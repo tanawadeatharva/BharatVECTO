@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart_ATP" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+<tns:VectoInputDeclaration schemaVersion="2.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
+xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
+xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
+xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
+	<v2.0:Vehicle id="VEH-PrimaryBus_nonSmart_ATP" xsi:type="Vehicle_Conventional_PrimaryBusDeclarationType">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890_nonSmart</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
+		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<Articulated>false</Articulated>
@@ -15,18 +24,18 @@
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<v2.6:ADAS xsi:type="v2.1:AdvancedDriverAssistantSystemsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
+		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
-		</v2.6:ADAS>
-		<v2.6:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+		</ADAS>
+		<v2.10.2:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 			<Entry gear="6" maxTorque="1800"/>
 			<Entry gear="1" maxTorque="2500"/>
-		</v2.6:TorqueLimits>
-		<Components xsi:type="PrimaryVehicleComponentsDeclarationType">
-			<v2.6:Engine xsi:type="v2.0:EngineComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+		</v2.10.2:TorqueLimits>
+		<Components xsi:type="Components_Conventional_PrimaryBusType">
+			<Engine>
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.1:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic primary bus 41 Engine</Model>
@@ -209,7 +218,7 @@
 						<Entry engineSpeed='2600.00' maxTorque='0.00' dragTorque='-132.07'/>
 					</FullLoadAndDragCurve>
 				</v2.0:Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#ENG-gooZah3D">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -218,10 +227,10 @@
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>sNtMe9udO39TyKXzgwYEpVKImWizFalaBVqq3jLktuo=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.6:Engine>
-			<v2.6:Gearbox xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="GearboxComponentDeclarationType">
-				<Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType">
+				</v2.0:Signature>
+			</Engine>
+			<Gearbox>
+				<Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>AT 6 Gear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -746,7 +755,7 @@
 						</Gear>
 					</Gears>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#gbx-vi2Oak2N">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -755,10 +764,10 @@
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>ieNmjofFObDBGnB7+GX9of3HYe3ydK/ra+YvmULVJIk=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.6:Gearbox>
-			<v2.6:TorqueConverter xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="TorqueConverterComponentDeclarationType">
-				<Data id="tc-123xyz" xsi:type="TorqueConverterDataDeclarationType">
+				</v2.0:Signature>
+			</Gearbox>
+			<TorqueConverter>
+				<Data id="tc-123xyz" xsi:type="TorqueConverterDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Some Manufacturer</Manufacturer>
 					<Model>Some Model</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -785,15 +794,15 @@
             <Entry speedRatio="8.1500" torqueRatio="1.00" inputTorqueRef="-16540.98"/>
 					</Characteristics>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#tc-123xyz">
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>q2sumDwsqQKLw4xwkEllgsygF5bHBwZPSS66UNaXXis=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.6:TorqueConverter>
-			<v2.6:Retarder xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="RetarderComponentDeclarationType">
-				<Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType">
+				</v2.0:Signature>
+			</TorqueConverter>
+			<Retarder>
+				<Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -828,7 +837,7 @@
 						<Entry retarderSpeed="4000.00" torqueLoss="42.00"/>
 					</RetarderLossMap>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#RET-Shai9imi">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -837,10 +846,10 @@
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.6:Retarder>
-			<v2.6:Axlegear xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxlegearComponentDeclarationType">
-				<Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType">
+				</v2.0:Signature>
+			</Retarder>
+			<Axlegear>
+				<Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic primary bus 41 AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -1622,7 +1631,7 @@
 							<Entry inputSpeed='3250.00' inputTorque='-7960.98' torqueLoss='268.68'/>
 					</TorqueLossMap>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#AXL-EC3ohnoh">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -1631,10 +1640,10 @@
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.6:Axlegear>
-			<v2.6:AxleWheels xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleWheelsComponentDeclarationType">
-				<Data xsi:type="AxleWheelsDataDeclarationType">
+				</v2.0:Signature>
+			</Axlegear>
+			<AxleWheels>
+				<Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" >
 					<Axles>
 						<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
 							<AxleType>VehicleNonDriven</AxleType>
@@ -1692,9 +1701,9 @@
 						</Axle>
 					</Axles>
 				</Data>
-			</v2.6:AxleWheels>
-			<v2.6:Auxiliaries xsi:type="PrimaryVehicleAuxiliariesComponentDeclarationType">
-				<Data xsi:type="PrimaryVehicleAuxiliaryDataDeclarationType">
+			</AxleWheels>
+			<Auxiliaries>
+				<Data xsi:type="AUX_Conventional_PrimaryBusType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>
@@ -1703,7 +1712,6 @@
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology>conventional</AlternatorTechnology>
-						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
@@ -1720,7 +1728,7 @@
 						<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
 					</HVAC>
 				</Data>
-			</v2.6:Auxiliaries>
+			</Auxiliaries>
 		</Components>
 	</v2.0:Vehicle>
 </tns:VectoInputDeclaration>

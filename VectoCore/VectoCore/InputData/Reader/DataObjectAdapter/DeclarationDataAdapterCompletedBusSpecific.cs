@@ -223,46 +223,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("NumberOfPassengersStandingUpperDeck input parameter is required");
 			}
 			if (busAux.HeatPumpTypeCoolingDriverCompartment == null) {
-				throw new VectoException("HeatPumpTypeCoolingDriverCompartment input parameter is required");
+				throw new VectoException("HeatPumpTypeDriverCompartment Cooling input parameter is required");
 			}
 			if (busAux.HeatPumpTypeHeatingDriverCompartment == null) {
-				throw new VectoException("HeatPumpTypeHeatingDriverCompartment input parameter is required");
+				throw new VectoException("HeatPumpTypeDriverCompartment Heating input parameter is required");
 			}
-
 			if (busAux.HeatPumpTypeCoolingPassengerCompartment == null) {
-				throw new VectoException("HeatPumpTypeCoolingPassengerCompartment input parameter is required");
+				throw new VectoException("HeatPumpTypePassengerCompartment Cooling input parameter is required");
+			}
+			if (busAux.HeatPumpTypeHeatingPassengerCompartment == null) {
+				throw new VectoException("HeatPumpTypePassengerCompartment Heating input parameter is required");
 			}
 
 
-
-			//if (busAux.HeatPumpPassengerCompartments == null || busAux.HeatPumpPassengerCompartments.Count == 0) {
-			//	throw new VectoException("HeatPumpPassengerCompartments input parameter is required");
-			//}
-			//if (busAux.HeatPumpModeDriverCompartment == null || (busAux.HeatPumpTypeDriverCompartment != HeatPumpType.none && busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A)) {
-			//	throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
-			//}
-
-			//if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeCoolingDriverCompartment == HeatPumpType.none) {
-			//	throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
-			//}
+			if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeCoolingDriverCompartment == HeatPumpType.none && busAux.HeatPumpTypeHeatingDriverCompartment == HeatPumpType.none) {
+				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
+			}
 			
-			//if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpTypeCoolingPassengerCompartment == HeatPumpType.none) {
-			//	throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
-			//}
+			if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpTypeCoolingPassengerCompartment == HeatPumpType.none && busAux.HeatPumpTypeHeatingPassengerCompartment == HeatPumpType.none) {
+				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
+			}
 
-			//if (busAux.HeatPumpPassengerCompartments.Any(x => x.Item1 != HeatPumpType.none && x.Item2 == HeatPumpMode.N_A)) {
-   //             throw new VectoException("HeatPumpModePassengerCompartment input parameter is required");
-   //         }
+			
 
-   //         var heatPumpTypeDriverCompartment =
-			//	busAux.HeatPumpModeDriverCompartment == HeatPumpMode.heating
-			//		? HeatPumpType.none
-			//		: busAux.HeatPumpTypeDriverCompartment.Value;
+            var heatPumpTypeDriverCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
 
-   //         var heatPumpTypePassengerCompartment = (
-   //             busAux.HeatPumpPassengerCompartments.All(x => x.Item2 == HeatPumpMode.heating)
-   //                 ? new[] {HeatPumpType.none}.ToList()
-   //                 : busAux.HeatPumpPassengerCompartments.Select(x => x.Item1).ToList()).FirstOrDefault();
+            var heatPumpTypePassengerCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
 
             var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
@@ -304,24 +290,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ssmInputs.HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2;
 
             //ToDo FK COP calculation
-			var heatPumpTypePassengerCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
-			var heatPumpTypeDriverCompartment = busAux.HeatPumpTypeCoolingDriverCompartment.Value;
-
-			ssmInputs.HVACCompressorType = busAux.HeatPumpTypeCoolingPassengerCompartment.Value; // use passenger compartment
+            ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
             ssmInputs.HVACTechnology = $"{busAux.SystemConfiguration.GetName()} " + 
 									   $"({string.Join(", ", heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName())})";
 			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
                 coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
                 floorType);
 
-			ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
-			ssmInputs.HVACTechnology = $"{busAux.SystemConfiguration.GetName()} " +
-									   $"({string.Join(", ", heatPumpTypePassengerCompartment.GetName(), heatPumpTypeDriverCompartment.GetName())})";
-			ssmInputs.COP = DeclarationData.BusAuxiliaries.CalculateCOP(
-				coolingPower.Item1, heatPumpTypeDriverCompartment, coolingPower.Item2, heatPumpTypePassengerCompartment /* average */,
-				floorType);
-
-			return ssmInputs;
+            return ssmInputs;
 		}
 
 		
@@ -422,21 +398,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		#endregion
 
 
-		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengers,
+		protected double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
 			double registeredPassengersStanding, LoadingType loading)
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
 			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
 				? mission.BusParameter.PassengerDensityLow
 				: mission.BusParameter.PassengerDensityRef);
-			//var passengerCountDecl = completedVehicle.NuberOfPassengersUpperDeck + completedVehicle.NumberOfPassengersLowerDeck;
+			
 			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading);
 			}
 
+			var passengerCount = registeredPassengerSeats +
+								(mission.MissionType == MissionType.Coach ? 0 : registeredPassengersStanding);
+
 			return loading == LoadingType.ReferenceLoad
-				? VectoMath.Min(passengerCountRef, registeredPassengers)
-				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), registeredPassengers);
+				? VectoMath.Min(passengerCountRef, passengerCount)
+				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), passengerCount);
 		}
 		
 		

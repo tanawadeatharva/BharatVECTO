@@ -135,4 +135,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationADASDataProviderV210 : XMLDeclarationADASDataProviderV21
+	{
+		/*
+		 * new field added in version 2.3
+		 */
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+
+		public new const string XSD_TYPE = "ADAS_Conventional_Type";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationADASDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationADASDataProviderV10
+
+		public override bool? ATEcoRollReleaseLockupClutch {
+			get {
+				var node = GetNode(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, required: false);
+				var busNode = GetNode(XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, required: false);
+				if (node == null && busNode == null) {
+					return null;
+				}
+
+				var innerText = node == null ? busNode.InnerText : node.InnerText;
+				return XmlConvert.ToBoolean(innerText);
+			}
+		}
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
 }

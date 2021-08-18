@@ -19,5 +19,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		double MinSoC { get; }
 
 		double MaxSoC { get; }
+		AmpereSecond Capacity { get; }
+		Volt NominalVoltage { get; }
 	}
 }

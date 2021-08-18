@@ -691,41 +691,76 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LoadstageThresholds = gsInputData.LoadStageThresholdsUp != null && gsInputData.LoadStageThresholdsDown != null ? gsInputData.LoadStageThresholdsUp.Zip(gsInputData.LoadStageThresholdsDown, Tuple.Create) : null
 			};
 
+			if (gsInputData.PEV_DeRatingDownshiftSpeedFactor != null) {
+				retVal.PEV_DeRatedDownshiftSpeedFactor = gsInputData.PEV_DeRatingDownshiftSpeedFactor.Value;
+			}
+
+			if (gsInputData.PEV_TargetSpeedBrakeNorm != null) {
+				retVal.PEV_TargetSpeedBrakeNorm = gsInputData.PEV_TargetSpeedBrakeNorm.Value;
+			}
+
+			if (gsInputData.PEV_DownshiftMinSpeedFactor != null) {
+				retVal.PEV_DownshiftMinSpeedFactor = gsInputData.PEV_DownshiftMinSpeedFactor.Value;
+			}
+
 			return retVal;
 		}
 
-		public BatteryData CreateBatteryData(IElectricStorageEngineeringInputData batteryInputData, double initialSOC)
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemEngineeringInputData batteryInputData, double initialSOC)
 		{
-			if (batteryInputData == null || batteryInputData.REESSPack.StorageType != REESSType.Battery) {
+			if (batteryInputData == null) {
 				return null;
 			}
 
-			var bat = batteryInputData.REESSPack as IBatteryPackEngineeringInputData;
+			var bat = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
 
-			return new BatteryData() {
-				MinSOC = bat.MinSOC,
-				MaxSOC = bat.MaxSOC,
-				MaxCurrent = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap, batteryInputData.Count),
-				Capacity = batteryInputData.Count * bat.Capacity,
-				InternalResistance = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, batteryInputData.Count),
-				SOCMap = BatterySOCReader.Create(bat.VoltageCurve),
-				InitialSoC = initialSOC
-			};
+			if (bat.Length == 0) {
+				return null;
+			}
+
+			var retVal = new BatterySystemData();
+			foreach (var entry in bat) {
+                var b = entry.REESSPack as IBatteryPackDeclarationInputData;
+                if (b == null) {
+                    continue;
+                }
+
+                for (var i = 0; i < entry.Count; i++) {
+					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
+						MinSOC = b.MinSOC,
+						MaxSOC = b.MaxSOC,
+						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
+						Capacity = b.Capacity,
+						InternalResistance =
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve),
+						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+					}));
+				}
+			}
+
+			retVal.InitialSoC = initialSOC;
+			return retVal;
 		}
 
-		public SuperCapData CreateSuperCapData(IElectricStorageEngineeringInputData reessInputData, double initialSOC)
+		public SuperCapData CreateSuperCapData(IElectricStorageSystemEngineeringInputData reessInputData, double initialSOC)
 		{
-			if (reessInputData == null || reessInputData.REESSPack.StorageType != REESSType.SuperCap)
+			if (reessInputData == null)
 			{
 				return null;
 			}
 
-			var superCap = reessInputData.REESSPack as ISuperCapEngineeringInputData;
+			var superCaps = reessInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.SuperCap).ToArray();
+
+			var superCap = superCaps.FirstOrDefault()?.REESSPack as ISuperCapDeclarationInputData;
+
+			if (superCap == null) {
+				return null;
+			}
 
 			return new SuperCapData()
 			{
-				Capacity = reessInputData.Count * superCap.Capacity,
-				InternalResistance = superCap.InternalResistance / reessInputData.Count,
+				Capacity = superCaps.First().Count * superCap.Capacity,
+				InternalResistance = superCap.InternalResistance / superCaps.First().Count,
 				MinVoltage = superCap.MinVoltage,
 				MaxVoltage = superCap.MaxVoltage,
 				MaxCurrentCharge = superCap.MaxCurrentCharge,
@@ -758,19 +793,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, TableData torqueLimits)
 		{
-			var fullLoadCurve = ElectricFullLoadCurveReader.Create(motorData.FullLoadCurve, count);
-			var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
-			var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
+				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
+				var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+
+				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
+
+				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
+					Voltage = entry.VoltageLevel,
+					FullLoadCurve = fullLoadCurveCombined,
+					DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
+				});
+			}
+
 
 			var lossMap = adcLossMap != null
 				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
 				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			return new ElectricMotorData() {
-				FullLoadCurve = fullLoadCurveCombined,
-				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
-				EfficiencyMap = ElectricMotorMapReader.Create(motorData.EfficiencyMap, count),
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				Inertia = motorData.Inertia,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,

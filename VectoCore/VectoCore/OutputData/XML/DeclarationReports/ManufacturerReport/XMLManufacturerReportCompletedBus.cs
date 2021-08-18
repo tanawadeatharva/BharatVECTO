@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport {
 	public class XMLManufacturerReportCompletedBus : AbstractXMLManufacturerReport
 	{
+		protected TankSystem? _tankSystem;
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
@@ -27,6 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
+			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
 				new XAttribute(xsi + "type", "VehicleCompletedBusType"),
 				GetPrimaryVehicleInformation(),
@@ -226,7 +228,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			//retVal.Add(new XElement(tns + "FuelConsumptionFactor", factor.ToMinSignificantDigits(4)));
 			foreach (var entry in primaryResult.EnergyConsumption) {
 				var fcEnergy = entry.Value * factor;  // J/m
-				var fuelData = FuelData.Instance().Lookup(entry.Key);
+				var fuelData = FuelData.Instance().Lookup(entry.Key, _tankSystem);
 				var fcMass = fcEnergy / fuelData.LowerHeatingValueVecto; // kg/m
 				co2Sum += fcMass * fuelData.CO2PerFuelWeight;
 

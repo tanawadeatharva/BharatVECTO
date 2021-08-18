@@ -169,8 +169,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					BusHVACSystemConfiguration.Unknown);
 		}
 
-
-
 		protected override bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
 		{
 			var propertyChanged = base.SetProperty(ref field, value, propertyName);
@@ -199,6 +197,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeCoolingPassengerCompartment;
 			HeatPumpTypeHeatingPassengerCompartment =
 				componentsAuxiliaryInputData.HVACAux?.HeatPumpTypeHeatingPassengerCompartment;
+
 
 
 			AuxHeaterPower = componentsAuxiliaryInputData.HVACAux?.AuxHeaterPower;
@@ -286,6 +285,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 
+		#region HVAC
 
 		
 
@@ -346,10 +346,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool EngineWasteGasHeatExchanger => throw new NotImplementedException();
 
-
-
-
-		#region HVAC
 
 		private bool _heatPumpGroupEditingEnabled;
 		private BusHVACSystemConfiguration? _systemConfiguration;

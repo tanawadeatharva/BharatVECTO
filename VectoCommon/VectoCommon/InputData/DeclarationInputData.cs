@@ -227,8 +227,8 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
-
-		IElectricStorageDeclarationInputData ElectricStorage { get; }
+		
+		IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 	}
@@ -712,11 +712,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorDeclarationInputData : IComponentInputData
 	{
-		TableData FullLoadCurve { get; }
-
-		TableData DragCurve { get; }
-		
-		TableData EfficiencyMap { get; }
+		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
 		KilogramSquareMeter Inertia { get; }
 
@@ -731,6 +727,17 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter OverloadTorque { get; }
 
 		PerSecond OverloadTestSpeed { get; }
+	}
+
+	public interface IElectricMotorVoltageLevel
+	{
+		Volt VoltageLevel { get; }
+
+		TableData FullLoadCurve { get; }
+
+		TableData DragCurve { get; }
+
+		TableData EfficiencyMap { get; }
 	}
 
 	public interface IElectricMachinesDeclarationInputData
@@ -755,11 +762,20 @@ namespace TUGraz.VectoCommon.InputData
 		public TableData MechanicalTransmissionLossMap { get; set; }
 	}
 
+	
+
+	public interface IElectricStorageSystemDeclarationInputData 
+	{
+		IList<IElectricStorageDeclarationInputData> ElectricStorageElements { get; }
+	}
+
 	public interface IElectricStorageDeclarationInputData
 	{
 		IREESSPackInputData REESSPack { get; }
 
 		int Count { get; }
+
+		int StringId { get; }
 	}
 
 	public enum REESSType
@@ -771,6 +787,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IREESSPackInputData : IComponentInputData
 	{
 		REESSType StorageType { get; }
+
 	}
 
 	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
@@ -899,7 +916,7 @@ namespace TUGraz.VectoCommon.InputData
 		HeatPumpType? HeatPumpTypeHeatingDriverCompartment { get; }
 
 		HeatPumpType? HeatPumpTypeCoolingPassengerCompartment { get; }
-
+		
 		HeatPumpType? HeatPumpTypeHeatingPassengerCompartment { get; }
 
 		Watt AuxHeaterPower { get; }

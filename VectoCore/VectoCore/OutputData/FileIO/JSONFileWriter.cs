@@ -34,7 +34,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private const int ElectricMotorFormatVersion = 2;
+	private const int ElectricMotorFormatVersion = 3;
 
 	private const int REESSFormatVersion = 1;
 
@@ -79,9 +79,9 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("SavedInDeclMode", declMode);
 
 		body.Add("Model", electricMachine.Model);
-		body.Add("FullLoadCurve", GetRelativePath(electricMachine.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
-		body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
+		//body.Add("FullLoadCurve", GetRelativePath(electricMachine.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
+		//body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
+		//body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
 		body.Add("Inertia", electricMachine.Inertia.Value());
 		body.Add("ContinuousTorque", electricMachine.ContinuousTorque.Value());
 		body.Add("ContinuousTorqueSpeed", electricMachine.ContinuousTorqueSpeed.AsRPM);
@@ -89,6 +89,18 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("OverloadTorqueSpeed", electricMachine.OverloadTestSpeed.AsRPM);
 		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
+
+		var vlevels = new List<Dictionary<string, object>>();
+		foreach (var entry in electricMachine.VoltageLevels) {
+			var vlevel = new Dictionary<string, object>();
+			vlevel.Add("Voltage", entry.VoltageLevel.Value());
+			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
+			vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
+			vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
+			vlevels.Add(vlevel);
+        }
+
+		body.Add("VoltageLevels", vlevels);
 		WriteFile(header, body, filename);
 	}
 
@@ -508,7 +520,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", "ParallelHybrid");
 		body.Add("ElectricMotors", electricMotorsOut);
-		body.Add("Battery", battery);
+		body.Add("Batteries", battery);
 
 		WriteFile(header, body, filename);
 	}
@@ -539,7 +551,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
 		body.Add("PowertrainConfiguration", "BatteryElectric");
 		body.Add("ElectricMotors", electricMotorsOut);
-		body.Add("Battery", battery);
+		body.Add("Batteries", battery);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		//body.Add("Retarder", retarderOut);
@@ -555,14 +567,19 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
 	}
 
-	private Dictionary<string, object> GetBattery(IVehicleEngineeringInputData vehicle, string basePath)
+	private Dictionary<string, object>[] GetBattery(IVehicleEngineeringInputData vehicle, string basePath)
 	{
-		var retVal = new Dictionary<string, object>()
-		{
-			{"NumPacks", vehicle.Components.ElectricStorage.Count},
-			{"BatteryFile", GetRelativePath(vehicle.Components.ElectricStorage.REESSPack.DataSource.SourceFile, basePath)}
+
+		var retVal = new List<Dictionary<string, object>>();
+		foreach (var entry in vehicle.Components.ElectricStorage.ElectricStorageElements) {
+
+			 retVal.Add(new Dictionary<string, object>() {
+				{ "NumPacks", entry.Count }, 
+				{ "BatteryFile", GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath) },
+				{ "StreamId", entry.StringId}
+			});
 		};
-		return retVal;
+		return retVal.ToArray();
 	}
 
 	private Array GetElectricMotors(IVehicleEngineeringInputData vehicle, string basePath)

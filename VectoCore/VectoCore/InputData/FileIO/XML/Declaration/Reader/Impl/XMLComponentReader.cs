@@ -301,6 +301,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLComponentReaderV210_Lorry : XMLComponentReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+
+        public new const string XSD_TYPE = "Components_Conventional_LorryType";
+		//public new const string AXLE_READER_TYPE = "AxleDataDeclarationType";
+		public new const string AUX_READER_TYPE = "AUX_Conventional_LorryDataType";
+
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        //public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
+        //public new static readonly string AXLE_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLE_READER_TYPE);
+        //public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+        public new static readonly string AUXILIARIES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_READER_TYPE);
+
+
+        public XMLComponentReaderV210_Lorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+			vehicle, componentsNode)
+		{ }
+	}
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLAuxiliaryReaderV23 : XMLComponentReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
@@ -309,30 +331,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, AUX_READER_TYPE);
 		
+		private IBusAuxiliariesDeclarationData _busAuxInputData;
+
 
 		public XMLAuxiliaryReaderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
-			vehicle, componentsNode)
-		{ }
-	}
-
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLComponentReaderV26 : XMLComponentReaderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
-
-		public new const string XSD_TYPE = "PrimaryVehicleComponentsDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public const string COMPLETE_XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
-		public static readonly string QUALIFIED_COMPLETE_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, COMPLETE_XSD_TYPE);
-
-
-		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-
-
-		public XMLComponentReaderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
 			vehicle, componentsNode)
 		{ }
 
@@ -342,6 +344,82 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV210_PrimaryBus : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+
+		public new const string XSD_TYPE = "Components_Conventional_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLComponentReaderV210_PrimaryBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+			vehicle, componentsNode)
+		{ }
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV210_CompletedBus : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+
+		public new const string XSD_TYPE = "Components_Conventional_CompletedBusType";
+
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLComponentReaderV210_CompletedBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+			: base(vehicle, componentsNode)
+		{
+
+		}
+
+		public override IAngledriveInputData AngledriveInputData => null;
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		public override IAxlesDeclarationInputData AxlesDeclarationInputData => null;
+
+		public override IEngineDeclarationInputData EngineInputData => null;
+
+		public override IGearboxDeclarationInputData GearboxInputData => null;
+
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
+
+		public override ITyreDeclarationInputData Tyre => null;
+
+		public override IRetarderInputData RetarderInputData => null;
+
+		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			_airdragInputData ??
+			(_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -378,96 +456,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
 	}
+
+
 	
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLComponentReaderNoAxlegearV26 : XMLComponentReaderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
-		public new const string XSD_TYPE = "VehicleComponentsNoAxlegearType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-
-
-		public XMLComponentReaderNoAxlegearV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
-			vehicle, componentsNode)
-		{ }
-
-		#region Overrides of XMLComponentReaderV10
-
-		public override IAxleGearInputData AxleGearInputData => null;
-
-		#endregion
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLGearboxReaderV26 : XMLComponentReaderV10
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
-		public new const string XSD_TYPE = "GearboxDataDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-
-
-		public XMLGearboxReaderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
-			vehicle, componentsNode)
-		{ }
-
-		
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLComponentReaderV28 : XMLComponentReaderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
-
-		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
-
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		protected IBusAuxiliariesDeclarationData _busAuxInputData;
-
-
-		public XMLComponentReaderV28(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
-			: base(vehicle, componentsNode)
-		{
-			
-		}
-
-		public override IAngledriveInputData AngledriveInputData => null;
-
-		public override IAxleGearInputData AxleGearInputData => null;
-
-		public override IAxlesDeclarationInputData AxlesDeclarationInputData => null;
-
-		public override IEngineDeclarationInputData EngineInputData => null;
-
-		public override IGearboxDeclarationInputData GearboxInputData => null;
-
-		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
-
-		public override ITyreDeclarationInputData Tyre => null;
-
-		public override IRetarderInputData RetarderInputData => null;
-
-		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
-
-		public override IAirdragDeclarationInputData AirdragInputData =>
-			_airdragInputData ??
-			(_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
-
-		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
-
-		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
-		{
-			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
-		}
-
-	}
 }

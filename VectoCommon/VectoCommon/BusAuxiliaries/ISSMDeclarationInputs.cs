@@ -306,55 +306,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		}
 	}
 
-	public enum HeatPumpMode
-	{
-		
-		[GuiLabel("Heating")]
-		heating,
-		[GuiLabel("Heating and cooling")]
-		heating_and_cooling,
-		[GuiLabel("Cooling")]
-		cooling,
-		[GuiLabel("not_applicable")]
-		N_A,
-	}
-
-	public static class HeatPumpModeHelper
-	{
-		private const string HEATING = "heating";
-		private const string HEATING_AND_COOLING = "heating and cooling";
-		private const string COOLING = "cooling";
-		private const string N_A = "N.A.";
-
-		public static HeatPumpMode Parse(string parse)
-		{
-			switch (parse)
-			{
-				case HEATING: return HeatPumpMode.heating;
-				case HEATING_AND_COOLING: return HeatPumpMode.heating_and_cooling;
-				case COOLING: return HeatPumpMode.cooling;
-				case N_A: return HeatPumpMode.N_A;
-				default: throw new InvalidEnumArgumentException("HeatPumpMode"); 
-			}
-		}
-
-		public static string GetLabel(this HeatPumpMode? type)
-		{
-			switch (type)
-			{
-				case HeatPumpMode.heating: return HEATING;
-				case HeatPumpMode.heating_and_cooling: return HEATING_AND_COOLING;
-				case HeatPumpMode.cooling: return COOLING;
-				case HeatPumpMode.N_A: return N_A;
-				default: return null;
-			}
-		}
-
-		public static string GetLabel(this HeatPumpMode type)
-		{
-			return GetLabel(type as HeatPumpMode?);
-		}
-	}
 
 	public interface ISSMEngineeringInputs : ISSMInputs
 	{

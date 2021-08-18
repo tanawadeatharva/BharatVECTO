@@ -129,27 +129,26 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.StatusBAR.SuspendLayout()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TabControl1.SuspendLayout()
-        Me.TabPageGEN.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPgOptions.SuspendLayout()
-        Me.PanelOptAllg.SuspendLayout()
-        Me.GroupBox5.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
-        Me.GroupBox3.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
-        Me.TabPageDEV.SuspendLayout()
-        Me.ConMenFilelist.SuspendLayout()
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer1.Panel1.SuspendLayout()
-        Me.SplitContainer1.Panel2.SuspendLayout()
-        Me.SplitContainer1.SuspendLayout()
-        Me.ToolStrip1.SuspendLayout()
-        Me.CmOpenFile.SuspendLayout()
-        Me.SuspendLayout()
+        Me.StatusBAR.SuspendLayout
+        Me.TabControl1.SuspendLayout
+        Me.TabPageGEN.SuspendLayout
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabPgOptions.SuspendLayout
+        Me.PanelOptAllg.SuspendLayout
+        Me.GroupBox5.SuspendLayout
+        Me.GroupBox4.SuspendLayout
+        Me.GroupBox3.SuspendLayout
+        Me.GroupBox2.SuspendLayout
+        Me.GroupBox1.SuspendLayout
+        Me.TabPageDEV.SuspendLayout
+        Me.ConMenFilelist.SuspendLayout
+        CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.SplitContainer1.Panel1.SuspendLayout
+        Me.SplitContainer1.Panel2.SuspendLayout
+        Me.SplitContainer1.SuspendLayout
+        Me.ToolStrip1.SuspendLayout
+        Me.CmOpenFile.SuspendLayout
+        Me.SuspendLayout
         '
         'StatusBAR
         '
@@ -164,29 +163,29 @@ Partial Class MainForm
         '
         Me.ToolStripLbStatus.Name = "ToolStripLbStatus"
         Me.ToolStripLbStatus.Size = New System.Drawing.Size(1030, 17)
-        Me.ToolStripLbStatus.Spring = True
+        Me.ToolStripLbStatus.Spring = true
         Me.ToolStripLbStatus.Text = "Status Text"
         Me.ToolStripLbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'ToolStripProgBarJob
         '
         Me.ToolStripProgBarJob.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgBarJob.AutoSize = False
+        Me.ToolStripProgBarJob.AutoSize = false
         Me.ToolStripProgBarJob.Name = "ToolStripProgBarJob"
         Me.ToolStripProgBarJob.Size = New System.Drawing.Size(100, 16)
         Me.ToolStripProgBarJob.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarJob.ToolTipText = "overall progress"
-        Me.ToolStripProgBarJob.Visible = False
+        Me.ToolStripProgBarJob.Visible = false
         '
         'ToolStripProgBarOverall
         '
         Me.ToolStripProgBarOverall.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgBarOverall.AutoSize = False
+        Me.ToolStripProgBarOverall.AutoSize = false
         Me.ToolStripProgBarOverall.Name = "ToolStripProgBarOverall"
         Me.ToolStripProgBarOverall.Size = New System.Drawing.Size(100, 16)
         Me.ToolStripProgBarOverall.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarOverall.ToolTipText = "job progress"
-        Me.ToolStripProgBarOverall.Visible = False
+        Me.ToolStripProgBarOverall.Visible = false
         '
         'TabControl1
         '
@@ -222,34 +221,34 @@ Partial Class MainForm
         Me.TabPageGEN.Size = New System.Drawing.Size(1034, 302)
         Me.TabPageGEN.TabIndex = 0
         Me.TabPageGEN.Text = "Job Files"
-        Me.TabPageGEN.UseVisualStyleBackColor = True
+        Me.TabPageGEN.UseVisualStyleBackColor = true
         '
         'btnImportXML
         '
-        Me.btnImportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnImportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.btnImportXML.Location = New System.Drawing.Point(460, 267)
         Me.btnImportXML.Name = "btnImportXML"
         Me.btnImportXML.Size = New System.Drawing.Size(115, 30)
         Me.btnImportXML.TabIndex = 23
         Me.btnImportXML.Text = "Import from XML"
-        Me.btnImportXML.UseVisualStyleBackColor = True
-        Me.btnImportXML.Visible = False
+        Me.btnImportXML.UseVisualStyleBackColor = true
+        Me.btnImportXML.Visible = false
         '
         'btnExportXML
         '
-        Me.btnExportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnExportXML.Enabled = False
+        Me.btnExportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.btnExportXML.Enabled = false
         Me.btnExportXML.Location = New System.Drawing.Point(344, 267)
         Me.btnExportXML.Name = "btnExportXML"
         Me.btnExportXML.Size = New System.Drawing.Size(115, 30)
         Me.btnExportXML.TabIndex = 22
         Me.btnExportXML.Text = "Export as XML"
-        Me.btnExportXML.UseVisualStyleBackColor = True
+        Me.btnExportXML.UseVisualStyleBackColor = true
         '
         'Label6
         '
-        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label6.AutoSize = True
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.Label6.AutoSize = true
         Me.Label6.Location = New System.Drawing.Point(814, 268)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(217, 13)
@@ -258,7 +257,7 @@ Partial Class MainForm
         '
         'btStartV3
         '
-        Me.btStartV3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btStartV3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.btStartV3.Image = Global.TUGraz.VECTO.My.Resources.Resources.Play_icon
         Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btStartV3.Location = New System.Drawing.Point(3, 56)
@@ -268,80 +267,80 @@ Partial Class MainForm
         Me.btStartV3.Text = "START"
         Me.btStartV3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.ToolTip1.SetToolTip(Me.btStartV3, "Start Simulation")
-        Me.btStartV3.UseVisualStyleBackColor = True
+        Me.btStartV3.UseVisualStyleBackColor = true
         '
         'LbDecl
         '
-        Me.LbDecl.AutoSize = True
-        Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LbDecl.AutoSize = true
+        Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.LbDecl.Location = New System.Drawing.Point(5, 109)
         Me.LbDecl.Name = "LbDecl"
         Me.LbDecl.Size = New System.Drawing.Size(107, 13)
         Me.LbDecl.TabIndex = 19
         Me.LbDecl.Text = "Declaration Mode"
-        Me.LbDecl.Visible = False
+        Me.LbDecl.Visible = false
         '
         'PictureBox1
         '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"),System.Drawing.Image)
         Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(108, 47)
         Me.PictureBox1.TabIndex = 18
-        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.TabStop = false
         '
         'BtGENdown
         '
-        Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.BtGENdown.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_arrow_down_icon
         Me.BtGENdown.Location = New System.Drawing.Point(307, 267)
         Me.BtGENdown.Name = "BtGENdown"
         Me.BtGENdown.Size = New System.Drawing.Size(30, 30)
         Me.BtGENdown.TabIndex = 6
         Me.ToolTip1.SetToolTip(Me.BtGENdown, "Move job down one row")
-        Me.BtGENdown.UseVisualStyleBackColor = True
+        Me.BtGENdown.UseVisualStyleBackColor = true
         '
         'BtGENup
         '
-        Me.BtGENup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.BtGENup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
         Me.BtGENup.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_arrow_up_icon
         Me.BtGENup.Location = New System.Drawing.Point(276, 267)
         Me.BtGENup.Name = "BtGENup"
         Me.BtGENup.Size = New System.Drawing.Size(30, 30)
         Me.BtGENup.TabIndex = 4
         Me.ToolTip1.SetToolTip(Me.BtGENup, "Move job up one row")
-        Me.BtGENup.UseVisualStyleBackColor = True
+        Me.BtGENup.UseVisualStyleBackColor = true
         '
         'ChBoxAllGEN
         '
-        Me.ChBoxAllGEN.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ChBoxAllGEN.AutoSize = True
+        Me.ChBoxAllGEN.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.ChBoxAllGEN.AutoSize = true
         Me.ChBoxAllGEN.Location = New System.Drawing.Point(195, 274)
         Me.ChBoxAllGEN.Name = "ChBoxAllGEN"
         Me.ChBoxAllGEN.Size = New System.Drawing.Size(70, 17)
         Me.ChBoxAllGEN.TabIndex = 16
         Me.ChBoxAllGEN.Text = "Select All"
         Me.ToolTip1.SetToolTip(Me.ChBoxAllGEN, "Select All / None")
-        Me.ChBoxAllGEN.UseVisualStyleBackColor = True
+        Me.ChBoxAllGEN.UseVisualStyleBackColor = true
         '
         'LvGEN
         '
-        Me.LvGEN.AllowDrop = True
-        Me.LvGEN.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LvGEN.CheckBoxes = True
+        Me.LvGEN.AllowDrop = true
+        Me.LvGEN.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+            Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.LvGEN.CheckBoxes = true
         Me.LvGEN.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColGENpath, Me.ColGENstatus})
-        Me.LvGEN.FullRowSelect = True
-        Me.LvGEN.GridLines = True
+        Me.LvGEN.FullRowSelect = true
+        Me.LvGEN.GridLines = true
         Me.LvGEN.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
-        Me.LvGEN.HideSelection = False
-        Me.LvGEN.LabelEdit = True
+        Me.LvGEN.HideSelection = false
+        Me.LvGEN.LabelEdit = true
         Me.LvGEN.Location = New System.Drawing.Point(114, 3)
         Me.LvGEN.Name = "LvGEN"
         Me.LvGEN.Size = New System.Drawing.Size(917, 263)
         Me.LvGEN.TabIndex = 14
-        Me.LvGEN.UseCompatibleStateImageBehavior = False
+        Me.LvGEN.UseCompatibleStateImageBehavior = false
         Me.LvGEN.View = System.Windows.Forms.View.Details
         '
         'ColGENpath
@@ -356,27 +355,27 @@ Partial Class MainForm
         '
         'ButtonGENremove
         '
-        Me.ButtonGENremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ButtonGENremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonGENremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.ButtonGENremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.ButtonGENremove.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
         Me.ButtonGENremove.Location = New System.Drawing.Point(147, 267)
         Me.ButtonGENremove.Name = "ButtonGENremove"
         Me.ButtonGENremove.Size = New System.Drawing.Size(33, 30)
         Me.ButtonGENremove.TabIndex = 2
         Me.ToolTip1.SetToolTip(Me.ButtonGENremove, "Remove selected entries")
-        Me.ButtonGENremove.UseVisualStyleBackColor = True
+        Me.ButtonGENremove.UseVisualStyleBackColor = true
         '
         'ButtonGENadd
         '
-        Me.ButtonGENadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ButtonGENadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ButtonGENadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.ButtonGENadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.ButtonGENadd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
         Me.ButtonGENadd.Location = New System.Drawing.Point(113, 267)
         Me.ButtonGENadd.Name = "ButtonGENadd"
         Me.ButtonGENadd.Size = New System.Drawing.Size(33, 30)
         Me.ButtonGENadd.TabIndex = 1
         Me.ToolTip1.SetToolTip(Me.ButtonGENadd, "Add Job File")
-        Me.ButtonGENadd.UseVisualStyleBackColor = True
+        Me.ButtonGENadd.UseVisualStyleBackColor = true
         '
         'TabPgOptions
         '
@@ -387,7 +386,7 @@ Partial Class MainForm
         Me.TabPgOptions.Size = New System.Drawing.Size(1034, 302)
         Me.TabPgOptions.TabIndex = 2
         Me.TabPgOptions.Text = "Options"
-        Me.TabPgOptions.UseVisualStyleBackColor = True
+        Me.TabPgOptions.UseVisualStyleBackColor = true
         '
         'PanelOptAllg
         '
@@ -412,22 +411,22 @@ Partial Class MainForm
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Size = New System.Drawing.Size(260, 100)
         Me.GroupBox5.TabIndex = 20
-        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.TabStop = false
         Me.GroupBox5.Text = "Look-Ahead Coasting Override"
         '
         'Label5
         '
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.Label5.Location = New System.Drawing.Point(7, 48)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(247, 36)
         Me.Label5.TabIndex = 4
-        Me.Label5.Text = "Overrides Look-Ahead Coasting in declaration mode. Leave empty to use default beh" &
+        Me.Label5.Text = "Overrides Look-Ahead Coasting in declaration mode. Leave empty to use default beh"& _ 
     "aviour."
         '
         'Label4
         '
-        Me.Label4.AutoSize = True
+        Me.Label4.AutoSize = true
         Me.Label4.Location = New System.Drawing.Point(10, 44)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(0, 13)
@@ -442,7 +441,7 @@ Partial Class MainForm
         '
         'Label3
         '
-        Me.Label3.AutoSize = True
+        Me.Label3.AutoSize = true
         Me.Label3.Location = New System.Drawing.Point(158, 20)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(38, 13)
@@ -451,12 +450,12 @@ Partial Class MainForm
         '
         'Label2
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(7, 20)
+        Me.Label2.AutoSize = true
+        Me.Label2.Location = New System.Drawing.Point(7, 19)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(64, 13)
-        Me.Label2.TabIndex = 0
-        Me.Label2.Text = "Min. Speed:"
+        Me.Label2.Size = New System.Drawing.Size(84, 13)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "Output Directory"
         '
         'GroupBox4
         '
@@ -466,7 +465,7 @@ Partial Class MainForm
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(260, 46)
         Me.GroupBox4.TabIndex = 19
-        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.TabStop = false
         Me.GroupBox4.Text = "Output Directory"
         '
         'BtTCfileBrowse
@@ -476,8 +475,8 @@ Partial Class MainForm
         Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
         Me.BtTCfileBrowse.Size = New System.Drawing.Size(24, 24)
         Me.BtTCfileBrowse.TabIndex = 27
-        Me.BtTCfileBrowse.TabStop = False
-        Me.BtTCfileBrowse.UseVisualStyleBackColor = True
+        Me.BtTCfileBrowse.TabStop = false
+        Me.BtTCfileBrowse.UseVisualStyleBackColor = true
         '
         'tbOutputFolder
         '
@@ -495,18 +494,18 @@ Partial Class MainForm
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(173, 110)
         Me.GroupBox3.TabIndex = 18
-        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.TabStop = false
         Me.GroupBox3.Text = "Misc"
         '
         'cbSaveVectoRunData
         '
-        Me.cbSaveVectoRunData.AutoSize = True
+        Me.cbSaveVectoRunData.AutoSize = true
         Me.cbSaveVectoRunData.Location = New System.Drawing.Point(7, 86)
         Me.cbSaveVectoRunData.Name = "cbSaveVectoRunData"
         Me.cbSaveVectoRunData.Size = New System.Drawing.Size(166, 17)
         Me.cbSaveVectoRunData.TabIndex = 19
         Me.cbSaveVectoRunData.Text = "Export ModelData (EXPERT!)"
-        Me.cbSaveVectoRunData.UseVisualStyleBackColor = True
+        Me.cbSaveVectoRunData.UseVisualStyleBackColor = true
         '
         'cbActVmod
         '
@@ -515,19 +514,19 @@ Partial Class MainForm
         Me.cbActVmod.Size = New System.Drawing.Size(167, 52)
         Me.cbActVmod.TabIndex = 18
         Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
-        Me.cbActVmod.UseVisualStyleBackColor = True
+        Me.cbActVmod.UseVisualStyleBackColor = true
         '
         'cbValidateRunData
         '
-        Me.cbValidateRunData.AutoSize = True
-        Me.cbValidateRunData.Checked = True
+        Me.cbValidateRunData.AutoSize = true
+        Me.cbValidateRunData.Checked = true
         Me.cbValidateRunData.CheckState = System.Windows.Forms.CheckState.Checked
         Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
         Me.cbValidateRunData.Name = "cbValidateRunData"
         Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
         Me.cbValidateRunData.TabIndex = 17
         Me.cbValidateRunData.Text = "Validate Data"
-        Me.cbValidateRunData.UseVisualStyleBackColor = True
+        Me.cbValidateRunData.UseVisualStyleBackColor = true
         '
         'GroupBox2
         '
@@ -537,30 +536,30 @@ Partial Class MainForm
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(173, 89)
         Me.GroupBox2.TabIndex = 16
-        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.TabStop = false
         Me.GroupBox2.Text = "Output"
         '
         'ChBoxModOut
         '
-        Me.ChBoxModOut.AutoSize = True
-        Me.ChBoxModOut.Checked = True
+        Me.ChBoxModOut.AutoSize = true
+        Me.ChBoxModOut.Checked = true
         Me.ChBoxModOut.CheckState = System.Windows.Forms.CheckState.Checked
         Me.ChBoxModOut.Location = New System.Drawing.Point(6, 19)
         Me.ChBoxModOut.Name = "ChBoxModOut"
         Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
         Me.ChBoxModOut.TabIndex = 0
         Me.ChBoxModOut.Text = "Write modal results"
-        Me.ChBoxModOut.UseVisualStyleBackColor = True
+        Me.ChBoxModOut.UseVisualStyleBackColor = true
         '
         'ChBoxMod1Hz
         '
-        Me.ChBoxMod1Hz.AutoSize = True
+        Me.ChBoxMod1Hz.AutoSize = true
         Me.ChBoxMod1Hz.Location = New System.Drawing.Point(6, 42)
         Me.ChBoxMod1Hz.Name = "ChBoxMod1Hz"
         Me.ChBoxMod1Hz.Size = New System.Drawing.Size(121, 17)
         Me.ChBoxMod1Hz.TabIndex = 16
         Me.ChBoxMod1Hz.Text = "Modal results in 1Hz"
-        Me.ChBoxMod1Hz.UseVisualStyleBackColor = True
+        Me.ChBoxMod1Hz.UseVisualStyleBackColor = true
         '
         'GroupBox1
         '
@@ -570,31 +569,31 @@ Partial Class MainForm
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(173, 72)
         Me.GroupBox1.TabIndex = 15
-        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Mode"
         '
         'RbDev
         '
-        Me.RbDev.AutoSize = True
-        Me.RbDev.Checked = True
+        Me.RbDev.AutoSize = true
+        Me.RbDev.Checked = true
         Me.RbDev.Location = New System.Drawing.Point(6, 42)
         Me.RbDev.Name = "RbDev"
         Me.RbDev.Size = New System.Drawing.Size(111, 17)
         Me.RbDev.TabIndex = 1
-        Me.RbDev.TabStop = True
+        Me.RbDev.TabStop = true
         Me.RbDev.Text = "Engineering Mode"
-        Me.RbDev.UseVisualStyleBackColor = True
+        Me.RbDev.UseVisualStyleBackColor = true
         '
         'RbDecl
         '
-        Me.RbDecl.AutoSize = True
+        Me.RbDecl.AutoSize = true
         Me.RbDecl.Location = New System.Drawing.Point(6, 19)
         Me.RbDecl.Name = "RbDecl"
         Me.RbDecl.Size = New System.Drawing.Size(109, 17)
         Me.RbDecl.TabIndex = 0
-        Me.RbDecl.TabStop = True
+        Me.RbDecl.TabStop = true
         Me.RbDecl.Text = "Declaration Mode"
-        Me.RbDecl.UseVisualStyleBackColor = True
+        Me.RbDecl.UseVisualStyleBackColor = true
         '
         'TabPageDEV
         '
@@ -606,12 +605,12 @@ Partial Class MainForm
         Me.TabPageDEV.Size = New System.Drawing.Size(1034, 302)
         Me.TabPageDEV.TabIndex = 3
         Me.TabPageDEV.Text = "Test"
-        Me.TabPageDEV.UseVisualStyleBackColor = True
+        Me.TabPageDEV.UseVisualStyleBackColor = true
         '
         'Label1
         '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = True
+        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+        Me.Label1.AutoSize = true
         Me.Label1.Location = New System.Drawing.Point(1012, 283)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(106, 13)
@@ -620,18 +619,19 @@ Partial Class MainForm
         '
         'LvDEVoptions
         '
-        Me.LvDEVoptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LvDEVoptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+            Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.LvDEVoptions.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader7, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader8, Me.ColumnHeader9})
-        Me.LvDEVoptions.FullRowSelect = True
-        Me.LvDEVoptions.GridLines = True
+        Me.LvDEVoptions.FullRowSelect = true
+        Me.LvDEVoptions.GridLines = true
+        Me.LvDEVoptions.HideSelection = false
         Me.LvDEVoptions.Location = New System.Drawing.Point(6, 6)
-        Me.LvDEVoptions.MultiSelect = False
+        Me.LvDEVoptions.MultiSelect = false
         Me.LvDEVoptions.Name = "LvDEVoptions"
         Me.LvDEVoptions.Size = New System.Drawing.Size(1022, 277)
         Me.LvDEVoptions.TabIndex = 0
-        Me.LvDEVoptions.UseCompatibleStateImageBehavior = False
+        Me.LvDEVoptions.UseCompatibleStateImageBehavior = false
         Me.LvDEVoptions.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader4
@@ -668,7 +668,7 @@ Partial Class MainForm
         '
         Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowInFolderMenuItem, Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
         Me.ConMenFilelist.Name = "ConMenFilelist"
-        Me.ConMenFilelist.ShowImageMargin = False
+        Me.ConMenFilelist.ShowImageMargin = false
         Me.ConMenFilelist.Size = New System.Drawing.Size(151, 114)
         '
         'ShowInFolderMenuItem
@@ -703,21 +703,22 @@ Partial Class MainForm
         '
         'LvMsg
         '
-        Me.LvMsg.AllowColumnReorder = True
+        Me.LvMsg.AllowColumnReorder = true
         Me.LvMsg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.LvMsg.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
         Me.LvMsg.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LvMsg.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LvMsg.FullRowSelect = True
-        Me.LvMsg.GridLines = True
+        Me.LvMsg.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.LvMsg.FullRowSelect = true
+        Me.LvMsg.GridLines = true
         Me.LvMsg.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable
-        Me.LvMsg.LabelWrap = False
+        Me.LvMsg.HideSelection = false
+        Me.LvMsg.LabelWrap = false
         Me.LvMsg.Location = New System.Drawing.Point(0, 0)
         Me.LvMsg.Margin = New System.Windows.Forms.Padding(0)
         Me.LvMsg.Name = "LvMsg"
         Me.LvMsg.Size = New System.Drawing.Size(1045, 281)
         Me.LvMsg.TabIndex = 0
-        Me.LvMsg.UseCompatibleStateImageBehavior = False
+        Me.LvMsg.UseCompatibleStateImageBehavior = false
         Me.LvMsg.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader1
@@ -737,9 +738,9 @@ Partial Class MainForm
         '
         'SplitContainer1
         '
-        Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+            Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 27)
         Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(0)
         Me.SplitContainer1.Name = "SplitContainer1"
@@ -806,7 +807,7 @@ Partial Class MainForm
         '
         Me.GENEditorToolStripMenuItem1.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
-        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(254, 22)
         Me.GENEditorToolStripMenuItem1.Text = "Job Editor - Conventional Vehicle"
         '
         'JobEditorParallelHybridVehicleToolStripMenuItem
@@ -834,52 +835,52 @@ Partial Class MainForm
         '
         Me.EPTPJobEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.EPTPJobEditorToolStripMenuItem.Name = "EPTPJobEditorToolStripMenuItem"
-        Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.EPTPJobEditorToolStripMenuItem.Text = "VTP Job Editor"
         '
         'VEHEditorToolStripMenuItem
         '
         Me.VEHEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VEH
         Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
-        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
         '
         'EngineEditorToolStripMenuItem
         '
         Me.EngineEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_ENG
         Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
-        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
         '
         'GearboxEditorToolStripMenuItem
         '
         Me.GearboxEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_GBX
         Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
-        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
         '
         'GraphToolStripMenuItem
         '
         Me.GraphToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_Graph
         Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
-        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.GraphToolStripMenuItem.Text = "Graph"
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(251, 6)
         '
         'OpenLogToolStripMenuItem
         '
         Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
-        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.OpenLogToolStripMenuItem.Text = "Open Log"
         '
         'SettingsToolStripMenuItem
         '
         Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(254, 22)
         Me.SettingsToolStripMenuItem.Text = "Settings"
         '
         'ToolStripDrDnBtInfo
@@ -923,7 +924,7 @@ Partial Class MainForm
         'CmDEV
         '
         Me.CmDEV.Name = "CmDEV"
-        Me.CmDEV.ShowImageMargin = False
+        Me.CmDEV.ShowImageMargin = false
         Me.CmDEV.Size = New System.Drawing.Size(36, 4)
         '
         'TmProgSec
@@ -934,7 +935,7 @@ Partial Class MainForm
         '
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.OpenInGraphWindowToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.ShowImageMargin = False
+        Me.CmOpenFile.ShowImageMargin = false
         Me.CmOpenFile.Size = New System.Drawing.Size(174, 70)
         '
         'OpenWithToolStripMenuItem
@@ -954,15 +955,6 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(7, 19)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(84, 13)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Output Directory"
         '
         'MainForm
         '

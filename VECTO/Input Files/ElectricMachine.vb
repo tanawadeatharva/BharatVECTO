@@ -7,6 +7,7 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
 
@@ -14,9 +15,15 @@ Imports TUGraz.VectoCore.Utils
 Public Class ElectricMachine
     Implements IElectricMotorEngineeringInputData
 
-    Private ReadOnly _fullLoadCurvePath As SubPath
-    Private ReadOnly _dragCurvePath As SubPath
-    Private ReadOnly _efficiencyMap As SubPath
+    public VoltageLevelLow As Double
+    Private ReadOnly _fullLoadCurvePathLow As SubPath
+    Private ReadOnly _dragCurvePathLow As SubPath
+    Private ReadOnly _efficiencyMapLow As SubPath
+
+    public VoltageLevelHigh as Double
+    Private ReadOnly _fullLoadCurvePathHi As SubPath
+    Private ReadOnly _dragCurvePathHi As SubPath
+    Private ReadOnly _efficiencyMapHi As SubPath
 
     ''' <summary>
     ''' Directory of engine file. Defined in FilePath property (Set)
@@ -46,10 +53,13 @@ Public Class ElectricMachine
         _myPath = ""
         _filePath = ""
 
-        _fullLoadCurvePath = New SubPath
-        _dragCurvePath = New SubPath()
-        _efficiencyMap = New SubPath()
+        _fullLoadCurvePathLow = New SubPath
+        _dragCurvePathLow = New SubPath()
+        _efficiencyMapLow = New SubPath()
 
+        _fullLoadCurvePathHi = New SubPath
+        _dragCurvePathHi = New SubPath()
+        _efficiencyMapHi = New SubPath()
 
         SetDefault()
     End Sub
@@ -59,7 +69,8 @@ Public Class ElectricMachine
         MotorInertia = 0
 
 
-        _fullLoadCurvePath.Clear()
+        _fullLoadCurvePathLow.Clear()
+        _fullLoadCurvePathHi.Clear()
 
     End Sub
 
@@ -195,27 +206,66 @@ Public Class ElectricMachine
         End Get
     End Property
 
-    Public ReadOnly Property FullLoadCurve As TableData Implements IElectricMotorDeclarationInputData.FullLoadCurve
+    protected ReadOnly Property FullLoadCurveLow As TableData 
         Get
-            If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
+            If Not File.Exists(_fullLoadCurvePathLow.FullPath) Then _
                 Throw New VectoException("Full-Load Curve is missing or invalid")
-            Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
+            Return VectoCSVFile.Read(_fullLoadCurvePathLow.FullPath)
         End Get
     End Property
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
+    protected ReadOnly Property DragCurvLow As TableData 
         Get
-            If Not File.Exists(_dragCurvePath.FullPath) Then _
+            If Not File.Exists(_dragCurvePathLow.FullPath) Then _
                 Throw New VectoException("Drag Curve is missing or invalid")
-            Return VectoCSVFile.Read(_dragCurvePath.FullPath)
+            Return VectoCSVFile.Read(_dragCurvePathLow.FullPath)
         End Get
     End Property
-    Public ReadOnly Property EfficiencyMap As TableData Implements IElectricMotorDeclarationInputData.EfficiencyMap
+    protected ReadOnly Property EfficiencyMapLow As TableData
         Get
-            If Not File.Exists(_efficiencyMap.FullPath) Then _
+            If Not File.Exists(_efficiencyMapLow.FullPath) Then _
                 Throw New VectoException("Drag Curve is missing or invalid")
-            Return VectoCSVFile.Read(_efficiencyMap.FullPath)
+            Return VectoCSVFile.Read(_efficiencyMapLow.FullPath)
         End Get
     End Property
+    protected ReadOnly Property FullLoadCurveHi As TableData 
+        Get
+            If Not File.Exists(_fullLoadCurvePathHi.FullPath) Then _
+                Throw New VectoException("Full-Load Curve is missing or invalid")
+            Return VectoCSVFile.Read(_fullLoadCurvePathHi.FullPath)
+        End Get
+                    End Property
+    protected ReadOnly Property DragCurvHi As TableData 
+        Get
+            If Not File.Exists(_dragCurvePathHi.FullPath) Then _
+                Throw New VectoException("Drag Curve is missing or invalid")
+            Return VectoCSVFile.Read(_dragCurvePathHi.FullPath)
+        End Get
+    End Property
+    protected ReadOnly Property EfficiencyMapHi As TableData
+        Get
+            If Not File.Exists(_efficiencyMapHi.FullPath) Then _
+                Throw New VectoException("Drag Curve is missing or invalid")
+            Return VectoCSVFile.Read(_efficiencyMapHi.FullPath)
+        End Get
+    End Property
+
+    Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
+    get
+            Return New List(Of IElectricMotorVoltageLevel) From{
+                New ElectricMotorVoltageLevel() With {
+                    .VoltageLevel = VoltageLevelLow.SI(of Volt),
+                    .EfficiencyMap = EfficiencyMapLow,
+                    .DragCurve = DragCurvLow,
+                    .FullLoadCurve = FullLoadCurveLow},
+                New ElectricMotorVoltageLevel()  With {
+                    .VoltageLevel = VoltageLevelHigh.SI(of Volt),
+                    .EfficiencyMap = EfficiencyMapHi,
+                    .DragCurve = DragCurvHi,
+                    .FullLoadCurve = FullLoadCurveHi}
+                }
+    End Get
+    End Property
+
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
         Get
             Return MotorInertia.SI(Of KilogramSquareMeter)
@@ -254,42 +304,81 @@ Public Class ElectricMachine
     End Get
     End Property
 
-    Public Property PathMaxTorque(Optional ByVal original As Boolean = False) As String
+    Public Property PathMaxTorqueLow(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
-                Return _fullLoadCurvePath.OriginalPath
+                Return _fullLoadCurvePathLow.OriginalPath
             Else
-                Return _fullLoadCurvePath.FullPath
+                Return _fullLoadCurvePathLow.FullPath
             End If
         End Get
         Set(ByVal value As String)
-            _fullLoadCurvePath.Init(_myPath, value)
+            _fullLoadCurvePathLow.Init(_myPath, value)
         End Set
     End Property
 
-    Public Property PathDrag(Optional ByVal original As Boolean = False) As String
+    Public Property PathDragLow(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
-                Return _dragCurvePath.OriginalPath
+                Return _dragCurvePathLow.OriginalPath
             Else
-                Return _dragCurvePath.FullPath
+                Return _dragCurvePathLow.FullPath
             End If
         End Get
         Set(ByVal value As String)
-            _dragCurvePath.Init(_myPath, value)
+            _dragCurvePathLow.Init(_myPath, value)
         End Set
     End Property
 
-    Public Property PathMap(Optional ByVal original As Boolean = False) As String
+    Public Property PathMapLow(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
-                Return _efficiencyMap.OriginalPath
+                Return _efficiencyMapLow.OriginalPath
             Else
-                Return _efficiencyMap.FullPath
+                Return _efficiencyMapLow.FullPath
             End If
         End Get
         Set(ByVal value As String)
-            _efficiencyMap.Init(_myPath, value)
+            _efficiencyMapLow.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property PathMaxTorqueHi(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _fullLoadCurvePathHi.OriginalPath
+            Else
+                Return _fullLoadCurvePathHi.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _fullLoadCurvePathHi.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property PathDragHi(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _dragCurvePathHi.OriginalPath
+            Else
+                Return _dragCurvePathHi.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _dragCurvePathHi.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property PathMapHi(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _efficiencyMapHi.OriginalPath
+            Else
+                Return _efficiencyMapHi.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _efficiencyMapHi.Init(_myPath, value)
         End Set
     End Property
 

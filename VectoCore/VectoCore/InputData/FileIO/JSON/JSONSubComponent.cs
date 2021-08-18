@@ -570,16 +570,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
         public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
+		public virtual HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
 
-		public HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
 
-		public HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => null;
 
-		public HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
-
-		public HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => null;
-
-		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
 		public virtual Watt AuxHeaterPower => null;
 		public virtual bool? DoubleGlazing => false;
 		public virtual bool HeatPump => false;
@@ -621,6 +618,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		
 		public int Count { get; internal set; }
+		public int StringId { get; internal set; }
 	}
 
+	public class JSONElectricStorageSystemEngineeringInputData : IElectricStorageSystemEngineeringInputData
+	{
+		private IList<IElectricStorageEngineeringInputData> _electricStorageElements;
+
+
+		public JSONElectricStorageSystemEngineeringInputData(IList<IElectricStorageEngineeringInputData> entries)
+		{
+			_electricStorageElements = entries;
+		}
+
+		public IList<IElectricStorageEngineeringInputData> ElectricStorageElements => _electricStorageElements;
+
+		#region Implementation of IElectricStorageSystemDeclarationInputData
+
+		IList<IElectricStorageDeclarationInputData> IElectricStorageSystemDeclarationInputData.ElectricStorageElements => _electricStorageElements.Cast<IElectricStorageDeclarationInputData>().ToList();
+
+		#endregion
+	}
+
+	
 }

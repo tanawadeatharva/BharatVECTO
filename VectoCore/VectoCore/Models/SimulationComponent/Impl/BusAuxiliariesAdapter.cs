@@ -52,7 +52,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IBusAuxiliaries Auxiliaries;
 
-		private double EngineStopStartUtilityFactor;
 		private bool SmartElectricSystem;
 		private IAuxiliaryConfig AuxCfg;
 
@@ -62,7 +61,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
 			container.AddComponent(this);
-			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
 
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineInfo.EngineIdleSpeed };
@@ -216,8 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed, true) - Auxiliaries.ElectricPowerDemandMech;
             //AdditionalAux = conventionalAux;
 
-            CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandESSEngineOn(absTime, dt, DataBus.EngineInfo.EngineIdleSpeed) ?? 0.SI<Watt>()) +
-                                        busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
+            CurrentState.PowerDemand = 0.SI<Watt>();
             //CurrentState.ESPowerGeneratedICE_On = Auxiliaries.ElectricPowerGenerated;
             //CurrentState.ESPowerMech = Auxiliaries.ElectricPowerDemandMech;
             // 
@@ -227,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             //	absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
             //AdditionalAux = conventionalAux;
 
-            return EngineStopStartUtilityFactor * (busAuxPowerDemand - Auxiliaries.PSPowerDemandAirGenerated + (AdditionalAux?.PowerDemandESSEngineOff(absTime, dt) ?? 0.SI<Watt>()));
+            return (busAuxPowerDemand - Auxiliaries.PSPowerDemandAirGenerated + (AdditionalAux?.PowerDemandESSEngineOff(absTime, dt) ?? 0.SI<Watt>()));
 		}
 
 
@@ -238,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var essUtilityFactor = 1.0;
 			if (!DataBus.EngineCtl.CombustionEngineOn) {
-				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
+				essUtilityFactor = 0.0;
 			}
 
             var signals = Auxiliaries.Signals;
@@ -248,7 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             // cycleStep has to be called here and not in DoCommit, write is called before Commit!
             //var oldSOC = Auxiliaries.BatterySOC;
-            Auxiliaries.CycleStep(CurrentState.dt, DataBus.EngineCtl.CombustionEngineOn ? 1.0 : EngineStopStartUtilityFactor);
+            Auxiliaries.CycleStep(CurrentState.dt);
 			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
@@ -356,7 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxChg = ElectricStorage.MaxChargeEnergy();
 			var maxDischg = ElectricStorage.MaxDischargeEnergy();
 			
-			var essFactor = DataBus.EngineCtl.CombustionEngineOn ? 0.0 : EngineStopStartUtilityFactor;
+			var essFactor = DataBus.EngineCtl.CombustionEngineOn ? 0.0 : 1.0;
 			var elPwrGen = Auxiliaries.ElectricPowerGenerated;
 			var elPwrConsumed = Auxiliaries.ElectricPowerConsumerSum;
 

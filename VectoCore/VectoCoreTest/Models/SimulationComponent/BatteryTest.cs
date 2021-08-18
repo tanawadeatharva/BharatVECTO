@@ -1,13 +1,21 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using Battery = TUGraz.VectoCore.Models.SimulationComponent.Impl.Battery;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -41,12 +49,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var modData = new MockModalDataContainer();
 			bat.Initialize(initialSoC);
 
@@ -77,12 +84,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 
 			bat.Initialize(initialSoC);
 
@@ -110,13 +116,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
 			var es = new ElectricSystem(container);
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
 			bat.Initialize(initialSoC);
@@ -147,12 +152,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 
 			bat.Initialize(initialSoC);
 
@@ -181,12 +185,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = inputData,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var container = new MockVehicleContainer();
-			var bat = new Battery(container, batteryData);
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(auxPower.SI<Watt>()));
@@ -199,6 +202,441 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(battLoss, response.RESSResponse.LossPower.Value(), 1e-2);
 			Assert.AreEqual(auxPower, response.AuxPower.Value(), 1e-2);
 			Assert.AreEqual(powerDemand - auxPower, response.RESSResponse.PowerDemand.Value(), 1e-2);
+		}
+
+
+		public const double REESS_Capacity = 4.5;
+		public const double REESS_MinSoC = 0.2;
+		public const double REESS_MaxSoC = 0.8;
+
+		[TestCase(0.5, 0.5, 5000),
+		TestCase(0.5, 0.5, -5000)]
+		public void BatteryTimeDependentInternalResistanceTest_ConstantLoad(double initialSoC, double dt, double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
+
+			var container = new MockVehicleContainer();
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
+			var es = new ElectricSystem(container);
+			es.Connect(bat);
+			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
+			bat.Initialize(initialSoC);
+
+			var modData = new MockModalDataContainer();
+			
+			var absTime = 0.SI<Second>();
+
+			var i = 0;
+			for (; i < 5; i++) { // constant for the first 2 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+				
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 21; i++) { // linear increase for the next 8s to 0.04
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r2 - r1) / (10 - 2);
+				var r = slope * absTime.Value() + r1 - slope * 2;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 41; i++) { // linear increase for the next 10s to 0.1
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r3 - r2) / (20 - 10);
+				var r = slope * absTime.Value() + r2 - slope * 10;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 100; i++) { // constant after 20 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+		}
+
+		[TestCase(0.5, 0.5, 5000),
+		TestCase(0.5, 0.5, -5000)]
+		public void BatteryTimeDependentInternalResistanceTest_LoadChanges(double initialSoC, double dt, double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
+
+			var container = new MockVehicleContainer();
+			var bat = new Battery(container, batteryData.Batteries.First().Item2);
+			var es = new ElectricSystem(container);
+			es.Connect(bat);
+			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
+			bat.Initialize(initialSoC);
+
+			var modData = new MockModalDataContainer();
+
+			var absTime = 0.SI<Second>();
+
+			var i = 0;
+			for (; i < 11; i++) { // constant for the first 5 sec
+				var response = es.Request(absTime, dt.SI<Second>(), -Math.Sign(powerDemand) * Math.Abs(powerDemand).SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 11 + 5; i++) { // constant for the first 2 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 10 + 21; i++) { // linear increase for the next 8s to 0.04
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r2 - r1) / (10 - 2);
+				var r = slope * (absTime.Value() - 5.5) + r1 - slope * 2;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 10 + 41; i++) { // linear increase for the next 10s to 0.1
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r3 - r2) / (20 - 10);
+				var r = slope * (absTime.Value() - 5.5) + r2 - slope * 10;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 100; i++) { // constant after 20 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+		}
+
+
+		[TestCase(0.5, 0.5, 5000),
+		TestCase(0.5, 0.5, -5000)]
+		public void BatterySystemTimeDependentInternalResistanceTest_ConstantLoad(double initialSoC, double dt, double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(1, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(1, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
+
+			var container = new MockVehicleContainer();
+			var bat = new BatterySystem(container, batteryData);
+			var es = new ElectricSystem(container);
+			es.Connect(bat);
+			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
+			bat.Initialize(initialSoC);
+
+			var modData = new MockModalDataContainer();
+
+			var absTime = 0.SI<Second>();
+
+			var i = 0;
+			for (; i < 5; i++) { // constant for the first 2 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 21; i++) { // linear increase for the next 8s to 0.04
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r2 - r1) / (10 - 2);
+				var r = slope * absTime.Value() + r1 - slope * 2;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 41; i++) { // linear increase for the next 10s to 0.1
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r3 - r2) / (20 - 10);
+				var r = slope * absTime.Value() + r2 - slope * 10;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 100; i++) { // constant after 20 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+		}
+
+		[TestCase(0.5, 0.5, 5000),
+		TestCase(0.5, 0.5, -5000)]
+		public void BatterySystemTimeDependentInternalResistanceTest_LoadChanges(double initialSoC, double dt, double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(1, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					}),
+					Tuple.Create(1, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
+
+			var container = new MockVehicleContainer();
+			var bat = new BatterySystem(container, batteryData);
+			var es = new ElectricSystem(container);
+			es.Connect(bat);
+			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
+			bat.Initialize(initialSoC);
+
+			var modData = new MockModalDataContainer();
+
+			var absTime = 0.SI<Second>();
+
+			var i = 0;
+
+			for (; i < 11; i++) { // constant for the first 2 sec
+				var response = es.Request(absTime, dt.SI<Second>(), -Math.Sign(powerDemand) * Math.Abs(powerDemand).SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				absTime += dt.SI<Second>();
+			}
+			
+			for (; i < 11 + 5; i++) { // constant for the first 2 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 11 + 21; i++) { // linear increase for the next 8s to 0.04
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r2 - r1) / (10 - 2);
+				var r = slope * (absTime.Value() - 5.5) + r1 - slope * 2;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 11 + 41; i++) { // linear increase for the next 10s to 0.1
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var slope = (r3 - r2) / (20 - 10);
+				var r = slope * (absTime.Value() - 5.5)  + r2 - slope * 10;
+				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
+
+			for (; i < 11 + 100; i++) { // constant after 20 sec
+				var response = es.Request(absTime, dt.SI<Second>(), powerDemand.SI<Watt>());
+				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
+				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
+
+				var current = (Ampere)modData[ModalResultField.I_reess];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
+
+				absTime += dt.SI<Second>();
+			}
 		}
 	}
 }

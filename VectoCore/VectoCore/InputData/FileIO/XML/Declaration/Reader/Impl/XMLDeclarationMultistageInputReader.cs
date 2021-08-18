@@ -873,7 +873,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IElectricStorageDeclarationInputData ElectricStorage => null;
+		public IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => null;
 
@@ -1180,14 +1180,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public BusHVACSystemConfiguration? SystemConfiguration => GetHVACBusAuxPropertyValue<BusHVACSystemConfiguration?>(nameof(SystemConfiguration));
 
-
 		public HeatPumpType? HeatPumpTypeCoolingDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeCoolingDriverCompartment));
 
 		public HeatPumpType? HeatPumpTypeHeatingDriverCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeHeatingDriverCompartment));
 
 		public HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeCoolingPassengerCompartment));
-
 		public HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => GetHVACBusAuxPropertyValue<HeatPumpType?>(nameof(HeatPumpTypeHeatingPassengerCompartment));
+
 
 		public Watt AuxHeaterPower => GetHVACBusAuxPropertyValue<Watt>(nameof(AuxHeaterPower));
 

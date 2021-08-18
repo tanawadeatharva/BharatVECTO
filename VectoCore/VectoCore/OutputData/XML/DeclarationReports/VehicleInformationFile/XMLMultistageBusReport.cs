@@ -26,37 +26,38 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected override XElement GetVehicleElement(string vehicleId)
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
-				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:ExemptedInterimStageInputType"),
+				new XAttribute("xmlns", v210),
+				new XAttribute(xsi + XMLNames.Attr_Type, "Vehicle_Exempted_CompletedBusType"),
 				new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
-				new XElement(v28 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
-				new XElement(v28 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
-				new XElement(v28 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
-				new XElement(v28 + XMLNames.Component_Date,
+				new XElement(v210 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
+				new XElement(v210 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
+				new XElement(v210 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
+				new XElement(v210 + XMLNames.Component_Date,
 					XmlConvert.ToString(_vehicleInputData.Date, XmlDateTimeSerializationMode.Utc)),
 				_vehicleInputData.Model != null
-					? new XElement(v28 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
+					? new XElement(v210 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
 				_vehicleInputData.LegislativeClass != null
-					? new XElement(v28 + XMLNames.Bus_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
 				_vehicleInputData.CurbMassChassis != null
-					? new XElement(v28 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
-					? new XElement(v28 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				_vehicleInputData.RegisteredClass != null
-					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberPassengerSeatsLowerDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
 				_vehicleInputData.NumberPassengersStandingLowerDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
 				_vehicleInputData.NumberPassengerSeatsUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
 				_vehicleInputData.NumberPassengersStandingUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
-					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null
-					? new XElement(v28 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
+					? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
 				_vehicleInputData.Height != null
-					? new XElement(v28 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
+					? new XElement(v210 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
 			);
 		}
 	}
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
-		protected XNamespace v28 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8";
+		protected XNamespace v210 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2";
 		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 		
 		private XElement _primaryVehicle;
@@ -199,14 +200,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetSignatureElement(XElement stage)
 		{
 			var stream = new MemoryStream();
-			var writer = new StreamWriter(stream);
-			writer.Write(stage);
-			writer.Flush();
+			var w = new XmlTextWriter(stream, Encoding.UTF8);
+			stage.WriteTo(w);
+			w.Flush();
 			stream.Seek(0, SeekOrigin.Begin);
 
-			return new XElement(tns + XMLNames.DI_Signature,
-						 VectoHash.Load(stream).ComputeXmlHash
-							(VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod));
+            return new XElement(tns + XMLNames.DI_Signature ,
+                         VectoHash.Load(stream).ComputeXmlHash
+                         (VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod)
+                        );
 		}
 
 
@@ -254,49 +256,50 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected virtual XElement GetVehicleElement(string vehicleId)
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
-				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:InterimStageInputType"),
+				new XAttribute("xmlns", v210),
+				new XAttribute(xsi + XMLNames.Attr_Type, "Vehicle_Conventional_CompletedBusDeclarationType"),
 				new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
-				new XElement(v28 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
-				new XElement(v28 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
-				new XElement(v28 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
-				new XElement(v28 + XMLNames.Component_Date,
+				new XElement(v210 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
+				new XElement(v210 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
+				new XElement(v210 + XMLNames.Vehicle_VIN, _vehicleInputData.VIN),
+				new XElement(v210 + XMLNames.Component_Date,
 					XmlConvert.ToString(_vehicleInputData.Date, XmlDateTimeSerializationMode.Utc)),
 				_vehicleInputData.Model != null
-					? new XElement(v28 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
+					? new XElement(v210 + XMLNames.Component_Model, _vehicleInputData.Model) : null,
 				_vehicleInputData.LegislativeClass != null
-					? new XElement(v28 + XMLNames.Bus_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_LegislativeCategory, _vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
 				_vehicleInputData.CurbMassChassis != null
-					? new XElement(v28 + XMLNames.Bus_CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
-					? new XElement(v28 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				GetAirdragModifiedMultistageEntry(),
 				_vehicleInputData.TankSystem != null 
-					? new XElement(v28 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.RegisteredClass != null
-					? new XElement(v28 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberPassengerSeatsLowerDeck != null 
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
 				_vehicleInputData.NumberPassengersStandingLowerDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengersStandingLowerDeck, _vehicleInputData.NumberPassengersStandingLowerDeck) : null,
 				_vehicleInputData.NumberPassengerSeatsUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
 				_vehicleInputData.NumberPassengersStandingUpperDeck != null
-					? new XElement(v28 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
+					? new XElement(v210 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
 				_vehicleInputData.VehicleCode != null
-					? new XElement(v28 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
+					? new XElement(v210 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null
-					? new XElement(v28 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
+					? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
 				_vehicleInputData.Height != null
-					? new XElement(v28 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Length != null
-					? new XElement(v28 + XMLNames.Bus_VehicleLength, _vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_VehicleLength, _vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Width != null 
-					? new XElement(v28 + XMLNames.Bus_VehicleWidth, _vehicleInputData.Width.ConvertToMilliMeter().ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_VehicleWidth, _vehicleInputData.Width.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.EntranceHeight != null 
-					? new XElement(v28 + XMLNames.Bus_EntranceHeight, _vehicleInputData.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_EntranceHeight, _vehicleInputData.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.DoorDriveTechnology != null
-					? new XElement(v28 + XMLNames.Bus_DoorDriveTechnology, _vehicleInputData.DoorDriveTechnology.ToXMLFormat()) : null,
-				new XElement(v28 + XMLNames.Bus_VehicleDeclarationType, _vehicleInputData.VehicleDeclarationType.GetLabel()),
+					? new XElement(v210 + XMLNames.Bus_DoorDriveTechnology, _vehicleInputData.DoorDriveTechnology.ToXMLFormat()) : null,
+				new XElement(v210 + XMLNames.Bus_VehicleDeclarationType, _vehicleInputData.VehicleDeclarationType.GetLabel()),
 				GetADAS(_vehicleInputData.ADAS),
 				GetBusVehicleComponents(_vehicleInputData.Components)
 			);
@@ -311,7 +314,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				case null:
 					throw new VectoException("AirdragModifiedMultistage must be set if an airdrag component has been set in previous stages.");
 				default:
-					return new XElement(v28 + XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage);
+					return new XElement(v210 + XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage);
 			}
 		}
 
@@ -321,13 +324,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return null;
 			
 			return new XElement(
-				v28 + XMLNames.Vehicle_ADAS,
-				new XElement(v23 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
-				new XElement(v23 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
-				new XElement(v23 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
-				new XElement(v23 + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat()),
+				v210 + XMLNames.Vehicle_ADAS,
+				new XAttribute(xsi + "type", "ADAS_Conventional_Type"),
+				new XElement(v210 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
+				new XElement(v210 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
+				new XElement(v210 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
+				new XElement(v210 + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat()),
 				adasData.ATEcoRollReleaseLockupClutch != null
-					? new XElement(v23 + XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, adasData.ATEcoRollReleaseLockupClutch)
+					? new XElement(v210 + XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, adasData.ATEcoRollReleaseLockupClutch)
 					: null
 			);
 		}
@@ -340,9 +344,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (busAirdrag == null && busAux == null)
 				return null;
 			
-			return new XElement(v28 + XMLNames.Vehicle_Components,
-				new XAttribute(XNamespace.Xmlns + "v2.8", v28),
-				new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:CompletedVehicleComponentsDeclarationType"),
+			return new XElement(v210 + XMLNames.Vehicle_Components,
+				new XAttribute(xsi + XMLNames.Attr_Type, "Components_Conventional_CompletedBusType"),
 				busAirdrag,
 				busAux
 			);
@@ -391,7 +394,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetAirdragXMLElementV1(XmlNode dataNode, XmlNode signatureNode)
 		{
-			return new XElement(v28 + XMLNames.Component_AirDrag,
+			return new XElement(v210 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.Report_DataWrap,
 					new XAttribute(XNamespace.Xmlns + "v1.0", v10.NamespaceName),
 					new XAttribute(xsi + XMLNames.Component_Type_Attr, "v1.0:" + XMLNames.AirDrag_Data_Type_Attr),
@@ -412,7 +415,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var signatureElement = XElement.Parse(signatureNode.OuterXml);
 			dataElement.Attribute(XNamespace.Xmlns + "xsi")?.Remove();
 
-			return new XElement(v28 + XMLNames.Component_AirDrag,
+			return new XElement(v210 + XMLNames.Component_AirDrag,
 				dataElement,
 				signatureElement);
 		}
@@ -434,10 +437,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var id = $"{VectoComponents.Airdrag.HashIdPrefix()}{GetGUID()}";
 
-			return new XElement(v28 + XMLNames.Component_AirDrag,
+			return new XElement(v210 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.ComponentDataWrapper,
-					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
-					new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:AirDragModifiedUseStandardValueType"),
+					new XAttribute(xsi + XMLNames.Attr_Type, "AirDragModifiedUseStandardValueType"),
 					new XAttribute(XMLNames.Component_ID_Attr, id)
 				),
 				new XElement(v20 + XMLNames.DI_Signature, XMLHelper.CreateDummySig(di)));
@@ -455,11 +457,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (electricSystemEntry == null && hvacEntry == null)
 				return null;
 
-			return new XElement(v28 + XMLNames.Component_Auxiliaries,
-
-					new XElement(v28 + XMLNames.ComponentDataWrapper,
-						new XAttribute(xsi + XMLNames.Attr_Type, "v2.8:CompletedVehicleAuxiliaryDataDeclarationType"),
-						electricSystemEntry != null
+			return new XElement(v210 + XMLNames.Component_Auxiliaries,
+				new XElement(v210 + XMLNames.ComponentDataWrapper,
+                        new XAttribute(xsi + XMLNames.Attr_Type, "AUX_Conventional_CompletedBusType"),
+                        electricSystemEntry != null
 							? GetElectricSystem(busAux.ElectricConsumers) : null,
 						hvacEntry != null
 							? GetHVAC(busAux.HVACAux) : null
@@ -477,18 +478,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				electricConsumer.HeadlightsLED == null)
 				return null;
 			
-			return new XElement(v28 + XMLNames.BusAux_ElectricSystem,
-				new XElement(v28 + XMLNames.BusAux_LEDLights,
+			return new XElement(v210 + XMLNames.BusAux_ElectricSystem,
+				new XElement(v210 + XMLNames.BusAux_LEDLights,
 					electricConsumer.InteriorLightsLED != null 
-						? new XElement(v28 + XMLNames.Bus_Interiorlights, electricConsumer.InteriorLightsLED) : null,
+						? new XElement(v210 + XMLNames.Bus_Interiorlights, electricConsumer.InteriorLightsLED) : null,
 					electricConsumer.DayrunninglightsLED != null
-						? new XElement(v28 + XMLNames.Bus_Dayrunninglights, electricConsumer.DayrunninglightsLED) : null,
+						? new XElement(v210 + XMLNames.Bus_Dayrunninglights, electricConsumer.DayrunninglightsLED) : null,
 					electricConsumer.PositionlightsLED != null
-						? new XElement(v28 + XMLNames.Bus_Positionlights, electricConsumer.PositionlightsLED) : null,
+						? new XElement(v210 + XMLNames.Bus_Positionlights, electricConsumer.PositionlightsLED) : null,
 					electricConsumer.BrakelightsLED != null
-						? new XElement(v28 + XMLNames.Bus_Brakelights, electricConsumer.BrakelightsLED) : null,
+						? new XElement(v210 + XMLNames.Bus_Brakelights, electricConsumer.BrakelightsLED) : null,
 					electricConsumer.HeadlightsLED != null
-						? new XElement(v28 + XMLNames.Bus_Headlights, electricConsumer.HeadlightsLED) : null
+						? new XElement(v210 + XMLNames.Bus_Headlights, electricConsumer.HeadlightsLED) : null
 				));
 		}
 
@@ -511,33 +512,34 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				hvac.OtherHeatingTechnology == null)
 				return null;
 
-			return new XElement(v28 + XMLNames.BusAux_HVAC,
+			return new XElement(v210 + XMLNames.BusAux_HVAC,
 				hvac.SystemConfiguration != null
-					? new XElement(v28 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.GetXmlFormat()) : null,
-				hvac.HeatPumpTypeCoolingDriverCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeCoolingDriver, hvac.HeatPumpTypeCoolingDriverCompartment.GetLabel()) : null,
-				hvac.HeatPumpTypeHeatingDriverCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeHeatingDriver, hvac.HeatPumpTypeHeatingDriverCompartment.GetLabel()) : null,
-				hvac.HeatPumpTypeCoolingPassengerCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeCoolingPassenger, hvac.HeatPumpTypeCoolingPassengerCompartment.GetLabel()) : null,
-				hvac.HeatPumpTypeHeatingPassengerCompartment != null
-					? new XElement(v28 + XMLNames.Bus_HeatPumpTypeHeatingPassenger, hvac.HeatPumpTypeHeatingPassengerCompartment.GetLabel()) : null,
+					? new XElement(v210 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.GetXmlFormat()) : null,
+				hvac.HeatPumpTypeCoolingDriverCompartment != null && hvac.HeatPumpTypeHeatingDriverCompartment != null
+					? new XElement(v210 + XMLNames.Bus_HeatPumpTypeDriver, 
+						new XElement(v210 + XMLNames.BusHVACHeatPumpCooling,  hvac.HeatPumpTypeCoolingDriverCompartment.GetLabel()),
+						new XElement(v210 + XMLNames.BusHVACHeatPumpHeating, hvac.HeatPumpTypeHeatingDriverCompartment.GetLabel())) : null,
+				hvac.HeatPumpTypeCoolingPassengerCompartment != null && hvac.HeatPumpTypeHeatingPassengerCompartment != null
+					? new XElement(v210 + XMLNames.Bus_HeatPumpTypePassenger,
+						new XElement(v210 + XMLNames.BusHVACHeatPumpCooling, hvac.HeatPumpTypeCoolingPassengerCompartment.GetLabel()),
+						new XElement(v210 + XMLNames.BusHVACHeatPumpHeating, hvac.HeatPumpTypeHeatingPassengerCompartment.GetLabel())) : null,
 				hvac.AuxHeaterPower != null
-					? new XElement(v28 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_AuxiliaryHeaterPower, hvac.AuxHeaterPower.ToXMLFormat(0)) : null,
 				hvac.DoubleGlazing != null
-					? new XElement(v28 + XMLNames.Bus_DoubleGlazing, hvac.DoubleGlazing) : null,
+					? new XElement(v210 + XMLNames.Bus_DoubleGlazing, hvac.DoubleGlazing) : null,
 				hvac.AdjustableAuxiliaryHeater != null
-					? new XElement(v28 + XMLNames.Bus_AdjustableAuxiliaryHeater, hvac.AdjustableAuxiliaryHeater) : null,
+					? new XElement(v210 + XMLNames.Bus_AdjustableAuxiliaryHeater, hvac.AdjustableAuxiliaryHeater) : null,
 				hvac.SeparateAirDistributionDucts != null
-					? new XElement(v28 + XMLNames.Bus_SeparateAirDistributionDucts, hvac.SeparateAirDistributionDucts) : null,
+					? new XElement(v210 + XMLNames.Bus_SeparateAirDistributionDucts, hvac.SeparateAirDistributionDucts) : null,
 				hvac.WaterElectricHeater != null
-					? new XElement(v28 + XMLNames.Bus_WaterElectricHeater, hvac.WaterElectricHeater) : null,
+					? new XElement(v210 + XMLNames.Bus_WaterElectricHeater, hvac.WaterElectricHeater) : null,
 				hvac.AirElectricHeater != null
-					? new XElement(v28 + XMLNames.Bus_AirElectricHeater, hvac.AirElectricHeater) : null,
+					? new XElement(v210 + XMLNames.Bus_AirElectricHeater, hvac.AirElectricHeater) : null,
 				hvac.OtherHeatingTechnology != null
-					? new XElement(v28 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
+					? new XElement(v210 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
 			);
 		}
+
 
 		private XElement GetApplicationInformation()
 		{

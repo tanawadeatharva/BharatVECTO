@@ -703,6 +703,23 @@ Public Class Gearbox
         End Get
     End Property
 
+    Public ReadOnly Property PEV_TargetSpeedBrakeNorm As Double? Implements IGearshiftEngineeringInputData.PEV_TargetSpeedBrakeNorm
+    get
+        Return Nothing
+    End Get
+    End Property
+    Public ReadOnly Property PEV_DeRatingDownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DeRatingDownshiftSpeedFactor
+    get
+        return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property PEV_DownshiftMinSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftMinSpeedFactor
+    get
+        Return Nothing
+    End Get
+    End Property
+
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData _
         Implements IGearshiftEngineeringInputData.LoadStageShiftLines
         Get
@@ -889,7 +906,7 @@ Public Class MockEngineeringVehicle
         Implements IVehicleComponentsEngineering.PTOTransmissionInputData
 
     Public Property AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
-    Public ReadOnly Property ElectricStorage As IElectricStorageEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
+    Public ReadOnly Property ElectricStorage As IElectricStorageSystemEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
     Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 End Class
 

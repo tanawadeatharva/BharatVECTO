@@ -123,4 +123,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	}
 
 	// ---------------------------------------------------------------------------------------
+
+	
+	public class XMLDeclarationAuxiliariesDataProviderV210_Lorry: XMLDeclarationAuxiliariesDataProviderV20
+	{
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+
+        public new const string XSD_TYPE = "AUX_Conventional_LorryDataType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationAuxiliariesDataProviderV210_Lorry(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+	}
 }

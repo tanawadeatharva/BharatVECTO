@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 		
-		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.8\";
+		const string DirPath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
 		const string VehicleInterimStageInput = DirPath + "vecto_vehicle-stage_input_full-sample.xml";
 		const string VehicleExemptedInterimStageInput = DirPath + "vecto_vehicle-exempted_input_full-sample.xml";
 		const string VehicleExemptedMandatoryOnly = DirPath + "vecto_vehicle-exempted_input_only_mandatory_entries.xml";
@@ -121,10 +121,15 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestHVACComponent(IHVACBusAuxiliariesDeclarationData hvacAux)
 		{
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.R_744, hvacAux.HeatPumpTypeCoolingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			//Assert.AreEqual(3, hvacAux.HeatPumpPassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
+			//Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpPassengerCompartments[1].Item1);
+			//Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpPassengerCompartments[1].Item2);
+			//Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpPassengerCompartments[2].Item1);
+			//Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpPassengerCompartments[2].Item2);
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
@@ -241,44 +246,22 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(airdrag);
 		}
 
-		[TestCase()]
-		public void TestValidateInputMultistageExampleFiles()
+		[TestCase(ExemptedInputFullSample),
+		TestCase(ExemptedOnlyCertainEntries01),
+		TestCase(ExemptedOnlyCertainEntries02),
+		TestCase(ExemptedSample),
+		TestCase(NewParamSample),
+		TestCase(VehicleSample),
+		TestCase(StageInputFullSample),
+		TestCase(StageInputCertainEntriesEntries01),
+		TestCase(StageInputCertainEntriesEntries02),
+		]
+		public void TestValidateInputMultistageExampleFiles(string fileName)
 		{
-			var reader = XmlReader.Create(ExemptedInputFullSample);
+			var reader = XmlReader.Create(fileName);
 			var inputDataProvider = xmlInputReader.CreateDeclaration(reader);
 			Assert.IsNotNull(inputDataProvider);
 
-			reader = XmlReader.Create(ExemptedOnlyCertainEntries01);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(ExemptedOnlyCertainEntries02);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(ExemptedSample);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(NewParamSample);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-			
-			reader = XmlReader.Create(VehicleSample);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(StageInputFullSample);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(StageInputCertainEntriesEntries01);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
-
-			reader = XmlReader.Create(StageInputCertainEntriesEntries02);
-			inputDataProvider = xmlInputReader.CreateDeclaration(reader);
-			Assert.IsNotNull(inputDataProvider);
 		}
 	}
 }

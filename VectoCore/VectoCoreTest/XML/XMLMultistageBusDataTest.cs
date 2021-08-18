@@ -630,17 +630,18 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvacAux = vehicleData.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, hvacAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.R_744, hvacAux.HeatPumpTypeCoolingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			//Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
 			Assert.AreEqual(50.SI<Watt>(), hvacAux.AuxHeaterPower);
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
 			Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
-			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
-			Assert.AreEqual(false, hvacAux.AirElectricHeater);
-			Assert.AreEqual(true, hvacAux.OtherHeatingTechnology);
+			//Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			//Assert.AreEqual(false, hvacAux.AirElectricHeater);
+			//Assert.AreEqual(true, hvacAux.OtherHeatingTechnology);
 		}
 
 		#endregion
@@ -745,17 +746,18 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvacAux = busAux.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.R_744, hvacAux.HeatPumpTypeCoolingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			//Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
 			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
 			Assert.AreEqual(40.SI<Watt>(), hvacAux.AuxHeaterPower);
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(false, hvacAux.AdjustableAuxiliaryHeater);
 			Assert.AreEqual(true, hvacAux.SeparateAirDistributionDucts);
-			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
-			Assert.AreEqual(true, hvacAux.AirElectricHeater);
-			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+			//Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			//Assert.AreEqual(true, hvacAux.AirElectricHeater);
+			//Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
 		}
 
 		private void TestAirdragVIF02(IAirdragDeclarationInputData airdragData)

@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
 
-		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\exempted_primary_heavyBus.xml";
+		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_primary_heavyBus.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

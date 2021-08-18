@@ -16,6 +16,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -25,6 +26,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class ElectricMotorTest
 	{
 		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
+		public const string MotorFile_v2 = @"TestData\Hybrids\ElectricMotor\GenericEMotorV2.vem";
 		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
 
 		[OneTimeSetUp]
@@ -60,6 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
+			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
@@ -106,6 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
+			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
@@ -152,6 +156,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
+			container.BatteryInfo = battery;
+
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
@@ -200,6 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
+			container.BatteryInfo = battery;
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
@@ -246,12 +253,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var tmp = new MockBatteryInputData() {
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
+
+			container.BatteryInfo = battery;
 
 			battery.Initialize(0.5);
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
@@ -267,7 +275,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			var dragTorque = data.First().Item2.DragCurve.Lookup(speed.RPMtoRad());
+			var dragTorque = data.First().Item2.EfficiencyData.VoltageLevels.First().DragCurve.Lookup(speed.RPMtoRad());
 			var enginePower = speed.RPMtoRad() * (torque.SI<NewtonMeter>() + dragTorque);
 			var motorMechPower = dragTorque * speed.RPMtoRad();
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
@@ -309,10 +317,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
+			container.BatteryInfo = battery;
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
 			battery.Initialize(initialSoc);
@@ -339,12 +347,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestElectricMotorThermalDeRating()
 		{
 			var initialSoc = 0.8;
-			var torque = 334.SI<NewtonMeter>();
+			var torque = 300.SI<NewtonMeter>();
+			var continuousTorque = 24.SI<NewtonMeter>();
 			var speed = 2000.RPMtoRad();
 
-			
-
-			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
+			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile_v2, false);
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
 			var dao = new EngineeringDataAdapter();
 			var electricMachine = new MockElectricMachinesInputData()
@@ -365,23 +372,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tmp = new MockBatteryInputData()
 			{
 				REESSPack = batInput,
-				Count = 1
 			};
 			var batteryData = dao.CreateBatteryData(tmp, 0.8);
 
 			var runData = new VectoRunData() {
+				JobName = "EM-Derating",
 				ElectricMachinesData = data
 			};
 
-			var modData = new ModalDataContainer(runData, null, null);
+			var modData = new ModalDataContainer(runData, new FileOutputWriter("debug.csv"), null);
 			modData.AddElectricMotor(PowertrainPosition.HybridP2);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			new EngineOnlyGearboxInfo(container);
 
-			var battery = new Battery(container, batteryData);
+			var battery = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(battery);
 			battery.Initialize(initialSoc);
+
 			var motor = new ElectricMotor(container, data.First().Item2, strategy, PowertrainPosition.HybridP2);
 			motor.Connect(es);
 
@@ -391,37 +399,52 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var i = 0;
 
-			// energy buffer is empty - overload is available
-			for (; i <= 60; i++) {
-				var dt = 0.5.SI<Second>();
-				var absTime = i * dt;
-				
-				var response = motor.Request(absTime, dt, torque, speed);
-				Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
-				motor.CommitSimulationStep(absTime, dt, modData);
-			}
+			var t1 = 21;
+			var t2 = 13;
+			var t3 = 20;
 
-			// energy buffer reached - only P_cont is available
+			try {
+				// energy buffer is empty - overload is available
+				for (; i < t1; i++) {
+					var dt = 0.5.SI<Second>();
+					var absTime = i * dt;
 
-			strategy.ElectricShare = -torque * 0.5;
-			for (; i <= 73; i++) {
-				var dt = 0.5.SI<Second>();
-				var absTime = i * dt;
+					var response = motor.Request(absTime, dt, torque, speed);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					motor.CommitSimulationStep(absTime, dt, modData);
+					modData[ModalResultField.time] = absTime;
+					modData.CommitSimulationStep();
+				}
 
-				var response = motor.Request(absTime, dt, torque * 0.5, speed);
-				Assert.AreEqual(-238.73, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
-				motor.CommitSimulationStep(absTime, dt, modData);
-			}
+				// energy buffer reached - only P_cont is available
+
+				strategy.ElectricShare = -continuousTorque;
+				for (; i < t1 + t2; i++) {
+					var dt = 0.5.SI<Second>();
+					var absTime = i * dt;
+
+					var response = motor.Request(absTime, dt, continuousTorque, speed);
+					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					motor.CommitSimulationStep(absTime, dt, modData);
+					modData[ModalResultField.time] = absTime;
+					modData.CommitSimulationStep();
+				}
 
 
-			// energy buffer below lower threshold - overload is available again
-			for (; i < 100; i++) {
-				var dt = 0.5.SI<Second>();
-				var absTime = i * dt;
+				// energy buffer below lower threshold - overload is available again
+				for (; i < t1 + t2 + t3; i++) {
+					var dt = 0.5.SI<Second>();
+					var absTime = i * dt;
 
-				var response = motor.Request(absTime, dt, torque * 0.5, speed);
-				Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
-				motor.CommitSimulationStep(absTime, dt, modData);
+					var response = motor.Request(absTime, dt, torque * 0.5, speed);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					motor.CommitSimulationStep(absTime, dt, modData);
+					modData[ModalResultField.time] = absTime;
+					modData.CommitSimulationStep();
+				}
+			} finally {
+				modData.WriteModalResults = true;
+				modData.Finish(VectoRun.Status.Aborted);
 			}
 		}
 

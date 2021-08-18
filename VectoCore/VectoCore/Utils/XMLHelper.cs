@@ -276,7 +276,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			const string versionPrefix = "v";
 			var namesp = node.SchemaInfo.SchemaType.QualifiedName.Namespace;
-			return namesp.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty).ToDouble();
+			var versionPart = namesp.Split(':').Last(x => x.StartsWith(versionPrefix))
+				.Replace(versionPrefix, string.Empty);
+			if (versionPart.Split('.').Length > 2) {
+				versionPart = string.Join(".", versionPart.Split('.').Take(2));
+			}
+			return versionPart.ToDouble();
 		}
 
 		public static XElement CreateDummySig(XNamespace di)

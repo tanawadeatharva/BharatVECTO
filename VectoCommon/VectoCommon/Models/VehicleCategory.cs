@@ -154,6 +154,8 @@ namespace TUGraz.VectoCommon.Models
 					return VehicleCategory.Tractor;
 				case "Rigid Lorry":
 					return VehicleCategory.RigidTruck;
+				case "Van":
+					return VehicleCategory.Van;
 				default:
 					return VehicleCategory.Unknown;
 			}

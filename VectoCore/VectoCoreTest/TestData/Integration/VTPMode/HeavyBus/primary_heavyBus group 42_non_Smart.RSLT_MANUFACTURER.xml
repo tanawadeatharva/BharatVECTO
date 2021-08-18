@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css"?>
-<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputManufacturer.xsd">
+<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputManufacturer.xsd">
   <mrf:Data xsi:type="VectoOutputDataType" id="RESULT-35861c040b024dd292c3">
     <Vehicle xsi:type="VehiclePrimaryBusType">
       <Model>Generic Model</Model>
@@ -91,19 +91,18 @@
             <aux:Technology axleNumber="1">Variable displacement elec. controlled</aux:Technology>
           </aux:SteeringPump>
           <aux:ElectricSystem>
-            <aux:AlternatorTechnology>default</aux:AlternatorTechnology>
-            <aux:SmartElectrics>false</aux:SmartElectrics>
-            <aux:MaxAlternatorPower>15000</aux:MaxAlternatorPower>
-            <aux:ElectricStorageCapacity>50</aux:ElectricStorageCapacity>
+            <aux:AlternatorTechnology>conventional</aux:AlternatorTechnology>
+            <aux:SupplyFromHEVPossible>true</aux:SupplyFromHEVPossible>
           </aux:ElectricSystem>
           <aux:PneumaticSystem>
             <aux:SizeOfAirSupply>Large Supply 2-stage</aux:SizeOfAirSupply>
+            <aux:CompressorDrive>mechanically</aux:CompressorDrive>
             <aux:Clutch>none</aux:Clutch>
             <aux:CompressorRatio>1.000</aux:CompressorRatio>
             <aux:SmartCompressionSystem>false</aux:SmartCompressionSystem>
             <aux:SmartRegenerationSystem>false</aux:SmartRegenerationSystem>
             <aux:AirsuspensionControl>electronically</aux:AirsuspensionControl>
-            <aux:AdBlueDosing>true</aux:AdBlueDosing>
+            <aux:PneumaticSCRReagentDosing>true</aux:PneumaticSCRReagentDosing>
           </aux:PneumaticSystem>
           <aux:HVAC>
             <aux:AdjustableCoolantThermostat>true</aux:AdjustableCoolantThermostat>

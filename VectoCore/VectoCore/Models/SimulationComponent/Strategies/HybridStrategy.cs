@@ -57,6 +57,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
 			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			if (TestPowertrain.Battery != null) {
+				TestPowertrain.Battery.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
+			}
+			if (TestPowertrain.BatterySystem != null) {
+				var batSystem = DataBus.BatteryInfo as BatterySystem;
+				foreach (var bsKey in batSystem.Batteries.Keys) {
+					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
+						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
+					}
+				}
+				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
+			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
@@ -205,8 +220,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			//	TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
-			
 			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			if (TestPowertrain.Battery != null) {
+				TestPowertrain.Battery.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
+			}
+			if (TestPowertrain.BatterySystem != null) {
+				var batSystem = DataBus.BatteryInfo as BatterySystem;
+				foreach (var bsKey in batSystem.Batteries.Keys) {
+					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
+						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
+					}
+				}
+				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
+			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
@@ -532,7 +561,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var engineDragEnergy = VectoMath.Abs(ModelData.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(ModelData.EngineData.IdleSpeed)) *
 									ModelData.EngineData.IdleSpeed / 2.0 * ModelData.EngineData.EngineStartTime;
 
-			IceRampUpCosts = (engineRampUpEnergy + engineDragEnergy).Value() / DeclarationData.AlternaterEfficiency / DeclarationData.AlternaterEfficiency;
+			IceRampUpCosts = (engineRampUpEnergy + engineDragEnergy).Value() / DeclarationData.AlternatorEfficiency / DeclarationData.AlternatorEfficiency;
 
 			IceIdlingCosts = ModelData.EngineData.Fuels.Sum(
 				x => (x.ConsumptionMap.GetFuelConsumptionValue(0.SI<NewtonMeter>(), ModelData.EngineData.IdleSpeed)
@@ -557,15 +586,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 
-			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			// TODO: MQ 20210712 how to handle with batterysystem
+			//var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
 			BatteryDischargeEnergyThreshold = 0.SI<WattSecond>();
-			if (auxEnergyReserve > 0) {
-				var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
-					StrategyParameters.MinSoC);
-				BatteryDischargeEnergyThreshold =
-					ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
-					auxEnergyReserve;
-			}
+			//if (auxEnergyReserve > 0) {
+			//	var minSoc = Math.Max(ModelData.BatteryData?.MinSOC ?? ModelData.SuperCapData.MinVoltage / ModelData.SuperCapData.MaxVoltage,
+			//		StrategyParameters.MinSoC);
+			//	BatteryDischargeEnergyThreshold =
+			//		ModelData.BatteryData.Capacity * minSoc * ModelData.BatteryData.SOCMap.Lookup(minSoc) +
+			//		auxEnergyReserve;
+			//}
 			AllowEmergencyShift = false;
 		}
 
@@ -1444,7 +1474,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			if ((!prohibitGearshift || AllowEmergencyShift) && best.IgnoreReason.EngineSpeedBelowDownshift()) {
+			if ((!prohibitGearshift || AllowEmergencyShift) && (best.IgnoreReason.EngineSpeedBelowDownshift() || best.IgnoreReason.EngineSpeedTooLow())) {
 				best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
 				if (best.IgnoreReason.EngineSpeedBelowDownshift()) {
 					//try downshift
@@ -1798,6 +1828,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
 				maxU = 0;
 			}
+
+			var voltage = DataBus.BatteryInfo.InternalVoltage;
 			if (firstResponse.ElectricMotor.MaxDriveTorque != null && (ElectricMotorCanPropellDuringTractionInterruption || firstResponse.Gearbox.Gear.Engaged)) {
 				for (var u = -stepSize; u >= maxU; u -= stepSize * (u < -10 ? 100 :(u < -4 ? 10 : (u < -2 ? 5 : 1)))) {
 					var emTorque = emTqReq.Abs() * u;
@@ -1835,9 +1867,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					//var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 					//							.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
 
-					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt);
+					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage, emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt);
 					var emDragTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2
-												.DragCurve.Lookup(firstResponse.ElectricMotor.AngularVelocity);
+												.EfficiencyData.LookupDragTorque(voltage, firstResponse.ElectricMotor.AngularVelocity);
 					if (emDriveTorque != null &&
 						emDriveTorque.IsBetween(
 							firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque) &&
@@ -1934,7 +1966,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				for (var u = stepSize; u <= 1.0; u += stepSize) {
 					var emTorque = firstResponse.ElectricMotor.MaxRecuperationTorque * u;
 					if (!(emTorque).IsBetween(
-						firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque)) {
+						firstResponse.ElectricMotor.MaxRecuperationTorque, firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>())) {
 						continue;
 					}
 
@@ -2085,7 +2117,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	//tmp.FuelCosts = double.NaN; // = Tuple.Create(true, response.Gearbox.Gear - 1);
 			//	tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineSpeedBelowDownshift;
 			//}
-			CheckGearshiftLimits(tmp, resp);
+			if (!tmp.IgnoreReason.EngineTorqueDemandTooHigh()) {
+				CheckGearshiftLimits(tmp, resp);
+			}
 
 			if (resp.Source is TorqueConverter) {
 				if (resp is ResponseUnderload) {
@@ -2224,6 +2258,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			foreach (var em in ModelData.ElectricMachinesData) {
 				retVal.MechanicalAssistPower[em.Item1] = null;
+			}
+
+			// TODO: MQ 20210712 how to handle with batterysystem
+			var auxEnergyReserve = ModelData.ElectricAuxDemand * StrategyParameters.AuxReserveTime;
+			if (auxEnergyReserve > 0) {
+				var minSoc = Math.Max(DataBus.BatteryInfo.MinSoC, StrategyParameters.MinSoC);
+				BatteryDischargeEnergyThreshold =
+					DataBus.BatteryInfo.Capacity * minSoc * DataBus.BatteryInfo.NominalVoltage +
+					auxEnergyReserve;
 			}
 
 			PreviousState.AngularVelocity = outAngularVelocity;

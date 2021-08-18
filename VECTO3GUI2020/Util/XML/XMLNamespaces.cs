@@ -21,6 +21,7 @@ namespace VECTO3GUI2020.Util.XML
 		public static XNamespace V20 = DeclarationDefinition + ":v2.0";
 		public static XNamespace V10 = DeclarationDefinition + ":v1.0";
 		public static XNamespace V28 = DeclarationDefinition + ":DEV:v2.8";
+		public static XNamespace v210 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2";
 		public static XNamespace Di = "http://www.w3.org/2000/09/xmldsig#";
 
 

@@ -583,15 +583,6 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ChassisConfiguration.
-        /// </summary>
-        public static string Bus_ChassisConfiguration {
-            get {
-                return ResourceManager.GetString("Bus_ChassisConfiguration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to CompressorRatio.
         /// </summary>
         public static string Bus_CompressorRatio {
@@ -606,15 +597,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_CompressorType {
             get {
                 return ResourceManager.GetString("Bus_CompressorType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CorrectedActualMass.
-        /// </summary>
-        public static string Bus_CorrectedActualMass {
-            get {
-                return ResourceManager.GetString("Bus_CorrectedActualMass", resourceCulture);
             }
         }
         
@@ -700,38 +682,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypeCoolingDriverCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypeDriverCompartment.
         /// </summary>
-        public static string Bus_HeatPumpTypeCoolingDriver {
+        public static string Bus_HeatPumpTypeDriver {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpTypeCoolingDriver", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypeDriver", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypeCoolingPassengerCompartment.
+        ///   Looks up a localized string similar to HeatPumpTypePassengerCompartment.
         /// </summary>
-        public static string Bus_HeatPumpTypeCoolingPassenger {
+        public static string Bus_HeatPumpTypePassenger {
             get {
-                return ResourceManager.GetString("Bus_HeatPumpTypeCoolingPassenger", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypeHeatingDriverCompartment.
-        /// </summary>
-        public static string Bus_HeatPumpTypeHeatingDriver {
-            get {
-                return ResourceManager.GetString("Bus_HeatPumpTypeHeatingDriver", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HeatPumpTypeHeatingPassengerCompartment.
-        /// </summary>
-        public static string Bus_HeatPumpTypeHeatingPassenger {
-            get {
-                return ResourceManager.GetString("Bus_HeatPumpTypeHeatingPassenger", resourceCulture);
+                return ResourceManager.GetString("Bus_HeatPumpTypePassenger", resourceCulture);
             }
         }
         
@@ -750,15 +714,6 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Bus_Interiorlights {
             get {
                 return ResourceManager.GetString("Bus_Interiorlights", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to LegislativeCategory.
-        /// </summary>
-        public static string Bus_LegislativeCategory {
-            get {
-                return ResourceManager.GetString("Bus_LegislativeCategory", resourceCulture);
             }
         }
         
@@ -1312,6 +1267,33 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cooling.
+        /// </summary>
+        public static string BusHVACHeatPumpCooling {
+            get {
+                return ResourceManager.GetString("BusHVACHeatPumpCooling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heating.
+        /// </summary>
+        public static string BusHVACHeatPumpHeating {
+            get {
+                return ResourceManager.GetString("BusHVACHeatPumpHeating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ChassisConfiguration.
+        /// </summary>
+        public static string ChassisConfiguration {
+            get {
+                return ResourceManager.GetString("ChassisConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AirDrag.
         /// </summary>
         public static string Component_AirDrag {
@@ -1560,6 +1542,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string CompressorDrive {
             get {
                 return ResourceManager.GetString("CompressorDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CorrectedActualMass.
+        /// </summary>
+        public static string CorrectedActualMass {
+            get {
+                return ResourceManager.GetString("CorrectedActualMass", resourceCulture);
             }
         }
         
@@ -3805,7 +3796,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ATEcoRollReleaseLockupClutch.
+        ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
         /// </summary>
         public static string Vehicle_ADAS_ATEcoRollReleaseLockupClutch {
             get {
@@ -4116,6 +4107,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_IdlingSpeed {
             get {
                 return ResourceManager.GetString("Vehicle_IdlingSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LegislativeCategory.
+        /// </summary>
+        public static string Vehicle_LegislativeCategory {
+            get {
+                return ResourceManager.GetString("Vehicle_LegislativeCategory", resourceCulture);
             }
         }
         

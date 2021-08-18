@@ -1135,7 +1135,7 @@
     <value>TechnicalPermissibleMaximumLadenMass</value>
   </data>
   <data name="Vehicle_ADAS_ATEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>ATEcoRollReleaseLockupClutch</value>
+    <value>APTEcoRollReleaseLockupClutch</value>
   </data>
   <data name="ManufacturerPrimaryVehicle" xml:space="preserve">
     <value>ManufacturerPrimaryVehicle</value>
@@ -1377,7 +1377,7 @@
   <data name="Report_Result_PassengerCount" xml:space="preserve">
     <value>PassengerCount</value>
   </data>
-  <data name="Bus_LegislativeCategory" xml:space="preserve">
+  <data name="Vehicle_LegislativeCategory" xml:space="preserve">
     <value>LegislativeCategory</value>
   </data>
   <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
@@ -1386,7 +1386,7 @@
   <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
     <value>AirdragModifiedMultistage</value>
   </data>
-  <data name="Bus_CorrectedActualMass" xml:space="preserve">
+  <data name="CorrectedActualMass" xml:space="preserve">
     <value>CorrectedActualMass</value>
   </data>
   <data name="Bus_NumberPassengersLowerDeck" xml:space="preserve">
@@ -1398,17 +1398,17 @@
   <data name="Bus_AirElectricHeater" xml:space="preserve">
     <value>AirElectricHeater</value>
   </data>
-  <data name="Bus_HeatPumpTypeCoolingDriver" xml:space="preserve">
-    <value>HeatPumpTypeCoolingDriverCompartment</value>
+  <data name="Bus_HeatPumpModeDriver" xml:space="preserve">
+    <value>HeatPumpModeDriverCompartment</value>
   </data>
-  <data name="Bus_HeatPumpTypeHeatingDriver" xml:space="preserve">
-    <value>HeatPumpTypeHeatingDriverCompartment</value>
+  <data name="Bus_HeatPumpModePassenger" xml:space="preserve">
+    <value>HeatPumpModePassengerCompartment</value>
   </data>
-  <data name="Bus_HeatPumpTypeCoolingPassenger" xml:space="preserve">
-    <value>HeatPumpTypeCoolingPassengerCompartment</value>
+  <data name="Bus_HeatPumpTypeDriver" xml:space="preserve">
+    <value>HeatPumpTypeDriverCompartment</value>
   </data>
-  <data name="Bus_HeatPumpTypeHeatingPassenger" xml:space="preserve">
-    <value>HeatPumpTypeHeatingPassengerCompartment</value>
+  <data name="Bus_HeatPumpTypePassenger" xml:space="preserve">
+    <value>HeatPumpTypePassengerCompartment</value>
   </data>
   <data name="Bus_OtherHeatingTechnology" xml:space="preserve">
     <value>OtherHeatingTechnology</value>
@@ -1512,7 +1512,7 @@
   <data name="CompressorDrive" xml:space="preserve">
     <value>CompressorDrive</value>
   </data>
-  <data name="Bus_ChassisConfiguration" xml:space="preserve">
+  <data name="ChassisConfiguration" xml:space="preserve">
     <value>ChassisConfiguration</value>
   </data>
   <data name="Bus_NumberPassengerSeatsLowerDeck" xml:space="preserve">
@@ -1572,6 +1572,12 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
+<data name="BusHVACHeatPumpCooling" xml:space="preserve">
+	<value>Cooling</value>
+</data>
+<data name="BusHVACHeatPumpHeating" xml:space="preserve">
+	<value>Heating</value>
+</data>
   <data name="Exempted_SumNetPower" xml:space="preserve">
     <value>SumNetPower</value>
   </data>

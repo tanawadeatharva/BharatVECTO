@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ninject;
@@ -1052,7 +1053,48 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		[TestCase(JobFile_Group41, TestName = "RunCompletedBusSimulation Group41/32b"),
 		TestCase(JobFile_Group42, TestName = "RunCompletedBusSimulation Group42/33b"),
-		TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
+		]
+		public void TestRunCompletedBusSimulation(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+
+			switch (inputData) {
+				case JSONInputDataSingleBusV6 _:
+				case JSONVTPInputDataV4 _:
+					break;
+				case JSONInputDataCompletedBusFactorMethodV7 completedJson: {
+					inputData = CompletedVIF.CreateCompletedVif(completedJson, xmlInputReader);
+					break;
+				}
+			}
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration,  inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+			//var runs = factory.SimulationRuns().ToArray();
+			//var runIdx = 0;
+			//runs[runIdx].Run();
+
+			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(JobFilePrimary41, TestName = "RunPrimaryBusSimulation Group41"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart_AT-P.xml", TestName = "RunPrimaryBusSimulation Group41 AT-P"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\vecto_vehicle-primary_heavyBus_ESS_electricFanSTP.xml", TestName = "RunPrimaryBusSimulation Group41 ES-AUX"),
 		TestCase(JobFilePrimary42, TestName = "RunPrimaryBusSimulation Group42"),
@@ -1060,7 +1102,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_42-33b.vecto", TestName = "RunSingleBusSimulation Group 42/33b"),
 		TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b_AT-P.vecto", TestName = "RunSingleBusSimulation Group 41/32b AT-P"),
 		]
-		public void TestRunCompletedBusSimulation(string jobName)
+		public void TestRunPrimaryOrSingleBusSimulation(string jobName)
 		{
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
@@ -1131,6 +1173,146 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
 			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
+
+		private const string JobGrp32b = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b_ES-AUX.vecto";
+
+		[
+		TestCase(JobGrp32b, 2, 20, 5, 17, 9, 51, TestName = "CompleteBus PassengerCount IU specific RL"),
+		TestCase(JobGrp32b, 3, 20, 5, 17, 9, 49.572, TestName = "CompleteBus PassengerCount IU generic RL"),
+		TestCase(JobGrp32b, 6, 20, 5, 17, 9, 37, TestName = "CompleteBus PassengerCount CO specific RL"),
+		TestCase(JobGrp32b, 7, 20, 5, 17, 9, 38.556, TestName = "CompleteBus PassengerCount CO generic RL"),
+		]
+		public void TestPassengerCountAllocationCompletedBus(string jobName, int runIdx, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper,  double expectedPassengers)
+		{
+			var inputData = CompletedVIF.CreateCompletedVifXML(
+				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
+				xmlInputReader);
+
+			var modified = GetModifiedXML(inputData, pSeatsLower, pStdLower, pSeatsUpper, pStdUpper);
+			var completedVif = xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(modified)));
+			
+			var writer = new FileOutputWriter("SanityCheckTest");
+			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
+			//var inputData = new MockCompletedBusInputData(modified);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer) {
+				WriteModalResults = true,
+				Validate = false
+			};
+
+			var runs = factory.DataReader.NextRun().ToList();
+			var run = runs[runIdx];
+			
+			Assert.NotNull(run.VehicleData.PassengerCount);
+			Assert.AreEqual(expectedPassengers, run.VehicleData.PassengerCount.Value, 1e-3);
+
+			var ssmInputs = run.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs;
+			Assert.NotNull(ssmInputs);
+			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
+		}
+
+		private const string PrimaryGrp41 = @"TestData\Integration\Buses\FactorMethod\primary_heavyBus group41_nonSmart.xml";
+		private const string CompletedGrp41_32b = @"TestData\Integration\Buses\FactorMethod\vecto_vehicle-completed_heavyBus_41.xml";
+
+		[
+			TestCase(PrimaryGrp41, CompletedGrp41_32b, 1, 20, 5, 17, 9, 51, TestName = "SingleBus PassengerCount IU RL"),
+			TestCase(PrimaryGrp41, CompletedGrp41_32b, 3, 20, 5, 17, 9, 37, TestName = "SingleBus PassengerCount CO RL"),
+		]
+		public void TestPassengerCountAllocationSingleBus(string primaryFile, string completedFile, int runIdx, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper, double expectedPassengers)
+		{
+			var primary = xmlInputReader.CreateDeclaration(primaryFile);
+
+			var completedXml = new XmlDocument();
+			completedXml.Load(completedFile);
+			var modified = GetModifiedXML(completedXml.OuterXml, pSeatsLower, pStdLower, pSeatsUpper, pStdUpper, VehicleCode.CB);
+			var modifiedCompleted = xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(modified)));
+
+			var inputData = new MockSingleBusInputDataProvider(primary.JobInputData.Vehicle, modifiedCompleted.JobInputData.Vehicle);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, null) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var runs = factory.DataReader.NextRun().ToList();
+			var run = runs[runIdx];
+
+			Assert.NotNull(run.VehicleData.PassengerCount);
+			Assert.AreEqual(expectedPassengers, run.VehicleData.PassengerCount.Value, 1e-3);
+
+			var ssmInputs = run.BusAuxiliaries.SSMInputs as ISSMDeclarationInputs;
+			Assert.NotNull(ssmInputs);
+			Assert.AreEqual(expectedPassengers + 1, ssmInputs.NumberOfPassengers, 1e-3); // adding driver for SSM
+		}
+
+		public class MockSingleBusInputDataProvider : ISingleBusInputDataProvider, IDeclarationJobInputData
+		{
+			public MockSingleBusInputDataProvider(IVehicleDeclarationInputData primary, IVehicleDeclarationInputData completed)
+			{
+				PrimaryVehicle = primary;
+				CompletedVehicle = completed;
+			}
+
+			#region Implementation of IInputDataProvider
+
+			public DataSource DataSource { get; }
+
+			#endregion
+
+			#region Implementation of IDeclarationInputDataProvider
+
+			public IDeclarationJobInputData JobInputData => this;
+			public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
+			public XElement XMLHash { get; }
+
+			#endregion
+
+			#region Implementation of ISingleBusInputDataProvider
+
+			public IVehicleDeclarationInputData PrimaryVehicle { get; set; }
+			public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+
+			#endregion
+
+			#region Implementation of IDeclarationJobInputData
+
+			public bool SavedInDeclarationMode => true;
+			public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
+			public string JobName { get; }
+			public string ShiftStrategy => "";
+			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+
+			#endregion
+		}
+
+		private string GetModifiedXML(string vifXML, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper,
+			VehicleCode? vehicleCode = null)
+		{
+			var vif = new XmlDocument();
+			vif.LoadXml(vifXML);
+
+			var pSeatsLowerNode = vif.SelectSingleNode("//*[local-name()='NumberPassengerSeatsLowerDeck']");
+			pSeatsLowerNode.InnerText = pSeatsLower.ToString();
+
+			var pStdLowerNode = vif.SelectSingleNode("//*[local-name()='NumberPassengersStandingLowerDeck']");
+			pStdLowerNode.InnerText = pStdLower.ToString();
+
+			var pSeatsUpperNode = vif.SelectSingleNode("//*[local-name()='NumberPassengerSeatsUpperDeck']");
+			pSeatsUpperNode.InnerText = pSeatsUpper.ToString();
+
+			var pStdUpperNode = vif.SelectSingleNode("//*[local-name()='NumberPassengersStandingUpperDeck']");
+			pStdUpperNode.InnerText = pStdUpper.ToString();
+
+			if (vehicleCode != null) {
+				var bodyWorkNode = vif.SelectSingleNode("//*[local-name()='BodyworkCode']");
+				bodyWorkNode.InnerText = vehicleCode.ToXMLFormat();
+
+			}
+
+			return vif.OuterXml;
+
+			
+		}
+
 
 		//[TestCase(@"E:\QUAM\tmp\primary_heavyBus group 42_SmartPS_spec engine map.xml", 0),]
 		public void TestRunPrimaryBusSimulationSngle(string jobName, int runIdx)

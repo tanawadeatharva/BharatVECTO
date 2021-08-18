@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public class XMLCustomerReportCompletedBus : XMLCustomerReport
 	{
 		private int _resultCount = 0;
+		protected TankSystem? _tankSystem;
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
 
@@ -27,6 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
+			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
 				new XAttribute(xsi + "type", "VehicleCompletedBusType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
@@ -161,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var co2Sum = 0.SI<KilogramPerMeter>();
 			foreach (var entry in primaryResult.EnergyConsumption) {
 				var fcEnergy = entry.Value * factor;  // J/m
-				var fuelData = FuelData.Instance().Lookup(entry.Key);
+				var fuelData = FuelData.Instance().Lookup(entry.Key, _tankSystem);
 				var fcMass = fcEnergy / fuelData.LowerHeatingValueVecto; // kg/m
 				co2Sum += fcMass * fuelData.CO2PerFuelWeight;
 

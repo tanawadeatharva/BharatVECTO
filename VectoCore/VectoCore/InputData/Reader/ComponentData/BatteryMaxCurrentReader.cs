@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class BatteryMaxCurrentReader
 	{
-		public static MaxCurrentMap Create(DataTable data, int packCount)
+		public static MaxCurrentMap Create(DataTable data)
 		{
 			if (data.Columns.Count != 3) {
 				throw new VectoException("Max Current Map data must contain exactly three columns: {0}, {1}, {2}", Fields.StateOfCharge, Fields.MaxChargeCurrent, Fields.MaxDischargeCurrent);
@@ -30,8 +30,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 			return new MaxCurrentMap(data.Rows.Cast<DataRow>().Select(row => new MaxCurrentMap.MaxCurrentEntry() {
 				SoC = row.ParseDouble(Fields.StateOfCharge) / 100,
-				MaxChargeCurrent = row.ParseDouble(Fields.MaxChargeCurrent).SI<Ampere>() * packCount,
-				MaxDischargeCurrent = -1 * row.ParseDouble(Fields.MaxDischargeCurrent).SI<Ampere>() * packCount
+				MaxChargeCurrent = row.ParseDouble(Fields.MaxChargeCurrent).SI<Ampere>(),
+				MaxDischargeCurrent = -1 * row.ParseDouble(Fields.MaxDischargeCurrent).SI<Ampere>()
 
 			}).OrderBy(e => e.SoC).ToArray());
 		}
@@ -46,9 +46,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		}
 
-		public static MaxCurrentMap Create(Stream data, int packCount)
+		public static MaxCurrentMap Create(Stream data)
 		{
-			return Create(VectoCSVFile.ReadStream(data), packCount);
+			return Create(VectoCSVFile.ReadStream(data));
 		}
 	}
 }

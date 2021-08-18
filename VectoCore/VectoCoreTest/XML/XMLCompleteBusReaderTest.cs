@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLCompleteBusReaderTest
 	{
 		private const string CompleteBusExample =
-			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/vecto_vehicle-completed_heavyBus-sample.xml";
+			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.10/vecto_vehicle-completed_heavyBus-sample.xml";
 
 
 
@@ -36,7 +36,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase,
+		Ignore("CompleteBus no longer used - new multistep approach")]
 		public void TestCompleteBusVehicleData()
 		{
 			var reader = XmlReader.Create(CompleteBusExample);

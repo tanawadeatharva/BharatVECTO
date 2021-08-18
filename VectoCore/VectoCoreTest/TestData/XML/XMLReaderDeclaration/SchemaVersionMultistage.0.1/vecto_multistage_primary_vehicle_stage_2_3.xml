@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
+xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
-xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
-xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" 
+xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
@@ -651,12 +651,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStage>
-			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-1-Vehicle">
-				<v2.8:Manufacturer>Intermediate Manufacturer 1</v2.8:Manufacturer>
-				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.8:ManufacturerAddress>
-				<v2.8:VIN>VEH-1234567890</v2.8:VIN>
-				<v2.8:Date>2018-02-15T11:00:00Z</v2.8:Date>
-				<v2.8:VehicleDeclarationType>interim</v2.8:VehicleDeclarationType>
+			<Vehicle xsi:type="v2.10.2:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle">
+				<v2.10.2:Manufacturer>Intermediate Manufacturer 1</v2.10.2:Manufacturer>
+				<v2.10.2:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.10.2:ManufacturerAddress>
+				<v2.10.2:VIN>VEH-1234567890</v2.10.2:VIN>
+				<v2.10.2:Date>2018-02-15T11:00:00Z</v2.10.2:Date>
+				<v2.10.2:VehicleDeclarationType>interim</v2.10.2:VehicleDeclarationType>
 			</Vehicle>
 			<ApplicationInformation>
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
@@ -686,48 +686,49 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStage>
-			<Vehicle xsi:type="v2.8:InterimStageInputType" id="MSTG-2-Vehicle">
-				<v2.8:Manufacturer>Intermediate Manufacturer 2</v2.8:Manufacturer>
-				<v2.8:ManufacturerAddress>Intermediate Manufacturer Address 2</v2.8:ManufacturerAddress>
-				<v2.8:VIN>VEH-2234567890</v2.8:VIN>
-				<v2.8:Date>2021-02-13T07:20:08.0187663Z</v2.8:Date>			
-				<v2.8:VehicleDeclarationType>final</v2.8:VehicleDeclarationType>
-				<v2.8:ADAS>
-					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
-					<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
-					<v2.3:PredictiveCruiseControl>1,2</v2.3:PredictiveCruiseControl>
-				</v2.8:ADAS>	
-				<v2.8:Components xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xsi:type="v2.8:CompletedVehicleComponentsDeclarationType">					
-					<v2.8:Auxiliaries>
-						<v2.8:Data xsi:type="v2.8:CompletedVehicleAuxiliaryDataDeclarationType">
-							<v2.8:ElectricSystem>
-								<v2.8:LEDLights>
-									<v2.8:Interiorlights>true</v2.8:Interiorlights>	
-									<v2.8:Dayrunninglights>true</v2.8:Dayrunninglights>
-									<v2.8:Positionlights>false</v2.8:Positionlights>
-									<v2.8:Brakelights>false</v2.8:Brakelights>
-									<v2.8:Headlights>true</v2.8:Headlights>														
-								</v2.8:LEDLights>
-							</v2.8:ElectricSystem>
-							<v2.8:HVAC>
-								<v2.8:SystemConfiguration>1</v2.8:SystemConfiguration>
-								<v2.8:HeatPumpTypeCoolingDriverCompartment>R-744</v2.8:HeatPumpTypeCoolingDriverCompartment>
-								<v2.8:HeatPumpTypeHeatingDriverCompartment>non R-744 2-stage</v2.8:HeatPumpTypeHeatingDriverCompartment>
-								<v2.8:HeatPumpTypeCoolingPassengerCompartment>none</v2.8:HeatPumpTypeCoolingPassengerCompartment>
-								<v2.8:HeatPumpTypeHeatingPassengerCompartment>non R-744 continuous</v2.8:HeatPumpTypeHeatingPassengerCompartment>
-								<v2.8:AuxiliaryHeaterPower>50</v2.8:AuxiliaryHeaterPower>
-								<v2.8:DoubleGlazing>false</v2.8:DoubleGlazing>
-								<v2.8:AdjustableAuxiliaryHeater>true</v2.8:AdjustableAuxiliaryHeater>
-								<v2.8:SeparateAirDistributionDucts>false</v2.8:SeparateAirDistributionDucts>
-								<v2.8:WaterElectricHeater>false</v2.8:WaterElectricHeater>
-								<v2.8:AirElectricHeater>false</v2.8:AirElectricHeater>
-								<v2.8:OtherHeatingTechnology>true</v2.8:OtherHeatingTechnology>
-							</v2.8:HVAC>
-						</v2.8:Data>
-					</v2.8:Auxiliaries>
-				</v2.8:Components>		
-			</Vehicle>
+			<vif0.1:Vehicle xsi:type="v2.10.2:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-2-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+				<Manufacturer>Intermediate Manufacturer 2</Manufacturer>
+				<ManufacturerAddress>Intermediate Manufacturer Address 2</ManufacturerAddress>
+				<VIN>VEH-2234567890</VIN>
+				<Date>2021-02-13T07:20:08.0187663Z</Date>			
+				<VehicleDeclarationType>final</VehicleDeclarationType>
+				<ADAS xsi:type="ADAS_Conventional_Type">
+					<EngineStopStart>true</EngineStopStart>
+					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+					<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+					<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
+				</ADAS>	
+				<Components xsi:type="Components_Conventional_CompletedBusType">					
+					<Auxiliaries>
+						<Data xsi:type="AUX_Conventional_CompletedBusType">
+							<ElectricSystem>
+								<LEDLights>
+									<Interiorlights>true</Interiorlights>	
+									<Dayrunninglights>true</Dayrunninglights>
+									<Positionlights>false</Positionlights>
+									<Brakelights>false</Brakelights>
+									<Headlights>true</Headlights>														
+								</LEDLights>
+							</ElectricSystem>
+							<HVAC>
+								<SystemConfiguration>1</SystemConfiguration>
+								<HeatPumpTypeDriverCompartment>
+									<Cooling>non R-744 2-stage</Cooling>
+									<Heating>none</Heating>
+								</HeatPumpTypeDriverCompartment>
+								<HeatPumpTypePassengerCompartment>
+									<Cooling>non R-744 3-stage</Cooling>
+									<Heating>none</Heating>
+								</HeatPumpTypePassengerCompartment>
+								<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
+								<DoubleGlazing>false</DoubleGlazing>
+								<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+								<SeparateAirDistributionDucts>false</SeparateAirDistributionDucts>
+							</HVAC>
+						</Data>
+					</Auxiliaries>
+				</Components>		
+			</vif0.1:Vehicle>
 			<ApplicationInformation>
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!!</SimulationToolVersion>
 				<Date>2021-03-13T07:20:08.0187663Z</Date>

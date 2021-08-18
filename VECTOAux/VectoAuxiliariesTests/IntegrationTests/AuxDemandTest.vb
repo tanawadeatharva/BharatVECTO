@@ -113,7 +113,7 @@ Namespace IntegrationTests
             For i As Integer = 0 To 9
                 aux.ResetCalculations()
                 Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
-                aux.CycleStep(1.SI(Of Second), 1.0)
+                aux.CycleStep(1.SI(Of Second))
                 'Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
@@ -128,7 +128,7 @@ Namespace IntegrationTests
             For i As Integer = 0 To 9
                 aux.ResetCalculations()
                 Assert.AreEqual(8954.1435, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
-                aux.CycleStep(1.SI(Of Second), 1.0)
+                aux.CycleStep(1.SI(Of Second))
                 'Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
@@ -143,7 +143,7 @@ Namespace IntegrationTests
             For i As Integer = 0 To 9
                 aux.ResetCalculations()
                 Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
-                aux.CycleStep(1.SI(Of Second), 1.0)
+                aux.CycleStep(1.SI(Of Second))
                 'Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 

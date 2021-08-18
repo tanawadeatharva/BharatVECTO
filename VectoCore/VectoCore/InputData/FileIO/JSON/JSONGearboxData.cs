@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONGearboxDataV6 : JSONGearboxDataV5
 	{
+		private IList<ITransmissionInputData> resultGears;
+
 		public JSONGearboxDataV6(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
 
@@ -54,12 +56,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override IList<ITransmissionInputData> Gears
 		{
 			get {
-				var resultGears = new List<ITransmissionInputData>();
-				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
-				for (var i = 1; i < gears.Count(); i++) {
-					var gear = gears[i];
+				if (resultGears == null) { 
+					resultGears = new List<ITransmissionInputData>();
+					var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
+					for (var i = 1; i < gears.Count(); i++) {
+						var gear = gears[i];
 
-					resultGears.Add(CreateGear(i, gear));
+						resultGears.Add(CreateGear(i, gear));
+					}
 				}
 				return resultGears;
 			}
@@ -371,6 +375,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public PerSecond MinEngineSpeedPostUpshift => null;
 		public Second ATLookAheadTime => null;
 		public double[][] ShiftSpeedsTCToLocked => null;
+		public double? PEV_TargetSpeedBrakeNorm => null;
+		public double? PEV_DeRatingDownshiftSpeedFactor => null;
+		public double? PEV_DownshiftMinSpeedFactor => null;
 
 		public double? VeloictyDropFactor => null;
 

@@ -22,6 +22,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
@@ -42,6 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 		protected const string BEV_E2_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto";
+		protected const string BEV_E2_Job_3Speed = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed.vecto";
 		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
@@ -324,7 +326,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		[
 			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "BPEVEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Construction", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Construction, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("Urban", 2000, 0.8, 0, TestName = "PEV E3 DriveCycle Urban, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
@@ -565,6 +567,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			TestCase(BEV_E2_Job, 8, TestName = "PEV E2 Job Urban"),
 			TestCase(BEV_E2_Job, 9, TestName = "PEV E2 Job UrbanDelivery"),
 
+			TestCase(BEV_E2_Job_3Speed, 0, TestName = "PEV E2 3Speed Job LongHaul"),
+			TestCase(BEV_E2_Job_3Speed, 1, TestName = "PEV E2 3Speed Job Coach"),
+			TestCase(BEV_E2_Job_3Speed, 2, TestName = "PEV E2 3Speed Job Construction"),
+			TestCase(BEV_E2_Job_3Speed, 3, TestName = "PEV E2 3Speed Job HeavyUrban"),
+			TestCase(BEV_E2_Job_3Speed, 4, TestName = "PEV E2 3Speed Job Interurban"),
+			TestCase(BEV_E2_Job_3Speed, 5, TestName = "PEV E2 3Speed Job MunicipalUtility"),
+			TestCase(BEV_E2_Job_3Speed, 6, TestName = "PEV E2 3Speed Job RegionalDelivery"),
+			TestCase(BEV_E2_Job_3Speed, 7, TestName = "PEV E2 3Speed Job Suburban"),
+			TestCase(BEV_E2_Job_3Speed, 8, TestName = "PEV E2 3Speed Job Urban"),
+			TestCase(BEV_E2_Job_3Speed, 9, TestName = "PEV E2 3Speed Job UrbanDelivery"),
+
 			TestCase(BEV_E2_Job_Cont30kW, 0, TestName = "PEV E2 Cont. 30kW Job LongHaul"),
 			TestCase(BEV_E2_Job_Cont30kW, 1, TestName = "PEV E2 Cont. 30kW Job Coach"),
 			TestCase(BEV_E2_Job_Cont30kW, 2, TestName = "PEV E2 Cont. 30kW Job Construction"),
@@ -688,7 +701,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			
 
 			var es = new ElectricSystem(container);
-			var battery = new Battery(container, batteryData);
+			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
 
 			var ctl = new BatteryElectricMotorController(container, es);
@@ -788,7 +801,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
-				
+				InputData = new DummyGearboxData() {
+					Gears = new List<ITransmissionInputData>() {
+						new TransmissionInputData(),
+						new TransmissionInputData(),
+					}
+				}
 			};
 		}
 

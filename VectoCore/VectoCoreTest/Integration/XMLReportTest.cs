@@ -326,7 +326,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase]
 		public void TestXMLPrimaryVehicleReportTest()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses/vecto_vehicle-primary_heavyBus-sample.xml";
+			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.10/vecto_vehicle-primary_heavyBus-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);

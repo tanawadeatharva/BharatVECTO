@@ -20,14 +20,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			VehiclePart.Add(
 				new XAttribute(xsi + "type", "VehicleExemptedPrimaryBusType"),
 				new XElement(tns + XMLNames.ManufacturerPrimaryVehicle, modelData.VehicleData.Manufacturer),
-				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle,
-					modelData.VehicleData.ManufacturerAddress),
+				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
-				new XElement(tns + XMLNames.Component_Date, 
-					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-				new XElement(tns + XMLNames.Bus_LegislativeCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + XMLNames.Bus_ChassisConfiguration, "Bus"),
+				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(modelData.VehicleData.Date, XmlDateTimeSerializationMode.Utc)),
+				new XElement(tns + XMLNames.Vehicle_LegislativeCategory, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
+				new XElement(tns + XMLNames.ChassisConfiguration, "Bus"),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(

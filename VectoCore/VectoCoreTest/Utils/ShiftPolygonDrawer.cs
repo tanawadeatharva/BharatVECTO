@@ -202,14 +202,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			PlotDragLoad(engineFld, chartArea, chart, name);
 
-			PlotEngineSpeedLine(engineFld, chartArea, chart, "nPref " + name, Color.DeepSkyBlue,
-				engineFld.PreferredSpeed.Value() / Constants.RPMToRad);
+			//PlotEngineSpeedLine(engineFld, chartArea, chart, "nPref " + name, Color.DeepSkyBlue,
+			//	engineFld.PreferredSpeed.Value() / Constants.RPMToRad);
 
-			PlotEngineSpeedLine(engineFld, chartArea, chart, "n95h " + name, Color.Red,
-				engineFld.N95hSpeed.Value() / Constants.RPMToRad);
+			//PlotEngineSpeedLine(engineFld, chartArea, chart, "n95h " + name, Color.Red,
+			//	engineFld.N95hSpeed.Value() / Constants.RPMToRad);
 
-			PlotEngineSpeedLine(engineFld, chartArea, chart, "n85kmh " + name, Color.LimeGreen,
-				speed85kmh.Value() / Constants.RPMToRad);
+			//PlotEngineSpeedLine(engineFld, chartArea, chart, "n85kmh " + name, Color.LimeGreen,
+			//	speed85kmh.Value() / Constants.RPMToRad);
 
 			PlotEngineSpeedLine(engineFld, chartArea, chart, "nPmax " + name, Color.Coral,
 				engineFld.RatedSpeed.Value() / Constants.RPMToRad);
