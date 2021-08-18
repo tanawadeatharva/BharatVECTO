@@ -142,6 +142,42 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cooling.
+        /// </summary>
+        public static string HeatPumpTypeCoolingDriverCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypeCoolingDriverCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cooling.
+        /// </summary>
+        public static string HeatPumpTypeCoolingPassengerCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypeCoolingPassengerCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heating.
+        /// </summary>
+        public static string HeatPumpTypeHeatingDriverCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypeHeatingDriverCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heating.
+        /// </summary>
+        public static string HeatPumpTypeHeatingPassengerCompartment {
+            get {
+                return ResourceManager.GetString("HeatPumpTypeHeatingPassengerCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string HeightInMm {

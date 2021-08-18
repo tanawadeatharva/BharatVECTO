@@ -38,14 +38,14 @@
                     <ContentControl Content="{Binding ParameterViewModels[SystemConfiguration]}"/>
                     <Border Margin="5" BorderThickness="2" BorderBrush="{DynamicResource ButtonHighlightColor}">
                         <StackPanel>
-                            <Label  Style="{DynamicResource LabelStyle1}">Driver Compartment</Label>
+                            <Label  Style="{DynamicResource LabelStyle1}">Driver Compartment Heat Pumps</Label>
                             <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeCoolingDriverCompartment]}"/>
                             <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeHeatingDriverCompartment]}"/>
                         </StackPanel>
                     </Border>
                     <Border Margin="5" BorderThickness="2" BorderBrush="{DynamicResource ButtonHighlightColor}">
                         <StackPanel>
-                            <Label  Style="{DynamicResource LabelStyle1}">Passenger Compartment</Label>
+                            <Label  Style="{DynamicResource LabelStyle1}">Passenger Compartment Heat Pumps</Label>
                             <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeCoolingPassengerCompartment]}"/>
                             <ContentControl Content="{Binding ParameterViewModels[HeatPumpTypeHeatingPassengerCompartment]}"/>
                         </StackPanel>

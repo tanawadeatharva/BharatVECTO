@@ -144,6 +144,18 @@
   <data name="GrossVehicleMassRating" xml:space="preserve">
     <value>Tech. Perm. Max. Laden Mass</value>
   </data>
+  <data name="HeatPumpTypeCoolingDriverCompartment" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="HeatPumpTypeCoolingPassengerCompartment" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="HeatPumpTypeHeatingDriverCompartment" xml:space="preserve">
+    <value>Heating</value>
+  </data>
+  <data name="HeatPumpTypeHeatingPassengerCompartment" xml:space="preserve">
+    <value>Heating</value>
+  </data>
   <data name="HeightInMm" xml:space="preserve">
     <value>Height</value>
   </data>

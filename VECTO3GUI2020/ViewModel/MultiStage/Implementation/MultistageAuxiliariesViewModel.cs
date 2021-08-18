@@ -367,6 +367,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				if (SetProperty(ref _heatPumpGroupEditingEnabled, value)) {
+					_parameterViewModels[nameof(SystemConfiguration)].EditingEnabled = value;
 					_parameterViewModels[nameof(HeatPumpTypeCoolingDriverCompartment)].EditingEnabled = value;
 					_parameterViewModels[nameof(HeatPumpTypeCoolingPassengerCompartment)].EditingEnabled = value;
 					_parameterViewModels[nameof(HeatPumpTypeHeatingDriverCompartment)].EditingEnabled = value;
