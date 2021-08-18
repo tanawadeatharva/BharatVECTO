@@ -583,10 +583,15 @@
 			<xs:extension base="v2.10.1:AbstractElectricMachineSystemDataType">
 				<xs:sequence>
 					<xs:group ref="v2.10.1:ElectricMachineSystemCommonParametersSequenceGroup"/>
-					<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType">
+					<xs:element name="CertificationMethod">
 						<xs:annotation>
 							<xs:documentation>P456</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v2.10.1:CertificationMethodType">
+								<xs:enumeration value="Measured"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="v2.10.1:ElectricMachineSystemPowerRatingsSequenceGroup"/>
 					<xs:element name="TestVoltageOverload" type="v2.10.1:TestVoltageOverloadType">
