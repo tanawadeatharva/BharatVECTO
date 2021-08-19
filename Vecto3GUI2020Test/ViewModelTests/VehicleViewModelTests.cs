@@ -92,14 +92,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public void loadVehicleDataAgainUnset()
-		{
-
-
-
-		}
-
-		[Test]
 		public void NoErrorAfterDataLoading()
 		{
 			var vm = loadFile(primary_vehicle_only);

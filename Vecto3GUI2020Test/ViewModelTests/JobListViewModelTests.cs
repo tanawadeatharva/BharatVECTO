@@ -19,6 +19,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		private const string _newVifJob = "newVifCompletedStage.json";
 		private JobListViewModel _jobListViewModel;
 
+		private const string _newVifCompletedDiesel = "newVifCompletedDiesel.vecto";
+		private const string _newVifExempted = "newVifExempted.vecto";
+		private const string _newVifInterimDiesel = "newVifInterimDiesel.vecto";
+		private const string _newVifExemptedIncomplete = "newVifExemptedIncomplete.vecto";
+
 		[SetUp]
 		public void SetupViewModelTests()
 		{
@@ -53,16 +58,24 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 
+		[TestCase(_newVifCompletedDiesel, TestName = "VIFConventionalCompleted")]
+		[TestCase(_newVifInterimDiesel, TestName="VIFConventionalInterim")]
+		[TestCase(_newVifExempted, TestName = "VIFExempted")]
+		[TestCase(_newVifExemptedIncomplete, TestName = "VIFExemptedInterim")]
 		[TestCase(VIFTests.exempted_primary_vif, TestName="Exempted")]
 		public async Task AddJobAsyncTest(string fileName)
 		{
 			var path = GetTestDataPath(fileName);
 			Assert.AreEqual(0, _jobListViewModel.Jobs.Count);
+			await DoAddJobAsync(path);
+		}
 
-			await _jobListViewModel.AddJobAsync(path);
+
+		private async Task DoAddJobAsync(string filepath) {
+			await _jobListViewModel.AddJobAsync(filepath);
 			Assert.AreEqual(1, _jobListViewModel.Jobs.Count);
 
-			Assert.AreEqual(path, _jobListViewModel.Jobs[0].DataSource.SourceFile);
+			Assert.AreEqual(filepath, _jobListViewModel.Jobs[0].DataSource.SourceFile);
 		}
 
 		[TestCase(true, TestName = "Exempted")]

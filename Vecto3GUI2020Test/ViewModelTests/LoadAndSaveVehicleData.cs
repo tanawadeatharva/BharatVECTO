@@ -38,41 +38,6 @@ namespace Vecto3GUI2020Test
 		}
 
 
-		//[Test, Combinatorial]
-		//public void LoadPrimaryAndEditHVACDriverCompartmentOnly(
-		//	[Values(BusHVACSystemConfiguration.Configuration2)] BusHVACSystemConfiguration configuration)
-		//{
-		//	var stageInputFileName = "stageinput.xml";
-
-		//	//Load Primary Vehicle VIF
-		//	var newMultiStageJob = loadFile(primary_vehicle_only);
-		//	var vehicle = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
-		//	Assert.NotNull(vehicle);
-		//	vehicle.Manufacturer = "test1";
-		//	vehicle.ManufacturerAddress = "testAddress2";
-		//	vehicle.VIN = "VIN123456789";
-
-
-
-		//	var manufacturingStage = newMultiStageJob.MultiStageJobViewModel.ManufacturingStageViewModel as ManufacturingStageViewModel_v0_1;
-
-		//	var auxVm = manufacturingStage.VehicleViewModel.MultistageAuxiliariesViewModel as MultistageAuxiliariesViewModel;
-
-
-		//	auxVm.SystemConfiguration = BusHVACSystemConfiguration.Configuration2;
-		//	auxVm.HeatPumpTypeDriverCompartment = HeatPumpType.non_R_744_2_stage;
-		//	auxVm.HeatPumpModeDriverCompartment = (HeatPumpMode)auxVm.HeatPumpModeDriverCompartmentAllowedValues[0];
-
-		//	var multistageJob = newMultiStageJob.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-		//	multistageJob.ManufacturingStageViewModel.SaveInputDataExecute(GetFullPath(stageInputFileName));
-		//	Assert.IsTrue(checkFileNameExists(stageInputFileName));
-
-
-
-		//}
-
-
-
 
 		[Test]
 		public void LoadPrimaryAndSaveVehicleData()

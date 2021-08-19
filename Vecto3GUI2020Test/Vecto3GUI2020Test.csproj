@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-exempted_input_incomplete.xml" Link="TestData\vecto_vehicle-exempted_input_incomplete.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-stage_input_full-sample_final_noNG.xml" Link="TestData\vecto_vehicle-stage_input_full-sample_final_noNG.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-stage_input_full-sample_interim_noNG.xml" Link="TestData\vecto_vehicle-stage_input_full-sample_interim_noNG.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-exempted_input_full-sample.xml" Link="Testdata\vecto_vehicle-exempted_input_full-sample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -128,9 +137,6 @@
     <None Update="TestData\interim2.VIF_Report_3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\newVifCompletedStage.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="TestData\vecto_vehicle-completed_heavyBus_31b.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -140,6 +146,21 @@
     <Folder Include="HelperTests\" />
     <Folder Include="Testdata\bugreports\" />
     <Folder Include="TestData\output\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedDiesel.vecto" Link="TestData\newVifCompletedDiesel.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" Link="TestData\newVifExempted.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" Link="TestData\newVifExemptedIncomplete.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" Link="TestData\newVifInterimDiesel.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
