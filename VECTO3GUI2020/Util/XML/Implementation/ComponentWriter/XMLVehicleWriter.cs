@@ -9,7 +9,11 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
+using TUGraz.VectoCore.OutputData.XML.GroupWriter;
+using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
@@ -118,7 +122,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
             typeof(VehicleViewModel_v2_0).ToString()
 		};
 
-		public XMLVehicleWriter_v2_0(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
+		public XMLVehicleWriter_v2_0(IVehicleDeclarationInputData inputData,
+			IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
         {
 
 
@@ -187,37 +192,58 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
     public class XMLVehicleWriter_ExcemptedVehicle_v2_2 { }
 
 
-	public class XMLVehicleWriter_v2_8 : XMLVehicleWriter
+	public class XMLVehicleWriter_v2_10 : XMLVehicleWriter
 	{
 		private readonly bool _exempted;
 		public static readonly string[] SUPPORTEDVERSIONS = {
-			typeof(InterimStageBusVehicleViewModel_v2_8).ToString()
+			typeof(InterimStageBusVehicleViewModel_v2_8).ToString(),
+			typeof(StageInputViewModel).ToString()
 		};
-		public XMLVehicleWriter_v2_8(IVehicleDeclarationInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
+
+		private readonly IGroupWriterFactory _groupWriterFactory;
+		private readonly bool _conventional;
+		private readonly IComponentWriterFactory _componentWriterFactory;
+
+		public XMLVehicleWriter_v2_10(IVehicleDeclarationInputData inputData, 
+			IXMLWriterFactory xmlWriterFactory, 
+			IGroupWriterFactory groupWriterFactory, 
+			IComponentWriterFactory componentWriterFactory) : base(inputData, xmlWriterFactory)
 		{
+			
+			//TODO: CHECK ALL POSSIBIBILITIES FOR VEHICLES
 			_exempted = inputData.ExemptedVehicle;
 
+			_conventional = !_exempted;
+			_groupWriterFactory = groupWriterFactory;
+			_componentWriterFactory = componentWriterFactory;
 		}
 
 		#region Overrides of XMLVehicleWriter
 
 		protected override void Initialize()
 		{
-			_defaultNamespace = XMLNamespaces.V28;
+			_defaultNamespace = XMLNamespaces.v2_10_2;
 
-			_Xelement = new XElement(XMLNamespaces.V20 + XMLNames.Component_Vehicle);
+			_Xelement = new XElement(XMLNamespaces.V20 + XMLNames.Component_Vehicle, 
+				new XAttribute("xmlns",  _defaultNamespace));
 			
 			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, _inputData.Identifier ?? ("VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20))));
-			if (_exempted) {
-				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "ExemptedInterimStageInputType"));
+			if (_conventional) {
+				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "Vehicle_Conventional_CompletedBusDeclarationType"));
 			} else {
-				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "InterimStageInputType"));
+				throw new NotImplementedException();
+				//_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "InterimStageInputType"));
 			}
 			
 		}
 
 		protected override void CreateElements()
 		{
+			if (_conventional) {
+				CreateConventionalElements();
+				return;
+			}
+
 			if (_exempted) {
 				CreateExemptedElements();
 				return;
@@ -227,7 +253,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				_inputData.ManufacturerAddress));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, DateTime.Today.ToXmlFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, XMLExtension.ToXmlFormat(DateTime.Today)));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
 
@@ -247,7 +273,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeightIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleLength, _inputData.Length?.ConvertToMilliMeter()));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleWidth, _inputData.Width?.ConvertToMilliMeter()));
@@ -301,13 +327,89 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 					componentElement.Add(auxiliaryElement);
 
 				}
-
-
 				_Xelement.Add(componentElement);
+
+			}
+		}
+
+		private void CreateConventionalElements()
+		{
+			_Xelement.Add(
+				_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup, _defaultNamespace).GetGroupElements(_inputData),
+				_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBusParametersSequenceGroup, _defaultNamespace).GetGroupElements(_inputData)
+			);
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_NgTankSystem, _inputData.TankSystem));
+
+			if (_inputData.NumberPassengerSeatsUpperDeck != null &&
+				_inputData.NumberPassengerSeatsLowerDeck != null &&
+				_inputData.NumberPassengersStandingUpperDeck != null &&
+				_inputData.NumberPassengersStandingLowerDeck != null) 
+			{
+				// ReSharper disable once CoVariantArrayConversion
+				_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, _defaultNamespace).GetGroupElements(_inputData));
 			}
 
-			
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
+
+			if (_inputData.Height != null && 
+				_inputData.Length != null &&
+				_inputData.Width != null &&
+				_inputData.EntranceHeight != null) {
+				// ReSharper disable once CoVariantArrayConversion
+				_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+						GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, _defaultNamespace)
+					.GetGroupElements(_inputData));
+			}
+
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology,
+				_inputData.DoorDriveTechnology != null
+					? _inputData.DoorDriveTechnology.ToXMLFormat()
+					: null));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleDeclarationType, _inputData.VehicleDeclarationType));
+
+			if (_inputData.ADAS != null) {
+				_Xelement.Add(_componentWriterFactory.getDeclarationAdasWriter(GroupNames.ADAS_Conventional_Type, _defaultNamespace).GetComponent(_inputData.ADAS));
+			}
+
+
+			if (_inputData.Components != null)
+			{
+				var componentElement = new XElement(
+					_defaultNamespace + XMLNames.Vehicle_Components,
+					new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type,
+						GUILabels.Components_Conventional_CompletedBusType));
+
+				//Airdrag
+				if (_inputData.Components.AirdragInputData != null)
+				{
+					var airDragElement = _xmlWriterFactory.CreateComponentWriter(_inputData.Components.AirdragInputData)
+						.GetElement();
+					var tempAirDragElement = new XElement(_defaultNamespace + XMLNames.Component_AirDrag);
+
+					airDragElement.Name = tempAirDragElement.Name;
+					componentElement.Add(airDragElement);
+				}
+
+				//auxiliaries
+				if (_inputData.Components.BusAuxiliaries != null)
+				{
+					var auxiliaryElement = _xmlWriterFactory.CreateBuxAuxiliariesWriter(_inputData.Components.BusAuxiliaries)
+						.GetElement();
+
+					componentElement.Add(auxiliaryElement);
+
+				}
+				_Xelement.Add(componentElement);
+
+			}
+
 		}
+
 
 		private void CreateExemptedElements()
 		{
@@ -316,7 +418,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				_inputData.ManufacturerAddress));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, DateTime.Today.ToXmlFormat()));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, XMLExtension.ToXmlFormat(DateTime.Today)));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
 
@@ -336,7 +438,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+			//_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
 
 			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
 		}

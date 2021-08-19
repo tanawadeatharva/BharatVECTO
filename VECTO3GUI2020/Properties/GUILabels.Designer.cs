@@ -115,6 +115,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Components_Conventional_CompletedBusType.
+        /// </summary>
+        public static string Components_Conventional_CompletedBusType {
+            get {
+                return ResourceManager.GetString("Components_Conventional_CompletedBusType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VECTO.
         /// </summary>
         public static string DefaultTitle {

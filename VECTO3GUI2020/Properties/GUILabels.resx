@@ -156,4 +156,7 @@
   <data name="_consolidateElectricConsumerData" xml:space="preserve">
     <value>Electric Consumer Data</value>
   </data>
+  <data name="Components_Conventional_CompletedBusType" xml:space="preserve">
+    <value>Components_Conventional_CompletedBusType</value>
+  </data>
 </root>

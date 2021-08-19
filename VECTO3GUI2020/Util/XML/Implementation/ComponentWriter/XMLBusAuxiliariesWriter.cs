@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using Castle.Components.DictionaryAdapter.Xml;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.OutputData.XML.GroupWriter;
 using VECTO3GUI2020.Util.XML.Interfaces;
 
 namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
@@ -52,20 +54,29 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 
 		private XNamespace _defaultNamespace;
-		public XMLBusAuxiliariesWriterMultistage(IBusAuxiliariesDeclarationData inputData) : base(inputData) { }
+		private readonly IGroupWriterFactory _groupWriterFactory;
+
+		public XMLBusAuxiliariesWriterMultistage(IBusAuxiliariesDeclarationData inputData,
+			IGroupWriterFactory groupWriterFactory) : base(inputData)
+		{
+			_groupWriterFactory = groupWriterFactory;
+		}
 
 		#region Overrides of XMLBusAuxiliariesWriter
 
 		public override void Initialize()
 		{
-			_defaultNamespace = XMLNamespaces.v210; 
+			_defaultNamespace = XMLNamespaces.v2_10_2; 
 			_xElement = new XElement(_defaultNamespace + XMLNames.Component_Auxiliaries);
 		}
 
 		public override void CreateElements()
 		{
-	
-			var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper,
+			CreateElementsWithGroupWriters();
+			return;
+			
+
+			var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper, 
 				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "CompletedVehicleAuxiliaryDataDeclarationType"));
 			_xElement.Add(dataElement);
 
@@ -112,6 +123,36 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			}
 
 			dataElement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+		}
+
+		private void CreateElementsWithGroupWriters()
+		{
+
+			var dataElement = new XElement(_defaultNamespace + XMLNames.ComponentDataWrapper,
+				new XAttribute("xmlns" , XMLNamespaces.v2_10_2),
+				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "AUX_Conventional_CompletedBusType"));
+
+			if (_inputData.ElectricConsumers != null) {
+				var electricSystemElement = new XElement(_defaultNamespace + XMLNames.BusAux_ElectricSystem);
+				var ledLightsElement = new XElement(_defaultNamespace + "LEDLights");
+				ledLightsElement.Add(
+					// ReSharper disable once CoVariantArrayConversion
+					_groupWriterFactory.GetBusAuxiliariesDeclarationGroupWriter(GroupNames.BusAuxElectricSystemLightsGroup, _defaultNamespace)
+						.GetGroupElements(_inputData));
+				electricSystemElement.Add(ledLightsElement);
+				dataElement.Add(electricSystemElement);
+
+			}
+
+			if (_inputData.HVACAux != null) {
+				var hvacElement = new XElement(_defaultNamespace + "HVAC");
+				hvacElement.Add(_groupWriterFactory.GetBusAuxiliariesDeclarationGroupWriter(GroupNames.BusAuxHVACConventionalSequenceGroup, _defaultNamespace)
+						.GetGroupElements(_inputData));
+				dataElement.Add(hvacElement);
+			}
+
+			_xElement.Add(dataElement);
+			
 		}
 
 		private XElement GetHeatPumpTypeElement(string xmlName, string value)

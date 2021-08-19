@@ -45,9 +45,9 @@ namespace VECTO3GUI2020.Ninject
 					Bind<IXMLVehicleWriter>().To<XMLVehicleWriter_v2_0>().Named(sv));
 
 			Array.ForEach(
-				XMLVehicleWriter_v2_8.SUPPORTEDVERSIONS,
+				XMLVehicleWriter_v2_10.SUPPORTEDVERSIONS,
 				sv =>
-					Bind<IXMLVehicleWriter>().To<XMLVehicleWriter_v2_8>().Named(sv));
+					Bind<IXMLVehicleWriter>().To<XMLVehicleWriter_v2_10>().Named(sv));
 
 			Array.ForEach(
 				XMLComponentsWriter_v1_0.SUPPORTED_VERSIONS,
