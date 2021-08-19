@@ -1245,7 +1245,7 @@
   <data name="Bus_LowEntry" xml:space="preserve">
     <value>LowEntry</value>
   </data>
-  <data name="Bus_HeighIntegratedBody" xml:space="preserve">
+  <data name="Bus_HeightIntegratedBody" xml:space="preserve">
     <value>HeightIntegratedBody</value>
   </data>
   <data name="Bus_VehicleLength" xml:space="preserve">
