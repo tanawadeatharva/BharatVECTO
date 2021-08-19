@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vehicleInputData.LowEntry != null
 					? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
 				_vehicleInputData.Height != null
-					? new XElement(v210 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
+					? new XElement(v210 + XMLNames.Bus_HeightIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
 			);
 		}
 	}
@@ -290,7 +290,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vehicleInputData.LowEntry != null
 					? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,
 				_vehicleInputData.Height != null
-					? new XElement(v210 + XMLNames.Bus_HeighIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null,
+					? new XElement(v210 + XMLNames.Bus_HeightIntegratedBody, _vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Length != null
 					? new XElement(v210 + XMLNames.Bus_VehicleLength, _vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)) : null,
 				_vehicleInputData.Width != null 

@@ -173,4 +173,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
+	public static class ADASDataProviderExtensions
+	{
+		public static bool EcoRollWithEngineStop(this IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return adas.EcoRoll == EcoRollType.WithEngineStop;
+		}
+
+		public static bool? EcoRollWithOutEngineStop(this IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return adas.EcoRoll == EcoRollType.WithoutEngineStop;
+		}
+
+	}
+
 }

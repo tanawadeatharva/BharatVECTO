@@ -447,6 +447,11 @@
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
     <Compile Include="OutputData\FileIO\TempFileOutputWriter.cs" />
     <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\ComponentWriter.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\ComponentWriterNinjectModule.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\Declaration\ADAS_Writer.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\Declaration\Components_Conventional.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\IComponentWriterFactory.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\AbstractXMLManufacturerReport.cs" />
@@ -490,6 +495,23 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportCompletedBus.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\IGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusDimensionsWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusParametersWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusGeneralParametersWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusPassengerCountWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxElectricSystemSupplyGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxElectricSystemLightsGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxHVACConventionalGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxHVACHeatPumpWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\GroupNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GroupNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OutputData\XML\GroupWriter\GroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\IGroupWriterFactory.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationNamespaces.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
@@ -500,6 +522,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLExemptedPrimaryBusVehicleReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLMultistageBusReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLPrimaryBusVehicleReport.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\XMLGroupWriterNinjectModule.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
@@ -571,6 +594,7 @@
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
+    <Compile Include="Utils\Ninject\UseFirstTwoArgumentsAsInstanceProvider.cs" />
     <Compile Include="Utils\PathHelper.cs" />
     <Compile Include="Utils\SchmittTrigger.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
@@ -756,6 +780,11 @@
     <EmbeddedResource Include="JsonKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OutputData\XML\GroupWriter\GroupNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupNames.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />

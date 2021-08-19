@@ -912,8 +912,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: (bool?)null;
 
 		public override Meter Height =>
-			ElementExists(XMLNames.Bus_HeighIntegratedBody)
-				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+			ElementExists(XMLNames.Bus_HeightIntegratedBody)
+				? GetDouble(XMLNames.Bus_HeightIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
 				: null;
 
 		public override Meter Length =>
@@ -1091,8 +1091,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: (bool?)null;
 
 		public override Meter Height =>
-			ElementExists(XMLNames.Bus_HeighIntegratedBody)
-				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
+			ElementExists(XMLNames.Bus_HeightIntegratedBody)
+				? GetDouble(XMLNames.Bus_HeightIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
 				: null;
 
 		public override XmlElement PTONode => null;

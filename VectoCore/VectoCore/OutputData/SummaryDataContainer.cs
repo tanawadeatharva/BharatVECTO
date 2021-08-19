@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.OutputData
 		//[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
-			var row = GetResultRow(modData, runData);
+			var row = GetResultRow(modData, runData); // Replace row with dictionary
 
 			row[Fields.SORT] = jobNr * 1000 + runNr;
 			row[Fields.JOB] = $"{jobNr}-{runNr}"; //ReplaceNotAllowedCharacters(current);
@@ -386,7 +386,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteGearshiftStats(modData, row, gearCount);
 
-			AddResultRow(row);
+			AddResultRow(row); //Add dictionary to datatable
 		}
 
 
