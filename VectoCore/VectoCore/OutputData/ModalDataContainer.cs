@@ -129,7 +129,8 @@ namespace TUGraz.VectoCore.OutputData
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
 
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, 
+			Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
 		{
 			_runData = runData;
 			_writer = writer;
@@ -218,14 +219,13 @@ namespace TUGraz.VectoCore.OutputData
 				return value;
 			}
 
-			VectoMath.LeastSquaresFitting(
+			var (k, _) = VectoMath.LeastSquaresFitting(
 				GetValues(
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCWHTCc)).Value())
-						: null).Where(x => x != null && x.Y > 0),
-				out var k, out var d, out var r);
+						: null).Where(x => x != null && x.Y > 0).ToArray());
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
 				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
 				k = 0;
@@ -243,14 +243,13 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (Data.AsEnumerable().Any(r => r.Field<SI>(ModalResultField.P_wheel_in.GetName()) != null)) {
-				VectoMath.LeastSquaresFitting(
-					GetValues(
-							row => row.Field<bool>(ModalResultField.ICEOn.GetName())
+				var (k, _) = VectoMath.LeastSquaresFitting(
+					GetValues(row => row.Field<bool>(ModalResultField.ICEOn.GetName())
 								? new Point(
 									row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
-						.Where(x => x != null && x.X > 0 && x.Y > 0), out var k, out var d, out var r);
+						.Where(x => x != null && x.X > 0 && x.Y > 0).ToArray());
 				if (double.IsInfinity(k) || double.IsNaN(k)) {
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
 					k = 0;
@@ -772,8 +771,15 @@ namespace TUGraz.VectoCore.OutputData
 			return dataColumns;
 		}
 
-		public IEnumerable<T> GetValues<T>(DataColumn col) =>
-			Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		public IEnumerable<T> GetValues<T>(DataColumn col) => GetValues(x => (T)x[col]);
+
+		public IEnumerable<(T1, T2)> GetValues<T1, T2>(DataColumn col1, DataColumn col2) =>
+			GetValues(x => ((T1)x[col1], (T2)x[col2]));
+		
+		public IEnumerable<(T1,T2,T3)> GetValues<T1,T2,T3>(DataColumn col1, DataColumn col2, DataColumn col3) => 
+			GetValues(x => ((T1)x[col1], (T2)x[col2], (T3)x[col3]));
+		
+		public IEnumerable<T> GetValues<T>(string columnName) => GetValues<T>(Data.Columns[columnName]);
 
 		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) =>
 			Data.Rows.Cast<DataRow>().Select(selectorFunc);
@@ -781,19 +787,21 @@ namespace TUGraz.VectoCore.OutputData
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> =>
 			TimeIntegral<T>(field.GetName(), filter);
 
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T> {
+			
 			if (filter == null && _timeIntegrals.TryGetValue(field, out var val)) {
 				return (T)val;
 			}
+
+			var dt = Data.Columns[ModalResultField.simulationInterval.GetName()];
 			var result = 0.0;
-			var idx = Data.Columns.IndexOf(field);
-			for (var i = 0; i < Data.Rows.Count; i++) {
-				var value = Data.Rows[i][idx];
+			var idx = Data.Columns[field];
+			foreach (DataRow row in Data.Rows) {
+				var value = row[idx];
 				if (value != null && value != DBNull.Value) {
 					var siValue = (SI)value;
 					if (filter == null || filter(siValue)) {
-						result += siValue.Value() * ((Second)Data.Rows[i][ModalResultField.simulationInterval.GetName()]).Value();
+						result += siValue.Value() * ((Second)row[dt]).Value();
 					}
 				}
 			}
