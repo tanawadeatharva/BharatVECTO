@@ -38,8 +38,11 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumHelper
 	{
-		public static T ParseEnum<T>(this string s, bool ignoreCase = true) =>
-			(T)Enum.Parse(typeof(T), Regex.Replace(s, "[^a-zA-Z0-9_-]", ""), ignoreCase);
+		public static T ParseEnum<T>(this string s, bool ignoreCase = true) => 
+			(T)Enum.Parse(typeof(T), 
+				s.StartsWith("-") 
+					? Regex.Replace(s, "[^a-zA-Z0-9_-]", "")
+					: Regex.Replace(s, "[^a-zA-Z0-9_]", ""), ignoreCase);
 
 		public static T ParseEnum<T>(this object o, bool ignoreCase = true) =>
 			o is string s ? ParseEnum<T>(s, ignoreCase) : (T)o;
