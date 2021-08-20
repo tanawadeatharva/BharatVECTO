@@ -890,7 +890,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					//	Tuple.Create((PerSecond)null, 0.SI<NewtonMeter>());
 				}
 				var testRequest = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOff);
-				if (testRequest != null) {
+				if (testRequest != null && testRequest.Engine.EngineSpeed < ModelData.EngineData.FullLoadCurves[0].NTq99hSpeed) {
 					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
 					candidates[nextGear] = Tuple.Create(maxGbxTorque * testRequest.Gearbox.InputSpeed, testRequest);
 				}
