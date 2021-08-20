@@ -29,7 +29,7 @@
           "Count": 2,
           "Ratio": 8.56,
           "MechanicalEfficiency":  0.97, 
-          "Position": "B4",
+          "Position": "B3",
           "MotorFile": "GenericEMotor_125kW_485Nm.vem"
         }
     ],

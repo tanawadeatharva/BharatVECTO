@@ -8,8 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehicleFile": "Class5_E3_PCC123.vveh",
-    "GearboxFile": "AMT_12.vgbx",
-    "TCU": "AMT_12.vgbx",
+    "GearboxFile": "Axle.vgbx",
     "Padd_electric": 3540.0,
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
