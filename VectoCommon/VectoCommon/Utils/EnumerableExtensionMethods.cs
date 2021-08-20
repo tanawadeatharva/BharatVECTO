@@ -39,8 +39,23 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumerableExtensionMethods
 	{
-		public static IEnumerable<(T value, int index)> Select<T>(this IEnumerable<T> self) => 
+		public static IEnumerable<(T value, int index)> Select<T>(this IEnumerable<T> self) =>
 			self.Select((value, index) => (value, index));
+
+		public static T[] Slice<T>(this T[] source, int start, int end)
+		{
+			if (start < 0) start = source.Length + start;
+			if (end < 0) end = source.Length + end;
+			var dest = new T[end-start];
+			Array.ConstrainedCopy(source, start, dest, 0, end - start);
+			return dest;
+		}
+
+		/// <summary>
+		/// Joins the items of the enumerable into a string.
+		/// </summary>
+		public static string JoinString(this IEnumerable<string> self, string separator = ", ") =>
+			string.Join(separator, self ?? Enumerable.Empty<string>());
 
 
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self, double? defaultValue = null)
@@ -102,8 +117,27 @@ namespace TUGraz.VectoCommon.Utils
 		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
-		public static IEnumerable<(T1 Item1, T2 Item2)> Zip<T1,T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
-			self.ZipAll(other, (arg1, arg2) => (arg1,arg2));
+		public static IEnumerable<(T1 Item1, T2 Item2)> Zip<T1, T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
+			self.ZipAll(other, (arg1, arg2) => (arg1, arg2));
+
+		/// <summary>
+		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
+		public static IEnumerable<(T1 Item1, T2 Item2, T3 Item3)> Zip<T1, T2, T3>(this IEnumerable<T1> item1, IEnumerable<T2> item2, IEnumerable<T3> item3)
+		{
+			using (var first = item1.GetEnumerator()) {
+				using (var second = item2.GetEnumerator()) {
+					using (var third = item3.GetEnumerator()) {
+						while (first.MoveNext() | second.MoveNext() | third.MoveNext()) {
+							yield return (first.Current, second.Current, third.Current);
+						}
+					}
+				}
+			}
+		}
+
+
 
 		/// <summary>
 		/// Sums up the values of selector.
@@ -229,22 +263,26 @@ namespace TUGraz.VectoCommon.Utils
 		public static IEnumerable<TResult> Pairwise<TSource, TResult>(this IEnumerable<TSource> source,
 			Func<TSource, TSource, TResult> resultSelector)
 		{
-			var previous = default(TSource);
-
 			using (var it = source.GetEnumerator()) {
 				if (it.MoveNext()) {
-					previous = it.Current;
-				}
-
-				while (it.MoveNext()) {
-					yield return resultSelector(previous, previous = it.Current);
+					var previous = it.Current;
+					while (it.MoveNext()) {
+						yield return resultSelector(previous, previous = it.Current);
+					}
 				}
 			}
 		}
 
-		public static IEnumerable<Tuple<TSource, TSource>> Pairwise<TSource>(this IEnumerable<TSource> source)
+		public static IEnumerable<(TSource, TSource)> Pairwise<TSource>(this IEnumerable<TSource> source)
 		{
-			return Pairwise(source, Tuple.Create);
+			using (var it = source.GetEnumerator()) {
+				if (it.MoveNext()) {
+					var previous = it.Current;
+					while (it.MoveNext()) {
+						yield return (previous, previous = it.Current);
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -291,7 +329,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="item5"></param>
 		/// <param name="item6"></param>
 		/// <param name="item7"></param>
-		public static void Deconstruct<T>(this IEnumerable<T> values, out T item1, out T item2, 
+		public static void Deconstruct<T>(this IEnumerable<T> values, out T item1, out T item2,
 			out T item3, out T item4, out T item5, out T item6, out T item7)
 		{
 			using (var enumerator = values.GetEnumerator()) {

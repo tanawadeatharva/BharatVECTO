@@ -67,14 +67,5 @@ namespace TUGraz.VectoCore.Utils
 
 		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key, TValue defaultValue) =>
 			self.TryGetValue(key, out var value) ? value : defaultValue;
-
-
-		/// <summary>
-		/// Joins the items of the enumerable into a string.
-		/// </summary>
-		/// <param name="self"></param>
-		/// <param name="separator"></param>
-		/// <returns></returns>
-		public static string JoinString(this IEnumerable<string> self, string separator = ", ") => string.Join(separator, self ?? Enumerable.Empty<string>());
 	}
 }
