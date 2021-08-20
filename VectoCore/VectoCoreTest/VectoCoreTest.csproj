@@ -2269,28 +2269,28 @@
     <None Include="TestData\Hybrids\Input CityBus 6x2_HEV_P2\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollEngineStop.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollEngineStop.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollWithoutEngineStop.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollWithoutEngineStop.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollEngineStop.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollEngineStop.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollEngineStop.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollEngineStop.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollWithoutEngineStop.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollWithoutEngineStop.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollEngineStop.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollEngineStop.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollWithoutEngineStop.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollWithoutEngineStop.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollWithoutEngineStop.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollWithoutEngineStop.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-HEV\Group5EcoRollEng\325kW.vfld">
@@ -3689,22 +3689,22 @@
     <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC12.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC12.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC12.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC12.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_NoADAS.vveh">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_NoADAS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_NoADAS.vecto">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_NoADAS.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CrestCoast2.vdri">
@@ -3755,34 +3755,34 @@
     <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseJ.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseJ.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseI.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseI.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseH.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseH.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseG.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseG.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseF.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseF.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseE.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseE.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseD.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseD.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseC.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseC.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseB.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseB.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\Group5Eng_CaseA.vdri">
+    <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\CaseA.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-Conventional\Group5PCCEng\LAC-DF-Vdrop.csv">

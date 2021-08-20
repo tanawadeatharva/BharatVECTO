@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -13,10 +14,12 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using PCCStates = TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.PCCStates;
 
 namespace TUGraz.VectoCore.Tests.Integration.ADAS
 {
@@ -24,13 +27,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
-		private const string Group5NoADAS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_NoADAS.vecto";
-		private const string Group5EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollWithoutEngineStop.vecto";
-		private const string Group5EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_EcoRollEngineStop.vecto";
-		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC12.vecto";
-		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123.vecto";
-		private const string Group5PCC123EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollWithoutEngineStop.vecto";
-		private const string Group5PCC123EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_Tractor_PCC123EcoRollEngineStop.vecto";
+		private const string BaseDirEng = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\";
+		private const string Group5NoADAS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_NoADAS.vecto";
+		private const string Group5EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollWithoutEngineStop.vecto";
+		private const string Group5EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollEngineStop.vecto";
+		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC12.vecto";
+		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123.vecto";
+		private const string Group5PCC123EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollWithoutEngineStop.vecto";
+		private const string Group5PCC123EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollEngineStop.vecto";
 
 		private IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
@@ -95,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(7, TestName = "EcoRoll DH1.1 const - TS68"),
 		TestCase(8, TestName = "EcoRoll DH1.1 const - TS72"),
 		TestCase(9, TestName = "EcoRoll DH1.1 const - TS80"),
-			]
+		]
 		public void TestEcoRoll(int cycleIdx)
 		{
 			var jobName = @"TestData\Integration\ADAS-Conventional\Group5EcoRollEng\Class5_Tractor_ENG.vecto";
@@ -312,6 +316,134 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			RunSingleEngineeringCycle(jobName, cycleIdx);
 		}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+		[Test]
+		public void Class5_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(4119, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(5426, PCCStates.UseCase1, DrivingAction.Coast),
+			(5830, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(4609, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(5414, PCCStates.UseCase1, DrivingAction.Coast),
+			(7291, PCCStates.OutsideSegment, DrivingAction.Coast),
+			(7490, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(3967, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(4912, PCCStates.UseCase1, DrivingAction.Coast),
+			(6089, PCCStates.WithinSegment, DrivingAction.Coast),
+			(6283, PCCStates.WithinSegment, DrivingAction.Brake),
+			(7160, PCCStates.OutsideSegment, DrivingAction.Coast),
+			(7573, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(654, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(1867, PCCStates.UseCase1, DrivingAction.Coast),
+			(2481, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(4021, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(4919, PCCStates.UseCase1, DrivingAction.Coast),
+			(6217, PCCStates.WithinSegment, DrivingAction.Coast),
+			(6593, PCCStates.WithinSegment, DrivingAction.Brake),
+			(6704, PCCStates.OutsideSegment, DrivingAction.Coast),
+			(7092, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(689, PCCStates.WithinSegment, DrivingAction.Accelerate), 
+			(2066, PCCStates.UseCase1, DrivingAction.Coast), 
+			(2377, PCCStates.WithinSegment, DrivingAction.Accelerate), 
+			(2984, PCCStates.UseCase1, DrivingAction.Coast), 
+			(3871, PCCStates.WithinSegment, DrivingAction.Coast), 
+			(3978, PCCStates.OutsideSegment, DrivingAction.Coast),
+			(4179, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
+			(712, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(2066, PCCStates.UseCase1, DrivingAction.Coast),
+			(2377, PCCStates.WithinSegment, DrivingAction.Accelerate),
+			(2984, PCCStates.UseCase1, DrivingAction.Coast),
+			(3871, PCCStates.WithinSegment, DrivingAction.Coast),
+			(3978, PCCStates.OutsideSegment, DrivingAction.Coast),
+			(4179, PCCStates.OutsideSegment, DrivingAction.Accelerate));
+
+
+
+
+
+
+		private void TestPCC(string jobName, string cycleName, params (double distance, PCCStates pcc, DrivingAction action)[] data)
+		{
+			jobName = BaseDirEng + jobName + ".vecto";
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
+			var sumContainer = new SummaryDataContainer(writer);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) { WriteModalResults = true, Validate = false, SumData = sumContainer };
+
+			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
+			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			var sCol = mod.Columns[ModalResultField.dist.GetName()];
+			var pccCol = mod.Columns["PCCState"];
+			var driverActionCol = mod.Columns["DriverAction"];
+			var vActCol = mod.Columns[ModalResultField.v_act.GetName()];
+
+			var expected = new List<(Meter start, Meter end, PCCStates pcc, DrivingAction action)>(
+					data.Pairwise().Select(x => (x.Item1.distance.SI<Meter>(), x.Item2.distance.SI<Meter>(), x.Item1.pcc, x.Item1.action)))
+				{ (data.Last().distance.SI<Meter>(), 1e6.SI<Meter>(), data.Last().pcc, data.Last().action) };
+
+			var segmentWasTested = false;
+
+			using (var exp = expected.AsEnumerable().GetEnumerator()) {
+				exp.MoveNext();
+				foreach (var (dist, pcc, action, vAct) in mod.Rows.Cast<DataRow>().Select(r =>
+					((Meter)r[sCol], (PCCStates)Convert.ToInt32(r[pccCol]), r[driverActionCol].ParseEnum<DrivingAction>(), (MeterPerSecond)r[vActCol]))) {
+					if (dist.IsBetween(exp.Current.start + vAct * 2.SI<Second>(), exp.Current.end - vAct * 2.SI<Second>())) {
+						Assert.AreEqual(exp.Current.pcc, pcc, $"dist {dist}: Wrong PCC state: {pcc} instead of {exp.Current.pcc}.");
+						Assert.AreEqual(exp.Current.action, action, $"dist {dist}: Wrong DriverAction: {action} instead of {exp.Current.action}.");
+						segmentWasTested = true;
+						continue;
+					}
+
+					if (dist > exp.Current.end) {
+						Assert.IsTrue(segmentWasTested);
+						if (!exp.MoveNext())
+							break;
+						segmentWasTested = false;
+					}
+				}
+			}
+			Assert.IsTrue(segmentWasTested);
+		}
+
+
 		[TestCase(5, TestName = "PCC Group5 RD RefLoad"),
 		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
 		public void TestTCCDeclaration(int runIdx)
@@ -396,20 +528,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[runIdx];
+			run.Run();
 
-			jobContainer.AddRun(runs[runIdx]);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-
-			//var run = jobContainer.Runs[runIdx].Run;
-			//run.Run();
-			//var runs = factory.SimulationRuns().ToArray();
-			//runs[runIdx].Run();
-
-			//Assert.IsTrue(runs.FinishedWithoutErrors);
+			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			return jobContainer;
 		}
@@ -448,6 +570,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 
+
 			var c = "CrestCoast1.vdri";
 			var result = CheckCycle(c, sumContainer);
 			Assert.AreEqual(203, result.NoADAS, 5);
@@ -457,13 +580,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
 			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
 			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			TestPCCSections(modData, c);
 
-			var m = modData[(Group5PCC123, c.Slice(0, -5))];
-			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
-			foreach (var (p, i) in pccStates.Select()) {
-				Assert.AreEqual(0, p, $"PCCStates Index[{i}] should be zero.");
+			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
+				Assert.AreEqual(0, p, "PCCStates should be zero.");
 			}
+
 
 			c = "CrestCoast2.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -474,20 +595,25 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
 			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
 			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			TestPCCSections(modData, c);
+			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
+				Assert.AreEqual(0, p, "PCCStates should be zero.");
+			}
 
 			c = "Group5Eng_CaseA.vdri";
 			result = CheckCycle(c, sumContainer);
 			Assert.AreEqual(264, result.NoADAS, 5);
-			Assert.Less(result.PCC12, result.NoADAS, $"{c}: pcc should be less.");
-			Assert.Less(result.PCC123, result.NoADAS, $"{c}: pcc should be less.");
-			Assert.AreEqual(result.PCC12, result.PCC123, $"{c}: pcc 12 and 123 should be equal.");
+			Assert.Less(result.PCC12, result.NoADAS);
+			Assert.Less(result.PCC123, result.NoADAS);
+			Assert.AreEqual(result.PCC12, result.PCC123);
 			Assert.Less(result.EcoRollNoStop, result.NoADAS);
 			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
 			Assert.Less(result.PCC123EngineStop, result.EcoRollEngineStop);
 			Assert.Less(result.PCC123NoEngineStop, result.EcoRollNoStop);
 			Assert.Less(result.PCC123NoEngineStop, result.EcoRollEngineStop);
-			TestPCCSections(modData, c, (4119d, 0, 1), (5426d, 1, 2), (5830d, 2, 0));
+			TestPCCSections(modData, c,
+				(4119d, 0, 1, DrivingAction.Accelerate),
+				(5426d, 1, 2, DrivingAction.Coast),
+				(5830d, 2, 0, DrivingAction.Accelerate));
 
 			c = "Group5Eng_CaseB.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -498,7 +624,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.Less(result.NoADAS, result.EcoRollNoStop);
 			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
 			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (4609, 0, 1), (5414, 1, 2), (7291, 2, 0));
+			TestPCCSections(modData, c,
+				(4609, 0, 1, DrivingAction.Accelerate),
+				(5414, 1, 2, DrivingAction.Coast),
+				(7291, 2, 0, DrivingAction.Accelerate));
 
 			c = "Group5Eng_CaseC.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -509,7 +638,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.Less(result.PCC123, result.PCC12);
 			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
 			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (3967, 0, 1), (4912, 1, 2), (6089, 2, 1), (7173, 1, 0));
+			TestPCCSections(modData, c,
+				(3967, 0, 1, DrivingAction.Accelerate),
+				(4912, 1, 2, DrivingAction.Coast),
+				(6089, 2, 1, DrivingAction.Brake),
+				(7173, 1, 0, DrivingAction.Accelerate));
 
 			c = "Group5Eng_CaseD.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -520,7 +653,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.Less(result.PCC123, result.PCC12);
 			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
 			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (654, 0, 1), (1867, 1, 2), (2481, 2, 0), (4021, 0, 1), (4919, 1, 2), (6217, 2, 1), (6704, 1, 0));
+			TestPCCSections(modData, c,
+				(654, 0, 1, DrivingAction.Accelerate),
+				(1867, 1, 2, DrivingAction.Accelerate),
+				(2481, 2, 0, DrivingAction.Coast),
+				(4021, 0, 1, DrivingAction.Accelerate),
+				(4919, 1, 2, DrivingAction.Accelerate),
+				(6217, 2, 1, DrivingAction.Coast),
+				(6704, 1, 0, DrivingAction.Accelerate));
 
 			c = "Group5Eng_CaseE.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -575,7 +715,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			Assert.AreEqual(result.PCC123, result.PCC12);
 			Assert.AreEqual(result.PCC123NoEngineStop, result.PCC123);
 			Assert.AreEqual(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c);
+			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
+				Assert.AreEqual(0, p, "PCCStates should be zero.");
+			}
 
 			c = "Group5Eng_CaseJ.vdri";
 			result = CheckCycle(c, sumContainer);
@@ -614,35 +756,62 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		private void TestPCCSections(ConcurrentDictionary<(string, string), ModalResults> modData, string c,
-			params (double Distance, int Before, int After)[] expectedSections)
+			params (double Distance, int Before, int After, DrivingAction Action)[] expectedSections)
 		{
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
 			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
+			var driverAction = m.SelectData(x => Convert.ToInt32(x["DriverAction"]));
 			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
 			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
-			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas));
+			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas, driverAction));
 			if (expectedSections.Length == 0) {
 				Assert.IsFalse(sections.Any());
 			} else {
 				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
+					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
 					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+					foreach (var (_, _, action) in actual.SegmentValues) {
+						Assert.AreEqual(exp.Action, action);
+					}
 				}
 			}
 		}
 
-		IEnumerable<(T2 Distance, T1 Before, T1 After)> GetDistancesOfStateChanges<T1, T2>(IEnumerable<T1> states, IEnumerable<T2> distances)
+		private void TestPCCSections(ConcurrentDictionary<(string, string), ModalResults> modData, string c,
+			params (double Distance, int Before, int After)[] expectedSections)
+		{
+			var m = modData[(Group5PCC123, c.Slice(0, -5))];
+			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
+			var driverAction = m.SelectData(x => Convert.ToInt32(x["DriverAction"]));
+			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
+			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
+			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas, driverAction));
+			if (expectedSections.Length == 0) {
+				Assert.IsFalse(sections.Any());
+			} else {
+				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
+					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+				}
+			}
+		}
+
+		IEnumerable<(T2 Distance, T1 Before, T1 After, T2[] SegmentValues)> GetDistancesOfStateChanges<T1, T2>(IEnumerable<T1> states, IEnumerable<T2> distances)
 		{
 			using (var values = states.GetEnumerator()) {
 				using (var distance = distances.GetEnumerator()) {
 					distance.MoveNext();
 					values.MoveNext();
 					var value = values.Current;
+					var segmentValues = new List<T2> { distance.Current };
 					while (values.MoveNext() | distance.MoveNext()) {
 						if (!value.Equals(values.Current)) {
-							yield return (distance.Current, value, values.Current);
+							yield return (distance.Current, value, values.Current, segmentValues.ToArray());
+							segmentValues.Clear();
 							value = values.Current;
+							segmentValues.Add(distance.Current);
 						}
 					}
 				}
