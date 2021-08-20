@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "Class5_P2.5_PCC123EcoRollEngineStop.vveh",
+    "VehicleFile": "Class5_P25_PCC123EcoRollEngineStop.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",

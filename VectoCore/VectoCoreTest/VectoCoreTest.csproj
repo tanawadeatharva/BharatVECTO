@@ -2470,10 +2470,10 @@
     <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_NoADAS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_P2.5_PCC123EcoRollEngineStop.vecto">
+    <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_P25_PCC123EcoRollEngineStop.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_P2.5_PCC123EcoRollEngineStop.vveh">
+    <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_P25_PCC123EcoRollEngineStop.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS-HEV\Group5PCCEng\Class5_P4_PCC123EcoRollEngineStop.vecto">
