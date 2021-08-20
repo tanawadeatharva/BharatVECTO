@@ -1,14 +1,14 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-13T16:01:09.2389451Z",
+    "Date": "2021-08-20T16:29:17.6081759Z",
     "AppVersion": "3",
     "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "Class5_Tractor_NoADAS.vveh",
+    "VehicleFile": "Class5_P4_PCC123EcoRollEngineStop.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
@@ -50,16 +50,16 @@
     "Cycles": [
       "CrestCoast1.vdri",
       "CrestCoast2.vdri",
-      "Group5Eng_CaseA.vdri",
-      "Group5Eng_CaseB.vdri",
-      "Group5Eng_CaseC.vdri",
-      "Group5Eng_CaseD.vdri",
-      "Group5Eng_CaseE.vdri",
-      "Group5Eng_CaseF.vdri",
-      "Group5Eng_CaseG.vdri",
-      "Group5Eng_CaseH.vdri",
-      "Group5Eng_CaseI.vdri",
-      "Group5Eng_CaseJ.vdri"
+      "CaseA.vdri",
+      "CaseB.vdri",
+      "CaseC.vdri",
+      "CaseD.vdri",
+      "CaseE.vdri",
+      "CaseF.vdri",
+      "CaseG.vdri",
+      "CaseH.vdri",
+      "CaseI.vdri",
+      "CaseJ.vdri"
     ]
   }
 }

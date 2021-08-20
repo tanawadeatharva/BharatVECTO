@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-13T16:04:07.2693958Z",
+    "Date": "2021-08-20T16:27:44.7568901Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -96,7 +96,7 @@
       {
         "Count": 1,
         "Ratio": 1.0,
-        "Position": "P2",
+        "Position": "P3",
         "MotorFile": "GenericEMotor_140kW_936Nm.vem",
         "MechanicalEfficiency": 1.0
       }

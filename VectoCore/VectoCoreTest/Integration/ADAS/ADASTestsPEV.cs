@@ -29,27 +29,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests() => Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
-		private GraphWriter GetGraphWriter()
-		{
-			var graphWriter = new GraphWriter();
-			//#if TRACE
-			graphWriter.Enable();
-			//#else
-			//graphWriter.Disable();
-			//#endif
-			graphWriter.Xfields = new[] { ModalResultField.dist };
-
-			graphWriter.Yfields = new[] {
-				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
-				ModalResultField.EM_E2_Off_,ModalResultField.P_E2_mech_
-			};
-			graphWriter.Series1Label = "ADAS PCC";
-			graphWriter.PlotIgnitionState = true;
-			return graphWriter;
-		}
-
-
-		#region PCC Engineering Testcases
 		[Test]
 		public void Class5_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, OutsideSegment, Accelerate),         // len: 4060m
@@ -510,8 +489,5 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				}
 			}
 		}
-		#endregion
-
-
 	}
 }
