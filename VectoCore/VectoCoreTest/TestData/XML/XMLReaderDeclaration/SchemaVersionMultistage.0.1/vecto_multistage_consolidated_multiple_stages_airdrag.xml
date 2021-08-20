@@ -821,8 +821,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<LegislativeCategory>M3</LegislativeCategory>				
 				<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
 				<AirdragModifiedMultistage>false</AirdragModifiedMultistage>
-				<NgTankSystem>Liquefied</NgTankSystem>				
-				<ClassBus>B</ClassBus>			
+				<NgTankSystem>Liquefied</NgTankSystem>						
 				<VehicleDeclarationType>interim</VehicleDeclarationType>
 				<ADAS xsi:type="ADAS_Conventional_Type">
 					<EngineStopStart>true</EngineStopStart>
