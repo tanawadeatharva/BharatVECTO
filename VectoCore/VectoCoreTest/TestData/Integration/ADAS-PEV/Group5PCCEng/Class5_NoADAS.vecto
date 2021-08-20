@@ -1,13 +1,13 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-13T16:23:14.2014524Z",
+    "Date": "2021-08-13T16:22:28.9151347Z",
     "AppVersion": "3",
     "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Class5_Tractor_PCC12.vveh",
+    "VehicleFile": "Class5_NoADAS.vveh",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
     "Padd_electric": 3540.0,
@@ -43,16 +43,16 @@
     "Cycles": [
       "CrestCoast1.vdri",
       "CrestCoast2.vdri",
-      "Group5Eng_CaseA.vdri",
-      "Group5Eng_CaseB.vdri",
-      "Group5Eng_CaseC.vdri",
-      "Group5Eng_CaseD.vdri",
-      "Group5Eng_CaseE.vdri",
-      "Group5Eng_CaseF.vdri",
-      "Group5Eng_CaseG.vdri",
-      "Group5Eng_CaseH.vdri",
-      "Group5Eng_CaseI.vdri",
-      "Group5Eng_CaseJ.vdri"
+      "CaseA.vdri",
+      "CaseB.vdri",
+      "CaseC.vdri",
+      "CaseD.vdri",
+      "CaseE.vdri",
+      "CaseF.vdri",
+      "CaseG.vdri",
+      "CaseH.vdri",
+      "CaseI.vdri",
+      "CaseJ.vdri"
     ]
   }
 }

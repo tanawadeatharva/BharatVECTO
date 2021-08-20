@@ -3,11 +3,8 @@ using System.Linq;
 using Ninject;
 using NUnit.Framework;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Reflection;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -19,7 +16,8 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using PCCStates = TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.PCCStates;
+using static TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.PCCStates;
+using static TUGraz.VectoCore.Models.SimulationComponent.Impl.DrivingAction;
 
 namespace TUGraz.VectoCore.Tests.Integration.ADAS
 {
@@ -27,14 +25,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
-		private const string BaseDirEng = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\";
-		private const string Group5NoADAS = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_NoADAS.vecto";
-		private const string Group5EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollWithoutEngineStop.vecto";
-		private const string Group5EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_EcoRollEngineStop.vecto";
-		private const string Group5PCC12 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC12.vecto";
-		private const string Group5PCC123 = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123.vecto";
-		private const string Group5PCC123EcoRollWithoutEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollWithoutEngineStop.vecto";
-		private const string Group5PCC123EcoRollEngineStop = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\Class5_PCC123EcoRollEngineStop.vecto";
+		private const string BasePath = @"TestData\Integration\ADAS-PEV\Group5PCCEng\";
+		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		private IXMLInputDataReader _xmlInputReader;
 		private IKernel _kernel;
@@ -223,227 +215,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			//var container = RunSingleDeclarationJob(filename, 1);
 		}
 
-
-		[TestCase(Group5EcoRollWithoutEngineStop, 0, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 1"),
-		TestCase(Group5EcoRollWithoutEngineStop, 1, TestName = "G5Eng EcoRoll Without Engine Stop CrestCoast 2"),
-		TestCase(Group5EcoRollWithoutEngineStop, 2, TestName = "G5Eng EcoRoll Without Engine Stop Case A"), // Case A
-		TestCase(Group5EcoRollWithoutEngineStop, 3, TestName = "G5Eng EcoRoll Without Engine Stop Case B"), // Case B
-		TestCase(Group5EcoRollWithoutEngineStop, 4, TestName = "G5Eng EcoRoll Without Engine Stop Case C"), // Case C
-		TestCase(Group5EcoRollWithoutEngineStop, 5, TestName = "G5Eng EcoRoll Without Engine Stop Case D"), // Case D
-		TestCase(Group5EcoRollWithoutEngineStop, 6, TestName = "G5Eng EcoRoll Without Engine Stop Case E"), // Case E
-		TestCase(Group5EcoRollWithoutEngineStop, 7, TestName = "G5Eng EcoRoll Without Engine Stop Case F"), // Case F
-		TestCase(Group5EcoRollWithoutEngineStop, 8, TestName = "G5Eng EcoRoll Without Engine Stop Case G"), // Case G
-		TestCase(Group5EcoRollWithoutEngineStop, 9, TestName = "G5Eng EcoRoll Without Engine Stop Case H"), // Case H
-		TestCase(Group5EcoRollWithoutEngineStop, 10, TestName = "G5Eng EcoRoll Without Engine Stop Case I"), // Case I
-		TestCase(Group5EcoRollWithoutEngineStop, 11, TestName = "G5Eng EcoRoll Without Engine Stop Case J"), // Case J
-
-		TestCase(Group5EcoRollEngineStop, 0, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 1"),
-		TestCase(Group5EcoRollEngineStop, 1, TestName = "G5Eng EcoRoll With Engine Stop CrestCoast 2"),
-		TestCase(Group5EcoRollEngineStop, 2, TestName = "G5Eng EcoRoll With Engine Stop Case A"), // Case A
-		TestCase(Group5EcoRollEngineStop, 3, TestName = "G5Eng EcoRoll With Engine Stop Case B"), // Case B
-		TestCase(Group5EcoRollEngineStop, 4, TestName = "G5Eng EcoRoll With Engine Stop Case C"), // Case C
-		TestCase(Group5EcoRollEngineStop, 5, TestName = "G5Eng EcoRoll With Engine Stop Case D"), // Case D
-		TestCase(Group5EcoRollEngineStop, 6, TestName = "G5Eng EcoRoll With Engine Stop Case E"), // Case E
-		TestCase(Group5EcoRollEngineStop, 7, TestName = "G5Eng EcoRoll With Engine Stop Case F"), // Case F
-		TestCase(Group5EcoRollEngineStop, 8, TestName = "G5Eng EcoRoll With Engine Stop Case G"), // Case G
-		TestCase(Group5EcoRollEngineStop, 9, TestName = "G5Eng EcoRoll With Engine Stop Case H"), // Case H
-		TestCase(Group5EcoRollEngineStop, 10, TestName = "G5Eng EcoRoll With Engine Stop Case I"), // Case I
-		TestCase(Group5EcoRollEngineStop, 11, TestName = "G5Eng EcoRoll With Engine Stop Case J"), // Case J
-
-		TestCase(Group5NoADAS, 0, TestName = "G5Eng NoPCC CrestCoast 1"),
-		TestCase(Group5NoADAS, 1, TestName = "G5Eng NoPCC CrestCoast 2"),
-		TestCase(Group5NoADAS, 2, TestName = "G5Eng NoPCC Case A"), // Case A
-		TestCase(Group5NoADAS, 3, TestName = "G5Eng NoPCC Case B"), // Case B
-		TestCase(Group5NoADAS, 4, TestName = "G5Eng NoPCC Case C"), // Case C
-		TestCase(Group5NoADAS, 5, TestName = "G5Eng NoPCC Case D"), // Case D
-		TestCase(Group5NoADAS, 6, TestName = "G5Eng NoPCC Case E"), // Case E
-		TestCase(Group5NoADAS, 7, TestName = "G5Eng NoPCC Case F"), // Case F
-		TestCase(Group5NoADAS, 8, TestName = "G5Eng NoPCC Case G"), // Case G
-		TestCase(Group5NoADAS, 9, TestName = "G5Eng NoPCC Case H"), // Case H
-		TestCase(Group5NoADAS, 10, TestName = "G5Eng NoPCC Case I"), // Case I
-		TestCase(Group5NoADAS, 11, TestName = "G5Eng NoPCC Case J"), // Case J
-
-		TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
-		TestCase(Group5PCC12, 1, TestName = "G5Eng PCC12 CrestCoast 2"),
-		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A
-		TestCase(Group5PCC12, 3, TestName = "G5Eng PCC12 Case B"), // Case B
-		TestCase(Group5PCC12, 4, TestName = "G5Eng PCC12 Case C"), // Case C
-		TestCase(Group5PCC12, 5, TestName = "G5Eng PCC12 Case D"), // Case D
-		TestCase(Group5PCC12, 6, TestName = "G5Eng PCC12 Case E"), // Case E
-		TestCase(Group5PCC12, 7, TestName = "G5Eng PCC12 Case F"), // Case F
-		TestCase(Group5PCC12, 8, TestName = "G5Eng PCC12 Case G"), // Case G
-		TestCase(Group5PCC12, 9, TestName = "G5Eng PCC12 Case H"), // Case H
-		TestCase(Group5PCC12, 10, TestName = "G5Eng PCC12 Case I"), // Case I
-		TestCase(Group5PCC12, 11, TestName = "G5Eng PCC12 Case J"), // Case J
-
-		TestCase(Group5PCC123, 2, TestName = "G5Eng PCC123 Case A"), // Case A
-		TestCase(Group5PCC123, 3, TestName = "G5Eng PCC123 Case B"), // Case B
-		TestCase(Group5PCC123, 4, TestName = "G5Eng PCC123 Case C"), // Case C
-		TestCase(Group5PCC123, 5, TestName = "G5Eng PCC123 Case D"), // Case D
-		TestCase(Group5PCC123, 6, TestName = "G5Eng PCC123 Case E"), // Case E
-		TestCase(Group5PCC123, 7, TestName = "G5Eng PCC123 Case F"), // Case F
-		TestCase(Group5PCC123, 8, TestName = "G5Eng PCC123 Case G"), // Case G
-		TestCase(Group5PCC123, 9, TestName = "G5Eng PCC123 Case H"), // Case H
-		TestCase(Group5PCC123, 10, TestName = "G5Eng PCC123 Case I"), // Case I
-		TestCase(Group5PCC123, 11, TestName = "G5Eng PCC123 Case J"), // Case J
-
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 2, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case A"), // Case A
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 3, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case B"), // Case B
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 4, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case C"), // Case C
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 5, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case D"), // Case D
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 6, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case E"), // Case E
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 7, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case F"), // Case F
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 8, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case G"), // Case G
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 9, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case H"), // Case H
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 10, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case I"), // Case I
-		TestCase(Group5PCC123EcoRollWithoutEngineStop, 11, TestName = "G5Eng PCC123-Eco WithoutEngineStop Case J"), // Case J
-
-		TestCase(Group5PCC123EcoRollEngineStop, 0, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 1"),
-		TestCase(Group5PCC123EcoRollEngineStop, 1, TestName = "G5Eng PCC123-Eco-EngineStop CrestCoast 2"),
-		TestCase(Group5PCC123EcoRollEngineStop, 2, TestName = "G5Eng PCC123-Eco-EngineStop Case A"), // Case A
-		TestCase(Group5PCC123EcoRollEngineStop, 3, TestName = "G5Eng PCC123-Eco-EngineStop Case B"), // Case B
-		TestCase(Group5PCC123EcoRollEngineStop, 4, TestName = "G5Eng PCC123-Eco-EngineStop Case C"), // Case C
-		TestCase(Group5PCC123EcoRollEngineStop, 5, TestName = "G5Eng PCC123-Eco-EngineStop Case D"), // Case D
-		TestCase(Group5PCC123EcoRollEngineStop, 6, TestName = "G5Eng PCC123-Eco-EngineStop Case E"), // Case E
-		TestCase(Group5PCC123EcoRollEngineStop, 7, TestName = "G5Eng PCC123-Eco-EngineStop Case F"), // Case F
-		TestCase(Group5PCC123EcoRollEngineStop, 8, TestName = "G5Eng PCC123-Eco-EngineStop Case G"), // Case G
-		TestCase(Group5PCC123EcoRollEngineStop, 9, TestName = "G5Eng PCC123-Eco-EngineStop Case H"), // Case H
-		TestCase(Group5PCC123EcoRollEngineStop, 10, TestName = "G5Eng PCC123-Eco-EngineStop Case I"), // Case I
-		TestCase(Group5PCC123EcoRollEngineStop, 11, TestName = "G5Eng PCC123-Eco-EngineStop  Case J"), // Case J
-		]
-		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
-		{
-			RunSingleEngineeringCycle(jobName, cycleIdx);
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		[Test]
-		public void Class5_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(4119, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(5426, PCCStates.UseCase1, DrivingAction.Coast),
-			(5830, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-		[Test]
-		public void Class5_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(4609, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(5414, PCCStates.UseCase1, DrivingAction.Coast),
-			(7291, PCCStates.OutsideSegment, DrivingAction.Coast),
-			(7490, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-
-		[Test]
-		public void Class5_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(3967, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(4912, PCCStates.UseCase1, DrivingAction.Coast),
-			(6089, PCCStates.WithinSegment, DrivingAction.Coast),
-			(6283, PCCStates.WithinSegment, DrivingAction.Brake),
-			(7160, PCCStates.OutsideSegment, DrivingAction.Coast),
-			(7573, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-
-		[Test]
-		public void Class5_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(654, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(1867, PCCStates.UseCase1, DrivingAction.Coast),
-			(2481, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(4021, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(4919, PCCStates.UseCase1, DrivingAction.Coast),
-			(6217, PCCStates.WithinSegment, DrivingAction.Coast),
-			(6593, PCCStates.WithinSegment, DrivingAction.Brake),
-			(6704, PCCStates.OutsideSegment, DrivingAction.Coast),
-			(7092, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-
-		[Test]
-		public void Class5_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(689, PCCStates.WithinSegment, DrivingAction.Accelerate), 
-			(2066, PCCStates.UseCase1, DrivingAction.Coast), 
-			(2377, PCCStates.WithinSegment, DrivingAction.Accelerate), 
-			(2984, PCCStates.UseCase1, DrivingAction.Coast), 
-			(3871, PCCStates.WithinSegment, DrivingAction.Coast), 
-			(3978, PCCStates.OutsideSegment, DrivingAction.Coast),
-			(4179, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-		[Test]
-		public void Class5_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0d, PCCStates.OutsideSegment, DrivingAction.Accelerate),
-			(712, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(2066, PCCStates.UseCase1, DrivingAction.Coast),
-			(2377, PCCStates.WithinSegment, DrivingAction.Accelerate),
-			(2984, PCCStates.UseCase1, DrivingAction.Coast),
-			(3871, PCCStates.WithinSegment, DrivingAction.Coast),
-			(3978, PCCStates.OutsideSegment, DrivingAction.Coast),
-			(4179, PCCStates.OutsideSegment, DrivingAction.Accelerate));
-
-
-
-
-
-
-		private void TestPCC(string jobName, string cycleName, params (double distance, PCCStates pcc, DrivingAction action)[] data)
-		{
-			jobName = BaseDirEng + jobName + ".vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
-			var sumContainer = new SummaryDataContainer(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) { WriteModalResults = true, Validate = false, SumData = sumContainer };
-
-			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
-			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
-
-			var sCol = mod.Columns[ModalResultField.dist.GetName()];
-			var pccCol = mod.Columns["PCCState"];
-			var driverActionCol = mod.Columns["DriverAction"];
-			var vActCol = mod.Columns[ModalResultField.v_act.GetName()];
-
-			var expected = new List<(Meter start, Meter end, PCCStates pcc, DrivingAction action)>(
-					data.Pairwise().Select(x => (x.Item1.distance.SI<Meter>(), x.Item2.distance.SI<Meter>(), x.Item1.pcc, x.Item1.action)))
-				{ (data.Last().distance.SI<Meter>(), 1e6.SI<Meter>(), data.Last().pcc, data.Last().action) };
-
-			var segmentWasTested = false;
-
-			using (var exp = expected.AsEnumerable().GetEnumerator()) {
-				exp.MoveNext();
-				foreach (var (dist, pcc, action, vAct) in mod.Rows.Cast<DataRow>().Select(r =>
-					((Meter)r[sCol], (PCCStates)Convert.ToInt32(r[pccCol]), r[driverActionCol].ParseEnum<DrivingAction>(), (MeterPerSecond)r[vActCol]))) {
-					if (dist.IsBetween(exp.Current.start + vAct * 2.SI<Second>(), exp.Current.end - vAct * 2.SI<Second>())) {
-						Assert.AreEqual(exp.Current.pcc, pcc, $"dist {dist}: Wrong PCC state: {pcc} instead of {exp.Current.pcc}.");
-						Assert.AreEqual(exp.Current.action, action, $"dist {dist}: Wrong DriverAction: {action} instead of {exp.Current.action}.");
-						segmentWasTested = true;
-						continue;
-					}
-
-					if (dist > exp.Current.end) {
-						Assert.IsTrue(segmentWasTested);
-						if (!exp.MoveNext())
-							break;
-						segmentWasTested = false;
-					}
-				}
-			}
-			Assert.IsTrue(segmentWasTested);
-		}
-
-
 		[TestCase(5, TestName = "PCC Group5 RD RefLoad"),
 		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
 		public void TestTCCDeclaration(int runIdx)
@@ -451,36 +222,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var jobName = @"TestData\Integration\ADAS-Conventional\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
 			RunSingleDeclarationJob(jobName, runIdx);
 		}
-
-		public void RunSingleEngineeringCycle(string jobName, int cycleIdx)
-		{
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
-
-			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
-
-
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[cycleIdx];
-
-			jobContainer.AddRun(run);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
-			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
-			GetGraphWriter().Write(modFilename);
-		}
-
-
 
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
@@ -536,265 +277,907 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			return jobContainer;
 		}
 
-		[TestCase]
-		public void CompareADAS_Conventional_EngineeringJobs()
+		#region PCC Engineering Testcases
+		[Test]
+		public void Class5_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4119, WithinSegment, Accelerate),
+			(5426, UseCase1, Coast),
+			(5830, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4609, WithinSegment, Accelerate),
+			(5414, UseCase1, Coast),
+			(7291, OutsideSegment, Coast),
+			(7490, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3967, WithinSegment, Accelerate),
+			(4912, UseCase1, Coast),
+			(6089, WithinSegment, Coast),
+			(6283, WithinSegment, Brake),
+			(7160, OutsideSegment, Coast),
+			(7573, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(654, WithinSegment, Accelerate),
+			(1867, UseCase1, Coast),
+			(2481, OutsideSegment, Accelerate),
+			(4021, WithinSegment, Accelerate),
+			(4919, UseCase1, Coast),
+			(6217, WithinSegment, Coast),
+			(6593, WithinSegment, Brake),
+			(6704, OutsideSegment, Coast),
+			(7092, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(689, WithinSegment, Accelerate),
+			(2066, UseCase1, Coast),
+			(2377, WithinSegment, Accelerate),
+			(2984, UseCase1, Coast),
+			(3871, WithinSegment, Coast),
+			(3978, OutsideSegment, Coast),
+			(4179, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(701, WithinSegment, Accelerate),
+			(2066, UseCase1, Coast),
+			(2400, WithinSegment, Accelerate),
+			(2587, UseCase1, Coast),
+			(3283, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3944, WithinSegment, Accelerate),
+			(5076, UseCase1, Coast),
+			(5899, WithinSegment, Coast),
+			(6275, WithinSegment, Brake),
+			(6571, WithinSegment, Coast),
+			(6596, OutsideSegment, Coast),
+			(7323, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3804, WithinSegment, Accelerate),
+			(4772, UseCase1, Coast),
+			(6003, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3450, OutsideSegment, Accelerate),
+			(3600, 4300, WithinSegment, Accelerate),
+			(5400, 5600, UseCase2, Coast),
+			(5750, 5900, WithinSegment, Coast),
+			(5970, 6080, WithinSegment, Brake),
+			(6150, 6480, OutsideSegment, Coast),
+			(6550, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(4441, OutsideSegment, Brake),
+			(5005, OutsideSegment, Coast),
+			(5422, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(4138, OutsideSegment, Brake),
+			(4510, OutsideSegment, Coast),
+			(4718, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4119, WithinSegment, Accelerate),
+			(5426, UseCase1, Coast),
+			(5830, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4609, WithinSegment, Accelerate),
+			(5414, UseCase1, Coast),
+			(7291, OutsideSegment, Coast),
+			(7490, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3967, WithinSegment, Accelerate),
+			(4912, UseCase1, Coast),
+			(6089, WithinSegment, Coast),
+			(6161, WithinSegment, Brake),
+			(7170, OutsideSegment, Coast),
+			(7467, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(654, WithinSegment, Accelerate),
+			(1867, UseCase1, Coast),
+			(2481, OutsideSegment, Accelerate),
+			(4021, WithinSegment, Accelerate),
+			(4919, UseCase1, Coast),
+			(6217, WithinSegment, Coast),
+			(6312, WithinSegment, Brake),
+			(6696, WithinSegment, Coast),
+			(6708, OutsideSegment, Coast),
+			(6982, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(689, WithinSegment, Accelerate),
+			(2066, UseCase1, Coast),
+			(2377, WithinSegment, Accelerate),
+			(2984, UseCase1, Coast),
+			(3871, WithinSegment, Coast),
+			(3978, OutsideSegment, Coast),
+			(4179, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(701, WithinSegment, Accelerate),
+			(2066, UseCase1, Coast),
+			(2400, WithinSegment, Accelerate),
+			(2587, UseCase1, Coast),
+			(3283, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3944, WithinSegment, Accelerate),
+			(5076, UseCase1, Coast),
+			(5899, WithinSegment, Coast),
+			(5994, WithinSegment, Brake),
+			(6595, OutsideSegment, Coast),
+			(7118, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3804, WithinSegment, Accelerate),
+			(4772, UseCase1, Coast),
+			(6003, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3559, OutsideSegment, Accelerate),
+			(3559, 4470, WithinSegment, Accelerate),
+			(5245, 5364, WithinSegment, Accelerate),
+			(5364, 5692, UseCase2, Coast),
+			(5692, 5751, WithinSegment, Coast),
+			(5751, 6124, WithinSegment, Brake),
+			(6124, 6136, WithinSegment, Coast),
+			(6136, 6409, OutsideSegment, Coast),
+			(6409, 1e06, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC12_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(4441, OutsideSegment, Brake),
+			(5005, OutsideSegment, Coast),
+			(5422, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_PCC12_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(4138, OutsideSegment, Brake),
+			(4510, OutsideSegment, Coast),
+			(4718, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5601, OutsideSegment, Coast),
+			(5940, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(6079, OutsideSegment, Coast),
+			(6704, OutsideSegment, Brake),
+			(7293, OutsideSegment, Coast),
+			(7757, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5449, OutsideSegment, Coast),
+			(5779, OutsideSegment, Brake),
+			(7160, OutsideSegment, Coast),
+			(7458, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2147, OutsideSegment, Coast),
+			(2289, OutsideSegment, Brake),
+			(2481, OutsideSegment, Coast),
+			(2612, OutsideSegment, Accelerate),
+			(5505, OutsideSegment, Coast),
+			(5847, OutsideSegment, Brake),
+			(6700, OutsideSegment, Coast),
+			(6985, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2476, OutsideSegment, Accelerate),
+			(3328, OutsideSegment, Coast),
+			(3563, OutsideSegment, Brake),
+			(3972, OutsideSegment, Coast),
+			(4234, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2511, OutsideSegment, Accelerate),
+			(2873, OutsideSegment, Coast),
+			(3475, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5426, OutsideSegment, Coast),
+			(5591, OutsideSegment, Brake),
+			(6600, OutsideSegment, Coast),
+			(7111, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5286, OutsideSegment, Coast),
+			(5640, OutsideSegment, Brake),
+			(6000, OutsideSegment, Coast),
+			(6250, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4400, OutsideSegment, Accelerate),
+			(5300, 5430, OutsideSegment, Accelerate),
+			(5600, 6000, OutsideSegment, Brake),
+			(6150, 6375, OutsideSegment, Coast),
+			(6450, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(4441, OutsideSegment, Brake),
+			(5005, OutsideSegment, Coast),
+			(5422, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_NoADAS_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(4138, OutsideSegment, Brake),
+			(4510, OutsideSegment, Coast),
+			(4718, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5601, OutsideSegment, Coast),
+			(5671, OutsideSegment, Roll),
+			(6072, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(6079, OutsideSegment, Coast),
+			(6149, OutsideSegment, Roll),
+			(6433, OutsideSegment, Brake),
+			(6445, OutsideSegment, Coast),
+			(6469, OutsideSegment, Brake),
+			(7286, OutsideSegment, Coast),
+			(7750, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5449, OutsideSegment, Coast),
+			(5519, OutsideSegment, Roll),
+			(5708, OutsideSegment, Brake),
+			(7162, OutsideSegment, Coast),
+			(7460, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2147, OutsideSegment, Coast),
+			(2289, OutsideSegment, Brake),
+			(2481, OutsideSegment, Coast),
+			(2612, OutsideSegment, Accelerate),
+			(5505, OutsideSegment, Coast),
+			(5575, OutsideSegment, Roll),
+			(5764, OutsideSegment, Brake),
+			(6701, OutsideSegment, Coast),
+			(6987, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2252, OutsideSegment, Roll),
+			(2548, OutsideSegment, Accelerate),
+			(3330, OutsideSegment, Coast),
+			(3400, OutsideSegment, Roll),
+			(3518, OutsideSegment, Brake),
+			(3975, OutsideSegment, Coast),
+			(4236, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2252, OutsideSegment, Roll),
+			(2666, OutsideSegment, Accelerate),
+			(2876, OutsideSegment, Coast),
+			(2946, OutsideSegment, Roll),
+			(3147, OutsideSegment, Brake),
+			(3159, OutsideSegment, Coast),
+			(3183, OutsideSegment, Brake),
+			(3280, OutsideSegment, Coast),
+			(3517, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5426, OutsideSegment, Coast),
+			(5591, OutsideSegment, Brake),
+			(6600, OutsideSegment, Coast),
+			(7111, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5286, OutsideSegment, Coast),
+			(5356, OutsideSegment, Roll),
+			(5545, OutsideSegment, Brake),
+			(5557, OutsideSegment, Coast),
+			(5569, OutsideSegment, Brake),
+			(6002, OutsideSegment, Coast),
+			(6252, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4400, OutsideSegment, Accelerate),
+			(5300, 5430, OutsideSegment, Accelerate),
+			(5600, 6000, OutsideSegment, Brake),
+			(6150, 6375, OutsideSegment, Coast),
+			(6450, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(3468, OutsideSegment, Roll),
+			(3854, OutsideSegment, Brake),
+			(3864, OutsideSegment, Coast),
+			(3915, OutsideSegment, Brake),
+			(5012, OutsideSegment, Coast),
+			(5420, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_EcoRollWithoutEngineStop_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(3672, OutsideSegment, Roll),
+			(3890, OutsideSegment, Brake),
+			(3900, OutsideSegment, Coast),
+			(3910, OutsideSegment, Brake),
+			(4505, OutsideSegment, Coast),
+			(4723, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5601, OutsideSegment, Coast),
+			(5671, OutsideSegment, Roll),
+			(6072, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(6079, OutsideSegment, Coast),
+			(6149, OutsideSegment, Roll),
+			(6433, OutsideSegment, Brake),
+			(6445, OutsideSegment, Coast),
+			(6457, OutsideSegment, Brake),
+			(7286, OutsideSegment, Coast),
+			(7750, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5449, OutsideSegment, Coast),
+			(5519, OutsideSegment, Roll),
+			(5708, OutsideSegment, Brake),
+			(7162, OutsideSegment, Coast),
+			(7460, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2147, OutsideSegment, Coast),
+			(2289, OutsideSegment, Brake),
+			(2481, OutsideSegment, Coast),
+			(2612, OutsideSegment, Accelerate),
+			(5505, OutsideSegment, Coast),
+			(5575, OutsideSegment, Roll),
+			(5764, OutsideSegment, Brake),
+			(6701, OutsideSegment, Coast),
+			(6987, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2252, OutsideSegment, Roll),
+			(2548, OutsideSegment, Accelerate),
+			(3330, OutsideSegment, Coast),
+			(3400, OutsideSegment, Roll),
+			(3518, OutsideSegment, Brake),
+			(3975, OutsideSegment, Coast),
+			(4236, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(2182, OutsideSegment, Coast),
+			(2252, OutsideSegment, Roll),
+			(2666, OutsideSegment, Accelerate),
+			(2876, OutsideSegment, Coast),
+			(2946, OutsideSegment, Roll),
+			(3147, OutsideSegment, Brake),
+			(3159, OutsideSegment, Coast),
+			(3171, OutsideSegment, Brake),
+			(3280, OutsideSegment, Coast),
+			(3517, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5426, OutsideSegment, Coast),
+			(5591, OutsideSegment, Brake),
+			(6600, OutsideSegment, Coast),
+			(7111, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(5286, OutsideSegment, Coast),
+			(5356, OutsideSegment, Roll),
+			(5545, OutsideSegment, Brake),
+			(6002, OutsideSegment, Coast),
+			(6252, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4400, OutsideSegment, Accelerate),
+			(5300, 5430, OutsideSegment, Accelerate),
+			(5600, 6000, OutsideSegment, Brake),
+			(6150, 6375, OutsideSegment, Coast),
+			(6450, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(3468, OutsideSegment, Roll),
+			(3854, OutsideSegment, Brake),
+			(3864, OutsideSegment, Coast),
+			(3884, OutsideSegment, Brake),
+			(5012, OutsideSegment, Coast),
+			(5420, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_EcoRollEngineStop_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(3672, OutsideSegment, Roll),
+			(3890, OutsideSegment, Brake),
+			(4505, OutsideSegment, Coast),
+			(4723, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4025, WithinSegment, Accelerate),
+			(5309, UseCase1, Roll),
+			(5908, OutsideSegment, Coast),
+			(5920, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4352, WithinSegment, Accelerate),
+			(5216, UseCase1, Roll),
+			(6698, WithinSegment, Coast),
+			(6769, WithinSegment, Roll),
+			(7169, WithinSegment, Brake),
+			(7182, WithinSegment, Coast),
+			(7551, OutsideSegment, Coast),
+			(7911, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3850, WithinSegment, Accelerate),
+			(4807, UseCase1, Roll),
+			(5935, WithinSegment, Coast),
+			(6141, WithinSegment, Brake),
+			(7154, WithinSegment, Coast),
+			(7278, OutsideSegment, Coast),
+			(7579, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(630, WithinSegment, Accelerate),
+			(1786, UseCase1, Roll),
+			(2500, OutsideSegment, Coast),
+			(2547, OutsideSegment, Accelerate),
+			(3912, WithinSegment, Accelerate),
+			(4834, UseCase1, Roll),
+			(5994, WithinSegment, Coast),
+			(6272, WithinSegment, Brake),
+			(6693, WithinSegment, Coast),
+			(6804, OutsideSegment, Coast),
+			(7093, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(654, WithinSegment, Accelerate),
+			(2007, UseCase1, Roll),
+			(2411, WithinSegment, Coast),
+			(2434, WithinSegment, Accelerate),
+			(2947, UseCase1, Roll),
+			(3722, WithinSegment, Coast),
+			(4060, OutsideSegment, Coast),
+			(4299, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(665, WithinSegment, Accelerate),
+			(2007, UseCase1, Roll),
+			(3172, WithinSegment, Coast),
+			(3243, WithinSegment, Roll),
+			(3350, OutsideSegment, Roll),
+			(3539, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3920, WithinSegment, Accelerate),
+			(4994, UseCase1, Roll),
+			(5774, WithinSegment, Coast),
+			(6053, WithinSegment, Brake),
+			(6572, WithinSegment, Coast),
+			(6904, OutsideSegment, Coast),
+			(7323, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3722, WithinSegment, Accelerate),
+			(4609, UseCase1, Roll),
+			(5819, WithinSegment, Coast),
+			(5890, WithinSegment, Roll),
+			(6094, OutsideSegment, Roll),
+			(6331, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3547, OutsideSegment, Accelerate),
+			(5364, 5623, UseCase2, Roll),
+			(5623, 5841, WithinSegment, Coast),
+			(5841, 6113, WithinSegment, Brake),
+			(6113, 6224, WithinSegment, Coast),
+			(6224, 6514, OutsideSegment, Coast),
+			(6514, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(3468, OutsideSegment, Roll),
+			(3854, OutsideSegment, Brake),
+			(3864, OutsideSegment, Coast),
+			(3915, OutsideSegment, Brake),
+			(5012, OutsideSegment, Coast),
+			(5420, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123EcoRollWithoutEngineStop_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(3672, OutsideSegment, Roll),
+			(3890, OutsideSegment, Brake),
+			(3900, OutsideSegment, Coast),
+			(3910, OutsideSegment, Brake),
+			(4505, OutsideSegment, Coast),
+			(4723, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4025, WithinSegment, Accelerate),
+			(5309, UseCase1, Roll),
+			(5908, OutsideSegment, Coast),
+			(5932, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(4352, WithinSegment, Accelerate),
+			(5216, UseCase1, Roll),
+			(6698, WithinSegment, Coast),
+			(6757, WithinSegment, Roll),
+			(7158, WithinSegment, Brake),
+			(7170, WithinSegment, Coast),
+			(7552, OutsideSegment, Coast),
+			(7912, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3850, WithinSegment, Accelerate),
+			(4807, UseCase1, Roll),
+			(5935, WithinSegment, Coast),
+			(6141, WithinSegment, Brake),
+			(7155, WithinSegment, Coast),
+			(7278, OutsideSegment, Coast),
+			(7579, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(630, WithinSegment, Accelerate),
+			(1786, UseCase1, Roll),
+			(2500, OutsideSegment, Coast),
+			(2559, OutsideSegment, Accelerate),
+			(3912, WithinSegment, Accelerate),
+			(4834, UseCase1, Roll),
+			(5994, WithinSegment, Coast),
+			(6273, WithinSegment, Brake),
+			(6693, WithinSegment, Coast),
+			(6804, OutsideSegment, Coast),
+			(7093, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(654, WithinSegment, Accelerate),
+			(2007, UseCase1, Roll),
+			(2411, WithinSegment, Coast),
+			(2434, WithinSegment, Accelerate),
+			(2947, UseCase1, Roll),
+			(3722, WithinSegment, Coast),
+			(4061, OutsideSegment, Coast),
+			(4299, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(665, WithinSegment, Accelerate),
+			(2007, UseCase1, Roll),
+			(3172, WithinSegment, Coast),
+			(3231, WithinSegment, Roll),
+			(3350, OutsideSegment, Roll),
+			(3539, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3920, WithinSegment, Accelerate),
+			(4994, UseCase1, Roll),
+			(5774, WithinSegment, Coast),
+			(6040, WithinSegment, Brake),
+			(6572, WithinSegment, Coast),
+			(6904, OutsideSegment, Coast),
+			(7323, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate),
+			(3722, WithinSegment, Accelerate),
+			(4609, UseCase1, Roll),
+			(5819, WithinSegment, Coast),
+			(5890, WithinSegment, Roll),
+			(6094, OutsideSegment, Roll),
+			(6332, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3547, OutsideSegment, Accelerate),
+			(3547, 4430, WithinSegment, Accelerate),
+			(5364, 5623, UseCase2, Roll),
+			(5623, 5841, WithinSegment, Coast),
+			(5841, 6113, WithinSegment, Brake),
+			(6113, 6225, WithinSegment, Coast),
+			(6225, 6514, OutsideSegment, Coast),
+			(6514, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3410, OutsideSegment, Coast),
+			(3468, OutsideSegment, Roll),
+			(3854, OutsideSegment, Brake),
+			(3864, OutsideSegment, Coast),
+			(3884, OutsideSegment, Brake),
+			(5012, OutsideSegment, Coast),
+			(5420, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_PCC123EcoRollEngineStop_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(474, OutsideSegment, Accelerate),
+			(3614, OutsideSegment, Coast),
+			(3672, OutsideSegment, Roll),
+			(3890, OutsideSegment, Brake),
+			(4505, OutsideSegment, Coast),
+			(4723, OutsideSegment, Accelerate));
+
+
+		private void TestPCC(string jobName, string cycleName, params (double distance, DefaultDriverStrategy.PCCStates pcc, DrivingAction action)[] data)
 		{
-			var jobName = Group5NoADAS;
-			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), "Group5_Conventional_Compare"));
+			var expected = new List<(double start, double end, DefaultDriverStrategy.PCCStates pcc, DrivingAction action)>(
+					data.Pairwise().Select(x => (x.Item1.distance, x.Item2.distance, x.Item1.pcc, x.Item1.action)))
+				{ (data.Last().distance, 1e6d, data.Last().pcc, data.Last().action) };
+			TestPCC(jobName, cycleName, expected.ToArray());
+		}
+
+		private void TestPCC(string jobName, string cycleName, params (double start, double end, DefaultDriverStrategy.PCCStates pcc, DrivingAction action)[] data)
+		{
+			jobName = Path.Combine(BasePath, jobName + ".vecto");
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 			var sumContainer = new SummaryDataContainer(writer);
-			var jobContainer = new JobContainer(sumContainer);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) { WriteModalResults = true, Validate = false, SumData = sumContainer };
 
-			var jobNames = new[] {
-				Group5NoADAS,
-				Group5EcoRollWithoutEngineStop,
-				Group5EcoRollEngineStop,
-				Group5PCC12,
-				Group5PCC123,
-				Group5PCC123EcoRollWithoutEngineStop,
-				Group5PCC123EcoRollEngineStop,
-			};
+			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
+			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			var modData = new ConcurrentDictionary<(string, string), ModalResults>();
+			PrintPCCSections(mod);
 
-			Parallel.ForEach(jobNames, j => {
-				var factory = new SimulatorFactory(ExecutionMode.Engineering,
-					JSONInputDataFactory.ReadJsonJob(j), writer, validate: false, writeModalResults: true);
-				foreach (var run in jobContainer.AddRuns(factory)) {
-					modData.TryAdd((j, run.CycleName), (run.GetContainer().ModalData as ModalDataContainer).Data);
-				}
-			});
+			var expected = data;
 
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-			var progress = jobContainer.GetProgress();
+			var segmentWasTested = false;
 
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			var dists = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
+			var pccs = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
+			var actions = mod.Columns["DriverAction"].Values<DrivingAction>();
+			var vActs = mod.Columns[ModalResultField.v_act.GetName()].Values<MeterPerSecond>();
 
+			using (var exp = expected.AsEnumerable().GetEnumerator()) {
+				exp.MoveNext();
+				foreach (var (dist, pcc, action, vAct) in dists.Zip(pccs, actions, vActs)) {
+					if (dist > exp.Current.end) {
+						Assert.IsTrue(segmentWasTested, $"dist {dist}: Expected Segment was not tested. Maybe distance range to narrow?");
+						if (!exp.MoveNext())
+							break;
+						segmentWasTested = false;
+					}
 
-			var c = "CrestCoast1.vdri";
-			var result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(203, result.NoADAS, 5);
-			Assert.AreEqual(result.PCC12, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
+					if (dist.IsBetween(exp.Current.start, exp.Current.end)) {
+						// if the segment is very short, at least one of the entries should have the expected values
+						if (exp.Current.pcc == pcc && exp.Current.action == action)
+							segmentWasTested = true;
+					}
 
-			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
-				Assert.AreEqual(0, p, "PCCStates should be zero.");
-			}
-
-
-			c = "CrestCoast2.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(250, result.NoADAS, 5);
-			Assert.AreEqual(result.PCC12, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.PCC123, result.NoADAS, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.AreEqual(result.EcoRollEngineStop, result.PCC123EngineStop, $"{c}: since there is no pcc event, pcc should consume the same.");
-			Assert.GreaterOrEqual(result.EcoRollNoStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			Assert.GreaterOrEqual(result.EcoRollEngineStop, result.NoADAS, $"{c}: Enabling EcoRoll increases fuel consumption.");
-			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
-				Assert.AreEqual(0, p, "PCCStates should be zero.");
-			}
-
-			c = "Group5Eng_CaseA.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(264, result.NoADAS, 5);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.PCC123, result.NoADAS);
-			Assert.AreEqual(result.PCC12, result.PCC123);
-			Assert.Less(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC123EngineStop, result.EcoRollEngineStop);
-			Assert.Less(result.PCC123NoEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC123NoEngineStop, result.EcoRollEngineStop);
-			TestPCCSections(modData, c,
-				(4119d, 0, 1, DrivingAction.Accelerate),
-				(5426d, 1, 2, DrivingAction.Coast),
-				(5830d, 2, 0, DrivingAction.Accelerate));
-
-			c = "Group5Eng_CaseB.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(224, result.NoADAS, 5);
-			Assert.AreEqual(result.PCC12, result.PCC123);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.NoADAS, result.EcoRollEngineStop);
-			Assert.Less(result.NoADAS, result.EcoRollNoStop);
-			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c,
-				(4609, 0, 1, DrivingAction.Accelerate),
-				(5414, 1, 2, DrivingAction.Coast),
-				(7291, 2, 0, DrivingAction.Accelerate));
-
-			c = "Group5Eng_CaseC.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(197, result.NoADAS, 5);
-			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.PCC123, result.PCC12);
-			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c,
-				(3967, 0, 1, DrivingAction.Accelerate),
-				(4912, 1, 2, DrivingAction.Coast),
-				(6089, 2, 1, DrivingAction.Brake),
-				(7173, 1, 0, DrivingAction.Accelerate));
-
-			c = "Group5Eng_CaseD.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(248, result.NoADAS, 5);
-			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.PCC123, result.PCC12);
-			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c,
-				(654, 0, 1, DrivingAction.Accelerate),
-				(1867, 1, 2, DrivingAction.Accelerate),
-				(2481, 2, 0, DrivingAction.Coast),
-				(4021, 0, 1, DrivingAction.Accelerate),
-				(4919, 1, 2, DrivingAction.Accelerate),
-				(6217, 2, 1, DrivingAction.Coast),
-				(6704, 1, 0, DrivingAction.Accelerate));
-
-			c = "Group5Eng_CaseE.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(230, result.NoADAS, 5);
-			Assert.Less(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.AreEqual(result.PCC123, result.PCC12);
-			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (689, 0, 1), (2066, 1, 2), (2377, 2, 1), (2984, 1, 2), (3871, 2, 1), (3978, 1, 0));
-
-			c = "Group5Eng_CaseF.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(220, result.NoADAS, 5);
-			Assert.Less(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.AreEqual(result.PCC123, result.PCC12);
-			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (701, 0, 1), (2066, 1, 2), (2400, 2, 1), (2587, 1, 2), (3283, 2, 0));
-
-			c = "Group5Eng_CaseG.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(236, result.NoADAS, 5);
-			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
-			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.PCC123, result.PCC12);
-			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123);
-			TestPCCSections(modData, c, (3944, 0, 1), (5076, 1, 2), (5899, 2, 1), (6596, 1, 0));
-
-			c = "Group5Eng_CaseH.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(204, result.NoADAS, 5);
-			Assert.Greater(result.EcoRollNoStop, result.NoADAS);
-			Assert.Less(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.AreEqual(result.PCC123, result.PCC12);
-			Assert.Less(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (3804, 0, 1), (4772, 1, 2), (6003, 2, 0));
-
-			c = "Group5Eng_CaseI.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(214, result.NoADAS, 5);
-			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
-			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.AreEqual(result.PCC12, result.NoADAS);
-			Assert.AreEqual(result.PCC123, result.PCC12);
-			Assert.AreEqual(result.PCC123NoEngineStop, result.PCC123);
-			Assert.AreEqual(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			foreach (var p in modData[(Group5PCC123, c.Slice(0, -5))].SelectData(x => Convert.ToInt32(x["PCCState"]))) {
-				Assert.AreEqual(0, p, "PCCStates should be zero.");
-			}
-
-			c = "Group5Eng_CaseJ.vdri";
-			result = CheckCycle(c, sumContainer);
-			Assert.AreEqual(303, result.NoADAS, 5);
-			Assert.AreEqual(result.EcoRollNoStop, result.NoADAS);
-			Assert.AreEqual(result.EcoRollEngineStop, result.EcoRollNoStop);
-			Assert.Less(result.PCC12, result.NoADAS);
-			Assert.Less(result.PCC123, result.PCC12);
-			Assert.Greater(result.PCC123NoEngineStop, result.PCC123);
-			Assert.Less(result.PCC123EngineStop, result.PCC123NoEngineStop);
-			TestPCCSections(modData, c, (3559, 0, 1), (5364, 1, 3), (5692, 3, 1), (6132, 1, 0));
-		}
-
-		private (ConvertedSI NoADAS, ConvertedSI EcoRollNoStop, ConvertedSI EcoRollEngineStop,
-			ConvertedSI PCC12, ConvertedSI PCC123, ConvertedSI PCC123NoEngineStop, ConvertedSI PCC123EngineStop)
-			CheckCycle(string s, SummaryDataContainer summaryDataContainer)
-		{
-
-			var sumResults = summaryDataContainer.Table.Select($@"[Cycle [-\]] = '{s}'", "Input File [-]");
-			Assert.AreEqual(7, sumResults.Length, $"{s}: Not enough result rows in sum file");
-			var values = sumResults.Select(row => row.Field<ConvertedSI>("FC-Final [g/km]")).ToArray();
-			var (EcoRollEngineStop, EcoRollNoStop, NoADAS, PCC12, PCC123, PCC123EngineStop, PCC123NoEngineStop) = values;
-
-			Assert.LessOrEqual(PCC12, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
-			Assert.LessOrEqual(PCC123, NoADAS, $"{s}: Enabling ADAS should always reduce fuel consumption.");
-
-			Assert.LessOrEqual(PCC123EngineStop, PCC123NoEngineStop, $"{s}: with engine stop should always consume less then without engine stop");
-			Assert.LessOrEqual(EcoRollEngineStop, EcoRollNoStop, $"{s}: with engine stop should always consume less then without engine stop");
-
-			Assert.LessOrEqual(PCC123NoEngineStop, EcoRollNoStop, $"{s}: PCC EcoRoll should always be lower as EcoRoll.");
-			Assert.LessOrEqual(PCC123EngineStop, EcoRollEngineStop, $"{s}: PCC EcoRoll should always be lower as EcoRoll.");
-
-			Assert.LessOrEqual(PCC123, PCC12, $"{s}: better pcc options should consume less");
-
-			return (NoADAS, EcoRollNoStop, EcoRollEngineStop, PCC12, PCC123, PCC123NoEngineStop, PCC123EngineStop);
-		}
-
-		private void TestPCCSections(ConcurrentDictionary<(string, string), ModalResults> modData, string c,
-			params (double Distance, int Before, int After, DrivingAction Action)[] expectedSections)
-		{
-			var m = modData[(Group5PCC123, c.Slice(0, -5))];
-			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
-			var driverAction = m.SelectData(x => Convert.ToInt32(x["DriverAction"]));
-			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
-			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
-			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas, driverAction));
-			if (expectedSections.Length == 0) {
-				Assert.IsFalse(sections.Any());
-			} else {
-				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
-					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					foreach (var (_, _, action) in actual.SegmentValues) {
-						Assert.AreEqual(exp.Action, action);
+					if (dist.IsBetween(exp.Current.start.SI<Meter>() + vAct * tolerance.SI<Second>(), exp.Current.end.SI<Meter>() - vAct * tolerance.SI<Second>())) {
+						Assert.AreEqual(exp.Current.pcc, pcc, $"dist {dist}: Wrong PCC state: {pcc} instead of {exp.Current.pcc}.");
+						Assert.AreEqual(exp.Current.action, action, $"dist {dist}: Wrong DriverAction: {action} instead of {exp.Current.action}.");
+						segmentWasTested = true;
 					}
 				}
 			}
+
+			Assert.IsTrue(segmentWasTested);
 		}
 
-		private void TestPCCSections(ConcurrentDictionary<(string, string), ModalResults> modData, string c,
-			params (double Distance, int Before, int After)[] expectedSections)
+
+		private void PrintPCCSections(ModalResults mod)
 		{
-			var m = modData[(Group5PCC123, c.Slice(0, -5))];
-			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
-			var driverAction = m.SelectData(x => Convert.ToInt32(x["DriverAction"]));
-			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
-			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
-			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas, driverAction));
-			if (expectedSections.Length == 0) {
-				Assert.IsFalse(sections.Any());
-			} else {
-				foreach (var (exp, actual) in expectedSections.Zip(sections)) {
-					Assert.AreEqual(exp.Distance, actual.Distance.Item1, actual.Distance.Item2, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.Before, actual.Before, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
-					Assert.AreEqual(exp.After, actual.After, $"Cycle {c}: Expected change from {exp.Before} --> {exp.After} at distance {exp.Distance}");
+			var sCol = mod.Columns[ModalResultField.dist.GetName()];
+			var pccCol = mod.Columns["PCCState"];
+			var driverActionCol = mod.Columns["DriverAction"];
+
+			var pccStates = pccCol.Values<DefaultDriverStrategy.PCCStates>();
+			var driverAction = driverActionCol.Values<DrivingAction>();
+			var distances = sCol.Values<Meter>();
+			var sections = GetDistancesOfStateChanges(pccStates.Zip(driverAction), distances).ToArray();
+
+			if (sections.Any()) {
+				var start = 0d;
+				Console.WriteLine("Found Segments:");
+				foreach (var section in sections) {
+					Console.WriteLine($"{$"({start}, {section.Before.Item1}, {section.Before.Item2}),",-40} // len: {(int)section.Distance.Value() - start}m");
+					start = (int)section.Distance.Value();
 				}
+				Console.WriteLine($"({start}, {sections.Last().After.Item1}, {sections.Last().After.Item2}));");
+				Console.WriteLine();
+
+				Console.WriteLine("Start-End Segments:");
+				start = 0;
+				foreach (var section in sections) {
+					Console.WriteLine($"{$"({start}, {(int)section.Distance.Value()}, {section.Before.Item1}, {section.Before.Item2}),",-45} // len: {(int)section.Distance.Value() - start}m");
+					start = (int)section.Distance.Value();
+				}
+				Console.WriteLine($"({(int)sections.Last().Distance.Value()}, 1e6, {sections.Last().After.Item1}, {sections.Last().After.Item2}));");
+			} else {
+				Console.WriteLine("Found Segments:");
+				Console.WriteLine("(0, OutsideSegment, Accelerate));");
+				Console.WriteLine();
+				Console.WriteLine("Start-End Segments:");
+				Console.WriteLine("(0, 1e6, OutsideSegment, Accelerate));");
 			}
 		}
 
@@ -817,5 +1200,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				}
 			}
 		}
+		#endregion
 	}
 }

@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			TestPCCSections(modData, c);
 
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
-			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
+			var pccStates = m.Values(x => Convert.ToInt32(x["PCCState"]));
 			foreach (var (p, i) in pccStates.Select()) {
 				Assert.AreEqual(0, p, $"PCCStates Index[{i}] should be zero.");
 			}
@@ -496,10 +496,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			params (double Distance, int Before, int After)[] expectedSections)
 		{
 			var m = modData[(Group5PCC123, c.Slice(0, -5))];
-			var pccStates = m.SelectData(x => Convert.ToInt32(x["PCCState"]));
-			var distances = m.SelectData(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
+			var pccStates = m.Values(x => Convert.ToInt32(x["PCCState"]));
+			var distances = m.Values(x => x.Field<Meter>(ModalResultField.dist.GetName()).Value());
 
-			var deltas = m.SelectData(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
+			var deltas = m.Values(x => (x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()) * 2.SI<Second>()).Value());
 			
 			var sections = GetDistancesOfStateChanges(pccStates, distances.Zip(deltas));
 			if (expectedSections.Length == 0) {
