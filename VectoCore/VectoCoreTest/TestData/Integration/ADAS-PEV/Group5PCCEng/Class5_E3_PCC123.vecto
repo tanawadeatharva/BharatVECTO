@@ -1,13 +1,13 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2021-08-13T16:22:28.9151347Z",
+    "Date": "2021-08-20T16:44:43.2695627Z",
     "AppVersion": "3",
     "FileVersion": 9
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Class5_NoADAS.vveh",
+    "VehicleFile": "Class5_E3_PCC123.vveh",
     "GearboxFile": "AMT_12.vgbx",
     "TCU": "AMT_12.vgbx",
     "Padd_electric": 3540.0,
