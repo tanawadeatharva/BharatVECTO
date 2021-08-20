@@ -52,12 +52,6 @@ namespace TUGraz.VectoCore.Utils
 			return defaultValue;
 		}
 
-		public static IEnumerable<TResult> SelectData<TResult>(this DataTable self, Func<DataRow,TResult> selector) => 
-			self.Rows.Cast<DataRow>().Select(selector);
-
-		public static IEnumerable<TResult> SelectData<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) => 
-			self.Rows.Cast<DataRow>().Select(selector);
-
 		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) => 
 			self.Rows.Cast<DataRow>().Where(predicate);
 
@@ -124,6 +118,14 @@ namespace TUGraz.VectoCore.Utils
 				: row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
 
 		public static IEnumerable<T> Values<T>(this DataColumn column) => 
-			column.Table.AsEnumerable().Select(r => r.Field<T>(column));
+			typeof(T).IsEnum 
+				? column.Table.Values(r => r[column].ParseEnum<T>()) 
+				: column.Table.Values(r => r.Field<T>(column));
+
+		public static IEnumerable<TResult> Values<TResult>(this DataTable self, Func<DataRow, TResult> selector) =>
+			self.Rows.Cast<DataRow>().Select(selector);
+
+		public static IEnumerable<TResult> Values<TResult>(this DataTable self, Func<DataRow, int, TResult> selector) =>
+			self.Rows.Cast<DataRow>().Select(selector);
 	}
 }

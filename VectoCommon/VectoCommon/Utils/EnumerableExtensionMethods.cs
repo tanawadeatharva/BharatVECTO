@@ -46,7 +46,7 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			if (start < 0) start = source.Length + start;
 			if (end < 0) end = source.Length + end;
-			var dest = new T[end-start];
+			var dest = new T[end - start];
 			Array.ConstrainedCopy(source, start, dest, 0, end - start);
 			return dest;
 		}
@@ -137,7 +137,24 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
-
+		/// <summary>
+		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
+		public static IEnumerable<(T1 Item1, T2 Item2, T3 Item3, T4 Item4)> Zip<T1, T2, T3, T4>(this IEnumerable<T1> item1, IEnumerable<T2> item2, IEnumerable<T3> item3, IEnumerable<T4> item4)
+		{
+			using (var first = item1.GetEnumerator()) {
+				using (var second = item2.GetEnumerator()) {
+					using (var third = item3.GetEnumerator()) {
+						using (var fourth = item4.GetEnumerator()) {
+							while (first.MoveNext() | second.MoveNext() | third.MoveNext() | fourth.MoveNext()) {
+								yield return (first.Current, second.Current, third.Current, fourth.Current);
+							}
+						}
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Sums up the values of selector.
