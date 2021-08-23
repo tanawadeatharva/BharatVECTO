@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -249,7 +250,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasGearbox { get; private set; }
 
-
+		[Required, ValidateObject]
 		public virtual VectoRunData RunData { get; set; }
 		public virtual ExecutionMode ExecutionMode { get; }
 

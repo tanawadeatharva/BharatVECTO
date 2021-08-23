@@ -114,31 +114,19 @@ namespace TUGraz.VectoCommon.Utils
 			const BindingFlags flags =
 				BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
 				BindingFlags.FlattenHierarchy;
-
-			if (m.MemberType == MemberTypes.Property) {
-				PropertyInfo prop = m as PropertyInfo ?? obj.GetProperty(m.Name, flags);
-				//var prop = obj.GetProperty(m.Name, flags);
-				if (prop != null)
-				{
-					//if (m is PropertyInfo prop) {
-					attributes = prop.GetCustomAttributes(typeof(T))
-						.Cast<T>()
-						.Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
-				}
+			var prop = obj.GetProperty(m.Name, flags);
+			if (prop != null) {
+				attributes = prop.GetCustomAttributes(typeof(T))
+					.Cast<T>()
+					.Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
 			}
 
-			if (m.MemberType == MemberTypes.Field) {
-				FieldInfo field = m as FieldInfo ?? obj.GetField(m.Name, flags);
-				//var field = obj.GetField(m.Name, flags);
-				if (field != null)
-				{
-					//if (m is FieldInfo field) {
-					attributes =
-						attributes.Concat(
-							field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
-				}
+			var field = obj.GetField(m.Name, flags);
+			if (field != null) {
+				attributes =
+					attributes.Concat(
+						field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
 			}
-            
 
 			return attributes;
 		}
