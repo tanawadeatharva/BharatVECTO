@@ -15,45 +15,52 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 	{
 		public CompletedBusParametersWriterV2_10_2(XNamespace writerNamespace) : base(writerNamespace) { }
 
-		#region Overrides of GroupWriter
 
-		public XElement[] GetGroupElements(IVehicleDeclarationInputData vehicle)
+		public static XElement[] GetGroupElements(IVehicleDeclarationInputData vehicle, XNamespace writerNamespace)
 		{
 			var elements = new List<XElement>();
 
 			if (vehicle.Model != null) {
-				elements.Add( new XElement(_writerNamespace + XMLNames.Component_Model, 
+				elements.Add(new XElement(writerNamespace + XMLNames.Component_Model,
 					vehicle.Model));
 			}
 
 			if (vehicle.LegislativeClass != null) {
-				elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_LegislativeCategory,
+				elements.Add(new XElement(writerNamespace + XMLNames.Vehicle_LegislativeCategory,
 					vehicle.LegislativeClass.ToXMLFormat()));
 			}
 
 			if (vehicle.CurbMassChassis != null) {
-				elements.Add(new XElement(_writerNamespace + XMLNames.CorrectedActualMass,
+				elements.Add(new XElement(writerNamespace + XMLNames.CorrectedActualMass,
 					vehicle.CurbMassChassis.ToXMLFormat(0)));
 			}
 
 			if (vehicle.GrossVehicleMassRating != null) {
-				elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_TPMLM,
+				elements.Add(new XElement(writerNamespace + XMLNames.Vehicle_TPMLM,
 					vehicle.GrossVehicleMassRating.ToXMLFormat(0)));
 			}
 
 			if (vehicle.AirdragModifiedMultistage != null) {
-                elements.Add(new XElement(_writerNamespace + XMLNames.Bus_AirdragModifiedMultistage,
-                    vehicle.AirdragModifiedMultistage));
+				elements.Add(new XElement(writerNamespace + XMLNames.Bus_AirdragModifiedMultistage,
+					vehicle.AirdragModifiedMultistage));
 			}
 
 			if (vehicle.RegisteredClass != null) {
-				elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_RegisteredClass, 
+				elements.Add(new XElement(writerNamespace + XMLNames.Vehicle_RegisteredClass,
 					vehicle.RegisteredClass.ToXMLFormat()));
 			}
 
 			return elements.ToArray();
 		}
-		#endregion
 
+
+		#region Implementation of IVehicleDeclarationGroupWriter
+
+		public XElement[] GetGroupElements(IVehicleDeclarationInputData vehicle)
+		{
+			return GetGroupElements(vehicle, _writerNamespace);
+		}
+
+		#endregion
 	}
 }

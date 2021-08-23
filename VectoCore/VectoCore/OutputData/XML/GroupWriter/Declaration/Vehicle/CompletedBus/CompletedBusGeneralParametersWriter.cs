@@ -23,12 +23,17 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 
 		public XElement[] GetGroupElements(IVehicleDeclarationInputData inputData)
 		{
+			return GetGroupElements(inputData, _writerNamespace);
+		}
+
+		public static XElement[] GetGroupElements(IVehicleDeclarationInputData inputData, XNamespace writerNamespace)
+		{
 			return new XElement[] {
-				new XElement(_writerNamespace + XMLNames.Component_Manufacturer, inputData.Manufacturer),
-				new XElement(_writerNamespace + XMLNames.Component_ManufacturerAddress,
-				inputData.ManufacturerAddress),
-				new XElement(_writerNamespace + XMLNames.Vehicle_VIN, inputData.VIN),
-				new XElement(_writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat())
+				new XElement(writerNamespace + XMLNames.Component_Manufacturer, inputData.Manufacturer),
+				new XElement(writerNamespace + XMLNames.Component_ManufacturerAddress,
+					inputData.ManufacturerAddress),
+				new XElement(writerNamespace + XMLNames.Vehicle_VIN, inputData.VIN),
+				new XElement(writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat())
 			};
 		}
 

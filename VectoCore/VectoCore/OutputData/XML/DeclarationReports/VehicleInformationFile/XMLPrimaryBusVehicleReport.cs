@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				GetTorqueLimits(modelData),
 				VehicleComponents(modelData, fuelModes)
 			);
-
+			
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
 											modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}

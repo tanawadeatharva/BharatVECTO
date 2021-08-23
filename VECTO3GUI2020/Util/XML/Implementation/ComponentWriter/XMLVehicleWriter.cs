@@ -248,6 +248,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				CreateExemptedElements();
 				return;
 			}
+
+			throw new NotImplementedException("Old Implementation");
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
 				_inputData.ManufacturerAddress));
@@ -413,34 +415,28 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 		private void CreateExemptedElements()
 		{
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Manufacturer, _inputData.Manufacturer));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_ManufacturerAddress,
-				_inputData.ManufacturerAddress));
-
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_VIN, _inputData.VIN));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Date, XMLExtension.ToXmlFormat(DateTime.Today)));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
-
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
-				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
 
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RegisteredClass, _inputData.RegisteredClass.ToXMLFormat()));
+			// ReSharper disable once CoVariantArrayConversion
+			_Xelement.Add(_groupWriterFactory
+				.GetVehicleDeclarationGroupWriter(GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup,
+					_defaultNamespace).GetGroupElements(_inputData));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _inputData.NumberPassengerSeatsLowerDeck));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingLowerDeck, _inputData.NumberPassengersStandingUpperDeck));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Component_Model, _inputData.Model));
+            _Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_LegislativeCategory, _inputData.LegislativeClass.ToXMLFormat()));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.CorrectedActualMass, _inputData.CurbMassChassis?.ToXMLFormat(0)));
+            _Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
+                _inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _inputData.NumberPassengerSeatsUpperDeck));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_NumberPassengersStandingUpperDeck, _inputData.NumberPassengersStandingUpperDeck));
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_RegisteredClass, _inputData.RegisteredClass.ToXMLFormat()));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
+			_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, _defaultNamespace).GetGroupElements(_inputData));
+			
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
 
-			//_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_HeighIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
-			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_HeightIntegratedBody, _inputData.Height?.ConvertToMilliMeter()));
 		}
 
 		#endregion
