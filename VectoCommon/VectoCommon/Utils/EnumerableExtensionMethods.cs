@@ -156,80 +156,50 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
-		/// <summary>
-		/// Sums up the values of selector.
-		/// </summary>
-		/// <returns></returns>
-		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
-			where TResult : SIBase<TResult>
-		{
-			return values.Select(selector).DefaultIfEmpty().Aggregate((sum, current) => sum + current);
-		}
+		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T> => 
+			values.Sum(x => x);
 
-		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T>
-		{
-			var valueList = values.ToList();
-			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) / valueList.Count : null;
-		}
+		public static TResult Sum<T, TResult>(this IEnumerable<T> values, Func<T, TResult> selector)
+			where TResult : SIBase<TResult> => 
+			values.Sum(value => selector(value).Value()).SI<TResult>();
 
-		public static SI Sum(this IEnumerable<SI> values)
-		{
-			return values.DefaultIfEmpty().Aggregate((sum, current) => sum + current);
-		}
-
+		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> => 
+			values.Average(v => v.Value()).SI<T>();
+		
 		/// <summary>
 		/// Get the first two items where the predicate changes from true to false.
 		/// If the predicate is always true, the last 2 elements are returned.
 		/// If the predicate is always false, the first 2 elements are returned.
 		/// </summary>
-		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index,
-			string message = null)
+		/// <example>values.GetSection(x => x &lt; X); // returns the pair (x_1, x2) where (x_1 &lt; X, x_2 &gt;= X)</example>
+		public static (T, T) GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index, string message = null)
 		{
-			var list = self.ToList();
-			var skipList = list.Select((arg1, i) => new { skip = skip(arg1) && i < list.Count - 1, i, value = arg1 });
-			var p = skipList.SkipWhile(x => x.skip).First();
-			index = Math.Max(p.i - 1, 0);
+			using (var enumerator = self.GetEnumerator()) {
+				index = 1;
+				enumerator.MoveNext();
+				var first = enumerator.Current;
+				enumerator.MoveNext();
+				var second = enumerator.Current;
+				while (skip(enumerator.Current) && enumerator.MoveNext()) {
+					index++;
+					(first, second) = (second, enumerator.Current);
+				}
 
-			if (!string.IsNullOrWhiteSpace(message)) {
-				if (!skip(list[index]) || skip(list[index + 1])) {
+				if (!string.IsNullOrWhiteSpace(message) && (!skip(first) || skip(second))) {
 					LogManager.GetLogger(typeof(T).ToString()).Warn(message);
 				}
+
+				return (first, second);
 			}
-
-			return Tuple.Create(list[index], list[index + 1]);
-		}
-
-		/// <summary>
-		/// Get the first two adjacent items where the predicate changes from true to false.
-		/// If the predicate is always false, the first 2 elements are returned.
-		/// If the predicate is always true, the last 2 elements are returned.
-		/// </summary>
-		public static Tuple<T, T> GetSection<T>(this T[] self, Func<T, bool> predicate)
-		{
-			var i = 0;
-			for (; i < self.Length; i++) {
-				if (!predicate(self[i]))
-					break;
-			}
-
-			if (i == 0) {
-				i = 1;
-			} else if (i == self.Length) {
-				i--;
-			}
-
-			return Tuple.Create(self[i - 1], self[i]);
 		}
 
 		/// <summary>
 		/// Get the first two adjacent items where the predicate changes from true to false.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
-		/// <example>GetSection(data => data.X &lt; searchedX); //returns the pair where first &lt; searchedX and second &gt;= searchedX</example>>
-		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> predicate, string message = null)
-		{
-			return self.GetSection(predicate, out var unused, message);
-		}
+		/// <example>values.GetSection(x => x &lt; X); // returns the pair (x_1, x2) where (x_1 &lt; X, x_2 &gt;= X)</example>
+		public static (T, T) GetSection<T>(this IEnumerable<T> self, Func<T, bool> predicate, string message = null) =>
+			self.GetSection(predicate, out _, message);
 
 		public static TSource MinBy<TSource>(this IEnumerable<TSource> source,
 			Func<TSource, IComparable> projectionToComparable)
