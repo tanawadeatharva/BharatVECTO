@@ -813,7 +813,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container));
 
 			if (data.AxleGearData != null) { // missing for E4
-				powertrain.AddComponent(new AxleGear(container, data.AxleGearData));
+				powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData));
 			}
 
 			powertrain = powertrain.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null);
