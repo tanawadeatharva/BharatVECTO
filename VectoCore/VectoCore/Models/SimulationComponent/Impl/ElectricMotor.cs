@@ -12,7 +12,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -29,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private PerSecond _maxSpeed;
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
-		protected internal bool DeRatingActive = false;
+		protected internal bool DeRatingActive;
 		
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
@@ -74,9 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public double[] TransmissionRatioPerGear { get; set; }
 
 		public PowertrainPosition Position { get; }
-		public PerSecond MaxSpeed {
-			get { return _maxSpeed ?? (_maxSpeed = (ModelData.EfficiencyData.MaxSpeed) / ModelData.RatioADC); }
-		}
+		public PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = ModelData.EfficiencyData.MaxSpeed / ModelData.RatioADC);
 
 		public Watt DragPower(Volt volt, PerSecond electricMotorSpeed)
 		{
@@ -294,7 +291,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inTorqueDt = outTorque + emTorqueDt;
 
-			IResponse retVal = null;
+			IResponse retVal;
 			if (NextComponent == null) {
 				if (electricSupplyResponse.MaxPowerDrive.IsEqual(0.SI<Watt>(), 100.SI<Watt>())) {
 					retVal = new ResponseBatteryEmpty(this, electricSupplyResponse);
@@ -332,7 +329,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									EngineSpeed = outAngularVelocity
 								},
 							};
-							var busAuxPwr = BusAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity, dryRun) ?? 0.SI<NewtonMeter>();
+							var busAuxPwr = BusAux?.TorqueDemand(absTime, dt, outTorque, outAngularVelocity) ?? 0.SI<NewtonMeter>();
 							if (!busAuxPwr.IsEqual(0)) {
 								Log.Warn("Check BusAux config for PEV!");
 							}
