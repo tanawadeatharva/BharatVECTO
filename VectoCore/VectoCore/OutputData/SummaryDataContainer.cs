@@ -382,6 +382,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (gearCount <= 0) {
+				AddResultRow(row);
 				return;
 			}
 
