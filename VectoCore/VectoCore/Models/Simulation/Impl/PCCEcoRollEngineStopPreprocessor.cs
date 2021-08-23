@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox?.PowerRequest ?? initialResponse.Engine?.PowerRequest + initialResponse.ElectricMotor?.PowerRequest ?? 0.SI<Watt>();
+			var delta = initialResponse.Gearbox?.PowerRequest ?? (initialResponse.Engine?.PowerRequest ?? 0.SI<Watt>()) + (initialResponse.ElectricMotor?.PowerRequest ?? 0.SI<Watt>());
 
 			try {
 				gradient = SearchAlgorithm.Search(

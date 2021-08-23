@@ -542,16 +542,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case PowertrainPosition.HybridP4:
 					throw new VectoException("BatteryElectric Vehicle does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container,
-						es, ctl);
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
 					powertrain.AddComponent(em);
 					new DummyGearboxInfo(container);
+					new DummyAxleGearInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE3:
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData,
-						container, es, ctl);
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(em);
 					new DummyGearboxInfo(container);
@@ -1138,7 +1137,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (dryRun) {
 				return -outTorque;
 			}
-			return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
+			return (-outTorque).LimitTo(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
 		}
 	}
 

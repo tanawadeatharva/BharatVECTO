@@ -148,8 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IList<MeterPerSecond> Speeds { get; }
 
-		protected MeterPerSecond SimulateRollingVehicle(
-			Vehicle vehicle, Radian gradient, IVehicleContainer container)
+		protected MeterPerSecond SimulateRollingVehicle(Vehicle vehicle, Radian gradient, IVehicleContainer container)
 		{
 			var simulationInterval = TractionInterruption;
 
