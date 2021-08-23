@@ -305,6 +305,17 @@ namespace TUGraz.VectoCore.Utils
 			);
 		}
 
+		public static bool IsAnyNull(this IComponentInputData inputData, params object[] checkForNull)
+		{
+			foreach (var o in checkForNull) {
+				if (o == null) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 
 		public static void AddIfContentNotNull(this XElement xElement, XElement xElementToAdd)
 		{
