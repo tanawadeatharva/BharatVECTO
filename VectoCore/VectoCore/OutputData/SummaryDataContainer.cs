@@ -382,6 +382,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (gearCount <= 0) {
+				AddResultRow(row);
 				return;
 			}
 
@@ -667,7 +668,7 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.E_PS_CompressorOff] = modData.EnergyPneumaticCompressorPowerOff().ConvertToKiloWattHour();
 				row[Fields.E_PS_CompressorOn] = modData.EnergyPneumaticCompressorOn().ConvertToKiloWattHour();
 
-				row[Fields.E_BusAux_ES_generated] = modData.EnergyBusAuxESGeneratedMech().ConvertToKiloWattHour();
+				row[Fields.E_BusAux_ES_generated] = modData.EnergyBusAuxESGenerated().ConvertToKiloWattHour();
 				row[Fields.E_BusAux_ES_consumed] = modData.EnergyBusAuxESConsumed().ConvertToKiloWattHour();
 				row[Fields.Delta_E_BusAux_Battery] = (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 						? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
