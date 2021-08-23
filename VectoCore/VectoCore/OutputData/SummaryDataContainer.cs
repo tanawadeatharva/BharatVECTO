@@ -373,13 +373,9 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
 			}
 
-			if (gearCount <= 0) {
-				AddResultRow(row);
-				return;
-			}
-
-			WriteGearshiftStats(modData, row, gearCount);
-
+			if (gearCount > 0)
+				WriteGearshiftStats(modData, row, gearCount);
+			
 			lock (Table)
 				Table.Rows.Add(row);
 		}
