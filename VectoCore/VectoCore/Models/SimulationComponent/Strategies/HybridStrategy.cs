@@ -2123,10 +2123,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			if (resp.Source is TorqueConverter) {
 				if (resp is ResponseUnderload) {
+					tmp.FuelCosts = double.NaN;
 					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineTorqueDemandTooLow;
 				}
 
 				if (resp is ResponseOverload) {
+					tmp.FuelCosts = double.NaN;
 					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.EngineTorqueDemandTooHigh;
 				}
 			}
