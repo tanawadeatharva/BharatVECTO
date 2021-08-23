@@ -22,7 +22,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void restoreValuesWhenEditingAgain()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -74,7 +74,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void SIDummyCreation()
 		{
 
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -94,7 +94,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void NoErrorAfterDataLoading()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -110,7 +110,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadPrimaryAndEdit()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =

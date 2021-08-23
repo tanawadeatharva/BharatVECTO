@@ -7,6 +7,7 @@ using Moq;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -29,7 +30,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
 		{
-			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var multistagevm = LoadFileFromTestDirectory(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
 
 			Assert.AreEqual(2, stage);
@@ -60,21 +61,64 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			[Values("manufacturer")] string manufacturer,
 			[Values(LegislativeClass.M3)] LegislativeClass legCategory)
 		{
-			var multistagevm = loadFile(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var multistagevm = LoadFileFromTestDirectory(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
 
 			Assert.AreEqual(2, stage);
 
 			//Set Necessary Fields
-			var vehicle =
+			var vehicleVm =
 				multistagevm.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
-			
 
-			vehicle.ManufacturerAddress = "Address";
-			vehicle.Manufacturer = "Manufacturer";
-			vehicle.VIN = "VIN12345678";
-			vehicle.Model = "Model";
+			vehicleVm.Manufacturer = "adsf";
+			vehicleVm.ManufacturerAddress = "asdf 123";
+			vehicleVm.VIN = "1234567890";
+			vehicleVm.Model = "Model";
+			vehicleVm.LegislativeClass = LegislativeClass.M3;
+			vehicleVm.CurbMassChassis = Kilogram.Create(20000);
+			vehicleVm.GrossVehicleMassRating = Kilogram.Create(20000);
+			vehicleVm.RegisteredClass = RegistrationClass.I_II;
+			vehicleVm.VehicleCode = VehicleCode.CC;
+			vehicleVm.LowEntry = true;
+			vehicleVm.Height = Meter.Create(2.6);
+			vehicleVm.NumberPassengerSeatsUpperDeck = 2;
+			vehicleVm.NumberPassengersStandingLowerDeck = 13;
+			vehicleVm.NumberPassengerSeatsLowerDeck = 10;
+			vehicleVm.NumberPassengersStandingUpperDeck = 12;
 
+			//SETADAS
+			vehicleVm.EngineStopStartNullable = true;
+			vehicleVm.EcoRollTypeNullable = EcoRollType.WithEngineStop;
+			vehicleVm.PredictiveCruiseControlNullable = PredictiveCruiseControlType.Option_1_2_3;
+			vehicleVm.ATEcoRollReleaseLockupClutch = false;
+
+
+
+			//SETAUxiliaries
+			var auxVm = vehicleVm.MultistageAuxiliariesViewModel as MultistageAuxiliariesViewModel;
+
+
+			auxVm.InteriorLightsLED = true;
+			auxVm.DayrunninglightsLED = false;
+			auxVm.PositionlightsLED = false;
+			auxVm.BrakelightsLED = true;
+			auxVm.HeadlightsLED = false;
+			auxVm.SystemConfiguration = BusHVACSystemConfiguration.Configuration2;
+			auxVm.HeatPumpTypeCoolingDriverCompartment = HeatPumpType.non_R_744_3_stage;
+			auxVm.HeatPumpTypeCoolingPassengerCompartment = HeatPumpType.non_R_744_4_stage;
+			auxVm.HeatPumpTypeHeatingDriverCompartment = HeatPumpType.non_R_744_2_stage;
+			auxVm.HeatPumpTypeHeatingPassengerCompartment = HeatPumpType.non_R_744_continuous;
+			auxVm.AuxHeaterPower = SIBase<Watt>.Create(50);
+			auxVm.DoubleGlazing = true;
+			auxVm.AdjustableAuxiliaryHeater = false;
+			auxVm.SeparateAirDistributionDucts = false;
+
+			var resultFile = multistagevm.SaveVif(GetFullPath(
+				"completed_final" + ".xml"));
+
+
+			var jobListVm = _kernel.Get<IJobListViewModel>();
+			Assert.That(() => jobListVm.Jobs.Count, Is.EqualTo(2));
 
 		}
 
@@ -86,7 +130,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			GetMockDialogHelper().Setup(dialogHelper => dialogHelper.ShowMessageBox(It.IsAny<string>(),
 				It.IsAny<string>(), MessageBoxButton.YesNo, It.IsAny<MessageBoxImage>())).Returns(MessageBoxResult.No);
 
-			var multistagevm = loadFile(_finalVifReport4);
+			var multistagevm = LoadFileFromTestDirectory(_finalVifReport4);
 
 			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 
@@ -122,7 +166,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void CreateCompletedExemptedVif()
 		{
-			var multistagevm = loadFile(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var multistagevm = LoadFileFromTestDirectory(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var jobListVm = _kernel.Get<IJobListViewModel>();
 
 			var vehicleVm =
@@ -163,7 +207,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void CreateIncompletedExemptedVif()
 		{
-			var multistagevm = loadFile(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
+			var multistagevm = LoadFileFromTestDirectory(exempted_primary_vif).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
 			var jobListVm = _kernel.Get<IJobListViewModel>();
 
 			var vehicleVm =
@@ -205,7 +249,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void TestAirdragLoadAndSave()
 		{
-			var newMultistageJobViewModel = loadFile(consolidated_multiple_stages);
+			var newMultistageJobViewModel = LoadFileFromTestDirectory(consolidated_multiple_stages);
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as IMultistageVehicleViewModel;
