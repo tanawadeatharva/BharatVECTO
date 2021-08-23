@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	[Parallelizable(ParallelScope.All)]
 	public class ADASTestsConventional
 	{
-		private const string BasePath = @"TestData\Integration\ADAS-PEV\Group5PCCEng\";
+		private const string BasePath = @"TestData\Integration\ADAS-Conventional\Group5PCCEng\";
 		private const double tolerance = 1; //seconds of tolerance. Tolerance distance is calculated dynamically based on speed.
 
 		private IXMLInputDataReader _xmlInputReader;
