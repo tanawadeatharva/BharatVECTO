@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			ATEcoRollReleaseLockupClutch = data?.GearboxData?.ATEcoRollReleaseLockupClutch ?? false;
 
-			EcoRollState = new EcoRoll() {
+			EcoRollState = new EcoRoll {
 				State = EcoRollStates.EcoRollOff,
 				Gear = new GearshiftPosition(0),
 				StateChangeTstmp = -double.MaxValue.SI<Second>(),
@@ -322,8 +322,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							break;
 						case EcoRollType.WithEngineStop:
 							dataBus.GearboxCtl.DisengageGearbox = true;
-							if (dataBus.EngineCtl != null)
+							if (dataBus.EngineCtl != null) {
 								dataBus.EngineCtl.CombustionEngineOn = false;
+							}
 							break;
 						default: throw new ArgumentOutOfRangeException();
 					}
@@ -332,9 +333,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case PCCStates.OutsideSegment:
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
-					dataBus.GearboxCtl.DisengageGearbox = false;
-					if (dataBus.EngineCtl != null)
+					if (dataBus.GearboxCtl != null) {
+						dataBus.GearboxCtl.DisengageGearbox = false;
+					}
+
+					if (dataBus.EngineCtl != null) {
 						dataBus.EngineCtl.CombustionEngineOn = true;
+					}
 					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
@@ -719,7 +724,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: 0.SI<Watt>();
 
 			var emDragLoss = Driver.DataBus.PowertrainInfo.HasElectricMotor
-				? Driver.DataBus.PowertrainInfo.ElectricMotorPositions.Select(x => 
+				? Driver.DataBus.PowertrainInfo.ElectricMotorPositions.Select(x =>
 					Driver.DataBus.ElectricMotorInfo(x).DragPower(Driver.DataBus.BatteryInfo.InternalVoltage, Driver.DataBus.ElectricMotorInfo(x).ElectricMotorSpeed)).Sum() // Driver.DataBus.ElectricMotorInfo()
 				: 0.SI<Watt>();
 

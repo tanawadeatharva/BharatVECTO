@@ -46,6 +46,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case ATGearbox atGearbox:
 					RunPreprocessingATGearbox(atGearbox, vehicle);
 					return;
+				case null when !Container.HasGearbox:
+					RunPreprocessingNoGearbox(vehicle);
+					return;
 				default:
 					throw new VectoException("no valid gearbox found...");
 			}
@@ -67,6 +70,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var slope = SearchSlope(vehicle, Container);
 
+				modData?.Reset();
+				SlopeData[speed] = slope;
+			}
+		}
+
+		private void RunPreprocessingNoGearbox(Vehicle vehicle)
+		{
+			var modData = Container.ModalData as ModalDataContainer;
+			SlopeData.Clear();
+
+			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+				vehicle.Initialize(speed, 0.SI<Radian>());
+				var slope = SearchSlope(vehicle, Container);
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
@@ -118,19 +134,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox.PowerRequest;
+			var delta = initialResponse.Gearbox?.PowerRequest ?? initialResponse.Engine?.PowerRequest + initialResponse.ElectricMotor?.PowerRequest ?? 0.SI<Watt>();
 
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest;
+						return r.Gearbox?.PowerRequest ?? (r.Engine?.PowerRequest ?? 0.SI<Watt>() + r.ElectricMotor?.PowerRequest ?? 0.SI<Watt>());
 					},
 					evaluateFunction: grad => vehicle.Request(absTime, simulationInterval, acceleration, grad, true),
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest.Value();
+						return (r.Gearbox?.PowerRequest ?? (r.Engine?.PowerRequest ?? 0.SI<Watt>()) + (r.ElectricMotor?.PowerRequest ?? 0.SI<Watt>())).Value();
 					}
 				);
 			} catch (VectoSearchAbortedException) {
