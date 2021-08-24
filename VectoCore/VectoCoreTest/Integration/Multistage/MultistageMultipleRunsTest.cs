@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 	{
 		private const string TestDataDir = "TestData\\Integration\\Multistage\\";
 
-		private const string CompletedDiesel = TestDataDir + "newVifCompletedDiesel.vecto";
+		private const string CompletedDiesel = TestDataDir + "newVifCompletedConventional.vecto";
 		private const string CompletedExempted = TestDataDir + "newVifExempted.vecto";
 
 		private const string InterimExempted = TestDataDir + "newVifExemptedIncomplete.vecto";
