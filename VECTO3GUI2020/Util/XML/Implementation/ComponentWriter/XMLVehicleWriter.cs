@@ -230,9 +230,8 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			_Xelement.Add(new XAttribute(XMLNames.Component_ID_Attr, _inputData.Identifier ?? ("VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20))));
 			if (_conventional) {
 				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "Vehicle_Conventional_CompletedBusDeclarationType"));
-			} else {
-				throw new NotImplementedException();
-				//_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "InterimStageInputType"));
+			} else if(_exempted) {
+				_Xelement.Add(new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, "Vehicle_Exempted_CompletedBusDeclarationType"));
 			}
 			
 		}
