@@ -82,7 +82,8 @@ namespace TUGraz.VectoCore.Utils
 			
 			_doc.Validate(ValidationCallBack);
 
-			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || _doc.DocumentElement?.SchemaInfo == null ||
+			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || 
+				_doc.DocumentElement?.SchemaInfo == null ||
 				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
 				ValidationCallBack(null, null);
 				_valid = false;
