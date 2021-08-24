@@ -7,7 +7,7 @@
   },
   "Body": {
     "PrimaryVehicle": "exempted_primary_heavyBus.xml",
-    "InterimStage": "vecto_vehicle-exempted_input_incomplete.xml",
+    "InterimStage": "vecto_vehicle-exempted_input_interim-sample.xml",
     "Completed": false
   }
 }

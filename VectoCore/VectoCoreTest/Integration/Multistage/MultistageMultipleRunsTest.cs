@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.ServiceModel.Syndication;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -192,6 +193,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private void ShowWrittenFiles(IList<string> writtenFiles)
 		{
+			TestContext.WriteLine("Written Files:");
 			if (writtenFiles.Count == 0)
 			{
 				TestContext.WriteLine("No Files Written");
