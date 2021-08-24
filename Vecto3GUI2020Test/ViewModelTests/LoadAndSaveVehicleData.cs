@@ -233,9 +233,9 @@ namespace Vecto3GUI2020Test
 
 			TestContext.Write("Saving file with loaded Airdrag Component ... ");
 			var multistageJobViewModel = vm.MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataAsCommand.Execute(null);
+			var savePath = GetFullPath($"{TestContext.CurrentContext.Test.Name}.xml");
+			multistageJobViewModel.ManufacturingStageViewModel.SaveInputDataExecute(savePath);
 
-			var savePath = mockDialogHelper.Object.SaveToXMLDialog();
 			Assert.IsTrue(File.Exists(savePath));
 			TestContext.WriteLine("Done!");
 			
@@ -326,8 +326,6 @@ namespace Vecto3GUI2020Test
 
 			TestAdasInput(vehicleViewModel);
 			TestComponents(vehicleViewModel.Components);
-			TestAirdragComponent(vehicleViewModel.Components.AirdragInputData);
-			TestAuxiliariesComponent(vehicleViewModel.BusAuxiliaries);
 
 
 
@@ -377,18 +375,18 @@ namespace Vecto3GUI2020Test
         {
             Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
 
-			Assert.AreEqual(HeatPumpType.R_744, hvacAux.HeatPumpTypeCoolingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_4_stage, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
 
 			Assert.AreEqual(50, hvacAux.AuxHeaterPower.Value());
             Assert.AreEqual(false, hvacAux.DoubleGlazing);
             Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
             Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
-            Assert.AreEqual(true, hvacAux.WaterElectricHeater);
-            Assert.AreEqual(false, hvacAux.AirElectricHeater);
-            Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+            Assert.AreEqual(null, hvacAux.WaterElectricHeater);
+            Assert.AreEqual(null, hvacAux.AirElectricHeater);
+            Assert.AreEqual(null, hvacAux.OtherHeatingTechnology);
         }
 
 

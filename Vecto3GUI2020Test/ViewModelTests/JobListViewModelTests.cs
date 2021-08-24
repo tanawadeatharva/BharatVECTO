@@ -14,12 +14,11 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	[TestFixture]
 	public class JobListViewModelTests : ViewModelTestBase
 	{
-		private const string finalVIF = "final.VIF_Report_4.xml";
+		private const string finalVIF = "vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 
-		private const string _newVifJob = "newVifCompletedStage.json";
 		private JobListViewModel _jobListViewModel;
 
-		private const string _newVifCompletedDiesel = "newVifCompletedDiesel.vecto";
+		private const string _newVifCompletedConventional = "newVifCompletedConventional.vecto";
 		private const string _newVifExempted = "newVifExempted.vecto";
 		private const string _newVifInterimDiesel = "newVifInterimDiesel.vecto";
 		private const string _newVifExemptedIncomplete = "newVifExemptedIncomplete.vecto";
@@ -58,7 +57,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 
-		[TestCase(_newVifCompletedDiesel, TestName = "VIFConventionalCompleted")]
+		[TestCase(_newVifCompletedConventional, TestName = "VIFConventionalCompleted")]
 		[TestCase(_newVifInterimDiesel, TestName="VIFConventionalInterim")]
 		[TestCase(_newVifExempted, TestName = "VIFExempted")]
 		[TestCase(_newVifExemptedIncomplete, TestName = "VIFExemptedInterim")]
@@ -135,11 +134,5 @@ namespace Vecto3GUI2020Test.ViewModelTests
             Assert.NotNull(stageInputDocumentViewModel);
 		}
 
-		[Test]
-		public async Task LoadNewVifJob()
-		{
-			var documentViewModel = await _jobListViewModel.AddJobAsync(GetTestDataPath(_newVifJob));
-			Assert.NotNull(documentViewModel);
-		}
     }
 }

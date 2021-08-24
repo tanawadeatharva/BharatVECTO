@@ -24,7 +24,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	public class VIFTests : ViewModelTestBase
 	{
 
-		public const string _finalVifReport4 = "final.VIF_Report_4.xml";
+		public const string _finalVif = "vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 		public const string _vectoMultistageOneStage = "vecto_multistage_consolidated_one_stage.xml";
 
 		[Test]
@@ -130,7 +130,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			GetMockDialogHelper().Setup(dialogHelper => dialogHelper.ShowMessageBox(It.IsAny<string>(),
 				It.IsAny<string>(), MessageBoxButton.YesNo, It.IsAny<MessageBoxImage>())).Returns(MessageBoxResult.No);
 
-			var multistagevm = LoadFileFromTestDirectory(_finalVifReport4);
+			var multistagevm = LoadFileFromTestDirectory(_finalVif);
 
 			var VehicleViewModel = multistagevm.MultiStageJobViewModel.ManufacturingStageViewModel.VehicleViewModel as InterimStageBusVehicleViewModel_v2_8;
 

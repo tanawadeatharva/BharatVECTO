@@ -173,8 +173,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			LoadValidNonExemptedFiles();
 			var primaryPath = _createVifViewModel.PrimaryInputPath;
 			var stagePath = _createVifViewModel.StageInputPath;
+			
 
-			var savedToPath = _createVifViewModel.SaveJob("non_exempted.json");
+			var savedToPath = _createVifViewModel.SaveJob(GetFullPath("non_exempted.vecto"));
 			WriteLine($"Saved to: {savedToPath}");
 
 			Assert.AreEqual(primaryPath, _createVifViewModel.PrimaryInputPath);

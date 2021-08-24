@@ -7,15 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-exempted_input_incomplete.xml" Link="TestData\vecto_vehicle-exempted_input_incomplete.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-stage_input_full-sample_final_noNG.xml" Link="TestData\vecto_vehicle-stage_input_full-sample_final_noNG.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\vecto_vehicle-stage_input_full-sample_interim_noNG.xml" Link="TestData\vecto_vehicle-stage_input_full-sample_interim_noNG.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-exempted_input_full-sample.xml" Link="Testdata\vecto_vehicle-exempted_input_full-sample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -53,6 +44,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AirdragLoadTestFilev2.xml" Link="Testdata\AirdragLoadTestFilev2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\exempted_completed.VIF_Report_2.xml" Link="TestData\exempted_completed.VIF_Report_2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\exempted_primary_heavyBus.VIF.xml" Link="TestData\exempted_primary_heavyBus.VIF.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml" Link="Testdata\vecto_multistage_consolidated_multiple_stages.xml">
@@ -137,6 +134,9 @@
     <None Update="TestData\interim2.VIF_Report_3.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\vecto_multistage_conventional_final_vif.VIF_Report_1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\vecto_vehicle-completed_heavyBus_31b.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -149,7 +149,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedDiesel.vecto" Link="TestData\newVifCompletedDiesel.vecto">
+    <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" Link="TestData\newVifCompletedConventional.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" Link="TestData\newVifExempted.vecto">
