@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+		public virtual string VehicleTypeApprovalNumber { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -700,7 +700,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+		public virtual string VehicleTypeApprovalNumber { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -941,6 +941,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: (ConsumerTechnology?)null;
 
 		public override VehicleDeclarationType VehicleDeclarationType => VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType));
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override string VehicleTypeApprovalNumber => ElementExists(XMLNames.VehicleTypeApprovalNumber) ? GetString(XMLNames.VehicleTypeApprovalNumber) : null;
+
+		#endregion
 
 
 		public override XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);

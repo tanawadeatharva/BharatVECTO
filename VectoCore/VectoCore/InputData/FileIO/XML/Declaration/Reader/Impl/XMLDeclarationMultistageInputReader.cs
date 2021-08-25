@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
 
-		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 
 		#endregion
 
@@ -530,6 +530,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public VehicleCode? VehicleCode => GetVehiclePropertyValue<VehicleCode?>(nameof(VehicleCode));
 
+		public string VehicleTypeApprovalNumber => GetVehiclePropertyValue<string>(nameof(VehicleTypeApprovalNumber));
 		public bool? LowEntry => GetVehiclePropertyValue<bool?>(nameof(LowEntry));
 
 		public Meter Height => GetVehiclePropertyValue<Meter>(nameof(Height));
@@ -719,6 +720,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					& InputComplete(Width, nameof(Width))
 					& InputComplete(EntranceHeight, nameof(EntranceHeight))
 					& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology))
+					& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					& (InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataCompleteFullCheck(jobType))
 					& (InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataCompleteFullCheck(jobType));
 			}
@@ -740,6 +742,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
 					&& InputComplete(EntranceHeight, nameof(EntranceHeight))  
 					&& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology)) 
+					&& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataComplete(jobType)
 					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataComplete(jobType);
 		}

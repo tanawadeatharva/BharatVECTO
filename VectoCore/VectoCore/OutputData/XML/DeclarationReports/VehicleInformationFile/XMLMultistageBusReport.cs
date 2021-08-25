@@ -262,18 +262,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					: null,
 				CompletedBusPassengerCountWriter_V2_10_2.GetGroupElements(_vehicleInputData, v210),
 				_vehicleInputData.VehicleCode != null
-                    ? new XElement(v210 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat())
-                    : null,
-                _vehicleInputData.LowEntry != null
-                    ? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry)
-                    : null,
+					? new XElement(v210 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat())
+					: null,
+				_vehicleInputData.LowEntry != null
+					? new XElement(v210 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry)
+					: null,
 				CompletedBusDimensionsWriter_V2_10_2.GetGroupElements(_vehicleInputData, v210),
 
 				_vehicleInputData.DoorDriveTechnology != null
-					? new XElement(v210 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, _vehicleInputData.DoorDriveTechnology.ToXMLFormat())
+					? new XElement(v210 + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology,
+						_vehicleInputData.DoorDriveTechnology.ToXMLFormat())
 					: null,
-                
-				new XElement(v210 + XMLNames.Bus_VehicleDeclarationType, _vehicleInputData.VehicleDeclarationType.GetLabel()),
+
+				new XElement(v210 + XMLNames.Bus_VehicleDeclarationType,
+					_vehicleInputData.VehicleDeclarationType.GetLabel()),
+				_vehicleInputData.VehicleTypeApprovalNumber != null
+					? new XElement(v210 + XMLNames.VehicleTypeApprovalNumber,
+						_vehicleInputData.VehicleTypeApprovalNumber)
+					: null,
 				GetADAS(_vehicleInputData.ADAS),
 				GetBusVehicleComponents(_vehicleInputData.Components)
 			);
