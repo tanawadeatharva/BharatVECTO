@@ -92,14 +92,15 @@
     "TorqueLimits": {},
     "InitialSoC": 80.0,
     "PowertrainConfiguration": "ParallelHybrid",
+    "MaxDrivetrainPower": 500000.0,
     "ElectricMotors": [
       {
         "Count": 1,
-        "Ratio": 1.0,
+        "Ratio":  3.077, 
         "Position": "P2.5",
         "MotorFile": "GenericEMotor_140kW_936Nm.vem",
         "MechanicalEfficiency": 1.0,
-        "RatioPerGear": []
+        "RatioPerGear": [ 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125, 1.0259, 0.8125 ],
       }
     ],
     "Batteries": [
