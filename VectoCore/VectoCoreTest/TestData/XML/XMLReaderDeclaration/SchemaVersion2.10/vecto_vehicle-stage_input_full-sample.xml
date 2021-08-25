@@ -24,6 +24,7 @@
 		<EntranceHeight>2000</EntranceHeight>
 		<DoorDriveTechnology>electric</DoorDriveTechnology>
 		<VehicleDeclarationType>interim</VehicleDeclarationType>
+		<VehicleTypeApprovalNumber>1234567890</VehicleTypeApprovalNumber>
 		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
