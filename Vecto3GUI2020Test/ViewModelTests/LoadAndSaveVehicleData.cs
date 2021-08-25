@@ -315,6 +315,7 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(2, vehicleViewModel.EntranceHeight.Value());
 			Assert.AreEqual(ConsumerTechnology.Electrically, vehicleViewModel.DoorDriveTechnology);
 			Assert.AreEqual(VehicleDeclarationType.interim, vehicleViewModel.VehicleDeclarationType);
+			Assert.AreEqual("1234567890", vehicleViewModel.VehicleTypeApprovalNumber);
 
 
 			Assert.AreEqual(newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle.DoorDriveTechnology, vehicleViewModel.DoorDriveTechnology);

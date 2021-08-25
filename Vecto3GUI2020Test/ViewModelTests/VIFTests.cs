@@ -140,7 +140,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			VehicleViewModel.Model = "asdf";
 			VehicleViewModel.AirdragModifiedEnum = loadAirdrag ? AIRDRAGMODIFIED.TRUE: AIRDRAGMODIFIED.FALSE;
 			VehicleViewModel.VehicleDeclarationType = VehicleDeclarationType.final;
-
+			VehicleViewModel.VehicleTypeApprovalNumber = "123456789";
 			//SETADAS
 			VehicleViewModel.EngineStopStartNullable = true;
 			VehicleViewModel.EcoRollTypeNullable = EcoRollType.WithEngineStop;

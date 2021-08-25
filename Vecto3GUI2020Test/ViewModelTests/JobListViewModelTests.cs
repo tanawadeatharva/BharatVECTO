@@ -105,6 +105,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//select vif for simulation
 			Assert.AreNotEqual(0, _jobListViewModel.Jobs.Count);
+
+			Assert.IsTrue(_jobListViewModel.Jobs[0].CanBeSimulated);
 			_jobListViewModel.Jobs[0].Selected = true;
 
 
