@@ -148,6 +148,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		public TableData MaxPropulsionTorque => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;

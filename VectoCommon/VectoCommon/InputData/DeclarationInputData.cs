@@ -198,6 +198,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
+		string VehicleTypeApprovalNumber { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }

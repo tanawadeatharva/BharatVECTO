@@ -499,6 +499,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
 
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		#endregion
 
 		#region ManufacturingStage optional properties

@@ -355,6 +355,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 
 		public VehicleDeclarationType VehicleDeclarationType => throw new NotImplementedException();
 
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		public virtual ConsumerTechnology DoorDriveTechnology
 		{
 			get => throw new NotImplementedException();

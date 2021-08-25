@@ -806,6 +806,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		#endregion
 
 

@@ -254,7 +254,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public ConsumerTechnology? DoorDriveTechnology => VehicleData.DoorDriveTechnology;
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		
+
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
