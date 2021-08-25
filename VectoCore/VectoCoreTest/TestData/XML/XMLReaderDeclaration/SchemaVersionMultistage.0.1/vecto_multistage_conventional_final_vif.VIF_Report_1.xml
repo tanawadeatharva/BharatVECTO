@@ -610,6 +610,7 @@
         <EntranceHeight>2000</EntranceHeight>
         <DoorDriveTechnology>electric</DoorDriveTechnology>
         <VehicleDeclarationType>final</VehicleDeclarationType>
+        <VehicleTypeApprovalNumber>123456789</VehicleTypeApprovalNumber>
         <ADAS xsi:type="ADAS_Conventional_Type">
           <EngineStopStart>true</EngineStopStart>
           <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>

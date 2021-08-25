@@ -67,7 +67,7 @@
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
-						<SystemConfiguration>0</SystemConfiguration>
+						<SystemConfiguration>6</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>
 							<Cooling>none</Cooling>
 							<Heating>non R-744 3-stage</Heating>
@@ -79,7 +79,7 @@
 						<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
 						<DoubleGlazing>false</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
-						<SeparateAirDistributionDucts>false</SeparateAirDistributionDucts>
+						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
 					</HVAC>
 				</Data>
 			</Auxiliaries>

@@ -1,13 +1,13 @@
 {
   "Header": {
     "CreatedBy": "Harry",
-    "Date": "2021-08-05T00:00:00+02:00",
+    "Date": "2021-08-25T00:00:00+02:00",
     "AppVersion": "Vecto3GUI2020",
     "FileVersion": 10
   },
   "Body": {
-    "PrimaryVehicle": "exempted_primary_heavyBus.xml",
-    "InterimStage": "vecto_vehicle-exempted_input_full-sample.xml",
+    "PrimaryVehicle": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\exempted_primary_heavyBus.xml",
+    "InterimStage": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\vecto_vehicle-exempted_input_full-sample.xml",
     "Completed": false
   }
 }
