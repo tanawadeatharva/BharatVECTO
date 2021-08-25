@@ -1584,4 +1584,7 @@
   <data name="Exempted_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
+  <data name="VehicleTypeApprovalNumber" xml:space="preserve">
+    <value>VehicleTypeApprovalNumber</value>
+  </data>
 </root>

@@ -4444,6 +4444,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VehicleTypeApprovalNumber.
+        /// </summary>
+        public static string VehicleTypeApprovalNumber {
+            get {
+                return ResourceManager.GetString("VehicleTypeApprovalNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to torqueLimit.
         /// </summary>
         public static string XMLManufacturerReport_torqueLimit {
