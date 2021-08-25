@@ -638,6 +638,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vehicle Type Approval Number.
+        /// </summary>
+        public static string VehicleTypeApprovalNumber {
+            get {
+                return ResourceManager.GetString("VehicleTypeApprovalNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vehicle Identification Number.
         /// </summary>
         public static string VehicleViewModel_v1_0_VIN {
