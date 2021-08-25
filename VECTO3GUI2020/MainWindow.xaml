@@ -40,8 +40,8 @@
                                 </MenuItem.CommandParameter>
                             </MenuItem>
                                 <Separator></Separator>
-                            <MenuItem Header="Create interim/completeted input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
-                            <MenuItem Header="Create extemted interim/completed input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
+                            <MenuItem Header="Create Interim/Completeted Input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
+                            <MenuItem Header="Create Exempted Interim/Completed Input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding JobListVm.AddJobAsyncCommand}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>

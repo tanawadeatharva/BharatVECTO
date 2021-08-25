@@ -305,7 +305,7 @@
     <value>Vehicle Code</value>
   </data>
   <data name="VehicleDeclarationType" xml:space="preserve">
-    <value>Declaration Type</value>
+    <value>Vehicle Declaration Type</value>
   </data>
   <data name="WaterElectricHeater" xml:space="preserve">
     <value>Water Electric Heater</value>

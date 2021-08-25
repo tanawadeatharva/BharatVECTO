@@ -58,7 +58,6 @@
                     <ContentControl Content="{Binding ParameterViewModels[DoubleGlazing]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[AdjustableAuxiliaryHeater]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[SeparateAirDistributionDucts]}"/>
-                    <Separator/>
                 </StackPanel>
             </DockPanel>
         </ScrollViewer>

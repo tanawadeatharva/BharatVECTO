@@ -336,7 +336,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			//Setup allowed values
 
-
 			_parameterViewModels[nameof(VehicleCode)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, VehicleCode>((TUGraz.VectoCommon.Models.VehicleCode
 					.NOT_APPLICABLE));
@@ -347,6 +346,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			_parameterViewModels[nameof(RegisteredClass)].AllowedItems =
 				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, RegistrationClass>(RegistrationClass.unknown);
+
+			_parameterViewModels[nameof(DoorDriveTechnology)].AllowedItems =
+				EnumHelper.GetValuesAsObservableCollectionExcluding<Enum, ConsumerTechnology>(
+					ConsumerTechnology.Unknown);
 
 			//Setup additional consolidatedVehicleData
 			_parameterViewModels[nameof(EngineStopStartNullable)].PreviousContent =

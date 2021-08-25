@@ -121,15 +121,15 @@
     <value>Airdrag Area 0</value>
   </data>
   <data name="AirdragModifiedEnum" xml:space="preserve">
-    <value>Airdrag modified</value>
+    <value>Airdrag Modified</value>
   </data>
   <data name="ATEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>ATP Eco Roll Release Lockup Clutch</value>
+    <value>APT Eco Roll Release Lockup Clutch</value>
   </data>
   <data name="CompressorDrive" xml:space="preserve">
     <value>Compressor Drive</value>
   </data>
-  <data name="CurbmassChassis" xml:space="preserve">
+  <data name="CurbMassChassis" xml:space="preserve">
     <value>Corrected Actual Mass</value>
   </data>
   <data name="EcoRollTypeNullable" xml:space="preserve">
@@ -157,31 +157,34 @@
     <value>Heating</value>
   </data>
   <data name="HeightInMm" xml:space="preserve">
-    <value>Height</value>
+    <value>Height Integrated Body</value>
   </data>
   <data name="LegislativeClass" xml:space="preserve">
     <value>Legislative Category</value>
   </data>
   <data name="LengthInMm" xml:space="preserve">
-    <value>Length</value>
+    <value>Vehicle Length</value>
   </data>
   <data name="Manufacturer" xml:space="preserve">
     <value>Manufacturer</value>
   </data>
   <data name="NumberPassengerSeatsLowerDeck" xml:space="preserve">
-    <value>Passenger Seats Lower Deck</value>
+    <value>Seats Lower Deck</value>
   </data>
   <data name="NumberPassengerSeatsUpperDeck" xml:space="preserve">
-    <value>Passenger Seats Upper Deck</value>
+    <value>Seats Upper Deck</value>
   </data>
   <data name="NumberPassengersStandingLowerDeck" xml:space="preserve">
-    <value>Passenger Standing Lower Deck</value>
+    <value>Standing Lower Deck</value>
   </data>
   <data name="NumberPassengersStandingUpperDeck" xml:space="preserve">
-    <value>Passenger Standing Upper Deck</value>
+    <value>Standing Upper Deck</value>
   </data>
   <data name="PredictiveCruiseControlNullable" xml:space="preserve">
     <value>Predictive Cruise Control</value>
+  </data>
+  <data name="RegisteredClass" xml:space="preserve">
+    <value>Class Bus</value>
   </data>
   <data name="TankSystem" xml:space="preserve">
     <value>Ng Tank System</value>
@@ -193,6 +196,6 @@
     <value>Bodywork Code</value>
   </data>
   <data name="WidthInMm" xml:space="preserve">
-    <value>Width</value>
+    <value>Vehicle Width</value>
   </data>
 </root>

@@ -629,7 +629,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Declaration Type.
+        ///   Looks up a localized string similar to Vehicle Declaration Type.
         /// </summary>
         public static string VehicleDeclarationType {
             get {
