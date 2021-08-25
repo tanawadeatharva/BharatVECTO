@@ -111,6 +111,7 @@
                 <ContentControl 
                     Content="{Binding ParameterViewModels[VehicleDeclarationType]}"/>
 
+                <ContentControl Content="{Binding ParameterViewModels[VehicleTypeApprovalNumber]}"/>
                     <Label Content="Advanced Driver Assistant Systems" Style="{DynamicResource LabelStyle1}"/>
 
                 <ContentControl 

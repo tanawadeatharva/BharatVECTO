@@ -265,6 +265,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(EcoRollTypeNullable),
 				nameof(PredictiveCruiseControlNullable),
 				nameof(ATEcoRollReleaseLockupClutch),
+				nameof(VehicleTypeApprovalNumber),
 			};
 
 			foreach (var property in properties) {
@@ -430,6 +431,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			EntranceHeight = vehicleInputData.EntranceHeight;
 			DoorDriveTechnology = vehicleInputData.DoorDriveTechnology;
 			VehicleDeclarationType = vehicleInputData.VehicleDeclarationType;
+			VehicleTypeApprovalNumber = vehicleInputData.VehicleTypeApprovalNumber;
 			AdasEditingEnabled = vehicleInputData.ADAS != null;
 			EngineStopStartNullable = vehicleInputData.ADAS?.EngineStopStart;
 			EcoRollTypeNullable = vehicleInputData.ADAS?.EcoRoll;
@@ -806,7 +808,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
-		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+		private string _vehicleTypeApprovalNumber;
+
+		public string VehicleTypeApprovalNumber
+		{
+			get => _vehicleTypeApprovalNumber;
+			set => SetProperty(ref _vehicleTypeApprovalNumber, value);
+		}
 
 		#endregion
 

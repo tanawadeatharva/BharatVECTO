@@ -343,35 +343,25 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			);
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_NgTankSystem, _inputData.TankSystem));
 
-			if (_inputData.NumberPassengerSeatsUpperDeck != null &&
-				_inputData.NumberPassengerSeatsLowerDeck != null &&
-				_inputData.NumberPassengersStandingUpperDeck != null &&
-				_inputData.NumberPassengersStandingLowerDeck != null) 
-			{
-				// ReSharper disable once CoVariantArrayConversion
-				_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
-					GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, _defaultNamespace).GetGroupElements(_inputData));
-			}
+			// ReSharper disable once CoVariantArrayConversion
+			_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+				GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, _defaultNamespace).GetGroupElements(_inputData));
 
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode, _inputData.VehicleCode.ToXMLFormat()));
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
 
-			if (_inputData.Height != null && 
-				_inputData.Length != null &&
-				_inputData.Width != null &&
-				_inputData.EntranceHeight != null) {
-				// ReSharper disable once CoVariantArrayConversion
-				_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
-						GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, _defaultNamespace)
-					.GetGroupElements(_inputData));
-			}
+
+			_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, _defaultNamespace)
+				.GetGroupElements(_inputData));
 
 			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology,
-				_inputData.DoorDriveTechnology != null
-					? _inputData.DoorDriveTechnology.ToXMLFormat()
-					: null));
+			_inputData.DoorDriveTechnology != null
+				? _inputData.DoorDriveTechnology.ToXMLFormat()
+				: null));
 
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleDeclarationType, _inputData.VehicleDeclarationType));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.VehicleTypeApprovalNumber, _inputData.VehicleTypeApprovalNumber));
 
 			if (_inputData.ADAS != null) {
 				_Xelement.Add(_componentWriterFactory.getDeclarationAdasWriter(GroupNames.ADAS_Conventional_Type, _defaultNamespace).GetComponent(_inputData.ADAS));
