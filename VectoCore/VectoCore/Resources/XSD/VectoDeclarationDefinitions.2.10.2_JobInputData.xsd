@@ -1346,6 +1346,7 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType" minOccurs="0"/>
 				</xs:sequence>
@@ -1648,6 +1649,7 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -1898,6 +1900,7 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -1983,6 +1986,7 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -3051,13 +3055,7 @@
 			<xs:element name="VocationalVehicle" type="xs:boolean"/>
 			<xs:element name="NgTankSystem" type="v2.1:NgTankSystemType" minOccurs="0"/>
 			<xs:element name="SleeperCab" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber">
-				<xs:simpleType>
-					<xs:restriction base="xs:token">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_HeavyLorryPEVParametersSequenceGroup_2">
@@ -3072,13 +3070,7 @@
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="VocationalVehicle" type="xs:boolean"/>
 			<xs:element name="SleeperCab" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber">
-				<xs:simpleType>
-					<xs:restriction base="xs:token">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_1">
@@ -3119,13 +3111,7 @@
 			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
-			<xs:element name="VehicleTypeApprovalNumber">
-				<xs:simpleType>
-					<xs:restriction base="xs:token">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryPEVParametersSequenceGroup_2">
@@ -3144,13 +3130,7 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber">
-				<xs:simpleType>
-					<xs:restriction base="xs:token">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_PrimaryBusParametersSequenceGroup">
@@ -3185,4 +3165,9 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:simpleType name="VehicleTypeApprovalNumberType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
