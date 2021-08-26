@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle)
 					builder.BuildSimplePowertrain(data, testContainer);
 				else {
-					builder.BuildSimplePowertrainE2(data, testContainer);
+					builder.BuildSimplePowertrainElectric(data, testContainer);
 				}
 
 				container?.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));

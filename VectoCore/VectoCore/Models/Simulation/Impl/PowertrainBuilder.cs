@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First().Item1;
-			IElectricMotor em = null;
+			IElectricMotor em;
 			switch (pos) {
 				case PowertrainPosition.HybridPositionNotSet:
 					throw new VectoException("invalid powertrain position");
@@ -546,7 +546,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					powertrain.AddComponent(em);
 					new DummyGearboxInfo(container);
 					new DummyAxleGearInfo(container);
-					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE3:
@@ -554,7 +553,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(em);
 					new DummyGearboxInfo(container);
-					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE2:
@@ -781,7 +779,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		}
 
-		public void BuildSimplePowertrainE2(VectoRunData data, VehicleContainer container)
+		public void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
 		{
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 
