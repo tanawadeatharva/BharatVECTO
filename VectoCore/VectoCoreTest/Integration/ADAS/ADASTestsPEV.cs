@@ -28,6 +28,108 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests() => Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
+		#region E2
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+	(0, 5647, OutsideSegment, Accelerate),        // len: 5647m
+	(5647, 5776, OutsideSegment, Coast),          // len: 129m
+	(5776, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 6196, OutsideSegment, Accelerate),        // len: 6196m
+			(6196, 7546, OutsideSegment, Coast),          // len: 1350m
+			(7546, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 5496, OutsideSegment, Accelerate),        // len: 5496m
+			(5496, 5849, OutsideSegment, Coast),          // len: 353m
+			(5849, 7111, OutsideSegment, Brake),          // len: 1262m
+			(7111, 7373, OutsideSegment, Coast),          // len: 262m
+			(7373, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 2147, OutsideSegment, Accelerate),        // len: 2147m
+			(2147, 2300, OutsideSegment, Coast),          // len: 153m
+			(2300, 2469, OutsideSegment, Brake),          // len: 169m
+			(2469, 2517, OutsideSegment, Coast),          // len: 48m
+			(2517, 5550, OutsideSegment, Accelerate),     // len: 3033m
+			(5550, 5916, OutsideSegment, Coast),          // len: 366m
+			(5916, 6649, OutsideSegment, Brake),          // len: 733m
+			(6649, 6899, OutsideSegment, Coast),          // len: 250m
+			(6899, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 2194, OutsideSegment, Accelerate),        // len: 2194m
+			(2194, 2358, OutsideSegment, Coast),          // len: 164m
+			(2358, 3349, OutsideSegment, Accelerate),     // len: 991m
+			(3349, 3597, OutsideSegment, Coast),          // len: 248m
+			(3597, 3946, OutsideSegment, Brake),          // len: 349m
+			(3946, 4160, OutsideSegment, Coast),          // len: 214m
+			(4160, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 2206, OutsideSegment, Accelerate),        // len: 2206m
+			(2206, 2381, OutsideSegment, Coast),          // len: 175m
+			(2381, 2918, OutsideSegment, Accelerate),     // len: 537m
+			(2918, 3329, OutsideSegment, Coast),          // len: 411m
+			(3329, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 5437, OutsideSegment, Accelerate),        // len: 5437m
+			(5437, 5614, OutsideSegment, Coast),          // len: 177m
+			(5614, 6467, OutsideSegment, Brake),          // len: 853m
+			(6467, 6897, OutsideSegment, Coast),          // len: 430m
+			(6897, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 5332, OutsideSegment, Accelerate),        // len: 5332m
+			(5332, 5722, OutsideSegment, Coast),          // len: 390m
+			(5722, 5962, OutsideSegment, Brake),          // len: 240m
+			(5962, 6177, OutsideSegment, Coast),          // len: 215m
+			(6177, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4794, OutsideSegment, Accelerate),        // len: 4794m
+			(5546, 6086, OutsideSegment, Brake),          // len: 540m
+			(6086, 6325, OutsideSegment, Coast),          // len: 239m
+			(6325, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E2_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 0, OutsideSegment, Halt),                 // len: 0m
+			(0, 112, OutsideSegment, Accelerate),         // len: 112m
+			(493, 3808, OutsideSegment, Accelerate),      // len: 3315m
+			(3808, 4567, OutsideSegment, Coast),          // len: 759m
+			(4567, 5010, OutsideSegment, Brake),          // len: 443m
+			(5010, 5160, OutsideSegment, Coast),          // len: 150m
+			(5160, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E2_NoADAS_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 0, OutsideSegment, Halt),                 // len: 0m
+			(0, 112, OutsideSegment, Accelerate),         // len: 112m
+			(493, 3613, OutsideSegment, Accelerate),      // len: 3120m
+			(3613, 4246, OutsideSegment, Coast),          // len: 633m
+			(4246, 4508, OutsideSegment, Brake),          // len: 262m
+			(4508, 1e6, OutsideSegment, Accelerate));
+		
+
 		[Test]
 		public void Class5_E2_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4060, OutsideSegment, Accelerate),        // len: 4060m
@@ -119,11 +221,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		public void Class5_E2_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 112, OutsideSegment, Accelerate),         // len: 112m
-			(112, 125, OutsideSegment, Roll),             // len: 13m
-			(125, 405, OutsideSegment, Accelerate),       // len: 280m
-			(405, 425, OutsideSegment, Roll),             // len: 20m
-			(425, 473, OutsideSegment, Accelerate),       // len: 48m
-			(473, 493, OutsideSegment, Roll),             // len: 20m
 			(493, 3808, OutsideSegment, Accelerate),      // len: 3315m
 			(3808, 4567, OutsideSegment, Coast),          // len: 759m
 			(4567, 5010, OutsideSegment, Brake),          // len: 443m
@@ -135,208 +232,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		public void Class5_E2_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 112, OutsideSegment, Accelerate),         // len: 112m
-			(112, 125, OutsideSegment, Roll),             // len: 13m
-			(125, 405, OutsideSegment, Accelerate),       // len: 280m
-			(405, 425, OutsideSegment, Roll),             // len: 20m
-			(425, 473, OutsideSegment, Accelerate),       // len: 48m
-			(473, 493, OutsideSegment, Roll),             // len: 20m
 			(493, 3613, OutsideSegment, Accelerate),      // len: 3120m
 			(3613, 4246, OutsideSegment, Coast),          // len: 633m
 			(4246, 4508, OutsideSegment, Brake),          // len: 262m
 			(4508, 1e6, OutsideSegment, Accelerate));
 
-		[Test]
-		public void Class5_E3_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 4049, OutsideSegment, Accelerate),        // len: 4049m
-			(4049, 5472, WithinSegment, Accelerate),      // len: 1423m
-			(5472, 5889, UseCase1, Coast),                // len: 417m
-			(5889, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E3_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 4445, OutsideSegment, Accelerate),        // len: 4445m
-			(4445, 5484, WithinSegment, Accelerate),      // len: 1039m
-			(5484, 7459, UseCase1, Coast),                // len: 1975m
-			(7459, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 3897, OutsideSegment, Accelerate),        // len: 3897m
-			(3897, 4936, WithinSegment, Accelerate),      // len: 1039m
-			(4936, 6054, UseCase1, Coast),                // len: 1118m
-			(6054, 6066, UseCase1, Brake),                // len: 12m
-			(6066, 6090, UseCase1, Coast),                // len: 24m
-			(6090, 6296, WithinSegment, Coast),           // len: 206m
-			(6296, 7112, WithinSegment, Brake),           // len: 816m
-			(7112, 7235, WithinSegment, Coast),           // len: 123m
-			(7235, 7430, OutsideSegment, Coast),          // len: 195m
-			(7430, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 642, OutsideSegment, Accelerate),         // len: 642m
-			(642, 1902, WithinSegment, Accelerate),       // len: 1260m
-			(1902, 2498, UseCase1, Coast),                // len: 596m
-			(2498, 3956, OutsideSegment, Accelerate),     // len: 1458m
-			(3956, 4948, WithinSegment, Accelerate),      // len: 992m
-			(4948, 6260, UseCase1, Coast),                // len: 1312m
-			(6260, 6769, WithinSegment, Coast),           // len: 509m
-			(6769, 6938, OutsideSegment, Coast),          // len: 169m
-			(6938, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 665, OutsideSegment, Accelerate),         // len: 665m
-			(665, 2077, WithinSegment, Accelerate),       // len: 1412m
-			(2077, 2401, UseCase1, Coast),                // len: 324m
-			(2401, 2984, WithinSegment, Accelerate),      // len: 583m
-			(2984, 4031, UseCase1, Coast),                // len: 1047m
-			(4031, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 677, OutsideSegment, Accelerate),         // len: 677m
-			(677, 2089, WithinSegment, Accelerate),       // len: 1412m
-			(2089, 2425, UseCase1, Coast),                // len: 336m
-			(2425, 2646, WithinSegment, Accelerate),      // len: 221m
-			(2646, 3334, UseCase1, Coast),                // len: 688m
-			(3334, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 3920, OutsideSegment, Accelerate),        // len: 3920m
-			(3920, 5099, WithinSegment, Accelerate),      // len: 1179m
-			(5099, 5923, UseCase1, Coast),                // len: 824m
-			(5923, 6788, WithinSegment, Coast),           // len: 865m
-			(6788, 7123, OutsideSegment, Coast),          // len: 335m
-			(7123, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E3_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 3745, OutsideSegment, Accelerate),        // len: 3745m
-			(3745, 4854, WithinSegment, Accelerate),      // len: 1109m
-			(4854, 6065, UseCase1, Coast),                // len: 1211m
-			(6065, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 3547, OutsideSegment, Accelerate),        // len: 3547m
-			(3547, 5374, WithinSegment, Accelerate),      // len: 1827m
-			(5374, 5643, UseCase2, Coast),                // len: 269m
-			(5643, 5666, UseCase2, Brake),                // len: 23m
-			(5666, 5909, WithinSegment, Coast),           // len: 243m
-			(5909, 6082, WithinSegment, Brake),           // len: 173m
-			(6082, 6194, WithinSegment, Coast),           // len: 112m
-			(6194, 6364, OutsideSegment, Coast),          // len: 170m
-			(6364, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E3_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 3410, OutsideSegment, Accelerate),        // len: 3410m
-			(3410, 4441, OutsideSegment, Coast),          // len: 1031m
-			(4441, 5005, OutsideSegment, Brake),          // len: 564m
-			(5005, 5206, OutsideSegment, Coast),          // len: 201m
-			(5206, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E3_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 3614, OutsideSegment, Accelerate),        // len: 3614m
-			(3614, 4148, OutsideSegment, Coast),          // len: 534m
-			(4148, 4510, OutsideSegment, Brake),          // len: 362m
-			(4510, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 4025, OutsideSegment, Accelerate),      // len: 3754m
-			(4025, 5902, WithinSegment, Accelerate),      // len: 1877m
-			(5902, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 4342, OutsideSegment, Accelerate),      // len: 4071m
-			(4342, 7546, WithinSegment, Accelerate),      // len: 3204m
-			(7546, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 3850, OutsideSegment, Accelerate),      // len: 3579m
-			(3850, 7279, WithinSegment, Accelerate),      // len: 3429m
-			(7279, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 630, OutsideSegment, Accelerate),       // len: 359m
-			(630, 2499, WithinSegment, Accelerate),       // len: 1869m
-			(2499, 3900, OutsideSegment, Accelerate),     // len: 1401m
-			(3900, 6803, WithinSegment, Accelerate),      // len: 2903m
-			(6803, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E4_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 647, OutsideSegment, Accelerate),       // len: 376m
-			(647, 4050, WithinSegment, Accelerate),       // len: 3403m
-			(4050, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E4_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 655, OutsideSegment, Accelerate),       // len: 384m
-			(655, 3350, WithinSegment, Accelerate),       // len: 2695m
-			(3350, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 3909, OutsideSegment, Accelerate),      // len: 3638m
-			(3909, 6903, WithinSegment, Accelerate),      // len: 2994m
-			(6903, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E4_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 3717, OutsideSegment, Accelerate),      // len: 3446m
-			(3717, 6086, WithinSegment, Accelerate),      // len: 2369m
-			(6086, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 271, OutsideSegment, Brake),              // len: 271m
-			(271, 3542, OutsideSegment, Accelerate),      // len: 3271m
-			(3542, 6222, WithinSegment, Accelerate),      // len: 2680m
-			(6222, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E4_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 1e6, OutsideSegment, Accelerate));
-
-
-		[Test]
-		public void Class5_E4_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 1e6, OutsideSegment, Accelerate));
+		
 
 		[Test]
 		public void Class5_E2_PCC12_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
@@ -458,114 +359,210 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4246, 4508, OutsideSegment, Brake),          // len: 262m
 			(4508, 1e6, OutsideSegment, Accelerate));
 
-		[Test]
-		public void Class5_E2_NoADAS_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 5647, OutsideSegment, Accelerate),        // len: 5647m
-			(5647, 5776, OutsideSegment, Coast),          // len: 129m
-			(5776, 1e6, OutsideSegment, Accelerate));
 
+		#endregion
+
+		#region E3
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 6196, OutsideSegment, Accelerate),        // len: 6196m
-			(6196, 7546, OutsideSegment, Coast),          // len: 1350m
-			(7546, 1e6, OutsideSegment, Accelerate));
-
-		[Test]
-		public void Class5_E2_NoADAS_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 5496, OutsideSegment, Accelerate),        // len: 5496m
-			(5496, 5849, OutsideSegment, Coast),          // len: 353m
-			(5849, 7111, OutsideSegment, Brake),          // len: 1262m
-			(7111, 7373, OutsideSegment, Coast),          // len: 262m
-			(7373, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4049, OutsideSegment, Accelerate),        // len: 4049m
+			(4049, 5472, WithinSegment, Accelerate),      // len: 1423m
+			(5472, 5889, UseCase1, Coast),                // len: 417m
+			(5889, 1e6, OutsideSegment, Accelerate));
 
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 2147, OutsideSegment, Accelerate),        // len: 2147m
-			(2147, 2300, OutsideSegment, Coast),          // len: 153m
-			(2300, 2469, OutsideSegment, Brake),          // len: 169m
-			(2469, 2517, OutsideSegment, Coast),          // len: 48m
-			(2517, 5550, OutsideSegment, Accelerate),     // len: 3033m
-			(5550, 5916, OutsideSegment, Coast),          // len: 366m
-			(5916, 6649, OutsideSegment, Brake),          // len: 733m
-			(6649, 6899, OutsideSegment, Coast),          // len: 250m
-			(6899, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 4445, OutsideSegment, Accelerate),        // len: 4445m
+			(4445, 5484, WithinSegment, Accelerate),      // len: 1039m
+			(5484, 7459, UseCase1, Coast),                // len: 1975m
+			(7459, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 2194, OutsideSegment, Accelerate),        // len: 2194m
-			(2194, 2358, OutsideSegment, Coast),          // len: 164m
-			(2358, 3349, OutsideSegment, Accelerate),     // len: 991m
-			(3349, 3597, OutsideSegment, Coast),          // len: 248m
-			(3597, 3946, OutsideSegment, Brake),          // len: 349m
-			(3946, 4160, OutsideSegment, Coast),          // len: 214m
-			(4160, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3897, OutsideSegment, Accelerate),        // len: 3897m
+			(3897, 4936, WithinSegment, Accelerate),      // len: 1039m
+			(4936, 6054, UseCase1, Coast),                // len: 1118m
+			(6054, 6066, UseCase1, Brake),                // len: 12m
+			(6066, 6090, UseCase1, Coast),                // len: 24m
+			(6090, 6296, WithinSegment, Coast),           // len: 206m
+			(6296, 7112, WithinSegment, Brake),           // len: 816m
+			(7112, 7235, WithinSegment, Coast),           // len: 123m
+			(7235, 7430, OutsideSegment, Coast),          // len: 195m
+			(7430, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 2206, OutsideSegment, Accelerate),        // len: 2206m
-			(2206, 2381, OutsideSegment, Coast),          // len: 175m
-			(2381, 2918, OutsideSegment, Accelerate),     // len: 537m
-			(2918, 3329, OutsideSegment, Coast),          // len: 411m
-			(3329, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 642, OutsideSegment, Accelerate),         // len: 642m
+			(642, 1902, WithinSegment, Accelerate),       // len: 1260m
+			(1902, 2498, UseCase1, Coast),                // len: 596m
+			(2498, 3956, OutsideSegment, Accelerate),     // len: 1458m
+			(3956, 4948, WithinSegment, Accelerate),      // len: 992m
+			(4948, 6260, UseCase1, Coast),                // len: 1312m
+			(6260, 6769, WithinSegment, Coast),           // len: 509m
+			(6769, 6938, OutsideSegment, Coast),          // len: 169m
+			(6938, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 5437, OutsideSegment, Accelerate),        // len: 5437m
-			(5437, 5614, OutsideSegment, Coast),          // len: 177m
-			(5614, 6467, OutsideSegment, Brake),          // len: 853m
-			(6467, 6897, OutsideSegment, Coast),          // len: 430m
-			(6897, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 665, OutsideSegment, Accelerate),         // len: 665m
+			(665, 2077, WithinSegment, Accelerate),       // len: 1412m
+			(2077, 2401, UseCase1, Coast),                // len: 324m
+			(2401, 2984, WithinSegment, Accelerate),      // len: 583m
+			(2984, 4031, UseCase1, Coast),                // len: 1047m
+			(4031, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 5332, OutsideSegment, Accelerate),        // len: 5332m
-			(5332, 5722, OutsideSegment, Coast),          // len: 390m
-			(5722, 5962, OutsideSegment, Brake),          // len: 240m
-			(5962, 6177, OutsideSegment, Coast),          // len: 215m
-			(6177, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 677, OutsideSegment, Accelerate),         // len: 677m
+			(677, 2089, WithinSegment, Accelerate),       // len: 1412m
+			(2089, 2425, UseCase1, Coast),                // len: 336m
+			(2425, 2646, WithinSegment, Accelerate),      // len: 221m
+			(2646, 3334, UseCase1, Coast),                // len: 688m
+			(3334, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3920, OutsideSegment, Accelerate),        // len: 3920m
+			(3920, 5099, WithinSegment, Accelerate),      // len: 1179m
+			(5099, 5923, UseCase1, Coast),                // len: 824m
+			(5923, 6788, WithinSegment, Coast),           // len: 865m
+			(6788, 7123, OutsideSegment, Coast),          // len: 335m
+			(7123, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E3_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3745, OutsideSegment, Accelerate),        // len: 3745m
+			(3745, 4854, WithinSegment, Accelerate),      // len: 1109m
+			(4854, 6065, UseCase1, Coast),                // len: 1211m
+			(6065, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E3_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 4794, OutsideSegment, Accelerate),        // len: 4794m
-			(5546, 6086, OutsideSegment, Brake),          // len: 540m
-			(6086, 6325, OutsideSegment, Coast),          // len: 239m
-			(6325, 1e6, OutsideSegment, Accelerate));
+		public void Class5_E3_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 3547, OutsideSegment, Accelerate),        // len: 3547m
+			(3547, 5374, WithinSegment, Accelerate),      // len: 1827m
+			(5374, 5643, UseCase2, Coast),                // len: 269m
+			(5643, 5666, UseCase2, Brake),                // len: 23m
+			(5666, 5909, WithinSegment, Coast),           // len: 243m
+			(5909, 6082, WithinSegment, Brake),           // len: 173m
+			(6082, 6194, WithinSegment, Coast),           // len: 112m
+			(6194, 6364, OutsideSegment, Coast),          // len: 170m
+			(6364, 1e6, OutsideSegment, Accelerate));
 
 		[Test]
-		public void Class5_E2_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 112, OutsideSegment, Accelerate),         // len: 112m
-			(112, 125, OutsideSegment, Roll),             // len: 13m
-			(125, 405, OutsideSegment, Accelerate),       // len: 280m
-			(405, 425, OutsideSegment, Roll),             // len: 20m
-			(425, 473, OutsideSegment, Accelerate),       // len: 48m
-			(473, 493, OutsideSegment, Roll),             // len: 20m
-			(493, 3808, OutsideSegment, Accelerate),      // len: 3315m
-			(3808, 4567, OutsideSegment, Coast),          // len: 759m
-			(4567, 5010, OutsideSegment, Brake),          // len: 443m
-			(5010, 5160, OutsideSegment, Coast),          // len: 150m
-			(5160, 1e6, OutsideSegment, Accelerate));
+			(0, 3410, OutsideSegment, Accelerate),        // len: 3410m
+			(3410, 4441, OutsideSegment, Coast),          // len: 1031m
+			(4441, 5005, OutsideSegment, Brake),          // len: 564m
+			(5005, 5206, OutsideSegment, Coast),          // len: 201m
+			(5206, 1e6, OutsideSegment, Accelerate));
 
 
 		[Test]
-		public void Class5_E2_NoADAS_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
-			(0, 112, OutsideSegment, Accelerate),         // len: 112m
-			(112, 125, OutsideSegment, Roll),             // len: 13m
-			(125, 405, OutsideSegment, Accelerate),       // len: 280m
-			(405, 425, OutsideSegment, Roll),             // len: 20m
-			(425, 473, OutsideSegment, Accelerate),       // len: 48m
-			(473, 493, OutsideSegment, Roll),             // len: 20m
-			(493, 3613, OutsideSegment, Accelerate),      // len: 3120m
-			(3613, 4246, OutsideSegment, Coast),          // len: 633m
-			(4246, 4508, OutsideSegment, Brake),          // len: 262m
-			(4508, 1e6, OutsideSegment, Accelerate));
+			(0, 3614, OutsideSegment, Accelerate),        // len: 3614m
+			(3614, 4148, OutsideSegment, Coast),          // len: 534m
+			(4148, 4510, OutsideSegment, Brake),          // len: 362m
+			(4510, 1e6, OutsideSegment, Accelerate));
+
+		#endregion
+
+
+		#region E4
+
+		[Test]
+		public void Class5_E4_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 4025, OutsideSegment, Accelerate),      // len: 3754m
+			(4025, 5902, WithinSegment, Accelerate),      // len: 1877m
+			(5902, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 4342, OutsideSegment, Accelerate),      // len: 4071m
+			(4342, 7546, WithinSegment, Accelerate),      // len: 3204m
+			(7546, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 3850, OutsideSegment, Accelerate),      // len: 3579m
+			(3850, 7279, WithinSegment, Accelerate),      // len: 3429m
+			(7279, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 630, OutsideSegment, Accelerate),       // len: 359m
+			(630, 2499, WithinSegment, Accelerate),       // len: 1869m
+			(2499, 3900, OutsideSegment, Accelerate),     // len: 1401m
+			(3900, 6803, WithinSegment, Accelerate),      // len: 2903m
+			(6803, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E4_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 647, OutsideSegment, Accelerate),       // len: 376m
+			(647, 4050, WithinSegment, Accelerate),       // len: 3403m
+			(4050, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E4_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 655, OutsideSegment, Accelerate),       // len: 384m
+			(655, 3350, WithinSegment, Accelerate),       // len: 2695m
+			(3350, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 3909, OutsideSegment, Accelerate),      // len: 3638m
+			(3909, 6903, WithinSegment, Accelerate),      // len: 2994m
+			(6903, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E4_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 3717, OutsideSegment, Accelerate),      // len: 3446m
+			(3717, 6086, WithinSegment, Accelerate),      // len: 2369m
+			(6086, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 271, OutsideSegment, Brake),              // len: 271m
+			(271, 3542, OutsideSegment, Accelerate),      // len: 3271m
+			(3542, 6222, WithinSegment, Accelerate),      // len: 2680m
+			(6222, 1e6, OutsideSegment, Accelerate));
+
+		[Test]
+		public void Class5_E4_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 0, OutsideSegment, Halt),                 // len: 0m
+			(0, 1e6, OutsideSegment, Accelerate));
+
+
+		[Test]
+		public void Class5_E4_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+			(0, 0, OutsideSegment, Halt),                 // len: 0m
+			(0, 1e6, OutsideSegment, Accelerate));
+
+		#endregion
 
 		private void TestPCC(string jobName, string cycleName, params (double start, double end, DefaultDriverStrategy.PCCStates pcc, DrivingAction action)[] data)
 		{
@@ -587,14 +584,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var segmentWasTested = false;
 
-			var dists = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
-			var pccs = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
+			var distances = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
+			var pccStates = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
 			var actions = mod.Columns["DriverAction"].Values<DrivingAction>();
 			var vActs = mod.Columns[ModalResultField.v_act.GetName()].Values<MeterPerSecond>();
 
 			using (var exp = expected.AsEnumerable().GetEnumerator()) {
 				exp.MoveNext();
-				foreach (var (dist, pcc, action, vAct) in dists.Zip(pccs, actions, vActs)) {
+				foreach (var (dist, pcc, action, vAct) in distances.Zip(pccStates, actions, vActs)) {
 					if (dist > exp.Current.end) {
 						Assert.IsTrue(segmentWasTested, $"dist {dist}: Expected Segment was not tested. Maybe distance range to narrow?");
 						if (!exp.MoveNext())

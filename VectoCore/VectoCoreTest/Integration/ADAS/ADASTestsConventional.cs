@@ -1111,14 +1111,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var segmentWasTested = false;
 
-			var dists = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
-			var pccs = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
+			var distances = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
+			var pccStates = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
 			var actions = mod.Columns["DriverAction"].Values<DrivingAction>();
 			var vActs = mod.Columns[ModalResultField.v_act.GetName()].Values<MeterPerSecond>();
 
 			using (var exp = expected.AsEnumerable().GetEnumerator()) {
 				exp.MoveNext();
-				foreach (var (dist, pcc, action, vAct) in dists.Zip(pccs, actions, vActs)) {
+				foreach (var (dist, pcc, action, vAct) in distances.Zip(pccStates, actions, vActs)) {
 					if (dist > exp.Current.end) {
 						Assert.IsTrue(segmentWasTested, $"dist {dist}: Expected Segment was not tested. Maybe distance range to narrow?");
 						if (!exp.MoveNext())
