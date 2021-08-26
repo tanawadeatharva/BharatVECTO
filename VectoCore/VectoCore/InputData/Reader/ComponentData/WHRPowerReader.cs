@@ -45,6 +45,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
+			// todo mk-2021-08-26 this check is redundant. Previous code would have thrown exception otherwise.
 			if (!headerValid && (type == WHRType.ElectricalOutput || type == WHRType.MechanicalOutputDrivetrain)) {
 				throw new VectoException("expected column headers: {0}", string.Join(", ", whrColumn));
 			}

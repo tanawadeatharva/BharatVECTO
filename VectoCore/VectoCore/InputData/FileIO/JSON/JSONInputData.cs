@@ -505,7 +505,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries => AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList();
+		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries => AuxData();
 
 		protected virtual IList<IAuxiliaryDeclarationInputData> AuxData()
 		{
@@ -794,11 +794,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					}
 
 					for (var i = 0; i < component.Count; i++) {
-						_componentDigests.GetOrAdd(component.Entry, _=> new List<string>()).Add(
+						_componentDigests.GetOrAdd(component.Entry, _ => new List<string>()).Add(
 							XMLManufacturerReportReader.GetComponentDataDigestValue(xmlDoc, component.Entry, i));
 					}
 				}
-			} catch (Exception) { }
+			} catch (Exception) {
+				// todo mk2021-08-26 really suppress all errors?
+			}
 
 			try {
 				_jobDigest = new DigestData(xmlDoc.SelectSingleNode("//*[local-name()='InputDataSignature']"));
@@ -815,14 +817,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class ManufacturerResults : IResultsInputData
 	{
-		private XmlNode ResultNode;
-
-		public ManufacturerResults(XmlNode resultsNode)
+		public ManufacturerResults(XmlNode resultNode)
 		{
-			ResultNode = resultsNode;
-			Status = ResultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
+			Status = resultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
 			Results = new List<IResult>();
-			foreach (XmlNode node in ResultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
+			foreach (XmlNode node in resultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
 				var entry = new Result {
 					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),

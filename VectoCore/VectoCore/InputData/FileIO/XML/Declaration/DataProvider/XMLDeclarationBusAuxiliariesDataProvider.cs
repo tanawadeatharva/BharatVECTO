@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 							var technology = GetNode("CapacitorTechnology", x).InnerText;
 							return new BusAuxCapacitorInputData(technology, voltage, ratedCapacity);
 						}).Cast<IBusAuxElectricStorageDeclarationInputData>())
-					.Cast<IBusAuxElectricStorageDeclarationInputData>().ToList();
+					.ToList();
 			}
 		}
 
