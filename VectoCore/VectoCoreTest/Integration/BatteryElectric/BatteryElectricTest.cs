@@ -19,7 +19,6 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
@@ -114,8 +113,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B4_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
@@ -150,8 +147,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B4_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
 			var job = CreateEngineeringRun(
@@ -185,8 +180,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-B4_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
@@ -271,8 +264,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B3_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
@@ -307,8 +298,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B3_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
@@ -342,8 +331,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-B3_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
@@ -428,8 +415,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B2_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
@@ -466,8 +451,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				   700,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleBatteryElectric-B2_stop_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
 			var job = CreateEngineeringRun(
@@ -495,8 +478,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleBatteryElectric-B2_acc_{vmax}-{initialSoC}_{slope}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
@@ -531,8 +512,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleBatteryElectric-B2_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE2;
