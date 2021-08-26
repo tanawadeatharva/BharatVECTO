@@ -804,7 +804,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
-			var ctl = new SimpleElectricMotorControl();
+			var ctl = new DummyElectricMotorControl();
 			var powertrain = vehicle
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container));
@@ -1137,6 +1137,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			return (-outTorque).LimitTo(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
 		}
+	}
+
+	public class DummyElectricMotorControl : IElectricMotorControl
+	{
+		#region Implementation of IElectricMotorControl
+
+		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque, PowertrainPosition position, bool dryRun) {
+			return EmTorque;
+		}
+
+		public NewtonMeter EmTorque;
+		
+		#endregion
 	}
 
 

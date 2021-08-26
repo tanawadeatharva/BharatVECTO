@@ -36,15 +36,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var runData = Container.RunData;
 
-			var electricEngineDrag = runData.ElectricMachinesData.Sum(e => 
-					e.Item2.EfficiencyData.VoltageLevels[0].DragCurve.Entries.Average(x => 
-						(x.MotorSpeed * x.DragTorque).Value())).SI<Watt>();
+			
 
 			var combustionEngineDrag = runData.EngineData?.FullLoadCurves[0].FullLoadEntries.Average(x => 
 											(x.EngineSpeed * x.TorqueDrag).Value()).SI<Watt>() 
 										?? 0.SI<Watt>();
 
-			var engineDrag = electricEngineDrag + combustionEngineDrag;
+			var engineDrag = combustionEngineDrag;
 			var slopeEngineDrag = 0.0;
 			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission()) {
 				if ((runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) ||

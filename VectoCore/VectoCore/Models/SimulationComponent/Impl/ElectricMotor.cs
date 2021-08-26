@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 
 		protected IElectricSystem ElectricPower;
-		protected IElectricMotorControl Control;
+		internal IElectricMotorControl Control { get; }
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
@@ -304,7 +304,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Engine = { EngineSpeed = avgDtSpeed},
 						ElectricMotor = {
 							ElectricMotorPowerMech = (inTorqueDt - outTorque) * avgDtSpeed,
-							TotalTorqueDemand = inTorqueDt,
 						},
 						DeltaFullLoad =  remainingPower,
 						DeltaDragLoad = remainingPower,
@@ -322,7 +321,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							retVal = new ResponseSuccess(this) {
 								ElectricMotor = {
 									ElectricMotorPowerMech = (inTorqueDt - outTorque) * avgDtSpeed,
-									TotalTorqueDemand = inTorqueDt
 								},
 								Engine = {
 									PowerRequest = 0.SI<Watt>(),
@@ -347,8 +345,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				retVal = NextComponent.Request(absTime, dt, inTorqueDt / ratio, outAngularVelocity * ratio, dryRun);
 				retVal.ElectricMotor.ElectricMotorPowerMech = (inTorqueDt - outTorque) * avgDtSpeed;
-				retVal.ElectricMotor.TotalTorqueDemand = inTorqueDt;
 			}
+
+			retVal.ElectricMotor.TotalTorqueDemand = inTorqueDt;
 
 			retVal.ElectricMotor.MaxDriveTorque = maxDriveTorqueDt;
 			retVal.ElectricMotor.MaxDriveTorqueEM = maxDriveTorqueEm;

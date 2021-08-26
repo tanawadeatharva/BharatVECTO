@@ -86,6 +86,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
+
+			if (!SlopeData.ContainsKey(MaxSpeed)) {
+				vehicle.Initialize(MaxSpeed, 0.SI<Radian>());
+				var slope = SearchSlope(vehicle, Container);
+				modData?.Reset();
+				SlopeData[MaxSpeed] = slope;
+			}
+
+
+
 		}
 
 		private void RunPreprocessingAMTGearbox(Gearbox gearbox, Vehicle vehicle)
@@ -133,20 +143,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
+
+			foreach (var motor in container.ElectricMotors.Values) {
+				((motor as ElectricMotor).Control as DummyElectricMotorControl).EmTorque = null;
+			}
+
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox?.PowerRequest ?? (initialResponse.Engine?.PowerRequest ?? 0.SI<Watt>()) + (initialResponse.ElectricMotor?.PowerRequest ?? 0.SI<Watt>());
+			var delta = initialResponse.Gearbox?.PowerRequest ?? initialResponse.ElectricMotor?.TotalTorqueDemand * initialResponse.ElectricMotor?.AvgDrivetrainSpeed;
 
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox?.PowerRequest ?? (r.Engine?.PowerRequest ?? 0.SI<Watt>() + r.ElectricMotor?.PowerRequest ?? 0.SI<Watt>());
+						return r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed;
 					},
 					evaluateFunction: grad => vehicle.Request(absTime, simulationInterval, acceleration, grad, true),
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return (r.Gearbox?.PowerRequest ?? (r.Engine?.PowerRequest ?? 0.SI<Watt>()) + (r.ElectricMotor?.PowerRequest ?? 0.SI<Watt>())).Value();
+						return (r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed).Value();
 					}
 				);
 			} catch (VectoSearchAbortedException) {
