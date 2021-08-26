@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -59,13 +58,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		protected Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
 			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
 
-		private Second _duration;
-		private Meter _distance;
-
-
 		public MockModalDataContainer()
 		{
 			Data = new ModalResults();
+
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
 				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
 					continue;
@@ -252,9 +248,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		}
 
-		public Second Duration => _duration;
+		public Second Duration => null;
 
-		public Meter Distance => _distance;
+		public Meter Distance => null;
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 

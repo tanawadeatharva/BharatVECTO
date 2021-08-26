@@ -81,7 +81,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var jobFile =
 				@"TestData\Integration\Buses\SingleBus.vecto";
-			var runIdx = 4;
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = Path.GetExtension(jobFile) == ".xml"
 				? xmlInputReader.CreateDeclaration(jobFile)

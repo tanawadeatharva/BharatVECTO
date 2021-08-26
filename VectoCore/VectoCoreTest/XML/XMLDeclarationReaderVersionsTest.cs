@@ -125,7 +125,6 @@ namespace TUGraz.VectoCore.Tests.XML
         ]
 		public void CreateRunDataMediumLorry(string jobFile)
 		{
-			var runIdx = 0;
 			//var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
 
 			var writer = new FileOutputWriter(jobFile);

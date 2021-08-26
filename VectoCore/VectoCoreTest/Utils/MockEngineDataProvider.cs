@@ -41,8 +41,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockEngineDataProvider : IEngineEngineeringInputData, IEngineModeEngineeringInputData, IEngineFuelEngineeringInputData
 	{
-		private IList<IEngineModeEngineeringInputData> _engineModes;
-		private IList<IEngineFuelEngineeringInputData> _fuels;
 		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
