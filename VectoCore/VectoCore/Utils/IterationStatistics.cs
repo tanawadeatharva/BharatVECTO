@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.Utils
 			c[key] = c.GetValueOrDefault(key, 0) + value ?? 1;
 		}
 
+		[Conditional("TRACE")]
 		public static void StartIteration()
 		{
 			Timer.Restart();
