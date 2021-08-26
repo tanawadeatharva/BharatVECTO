@@ -240,6 +240,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 						modelData.EngineData.RatedPowerDeclared);
 			}
 
+			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
+				? ZeroWeighting
+				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
+
+
 			InstantiateReports(modelData);
 
 			ManufacturerRpt.Initialize(modelData, fuelModes);
