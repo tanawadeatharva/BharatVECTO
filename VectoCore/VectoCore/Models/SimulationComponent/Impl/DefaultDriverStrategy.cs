@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 
+			// todo mk-2021-08-26 container is never null (otherwise previous lines would have already crashed): conditional access is not necessary
 			VehicleCategory = container?.RunData.VehicleData.VehicleCategory ?? VehicleCategory.Unknown;
 
 			var data = container?.RunData;

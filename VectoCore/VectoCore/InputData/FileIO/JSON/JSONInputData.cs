@@ -640,8 +640,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
 		IVTPDeclarationInputDataProvider, IManufacturerReport
 	{
-		private IDictionary<VectoComponents, IList<string>> _componentDigests = null;
-		private DigestData _jobDigest = null;
+		private IDictionary<VectoComponents, IList<string>> _componentDigests;
+		private DigestData _jobDigest;
 		private IXMLInputDataReader _inputReader;
 		private IResultsInputData _manufacturerResults;
 		private Meter _vehicleLenght;

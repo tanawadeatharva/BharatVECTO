@@ -107,8 +107,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 			if (genericResult.Status == VectoRun.Status.Canceled || genericResult.Status == VectoRun.Status.Aborted || specificResult.Status == VectoRun.Status.Canceled || specificResult.Status == VectoRun.Status.Aborted) {
 				content = new object[] {
-					new XElement(tns + XMLNames.Report_Results_Error, genericResult.Error ?? "" + Environment.NewLine +  specificResult.Error ?? ""),
-					new XElement(tns + XMLNames.Report_Results_ErrorDetails, genericResult.StackTrace ?? "" + Environment.NewLine + specificResult.StackTrace ?? ""),
+					new XElement(tns + XMLNames.Report_Results_Error, (genericResult.Error ?? "") + Environment.NewLine +  (specificResult.Error ?? "")),
+					new XElement(tns + XMLNames.Report_Results_ErrorDetails, (genericResult.StackTrace ?? "") + Environment.NewLine + (specificResult.StackTrace ?? "")),
 				};
 			}
 

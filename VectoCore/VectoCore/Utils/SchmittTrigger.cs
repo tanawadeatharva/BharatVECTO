@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.Utils
 {
 	public class SchmittTrigger
 	{
-		protected int Value = 0;
+		protected int Value;
 
 		public SchmittTrigger(double thLow, double thHigh)
 		{

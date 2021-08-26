@@ -25,8 +25,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public static WHRPowerMap Create(TableData data, WHRType type)
 		{
-			string whrColumn = null;
-			type = type & (WHRType.ElectricalOutput | WHRType.MechanicalOutputDrivetrain);
+			string whrColumn;
+			type &= WHRType.ElectricalOutput | WHRType.MechanicalOutputDrivetrain;
 			switch (type) {
 				case WHRType.MechanicalOutputDrivetrain:
 					whrColumn = Fields.MechanicalPower;
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					var torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>();
 					var electricPower = row.ParseDouble(whrColumn).SI<Watt>();
 
-					delaunayMap?.AddPoint(torque.Value(), engineSpeed.Value(), electricPower.Value());
+					delaunayMap.AddPoint(torque.Value(), engineSpeed.Value(), electricPower.Value());
 				} catch (Exception e) {
 					throw new VectoException($"WHR Map - Line {data.Rows.IndexOf(row)}: {e.Message}", e);
 				}
