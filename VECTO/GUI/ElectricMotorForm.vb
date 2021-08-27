@@ -183,14 +183,14 @@ Public Class ElectricMotorForm
 
         Dim voltageLevelHigh As IElectricMotorVoltageLevel = engine.VoltageLevels.MaxBy(function(level) level.VoltageLevel.Value())
 
-        tbDragTorqueHi.Text = GetRelativePath(voltageLevelHigh.DragCurve.Source, basePath)
+        '        tbDragTorqueHi.Text = GetRelativePath(voltageLevelHigh.DragCurve.Source, basePath)
         tbMaxTorqueHi.Text = GetRelativePath(voltageLevelHigh.FullLoadCurve.Source, basePath)
         tbMapHi.Text = GetRelativePath(voltageLevelHigh.EfficiencyMap.Source, basePath)
         tbVoltageHi.Text = voltageLevelHigh.VoltageLevel.Value().ToGUIFormat()
 
         Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
 
-        tbDragTorqueLow.Text = GetRelativePath(voltageLevelLow.DragCurve.Source, basePath)
+        '        tbDragTorqueLow.Text = GetRelativePath(voltageLevelLow.DragCurve.Source, basePath)
         tbMaxTorqueLow.Text = GetRelativePath(voltageLevelLow.FullLoadCurve.Source, basePath)
         tbMapLow.Text = GetRelativePath(voltageLevelLow.EfficiencyMap.Source, basePath)
         tbVoltageLow.Text = voltageLevelLow.VoltageLevel.Value().ToGUIFormat()

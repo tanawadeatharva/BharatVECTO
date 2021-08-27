@@ -458,22 +458,24 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
-	get
-		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
-			return Nothing
-		End If
-		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
-	End Get
-    End Property
-    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
-	get
-	    If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath))
-	        return Nothing
-	    End If
-	    Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
-	End Get
-    End Property
+	'    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
+	'	get
+	'		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
+	'			return Nothing
+	'		End If
+	'		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
+	'	End Get
+	'    End Property
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, Tuple(Of Integer, TableData)) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+
+	Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+		Get
+			If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath)) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
+		End Get
+	End Property
 
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
 	Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
@@ -1043,11 +1045,17 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
-    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+	Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
 	Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
+	Public ReadOnly Property TestVoltageOverload As Volt Implements IElectricMotorDeclarationInputData.TestVoltageOverload
+	Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
+	Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 	Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
-    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
-    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
+	Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
+	Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
+	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
-    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
+	Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
 End Class

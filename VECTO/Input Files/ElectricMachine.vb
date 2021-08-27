@@ -250,21 +250,22 @@ Public Class ElectricMachine
     End Property
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
-    get
-            Return New List(Of IElectricMotorVoltageLevel) From{
+    Get
+            Return New List(Of IElectricMotorVoltageLevel) From {
                 New ElectricMotorVoltageLevel() With {
-                    .VoltageLevel = VoltageLevelLow.SI(of Volt),
+                    .VoltageLevel = VoltageLevelLow.SI(Of Volt),
                     .EfficiencyMap = EfficiencyMapLow,
-                    .DragCurve = DragCurvLow,
                     .FullLoadCurve = FullLoadCurveLow},
-                New ElectricMotorVoltageLevel()  With {
-                    .VoltageLevel = VoltageLevelHigh.SI(of Volt),
+                New ElectricMotorVoltageLevel() With {
+                    .VoltageLevel = VoltageLevelHigh.SI(Of Volt),
                     .EfficiencyMap = EfficiencyMapHi,
-                    .DragCurve = DragCurvHi,
                     .FullLoadCurve = FullLoadCurveHi}
                 }
-    End Get
+        End Get
     End Property
+
+    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+    Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
         Get
@@ -273,10 +274,14 @@ Public Class ElectricMachine
     End Property
 
     Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
-    get
-            Return PeakPowerTime.SI(of Second)
-    End Get
+        Get
+            Return PeakPowerTime.SI(Of Second)
+        End Get
     End Property
+
+    Public ReadOnly Property TestVoltageOverload As Volt Implements IElectricMotorDeclarationInputData.TestVoltageOverload
+    Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
+    Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 
     Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
     get
@@ -299,10 +304,12 @@ Public Class ElectricMachine
     End Property
 
     Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
-    get
-        Return OvlSpeed.RPMtoRad()
-    End Get
+        Get
+            Return OvlSpeed.RPMtoRad()
+        End Get
     End Property
+
+    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 
     Public Property PathMaxTorqueLow(Optional ByVal original As Boolean = False) As String
         Get

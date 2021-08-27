@@ -664,8 +664,8 @@ Public Class DummyVehicle
 	Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
 	Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
 	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
-    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
-    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, Tuple(Of Integer, TableData)) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+	Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
 	Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 	Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
