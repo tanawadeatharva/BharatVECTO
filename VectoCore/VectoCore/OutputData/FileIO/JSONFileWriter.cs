@@ -95,7 +95,7 @@ public class JSONFileWriter : IOutputFileWriter
 			var vlevel = new Dictionary<string, object>();
 			vlevel.Add("Voltage", entry.VoltageLevel.Value());
 			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-			vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
+			// vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
 			vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
 			vlevels.Add(vlevel);
         }
@@ -510,9 +510,11 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
 		//body.Add(JsonKeys.HEV_Vehicle_MaxDrivetrainPower, vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value);
-		if (vehicle.ElectricMotorTorqueLimits != null) {
-			body.Add("EMTorqueLimits", GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath));
-		}
+
+		//ToDo ElectricMotorTorqueLimits changed
+		// if (vehicle.ElectricMotorTorqueLimits != null) {
+		// 	body.Add("EMTorqueLimits", GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath));
+		// }
 		if (vehicle.MaxPropulsionTorque != null) {
 			body.Add("MaxPropulsionTorque", GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath));
 		}

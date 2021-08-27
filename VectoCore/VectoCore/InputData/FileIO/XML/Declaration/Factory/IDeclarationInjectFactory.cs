@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 
 		IXMLGearData CreateGearData(string version, XmlNode gearNode, string sourceFile);
 
+		IXMLElectricMotorDeclarationInputData CreateElectricMotorDeclarationInputData(
+			string version, XmlNode componentNode, string sourceFile);
 
 		IXMLTorqueConverterDeclarationInputData CreateTorqueconverterData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
@@ -121,6 +123,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAdvancedDriverAssistantSystemDeclarationInputData CreateADASData(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLBusAuxiliariesDeclarationData CreateBusAuxiliaires(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLElectricMachinesDeclarationInputData CreateElectricMachinesData(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+		
+
+		IXMLElectricMachineSystemReader CreateElectricMotorReader(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 
 		// ---------------------------------------------------------------------------------------------

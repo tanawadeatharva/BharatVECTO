@@ -91,7 +91,9 @@ namespace TUGraz.VectoCore.Utils
 
         public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS = DECLARATION_NAMESPACE + ":DEV:v2.10.2";
 
-        public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
+        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS = DECLARATION_NAMESPACE + ":DEV:v2.10.1";
+
+		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
 		public const string DECLARATION_INPUT_NAMESPACE_URI_V10 = DECLARATION_INPUT_NAMESPACE + ":v1.0";
 

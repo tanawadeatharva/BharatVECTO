@@ -148,6 +148,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
+		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits => null;
+
 		public TableData MaxPropulsionTorque => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
@@ -211,7 +213,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual Meter Height => GetNode("VehicleHeight")?.InnerText.ToDouble().SI<Meter>();
 
-		public TableData ElectricMotorTorqueLimits => null;
+
 
 		public virtual Meter Length => null;
 

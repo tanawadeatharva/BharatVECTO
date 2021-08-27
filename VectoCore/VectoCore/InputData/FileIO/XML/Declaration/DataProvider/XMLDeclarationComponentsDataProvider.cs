@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IPTOTransmissionInputData _ptoInputData;
 		protected IXMLDeclarationVehicleData _vehicle;
 		protected ITorqueConverterDeclarationInputData _torqueconverterInputData;
+		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
 
 
 		public XMLDeclarationComponentsDataProviderV10(
@@ -93,8 +94,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
-		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage => null;
-		public virtual IElectricMachinesDeclarationInputData ElectricMachines => null;
+		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage =>  null;
+		public virtual IElectricMachinesDeclarationInputData ElectricMachines => _electricMachinesInputData ?? (_electricMachinesInputData = ComponentReader.ElectricMachines);
+
+		
+
 
 		#endregion
 
@@ -168,6 +172,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{ }
 
 
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+		
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
@@ -284,4 +290,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return busAux;
 		}
 	}
+
+
+
+	public class XMLDeclarationHEVPxLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-Px_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		}
+
+
 }

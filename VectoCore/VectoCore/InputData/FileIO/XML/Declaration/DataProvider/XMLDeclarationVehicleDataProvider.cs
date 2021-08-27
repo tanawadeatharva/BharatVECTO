@@ -236,6 +236,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
+		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+		public TableData MaxPropulsionTorque { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -697,6 +699,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
+		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+		public TableData MaxPropulsionTorque { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -1112,6 +1116,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_Conventional_HeavyLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationHeavyLorryDataProviderV210(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-Px_HeavyLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHEVPxHeavyLorryDataProviderV210(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+	}
 }
-
-

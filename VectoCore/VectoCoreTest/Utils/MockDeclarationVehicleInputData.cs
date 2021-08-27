@@ -63,6 +63,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+		public TableData MaxPropulsionTorque { get; }
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 
@@ -182,6 +184,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IElectricStorageSystemEngineeringInputData ElectricStorage { get; set; }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 
-		#endregion
-	}
+        Dictionary<PowertrainPosition, Tuple<int, TableData>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+
+        #endregion
+    }
 }

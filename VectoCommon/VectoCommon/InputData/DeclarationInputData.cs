@@ -198,6 +198,10 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
+		Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+
+		TableData MaxPropulsionTorque { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
@@ -712,21 +716,32 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorDeclarationInputData : IComponentInputData
 	{
-		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
+		ElectricMachineType ElectricMachineType { get; }
+
+		Watt R85RatedPower { get; }
 
 		KilogramSquareMeter Inertia { get; }
 
-		Second OverloadTime { get; }
-
-		double OverloadRecoveryFactor { get; }
-
 		NewtonMeter ContinuousTorque { get; }
-
-		PerSecond ContinuousTorqueSpeed { get; }
+		
+		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
 
 		NewtonMeter OverloadTorque { get; }
 
-		PerSecond OverloadTestSpeed { get; }
+		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+
+		Second OverloadTime { get; } //OverloadDuration
+
+		Volt TestVoltageOverload { get; }
+
+		bool DcDcConverterIncluded { get; }
+
+		string IHPCType { get; }
+
+		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
+		TableData DragCurve { get; }
+		
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMotorVoltageLevel
@@ -734,8 +749,6 @@ namespace TUGraz.VectoCommon.InputData
 		Volt VoltageLevel { get; }
 
 		TableData FullLoadCurve { get; }
-
-		TableData DragCurve { get; }
 
 		TableData EfficiencyMap { get; }
 	}
@@ -1056,5 +1069,39 @@ namespace TUGraz.VectoCommon.InputData
 			}
 		}
 	}
+
+
+	public enum ElectricMachineType
+	{
+		ASM,
+		ESM,
+		PSM,
+		RM
+	}
+
+	public static class ElectricMachineTypeHelper
+	{
+		public static ElectricMachineType Parse(string parse)
+		{
+			switch (parse) {
+				case nameof(ElectricMachineType.ASM):
+					return ElectricMachineType.ASM;
+				case nameof(ElectricMachineType.ESM):
+					return ElectricMachineType.ESM;
+				case nameof(ElectricMachineType.PSM):
+					return ElectricMachineType.PSM;
+				case nameof(ElectricMachineType.RM):
+					return ElectricMachineType.RM;
+				default: 
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public static string GetLabel(this ElectricMachineType type)
+		{
+			return nameof(type);
+		}
+	}
+
 
 }

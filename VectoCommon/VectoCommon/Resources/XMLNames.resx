@@ -210,6 +210,12 @@
   <data name="Component_Transmission" xml:space="preserve">
     <value>Transmission</value>
   </data>
+  <data name="Component_ElectricMachine" xml:space="preserve">
+    <value>ElectricMachine</value>
+  </data>
+  <data name="Component_ElectricMachineGEN" xml:space="preserve">
+    <value>ElectricMachineGEN</value>
+  </data>
   <data name="Gearbox_TransmissionType" xml:space="preserve">
     <value>TransmissionType</value>
   </data>
@@ -1566,10 +1572,61 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
-<data name="BusHVACHeatPumpCooling" xml:space="preserve">
-	<value>Cooling</value>
-</data>
-<data name="BusHVACHeatPumpHeating" xml:space="preserve">
-	<value>Heating</value>
-</data>
+  <data name="BusHVACHeatPumpCooling" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="BusHVACHeatPumpHeating" xml:space="preserve">
+    <value>Heating</value>
+  </data>
+  <data name="ElectricMachine_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="ElectricMachine_P2.5GearRatios" xml:space="preserve">
+    <value>P2.5GearRatios</value>
+  </data>
+  <data name="ElectricMachine_PowertrainPosition" xml:space="preserve">
+    <value>PowertrainPosition</value>
+  </data>
+  <data name="ElectricMachine_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="ElectricMachine_DcDcConverterIncluded" xml:space="preserve">
+    <value>DcDcConverterIncluded</value>
+  </data>
+  <data name="ElectricMachine_ElectricMachineType" xml:space="preserve">
+    <value>ElectricMachineType</value>
+  </data>
+  <data name="ElectricMachine_IHPCType" xml:space="preserve">
+    <value>IHPCType</value>
+  </data>
+  <data name="ElectricMachine_OverloadDuration" xml:space="preserve">
+    <value>OverloadDuration</value>
+  </data>
+  <data name="ElectricMachine_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="ElectricMachine_R85RatedPower" xml:space="preserve">
+    <value>R85RatedPower</value>
+  </data>
+  <data name="ElectricMachine_RotationalInertia" xml:space="preserve">
+    <value>RotationalInertia</value>
+  </data>
+  <data name="ElectricMachine_TestSpeedContinuousTorque" xml:space="preserve">
+    <value>TestSpeedContinuousTorque</value>
+  </data>
+  <data name="ElectricMachine_TestSpeedOverloadTorque" xml:space="preserve">
+    <value>TestSpeedOverloadTorque</value>
+  </data>
+  <data name="ElectricMachine_TestVoltageOverload" xml:space="preserve">
+    <value>TestVoltageOverload</value>
+  </data>
+  <data name="GearRatio_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="VoltageLevel_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="ElectricMachineSystem" xml:space="preserve">
+    <value>ElectricMachineSystem</value>
+  </data>
 </root>

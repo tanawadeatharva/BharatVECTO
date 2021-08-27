@@ -46,10 +46,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAuxiliariesDeclarationInputData AuxiliaryData { get; }
 		IRetarderInputData RetarderInputData { get; }
 		IAxlesDeclarationInputData AxlesDeclarationInputData { get; }
-
 		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-
 		IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get; }
+		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 	}
 
 	public interface IXMLAxlesReader
@@ -72,4 +71,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode);
 
 	}
+
+	public interface IXMLElectricMachineSystemReader
+	{
+		IElectricMotorDeclarationInputData CreateElectricMachineSystem(XmlNode electricMachineSystem);
+	}
+
 }

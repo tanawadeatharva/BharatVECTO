@@ -237,10 +237,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Meter Height => VehicleData.Height;
 
-		public TableData ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
-
-		public TableData MaxPropulsionTorque => Vehicle.ElectricMotorTorqueLimits;
-
 		public bool? ATEcoRollReleaseLockupClutch => VehicleData.ADAS.ATEcoRollReleaseLockupClutch;
 
 		public XmlNode XMLSource => null;
@@ -254,7 +250,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public ConsumerTechnology? DoorDriveTechnology => VehicleData.DoorDriveTechnology;
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		
+
+		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public TableData MaxPropulsionTorque => Vehicle.MaxPropulsionTorque;
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;

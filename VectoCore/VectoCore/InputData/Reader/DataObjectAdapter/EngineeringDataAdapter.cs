@@ -804,7 +804,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
 					FullLoadCurve = fullLoadCurveCombined,
-					DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
 					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
 				});
 			}
