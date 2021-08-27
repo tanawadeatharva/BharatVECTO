@@ -2740,6 +2740,9 @@
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\CaseJE4.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS-PEV\Group5PCCEng\Class5_E2_NoADAS.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
