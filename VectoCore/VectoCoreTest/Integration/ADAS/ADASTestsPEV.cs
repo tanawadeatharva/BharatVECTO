@@ -606,14 +606,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
 			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;
 			run.Run();
+			PrintPCCSections(mod);
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			PrintPCCSections(mod);
-
 			var expected = data;
-
 			var segmentWasTested = false;
-
 			var distances = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
 			var pccStates = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
 			var actions = mod.Columns["DriverAction"].Values<DrivingAction>();
@@ -645,7 +642,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			Assert.IsTrue(segmentWasTested);
 		}
-
 
 		private void PrintPCCSections(ModalResults mod)
 		{

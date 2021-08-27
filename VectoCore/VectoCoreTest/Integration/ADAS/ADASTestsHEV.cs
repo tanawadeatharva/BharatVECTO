@@ -1683,10 +1683,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
 			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;
 			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
-
 			PrintPCCSections(mod);
-
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			
 			var expected = data;
 
 			var segmentWasTested = false;
