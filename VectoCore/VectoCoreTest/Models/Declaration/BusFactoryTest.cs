@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BusFactoryTest
 	{
 		protected IXMLInputDataReader xmlInputReader;

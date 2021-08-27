@@ -670,6 +670,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	}
 
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonComparison
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";

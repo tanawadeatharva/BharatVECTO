@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -9,6 +8,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DeclarationSegmentHeavyBusesTest
 	{
 		[

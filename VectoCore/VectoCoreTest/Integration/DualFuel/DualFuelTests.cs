@@ -11,6 +11,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DualFuelTests
 	{
 		private StandardKernel _kernel;

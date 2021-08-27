@@ -17,6 +17,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SimulationPreprocessingTest
 	{
 		private StandardKernel _kernel;

@@ -38,7 +38,8 @@ using Formatting = Newtonsoft.Json.Formatting;
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
 
-	[TestFixture()]
+	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class CompletedBusFactorMethodTest
 	{
 		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";

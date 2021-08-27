@@ -14,6 +14,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftStrategyV2Test
 	{
 		public const string Class9Decl =

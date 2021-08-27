@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class WHRMapTest
 	{
 		public const string SingleFuelWHRVehicle = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeSingleFuel_WHR.xml";

@@ -8,10 +8,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Integration.Declaration;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
