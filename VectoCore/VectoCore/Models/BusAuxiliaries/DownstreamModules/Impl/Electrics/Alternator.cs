@@ -64,20 +64,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public double GetEfficiency(PerSecond crankSpeed, Ampere currentDemand)
 		{
 			// First build RangeTable, table 4
-			InitialiseRangeTable();
-			CalculateRangeTable(currentDemand);
+				InitialiseRangeTable();
+				CalculateRangeTable(currentDemand);
 
-			// Calculate ( Interpolate ) Efficiency
-			var range = RangeTable.Select(s => new AltUserInput<PerSecond>(s.RPM, s.Efficiency)).ToList();
+				// Calculate ( Interpolate ) Efficiency
+				var range = RangeTable.Select(s => new AltUserInput<PerSecond>(s.RPM, s.Efficiency)).ToList();
 
-			return Iterpolate(range, crankSpeed * PulleyRatio);
-
+				return Iterpolate(range, crankSpeed * PulleyRatio);
+			
 		}
 
 
+		
 
-
-		public static double Iterpolate<T>(List<AltUserInput<T>> values, T x) where T : SI
+		public static double Iterpolate<T>(List<AltUserInput<T>> values, T x) where T:SI
 		{
 			var lowestX = values.Min(m => m.Amps);
 			var highestX = values.Max(m => m.Amps);
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			var deltaX = postKey - preKey;
 			var deltaEff = postEff - preEff;
 
-
+			
 			var retVal = ((x - preKey) / deltaX).Value() * deltaEff + preEff;
 
 			return retVal;
@@ -166,9 +166,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			// IF(M12=IF(N12>N13,M12-((M12-M13)/(N12-N13))*(N12-N11),M12-((M12-M13)/(N12-N13))*(N12-N11)), M12-0.01, IF(N12>N13,M12-((M12-M13)/(N12-N13))*(N12-N11),M12-((M12-M13)/(N12-N13))*(N12-N11)))
 			var M11 = N12 - N13 == 0
 						? 0.RPMtoRad()
-						: M12 == M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)
+						: (
+							M12 == (N12 > N13
+								? M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)
+								: M12 - (M12 - M13) / (N12 - N13) * (N12 - N11))
 								? M12 - 0.01.RPMtoRad()
-								: M12 - (M12 - M13) / (N12 - N13) * (N12 - N11);
+								: (N12 > N13
+									? M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)
+									: M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)));
 
 			RangeTable[1].RPM = M11;
 
