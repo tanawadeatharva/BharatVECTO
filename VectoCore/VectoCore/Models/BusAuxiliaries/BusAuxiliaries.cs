@@ -9,8 +9,6 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using System;
-using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -23,13 +21,9 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
-using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries
 {
-
 	public class BusAuxiliariesNoAlternator : BusAuxiliaries
 	{
 		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
@@ -38,7 +32,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		private ISSMPowerDemand ssmTool;
 
 		public BusAuxiliariesNoAlternator(ISimpleBatteryInfo battery) : base(battery) { }
-
 
 		public override void Initialise(IAuxiliaryConfig auxCfg)
 		{
@@ -346,35 +339,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			return 0.SI<WattSecond>();
 		}
 
-
-
-
-
-		public virtual void CycleStep(Second seconds)
-		{
-			//M9.CycleStep(seconds);
-			//M10.CycleStep(seconds);
-			//M11.CycleStep(seconds);
-			//if (auxConfig.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
-			//    var generatedElPower =
-			//        (auxConfig.PneumaticUserInputsConfig.SmartAirCompression
-			//            ? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
-			//            : M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
-			//        auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-			//    var energy = (generatedElPower - ElectricPowerConsumerSum) * essFactor * seconds;
-			//    var maxCharge = (ElectricStorage.SOC - 1) * ElectricStorage.Capacity;
-			//    var maxDischarge = ElectricStorage.SOC * ElectricStorage.Capacity;
-			//    var batEnergy = energy.LimitTo(-maxDischarge, -maxCharge);
-			//    ElectricStorage.Request(batEnergy);
-			//}
+		public virtual void CycleStep(Second seconds) =>
 			Signals.CurrentCycleTimeInSeconds += seconds.Value();
-		}
 
 		public virtual void ResetCalculations()
 		{
 			var modules = new IAbstractModule[] { M0, M1, M2, M3, M4, M5, M6, M7, M8 };
-			foreach (var module in modules)
+			foreach (var module in modules) {
 				module.ResetCalculations();
+			}
 		}
 	}
 }
