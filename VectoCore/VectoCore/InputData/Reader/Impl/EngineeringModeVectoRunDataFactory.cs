@@ -94,10 +94,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				GearboxData gearboxData = null;
 				ShiftStrategyParameters gearshiftParams = null;
-				AngledriveData angledriveData = null;
+				var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 				if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
 					// gearbox required!
-					// todo mk-2021-08-26 angleDrive will always be null!!
 					gearshiftParams = dao.CreateGearshiftData(
 						InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
 						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
@@ -120,8 +119,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							AxleGearData = axlegearData,
 							ElectricMachinesData = electricMachinesData
 						}, tmpStrategy);
-					angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-					
 				}
 
 				if (gearshiftParams == null) {
