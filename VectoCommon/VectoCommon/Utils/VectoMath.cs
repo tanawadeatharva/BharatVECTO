@@ -408,29 +408,7 @@ namespace TUGraz.VectoCommon.Utils
 					return (k, d);
 			}
 		}
-
-		public static (double a, double b, double c) FitQuadraticEquation((double x, double y)[] points)
-		{
-			double sx4 = 0, sx3 = 0, sx2 = 0, sx = 0, sx2y = 0, sxy = 0, sy = 0;
-			foreach (var (x, y) in points) {
-				sx += x;
-				sx2 += x * x;
-				sx3 += x * x * x;
-				sx4 += x * x * x * x;
-				sx2y += x * x * y;
-				sxy += x * y;
-				sy += y;
-			}
-
-			double s00 = points.Length;
-			var D = sx4 * (sx2 * s00 - sx * sx) - sx3 * (sx3 * s00 - sx * sx2) + sx2 * (sx3 * sx - sx2 * sx2);
-			var a = (sx2y * (sx2 * s00 - sx * sx) - sxy * (sx3 * s00 - sx * sx2) + sy * (sx3 * sx - sx2 * sx2)) / D;
-			var b = (sx4 * (sxy * s00 - sy * sx) - sx3 * (sx2y * s00 - sy * sx2) + sx2 * (sx2y * sx - sxy * sx2)) / D;
-			var c = (sx4 * (sx2 * sy - sx * sxy) - sx3 * (sx3 * sy - sx * sx2y) + sx2 * (sx3 * sxy - sx2 * sx2y)) / D;
-			return (a, b, c);
-		}
-
-
+		
 		public static double[] QuadraticEquationSolver(double a, double b, double c)
 		{
 			return Polynom2Solver(a, b, c);
