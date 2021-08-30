@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
 
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, 
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
 		{
 			_runData = runData;
@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.OutputData
 				return double.NaN;
 			}
 
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.OutputData
 				return double.NaN;
 			}
 
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -349,14 +349,14 @@ namespace TUGraz.VectoCore.OutputData
 			if (!ElectricMotors.Contains(emPos)) {
 				return double.NaN;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
-					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), 
 						emPos.GetName())),
-					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), 
 						emPos.GetName())) * dt,
-					E_el = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), 
 						emPos.GetName())) * dt,
 				};
 			});
@@ -367,10 +367,8 @@ namespace TUGraz.VectoCore.OutputData
 				eEl += entry.E_el;
 			}
 
-			if (eEl.Value() != 0 && eMech.Value() != 0)
-				return eEl.Value() / eMech.Value();
-			else
-				return 1;
+			var eff = eEl.Value() / eMech.Value();
+			return eff;
 		}
 
 		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos)
@@ -378,7 +376,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (!ElectricMotors.Contains(emPos)) {
 				return double.NaN;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -405,7 +403,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (!ElectricMotors.Contains(emPos)) {
 				return null;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -419,7 +417,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_loss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -428,7 +426,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond ElectricMotorMotLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotorLoss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -437,7 +435,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_TransmissionLoss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -453,12 +451,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public double REESSStartSoC()
 		{
-			return (Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
+			return (Data.AsEnumerable().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
 		}
 
 		public double REESSEndSoC()
 		{
-			return (Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
+			return (Data.AsEnumerable().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
 		}
 
 		public WattSecond REESSLoss()
@@ -775,10 +773,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public IEnumerable<(T1, T2)> GetValues<T1, T2>(DataColumn col1, DataColumn col2) =>
 			GetValues(x => ((T1)x[col1], (T2)x[col2]));
-		
-		public IEnumerable<(T1,T2,T3)> GetValues<T1,T2,T3>(DataColumn col1, DataColumn col2, DataColumn col3) => 
+
+		public IEnumerable<(T1, T2, T3)> GetValues<T1, T2, T3>(DataColumn col1, DataColumn col2, DataColumn col3) =>
 			GetValues(x => ((T1)x[col1], (T2)x[col2], (T3)x[col3]));
-		
+
 		public IEnumerable<T> GetValues<T>(string columnName) => GetValues<T>(Data.Columns[columnName]);
 
 		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) =>
@@ -787,8 +785,9 @@ namespace TUGraz.VectoCore.OutputData
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> =>
 			TimeIntegral<T>(field.GetName(), filter);
 
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T> {
-			
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
+
 			if (filter == null && _timeIntegrals.TryGetValue(field, out var val)) {
 				return (T)val;
 			}
