@@ -159,9 +159,9 @@ namespace TUGraz.VectoCommon.Utils
 		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T> => 
 			values.Sum(x => x);
 
-		public static TResult Sum<T, TResult>(this IEnumerable<T> values, Func<T, TResult> selector)
-			where TResult : SIBase<TResult> => 
-			values.Sum(value => selector(value).Value()).SI<TResult>();
+		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
+			where TResult : SIBase<TResult> =>
+			values.Select(selector).DefaultIfEmpty().Aggregate((sum, current) => sum + current);
 
 		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> => 
 			values.Average(v => v.Value()).SI<T>();
