@@ -989,6 +989,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case ResponseOverload _ when DataBus.VehicleInfo.VehicleSpeed.IsGreater(0):
 					third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add(new { action = "second:Overload -> Coast", third });
+					switch (third) {
+						case ResponseSpeedLimitExceeded _:
+							if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+								!DataBus.GearboxInfo.Gear.IsLockedGear()) {
+								third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed + 1.KMPHtoMeterPerSecond(), gradient);
+								debug.Add(new { action = "third:Overload (AT, Converter gear) -> Coast", third });
+							} else {
+								third = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
+								debug.Add(new { action = "third:SpeedLimitExceeded -> Brake", third });
+							}
+
+							break;
+					}
 					break;
 			}
 
