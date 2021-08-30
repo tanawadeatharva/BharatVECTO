@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, GearshiftPosition gear)
 		{
 			// Emergency Downshift: if lower than engine idle speed
-			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) {
+			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed) && Gears.HasPredecessor(gear)) {
 				Log.Debug("engine speed would fall below idle speed - shift down");
 				Downshift(absTime, gear);
 				return true;
