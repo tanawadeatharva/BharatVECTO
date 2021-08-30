@@ -85,21 +85,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Adds the runs from the factory to the job container.
 		/// </summary>
 		/// <returns>A List of Run-Identifiers (unique), int</returns>
-		public List<IVectoRun> AddRuns(ISimulatorFactory factory)
+		public List<int> AddRuns(ISimulatorFactory factory)
 		{
-			var createdRuns = new List<IVectoRun>();
+			var runIDs = new List<int>();
 
 			factory.SumData = _sumWriter;
 			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
 
 			foreach (var run in factory.SimulationRuns()) {
 				var entry = new RunEntry { Run = run, JobContainer = this };
-				lock(Runs)
+				lock (Runs) {
 					Runs.Add(entry);
-				createdRuns.Add(entry.Run);
+				}
+				runIDs.Add(entry.Run.RunIdentifier);
 			}
 
-			return createdRuns;
+			return runIDs;
 		}
 
 		/// <summary>
