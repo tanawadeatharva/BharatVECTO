@@ -248,12 +248,15 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
 			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
-			Assert.IsNotNull(vehicle.Components.AxleWheels);
-//			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels); 
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
 
 			Assert.IsNotNull(vehicle.Components.AirdragInputData);
-			// Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			TestElectricStorageElements(vehicle.Components.ElectricStorage.ElectricStorageElements);
+
+
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
@@ -348,6 +351,33 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		#endregion
+
+		#region Test ElectricStorage Element Reader
+
+		private void TestElectricStorageElements(IList<IElectricStorageDeclarationInputData> elements)
+		{
+			Assert.IsNotNull(elements);
+			Assert.AreEqual(2, elements.Count);
+
+			foreach (var entry in elements) {
+				TestREESS(entry);
+			}
+
+
+
+		}
+
+		private void TestREESS(IElectricStorageDeclarationInputData storage)
+		{
+			Assert.AreEqual(1, storage.StringId);
+		}
+
+
+		
+
+		#endregion
+
+
 
 
 		#region Test existence of torque converter

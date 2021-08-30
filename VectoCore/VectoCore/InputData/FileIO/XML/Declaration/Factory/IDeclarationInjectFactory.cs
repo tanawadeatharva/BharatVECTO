@@ -91,6 +91,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLElectricMotorDeclarationInputData CreateElectricMotorDeclarationInputData(
 			string version, XmlNode componentNode, string sourceFile);
 
+		IXMLBatteryPackDeclarationInputData CreateBatteryPackDeclarationInputData(
+			string version, XmlNode componentNode, string sourceFile);
+
+		ISuperCapDeclarationInputData CreateSuperCapDeclarationInputData(
+			string version, XmlNode componentNode, string sourceFile);
+
 		IXMLTorqueConverterDeclarationInputData CreateTorqueconverterData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
@@ -127,8 +133,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLElectricMachinesDeclarationInputData CreateElectricMachinesData(string version,
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 		
-
 		IXMLElectricMachineSystemReader CreateElectricMotorReader(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLElectricStorageSystemDeclarationInputData CreateElectricStorageSystemData(string version,
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLREESSReader CreateStorageTypeReader(string version,
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 

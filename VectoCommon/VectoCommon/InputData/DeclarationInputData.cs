@@ -805,12 +805,19 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
 	{
-		
 		double MinSOC { get; }
 
 		double MaxSOC { get; }
 
+		BatteryType BatteryType { get; }
+
 		AmpereSecond Capacity { get; }
+
+		bool ConnectorsSubsystemsIncluded { get; }
+
+		bool JunctionboxIncluded { get; }
+
+		Kelvin TestingTemperature { get; }
 
 		TableData InternalResistanceCurve { get; }
 
@@ -1103,5 +1110,29 @@ namespace TUGraz.VectoCommon.InputData
 		}
 	}
 
+	public enum BatteryType
+	{
+		HPBS,
+		HEBS
+	}
 
+	public static class BatteryTypeHelper
+	{
+		public static BatteryType Parse(string parse)
+		{
+			switch (parse) {
+				case nameof(BatteryType.HPBS):
+					return BatteryType.HPBS;
+				case nameof(BatteryType.HEBS):
+					return BatteryType.HEBS;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		public static string GetLabel(this BatteryType type)
+		{
+			return nameof(type);
+		}
+	}
 }

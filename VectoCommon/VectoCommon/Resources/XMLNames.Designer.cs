@@ -1393,6 +1393,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ElectricEnergyStorage.
+        /// </summary>
+        public static string Component_ElectricEnergyStorage {
+            get {
+                return ResourceManager.GetString("Component_ElectricEnergyStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ElectricMachine.
         /// </summary>
         public static string Component_ElectricMachine {
@@ -1938,6 +1947,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string DriverModel_ShiftStrategyParameters_UpshiftMinAcceleration {
             get {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_UpshiftMinAcceleration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battery.
+        /// </summary>
+        public static string ElectricEnergyStorage_Battery {
+            get {
+                return ResourceManager.GetString("ElectricEnergyStorage_Battery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capacitor.
+        /// </summary>
+        public static string ElectricEnergyStorage_Capacitor {
+            get {
+                return ResourceManager.GetString("ElectricEnergyStorage_Capacitor", resourceCulture);
             }
         }
         

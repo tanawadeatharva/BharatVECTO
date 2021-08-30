@@ -223,11 +223,17 @@ Public Class Battery
         End Get
     End Property
 
+    Public ReadOnly Property BatteryType As BatteryType Implements IBatteryPackDeclarationInputData.BatteryType
+
     Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
         Get
             Return BatCapacity.SI(Unit.SI.Ampere.Hour).Cast(Of AmpereSecond)
         End Get
     End Property
+
+    Public ReadOnly Property ConnectorsSubsystemsIncluded As Boolean Implements IBatteryPackDeclarationInputData.ConnectorsSubsystemsIncluded
+    Public ReadOnly Property JunctionboxIncluded As Boolean Implements IBatteryPackDeclarationInputData.JunctionboxIncluded
+    Public ReadOnly Property TestingTemperature As Kelvin Implements IBatteryPackDeclarationInputData.TestingTemperature
 
     Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
         Get

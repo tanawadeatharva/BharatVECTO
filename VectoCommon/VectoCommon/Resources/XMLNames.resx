@@ -1629,4 +1629,13 @@
   <data name="ElectricMachineSystem" xml:space="preserve">
     <value>ElectricMachineSystem</value>
   </data>
+  <data name="Component_ElectricEnergyStorage" xml:space="preserve">
+    <value>ElectricEnergyStorage</value>
+  </data>
+  <data name="ElectricEnergyStorage_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="ElectricEnergyStorage_Capacitor" xml:space="preserve">
+    <value>Capacitor</value>
+  </data>
 </root>

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;

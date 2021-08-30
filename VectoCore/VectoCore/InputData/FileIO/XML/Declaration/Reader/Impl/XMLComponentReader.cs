@@ -74,6 +74,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IAuxiliariesDeclarationInputData _auxiliaryInputData;
 		protected ITorqueConverterDeclarationInputData _torqueConverterInputData;
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
+		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
 
 
 		[Inject]
@@ -115,6 +116,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IElectricMachinesDeclarationInputData ElectricMachines => _electricMachinesInputData ?? 
 																				(_electricMachinesInputData = GetElectricMachineEntries());
+		public virtual IElectricStorageSystemDeclarationInputData ElectricStorageSystem => _electricStorageSystemInputData ?? 
+			(_electricStorageSystemInputData  = GetElectricEnergyStorageEntries());
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
@@ -283,11 +286,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IElectricMachinesDeclarationInputData GetElectricMachineEntries()
 		{
 			var electricMachines = new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>>();
-			var electricMachine =  CreateComponent(XMLNames.Component_ElectricMachine, ElectricMachinesCreator,true);
+			var electricMachine = CreateComponent(XMLNames.Component_ElectricMachine, ElectricMachinesCreator, true);
 			if(electricMachine?.Entries?.Any() == true)
 				electricMachines.AddRange(electricMachine.Entries);
 
-			var electricMachineGEN = CreateComponent(XMLNames.Component_ElectricMachineGEN, ElectricMachinesCreator,true);
+			var electricMachineGEN = CreateComponent(XMLNames.Component_ElectricMachineGEN, ElectricMachinesCreator, true);
 			if(electricMachineGEN?.Entries?.Any() == true)
 				electricMachines.AddRange(electricMachineGEN.Entries);
 			
@@ -304,6 +307,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			electricMachine.ElectricMachineSystemReader = Factory.CreateElectricMotorReader(version, Vehicle, componentNode, sourcefile);
 			return electricMachine;
 		}
+
+		protected virtual IElectricStorageSystemDeclarationInputData GetElectricEnergyStorageEntries()
+		{
+			return CreateComponent(XMLNames.Component_ElectricEnergyStorage, ElectricEnergyStorageCreator, true);
+		}
+		
+		protected virtual IElectricStorageSystemDeclarationInputData ElectricEnergyStorageCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			if (componentNode == null)
+				return null;
+
+			var electricStorage = Factory.CreateElectricStorageSystemData(version, Vehicle, componentNode, sourcefile);
+			electricStorage.StorageTypeReader =
+				Factory.CreateStorageTypeReader(version, Vehicle, componentNode, sourcefile);
+			
+
+			return electricStorage;
+		}
+
+
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -520,7 +545,54 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#endregion
 	}
-	
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLREESSReaderV210 : AbstractComponentReader, IXMLREESSReader
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public const string XSD_TYPE = "ElectricEnergyStorageType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		[Inject] public IDeclarationInjectFactory Factory { protected get; set; }
+
+		public XMLREESSReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode) { }
+
+		#region Implementation of IXMLREESSReader
+
+		public virtual IREESSPackInputData CreateREESSInputData(XmlNode reessNode, REESSType reessType)
+		{
+			var type = reessNode.SchemaInfo.SchemaType;
+			var version = XMLHelper.GetXsdType(type);
+			if (version == null)
+				return null;
+			
+			switch (reessType) {
+				case REESSType.Battery:
+					return BatteryPackCreator(version, reessNode, null);
+				case REESSType.SuperCap:
+					return SuperCapCreator(version, reessNode, null);
+				default:
+					return null;
+			}
+		}
+
+		protected virtual IBatteryPackDeclarationInputData BatteryPackCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateBatteryPackDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		protected virtual ISuperCapDeclarationInputData SuperCapCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateSuperCapDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		#endregion
+	}
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLMultistagePrimaryVehicleBusComponentReaderV01 : XMLComponentReaderV20

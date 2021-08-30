@@ -60,6 +60,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IXMLDeclarationVehicleData _vehicle;
 		protected ITorqueConverterDeclarationInputData _torqueconverterInputData;
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
+		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
 
 
 		public XMLDeclarationComponentsDataProviderV10(
@@ -94,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
-		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage =>  null;
+		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage =>  _electricStorageSystemInputData  ?? (_electricStorageSystemInputData = ComponentReader.ElectricStorageSystem);
 		public virtual IElectricMachinesDeclarationInputData ElectricMachines => _electricMachinesInputData ?? (_electricMachinesInputData = ComponentReader.ElectricMachines);
 
 		
