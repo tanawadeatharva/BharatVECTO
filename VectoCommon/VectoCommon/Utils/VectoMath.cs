@@ -378,30 +378,35 @@ namespace TUGraz.VectoCommon.Utils
 
 
 		public static (double k, double d) LeastSquaresFitting<T>(IEnumerable<T> entries, Func<T, double> getX, Func<T, double> getY) =>
-			LeastSquaresFitting(entries?.Select(x => new Point(getX(x), getY(x))).ToArray());
+			LeastSquaresFitting(entries?.Select(x => new Point(getX(x), getY(x))));
 
-		public static (double k, double d) LeastSquaresFitting(Point[] entries)
+		public static (double k, double d) LeastSquaresFitting(IEnumerable<Point> entries)
 		{
-			if (entries.Length == 0) {
+			if (entries == null) {
 				return (0, 0);
 			}
 
-			if (entries.Length == 1) {
-				return (0, entries[0].Y);
-			}
-
 			// algorithm taken from http://mathworld.wolfram.com/LeastSquaresFitting.html (eqn. 27 & 28)
-			double sx = 0, sy = 0, sxx = 0, sxy = 0;
-			foreach (var (x, y) in entries) {
-				sx += x;
-				sy += y;
-				sxx += x * x;
-				sxy += x * y;
+			var count = 0;
+			double sumX = 0, sumY = 0, sumXSquare = 0, sumYSquare = 0, sumXY = 0;
+			foreach (var e in entries) {
+				sumX += e.X;
+				sumY += e.Y;
+				sumXSquare += e.X * e.X;
+				sumYSquare += e.Y * e.Y;
+				sumXY += e.X * e.Y;
+				count++;
 			}
-
-			var k = (sxy - sx * sy / entries.Length) / (sxx - sx * sx / entries.Length);
-			var d = (sy - k * sx) / entries.Length;
-			return (k, d);
+			switch (count) {
+				case 0: return (0, 0);
+				case 1: return (0, sumY);
+				default:
+					var ssxx = sumXSquare - sumX * sumX / count;
+					var ssxy = sumXY - sumX * sumY / count;
+					var k = ssxy / ssxx;
+					var d = (sumY - k * sumX) / count;
+					return (k, d);
+			}
 		}
 
 		public static (double a, double b, double c) FitQuadraticEquation((double x, double y)[] points)
@@ -666,7 +671,7 @@ namespace TUGraz.VectoCommon.Utils
 
 		public bool SharesVertexWith(Triangle t) => Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 
-		public Edge[] GetEdges() => new[] {new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1)};
+		public Edge[] GetEdges() => new[] { new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1) };
 
 		#region Equality members
 		protected bool Equals(Triangle other) => Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
@@ -696,10 +701,10 @@ namespace TUGraz.VectoCommon.Utils
 
 		#region Equality members
 
-		protected bool Equals(Edge other) => 
+		protected bool Equals(Edge other) =>
 			P1.Equals(other.P1) && Equals(P2, other.P2) || P1.Equals(other.P2) && P2.Equals(other.P1);
 
-		public override bool Equals(object obj) => 
+		public override bool Equals(object obj) =>
 			!ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Edge)obj));
 
 		public override int GetHashCode() => P1.GetHashCode() ^ P2.GetHashCode();
@@ -708,7 +713,7 @@ namespace TUGraz.VectoCommon.Utils
 
 		public static Edge Create(Point arg1, Point arg2) => new Edge(arg1, arg2);
 
-		public bool ContainsXY(Point point) => 
+		public bool ContainsXY(Point point) =>
 			(SlopeXY * point.X + (P1.Y - SlopeXY * P1.X) - point.Y).IsEqual(0, 1E-9);
 	}
 }
