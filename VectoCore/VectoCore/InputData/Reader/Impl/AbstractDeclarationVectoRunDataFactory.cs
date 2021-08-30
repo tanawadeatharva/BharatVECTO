@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -18,10 +17,6 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	public abstract class AbstractDeclarationVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-
-		protected static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
-			new ConcurrentDictionary<MissionType, DrivingCycleData>();
-
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;

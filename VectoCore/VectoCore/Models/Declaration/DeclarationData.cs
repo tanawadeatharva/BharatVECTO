@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.Collections.Concurrent;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -98,6 +99,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
 		public const double AlternatorEfficiency = 0.7;
+
+		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
+			new ConcurrentDictionary<MissionType, DrivingCycleData>();
+
+
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.

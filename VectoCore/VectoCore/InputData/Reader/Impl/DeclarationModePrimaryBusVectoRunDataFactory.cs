@@ -18,7 +18,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
 		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
-			base(dataProvider, report) { }
+			base(dataProvider, report)
+		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
 
@@ -87,10 +88,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				return new VectoRunData() {
+				return new VectoRunData {
 					Exempted = true,
 					Report = Report,
-					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
+					Mission = new Mission { MissionType = MissionType.ExemptedMission },
 					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
 						null,
 						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
@@ -103,7 +104,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
 
-			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,

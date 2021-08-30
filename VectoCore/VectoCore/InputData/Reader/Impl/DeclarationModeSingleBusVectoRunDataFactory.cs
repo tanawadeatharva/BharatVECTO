@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -15,7 +12,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl {
+namespace TUGraz.VectoCore.Models.Simulation.Impl
+{
 	internal class DeclarationModeSingleBusVectoRunDataFactory : DeclarationModePrimaryBusVectoRunDataFactory
 	{
 		protected new DeclarationDataAdapterSingleBus _dao = new DeclarationDataAdapterSingleBus();
@@ -74,8 +72,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
 
-			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
-			
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),

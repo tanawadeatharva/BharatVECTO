@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
 
-			var cycle = CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
