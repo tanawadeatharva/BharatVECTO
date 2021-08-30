@@ -769,15 +769,7 @@ namespace TUGraz.VectoCore.OutputData
 			return dataColumns;
 		}
 
-		public IEnumerable<T> GetValues<T>(DataColumn col) => GetValues(x => (T)x[col]);
-
-		public IEnumerable<(T1, T2)> GetValues<T1, T2>(DataColumn col1, DataColumn col2) =>
-			GetValues(x => ((T1)x[col1], (T2)x[col2]));
-
-		public IEnumerable<(T1, T2, T3)> GetValues<T1, T2, T3>(DataColumn col1, DataColumn col2, DataColumn col3) =>
-			GetValues(x => ((T1)x[col1], (T2)x[col2], (T3)x[col3]));
-
-		public IEnumerable<T> GetValues<T>(string columnName) => GetValues<T>(Data.Columns[columnName]);
+		public IEnumerable<T> GetValues<T>(DataColumn col) => GetValues(x => x.Field<T>(col));
 
 		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) =>
 			Data.Rows.Cast<DataRow>().Select(selectorFunc);
