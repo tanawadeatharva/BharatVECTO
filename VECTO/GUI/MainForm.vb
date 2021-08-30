@@ -1031,8 +1031,8 @@ Imports TUGraz.VectoCore.Utils
                 runsFactory.ActualModalData = cbActVmod.Checked
                 runsFactory.SerializeVectoRunData = cbSaveVectoRunData.Checked
 
-                For Each run As IVectoRun In jobContainer.AddRuns(runsFactory)
-                    fileWriters.Add(run.RunIdentifier, fileWriter)
+                For Each run as integer In jobContainer.AddRuns(runsFactory)
+                    fileWriters.Add(run, fileWriter)
                 Next
 
                 ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
