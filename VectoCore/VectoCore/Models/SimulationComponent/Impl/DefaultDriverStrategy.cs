@@ -92,10 +92,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 
-			// todo mk-2021-08-26 container is never null (otherwise previous lines would have already crashed): conditional access is not necessary
-			VehicleCategory = container?.RunData.VehicleData.VehicleCategory ?? VehicleCategory.Unknown;
+			VehicleCategory = container.RunData.VehicleData.VehicleCategory;
 
-			var data = container?.RunData;
+			var data = container.RunData;
 			ADAS = data?.VehicleData?.ADAS ?? new VehicleData.ADASData() {
 				EcoRoll = EcoRollType.None,
 				EngineStopStart = false,
@@ -124,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					builder.BuildSimplePowertrainElectric(data, testContainer);
 				}
 
-				container?.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
+				container.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
 		}
 
@@ -427,7 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				if (ADAS.EcoRoll == EcoRollType.None) {
 					if (Driver.DataBus.EngineInfo is null) {
-						// todo 20210721 mk search for the correct engine!
+						// todo mk20210721 search for the correct engine!
 						var engine = Driver.DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2);
 						engineDragLoss = engine.DragPower(0.SI<Volt>(), engine.ElectricMotorSpeed);
 					} else {
@@ -957,9 +956,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			switch (first) {
 				case ResponseUnderload _:
 					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.ClutchInfo.ClutchClosed(absTime)) {
-						//TODO mk20210616 the assignment to second is always overriden. Delete the assignment, or maybe even delete the whole line?
 						//TODO mk20210616 the whole statement could be de-nested to switch-pattern matching (with "where") if this first "if" would not be here.
-						second = Driver.DrivingActionRoll(absTime, ds, velocityWithOverspeed, gradient);
+						var debugResponse = Driver.DrivingActionRoll(absTime, ds, velocityWithOverspeed, gradient);
 					}
 
 					if (DataBus.VehicleInfo.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
