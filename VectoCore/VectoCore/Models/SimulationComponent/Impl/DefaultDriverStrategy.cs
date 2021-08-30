@@ -413,10 +413,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dataBus = Driver.DataBus;
 			var airDragForce = Driver.DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
-
-			//var rollResistanceForce = Driver.DataBus.RollingResistance(
-			//	((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance))
-			//	.Value().SI<Radian>());
 			var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
 			var engineDragLoss = 0.SI<Watt>();
 			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
@@ -425,12 +421,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} else {
 				if (ADAS.EcoRoll == EcoRollType.None) {
-					if (Driver.DataBus.EngineInfo is null) {
-						// todo mk20210721 search for the correct engine!
-						var engine = Driver.DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2);
-						engineDragLoss = engine.DragPower(0.SI<Volt>(), engine.ElectricMotorSpeed);
-					} else {
-						engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
+					engineDragLoss = Driver.DataBus?.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
+
+					foreach (var pos in Driver.DataBus.PowertrainInfo.ElectricMotorPositions) {
+						var electricMotorInfo = Driver.DataBus.ElectricMotorInfo(pos);
+						engineDragLoss += electricMotorInfo.DragPower(dataBus.BatteryInfo.InternalVoltage, electricMotorInfo.ElectricMotorSpeed);
 					}
 				}
 			}
