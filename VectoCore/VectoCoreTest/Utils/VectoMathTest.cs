@@ -169,15 +169,5 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(0.431535, k, 1e-6);
 
 		}
-
-
-		[TestCase]
-		public void TestQuadraticEquationFit() {
-			var entries = new[] { (0d, 1d), (1, 0), (2, -1), (3, 1) };
-			var (a, b, c) = VectoMath.FitQuadraticEquation(entries);
-			Assert.AreEqual(0.75, a);
-			Assert.AreEqual(-2.35, b);
-			Assert.AreEqual(1.15, c);
-		}
 	}
 }
