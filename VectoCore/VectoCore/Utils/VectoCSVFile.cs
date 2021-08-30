@@ -75,7 +75,6 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				//UpdateLastAccessTime(fileName);
 				using (var fs = File.OpenText(fileName)) {
 					var retVal = new TableData(fileName);
 					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
@@ -84,15 +83,6 @@ namespace TUGraz.VectoCore.Utils
 			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
 				throw new VectoException("Error reading file {0}: {1}", fileName, e.Message);
-			}
-		}
-
-		public static void UpdateLastAccessTime(string fileName)
-		{
-			try {
-				File.SetLastAccessTime(fileName, DateTime.Now);
-			} catch (Exception e) {
-				Console.WriteLine(e);
 			}
 		}
 
@@ -130,11 +120,10 @@ namespace TUGraz.VectoCore.Utils
 				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
 				.ToArray();
 
-			double tmp;
 			var columns = colsWithoutComment
 				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
 				.Select(l => l.Trim())
-				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
+				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
 				.Distinct()
 				.ToList();
 

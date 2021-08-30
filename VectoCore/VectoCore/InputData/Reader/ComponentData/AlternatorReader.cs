@@ -24,19 +24,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				throw new ArgumentException("Supplied input file does not exist");
 			}
 
-			//UpdateLastAccessTime(filePath);
 			return ReadMap(File.OpenRead(filePath), Path.GetFullPath(filePath));
 		}
-
-		public static void UpdateLastAccessTime(string fileName)
-		{
-			try {
-				File.SetLastAccessTime(fileName, DateTime.Now);
-			} catch (Exception e) {
-				Console.WriteLine(e);
-			}
-		}
-
 
 		public static IAlternatorMap ReadMap(Stream stream, string source = null)
 		{

@@ -111,20 +111,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static DrivingCycleData ReadFromFile(string fileName, CycleType type, bool crossWindRequired)
 		{
 			try {
-				//UpdateLastAccessTime(fileName);
 				var stream = File.OpenRead(fileName);
 				return ReadFromStream(stream, type, Path.GetFileNameWithoutExtension(fileName), crossWindRequired);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while opening DrivingCycle File: " + ex.Message, ex);
-			}
-		}
-
-		public static void UpdateLastAccessTime(string fileName)
-		{
-			try {
-				File.SetLastAccessTime(fileName, DateTime.Now);
-			} catch (Exception e) {
-				Console.WriteLine(e);
 			}
 		}
 

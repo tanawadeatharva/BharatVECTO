@@ -64,17 +64,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
 			}
 
-			//UpdateLastAccessTime(fileName);
 			using (var reader = File.OpenText(fileName)) {
 				return (JObject)JToken.ReadFrom(new JsonTextReader(reader));
-			}
-		}
-		public static void UpdateLastAccessTime(string fileName)
-		{
-			try {
-				File.SetLastAccessTime(fileName, DateTime.Now);
-			} catch (Exception e) {
-				Console.WriteLine(e);
 			}
 		}
 
