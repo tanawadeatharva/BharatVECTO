@@ -628,7 +628,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgICDSpeed = (DataBus.EngineInfo.EngineSpeed + engSpeed) / 2.0;
 			var drTq = (DataBus.EngineInfo.EngineDragPower(avgICDSpeed)) / avgICDSpeed;
 			var maxTq = DataBus.EngineInfo.EngineDynamicFullLoadPower(avgICDSpeed, operatingPoint.SimulationInterval) /
-						avgICDSpeed;
+						avgICDSpeed * 0.995;
 			var inTq = Formulas.InertiaPower(
 							engSpeed, DataBus.EngineInfo.EngineSpeed,
 							(DataBus as VehicleContainer)?.RunData.EngineData.Inertia ?? 0.SI<KilogramSquareMeter>(),
@@ -848,8 +848,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								break;
 							}
 
-							operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
-								operatingPoint.Acceleration, retVal);
+							try {
+								operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance,
+									gradient,
+									operatingPoint.Acceleration, retVal);
+							} catch (VectoSearchAbortedException vsa) {
+								Log.Warn("Search braking power aborted {0}", vsa);
+								if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+									operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint,
+										response);
+								}
+							}
+
 							DriverAcceleration = operatingPoint.Acceleration;
 							if (DataBus.Brakes.BrakePower.IsSmaller(0)) {
 								DataBus.Brakes.BrakePower = 0.SI<Watt>();
