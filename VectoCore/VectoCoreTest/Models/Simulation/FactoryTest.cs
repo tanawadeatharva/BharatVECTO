@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase]
+		[Test]
 		public void CreateDeclarationSimulationRun()
 		{
 			var fileWriter = new FileOutputWriter(DeclarationJobFile);
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(988.9, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[1].Torque.Value(), 0.1);
 		}
 
-		[TestCase]
+		[Test]
 		public void CreateEngineeringSimulationRun()
 		{
 			var fileWriter = new FileOutputWriter(EngineeringJobFile);
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestDistanceCycleInVTPEngineering()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\VTPModeWithDistanceCycle.vecto");
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestDistanceCycleInEngineOnly()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\EngineOnlyJobWithDistanceCycle.vecto");
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in EngineOnly mode");
 		}
 
-		[TestCase]
+		[Test]
 		public void TestMeasuredSpeedCycleInEngineOnly()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\EngineOnlyJobWithMeasuredCycle.vecto");

@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Exceptions
 	[Parallelizable(ParallelScope.All)]
 	public class ExceptionTests
 	{
-		[TestCase]
+		[Test]
 		public void Test_VectoExceptions()
 		{
 			new CSVReadException("Test");

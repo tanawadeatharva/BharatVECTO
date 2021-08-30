@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class AuxiliaryTypeHelperTest
 	{
-		[TestCase]
+		[Test]
 		public void TestParseAuxiliaryType()
 		{
 			Assert.AreEqual(AuxiliaryType.Fan, AuxiliaryTypeHelper.Parse("Fan"));
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
 		}
 
-		[TestCase]
+		[Test]
 		public void TestToString()
 		{
 			Assert.AreEqual(Constants.Auxiliaries.Names.Fan, AuxiliaryTypeHelper.ToString(AuxiliaryType.Fan));

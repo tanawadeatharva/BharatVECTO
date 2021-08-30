@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestGearboxDataReadTest()
 		{
 			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxFile);
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(gbxPowerLoss, loss.Value(), 0.1, testName);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestLossMap_IN_10_CONST_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(10, map.GetTorqueLoss(120.RPMtoRad(), 50.SI<NewtonMeter>()).Value);
 		}
 
-		//[TestCase]
+		//[Test]
 		//public void TestLossMap_OUT_10_CONST_Interpolation_Extrapolation()
 		//{
 		//	var data = new DataTable();
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		//	AssertHelper.AreRelativeEqual(40, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 		//}
 
-		[TestCase]
+		[Test]
 		public void TestLossMap_IN_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(25, map.GetTorqueLoss(120.RPMtoRad(), 50.SI<NewtonMeter>()).Value);
 		}
 
-		//[TestCase]
+		//[Test]
 		//public void TestLossMap_OUT_Interpolation_Extrapolation()
 		//{
 		//	var data = new DataTable();
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		//	AssertHelper.Exception<VectoException>(() => { map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>()); });
 		//}
 
-		[TestCase]
+		[Test]
 		public void TestFullLoadCurveIntersection()
 		{
 			var engineFldString = new[] {
@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///		VECTO-190
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void TestFullLoadSorting()
 		{
 			var gbxFldString = new[] {

@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_consolidatedInputData);
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestPrimaryOnlyConsolidateMultistageVehicle()
 		{ 
 			var reader = XmlReader.Create(_primaryOnlyInputData);
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, inputDataProvider.JobInputData.InputComplete);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestOneStageConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_oneStageInputData);
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		}
 
-		[TestCase]
+		[Test]
 		public void TestTwoStagesConsolidateMultistageVehicle()
 		{
 			var reader = XmlReader.Create(_twoStagesInputData);
@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestConsolidateMultistageAirdrag()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataAirdrag);
@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestConsolidateMultistageHeatPump()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatPump);
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
 		
-		[TestCase]
+		[Test]
 		public void TestConsolidateMultistageHeatHev()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatHev);
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, inputDataProvider.JobInputData.InputComplete);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestConsolidateMultistageHeatNgTankSystem()
 		{
 			var reader = XmlReader.Create(_consolidatedInputDataHeatNgTank);

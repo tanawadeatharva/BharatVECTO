@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestVehicleMultistageBusInput01()
 		{
 			var reader = XmlReader.Create(VIF01);
@@ -666,7 +666,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		#endregion
 		
 
-		[TestCase]
+		[Test]
 		public void TestVehicleMultistageBusInput02()
 		{
 			var reader = XmlReader.Create(VIF02);

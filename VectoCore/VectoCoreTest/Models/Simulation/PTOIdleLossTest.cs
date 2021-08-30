@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class PTOIdleLossTest
 	{
-		[TestCase]
+		[Test]
 		public void PTOLossMapCaseSensitiveTest()
 		{
 			var data = new[] {
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase]
+		[Test]
 		public void PTOIdleLosses_FixPoints()
 		{
 			var entryList = new List<PTOLossMap.Entry>();
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase]
+		[Test]
 		public void PTOIdleLosses_Interpolate()
 		{
 			var entryList = new List<PTOLossMap.Entry>();

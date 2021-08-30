@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	{
 		private const double Tolerance = 0.0001;
 
-		[TestCase]
+		[Test]
 		public void TestFuelConsumption_FixedPoints()
 		{
 			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertMapValuesEqual(lines, map);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestFuelConsumption_InterpolatedPoints()
 		{
 			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");

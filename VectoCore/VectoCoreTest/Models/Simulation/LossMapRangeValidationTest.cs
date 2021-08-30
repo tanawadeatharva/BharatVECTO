@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-173
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void LossMapValid()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-173
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void LossMapInvalidAxle()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-173
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void LossMapLimited()
 		{
 			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-173
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void LossMapAxleLossMapMissing()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-173
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void LossMapGearLossMapMissing()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0);
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-230
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void TestLossMapValuesWithEfficiency()
 		{
 			var lossMap = TransmissionLossMapReader.Create(0.95, 1.0, "Dummy");
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-230
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void CreateJobWithLossMapEfficiency_Engineering()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto");
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-230
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void RunJobWithLossMapEfficiency_Engineering()
 		{
 			const string jobFileName = @"TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto";
@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-230
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void CreateJobWith_Axle_LossMapEfficiency_Declaration()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto");
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <summary>
 		/// VECTO-230
 		/// </summary>
-		[TestCase]
+		[Test]
 		public void CreateJobWith_Gear_LossMapEfficiency_Declaration()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with GearEfficiency.vecto");

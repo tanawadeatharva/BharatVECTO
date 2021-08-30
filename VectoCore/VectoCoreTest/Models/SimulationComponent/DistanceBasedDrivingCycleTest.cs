@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestLimitRequst()
 		{
 			var data = new string[] {
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestDistanceRequest()
 		{
 			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased, false);
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 		}
 
-		[TestCase]
+		[Test]
 		public void CycleStartsWithNoStopTime()
 		{
 			var data = new string[] {
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(run.FinishedWithoutErrors, "Cycle start witout stoptime FAILED");
 		}
 
-		[TestCase]
+		[Test]
 		public void CycleWithZeroStopTime()
 		{
 			var data = new string[] {

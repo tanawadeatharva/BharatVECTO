@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsNotNull(port);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestOutPortRequestNotFailing()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, torque, engineSpeed, false);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestSimpleModalData()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestCase]
+		[Test]
 		public void EngineIdleJump()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 		}
 
-		[TestCase]
+		[Test]
 		public void EngineIdleControllerTestCoach()
 		{
 			VehicleContainer(CoachEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		| 70.5     | 308.729     | 1284.139  | 2295.815    | 9        |
 				*/
 
-		[TestCase]
+		[Test]
 		public void EngineIdleControllerTestTruck()
 		{
 			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestCase]
+		[Test]
 		public void EngineIdleControllerTest2Truck()
 		{
 			VehicleContainer(TruckEngine, out var container, out var engine, out var requestPort, out var gearbox);
@@ -501,7 +501,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestCase]
+		[Test]
 		public void Test_EngineData()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);

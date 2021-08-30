@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase]
+		[Test]
 		public void TestWriteEngineOnlySingleFile()
 		{
 			var outFile = "EngineOnlyJobSingleFile.xml";
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestWriteEngineeringSingleFile()
 		{
 			var outFile = "EngineeringJobSingleFile.xml";
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestWriteEngineeringSingleFileFull()
 		{
 			var outFile = "EngineeringJobSingleFileFull.xml";
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestWriteEngineeringMultipleFilesFull()
 		{
 			var outFile = "EngineeringJobMultipleFilesFull.xml";
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void TestWriteEngineeringMultipleFiles()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJob);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestWriteDeclarationJob()
 		{
 			var outputFile = "DeclarationJobSingleFile.xml";
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-NA", xml.JobInputData.JobName);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestWriteDeclarationJobFull()
 		{
 			var outputFile = "DeclarationJobFullSingleFile.xml";

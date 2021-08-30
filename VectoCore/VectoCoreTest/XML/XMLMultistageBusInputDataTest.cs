@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase]
+		[Test]
 		public void TestVehicleInterimStageInput()
 		{
 			var reader = XmlReader.Create(VehicleInterimStageInput);
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[Test]
 		public void TestVehicleExemptedInterimStageInput()
 		{
 			var reader = XmlReader.Create(VehicleExemptedInterimStageInput);
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2.5, vehicle.Height.Value());
 		}
 
-		[TestCase]
+		[Test]
 		public void TestVehicleExemptedMandatoryInput()
 		{
 			var reader = XmlReader.Create(VehicleExemptedMandatoryOnly);
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.Components);
 		}
 
-		[TestCase]
+		[Test]
 		public void TestNullableComponentEntriesInput()
 		{
 			var reader = XmlReader.Create(VehicleComponentsEntriesNullable);
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null , vehicle.Components);
 		}
 		
-		[TestCase]
+		[Test]
 		public void TestStandardValueAirdragComponent()
 		{
 			var reader = XmlReader.Create(VehicleAirdragStandardValue);

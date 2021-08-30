@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"AngularVelocity Engine Side");
 		}
 
-		[TestCase]
+		[Test]
 		public void AxleGearValidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false).Count);
 		}
 
-		[TestCase]
+		[Test]
 		public void AxleGearInvalidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);

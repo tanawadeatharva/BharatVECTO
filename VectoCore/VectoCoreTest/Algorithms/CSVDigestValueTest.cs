@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 	public class CSVDigestValueTest
 	{
 
-		[TestCase]
+		[Test]
 		public void TestDigestValueCreation()
 		{
 			var tbl = CreateDataTable(new[] { "t", "dt", "v" }, 5);
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			Assert.IsTrue(last.Contains("SHA256"), "Digest descriptor SHA256 not found");
 		}
 
-		[TestCase]
+		[Test]
 		public void TestDigestValueValidation()
 		{
 			var tbl = CreateDataTable(new[] { "t", "dt", "v" }, 5);

@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}
 
-		[TestCase]
+		[Test]
 		public void AccelerationTest()
 		{
 			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Coach.vacc");

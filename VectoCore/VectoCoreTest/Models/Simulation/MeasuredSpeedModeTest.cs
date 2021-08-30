@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Test if the cycle file can be read.
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_ReadCycle_Gear()
 		{
 			// all data
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Test if the cycle file can be read.
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_ReadCycle()
 		{
 			// all data
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the powertrain can be created in MeasuredSpeed mode.
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_CreatePowertrain_Gear()
 		{
 			// prepare input data
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the powertrain can be created in MeasuredSpeed mode.
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_CreatePowertrain()
 		{
 			// prepare input data
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestSumFile(expectedSumFile, actualSumFile);
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeed.vecto",
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeed.vsum", @"TestData\MeasuredSpeed\MeasuredSpeed.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedAux_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedAux.vecto",
@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedAux.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedVair_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVair.vecto",
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVair.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedVair_WindFromFront_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vecto",
@@ -425,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedVair_WindFromBack_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vecto",
@@ -435,7 +435,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedVair_NoWind_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vecto",
@@ -445,7 +445,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeedVairAux_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vecto",
@@ -454,7 +454,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto",
@@ -463,7 +463,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_TractionInterruption_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vecto",
@@ -473,7 +473,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_Aux_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto",
@@ -482,7 +482,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_Vair_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto",
@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_VairAux_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vecto",
@@ -501,7 +501,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_AT_PS_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vecto",
@@ -511,7 +511,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void MeasuredSpeed_Gear_AT_Ser_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vecto",
@@ -521,7 +521,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void VcdbTest()
 		{
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBetaFull.vcdb");

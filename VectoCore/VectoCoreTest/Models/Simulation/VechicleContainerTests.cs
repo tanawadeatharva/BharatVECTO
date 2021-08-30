@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	{
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 
-		[TestCase]
+		[Test]
 		public void VechicleContainerHasEngine()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);

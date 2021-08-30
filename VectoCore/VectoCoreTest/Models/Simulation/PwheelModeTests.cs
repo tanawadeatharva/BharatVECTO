@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Test if the cycle file can be read.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestCase]
+		[Test]
 		public void Pwheel_ReadCycle_Test()
 		{
 			var runData = new VectoRunData() {
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the powertrain can be created in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestCase]
+		[Test]
 		public void Pwheel_CreatePowertrain_Test()
 		{
 			// prepare input data
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestCase]
+		[Test]
 		public void Pwheel_Run_Test()
 		{
 			var jobFile = @"TestData\Pwheel\Pwheel.vecto";
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void Pwheel_ultimate_Run_Test()
 		{
 			var jobFile = @"TestData\Pwheel\Pwheel_ultimate.vecto";

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 	public class MeanShiftClusteringTest
 	{
 		
-		[TestCase]
+		[Test]
 		public void TestClusteringClusters()
 		{
 			var centers = new[] { 100.0, 200, 300, 400 };
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			}
 		}
 
-		[TestCase]
+		[Test]
 		public void TestClusteringRandom()
 		{
 			var entries = new double[100];

@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase]
+		[Test]
 		public void AuxWriteModFileSumFile()
 
 		{
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxWriteModFileSumFile.vsum");
 		}
 
-		[TestCase]
+		[Test]
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
-		[TestCase]
+		[Test]
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestCase] 
+		[Test] 
 		public void AuxAllCombined()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void AuxReadJobFileDeclarationMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
@@ -283,7 +283,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[Category("LongRunning")]
-		[TestCase]
+		[Test]
 		public void AuxReadJobFileEngineeringMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode");
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 		}
 
-		[TestCase]
+		[Test]
 		public void AuxDeclarationWrongConfiguration()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");

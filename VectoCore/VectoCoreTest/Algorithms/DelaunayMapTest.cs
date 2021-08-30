@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 		}
 
 
-		[TestCase]
+		[Test]
 		public void Test_Simple_DelaunayMap()
 		{
 			var map = new DelaunayMap("TEST");
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			AssertHelper.AreRelativeEqual(0, result);
 		}
 
-		[TestCase]
+		[Test]
 		public void Test_DelaunayMapTriangle()
 		{
 			var map = new DelaunayMap("TEST");
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1.5, -0.5), "Interpolation failed.");
 		}
 
-		[TestCase]
+		[Test]
 		public void Test_Delaunay_LessThan3Points()
 		{
 			AssertHelper.Exception<ArgumentException>(() => new DelaunayMap("TEST").Triangulate(),
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			map.Triangulate();
 		}
 
-		[TestCase]
+		[Test]
 		public void Test_Delaunay_DuplicatePoints()
 		{
 			var map = new DelaunayMap("TEST");
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 				"TEST: Input Data for Delaunay map contains duplicates! \n1 / 1");
 		}
 
-		[TestCase]
+		[Test]
 		public void Test_Delaunay_NormalOperation()
 		{
 			foreach (var factors in	new[] {

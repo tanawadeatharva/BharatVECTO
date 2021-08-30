@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile);
 		}
 
-		[TestCase]
+		[Test]
 		public void AssembleEngineOnlyPowerTrain()
 		{
 			var dataWriter = new MockModalDataContainer();

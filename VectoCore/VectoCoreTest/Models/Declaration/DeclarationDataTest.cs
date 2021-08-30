@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             Assert.IsTrue(tmp.Extrapolated);
         }
 
-        [TestCase]
+        [Test]
         public void WHTCTest()
         {
             var whtc = DeclarationData.WHTCCorrection;
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             }
         }
 
-        [TestCase]
+        [Test]
         public void WHTCLookupTestLongHaul()
         {
             var expected = 1.015501;
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             Assert.AreEqual(expected, lookup, 1e-8);
         }
 
-        [TestCase]
+        [Test]
         public void WHTCLookupTestRegionalDelivery()
         {
             var expected = 1.02708700;
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                 crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
         }
 
-        [TestCase]
+        [Test]
         public void CrossWindAreaCdxANotSet_DeclarationMode()
         {
             var airDrag = new AirdragData()
@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                 "In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
         }
 
-        [TestCase]
+        [Test]
         public void CrossWindAreaCdxANotSet_Other()
         {
             foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>())
@@ -575,7 +575,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                     new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
         }
 
-        [TestCase]
+        [Test]
         public void Aux_SteeringpumpMultipleLookups()
         {
             // testcase to illustrate modification of lookup-data for steering pump
@@ -970,7 +970,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// trailer in longhaul, always pc formula
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment2Test()
         {
             var vehicleData = new
@@ -1044,7 +1044,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// trailer in longhaul, always pc formula
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment2TestHeavy()
         {
             var vehicleData = new
@@ -1118,7 +1118,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// normal pc formula, no trailer
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment3Test()
         {
             var vehicleData = new
@@ -1172,7 +1172,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// fixed reference weight, trailer only in longhaul
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment4Test()
         {
             var vehicleData = new
@@ -1261,7 +1261,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// fixed reference weight, trailer only in longhaul
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment4VocationalTest()
         {
             var vehicleData = new
@@ -1318,7 +1318,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 5: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment5Test()
         {
             var vehicleData = new
@@ -1407,7 +1407,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 5: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment5VocationalTest()
         {
             var vehicleData = new
@@ -1448,7 +1448,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment9Test()
         {
             var vehicleData = new
@@ -1555,7 +1555,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment9VocationalTest()
         {
             var vehicleData = new
@@ -1613,7 +1613,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment10Test()
         {
             var vehicleData = new
@@ -1704,7 +1704,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment10VocationalTest()
         {
             var vehicleData = new
@@ -1746,7 +1746,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 11: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment11Test()
         {
             var vehicleData = new
@@ -1868,7 +1868,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 10: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment12Test()
         {
             var vehicleData = new
@@ -1976,7 +1976,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         /// <summary>
         /// Segment 9: fixed reference weight, trailer always used
         /// </summary>
-        [TestCase]
+        [Test]
         public void Segment16Test()
         {
             var vehicleData = new
@@ -2079,7 +2079,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             EqualAcceleration(data, 140, 0.5, -0.5);
         }
 
-        [TestCase]
+        [Test]
         public void Declaration_WheelsForT1_Class2()
         {
             var dataProvider =
@@ -2102,7 +2102,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
         }
 
-        [TestCase]
+        [Test]
         public void Declaration_WheelsForT2_Class4()
         {
             var dataProvider =
@@ -2127,7 +2127,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             CollectionAssert.AreEqual(bodyOnly, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
         }
 
-        [TestCase]
+        [Test]
         public void Declaration_WheelsForDefault_Class5()
         {
             var dataProvider =
