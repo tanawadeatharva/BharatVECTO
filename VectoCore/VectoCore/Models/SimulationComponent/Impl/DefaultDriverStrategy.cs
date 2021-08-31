@@ -1001,11 +1001,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add(new { action = "second:Overload -> Coast", third });
 
-					if (third is ResponseGearShift) {
-						third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
-						debug.Add(new { action = "third:GearShift -> try again Coast", third });
-					}
 					switch (third) {
+						case ResponseGearShift _:
+							third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+							debug.Add(new { action = "third:GearShift -> try again Coast", third });
+							break;
 						case ResponseSpeedLimitExceeded _:
 							if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
 								!DataBus.GearboxInfo.Gear.IsLockedGear()) {
