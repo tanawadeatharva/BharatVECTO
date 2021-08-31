@@ -191,8 +191,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>
@@ -229,8 +229,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>

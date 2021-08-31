@@ -90,7 +90,7 @@
 				<xs:documentation>P529 - [%]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="maxChagingCurrent" type="v2.10.1:BatteryMaxCurrentType" use="required">
+		<xs:attribute name="maxChargingCurrent" type="v2.10.1:BatteryMaxCurrentType" use="required">
 			<xs:annotation>
 				<xs:documentation>P530 - A]</xs:documentation>
 			</xs:annotation>
