@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestSumCalcFixedTime()
 		{
 			var writer = new FileOutputWriter("testsumcalc_fixed");
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual((500.0 * 1e-4) * 1000 * 1000 / 500, sumData.Rows[0].ParseDouble("FC-Map [g/km]"), 1e-3);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestSumCalcVariableTime()
 		{
 			var writer = new FileOutputWriter("testsumcalc_var");
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";

@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"AngularVelocity Engine Side");
 		}
 
-		[Test]
+		[TestCase]
 		public void AxleGearValidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false).Count);
 		}
 
-		[Test]
+		[TestCase]
 		public void AxleGearInvalidRangeTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
-		[Test]
+		[TestCase]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);

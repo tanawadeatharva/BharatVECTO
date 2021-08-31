@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 
-		[Test]
+		[TestCase]
 		public void IntersectShiftLines1()
 		{
 			var upShift = new[] {
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void IntersectShiftLines2()
 		{
 			var upShift = new[] {
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void IntersectShiftLines3()
 		{
 			var upShift = new[] {
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void IntersectShiftLines4()
 		{
 			var upShift = new[] {
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void LimitShiftlines1()
 		{
 			var upShift = new[] {
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void LimitShiftlines2()
 		{
 			var upShift = new[] {
@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void LimitShiftlines3()
 		{
 			var upShift = new[] {
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void ShiftPolygonFldMarginTest()
 		{
 			var engineFld = new[] {
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void CorrectDownShiftByEngineFldTest()
 		{
 			var downshift = Edge.Create(new Point(10, 10), new Point(22, 20));
@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(20, corrected.P2.Y, 1e-3);
 		}
 
-		[Test]
+		[TestCase]
 		public void ComputeShiftPolygonDeclarationTest()
 		{
 			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
@@ -485,7 +485,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
-		[Test]
+		[TestCase]
 		public void ComputeShiftPolygonATDeclarationTest()
 		{
 			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
-		[Test]
+		[TestCase]
 		public void ComputeShiftPolygonDeclarationTestConfidentialEngine()
 		{
 			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
@@ -823,7 +823,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		/// <summary>
 		/// VECTO-517 Shiftpolygon is considered invalid
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void ShiftCurve_ShiftPolygon_Validation_Test()
 		{
 			var vgbs = new[] {

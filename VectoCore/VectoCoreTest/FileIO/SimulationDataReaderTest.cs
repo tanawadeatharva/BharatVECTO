@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void ReadDeclarationJobFile()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(DeclarationJob);

@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Test_FullPowertrain()
 		{
 			var gearboxData = CreateGearboxData();
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Test_FullPowerTrain_JobFile()
 		{
 			const string jobFile = @"TestData\job.vecto";

@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLReportMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestXMLReportCorrectHashes()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLPrimaryVehicleReportTest()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses/vecto_vehicle-primary_heavyBus-sample.xml";

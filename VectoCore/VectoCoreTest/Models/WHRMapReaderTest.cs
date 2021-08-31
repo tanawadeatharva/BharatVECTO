@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestWHRMapCSVDataElectric()
 		{
 
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(400, result.GeneratedPower.Value());
 		}
 
-		[Test]
+		[TestCase]
 		public void TestWHRMapCSVDataMechanical()
 		{
 
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestWHRMapCSVDataElectricAndMechanical()
 		{
 

@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputEngineeringReferencedFileAsStream()
 		{
 			AssertHelper.Exception<VectoException>(() => {
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputEngReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputGbxReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//var fldMap = FullLoadCurveReader.Create(gears.First().FullLoadCurve, true);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputGbxTCReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("0.9", tcInputDataProvider.TCData.Rows[2][2]);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAngledriveReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, angledriveInputData.Ratio, "Angledrive");
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxlGReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, axlegearDataProvider.Ratio, "AxleGear");
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputRetarderReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = RetarderLossMapReader.Create(lossMapData);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxleWheelsReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.488822, vehicleDataProvider.DynamicTyreRadius.Value(), 1e-6);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAuxiliariesReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual(3190, aux2.DemandMap.Rows[113].ParseDouble(AuxiliaryDataReader.Fields.SupplyPower));
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputADASReferencedFile()
 		{
 			//var reader = XmlReader.Create(EngineeringSampleFile);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsTrue(adas.OverSpeedData.Enabled);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestVehicleInputReferencedFile()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLPowertrainGenerationReferencedFile()
 		{
 			var fileWriter = new FileOutputWriter("foo");
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestXMEngineering_DriverModelLACExt()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("lac_velocityDrop.csv", Path.GetFileName(lac.CoastingDecisionFactorVelocityDropLookup.Source));
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMEngineering_PTO()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);

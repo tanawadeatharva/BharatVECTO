@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputDecl()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		
-		[Test]
+		[TestCase]
 		public void TestXMLInputGbx()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxlG()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputRetarder()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxleWheels()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("e12*0815/8051*2017/05E0000*00", tyre.CertificationNumber);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxleWheelsDuplicates()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -283,7 +283,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooLow()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooHigh()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputAuxiliaries()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestVehicleInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestVehicleInputNoAirdrag()
 		{
 			var reader = XmlReader.Create(SampleVehicleDeclNoAirdrag);
@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestXMLPowertrainGeneration()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -421,7 +421,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(10, jobContainer.Runs.Count);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullFeaturedXMEngineering_TorqueConverter()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -436,7 +436,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("0.90", tcDataProvider.TCData.Rows[2][1]);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_AngleDrive()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -455,7 +455,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestVehicleInputData()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -473,7 +473,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_TorqueLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -488,7 +488,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(12, torqueLimits[2].Gear);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_GbxTorqueLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(gears[11].MaxTorque);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_GbxSpeedLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -518,7 +518,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(gears[11].MaxInputSpeed);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestElementNotAvailable()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -545,7 +545,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[Test]
+		[TestCase]
 		public void TestRetarderTypeNone()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -580,7 +580,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			jobContainer.Execute();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestRetarderTypes()
 		{
 			var retarderTypes = GetEnumOptions("RetarderTypeType", "1.0");
@@ -610,7 +610,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAxleConfigurationTypes()
 		{
 			var axleConfigurations = GetEnumOptions("VehicleAxleConfigurationDeclarationType", "1.0");
@@ -638,7 +638,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestVehicleCategoryTypes()
 		{
 			var vehicleCategories = GetEnumOptions("VehicleCategoryDeclarationType", "1.0");
@@ -673,7 +673,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestWheelsTypes()
 		{
 			var wheelDimensions = GetEnumOptions("TyreDimensionType", "1.0");
@@ -708,7 +708,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPTOTypeTypes()
 		{
 			var ptoGearWheels = GetEnumOptions("PTOShaftsGearWheelsType", "1.0");
@@ -772,7 +772,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAngledriveTypes()
 		{
 			var angledriveTypes = GetEnumOptions("AngledriveTypeType", "1.0");
@@ -802,7 +802,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestGearboxTypes()
 		{
 			var gearboxTypes = GetEnumOptions("GearboxTransmissionTypeType", "1.0");
@@ -837,7 +837,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPTOInputNone()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -848,7 +848,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("None", ptoDataProvider.PTOTransmissionType);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPTOInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -861,7 +861,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1000, lookup.PowerDemand.Value());
 		}
 
-		[Test]
+		[TestCase]
 		public void TestCertificationMethodInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDeclCertificationOptions);
@@ -878,33 +878,33 @@ namespace TUGraz.VectoCore.Tests.XML
 				inputDataProvider.JobInputData.Vehicle.Components.AirdragInputData.CertificationMethod);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAuxFanTechTypes()
 		{
 			TestAuxTech(AuxiliaryType.Fan, GetEnumOptions("AuxFanTechnologyType", "1.0"), DeclarationData.Fan);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAuxElectricSystemTechTypes()
 		{
 			TestAuxTech(AuxiliaryType.ElectricSystem, GetEnumOptions("AuxESTechnologyType", "1.0"),
 				DeclarationData.ElectricSystem);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAuxSteeringPumpTechTypes()
 		{
 			TestAuxTech(AuxiliaryType.SteeringPump, GetEnumOptions("AuxSPTechnologyType", "1.0"), DeclarationData.SteeringPump);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAuxPneumaticSystemTechTypes()
 		{
 			TestAuxTech(AuxiliaryType.PneumaticSystem, GetEnumOptions("AuxPSTechnologyType", "1.0"),
 				DeclarationData.PneumaticSystem);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestAuxHVACTechTypes()
 		{
 			TestAuxTech(AuxiliaryType.HVAC, GetEnumOptions("AuxHVACTechnologyType", "1.0"),

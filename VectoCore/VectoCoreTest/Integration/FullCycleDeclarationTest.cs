@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("LongHaul");
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_RegionalDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("RegionalDelivery");
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("UrbanDelivery");
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_MunicipalCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("MunicipalUtility");
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_ConstructionCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Construction");
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void Truck40t_HeavyUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("HeavyUrban");
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[Test]
+		[TestCase]
 		public void Truck40t_SubUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
@@ -350,7 +350,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[Test]
+		[TestCase]
 		public void DeclarationClass9PTOTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(Class9RigidTruckPTOJob);
@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[Test]
+		[TestCase]
 		public void DeclarationClass5PrimaryRetarder()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(Class5TractorDeclPrimaryRetarder);

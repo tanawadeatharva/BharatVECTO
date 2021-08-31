@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 	[Parallelizable(ParallelScope.All)]
 	public class VectoMathTest
 	{
-		[Test]
+		[TestCase]
 		public void VectoMath_Min()
 		{
 			var smaller = 0.SI();

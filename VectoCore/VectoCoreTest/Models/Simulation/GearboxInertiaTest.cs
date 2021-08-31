@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[Test]
+		[TestCase]
 		public void RunWithGearboxInertia()
 		{
 			var cycleData = "0, 0, 0, 2\n" +

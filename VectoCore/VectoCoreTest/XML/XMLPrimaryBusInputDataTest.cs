@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestXMLInputDeclPrimaryBus()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);

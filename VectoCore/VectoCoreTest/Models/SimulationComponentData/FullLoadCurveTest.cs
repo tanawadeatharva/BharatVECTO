@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullLoadStaticTorque()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -72,14 +72,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580.RPMtoRad()).Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullLoadEngineSpeedRated()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
 			Assert.AreEqual(181.8444, fldCurve.RatedSpeed.Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullLoadStaticPower()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(74767.810760, fldCurve.FullLoadStationaryPower(580.RPMtoRad()).Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestDragLoadStaticTorque()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(-339, fldCurve.DragLoadStationaryTorque(2200.RPMtoRad()).Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestDragLoadStaticPower()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(-9019.51251, fldCurve.DragLoadStationaryPower(580.RPMtoRad()).Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPT1()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.37, fldCurve.PT1(1700.RPMtoRad()).Value.Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPreferredSpeed()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(990.9626, nTq99l.AsRPM, 1e-3);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestPreferredSpeed2()
 		{
 			var fldData = new[] {
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			//AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestN95hSpeedInvalid()
 		{
 			var fldData = new[] {
@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///		[VECTO-679]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void TestN95hComputation()
 		{
 			var fldData = new[] {
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///     [VECTO-78]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void Test_FileRead_WrongFileFormat_InsufficientColumns()
 		{
 			AssertHelper.Exception<VectoException>(
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// [VECTO-78]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void Test_FileRead_HeaderColumnsNotNamedCorrectly()
 		{
 			LogList.Clear();
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///     [VECTO-78]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void Test_FileRead_NoHeader()
 		{
 			var curve = FullLoadCurveReader.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///     [VECTO-78]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void Test_FileRead_InsufficientEntries()
 		{
 			AssertHelper.Exception<VectoException>(
@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"ERROR while reading FullLoadCurve File: FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 		}
 
-		[Test]
+		[TestCase]
 		public void FullLoad_LossMap_Test()
 		{
 			var engineData = new CombustionEngineData {
@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///     [VECTO-190]
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void TestSortingFullLoadEntries()
 		{
 			var fldEntries = new[] {
@@ -382,7 +382,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580.RPMtoRad()).Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestDuplicateEntries()
 		{
 			var fldData = new[] {

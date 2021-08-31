@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class LACDecisionFactorTest
 	{
-		[Test]
+		[TestCase]
 		public void LAC_DF_Test()
 		{
 			for (var vVehicle = 0.SI<MeterPerSecond>();

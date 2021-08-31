@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
-		[Test]
+		[TestCase]
 		public void DriverCoastingTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[Test]
+		[TestCase]
 		public void DriverCoastingTest2()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[Test]
+		[TestCase]
 		public void DriverOverloadTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.2900, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void DriverAccelerationTest()
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
@@ -358,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.2, response.SimulationInterval.Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void DriverDecelerationTest()
 		{
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);

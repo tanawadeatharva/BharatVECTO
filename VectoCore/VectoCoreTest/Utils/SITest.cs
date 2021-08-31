@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 	[Parallelizable(ParallelScope.All)]
 	public class SITest
 	{
-		[Test]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_TypicalUsageTest()
 		{
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             var res2 = 40.SI(Unit.SI.Newton).Cast<Newton>();
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_Test()
 		{
 			var si = 0.SI();
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(45.0 / 180.0 * Math.PI, VectoMath.InclinationToAngle(1).Value(), 0.000001);
 		}
 
-		[Test]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_Comparison_Operators()
 		{
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(1, 2.SI().CompareTo(1.SI()));
 		}
 
-		[Test]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_Test_Addition_Subtraction()
 		{
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				"Operator '-' can only operate on SI Objects with the same unit. Got: 1.0000 [s] - 1.0000 [m]");
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_SpecialUnits()
 		{
 			Scalar scalar = 3.SI<Scalar>();
@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// <summary>
 		/// VECTO-111
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void SI_ReziprokDivision()
 		{
 			var test = 2.0.SI<Second>();
@@ -302,7 +302,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(expected, actual);
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_Multiplication_Division()
 		{
 			AssertHelper.AreRelativeEqual(12.SI(), 3.SI() * 4.SI());
@@ -340,14 +340,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(2.SI<NormLiterPerSecond>(), 2.SI<NormLiterPerSecond>() * 1);
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_MeterPerSecond_Div_Meter()
 		{
 			PerSecond actual = 6.SI<MeterPerSecond>() / 2.SI<Meter>();
             AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Per.Second), actual);
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_SimplifyUnits()
 		{
             AssertHelper.AreRelativeEqual(3.SI(), 18.SI(Unit.SI.Kilo.Gramm) / 6.SI(Unit.SI.Kilo.Gramm));
@@ -370,14 +370,14 @@ namespace TUGraz.VectoCore.Tests.Utils
             // AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Meter.Per.Second), 3.SI<Newton>(Unit.SI.Second.Per.Kilo.Gramm));
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_Math()
 		{
 			AssertHelper.AreRelativeEqual(-3, -3.SI().Value());
 			AssertHelper.AreRelativeEqual(3.SI(), (-3).SI().Abs());
 		}
 
-		[Test]
+		[TestCase]
 		[SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
 		public void SI_Equality()
 		{
@@ -415,7 +415,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			4.SI<NewtonMeter>().GetHashCode();
 		}
 
-		[Test]
+		[TestCase]
 		public void SI_Output()
 		{
 			Assert.AreEqual("3.0000", 3.SI().ToOutputFormat());
@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual("0.5000 [m/s^2]", 0.5.SI<MeterPerSquareSecond>().ToOutputFormat(showUnit: true));
 		}
 		
-		[Test]
+		[TestCase]
         public void SI_Hash()
         {
             3.SI().GetHashCode();
@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             4.SI<NewtonMeter>().GetHashCode();
         }
 
-        [Test]
+        [TestCase]
         public void SI_ConstructorPerformance()
         {
             for (var i = 0; i < 5e5; i++)
@@ -461,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
         }
 
-        [Test]
+        [TestCase]
         public void SI_CheckForEqualUnitPerformance()
         {
 
@@ -483,7 +483,7 @@ namespace TUGraz.VectoCore.Tests.Utils
         }
 
 
-        [Test]
+        [TestCase]
         public void SI_NeutralArithmeticPerformance()
         {
 
@@ -505,7 +505,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             }
         }
 
-        [Test]
+        [TestCase]
         public void SI_SpecialArithmeticPerformance()
         {
 
@@ -527,7 +527,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             }
         }
 
-        [Test]
+        [TestCase]
         public void SI_NewTests()
         {
             UnitInstance sikg = Unit.SI.Kilo.Gramm;
@@ -573,7 +573,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual("m^3", 2.13093.SI(Unit.SI.Liter).UnitString);
 		}
 
-		//[Test]
+		//[TestCase]
   //      public void SI_ConvertValues()
   //      {
   //          var sig1 = 5.SI(Unit.SI.Gramm);

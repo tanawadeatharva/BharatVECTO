@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadJobTest()
 		{
 			var job = JSONInputDataFactory.ReadJsonJob(TestJobFile);
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			//			AssertHelper.Exception<InvalidFileFormatException>(() => );
 		}
 
-		[Test]
+		[TestCase]
 		public void NoEngineFileTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				"JobFile: Failed to read Engine file '': Key EngineFile not found");
 		}
 
-		[Test]
+		[TestCase]
 		public void NoGearboxFileTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				"JobFile: Failed to read Gearbox file '': Key GearboxFile not found");
 		}
 
-		[Test]
+		[TestCase]
 		public void NoVehicleFileTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				"JobFile: Failed to read Vehicle file '': Key VehicleFile not found");
 		}
 
-		[Test]
+		[TestCase]
 		public void NoCyclesTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0, tmp.Count);
 		}
 
-		[Test]
+		[TestCase]
 		public void NoAuxTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0, tmp.PowerDemandICEOffStandstill.Value());
 		}
 
-		[Test]
+		[TestCase]
 		public void NoDriverAccCurveTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsNull(tmp);
 		}
 
-		[Test]
+		[TestCase]
 		public void UseDeclarationDriverAccCurveTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsNotNull(tmp);
 		}
 
-		[Test]
+		[TestCase]
 		public void NoLookaheadCoastingTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsNull(tmp);
 		}
 
-		[Test]
+		[TestCase]
 		public void NoOverspeedEcoRollTest()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				"Key OverSpeedEcoRoll not found");
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxV5()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\Gearbox_v5.vgbx");
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxSerialTC()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerial.vgbx");
@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxPowersplitTC()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxPowerSplit.vgbx");
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxDualTCTruck()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxSingleTCBus()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
@@ -404,7 +404,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		[Test]
+		[TestCase]
 		public void ReadGearboxDualTCBus()
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTCBus.vgbx");
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
-		//[Test]
+		//[TestCase]
 		//public void TestReadingElectricTechlist()
 		//{
 		//	var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
@@ -468,7 +468,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		//	}
 		//}
 
-		[Test]
+		[TestCase]
 		public void JSON_Read_AngleGear()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 
-		[Test]
+		[TestCase]
 		public void JSON_Read_HeavyBus()
 		{
 			var inputProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto");
@@ -578,7 +578,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//  ""FileVersion"": 7
 	//}";
 
-	//		[Test]
+	//		[TestCase]
 	//		public void TestJsonHeaderEquality()
 	//		{
 	//			var h1 = new JsonDataHeader {
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreNotEqual(h1, "hello world");
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_German()
 	//		{
 	//			var json = @"{
@@ -619,7 +619,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreEqual(jsonExpected, jsonCompare);
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_German2()
 	//		{
 	//			var json = @"{
@@ -639,7 +639,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreEqual(jsonExpected2, jsonCompare);
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_English()
 	//		{
 	//			var json = @"{
@@ -659,7 +659,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreEqual(jsonExpected, jsonCompare);
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_English2()
 	//		{
 	//			var json = @"{
@@ -679,7 +679,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreEqual(jsonExpected2, jsonCompare);
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_ISO8601()
 	//		{
 	//			var json = @"{
@@ -699,7 +699,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	//			Assert.AreEqual(json, jsonCompare);
 	//		}
 
-	//		[Test]
+	//		[TestCase]
 	//		public void Test_Json_DateFormat_ISO8601_CET()
 	//		{
 	//			var json = @"{

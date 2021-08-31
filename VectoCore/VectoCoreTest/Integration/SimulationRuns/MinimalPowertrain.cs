@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestWheelsAndEngineInitialize()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			NLog.LogManager.EnableLogging();
 		}
 
-		[Test]
+		[TestCase]
 		public void TestWheelsAndEngineLookahead()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);

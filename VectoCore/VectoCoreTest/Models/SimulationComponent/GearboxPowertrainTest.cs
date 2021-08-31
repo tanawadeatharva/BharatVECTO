@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[Test]
+		[TestCase]
 		public void Gearbox_Initialize_Empty()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(65.6890, container.EngineInfo.EngineSpeed);
 		}
 
-		[Test]
+		[TestCase]
 		public void Gearbox_Initialize_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(87.3192, container.EngineInfo.EngineSpeed);
 		}
 
-		[Test]
+		[TestCase]
 		public void Gearbox_Initialize_85_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {

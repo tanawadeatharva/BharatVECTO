@@ -2318,7 +2318,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		}
 
-		[Test]
+		[TestCase]
 		public void TestWHRMech_ModDataCorrection()
 		{
 			var runData = GetRunData();

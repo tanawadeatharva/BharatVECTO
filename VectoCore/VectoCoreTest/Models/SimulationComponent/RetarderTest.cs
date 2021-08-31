@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
 		}
 
-		[Test]
+		[TestCase]
 		public void RetarderSubsequentRequestTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		}
 
-		[Test]
+		[TestCase]
 		public void RetarderDeclarationTest()
 		{
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:5100 (min:0, max:2300), ratio:2");
 		}
 
-		[Test]
+		[TestCase]
 		public void RetarderDataSorting()
 		{
 			var retarderEntries = new[] {

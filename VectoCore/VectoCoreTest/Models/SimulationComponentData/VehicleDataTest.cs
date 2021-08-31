@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	{
 		private const string VehicleDataFile = @"TestData\Components\24t Coach.vveh";
 
-		[Test]
+		[TestCase]
 		public void ReadVehicleFileTest()
 		{
 			//IDataFileReader reader = new EngineeringModeSimulationDataReader();
