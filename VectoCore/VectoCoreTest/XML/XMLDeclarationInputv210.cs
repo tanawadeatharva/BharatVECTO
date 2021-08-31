@@ -9,6 +9,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
@@ -255,17 +256,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			TestElectricStorageElements(vehicle.Components.ElectricStorage.ElectricStorageElements);
-
-
+			
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
 //			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 //			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
-
-
-
 
 		#region Test Electric Machines Reader
 
@@ -358,27 +355,97 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			Assert.IsNotNull(elements);
 			Assert.AreEqual(2, elements.Count);
-
-			foreach (var entry in elements) {
-				TestREESS(entry);
-			}
-
-
-
+			
+			TestFirstBatterySystemEntry(elements[0]);
+			TestSecondBatterySystemEntry(elements[1]);
 		}
 
-		private void TestREESS(IElectricStorageDeclarationInputData storage)
+		private void TestFirstBatterySystemEntry(IElectricStorageDeclarationInputData entry)
 		{
-			Assert.AreEqual(1, storage.StringId);
+			Assert.AreEqual(0, entry.StringId);
+			Assert.AreEqual("a", entry.REESSPack.Manufacturer);
+			Assert.AreEqual("a", entry.REESSPack.Model);
+			Assert.AreEqual("tokena", entry.REESSPack.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-01-01T00:00:00Z").ToUniversalTime(), entry.REESSPack.Date);
+			Assert.AreEqual("aaaaa", entry.REESSPack.AppVersion);
+			Assert.AreEqual(CertificationMethod.Measured, entry.REESSPack.CertificationMethod);
+			Assert.IsNotNull(entry.REESSPack.DigestValue);
+
+			var battery = (IBatteryPackDeclarationInputData)entry.REESSPack;
+			Assert.AreEqual(20, battery.MinSOC);
+			Assert.AreEqual(80, battery.MaxSOC);
+			Assert.AreEqual(BatteryType.HPBS, battery.BatteryType);
+			Assert.AreEqual(72.00.SI<AmpereSecond>() * 3600, battery.Capacity);
+			Assert.AreEqual(true, battery.ConnectorsSubsystemsIncluded);
+			Assert.AreEqual(true, battery.JunctionboxIncluded);
+			Assert.AreEqual(20.0.DegCelsiusToKelvin(), battery.TestingTemperature);
+
+			Assert.IsNotNull(battery.VoltageCurve);//OVC Data
+			TestOCVTableRow("0", "620.00", battery.VoltageCurve.Rows[0]);
+			TestOCVTableRow("100", "640.00", battery.VoltageCurve.Rows[1]);
+			Assert.IsNotNull(battery.InternalResistanceCurve);
+			TestInternalResistanceTableRow("0", "10.00", "11.00", "12.00", battery.InternalResistanceCurve.Rows[0]);
+			TestInternalResistanceTableRow("100","12.00" ,"14.00","16.00", battery.InternalResistanceCurve.Rows[1]);
+			Assert.IsNotNull(battery.MaxCurrentMap);//CurrentLimits Data
+			TestCurrentLimitsTableRow("0", "50.00", "0.00", battery.MaxCurrentMap.Rows[0]);
+			TestCurrentLimitsTableRow("100", "0.00", "50.00", battery.MaxCurrentMap.Rows[1]);
 		}
 
+		private void TestSecondBatterySystemEntry(IElectricStorageDeclarationInputData entry)
+		{
+			Assert.AreEqual(1, entry.StringId);
+			Assert.AreEqual("b", entry.REESSPack.Manufacturer);
+			Assert.AreEqual("b", entry.REESSPack.Model);
+			Assert.AreEqual("tokenb", entry.REESSPack.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-02-02T00:00:00Z").ToUniversalTime(), entry.REESSPack.Date);
+			Assert.AreEqual("bbbbb", entry.REESSPack.AppVersion);
+			Assert.AreEqual(CertificationMethod.Measured, entry.REESSPack.CertificationMethod);
+			Assert.IsNotNull(entry.REESSPack.DigestValue);
 
+			var battery = (IBatteryPackDeclarationInputData)entry.REESSPack;
+			Assert.IsNull(battery.MinSOC);
+			Assert.IsNull(battery.MaxSOC);
+			Assert.AreEqual(BatteryType.HPBS, battery.BatteryType);
+			Assert.AreEqual(73.00.SI<AmpereSecond>() * 3600, battery.Capacity);
+			Assert.AreEqual(true, battery.ConnectorsSubsystemsIncluded);
+			Assert.AreEqual(true, battery.JunctionboxIncluded);
+			Assert.AreEqual(20.0.DegCelsiusToKelvin(), battery.TestingTemperature);
+
+			Assert.IsNotNull(battery.VoltageCurve);//OVC Data
+			TestOCVTableRow("0", "621.00", battery.VoltageCurve.Rows[0]);
+			TestOCVTableRow("100", "641.00", battery.VoltageCurve.Rows[1]);
+			Assert.IsNotNull(battery.InternalResistanceCurve);
+			TestInternalResistanceTableRow("0", "11.00", "12.00", "13.00", battery.InternalResistanceCurve.Rows[0]);
+			TestInternalResistanceTableRow("100", "12.00", "14.00", "16.00", battery.InternalResistanceCurve.Rows[1]);
+			Assert.IsNotNull(battery.MaxCurrentMap);//CurrentLimits Data
+			TestCurrentLimitsTableRow("0", "51.00", "0.00", battery.MaxCurrentMap.Rows[0]);
+			TestCurrentLimitsTableRow("100", "0.00", "50.00", battery.MaxCurrentMap.Rows[1]);
+		}
+
+		private void TestOCVTableRow(string soc, string ocv, DataRow row)
+		{
+			Assert.AreEqual(soc, row[XMLNames.REESS_OCV_SoC]);
+			Assert.AreEqual(ocv, row[XMLNames.REESS_OCV_OCV]);
+		}
+
+		private void TestInternalResistanceTableRow(string soc, string r2, string r10, string r20, DataRow row)
+		{
+			Assert.AreEqual(soc, row[XMLNames.REESS_InternalResistanceCurve_SoC]);
+			Assert.AreEqual(r2, row[XMLNames.REESS_InternalResistanceCurve_R2]);
+			Assert.AreEqual(r10, row[XMLNames.REESS_InternalResistanceCurve_R10]);
+			Assert.AreEqual(r20, row[XMLNames.REESS_InternalResistanceCurve_R20]);
+		}
 		
+		private void TestCurrentLimitsTableRow(string soc, string maxChargingCurrent, string maxDischargingCurrent,
+			DataRow row)
+		{
+			Assert.AreEqual(soc, row[XMLNames.REESS_CurrentLimits_SoC]);
+			Assert.AreEqual(maxChargingCurrent, row[XMLNames.REESS_CurrentLimits_MaxChargingCurrent]);
+			Assert.AreEqual(maxDischargingCurrent, row[XMLNames.REESS_CurrentLimits_MaxDischargingCurrent]);
+		}
+
 
 		#endregion
-
-
-
 
 		#region Test existence of torque converter
 

@@ -805,9 +805,9 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
 	{
-		double MinSOC { get; }
+		double? MinSOC { get; }
 
-		double MaxSOC { get; }
+		double? MaxSOC { get; }
 
 		BatteryType BatteryType { get; }
 

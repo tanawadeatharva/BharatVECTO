@@ -26,9 +26,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public DigestData DigestValue => null;
 
-		public double MinSOC => Body.GetEx<double>("SOC_min") / 100.0;
+		public double? MinSOC => Body.GetEx<double>("SOC_min") / 100.0;
 
-		public double MaxSOC => Body.GetEx<double>("SOC_max") / 100.0;
+		public double? MaxSOC => Body.GetEx<double>("SOC_max") / 100.0;
 		public BatteryType BatteryType { get; }
 
 		AmpereSecond IBatteryPackDeclarationInputData.Capacity => Body.GetEx<double>("Capacity").SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();

@@ -1638,4 +1638,70 @@
   <data name="ElectricEnergyStorage_Capacitor" xml:space="preserve">
     <value>Capacitor</value>
   </data>
+  <data name="Battery_SOCmax" xml:space="preserve">
+    <value>SOCmax</value>
+  </data>
+  <data name="Battery_SOCmin" xml:space="preserve">
+    <value>SOCmin</value>
+  </data>
+  <data name="Battery_StringID" xml:space="preserve">
+    <value>StringID</value>
+  </data>
+  <data name="REESS_BatteryType" xml:space="preserve">
+    <value>BatteryType</value>
+  </data>
+  <data name="REESS_ConnectorsSubsystemsIncluded" xml:space="preserve">
+    <value>ConnectorsSubsystemsIncluded</value>
+  </data>
+  <data name="REESS_CurrentLimits" xml:space="preserve">
+    <value>CurrentLimits</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve" xml:space="preserve">
+    <value>InternalResistance</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R10" xml:space="preserve">
+    <value>R_10</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R120" xml:space="preserve">
+    <value>R_120</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R2" xml:space="preserve">
+    <value>R_2</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R20" xml:space="preserve">
+    <value>R_20</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
+  <data name="REESS_JunctionboxIncluded" xml:space="preserve">
+    <value>JunctionboxIncluded</value>
+  </data>
+  <data name="REESS_MapEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="REESS_OCV" xml:space="preserve">
+    <value>OCV</value>
+  </data>
+  <data name="REESS_OCV_OCV" xml:space="preserve">
+    <value>OCV</value>
+  </data>
+  <data name="REESS_OCV_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
+  <data name="REESS_RatedCapacity" xml:space="preserve">
+    <value>RatedCapacity</value>
+  </data>
+  <data name="REESS_TestingTemperature" xml:space="preserve">
+    <value>TestingTemperature</value>
+  </data>
+  <data name="REESS_CurrentLimits_MaxChargingCurrent" xml:space="preserve">
+    <value>maxChargingCurrent</value>
+  </data>
+  <data name="REESS_CurrentLimits_MaxDischargingCurrent" xml:space="preserve">
+    <value>maxDischargingCurrent</value>
+  </data>
+  <data name="REESS_CurrentLimits_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
 </root>

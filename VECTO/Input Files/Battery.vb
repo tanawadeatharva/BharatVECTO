@@ -211,13 +211,13 @@ Public Class Battery
         End Get
     End Property
 
-    Public ReadOnly Property MinSOC As Double Implements IBatteryPackDeclarationInputData.MinSOC
+    Public ReadOnly Property MinSOC As Double? Implements IBatteryPackDeclarationInputData.MinSOC
         Get
             Return BatMinSoc / 100.0
         End Get
     End Property
 
-    Public ReadOnly Property MaxSOC As Double Implements IBatteryPackDeclarationInputData.MaxSOC
+    Public ReadOnly Property MaxSOC As Double? Implements IBatteryPackDeclarationInputData.MaxSOC
         Get
             Return BatMaxSoc / 100.0
         End Get

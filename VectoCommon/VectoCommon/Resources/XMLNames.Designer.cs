@@ -493,6 +493,33 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SOCmax.
+        /// </summary>
+        public static string Battery_SOCmax {
+            get {
+                return ResourceManager.GetString("Battery_SOCmax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SOCmin.
+        /// </summary>
+        public static string Battery_SOCmin {
+            get {
+                return ResourceManager.GetString("Battery_SOCmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StringID.
+        /// </summary>
+        public static string Battery_StringID {
+            get {
+                return ResourceManager.GetString("Battery_StringID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
         /// </summary>
         public static string Bus_ADAS_APTEcoRollReleaseLockupClutch {
@@ -2838,6 +2865,177 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Missions_Cycle {
             get {
                 return ResourceManager.GetString("Missions_Cycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BatteryType.
+        /// </summary>
+        public static string REESS_BatteryType {
+            get {
+                return ResourceManager.GetString("REESS_BatteryType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConnectorsSubsystemsIncluded.
+        /// </summary>
+        public static string REESS_ConnectorsSubsystemsIncluded {
+            get {
+                return ResourceManager.GetString("REESS_ConnectorsSubsystemsIncluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CurrentLimits.
+        /// </summary>
+        public static string REESS_CurrentLimits {
+            get {
+                return ResourceManager.GetString("REESS_CurrentLimits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to maxChargingCurrent.
+        /// </summary>
+        public static string REESS_CurrentLimits_MaxChargingCurrent {
+            get {
+                return ResourceManager.GetString("REESS_CurrentLimits_MaxChargingCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to maxDischargingCurrent.
+        /// </summary>
+        public static string REESS_CurrentLimits_MaxDischargingCurrent {
+            get {
+                return ResourceManager.GetString("REESS_CurrentLimits_MaxDischargingCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SoC.
+        /// </summary>
+        public static string REESS_CurrentLimits_SoC {
+            get {
+                return ResourceManager.GetString("REESS_CurrentLimits_SoC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InternalResistance.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R_10.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve_R10 {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve_R10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R_120.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve_R120 {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve_R120", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R_2.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve_R2 {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve_R2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R_20.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve_R20 {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve_R20", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SoC.
+        /// </summary>
+        public static string REESS_InternalResistanceCurve_SoC {
+            get {
+                return ResourceManager.GetString("REESS_InternalResistanceCurve_SoC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JunctionboxIncluded.
+        /// </summary>
+        public static string REESS_JunctionboxIncluded {
+            get {
+                return ResourceManager.GetString("REESS_JunctionboxIncluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string REESS_MapEntry {
+            get {
+                return ResourceManager.GetString("REESS_MapEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OCV.
+        /// </summary>
+        public static string REESS_OCV {
+            get {
+                return ResourceManager.GetString("REESS_OCV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OCV.
+        /// </summary>
+        public static string REESS_OCV_OCV {
+            get {
+                return ResourceManager.GetString("REESS_OCV_OCV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SoC.
+        /// </summary>
+        public static string REESS_OCV_SoC {
+            get {
+                return ResourceManager.GetString("REESS_OCV_SoC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatedCapacity.
+        /// </summary>
+        public static string REESS_RatedCapacity {
+            get {
+                return ResourceManager.GetString("REESS_RatedCapacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TestingTemperature.
+        /// </summary>
+        public static string REESS_TestingTemperature {
+            get {
+                return ResourceManager.GetString("REESS_TestingTemperature", resourceCulture);
             }
         }
         
