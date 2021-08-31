@@ -497,7 +497,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var maxAlternatorPower =
-					Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null;
+					Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>();
 
 				if (maxAlternatorPower == null) {
 					return null;
@@ -512,7 +512,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				var batteryCapacity =  Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null;
+				var batteryCapacity =  Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>();
 				if (batteryCapacity == null) {
 					return null;
 				}
@@ -538,7 +538,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool SmartElectrics => Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false;
 
-		public WattSecond ElectricStorageCapacity => Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null;
+		public WattSecond ElectricStorageCapacity => Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>();
 
 		#endregion
 

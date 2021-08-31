@@ -63,6 +63,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 			return retVal.ToArray();
 		}
-
 	}
 }

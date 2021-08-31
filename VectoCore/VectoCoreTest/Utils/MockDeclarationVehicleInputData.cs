@@ -89,9 +89,6 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 	public class MockEngineeringVehicleInputData : IVehicleEngineeringInputData, IVehicleComponentsEngineering
 	{
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
-		private IVehicleComponentsDeclaration _components;
-
 		#region Implementation of IComponentInputData
 
 		public DataSource DataSource { get; }
@@ -131,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public VehicleCode? VehicleCode { get; set; }
 		public bool? LowEntry { get; }
 
-		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => _components;
+		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 
 		public XmlNode XMLSource { get; }
 
@@ -152,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool? AirdragModifiedMultistage { get; }
 		public TankSystem? TankSystem { get; }
 
-		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => _adas;
+		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 
 		public double InitialSOC { get; }
 		public VectoSimulationJobType VehicleType { get; }

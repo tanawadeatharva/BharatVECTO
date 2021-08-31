@@ -65,13 +65,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true)
+			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true, bool writeModalResults = false)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			ModWriter = writer;
 			Validate = validate;
+			WriteModalResults = writeModalResults;
 
 			ThreadPool.GetMinThreads(out var workerThreads, out var completionThreads);
 			if (workerThreads < 12) {

@@ -174,12 +174,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 
 				PrimaryResult = runData.PrimaryResult;
-			
+
 			}
 
 		}
 
-		
+
 
 		public virtual XDocument FullReport => ManufacturerRpt.Report;
 
@@ -200,9 +200,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1)) {
 				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
 			}
-			
-				ManufacturerRpt.WriteResult(result);
-				CustomerRpt.WriteResult(result);
+
+			ManufacturerRpt.WriteResult(result);
+			CustomerRpt.WriteResult(result);
 		}
 
 		protected override void GenerateReports()
@@ -243,6 +243,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
 				: DeclarationData.WeightingFactors.Lookup(WeightingGroup);
+
 
 			InstantiateReports(modelData);
 

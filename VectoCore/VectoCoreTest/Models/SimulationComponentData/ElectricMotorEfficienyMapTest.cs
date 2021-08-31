@@ -7,6 +7,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorEfficienyMapTest
 	{
 

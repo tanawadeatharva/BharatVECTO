@@ -25,9 +25,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			var result = new EfficiencyResult();
 			result.Torque = torque;
 			var value = _efficiencyMapMech2El.Interpolate(torque, angularSpeed);
-			if (value.HasValue)
+			if (!value.IsNaN())
 			{
-				result.ElectricalPower = value.Value.SI<Watt>();
+				result.ElectricalPower = value.SI<Watt>();
 				return result;
 			}
 			if (allowExtrapolation)

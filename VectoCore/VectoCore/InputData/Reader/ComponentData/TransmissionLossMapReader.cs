@@ -114,10 +114,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[2].ColumnName = Fields.TorqeLoss;
 			}
 			entries = (from DataRow row in data.Rows
-					select new TransmissionLossMap.GearLossMapEntry(
-						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
-						inputTorque: -row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
-						torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+					   select new TransmissionLossMap.GearLossMapEntry(
+						   inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						   inputTorque: -row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						   torqueLoss: -row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 
 			return new TransmissionLossMap(entries, gearRatio, gearName);
@@ -148,8 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					continue;
 				}
 
-				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out var k, out var d,
-					out var r);
+				var (k, d) = VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value());
 
 				for (var i = 2; i <= DeclarationData.LossMapExtrapolationFactor; i++) {
 					var inTq = i * maxTorque;
@@ -242,20 +241,20 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumnNames(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new TransmissionLossMap.GearLossMapEntry(
-					inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
-					inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 		}
 
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumIndizes(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new TransmissionLossMap.GearLossMapEntry(
-					inputSpeed: row.ParseDouble(0).RPMtoRad(),
-					inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(0).RPMtoRad(),
+						inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
 				.ToList();
 		}
 

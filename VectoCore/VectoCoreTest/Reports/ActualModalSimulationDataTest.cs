@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		[Category("LongRunning")]
-		[Test]
+		[TestCase]
 		public void TestWriteActualModData()
 		{
 			const string jobFile = @"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";

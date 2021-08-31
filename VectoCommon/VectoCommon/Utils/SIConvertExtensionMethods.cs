@@ -237,7 +237,7 @@ namespace TUGraz.VectoCommon.Utils
 			return new ConvertedSI(value.Value() / Kilo / Kilo, "MJ/kg");
 		}
 
-		public static ConvertedSI ConvertToKiloWattHourPerKilogramm(this JoulePerKilogramm value)
+		public static ConvertedSI ConvertToKiloWattHourPerKilogram(this JoulePerKilogramm value)
 		{
 			return new ConvertedSI(value.Value() / SecondsPerHour / Kilo, "kWh/kg");
 		}
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCommon.Utils
 			return new ConvertedSI(nlps.Value() * 60.0, "Nl/min");
 		}
 
-		public static ConvertedSI ConvertToMegaJouleperKilometer(this JoulePerMeter jpm)
+		public static ConvertedSI ConvertToMegaJoulePerKilometer(this JoulePerMeter jpm)
 		{
 			return new ConvertedSI(jpm.Value() * 1e-3, "MJ/km");
 		}

@@ -309,8 +309,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected readonly IEnumerable<IManufacturingStageInputData> _manufacturingStages;
 		private string _invalidEntry;
 		protected IList<string> _invalidEntries = new List<string>();
-		protected bool _fullChecked = false;
-		protected bool _checked = false;
+		protected bool _fullChecked;
+		protected bool _checked;
 		protected bool _isComplete = true;
 
 		protected string InvalidEntry

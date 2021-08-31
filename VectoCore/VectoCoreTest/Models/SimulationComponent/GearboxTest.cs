@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
-		[Test]
+		[TestCase]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);

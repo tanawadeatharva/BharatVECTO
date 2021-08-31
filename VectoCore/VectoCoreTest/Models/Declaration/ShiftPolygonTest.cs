@@ -670,6 +670,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	}
 
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonComparison
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
@@ -859,10 +860,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		]
 		public void IsLeftOf_Test(bool result, double speed, double torque)
 		{
-			var segment = Tuple.Create(
-				new ShiftPolygon.ShiftPolygonEntry(550.SI<NewtonMeter>(), 685.RPMtoRad()),
-				new ShiftPolygon.ShiftPolygonEntry(1200.SI<NewtonMeter>(), 1080.RPMtoRad())
-				);
+			var segment = (new ShiftPolygon.ShiftPolygonEntry(550.SI<NewtonMeter>(), 685.RPMtoRad()), 
+					new ShiftPolygon.ShiftPolygonEntry(1200.SI<NewtonMeter>(), 1080.RPMtoRad()));
 
 			Assert.AreEqual(result, ShiftPolygon.IsLeftOf(speed.RPMtoRad(), torque.SI<NewtonMeter>(), segment));
 		}

@@ -20,6 +20,7 @@ using Battery = TUGraz.VectoCore.Models.SimulationComponent.Impl.Battery;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BatteryTest
 	{
 		public const string componentFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";

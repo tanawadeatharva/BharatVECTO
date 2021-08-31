@@ -29,14 +29,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[SIRange(0, double.MaxValue)]
 		public Second OverloadTime { get; internal set; }
-		
+
 		[SIRange(0, 1)]
 		public double OverloadRegenerationFactor { get; internal set; }
 
 		public double RatioADC { get; internal set; }
-		
+
 		public TransmissionLossMap TransmissionLossMap { get; internal set; }
-		
+
 		public double[] RatioPerGear { get; set; }
 
 		[ValidateObject]
@@ -50,22 +50,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public IList<ElectricMotorVoltageLevelData> VoltageLevels { get; internal set; }
 
 
-		public PerSecond MaxSpeed
-		{
-			get
-			{
-				return _maxSpeed ?? (_maxSpeed = VoltageLevels
-					.Min(v => VectoMath.Min(v.EfficiencyMap.MaxSpeed, v.FullLoadCurve.MaxSpeed)));
-			}
-		}
+		public PerSecond MaxSpeed =>
+			_maxSpeed ?? (_maxSpeed = VoltageLevels
+				.Min(v => VectoMath.Min(v.EfficiencyMap.MaxSpeed, v.FullLoadCurve.MaxSpeed)));
 
-		public NewtonMeter LookupDragTorque(Volt voltage, PerSecond avgSpeed)
-		{
-			var tuple = GetSection(voltage);
-
-			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
-				tuple.Item1.DragCurve.Lookup(avgSpeed),
-				tuple.Item2.DragCurve.Lookup(avgSpeed), voltage);
+		public NewtonMeter LookupDragTorque(Volt voltage, PerSecond avgSpeed) {
+			var (a, b) = GetSection(voltage);
+			return VectoMath.Interpolate(a.Voltage, b.Voltage, 
+				a.DragCurve.Lookup(avgSpeed), b.DragCurve.Lookup(avgSpeed), voltage);
 		}
 
 		public NewtonMeter EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
@@ -73,15 +65,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
-			var tuple = GetSection(voltage);
-			var r1 = tuple.Item1.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
-			var r2 = tuple.Item2.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			var (a, b) = GetSection(voltage);
+			var r1 = a.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			var r2 = b.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 
 			if (r1 == null && r2 == null) {
 				return null;
 			}
 
-			var retVal = VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
+			var retVal = VectoMath.Interpolate(a.Voltage, b.Voltage,
 				r1, r2, voltage);
 			var elPwr = LookupElectricPower(voltage, avgSpeed, retVal, true);
 			if (elPwr.ElectricalPower != null && electricPower.IsEqual(elPwr.ElectricalPower, 1e-3.SI<Watt>())) {
@@ -89,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			var searchResult = SearchAlgorithm.Search(retVal, electricPower - elPwr.ElectricalPower,
-				interval: 10.SI<NewtonMeter>(), 
+				interval: 10.SI<NewtonMeter>(),
 				getYValue: x => (Watt)x,
 				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
 				criterion: x => ((Watt)x).Value()
@@ -109,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			if (r1 == null || r2 == null || r1.ElectricalPower == null || r2.ElectricalPower == null) {
 				return new EfficiencyMap.EfficiencyResult() {
-					ElectricalPower =  null,
+					ElectricalPower = null,
 					Speed = avgSpeed,
 					Torque = torque
 				};
@@ -137,21 +129,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			var tuple = GetSection(voltage);
+			var (electricMotorVoltageLevelData, item2) = GetSection(voltage);
 
-			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
-				tuple.Item1.FullLoadCurve.FullLoadDriveTorque(avgSpeed),
-				tuple.Item2.FullLoadCurve.FullLoadDriveTorque(avgSpeed), voltage);
+			return VectoMath.Interpolate(electricMotorVoltageLevelData.Voltage, item2.Voltage,
+				electricMotorVoltageLevelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed),
+				item2.FullLoadCurve.FullLoadDriveTorque(avgSpeed), voltage);
 		}
 
-		protected Tuple<ElectricMotorVoltageLevelData, ElectricMotorVoltageLevelData> GetSection(Volt voltage)
+		protected (ElectricMotorVoltageLevelData, ElectricMotorVoltageLevelData) GetSection(Volt voltage)
 		{
 			if (voltage < VoltageLevels.First().Voltage) {
-				return Tuple.Create(VoltageLevels.First(), VoltageLevels.First());
+				return (VoltageLevels.First(), VoltageLevels.First());
 			}
 
 			if (voltage > VoltageLevels.Last().Voltage) {
-				return Tuple.Create(VoltageLevels.Last(), VoltageLevels.Last());
+				return (VoltageLevels.Last(), VoltageLevels.Last());
 			}
 			return VoltageLevels.GetSection(x => voltage > x.Voltage);
 		}
@@ -171,6 +163,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public EfficiencyMap EfficiencyMap { get; internal set; }
 
-		
+
 	}
 }

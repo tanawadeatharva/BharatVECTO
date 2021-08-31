@@ -55,8 +55,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
-		private ITorqueConverter _torqueConverter;
-		private IGearboxInfo _gearboxInfoImplementation;
 
 		public IAxlegearInfo AxlegearInfo => this;
 
@@ -111,9 +109,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public ITorqueConverterInfo TorqueConverterInfo => _torqueConverter;
+		public ITorqueConverterInfo TorqueConverterInfo => null;
 
-		public ITorqueConverterControl TorqueConverterCtl => _torqueConverter;
+		public ITorqueConverterControl TorqueConverterCtl => null;
 
 		public IPowertainInfo PowertrainInfo => this;
 
@@ -130,9 +128,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Second LastShift { get;  set; }
-		public Second LastUpshift => _gearboxInfoImplementation.LastUpshift;
+		public Second LastUpshift => null;
 
-		public Second LastDownshift => _gearboxInfoImplementation.LastDownshift;
+		public Second LastDownshift => null;
 
 		public GearData GetGearData(uint gear)
 		{

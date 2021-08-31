@@ -15,6 +15,7 @@ namespace TUGraz.VectoCore.Tests.XML
 {
 
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLCompleteBusReaderTest
 	{
 		private const string CompleteBusExample =

@@ -35,6 +35,7 @@ using System.IO;
 using System.Text;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
@@ -54,15 +55,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			foreach (var entry in shiftPolygon.Upshift) {
 				var torque = Math.Round(entry.Torque.Value(), 4);
-				if (lines.ContainsKey(torque))
-					lines[torque].UpShift = entry.AngularSpeed;
-				else {
-					lines.Add(torque, new ShiftPolygonFileEntry {
-						Torque = entry.Torque,
-						DownShift = shiftPolygon.Downshift.Count > 0 ? shiftPolygon.InterpolateDownshiftSpeed(entry.Torque) : null,
-						UpShift = entry.AngularSpeed
-					});
-				}
+				var line = lines.GetOrAdd(torque, _ => new ShiftPolygonFileEntry {
+					Torque = entry.Torque,
+					DownShift = shiftPolygon.Downshift.Count > 0 ? shiftPolygon.InterpolateDownshiftSpeed(entry.Torque) : null
+				});
+				line.UpShift = entry.AngularSpeed;
 			}
 
 			var sb = new StringBuilder(lines.Count + 1);

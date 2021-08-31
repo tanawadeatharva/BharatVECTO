@@ -23,6 +23,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorTest
 	{
 		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
