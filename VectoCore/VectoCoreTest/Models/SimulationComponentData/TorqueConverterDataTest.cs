@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class TorqueConverterDataTest
 	{
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterDataDeclarationMode()
 		{
 			var tqInput = new[] {
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(5, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterExtendPowersplit()
 		{
 			var tqInput = new[] {
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterDataEngneeringMode_Append()
 		{
 			var tqInput = new[] {
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(5, tqData.TorqueConverterEntries.Last().SpeedRatio, 1e-9);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterDataEngineeringMode_Unmodified()
 		{
 			var tqInput = new[] {
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(operatingPoint.OutAngularVelocity.Value(), reverseOP.OutAngularVelocity.Value(), 1e-6);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterComparisonV2()
 		{
 			var tqLimit = 1600;
@@ -473,7 +473,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 
-		[Test]
+		[TestCase]
 		public void TestTorqueConverterBehavior()
 		{
 			var tqLimit = 1600;

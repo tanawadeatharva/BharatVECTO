@@ -43,6 +43,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineeringModeBusAuxTest
 	{
 		protected IXMLInputDataReader xmlInputReader;

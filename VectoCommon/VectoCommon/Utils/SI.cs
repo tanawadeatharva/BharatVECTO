@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -865,7 +864,7 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<MeterPerSecond>.Create(perSecond.Val * meter.Value());
 		}
-
+		
 		public double AsRPM => Val * 60 / (2 * Math.PI);
 	}
 
@@ -1448,6 +1447,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
+		[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;
@@ -1462,10 +1462,10 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("Infinity [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
 			}
 		}
-
+		[DebuggerHidden]
 		protected SI(double val, int[] units) : this(val, 1, units) { }
 
-
+		[DebuggerHidden]
 		public SI(UnitInstance si, double val = 0) : this(val * si.Factor, si.GetSIUnits()) { }
 
 		/// <summary>
@@ -1481,25 +1481,29 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <typeparam name="T">the specialized SI unit. e.g. Watt, NewtonMeter, Second</typeparam>
 		[DebuggerHidden]
-		public T Cast<T>() where T : SIBase<T>
-		{
+		public T Cast<T>() where T : SIBase<T> {
+			if (this is T t)
+				return t;
+
 			var si = ToBasicUnits();
 			var zero = SIBase<T>.Create(0);
-			var t = SIBase<T>.Create(si.Val / zero.UnitFactor);
-			if (!si.HasEqualUnit(t)) {
-				throw new VectoException("SI Unit Conversion failed: From {0} to {1}", si, t);
+			var casted = SIBase<T>.Create(si.Val / zero.UnitFactor);
+			if (!si.HasEqualUnit(casted)) {
+				throw new VectoException("SI Unit Conversion failed: From {0} to {1}", si, casted);
 			}
-			return t;
+			return casted;
 		}
-
+		
 		/// <summary>
 		/// Converts the derived SI units to the basic units and returns this as a new SI object.
 		/// </summary>
+		[DebuggerHidden]
 		public SI ToBasicUnits()
 		{
 			return new SI(Val * UnitFactor, _units);
 		}
 
+		[DebuggerHidden]
 		protected double AsBasicUnit => Val * UnitFactor;
 
 
@@ -1515,6 +1519,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Clones this instance.
 		/// </summary>
+		[DebuggerHidden]
 		public SI Clone()
 		{
 			return new SI(Val, _units);
@@ -1523,6 +1528,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Returns the absolute value.
 		/// </summary>
+		[DebuggerHidden]
 		public SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);

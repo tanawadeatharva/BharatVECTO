@@ -7,6 +7,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class TestGenericBusPowertrainModelData
 	{
 

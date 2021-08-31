@@ -27,7 +27,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
-	//[Parallelizable]
+	[Parallelizable(ParallelScope.All)]
 	public class ModDataPostprocessingTest
 	{
 		private double busAuxAlternatorEff = 0.753;

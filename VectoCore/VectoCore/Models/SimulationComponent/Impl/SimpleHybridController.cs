@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class SimpleHybridController : VectoSimulationComponent, IHybridController, ITnInPort, ITnOutPort
@@ -126,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque.ContainsKey(pos) ? _electricMotorTorque[pos].Item2 : null;
+			return _electricMotorTorque.GetValueOrDefault(pos)?.Item2;
 		}
 
 		///=======================================================================================

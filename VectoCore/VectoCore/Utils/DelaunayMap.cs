@@ -71,8 +71,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public IReadOnlyCollection<Point> Entries
 		{
-			get
-			{
+			get {
 				var retVal = new Point[_points.Count];
 				var i = 0;
 				foreach (var pt in _points) {
@@ -229,7 +228,8 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		public double? Interpolate(SI x, SI y)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public double Interpolate(SI x, SI y)
 		{
 			return Interpolate(x.Value(), y.Value());
 		}
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns>a value if interpolation is successfull, 
 		///          null if interpolation has failed.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public double? Interpolate(double x, double y)
+		public double Interpolate(double x, double y)
 		{
 			if (_triangles == null) {
 				throw new VectoException("Interpolation not possible. Call DelaunayMap.Triangulate first.");
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			if (i == _triangles.Length) {
-				return null;
+				return double.NaN;
 			}
 
 			var tr = _triangles[i];

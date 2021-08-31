@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var modData = new ModalDataContainer(runData, null, null);
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
-			builder.BuildSimplePowertrainE2(runData, TestContainer);
+			builder.BuildSimplePowertrainElectric(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
@@ -655,7 +655,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected bool IsBelowDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter emTorque, PerSecond emSpeed)
 		{
-			foreach (var entry in shiftPolygon.Downshift.Pairwise(Tuple.Create)) {
+			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
 				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
 				}
@@ -671,13 +671,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected bool IsAboveDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter emTorque, PerSecond emSpeed)
 		{
-			foreach (var entry in shiftPolygon.Downshift.Pairwise(Tuple.Create)) {
+			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
 				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
 				}
 
 				if (ShiftPolygon.IsRightOf(emSpeed, emTorque, entry)) {
-
 					return true;
 				}
 			}

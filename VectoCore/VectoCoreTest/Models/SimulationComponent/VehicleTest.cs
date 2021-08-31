@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         }
 
 
-        [Test]
+        [TestCase]
 		public void VehiclePortTest()
 		{
 			
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(expected, avgForce.Value(), Tolerance);
 		}
 
-		[Test]
+		[TestCase]
 		public void VehicleAirDragPowerLossDeclarationTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);

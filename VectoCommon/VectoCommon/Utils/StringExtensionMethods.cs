@@ -39,6 +39,12 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class StringExtensionMethods
 	{
+		public static string Slice(this string source, int start, int end) {
+			if (start < 0) start = source.Length + start;
+			if (end < 0) end = source.Length + end;
+			return source.Substring(start, end - start);
+		}
+
 		public static double ToDouble(this string self, double? defaultValue = null)
 		{
 			if (string.IsNullOrWhiteSpace(self)) {

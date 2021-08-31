@@ -63,6 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (!File.Exists(fileName)) {
 				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
 			}
+
 			using (var reader = File.OpenText(fileName)) {
 				return (JObject)JToken.ReadFrom(new JsonTextReader(reader));
 			}
@@ -108,13 +109,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, IJSONVehicleComponents job,  bool tolerateMissing = false)
+		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
 			switch (version) {
 				case 7:
-					return new JSONVehicleDataV7(json, filename, job,tolerateMissing);
+					return new JSONVehicleDataV7(json, filename, job, tolerateMissing);
 				case 8:
 					return new JSONVehicleDataV8(json, filename, job, tolerateMissing);
 				case 9:
@@ -194,8 +195,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version)
-			{
+			switch (version) {
 				case 1:
 					return new JSONBatteryV1(json, filename, tolerateMissing);
 				default:
@@ -207,8 +207,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version)
-			{
+			switch (version) {
 				case 1:
 					return new JSONElectricMotorV1(json, filename, tolerateMissing);
 				case 2:

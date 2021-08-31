@@ -35,13 +35,11 @@ using System.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -125,7 +123,6 @@ namespace TUGraz.VectoCore.Tests.XML
         ]
 		public void CreateRunDataMediumLorry(string jobFile)
 		{
-			var runIdx = 0;
 			//var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry-sample.xml";
 
 			var writer = new FileOutputWriter(jobFile);

@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {
-	[TestFixture()]
+	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class TestMaxMassInMUCycle
 	{

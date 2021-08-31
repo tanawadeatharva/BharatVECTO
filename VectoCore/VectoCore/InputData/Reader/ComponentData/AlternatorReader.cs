@@ -27,7 +27,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return ReadMap(File.OpenRead(filePath), Path.GetFullPath(filePath));
 		}
 
-		
 		public static IAlternatorMap ReadMap(Stream stream, string source = null)
 		{
 			//var returnValue = false;

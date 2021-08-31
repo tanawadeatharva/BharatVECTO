@@ -94,10 +94,10 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0, 0.75));
 
 			// extrapolation (should fail)
-			Assert.IsNull(map.Interpolate(1, 1));
-			Assert.IsNull(map.Interpolate(-1, -1));
-			Assert.IsNull(map.Interpolate(1, -1));
-			Assert.IsNull(map.Interpolate(-1, 1));
+			Assert.IsNaN(map.Interpolate(1, 1));
+			Assert.IsNaN(map.Interpolate(-1, -1));
+			Assert.IsNaN(map.Interpolate(1, -1));
+			Assert.IsNaN(map.Interpolate(-1, 1));
 		}
 
 		public void Test_DelaunayMapPlane()

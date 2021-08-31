@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				using (var fs = new StreamReader(File.OpenRead(fileName))) {
+				using (var fs = File.OpenText(fileName)) {
 					var retVal = new TableData(fileName);
 					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
 					return retVal;
@@ -120,11 +120,10 @@ namespace TUGraz.VectoCore.Utils
 				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
 				.ToArray();
 
-			double tmp;
 			var columns = colsWithoutComment
 				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
 				.Select(l => l.Trim())
-				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
+				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
 				.Distinct()
 				.ToList();
 

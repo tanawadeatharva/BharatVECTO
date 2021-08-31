@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Utils;
 
 // Copyright 2017 European Union.
 // Licensed under the EUPL (the 'Licence');
@@ -134,7 +135,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Ampere NominalCurrent(MissionType mission)
 		{
-			return _missions.ContainsKey(mission) ? _missions[mission] : 0.SI<Ampere>();
+			return _missions.GetValueOrDefault(mission, 0.SI<Ampere>());
 		}
 
 		public Ampere this[MissionType mission]

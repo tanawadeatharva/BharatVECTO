@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Ninject;
-using Ninject.Planning.Bindings.Resolvers;
 using NUnit.Framework;
-using TUGraz.VECTO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -30,7 +25,6 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -38,7 +32,8 @@ using Formatting = Newtonsoft.Json.Formatting;
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
 
-	[TestFixture()]
+	[TestFixture]
+	//[Parallelizable(ParallelScope.All)] --> job file executed more than 20 runs in parallel, which produces out-of-memory if run parallel
 	public class CompletedBusFactorMethodTest
 	{
 		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";

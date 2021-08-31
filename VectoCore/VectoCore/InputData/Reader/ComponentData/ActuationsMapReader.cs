@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					throw new VectoException("Duplicate entries in actuations map! {0} / {1}", key.GetLabel());
 				}
 
-				var entry = new Actuations() {
+				var entry = new Actuations {
 					Braking = row.Field<string>(Fields.Braking).ToInt(),
 					ParkBrakeAndDoors = row.Field<string>(Fields.ParkBrakeAndDoors).ToInt(),
 					Kneeling = row.Field<string>(Fields.Kneeling).ToInt(),

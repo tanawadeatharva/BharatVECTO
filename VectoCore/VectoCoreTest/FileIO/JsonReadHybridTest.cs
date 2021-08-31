@@ -8,10 +8,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Integration.Declaration;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
@@ -75,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
-			Assert.AreEqual(-10171.0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value());
+			Assert.AreEqual(-10171.0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
 			Assert.AreEqual(-20430.186, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
@@ -106,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("9.8449", pwrLow.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMapLow = ElectricMotorMapReader.Create(pwrLow, 1);
-			Assert.AreEqual(-10171.0, pwrMapLow.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value());
+			Assert.AreEqual(-10171.0, pwrMapLow.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
 			Assert.AreEqual(-20430.186, pwrMapLow.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
@@ -129,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("8.86041", pwrHi.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwrHi, 1);
-			Assert.AreEqual(-9153.9, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value());
+			Assert.AreEqual(-9153.9, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
 			Assert.AreEqual(-18387.16730, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 		}

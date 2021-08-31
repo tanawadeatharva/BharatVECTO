@@ -94,9 +94,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			foreach (var run in factory.SimulationRuns()) {
 				var entry = new RunEntry { Run = run, JobContainer = this };
-				Runs.Add(entry);
+				lock (Runs) {
+					Runs.Add(entry);
+				}
 				runIDs.Add(entry.Run.RunIdentifier);
 			}
+
 			return runIDs;
 		}
 

@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(expectedEngineSpeed, outPort.AngularVelocity.Value(), 0.001);
 		}
 
-		//[Test] // this test is just to make sure the clutch characteristic has no unsteadiness
+		//[TestCase] // this test is just to make sure the clutch characteristic has no unsteadiness
 		public void ClutchContinuityTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);

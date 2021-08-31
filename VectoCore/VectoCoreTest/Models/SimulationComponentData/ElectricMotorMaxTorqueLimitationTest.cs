@@ -11,6 +11,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorMaxTorqueLimitationTest
 	{
 		[OneTimeSetUp]

@@ -17,11 +17,6 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	public abstract class AbstractDeclarationVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected static readonly object CyclesCacheLock = new object();
-
-		protected static readonly Dictionary<MissionType, DrivingCycleData> CyclesCache =
-			new Dictionary<MissionType, DrivingCycleData>();
-
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;

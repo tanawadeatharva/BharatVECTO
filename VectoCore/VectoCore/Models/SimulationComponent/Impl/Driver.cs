@@ -496,13 +496,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (response) {
 				case ResponseSuccess _:
-					break;
-				case ResponseUnderload _:
-					break; // driver limits acceleration, operating point may be below engine's drag load resp. below 0
-				case ResponseOverload _:
-					break; // driver limits acceleration, operating point may be above 0 (GBX), use brakes
-				case ResponseEngineSpeedTooHigh _:
-					break; // reduce acceleration/vehicle speed
+				case ResponseUnderload _: // driver limits acceleration, operating point may be below engine's drag load resp. below 0
+				case ResponseOverload _: // driver limits acceleration, operating point may be above 0 (GBX), use brakes
+				case ResponseEngineSpeedTooHigh _: // reduce acceleration/vehicle speed
 				case ResponseGearShift _:
 					break;
 				case ResponseFailTimeInterval r:
