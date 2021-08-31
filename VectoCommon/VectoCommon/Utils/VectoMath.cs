@@ -573,6 +573,31 @@ namespace TUGraz.VectoCommon.Utils
 		#endregion
 	}
 
+	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]
+	public class Plane
+	{
+		public readonly double X;
+		public readonly double Y;
+		public readonly double Z;
+		public readonly double W;
+
+		public Plane(Triangle tr)
+		{
+			var abX = tr.P2.X - tr.P1.X;
+			var abY = tr.P2.Y - tr.P1.Y;
+			var abZ = tr.P2.Z - tr.P1.Z;
+
+			var acX = tr.P3.X - tr.P1.X;
+			var acY = tr.P3.Y - tr.P1.Y;
+			var acZ = tr.P3.Z - tr.P1.Z;
+
+			X = abY * acZ - abZ * acY;
+			Y = abZ * acX - abX * acZ;
+			Z = abX * acY - abY * acX;
+			W = tr.P1.X * X + tr.P1.Y * Y + tr.P1.Z * Z;
+		}
+	}
+
 	[DebuggerDisplay("Triangle(({P1.X}, {P1.Y}, {P1.Z}), ({P2.X}, {P2.Y}, {P2.Z}), ({P3.X}, {P3.Y}, {P3.Z}))")]
 	public class Triangle
 	{

@@ -37,6 +37,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -101,42 +102,43 @@ namespace TUGraz.VectoCore.Utils
 			_maxY = _points.Max(p => p.Y);
 			_minX = _points.Min(p => p.X);
 			_minY = _points.Min(p => p.Y);
-			_points = _points.Select(p => new Point((p.X - _minX) / (_maxX - _minX), (p.Y - _minY) / (_maxY - _minY), p.Z)).ToArray();
+			_points =
+				_points.Select(p => new Point((p.X - _minX) / (_maxX - _minX), (p.Y - _minY) / (_maxY - _minY), p.Z)).ToList();
 			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
 			var triangles = new List<Triangle> { superTriangle };
 
-			var n = 3; //starts with 3 points on supertriangle
-					   // iteratively add each point into the correct triangle and split up the triangle
-			var uniqueEdges = new HashSet<Edge>();
-			foreach (var point in _points) {
+			var pointCount = 0;
+
+			var points = _points.ToArray();
+
+			// iteratively add each point into the correct triangle and split up the triangle
+			foreach (var point in points) {
 				// If the vertex lies inside the circumcircle of a triangle, the edges of this triangle are 
 				// added to the edge buffer and the triangle is removed from list.
 				// Remove duplicate edges. This leaves the convex hull of the edges.
 				// The edges in this convex hull are oriented counterclockwise!
 
-				uniqueEdges.Clear();
-				for (var i = triangles.Count - 1; i >= 0; i--) {
-					if (triangles[i].ContainsInCircumcircle(point)) {
-						foreach (var edge in triangles[i].GetEdges()) {
-							if (uniqueEdges.Contains(edge)) {
-								uniqueEdges.Remove(edge);
-							} else {
-								uniqueEdges.Add(edge);
-							}
-						}
-						triangles.RemoveAt(i);
-					}
-				}
-				foreach (var edge in uniqueEdges) {
-					triangles.Add(new Triangle(point, edge.P1, edge.P2));
-				}
-				n++;
+				var newTriangles = triangles.Select((t, i) => Tuple.Create(i, t, t.ContainsInCircumcircle(point)))
+					.Where(t => t.Item3)
+					.Reverse()
+					.SelectMany(t => {
+						triangles.RemoveAt(t.Item1);
+						return t.Item2.GetEdges();
+					})
+					.GroupBy(edge => edge)
+					.Where(group => group.Count() == 1)
+					.Select(group => new Triangle(group.Key.P1, group.Key.P2, point)).ToList();
 
-				// triangle invariant: m=2n-2-k
+				triangles.AddRange(newTriangles);
+
+				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
+				pointCount++;
+
+				// check invariant: m = 2n-2-k
 				// m...triangle count
-				// n...point count (pointCount including 3 points on the supertriangle)
+				// n...point count (pointCount +3 points on the supertriangle)
 				// k...points on convex hull (exactly 3 --> supertriangle)
-				if (triangles.Count != 2 * n - 2 - 3) {
+				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
 					throw new VectoException(
 						"{0} Delaunay-Triangulation invariant violated! Triangle count and point count doesn't fit together.", _mapName);
 				}
@@ -227,7 +229,10 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public double Interpolate(SI x, SI y) => Interpolate(x.Value(), y.Value());
+		public double Interpolate(SI x, SI y)
+		{
+			return Interpolate(x.Value(), y.Value());
+		}
 
 		/// <summary>
 		/// Interpolates the value of an point in the delaunay map.
@@ -245,7 +250,7 @@ namespace TUGraz.VectoCore.Utils
 
 			x = (x - _minX) / (_maxX - _minX);
 			y = (y - _minY) / (_maxY - _minY);
-			
+
 			var i = 0;
 			while (i < _triangles.Length && !_triangles[i].IsInside(x, y, true)) {
 				i++;
@@ -255,27 +260,15 @@ namespace TUGraz.VectoCore.Utils
 				while (i < _triangles.Length && !_triangles[i].IsInside(x, y, false)) {
 					i++;
 				}
+			}
 
-				if (i == _triangles.Length) {
-					return double.NaN;
-				}
+			if (i == _triangles.Length) {
+				return double.NaN;
 			}
 
 			var tr = _triangles[i];
-			var abX = tr.P2.X - tr.P1.X;
-			var abY = tr.P2.Y - tr.P1.Y;
-			var abZ = tr.P2.Z - tr.P1.Z;
-
-			var acX = tr.P3.X - tr.P1.X;
-			var acY = tr.P3.Y - tr.P1.Y;
-			var acZ = tr.P3.Z - tr.P1.Z;
-
-			var X = abY * acZ - abZ * acY;
-			var Y = abZ * acX - abX * acZ;
-			var Z = abX * acY - abY * acX;
-			var W = tr.P1.X * X + tr.P1.Y * Y + tr.P1.Z * Z;
-
-			return (W - X * x - Y * y) / Z;
+			var plane = new Plane(tr);
+			return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
 		}
 
 		public double Extrapolate(SI x, SI y)
