@@ -269,13 +269,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(TestJobCityBusP1_APTP, 8, TestName = "P1 CityBus Hybrid APT-P, DriveCycle Urban"),
 			TestCase(TestJobCityBusP1_APTP, 9, TestName = "P1 CityBus Hybrid APT-P, DriveCycle UrbanDelivery"),
 
-			TestCase(TestJobP1, 0, TestName = "P1 Bus Hybrid Roeck - Urban"),
-			TestCase(TestJobP1, 1, TestName = "P1 Bus Hybrid Roeck - Coach"),
-			TestCase(TestJobP1, 2, TestName = "P1 Bus Hybrid Roeck - HeavyUrban"),
-			TestCase(TestJobP1, 3, TestName = "P1 Bus Hybrid Roeck - Interurban"),
-			TestCase(TestJobP1, 4, TestName = "P1 Bus Hybrid Roeck - Suburban"),
-			TestCase(TestJobP1, 5, TestName = "P1 Bus Hybrid Roeck - Suburban + stop"),
-
 		]
 		public void P1APTHybridDriveCycle(string jobFile, int cycleIdx)
 		{
