@@ -1695,6 +1695,69 @@
   <data name="REESS_TestingTemperature" xml:space="preserve">
     <value>TestingTemperature</value>
   </data>
+  <data name="BoostingLimitation_BoostingTorque" xml:space="preserve">
+    <value>boostingTorque</value>
+  </data>
+  <data name="BoostingLimitation_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="BoostingLimitation_RotationalSpeed" xml:space="preserve">
+    <value>rotationalSpeed</value>
+  </data>
+  <data name="DragCurve" xml:space="preserve">
+    <value>DragCurve</value>
+  </data>
+  <data name="DragCurve_DragTorque" xml:space="preserve">
+    <value>dragTorque</value>
+  </data>
+  <data name="DragCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="DragCurve_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="ElectricMachine_Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="ElectricMachine_VoltageLevel" xml:space="preserve">
+    <value>VoltageLevel</value>
+  </data>
+  <data name="ElectricMotorTorqueLimits" xml:space="preserve">
+    <value>ElectricMotorTorqueLimits</value>
+  </data>
+  <data name="ElectricMotorTorqueLimit_ElectricMachine" xml:space="preserve">
+    <value>ElectricMachine</value>
+  </data>
+  <data name="MaxTorqueCurve" xml:space="preserve">
+    <value>MaxTorqueCurve</value>
+  </data>
+  <data name="MaxTorqueCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="MaxTorqueCurve_MaxTorque" xml:space="preserve">
+    <value>maxTorque</value>
+  </data>
+  <data name="MaxTorqueCurve_MinTorque" xml:space="preserve">
+    <value>minTorque</value>
+  </data>
+  <data name="MaxTorqueCurve_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="PowerMap" xml:space="preserve">
+    <value>PowerMap</value>
+  </data>
+  <data name="PowerMap_ElectricPower" xml:space="preserve">
+    <value>electricPower</value>
+  </data>
+  <data name="PowerMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="PowerMap_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="PowerMap_Torque" xml:space="preserve">
+    <value>torque</value>
+  </data>
   <data name="REESS_CurrentLimits_MaxChargingCurrent" xml:space="preserve">
     <value>maxChargingCurrent</value>
   </data>
@@ -1703,5 +1766,8 @@
   </data>
   <data name="REESS_CurrentLimits_SoC" xml:space="preserve">
     <value>SoC</value>
+  </data>
+  <data name="Vehicle_BoostingLimitation" xml:space="preserve">
+    <value>BoostingLimitations</value>
   </data>
 </root>

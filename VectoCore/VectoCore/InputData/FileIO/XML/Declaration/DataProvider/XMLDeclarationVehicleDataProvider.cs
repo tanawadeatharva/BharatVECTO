@@ -236,8 +236,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
-		public TableData MaxPropulsionTorque { get; }
+		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual TableData MaxPropulsionTorque => null;
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -699,7 +699,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData MaxPropulsionTorque { get; }
 
 
@@ -1143,6 +1143,64 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVPxHeavyLorryDataProviderV210(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+			: base(jobData, xmlNode, sourceFile)
+		{
+
+		}
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override Dictionary<PowertrainPosition,  List<Tuple<int, TableData>>> ElectricMotorTorqueLimits
+			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
+
+		private Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ReadElectricMotorTorqueLimits()
+		{
+			var torqueLimitNode = GetNode(XMLNames.ElectricMotorTorqueLimits);
+			var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
+			if (electricMachineNodes == null || electricMachineNodes.Count == 0)
+				return null;
+
+			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<int, TableData>>>();
+			
+			foreach (XmlNode electricMachineNode in electricMachineNodes) {
+				var powertrainPosition =
+					PowertrainPositionHelper.Parse("P" + GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
+				
+				if(!motorTorqueLimits.ContainsKey(powertrainPosition))
+					motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
+				
+				var voltageLevelNodes = GetNodes( XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
+				foreach (XmlNode voltageLevelNode in voltageLevelNodes) {
+					var voltageLevel = ReadVoltageLevelNode(voltageLevelNode);
+					motorTorqueLimits[powertrainPosition].Add(voltageLevel);
+				}
+			}
+
+			return motorTorqueLimits;
+		}
+
+		private Tuple<int, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
+		{
+			var voltage = Convert.ToInt32(GetString(XMLNames.VoltageLevel_Voltage, voltageLevelNode));
+			var entries = voltageLevelNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.MaxTorqueCurve, XMLNames.MaxTorqueCurve_Entry));
+			var mapping = new Dictionary<string, string> {
+							{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed},
+							{ XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque },
+							{ XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque}
+						};
+			var maxTorqueCurve = XMLHelper.ReadTableData(mapping, entries);
+			return new Tuple<int, TableData>(voltage, maxTorqueCurve);
+		}
+		
+		public override TableData MaxPropulsionTorque 
+			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
+				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
+					new Dictionary<string, string> {
+						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
+						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
+					})
+				: null;
+
+		#endregion
 	}
 }

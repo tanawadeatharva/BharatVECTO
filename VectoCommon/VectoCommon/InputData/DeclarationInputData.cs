@@ -198,7 +198,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
-		Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits { get; }
+		Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
 
 		TableData MaxPropulsionTorque { get; }
 

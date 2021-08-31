@@ -19,7 +19,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricMotorVoltageLevel> _voltageLevels;
 
 		public XMLElectricMotorDeclarationInputDataProvider(
-			XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+			XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
 
 		#region Implementation of IElectricMotorDeclarationInputData
 
@@ -58,13 +61,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
 
 		public TableData DragCurve =>
-			ReadTableData("DragCurve", "Entry", new Dictionary<string, string> 
+			ReadTableData(XMLNames.DragCurve, XMLNames.DragCurve_Entry, new Dictionary<string, string> 
 			{
-				{"outShaftSpeed", "outShaftSpeed"},
-				{"dragTorque", "dragTorque"}
+				{XMLNames.DragCurve_OutShaftSpeed, XMLNames.DragCurve_OutShaftSpeed},
+				{XMLNames.DragCurve_DragTorque, XMLNames.DragCurve_DragTorque}
 			});
-			
-		
 
 		public virtual double OverloadRecoveryFactor { get; }
 
@@ -74,23 +75,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public Volt VoltageLevel => GetDouble(XMLNames.VoltageLevel_Voltage).SI<Volt>();
 
-		public TableData FullLoadCurve => ReadTableData("MaxTorqueCurve", "Entry", new Dictionary<string, string> {
-			{"outShaftSpeed", "outShaftSpeed"},
-			{"maxTorque", "maxTorque"},
-			{"minTorque", "minTorque"}
+		public TableData FullLoadCurve => ReadTableData(XMLNames.MaxTorqueCurve, XMLNames.MaxTorqueCurve_Entry, new Dictionary<string, string> {
+			{XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed},
+			{XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque},
+			{XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque}
 		});
 
-		public TableData EfficiencyMap => ReadTableData("PowerMap", "Entry", new Dictionary<string, string> {
-			{ "outShaftSpeed", "outShaftSpeed" },
-			{ "torque", "torque" },
-			{ "electricPower", "electricPower" }
+		public TableData EfficiencyMap => ReadTableData(XMLNames.PowerMap, XMLNames.PowerMap_Entry, new Dictionary<string, string> {
+			{ XMLNames.PowerMap_OutShaftSpeed, XMLNames.PowerMap_OutShaftSpeed },
+			{ XMLNames.PowerMap_Torque, XMLNames.PowerMap_Torque },
+			{ XMLNames.PowerMap_ElectricPower, XMLNames.PowerMap_ElectricPower }
 		});
 
 		#endregion
 
 		private IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
-			var voltageLevelNodes = GetNodes("VoltageLevel");
+			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel);
 			if (voltageLevelNodes.IsNullOrEmpty())
 				return null;
 			

@@ -466,7 +466,7 @@ Public Class Vehicle
 	'		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
 	'	End Get
 	'    End Property
-	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, Tuple(Of Integer, TableData)) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
 
 	Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
 		Get

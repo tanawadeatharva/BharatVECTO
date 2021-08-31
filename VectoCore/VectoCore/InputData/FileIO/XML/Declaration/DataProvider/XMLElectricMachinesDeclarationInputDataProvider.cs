@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(componentNode, sourceFile)
 		{
 			_vehicle = vehicle;
+			SourceType = DataSourceType.XMLEmbedded;
 		}
 
 		#region Implementation of IElectricMachinesDeclarationInputData
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
 				Position = PowertrainPositionHelper.Parse("P" + GetString(XMLNames.ElectricMachine_PowertrainPosition)),
 				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
-				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode("ElectricMachineSystem")),
+				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
 			};
 			
 			SetGearRatios(machineEntry);

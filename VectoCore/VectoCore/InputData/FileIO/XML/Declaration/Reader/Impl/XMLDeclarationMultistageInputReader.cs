@@ -498,7 +498,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string VIN => _manufacturingStages.First().Vehicle.VIN;
 
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
-		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
 		public TableData MaxPropulsionTorque => throw new NotImplementedException();
 
 		#endregion

@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
 		public TableData MaxPropulsionTorque => Vehicle.MaxPropulsionTorque;
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;

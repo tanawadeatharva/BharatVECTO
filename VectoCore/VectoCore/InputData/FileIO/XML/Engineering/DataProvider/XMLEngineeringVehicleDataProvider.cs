@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, Tuple<int, TableData>> ElectricMotorTorqueLimits => null;
+		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
 
 		public TableData MaxPropulsionTorque => null;
 

@@ -870,7 +870,7 @@ Public Class MockEngineeringVehicle
     Public Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
-    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, Tuple(Of Integer, TableData)) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
     Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width

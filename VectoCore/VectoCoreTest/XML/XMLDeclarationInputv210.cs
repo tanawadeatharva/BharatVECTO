@@ -260,8 +260,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
-//			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
-//			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+			TestElectricMotorTorqueLimits(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			TestBoostingLimitations(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 
 		#region Test Electric Machines Reader
@@ -323,16 +323,16 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		private void TestMaxTorqueCurveEntry(string outShaftSpeed, string maxTorque, string minTorque, DataRow row)
 		{
-			Assert.AreEqual(outShaftSpeed, row["outShaftSpeed"].ToString());
-			Assert.AreEqual(maxTorque, row["maxTorque"].ToString());
-			Assert.AreEqual(minTorque, row["minTorque"].ToString());
+			Assert.AreEqual(outShaftSpeed, row[XMLNames.MaxTorqueCurve_OutShaftSpeed]);
+			Assert.AreEqual(maxTorque, row[XMLNames.MaxTorqueCurve_MaxTorque]);
+			Assert.AreEqual(minTorque, row[XMLNames.MaxTorqueCurve_MinTorque]);
 		}
 
 		private void TestPowerMapEntry(string outShaftSpeed, string torque, string electricPower, DataRow row)
 		{
-			Assert.AreEqual(outShaftSpeed, row["outShaftSpeed"].ToString());
-			Assert.AreEqual(torque, row["torque"].ToString());
-			Assert.AreEqual(electricPower, row["electricPower"].ToString());
+			Assert.AreEqual(outShaftSpeed, row[XMLNames.PowerMap_OutShaftSpeed]);
+			Assert.AreEqual(torque, row[XMLNames.PowerMap_Torque]);
+			Assert.AreEqual(electricPower, row[XMLNames.PowerMap_ElectricPower]);
 		}
 
 		private void TestDragCurve(TableData dragCurve)
@@ -343,8 +343,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestDragCurveEntry(string outShaftSpeed, string dragTorque, DataRow row)
 		{
-			Assert.AreEqual(outShaftSpeed, row["outShaftSpeed"].ToString());
-			Assert.AreEqual(dragTorque, row["dragTorque"].ToString());
+			Assert.AreEqual(outShaftSpeed, row[XMLNames.DragCurve_OutShaftSpeed]);
+			Assert.AreEqual(dragTorque, row[XMLNames.DragCurve_DragTorque]);
 		}
 
 		#endregion
@@ -447,6 +447,46 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#endregion
 
+		#region Test Electric Motor TorqueLimits Reader
+
+		private void TestElectricMotorTorqueLimits(Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> limits)
+		{
+			Assert.IsNotNull(limits);
+			Assert.AreEqual(1, limits.Count);
+			Assert.AreEqual(2, limits.First().Value.Count);
+			Assert.AreEqual(PowertrainPosition.HybridP2, limits.First().Key);
+			
+			Assert.AreEqual(100, limits.First().Value[0].Item1);
+			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[0].Item2.Rows[0]);
+			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[0].Item2.Rows[1]);
+
+			Assert.AreEqual(500, limits.First().Value[1].Item1);
+			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[1].Item2.Rows[0]);
+			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[1].Item2.Rows[1]);
+		}
+
+		#endregion
+
+
+		#region Test Max Propulsion Torque Reader / BoostingLimitations
+
+		private void TestBoostingLimitations(TableData boostingLimitations)
+		{
+			Assert.IsNotNull(boostingLimitations);
+			Assert.AreEqual(2, boostingLimitations.Rows.Count);
+
+			TestBoostingLimitationsEntry("0.00", "0.00", boostingLimitations.Rows[0]);
+			TestBoostingLimitationsEntry("1000.00", "0.00", boostingLimitations.Rows[1]);
+		}
+
+		private void TestBoostingLimitationsEntry(string rotationalSpeed, string boostingTorque, DataRow row)
+		{
+			Assert.AreEqual(rotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed]);
+			Assert.AreEqual(boostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]);
+		}
+
+		#endregion
+		
 		#region Test existence of torque converter
 
 		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
