@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							? double.MaxValue.SI<NewtonMeter>()
 							: GearboxModelData.Gears[currentGear.Gear].ShiftPolygon
 								.InterpolateDownshift(response.Engine.EngineSpeed));
-					var reserve = 1 - inTorque / maxTorque;
+					var reserve = 1 - inTorque.Value() / maxTorque.Value();
 
 					if (reserve >= 0 /*ModelData.TorqueReserve */ && IsAboveDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 						continue;
