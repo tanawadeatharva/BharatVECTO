@@ -218,7 +218,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual int? NumberPassengersStandingUpperDeck => 0;
 
-		public virtual CubicMeter CargoVolume => 0.SI<CubicMeter>();
+		public virtual CubicMeter CargoVolume => 
+			ElementExists(XMLNames.Vehicle_CargoVolume) 
+				? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>() : null;
 
 		public virtual VehicleCode? VehicleCode => VectoCommon.Models.VehicleCode.NOT_APPLICABLE;
 
@@ -1143,10 +1145,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVPxHeavyLorryDataProviderV210(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile)
-		{
-
-		}
+			: base(jobData, xmlNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -1200,6 +1199,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
 					})
 				: null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVPxMediumLorryDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-Px_MediumLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationHEVPxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override XmlElement PTONode => null;
 
 		#endregion
 	}

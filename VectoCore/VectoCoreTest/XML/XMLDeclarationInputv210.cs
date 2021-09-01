@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNull(vehicle.Components.ElectricStorage);
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData); 
-			Assert.AreEqual(0.SI<CubicMeter>() , vehicle.CargoVolume);
+			Assert.IsNull(vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
 			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limits
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
-			Assert.AreNotEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
+			Assert.AreEqual(20.300.SI<CubicMeter>(), vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
 			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.Components.AirdragInputData);
 			Assert.IsNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
-			Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
+			Assert.IsNull(vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
 			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestElectricStorageElements(vehicle.Components.ElectricStorage.ElectricStorageElements);
 			
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
-			Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
+			Assert.IsNull(vehicle.CargoVolume);
 			Assert.IsNotNull(vehicle.TorqueLimits);
 			TestElectricMotorTorqueLimits(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			TestBoostingLimitations(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
@@ -513,7 +513,40 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		#endregion
+
 		
+		[TestCase(@"MediumLorry\HEV_mediumLorry_AMT_Px.xml")]
+		public void TestHEVMediumLorry(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider);
+			Assert.NotNull(dataProvider.JobInputData);
+
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.IsNotNull(vehicle.Components.GearboxInputData);
+			TestTorqueConverter(vehicle);
+			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.AreEqual(20.300.SI<CubicMeter>(), vehicle.CargoVolume);
+			Assert.IsNotNull(vehicle.TorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+		}
+
+
 		#region Test existence of torque converter
 
 		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)

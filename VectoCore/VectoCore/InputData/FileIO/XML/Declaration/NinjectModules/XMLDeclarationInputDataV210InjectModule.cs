@@ -24,11 +24,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHeavyLorryDataProviderV210>()
 				.Named(XMLDeclarationHeavyLorryDataProviderV210.QUALIFIED_XSD_TYPE);
-
-
+			
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVPxHeavyLorryDataProviderV210>()
 				.Named(XMLDeclarationHEVPxHeavyLorryDataProviderV210.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVPxMediumLorryDataProviderV210>()
+				.Named(XMLDeclarationHEVPxMediumLorryDataProviderV210.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompletedBusComponentsDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
