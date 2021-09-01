@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -37,20 +38,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		private IList<IElectricStorageDeclarationInputData> GetElectricStorages()
 		{
-			var batteries = GetNodes(XMLNames.ElectricEnergyStorage_Battery);
-			if (!(batteries?.Count > 0))
-				return null;
-
 			var electricStorages = new List<IElectricStorageDeclarationInputData>();
-			foreach (XmlNode battery in batteries) {
-				electricStorages.Add(
-					new XMLElectricStorageDeclaration {
-						REESSPack = StorageTypeReader.CreateREESSInputData(battery, REESSType.Battery),
-						StringId = XmlConvert.ToInt32(GetString(XMLNames.Battery_StringID, battery))
-					}); 
+			if (ElementExists(XMLNames.ElectricEnergyStorage_Capacitor)) {
+				var capacitor = GetNode(XMLNames.ElectricEnergyStorage_Capacitor);
+				electricStorages.Add(new XMLElectricStorageDeclaration {
+							REESSPack = StorageTypeReader.CreateREESSInputData(capacitor, REESSType.SuperCap)
+				});
+			}else if (ElementExists(XMLNames.ElectricEnergyStorage_Battery)) {
+				var batteries = GetNodes(XMLNames.ElectricEnergyStorage_Battery);
+				foreach (XmlNode battery in batteries)
+				{
+					electricStorages.Add(new XMLElectricStorageDeclaration {
+							REESSPack = StorageTypeReader.CreateREESSInputData(battery, REESSType.Battery),
+							StringId = XmlConvert.ToInt32(GetString(XMLNames.Battery_StringID, battery))
+					});
+				}
 			}
-			
-			return electricStorages;
+		
+			return electricStorages.Any() ? electricStorages : null;
 		}
 
 		#region Implementation of IXMLElectricStorageSystemDeclarationInputData
@@ -86,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public const string XSD_TYPE = "REESSBatteryType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLBatteryPackDeclarationDeclarationInputData( XmlNode componentNode, string sourceFile) 
+		public XMLBatteryPackDeclarationDeclarationInputData(XmlNode componentNode, string sourceFile) 
 			: base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -139,6 +144,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
+	
+	// ---------------------------------------------------------------------------------------
+	
+	public class XMLSuperCapDeclarationInputData : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public const string XSD_TYPE = "REESSCapacitorType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLSuperCapDeclarationInputData(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+		
+		#region Implementation of IREESSPackInputData
+
+		public REESSType StorageType => REESSType.SuperCap;
+
+		#endregion
+
+		#region Implementation of ISuperCapDeclarationInputData
+
+		public Farad Capacity => GetDouble(XMLNames.Capacitor_Capacitance).SI<Farad>();
+		public Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI<Ohm>() / 1000;
+		public Volt MinVoltage => GetDouble(XMLNames.Capacitor_MinVoltage).SI<Volt>();
+		public Volt MaxVoltage => GetDouble(XMLNames.Capacitor_MaxVoltage).SI<Volt>();
+		public Ampere MaxCurrentCharge => GetDouble(XMLNames.Capacitor_MaxChargingCurrent).SI<Ampere>();
+		public Ampere MaxCurrentDischarge => GetDouble(XMLNames.Capacitor_MaxDischargingCurrent).SI<Ampere>();
+
+		public Kelvin TestingTemperature => 
+			ElementExists(XMLNames.REESS_TestingTemperature)
+				? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
+		
+		#endregion
+		
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;

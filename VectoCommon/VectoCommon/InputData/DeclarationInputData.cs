@@ -840,6 +840,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Ampere MaxCurrentDischarge { get; }
 
+		Kelvin TestingTemperature { get; }
 	}
 
 

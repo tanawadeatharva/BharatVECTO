@@ -117,10 +117,12 @@ Public Class SuperCap
     End Get
     End Property
     Public ReadOnly Property MaxCurrentDischarge As Ampere Implements ISuperCapDeclarationInputData.MaxCurrentDischarge
-    get
-        Return MaxDischgCurrent.SI(Of Ampere)
-    End Get
+        Get
+            Return MaxDischgCurrent.SI(Of Ampere)
+        End Get
     End Property
+
+    Public ReadOnly Property TestingTemperature As Kelvin Implements ISuperCapDeclarationInputData.TestingTemperature
 
     Public Property FilePath() As String
         Get

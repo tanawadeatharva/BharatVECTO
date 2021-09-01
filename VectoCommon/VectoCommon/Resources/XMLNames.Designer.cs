@@ -1339,6 +1339,60 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capacitance.
+        /// </summary>
+        public static string Capacitor_Capacitance {
+            get {
+                return ResourceManager.GetString("Capacitor_Capacitance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to InternalResistance.
+        /// </summary>
+        public static string Capacitor_InternalResistance {
+            get {
+                return ResourceManager.GetString("Capacitor_InternalResistance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxChargingCurrent.
+        /// </summary>
+        public static string Capacitor_MaxChargingCurrent {
+            get {
+                return ResourceManager.GetString("Capacitor_MaxChargingCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxDischargingCurrent.
+        /// </summary>
+        public static string Capacitor_MaxDischargingCurrent {
+            get {
+                return ResourceManager.GetString("Capacitor_MaxDischargingCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxVoltage.
+        /// </summary>
+        public static string Capacitor_MaxVoltage {
+            get {
+                return ResourceManager.GetString("Capacitor_MaxVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinVoltage.
+        /// </summary>
+        public static string Capacitor_MinVoltage {
+            get {
+                return ResourceManager.GetString("Capacitor_MinVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ChassisConfiguration.
         /// </summary>
         public static string ChassisConfiguration {

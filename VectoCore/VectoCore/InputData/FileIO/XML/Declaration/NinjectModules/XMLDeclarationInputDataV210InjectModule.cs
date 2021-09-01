@@ -91,6 +91,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputData>()
 				.Named(XMLBatteryPackDeclarationDeclarationInputData.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputData>()
+				.Named(XMLSuperCapDeclarationInputData.QUALIFIED_XSD_TYPE);
+			
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_Lorry>()
 				.Named(XMLComponentReaderV210_Lorry.QUALIFIED_XSD_TYPE);
 

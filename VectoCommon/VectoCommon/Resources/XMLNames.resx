@@ -1770,4 +1770,22 @@
   <data name="Vehicle_BoostingLimitation" xml:space="preserve">
     <value>BoostingLimitations</value>
   </data>
+  <data name="Capacitor_Capacitance" xml:space="preserve">
+    <value>Capacitance</value>
+  </data>
+  <data name="Capacitor_InternalResistance" xml:space="preserve">
+    <value>InternalResistance</value>
+  </data>
+  <data name="Capacitor_MaxChargingCurrent" xml:space="preserve">
+    <value>MaxChargingCurrent</value>
+  </data>
+  <data name="Capacitor_MaxDischargingCurrent" xml:space="preserve">
+    <value>MaxDischargingCurrent</value>
+  </data>
+  <data name="Capacitor_MaxVoltage" xml:space="preserve">
+    <value>MaxVoltage</value>
+  </data>
+  <data name="Capacitor_MinVoltage" xml:space="preserve">
+    <value>MinVoltage</value>
+  </data>
 </root>

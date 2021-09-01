@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 		
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml")]
-
+		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px_Capacitor.xml")]
 		public void TestHEVHeaveyLorry(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
@@ -354,14 +354,41 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestElectricStorageElements(IList<IElectricStorageDeclarationInputData> elements)
 		{
 			Assert.IsNotNull(elements);
-			Assert.AreEqual(2, elements.Count);
+			switch (elements.Count) {
+				case 1:
+					TestSuperCapEntry(elements.First());
+					break;
+				case 2:
+					Assert.AreEqual(2, elements.Count);
+					TestFirstBatterySystemEntry(elements[0]);
+					TestSecondBatterySystemEntry(elements[1]);
+					break;
+			}
+		}
+
+		private void TestSuperCapEntry(IElectricStorageDeclarationInputData entry)
+		{
+			Assert.AreEqual(REESSType.SuperCap, entry.REESSPack.StorageType);
+			Assert.AreEqual("Capacitor Manufacturer", entry.REESSPack.Manufacturer);
+			Assert.AreEqual("Capacitor Model", entry.REESSPack.Model);
+			Assert.AreEqual("ccccccc", entry.REESSPack.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-02-03T00:00:00Z").ToUniversalTime(), entry.REESSPack.Date);
+			Assert.AreEqual("ccccc", entry.REESSPack.AppVersion);
+			Assert.AreEqual(CertificationMethod.Measured, entry.REESSPack.CertificationMethod);
+			Assert.IsNotNull(entry.REESSPack.DigestValue);
 			
-			TestFirstBatterySystemEntry(elements[0]);
-			TestSecondBatterySystemEntry(elements[1]);
+			var supercap = (ISuperCapDeclarationInputData)entry.REESSPack;
+			Assert.AreEqual(100.00.SI<Farad>(), supercap.Capacity);
+			Assert.AreEqual(20.00.SI<Ohm>() / 1000, supercap.InternalResistance);
+			Assert.AreEqual(12.00.SI<Volt>(), supercap.MinVoltage);
+			Assert.AreEqual(100.00.SI<Volt>(), supercap.MaxVoltage);
+			Assert.AreEqual(80.00.SI<Ampere>(), supercap.MaxCurrentCharge);
+			Assert.AreEqual(20.00.SI<Ampere>(), supercap.MaxCurrentDischarge);
 		}
 
 		private void TestFirstBatterySystemEntry(IElectricStorageDeclarationInputData entry)
 		{
+			Assert.AreEqual(REESSType.Battery, entry.REESSPack.StorageType);
 			Assert.AreEqual(0, entry.StringId);
 			Assert.AreEqual("a", entry.REESSPack.Manufacturer);
 			Assert.AreEqual("a", entry.REESSPack.Model);
@@ -393,6 +420,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestSecondBatterySystemEntry(IElectricStorageDeclarationInputData entry)
 		{
+			Assert.AreEqual(REESSType.Battery, entry.REESSPack.StorageType);
 			Assert.AreEqual(1, entry.StringId);
 			Assert.AreEqual("b", entry.REESSPack.Manufacturer);
 			Assert.AreEqual("b", entry.REESSPack.Model);
@@ -466,8 +494,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		#endregion
-
-
+		
 		#region Test Max Propulsion Torque Reader / BoostingLimitations
 
 		private void TestBoostingLimitations(TableData boostingLimitations)

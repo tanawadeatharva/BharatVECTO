@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLBatteryPackDeclarationInputData CreateBatteryPackDeclarationInputData(
 			string version, XmlNode componentNode, string sourceFile);
 
-		ISuperCapDeclarationInputData CreateSuperCapDeclarationInputData(
+		IXMLSuperCapDeclarationInputData CreateSuperCapDeclarationInputData(
 			string version, XmlNode componentNode, string sourceFile);
 
 		IXMLTorqueConverterDeclarationInputData CreateTorqueconverterData(
