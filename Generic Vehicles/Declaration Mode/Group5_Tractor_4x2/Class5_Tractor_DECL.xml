@@ -8,7 +8,7 @@
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/DEV/VectoInput.2.0.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0 https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/DEV/VectoInput.2.0.xsd">
   <v2.0:Vehicle id="VEH-NA" xsi:type="VehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
     <Manufacturer>TU Graz, IVT</Manufacturer>
     <ManufacturerAddress>N/A</ManufacturerAddress>
