@@ -116,7 +116,7 @@
                     </Button>
                 </Border>
             </UniformGrid>
-            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="3" VerticalAlignment="Stretch">
+            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource AccentColorButton}" BorderThickness="0 1 0 0" VerticalAlignment="Stretch">
                 <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
             </Border>
         </DockPanel>

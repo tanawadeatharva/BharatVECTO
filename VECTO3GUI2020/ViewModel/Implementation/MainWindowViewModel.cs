@@ -48,29 +48,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			CurrentViewModel = _viewModels[key];
 		}
 
-		public bool JobsSelected
-		{
-			get
-			{
-				return CurrentViewModel == _jobListVm;
-			}
-		}
+		public bool JobsSelected => CurrentViewModel == _jobListVm;
 
-		public bool SettingsSelected
-		{
-			get
-			{ 
-				return CurrentViewModel == _settingsViewModel;
-			}
-		}
+		public bool SettingsSelected => CurrentViewModel == _settingsViewModel;
 
-		public bool AboutSelected
-		{
-			get
-			{
-				return CurrentViewModel == _aboutViewModel;
-			}
-		}
+		public bool AboutSelected => CurrentViewModel == _aboutViewModel;
 
 		public IMainViewModel CurrentViewModel
         {

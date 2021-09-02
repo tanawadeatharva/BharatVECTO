@@ -15,39 +15,26 @@
 
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="5"/>
             <RowDefinition Height="1*" MinHeight="65"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="140" Width="1*"/>
-                <ColumnDefinition Width="6*"/>
-                <ColumnDefinition MinWidth="140" Width="1*"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="140"/>
             </Grid.ColumnDefinitions>
 
-            <Border  BorderBrush="Transparent" BorderThickness="1">
+            <Border>
                 <Grid>
-                    <StackPanel HorizontalAlignment="Stretch">
-                        <Button x:Name="button" Margin="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}"
-                        Command="{Binding SimulationCommand}">Simulation</Button>
-                        <Button Margin="4" HorizontalAlignment="Stretch" 
-                            Style="{StaticResource MultiStageButtonStyle1}"
-                            Command="{Binding CancelSimulation}">Stop</Button>
-                        <Button x:Name="button1" Margin="4"  HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}" 
-                        Command="{Binding moveJobUp}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Up</Button>
-                        <Button x:Name="button2" Margin="4" HorizontalAlignment="Stretch" 
-                        Style="{StaticResource MultiStageButtonStyle1}" 
-                        Command="{Binding moveJobDown}"
-                        CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Down</Button>
+                    <StackPanel>
+                        <Button x:Name="button" Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding SimulationCommand}">Simulation</Button>
+                        <Button Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding CancelSimulation}">Stop</Button> 
+                        <Button x:Name="button1" Style="{StaticResource MultiStageButtonStyle1}"  Command="{Binding moveJobUp}" CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Up</Button>
+                        <Button x:Name="button2" Style="{StaticResource MultiStageButtonStyle1}" Command="{Binding moveJobDown}" CommandParameter="{Binding ElementName=JobDataGrid, Path=SelectedItem}">Down</Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -79,9 +66,9 @@
                             </behavior:AutoScrollDataGridBehaviour>
                         </i:Interaction.Behaviors>
 
-                            <!--CONTEXT MENU-->
+                        <!--CONTEXT MENU-->
 
-                            <!--<DataGrid.Resources>
+                        <!--<DataGrid.Resources>
                                 <ContextMenu x:Key="RowMenu">
                                     <MenuItem Header="Edit WIP" Command="{Binding RowCopyCommand}" />
                                     <MenuItem Header="Show Source File">
@@ -94,7 +81,7 @@
                                     <Setter Property="ContextMenu" Value="{StaticResource RowMenu}" />
                                 </Style>
                             </DataGrid.RowStyle>-->
-                            <DataGrid.Columns>
+                        <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Simulate" Width="1*" MinWidth="50" IsReadOnly="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="document:IDocumentViewModel">
@@ -121,7 +108,7 @@
                                                     Visibility="{Binding CanBeSimulated, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
                                             </Button>
                                         </Grid>
-                                        
+
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -161,7 +148,7 @@
                         <Button x:Name="button3" Margin="4" HorizontalAlignment="Stretch" 
                                 Style="{StaticResource MultiStageButtonStyle1}"
                                 Command="{Binding AddJobAsyncCommand, IsAsync=True}" Background="#FFDDDDDD">
-                                Load File</Button>
+                            Load File</Button>
                         <Button x:Name="button4" Margin ="4" HorizontalAlignment="Stretch" 
                                 Style="{StaticResource MultiStageButtonStyle1}"
                                 Command="{Binding EditDocument}"
@@ -198,5 +185,5 @@
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5"/>
         <ContentControl Grid.Row="2" Margin="0,0,0,0" Name="ContentControlBottom" Content="{Binding OutputViewModel }"/>
     </Grid>
-   
+
 </UserControl>

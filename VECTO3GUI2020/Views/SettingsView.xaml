@@ -103,9 +103,7 @@
                         Width="100"
                         Command="{Binding CloseWindowCommand}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                        Style="{DynamicResource MultiStageButtonStyle1}"
-                        Margin="4"
-                        Padding="4">Close</Button>
+                        Style="{DynamicResource MultiStageButtonStyle1}">Close</Button>
             </DockPanel>
         </DockPanel>
     </Grid>
