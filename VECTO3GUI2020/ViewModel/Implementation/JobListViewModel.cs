@@ -841,6 +841,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 						});
 						_simulationLoggingEnabled = false;
 						_cancellationTokenSource.Cancel();
+						_status.Report("");
 						
 						
 					},
