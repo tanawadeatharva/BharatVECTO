@@ -1143,26 +1143,27 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5531, OutsideSegment, Accelerate),        // len: 5531m
-			(5531, 5577, OutsideSegment, Coast),          // len: 46m
-			(5577, 6085, OutsideSegment, Roll),           // len: 508m
-			(6085, 1e6, OutsideSegment, Accelerate));
+			(5531, 6038, OutsideSegment, Coast),          // len: 507m
+			(6038, 6085, OutsideSegment, Roll),           // len: 47m
+			(6085, 6096, OutsideSegment, Accelerate),     // len: 11m
+			(6096, 6120, OutsideSegment, Roll),           // len: 24m
+			(6120, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5892, OutsideSegment, Accelerate),        // len: 5892m
-			(5892, 6376, OutsideSegment, Roll),           // len: 484m
-			(6376, 7481, OutsideSegment, Brake),          // len: 1105m
+			(5892, 6387, OutsideSegment, Coast),          // len: 495m
+			(6387, 7481, OutsideSegment, Brake),          // len: 1094m
 			(7481, 7874, OutsideSegment, Coast),          // len: 393m
 			(7874, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5367, OutsideSegment, Accelerate),        // len: 5367m
-			(5367, 5402, OutsideSegment, Coast),          // len: 35m
-			(5402, 5674, OutsideSegment, Roll),           // len: 272m
-			(5674, 7247, OutsideSegment, Brake),          // len: 1573m
-			(7247, 7510, OutsideSegment, Coast),          // len: 263m
-			(7510, 1e6, OutsideSegment, Accelerate));
+			(5367, 5685, OutsideSegment, Coast),          // len: 318m
+			(5685, 7247, OutsideSegment, Brake),          // len: 1562m
+			(7247, 7509, OutsideSegment, Coast),          // len: 262m
+			(7509, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
@@ -1171,35 +1172,31 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(2265, 2494, OutsideSegment, Brake),          // len: 229m
 			(2494, 2613, OutsideSegment, Coast),          // len: 119m
 			(2613, 5424, OutsideSegment, Accelerate),     // len: 2811m
-			(5424, 5459, OutsideSegment, Coast),          // len: 35m
-			(5459, 5743, OutsideSegment, Roll),           // len: 284m
-			(5743, 6776, OutsideSegment, Brake),          // len: 1033m
+			(5424, 5742, OutsideSegment, Coast),          // len: 318m
+			(5742, 6776, OutsideSegment, Brake),          // len: 1034m
 			(6776, 7026, OutsideSegment, Coast),          // len: 250m
 			(7026, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2159, OutsideSegment, Accelerate),        // len: 2159m
-			(2159, 2206, OutsideSegment, Coast),          // len: 47m
-			(2206, 2561, OutsideSegment, Roll),           // len: 355m
-			(2561, 3284, OutsideSegment, Accelerate),     // len: 723m
-			(3284, 3331, OutsideSegment, Coast),          // len: 47m
-			(3331, 3508, OutsideSegment, Roll),           // len: 177m
-			(3508, 4025, OutsideSegment, Brake),          // len: 517m
-			(4025, 4287, OutsideSegment, Coast),          // len: 262m
-			(4287, 1e6, OutsideSegment, Accelerate));
+			(2159, 2525, OutsideSegment, Coast),          // len: 366m
+			(2525, 3284, OutsideSegment, Accelerate),     // len: 759m
+			(3284, 3508, OutsideSegment, Coast),          // len: 224m
+			(3508, 4024, OutsideSegment, Brake),          // len: 516m
+			(4024, 4286, OutsideSegment, Coast),          // len: 262m
+			(4286, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2159, OutsideSegment, Accelerate),        // len: 2159m
-			(2159, 2206, OutsideSegment, Coast),          // len: 47m
-			(2206, 2667, OutsideSegment, Roll),           // len: 461m
-			(2667, 2819, OutsideSegment, Accelerate),     // len: 152m
-			(2819, 2865, OutsideSegment, Coast),          // len: 46m
-			(2865, 3126, OutsideSegment, Roll),           // len: 261m
-			(3126, 3330, OutsideSegment, Brake),          // len: 204m
-			(3330, 3544, OutsideSegment, Coast),          // len: 214m
-			(3544, 1e6, OutsideSegment, Accelerate));
+			(2159, 2608, OutsideSegment, Coast),          // len: 449m
+			(2608, 2655, OutsideSegment, Roll),           // len: 47m
+			(2655, 2667, OutsideSegment, Accelerate),     // len: 12m
+			(2667, 2690, OutsideSegment, Roll),           // len: 23m
+			(2690, 2888, OutsideSegment, Accelerate),     // len: 198m
+			(2888, 3442, OutsideSegment, Coast),          // len: 554m
+			(3442, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
@@ -1212,12 +1209,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7363, 7387, OutsideSegment, Roll),           // len: 24m
 			(7387, 1e6, OutsideSegment, Accelerate));
 
-
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5227, OutsideSegment, Accelerate),        // len: 5227m
-			(5227, 5262, OutsideSegment, Coast),          // len: 35m
-			(5262, 5522, OutsideSegment, Roll),           // len: 260m
+			(5227, 5522, OutsideSegment, Coast),          // len: 295m
 			(5522, 6063, OutsideSegment, Brake),          // len: 541m
 			(6063, 6289, OutsideSegment, Coast),          // len: 226m
 			(6289, 1e6, OutsideSegment, Accelerate));
@@ -1229,24 +1224,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase]
 		public void Class5_EcoRollWithoutEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4472, OutsideSegment, Accelerate),        // len: 4472m
-			(4472, 4492, OutsideSegment, Roll),           // len: 20m
-			(4492, 4679, OutsideSegment, Accelerate),     // len: 187m
-			(4679, 4695, OutsideSegment, Roll),           // len: 16m
-			(4695, 4782, OutsideSegment, Accelerate),     // len: 87m
-			(4782, 4794, OutsideSegment, Roll),           // len: 12m
-			(4794, 4888, OutsideSegment, Accelerate),     // len: 94m
-			(4888, 4898, OutsideSegment, Roll),           // len: 10m
-			(4898, 4963, OutsideSegment, Accelerate),     // len: 65m
-			(4963, 4974, OutsideSegment, Roll),           // len: 11m
-			(4974, 5026, OutsideSegment, Accelerate),     // len: 52m
-			(5026, 5039, OutsideSegment, Roll),           // len: 13m
-			(5039, 5074, OutsideSegment, Accelerate),     // len: 35m
-			(5074, 5088, OutsideSegment, Roll),           // len: 14m
-			(5088, 5135, OutsideSegment, Accelerate),     // len: 47m
-			(5135, 5152, OutsideSegment, Roll),           // len: 17m
 			(5152, 5423, OutsideSegment, Accelerate),     // len: 271m
-			(5423, 5470, OutsideSegment, Roll),           // len: 47m
-			(5470, 5506, OutsideSegment, Coast),          // len: 36m
 			(5506, 6119, OutsideSegment, Brake),          // len: 613m
 			(6119, 6381, OutsideSegment, Coast),          // len: 262m
 			(6381, 1e6, OutsideSegment, Accelerate));
@@ -1256,13 +1234,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 4, OutsideSegment, Accelerate),           // len: 4m
 			(411, 3406, OutsideSegment, Accelerate),      // len: 2995m
-			(3406, 3454, OutsideSegment, Coast),          // len: 48m
-			(3454, 3851, OutsideSegment, Roll),           // len: 397m
-			(3851, 5210, OutsideSegment, Brake),          // len: 1359m
+			(3406, 3870, OutsideSegment, Coast),          // len: 464m
+			(3870, 5210, OutsideSegment, Brake),          // len: 1340m
 			(5210, 5230, OutsideSegment, Roll),           // len: 20m
-			(5230, 5480, OutsideSegment, Coast),          // len: 250m
-			(5480, 5490, OutsideSegment, Accelerate),     // len: 10m
-			(5490, 5509, OutsideSegment, Roll),           // len: 19m
+			(5230, 5479, OutsideSegment, Coast),          // len: 249m
+			(5479, 5489, OutsideSegment, Accelerate),     // len: 10m
+			(5489, 5509, OutsideSegment, Roll),           // len: 20m
 			(5509, 1e6, OutsideSegment, Accelerate));
 
 
@@ -1271,39 +1248,37 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 4, OutsideSegment, Accelerate),           // len: 4m
 			(411, 3415, OutsideSegment, Accelerate),      // len: 3004m
-			(3415, 3464, OutsideSegment, Coast),          // len: 49m
-			(3464, 3838, OutsideSegment, Roll),           // len: 374m
-			(3838, 4513, OutsideSegment, Brake),          // len: 675m
+			(3415, 3848, OutsideSegment, Coast),          // len: 433m
+			(3848, 4513, OutsideSegment, Brake),          // len: 665m
 			(4513, 4533, OutsideSegment, Roll),           // len: 20m
 			(4533, 4752, OutsideSegment, Coast),          // len: 219m
 			(4752, 4771, OutsideSegment, Roll),           // len: 19m
 			(4771, 1e6, OutsideSegment, Accelerate));
 
-
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5531, OutsideSegment, Accelerate),        // len: 5531m
-			(5531, 5577, OutsideSegment, Coast),          // len: 46m
-			(5577, 6085, OutsideSegment, Roll),           // len: 508m
-			(6085, 1e6, OutsideSegment, Accelerate));
+			(5531, 6038, OutsideSegment, Coast),          // len: 507m
+			(6038, 6085, OutsideSegment, Roll),           // len: 47m
+			(6085, 6096, OutsideSegment, Accelerate),     // len: 11m
+			(6096, 6120, OutsideSegment, Roll),           // len: 24m
+			(6120, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5892, OutsideSegment, Accelerate),        // len: 5892m
-			(5892, 6376, OutsideSegment, Roll),           // len: 484m
-			(6376, 7481, OutsideSegment, Brake),          // len: 1105m
+			(5892, 6387, OutsideSegment, Coast),          // len: 495m
+			(6387, 7481, OutsideSegment, Brake),          // len: 1094m
 			(7481, 7874, OutsideSegment, Coast),          // len: 393m
 			(7874, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5367, OutsideSegment, Accelerate),        // len: 5367m
-			(5367, 5402, OutsideSegment, Coast),          // len: 35m
-			(5402, 5674, OutsideSegment, Roll),           // len: 272m
-			(5674, 7247, OutsideSegment, Brake),          // len: 1573m
-			(7247, 7510, OutsideSegment, Coast),          // len: 263m
-			(7510, 1e6, OutsideSegment, Accelerate));
-
+			(5367, 5685, OutsideSegment, Coast),          // len: 318m
+			(5685, 7247, OutsideSegment, Brake),          // len: 1562m
+			(7247, 7509, OutsideSegment, Coast),          // len: 262m
+			(7509, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
@@ -1312,35 +1287,31 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(2265, 2494, OutsideSegment, Brake),          // len: 229m
 			(2494, 2613, OutsideSegment, Coast),          // len: 119m
 			(2613, 5424, OutsideSegment, Accelerate),     // len: 2811m
-			(5424, 5459, OutsideSegment, Coast),          // len: 35m
-			(5459, 5743, OutsideSegment, Roll),           // len: 284m
-			(5743, 6776, OutsideSegment, Brake),          // len: 1033m
+			(5424, 5742, OutsideSegment, Coast),          // len: 318m
+			(5742, 6776, OutsideSegment, Brake),          // len: 1034m
 			(6776, 7026, OutsideSegment, Coast),          // len: 250m
 			(7026, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2159, OutsideSegment, Accelerate),        // len: 2159m
-			(2159, 2206, OutsideSegment, Coast),          // len: 47m
-			(2206, 2561, OutsideSegment, Roll),           // len: 355m
-			(2561, 3284, OutsideSegment, Accelerate),     // len: 723m
-			(3284, 3331, OutsideSegment, Coast),          // len: 47m
-			(3331, 3508, OutsideSegment, Roll),           // len: 177m
-			(3508, 4025, OutsideSegment, Brake),          // len: 517m
-			(4025, 4287, OutsideSegment, Coast),          // len: 262m
-			(4287, 1e6, OutsideSegment, Accelerate));
+			(2159, 2525, OutsideSegment, Coast),          // len: 366m
+			(2525, 3284, OutsideSegment, Accelerate),     // len: 759m
+			(3284, 3508, OutsideSegment, Coast),          // len: 224m
+			(3508, 4024, OutsideSegment, Brake),          // len: 516m
+			(4024, 4286, OutsideSegment, Coast),          // len: 262m
+			(4286, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2159, OutsideSegment, Accelerate),        // len: 2159m
-			(2159, 2206, OutsideSegment, Coast),          // len: 47m
-			(2206, 2667, OutsideSegment, Roll),           // len: 461m
-			(2667, 2819, OutsideSegment, Accelerate),     // len: 152m
-			(2819, 2865, OutsideSegment, Coast),          // len: 46m
-			(2865, 3126, OutsideSegment, Roll),           // len: 261m
-			(3126, 3330, OutsideSegment, Brake),          // len: 204m
-			(3330, 3544, OutsideSegment, Coast),          // len: 214m
-			(3544, 1e6, OutsideSegment, Accelerate));
+			(2159, 2608, OutsideSegment, Coast),          // len: 449m
+			(2608, 2655, OutsideSegment, Roll),           // len: 47m
+			(2655, 2667, OutsideSegment, Accelerate),     // len: 12m
+			(2667, 2690, OutsideSegment, Roll),           // len: 23m
+			(2690, 2888, OutsideSegment, Accelerate),     // len: 198m
+			(2888, 3442, OutsideSegment, Coast),          // len: 554m
+			(3442, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
@@ -1356,8 +1327,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5227, OutsideSegment, Accelerate),        // len: 5227m
-			(5227, 5262, OutsideSegment, Coast),          // len: 35m
-			(5262, 5522, OutsideSegment, Roll),           // len: 260m
+			(5227, 5522, OutsideSegment, Coast),          // len: 295m
 			(5522, 6063, OutsideSegment, Brake),          // len: 541m
 			(6063, 6289, OutsideSegment, Coast),          // len: 226m
 			(6289, 1e6, OutsideSegment, Accelerate));
@@ -1369,24 +1339,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase]
 		public void Class5_EcoRollEngineStop_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4472, OutsideSegment, Accelerate),        // len: 4472m
-			(4472, 4492, OutsideSegment, Roll),           // len: 20m
-			(4492, 4679, OutsideSegment, Accelerate),     // len: 187m
-			(4679, 4695, OutsideSegment, Roll),           // len: 16m
-			(4695, 4782, OutsideSegment, Accelerate),     // len: 87m
-			(4782, 4794, OutsideSegment, Roll),           // len: 12m
-			(4794, 4888, OutsideSegment, Accelerate),     // len: 94m
-			(4888, 4898, OutsideSegment, Roll),           // len: 10m
-			(4898, 4963, OutsideSegment, Accelerate),     // len: 65m
-			(4963, 4974, OutsideSegment, Roll),           // len: 11m
-			(4974, 5026, OutsideSegment, Accelerate),     // len: 52m
-			(5026, 5039, OutsideSegment, Roll),           // len: 13m
-			(5039, 5074, OutsideSegment, Accelerate),     // len: 35m
-			(5074, 5088, OutsideSegment, Roll),           // len: 14m
-			(5088, 5135, OutsideSegment, Accelerate),     // len: 47m
-			(5135, 5152, OutsideSegment, Roll),           // len: 17m
 			(5152, 5423, OutsideSegment, Accelerate),     // len: 271m
-			(5423, 5470, OutsideSegment, Roll),           // len: 47m
-			(5470, 5506, OutsideSegment, Coast),          // len: 36m
 			(5506, 6119, OutsideSegment, Brake),          // len: 613m
 			(6119, 6381, OutsideSegment, Coast),          // len: 262m
 			(6381, 1e6, OutsideSegment, Accelerate));
@@ -1396,10 +1349,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 4, OutsideSegment, Accelerate),           // len: 4m
 			(411, 3406, OutsideSegment, Accelerate),      // len: 2995m
-			(3406, 3454, OutsideSegment, Coast),          // len: 48m
-			(3454, 3851, OutsideSegment, Roll),           // len: 397m
-			(3851, 5210, OutsideSegment, Brake),          // len: 1359m
-			(5230, 5480, OutsideSegment, Coast),          // len: 250m
+			(3406, 3870, OutsideSegment, Coast),          // len: 464m
+			(3870, 5210, OutsideSegment, Brake),          // len: 1340m
+			(5210, 5230, OutsideSegment, Roll),           // len: 20m
+			(5230, 5479, OutsideSegment, Coast),          // len: 249m
+			(5479, 5489, OutsideSegment, Accelerate),     // len: 10m
+			(5489, 5509, OutsideSegment, Roll),           // len: 20m
 			(5509, 1e6, OutsideSegment, Accelerate));
 
 
@@ -1408,10 +1363,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 4, OutsideSegment, Accelerate),           // len: 4m
 			(411, 3415, OutsideSegment, Accelerate),      // len: 3004m
-			(3415, 3464, OutsideSegment, Coast),          // len: 49m
-			(3464, 3838, OutsideSegment, Roll),           // len: 374m
-			(3838, 4513, OutsideSegment, Brake),          // len: 675m
+			(3415, 3848, OutsideSegment, Coast),          // len: 433m
+			(3848, 4513, OutsideSegment, Brake),          // len: 665m
+			(4513, 4533, OutsideSegment, Roll),           // len: 20m
 			(4533, 4752, OutsideSegment, Coast),          // len: 219m
+			(4752, 4771, OutsideSegment, Roll),           // len: 19m
 			(4771, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
