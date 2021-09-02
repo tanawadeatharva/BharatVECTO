@@ -178,6 +178,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			retVal.Add(
 				new XElement(tns + XMLNames.VectoOutputMultistage,
 					_namespaceAttributes,
+					new XAttribute(XNamespace.Xmlns + "tns", tns),
 					_primaryVehicle,
 					_manufacturingStages,
 					GenerateInputManufacturingStage()
