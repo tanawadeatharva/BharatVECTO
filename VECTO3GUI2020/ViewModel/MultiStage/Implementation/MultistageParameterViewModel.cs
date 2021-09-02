@@ -37,6 +37,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private object _currentContent;
 		private object _dummyContent;
 		private bool _mandatory;
+		private bool _allowNullValue;
 		private object _storedContent;
 		private string _label;
 		private ObservableCollection<Enum> _allowedItems;
@@ -203,6 +204,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set
 			{
 				SetProperty(ref _isReadOnly, value);
+				UpdateValueFieldEditable();
+			}
+		}
+
+		public bool AllowNullValue
+		{
+			get => _allowNullValue;
+			set
+			{
+				SetProperty(ref _allowNullValue, value);
 				UpdateValueFieldEditable();
 			}
 		}
@@ -398,7 +409,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		/// <returns></returns>
 		public bool UpdateEditingEnabled()
 		{
-			if (CurrentContent == null) {
+			if (!AllowNullValue && CurrentContent == null) {
 				EditingEnabled = false;
 			} else {
 				EditingEnabled = true;

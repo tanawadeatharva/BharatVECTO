@@ -318,6 +318,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(PredictiveCruiseControlNullable)].EditingChangedCallback = ADASGroupEditingCallback;
 			_parameterViewModels[nameof(ATEcoRollReleaseLockupClutch)].EditingChangedCallback = ADASGroupEditingCallback;
 
+			_parameterViewModels[nameof(ATEcoRollReleaseLockupClutch)].AllowNullValue = true;
+
 			Action<MultistageParameterViewModel> PassengerGroupEditingCallback = (MultistageParameterViewModel param) => {
 				NumberOfPassengersEditingEnabled = param.EditingEnabled;
 			};
