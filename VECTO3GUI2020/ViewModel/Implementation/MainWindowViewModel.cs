@@ -5,6 +5,7 @@ using Ninject;
 using System.Diagnostics;
 using System.Windows.Input;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using System.Reflection;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.Util;
@@ -96,6 +97,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get => _jobListVm;
 			set => SetProperty(ref _jobListVm, value);
 		}
+
+		public string Version => "VECTO Multistage " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+
 		#endregion
 
 		#region Commands
