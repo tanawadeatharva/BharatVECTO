@@ -151,7 +151,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Interim/Completed Input.
+        ///   Looks up a localized string similar to .
         /// </summary>
         public static string CreateInterimCompletedInputToolTip {
             get {
@@ -196,7 +196,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a new Complete Job.
+        ///   Looks up a localized string similar to Special Case 2: Provide primary input XML and all parameters of completed vehicle to create a VECTO job..
         /// </summary>
         public static string NewCompleteJobToolTip {
             get {
@@ -214,7 +214,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a new Interim/Completed Job.
+        ///   Looks up a localized string similar to General case: Provide VIF and completed model parameters to create a VECTO job..
         /// </summary>
         public static string NewInterimOrCompletedJobToolTip {
             get {
@@ -232,7 +232,7 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a new Primary Job with Interim Input.
+        ///   Looks up a localized string similar to Special Case 1: Provide primary input XML and some parameters of completed vehicle (interim XML) to create a VECTO job..
         /// </summary>
         public static string NewPrimaryAndInterimJobToolTip {
             get {

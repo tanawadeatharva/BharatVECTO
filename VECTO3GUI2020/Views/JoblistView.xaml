@@ -57,7 +57,7 @@
                           PreviewDrop = "JobDataGrid_OnPreviewDrop"
                           ColumnHeaderStyle="{StaticResource JobListDataGridHeaderStyle}"
                           RowHeight="30"
-                          AlternatingRowBackground="Gainsboro" 
+                          AlternatingRowBackground="WhiteSmoke" 
                           CellStyle="{DynamicResource DataGridCellStyle1}"
                           SelectedItem = "{Binding SelectedJob}"
                 >

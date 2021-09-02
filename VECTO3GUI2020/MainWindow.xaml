@@ -38,8 +38,8 @@
                                 </MenuItem.CommandParameter>
                             </MenuItem>
                             <Separator></Separator>
-                            <MenuItem Header="{x:Static resx:GUILabels.CreateInterimCompletedInput}" Command="{Binding JobListVm.NewCompletedInputCommand}" ToolTip="{x:Static resx:GUILabels.CreateInterimCompletedInputToolTip}"/>
-                            <MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" ToolTip="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInputToolTip}"/>
+                            <MenuItem Header="{x:Static resx:GUILabels.CreateInterimCompletedInput}" Command="{Binding JobListVm.NewCompletedInputCommand}" />
+                            <MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" />
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding JobListVm.AddJobAsyncCommand}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
