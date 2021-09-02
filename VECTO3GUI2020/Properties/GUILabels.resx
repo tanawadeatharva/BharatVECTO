@@ -123,11 +123,23 @@
   <data name="NewPrimaryAndInterimJob" xml:space="preserve">
     <value>New Primary Job with Interim Input</value>
   </data>
+  <data name="NewPrimaryAndInterimJobToolTip" xml:space="preserve">
+    <value>Create a new Primary Job with Interim Input</value>
+  </data>
   <data name="NewInterimOrCompletedJob" xml:space="preserve">
     <value>New Interim/Completed Job</value>
   </data>
+  <data name="NewInterimOrCompletedJobToolTip" xml:space="preserve">
+    <value>Create a new Interim/Completed Job</value>
+  </data>
   <data name="NewCompleteJob" xml:space="preserve">
     <value>New Complete Job</value>
+  </data>
+  <data name="NewCompleteJobToolTip" xml:space="preserve">
+    <value>Create a new Complete Job</value>
+  </data>
+  <data name="CreateInterimCompletedInput" xml:space="preserve">
+    <value>Create Interim/Completed Input</value>
   </data>
   <data name="no manufacturing stages" xml:space="preserve">
     <value>No Manufacturing Steps</value>
@@ -158,5 +170,14 @@
   </data>
   <data name="Components_Conventional_CompletedBusType" xml:space="preserve">
     <value>Components_Conventional_CompletedBusType</value>
+  </data>
+  <data name="CreateInterimCompletedInputToolTip" xml:space="preserve">
+    <value>Create Interim/Completed Input</value>
+  </data>
+  <data name="CreateExemptedInterimCompletedInput" xml:space="preserve">
+    <value>Create Exempted Interim/Completed Input</value>
+  </data>
+  <data name="CreateExemptedInterimCompletedInputToolTip" xml:space="preserve">
+    <value>Create Exempted Interim/Completed Input</value>
   </data>
 </root>
