@@ -124,19 +124,19 @@
     <value>New Primary Job with Interim Input</value>
   </data>
   <data name="NewPrimaryAndInterimJobToolTip" xml:space="preserve">
-    <value>Create a new Primary Job with Interim Input</value>
+    <value>Special Case 1: Provide primary input XML and some parameters of completed vehicle (interim XML) to create a VECTO job.</value>
   </data>
   <data name="NewInterimOrCompletedJob" xml:space="preserve">
     <value>New Interim/Completed Job</value>
   </data>
   <data name="NewInterimOrCompletedJobToolTip" xml:space="preserve">
-    <value>Create a new Interim/Completed Job</value>
+    <value>General case: Provide VIF and completed model parameters to create a VECTO job.</value>
   </data>
   <data name="NewCompleteJob" xml:space="preserve">
     <value>New Complete Job</value>
   </data>
   <data name="NewCompleteJobToolTip" xml:space="preserve">
-    <value>Create a new Complete Job</value>
+    <value>Special Case 2: Provide primary input XML and all parameters of completed vehicle to create a VECTO job.</value>
   </data>
   <data name="CreateInterimCompletedInput" xml:space="preserve">
     <value>Create Interim/Completed Input</value>
@@ -172,7 +172,7 @@
     <value>Components_Conventional_CompletedBusType</value>
   </data>
   <data name="CreateInterimCompletedInputToolTip" xml:space="preserve">
-    <value>Create Interim/Completed Input</value>
+    <value></value>
   </data>
   <data name="CreateExemptedInterimCompletedInput" xml:space="preserve">
     <value>Create Exempted Interim/Completed Input</value>
