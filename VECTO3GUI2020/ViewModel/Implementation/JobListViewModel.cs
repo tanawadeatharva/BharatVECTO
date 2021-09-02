@@ -409,7 +409,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							Time = DateTime.Now,
 							Type = MessageType.InfoMessage,
 						});
-						status.Report("No jobs selected");
+						status.Report("No Jobs selected");
 						return;
 					}
 				}
@@ -631,7 +631,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				PrintRuns(justFinished, fileWriters, outputMessages);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
 
-				var delayMs = 500;
+				var delayMs = 100;
 				Task.Delay(delayMs, ct).Wait(delayMs);
 			}
 			start.Stop();
