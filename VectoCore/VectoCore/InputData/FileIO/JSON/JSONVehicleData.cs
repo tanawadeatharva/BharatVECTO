@@ -113,9 +113,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected override IAdvancedDriverAssistantSystemsEngineering GetADS()
 		{
-			return _adasInputData ?? (_adasInputData = (VehicleType == VectoSimulationJobType.BatteryElectricVehicle
-				? new JSONADASInputDataV10BEV(this)
-				: base.GetADS()));
+			if (_adasInputData != null)
+				return _adasInputData;
+
+			switch (VehicleType) {
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return _adasInputData = new JSONADASInputDataV10BEV(this);
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return _adasInputData = new JSONADASInputDataV10HEV(this);
+				default:
+					return base.GetADS();
+			}
 		}
 		
 
