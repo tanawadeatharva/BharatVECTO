@@ -66,8 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual RetarderType Type
 		{
-			get
-			{
+			get {
 				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
 				return RetarderTypeHelper.Parse(retarderType);
 			}
@@ -77,25 +76,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData LossMap
 		{
-			get
-			{
+			get {
 				if (Body[JsonKeys.Vehicle_Retarder] != null &&
-					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null)
-				{
+					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
 					var lossmapFile = Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile];
-					if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>()))
-					{
+					if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
 						return null;
 					}
 
-					try
-					{
+					try {
 						return ReadTableData(lossmapFile.Value<string>(), "LossMap");
-					}
-					catch (Exception)
-					{
-						if (!TolerateMissing)
-						{
+					} catch (Exception) {
+						if (!TolerateMissing) {
 							throw;
 						}
 
@@ -116,14 +108,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONRetarderInputDataBEV : JSONRetarderInputData
 	{
-		public JSONRetarderInputDataBEV(JSONVehicleDataV7 vehicle) : base(vehicle){}
+		public JSONRetarderInputDataBEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
 		public override RetarderType Type
 		{
-			get
-			{
-				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle)
-				{
+			get {
+				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle) {
 					return RetarderType.None;
 				}
 
@@ -133,10 +123,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override double Ratio
 		{
-			get
-			{
-				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle)
-				{
+			get {
+				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle) {
 					return 0.0;
 				}
 				return base.Ratio;
@@ -150,17 +138,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	internal class JSONAngledriveInputData : JSONSubComponent, IAngledriveInputData
 	{
 		public JSONAngledriveInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile)
-		{}
+		{ }
 
 		#region IAngledriveInputData
 
 		public virtual AngledriveType Type
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
-				if (angleDrive == null)
-				{
+				if (angleDrive == null) {
 					return AngledriveType.None;
 				}
 
@@ -170,11 +156,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double Ratio
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
-				if (angleDrive == null)
-				{
+				if (angleDrive == null) {
 					return double.NaN;
 				}
 
@@ -184,28 +168,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData LossMap
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
-				if (angleDrive == null || angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile] == null)
-				{
+				if (angleDrive == null || angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile] == null) {
 					return null;
 				}
 
 				var lossmapFile = angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile];
-				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>()))
-				{
+				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
 					return null;
 				}
 
-				try
-				{
+				try {
 					return ReadTableData(lossmapFile.Value<string>(), "LossMap");
-				}
-				catch (Exception)
-				{
-					if (!TolerateMissing)
-					{
+				} catch (Exception) {
+					if (!TolerateMissing) {
 						throw;
 					}
 
@@ -226,7 +203,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONAirdragInputData : JSONSubComponent, IAirdragEngineeringInputData
 	{
-		public JSONAirdragInputData(JSONVehicleDataV7 vehicle) : base(vehicle) {}
+		public JSONAirdragInputData(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
 		#region Airdrag
 
@@ -243,16 +220,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData CrosswindCorrectionMap
 		{
-			get
-			{
-				try
-				{
+			get {
+				try {
 					return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File");
-				}
-				catch (Exception)
-				{
-					if (!TolerateMissing)
-					{
+				} catch (Exception) {
+					if (!TolerateMissing) {
 						throw;
 					}
 
@@ -277,11 +249,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string PTOTransmissionType
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null)
-				{
+				if (pto == null) {
 					return "None";
 				}
 
@@ -291,28 +261,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData PTOLossMap
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null || pto[JsonKeys.Vehicle_PTO_LossMapFile] == null)
-				{
+				if (pto?[JsonKeys.Vehicle_PTO_LossMapFile] == null) {
 					return null;
 				}
 
 				var lossmapFile = pto[JsonKeys.Vehicle_PTO_LossMapFile];
-				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>()))
-				{
+				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
 					return null;
 				}
 
-				try
-				{
+				try {
 					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap");
-				}
-				catch (Exception)
-				{
-					if (!TolerateMissing)
-					{
+				} catch (Exception) {
+					if (!TolerateMissing) {
 						throw;
 					}
 
@@ -325,28 +288,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData PTOCycle
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null)
-				{
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
 					return null;
 				}
 
 				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
-				if (string.IsNullOrWhiteSpace(cycle.Value<string>()))
-				{
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
 					return null;
 				}
 
-				try
-				{
+				try {
 					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle");
-				}
-				catch (Exception)
-				{
-					if (!TolerateMissing)
-					{
+				} catch (Exception) {
+					if (!TolerateMissing) {
 						throw;
 					}
 
@@ -355,7 +311,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual TableData PTOCycleDuringStop {
+		public virtual TableData PTOCycleDuringStop
+		{
 			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
 				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
@@ -376,7 +333,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual TableData PTOCycleWhileDriving {
+		public virtual TableData PTOCycleWhileDriving
+		{
 			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
 				if (pto == null || pto[JsonKeys.Vehicle_PTO_CycleDriving] == null) {
@@ -405,7 +363,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONADASInputDataV7 : JSONSubComponent, IAdvancedDriverAssistantSystemsEngineering
 	{
-		public JSONADASInputDataV7(JSONVehicleDataV7 vehicle) : base(vehicle) {}
+		public JSONADASInputDataV7(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
@@ -425,7 +383,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONADASInputDataV8 : JSONADASInputDataV7
 	{
-		public JSONADASInputDataV8(JSONVehicleDataV7 vehicle) : base(vehicle) {}
+		public JSONADASInputDataV8(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
 		#region Overrides of JSONADASInputDataV7
 
@@ -452,16 +410,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	internal class JSONADASInputDataV10HEV : JSONADASInputDataV8
 	{
 		public JSONADASInputDataV10HEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
-		
+
 		public override EcoRollType EcoRoll => EcoRollType.None;
 	}
 
 	internal class JSONADASInputDataV10BEV : JSONADASInputDataV8
 	{
 		public JSONADASInputDataV10BEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
-		
+
 		public override bool EngineStopStart => false;
-		
+
 		public override EcoRollType EcoRoll => EcoRollType.None;
 	}
 
@@ -474,7 +432,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IElectricConsumersDeclarationData, IPneumaticSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IHVACBusAuxiliariesDeclarationData
 	{
-		public JSONBusAuxiliariesData(JSONVehicleDataV7 vehicle) : base(vehicle) {}
+		public JSONBusAuxiliariesData(JSONVehicleDataV7 vehicle) : base(vehicle) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
@@ -503,8 +461,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<IAlternatorDeclarationInputData> Alternators
 		{
-			get
-			{
+			get {
 				var maxAlternatorPower =
 					Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>();
 
@@ -519,9 +476,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
 		{
-			get
-			{
-				var batteryCapacity =  Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>();
+			get {
+				var batteryCapacity = Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>();
 				if (batteryCapacity == null) {
 					return null;
 				}
@@ -535,7 +491,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IElectricConsumersDeclarationData
 
-        public virtual bool? InteriorLightsLED => false;
+		public virtual bool? InteriorLightsLED => false;
 
 		public virtual bool? DayrunninglightsLED => false;
 
@@ -578,7 +534,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-        public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
+		public virtual BusHVACSystemConfiguration? SystemConfiguration { get; set; }
 		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
 		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
 
@@ -610,7 +566,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			_entries = entries;
 		}
 
-		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries => _entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
+		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries =>
+			_entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
 
 		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries => _entries;
 	}
@@ -622,7 +579,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public IREESSPackInputData REESSPack { get; set; }
 
-		
+
 		public int Count { get; internal set; }
 		public int StringId { get; internal set; }
 	}
@@ -646,5 +603,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
-	
+
 }

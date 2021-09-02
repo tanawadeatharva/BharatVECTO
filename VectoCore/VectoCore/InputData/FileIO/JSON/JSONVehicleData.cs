@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
 			foreach (var entry in Body["ElectricMotors"]) {
-				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
+				var tmp = new ElectricMachineEntry<IElectricMotorEngineeringInputData> {
 					Position = PowertrainPositionHelper.Parse(entry.GetEx<string>("Position")),
 					RatioADC = entry.GetEx<double>("Ratio"),
 					RatioPerGear = entry["RatioPerGear"] != null
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var entries = new List<IElectricStorageEngineeringInputData>();
 			if (Body["Batteries"] != null) {
 				foreach (var entry in Body["Batteries"]) {
-					entries.Add(new JSONElectricStorageEngineeringInputData() {
+					entries.Add(new JSONElectricStorageEngineeringInputData {
 						Count = entry.GetEx<int>("NumPacks"),
 						StringId = entry.GetEx<int>("StreamId"),
 						REESSPack = JSONInputDataFactory.ReadREESSData(
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					});
 				}
 			} else {
-				entries.Add(new JSONElectricStorageEngineeringInputData() {
+				entries.Add(new JSONElectricStorageEngineeringInputData {
 					Count = Body["Battery"].GetEx<int>("NumPacks"),
 					StringId = 0,
 					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
@@ -266,7 +266,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 				foreach (var entry in (JObject)Body["TorqueLimits"]) {
 					retVal.Add(
-						new TorqueLimitInputData() {
+						new TorqueLimitInputData {
 							Gear = entry.Key.ToInt(),
 							MaxTorque = entry.Value.ToString().ToDouble(0).SI<NewtonMeter>()
 						});
@@ -341,7 +341,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						AxleType = axle["Type"] != null
 							? axle.GetEx<string>("Type").ParseEnum<AxleType>()
 							: (idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven),
-						Tyre = new TyreInputData() {
+						Tyre = new TyreInputData {
 							DataSource = new DataSource {
 								SourceType = DataSourceType.JSONFile,
 								SourceFile = Source,
