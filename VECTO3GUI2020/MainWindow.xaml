@@ -25,23 +25,21 @@
                 <Menu IsMainMenu="True">
                     <MenuItem Header="File" VerticalAlignment="Stretch">
                         <MenuItem Header="New File">
-                            <MenuItem Header="{x:Static resx:GUILabels.NewInterimOrCompletedJob}" Command="{Binding JobListVm.NewManufacturingStageFileCommand}"/>
-                            <MenuItem Header="{x:Static resx:GUILabels.NewPrimaryAndInterimJob}" 
-                                      Command="{Binding JobListVm.NewVifCommand}" >
+                            <MenuItem Header="{x:Static resx:GUILabels.NewInterimOrCompletedJob}" Command="{Binding JobListVm.NewManufacturingStageFileCommand}" ToolTip="{x:Static resx:GUILabels.NewInterimOrCompletedJobToolTip}"/>
+                            <MenuItem Header="{x:Static resx:GUILabels.NewPrimaryAndInterimJob}" Command="{Binding JobListVm.NewVifCommand}"  ToolTip="{x:Static resx:GUILabels.NewPrimaryAndInterimJobToolTip}">
                                 <MenuItem.CommandParameter>
                                     <system:Boolean>False</system:Boolean>
                                 </MenuItem.CommandParameter>
                             </MenuItem>
 
-                            <MenuItem Header="{x:Static resx:GUILabels.NewCompleteJob}"
-                                      Command="{Binding JobListVm.NewVifCommand}">
+                            <MenuItem Header="{x:Static resx:GUILabels.NewCompleteJob}" Command="{Binding JobListVm.NewVifCommand}" ToolTip="{x:Static resx:GUILabels.NewCompleteJobToolTip}">
                                 <MenuItem.CommandParameter>
                                     <system:Boolean>True</system:Boolean>
                                 </MenuItem.CommandParameter>
                             </MenuItem>
-                                <Separator></Separator>
-                            <MenuItem Header="Create Interim/Completeted Input" Command="{Binding JobListVm.NewCompletedInputCommand}"/>
-                            <MenuItem Header="Create Exempted Interim/Completed Input" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}"/>
+                            <Separator></Separator>
+                            <MenuItem Header="{x:Static resx:GUILabels.CreateInterimCompletedInput}" Command="{Binding JobListVm.NewCompletedInputCommand}" ToolTip="{x:Static resx:GUILabels.CreateInterimCompletedInputToolTip}"/>
+                            <MenuItem Header="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInput}" Command="{Binding JobListVm.NewExemptedCompletedInputCommand}" ToolTip="{x:Static resx:GUILabels.CreateExemptedInterimCompletedInputToolTip}"/>
                         </MenuItem>
                         <MenuItem  Header="Load File" Command="{Binding JobListVm.AddJobAsyncCommand}"/>
                         <MenuItem Header="Settings" Command="{Binding OpenSettings}"/>
@@ -56,28 +54,28 @@
                     </MenuItem>
                 </Menu>
             </StackPanel>
-                <UniformGrid Margin="0 10 0 0 " Rows="1" DockPanel.Dock="Top" Width="400" HorizontalAlignment="Left">
-                    <Border x:Name="JobsButtonBorder" BorderThickness ="0 0 0 3">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JobsSelected}" Value="true">
-                                        <Setter Property="BorderBrush" Value="{StaticResource AccentColorButton}"></Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        
-                 
-                        <Button x:Name="Jobs" Margin="0 0 0 0" 
+            <UniformGrid Margin="0 10 0 0 " Rows="1" DockPanel.Dock="Top" Width="400" HorizontalAlignment="Left">
+                <Border x:Name="JobsButtonBorder" BorderThickness ="0 0 0 3">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding JobsSelected}" Value="true">
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentColorButton}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+
+                    <Button x:Name="Jobs" Margin="0 0 0 0" 
                                 VerticalAlignment="Stretch"
                                 DockPanel.Dock="Top" 
                                 Content="Jobs"
                                 Command="{Binding SwitchTopView}"
                                 CommandParameter="Jobs"
                                 Style="{DynamicResource MultiStageButtonStyle1}">
-                        </Button>
-                    </Border>
+                    </Button>
+                </Border>
 
                 <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}">
                     <Border.Style>
@@ -97,7 +95,7 @@
                             CommandParameter="Settings"
                             Style="{DynamicResource MultiStageButtonStyle1}">
                     </Button>
-                    </Border>
+                </Border>
                 <Border BorderThickness="{Binding ElementName=JobsButtonBorder, Path=BorderThickness}">
                     <Border.Style>
                         <Style TargetType="Border">

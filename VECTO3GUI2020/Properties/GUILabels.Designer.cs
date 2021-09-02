@@ -124,6 +124,42 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Exempted Interim/Completed Input.
+        /// </summary>
+        public static string CreateExemptedInterimCompletedInput {
+            get {
+                return ResourceManager.GetString("CreateExemptedInterimCompletedInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Exempted Interim/Completed Input.
+        /// </summary>
+        public static string CreateExemptedInterimCompletedInputToolTip {
+            get {
+                return ResourceManager.GetString("CreateExemptedInterimCompletedInputToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Interim/Completed Input.
+        /// </summary>
+        public static string CreateInterimCompletedInput {
+            get {
+                return ResourceManager.GetString("CreateInterimCompletedInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Interim/Completed Input.
+        /// </summary>
+        public static string CreateInterimCompletedInputToolTip {
+            get {
+                return ResourceManager.GetString("CreateInterimCompletedInputToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VECTO.
         /// </summary>
         public static string DefaultTitle {
@@ -160,6 +196,15 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a new Complete Job.
+        /// </summary>
+        public static string NewCompleteJobToolTip {
+            get {
+                return ResourceManager.GetString("NewCompleteJobToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Interim/Completed Job.
         /// </summary>
         public static string NewInterimOrCompletedJob {
@@ -169,11 +214,29 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a new Interim/Completed Job.
+        /// </summary>
+        public static string NewInterimOrCompletedJobToolTip {
+            get {
+                return ResourceManager.GetString("NewInterimOrCompletedJobToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Primary Job with Interim Input.
         /// </summary>
         public static string NewPrimaryAndInterimJob {
             get {
                 return ResourceManager.GetString("NewPrimaryAndInterimJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new Primary Job with Interim Input.
+        /// </summary>
+        public static string NewPrimaryAndInterimJobToolTip {
+            get {
+                return ResourceManager.GetString("NewPrimaryAndInterimJobToolTip", resourceCulture);
             }
         }
         

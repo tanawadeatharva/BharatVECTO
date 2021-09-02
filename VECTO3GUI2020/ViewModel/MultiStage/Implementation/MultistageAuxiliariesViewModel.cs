@@ -632,13 +632,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					case nameof(SystemConfiguration):
 						if (HeatPumpGroupEditingEnabled == true &&
 							this.GetType().GetProperty(propertyName).GetValue(this) == null) {
-							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 						}
 						break;
 					default:
 						if (_parameterViewModels[propertyName].EditingEnabled == true && this.GetType().GetProperty(propertyName).GetValue(this) == null)
 						{
-							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 						}
 						break;
 				}

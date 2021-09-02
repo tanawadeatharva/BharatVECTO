@@ -154,7 +154,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			var dialogHelper = _multistageDependencies.DialogHelper;
 			if (VehicleViewModel.HasErrors) {
-				var errorMessage = "Vehicle\n";
+				var errorMessage = "Vehicle:\n";
 				var vehicleErrorInfo = VehicleViewModel as IDataErrorInfo;
 				errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
 
@@ -163,7 +163,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					VehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
 				if (auxiliariesErrorInfo != null &&
 					!auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
-					errorMessage += "\n Auxiliaries \n";
+					errorMessage += "\nAuxiliaries:\n";
 					errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 				}
 
