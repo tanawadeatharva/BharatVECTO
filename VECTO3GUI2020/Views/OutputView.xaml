@@ -24,7 +24,7 @@
                 VerticalScrollBarVisibility="Auto"
                 DockPanel.Dock="Top" 
                 ItemsSource="{Binding Messages, IsAsync=True}" 
-                BorderThickness="1" 
+                BorderThickness="0 0 0 1" 
                 CanUserAddRows="False" 
                 AutoGenerateColumns="False" 
                 SelectionUnit="FullRow" 
