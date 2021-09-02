@@ -459,11 +459,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	internal class JSONADASInputDataV10BEV : JSONADASInputDataV8
 	{
 		public JSONADASInputDataV10BEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
-
+		
 		public override bool EngineStopStart => false;
-
+		
 		public override EcoRollType EcoRoll => EcoRollType.None;
 	}
+
+
 
 	// ###################################################################
 	// ###################################################################
