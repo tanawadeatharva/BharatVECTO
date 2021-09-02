@@ -1185,7 +1185,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					case nameof(PredictiveCruiseControlNullable):
 					case nameof(ATEcoRollReleaseLockupClutch):
 						if (AdasEditingEnabled == true && this.GetType().GetProperty(propertyName).GetValue(this) == null){
-							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 						}
 						break;
 					default:
@@ -1193,12 +1193,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							var propertyValue = this.GetType().GetProperty(propertyName)?.GetValue(this);
 							if (propertyValue == null) {
 								result =
-									$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+									$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 							} else { 
 								if (propertyValue.GetType() == typeof(string) && string.IsNullOrWhiteSpace(propertyValue as string))
 								{
 									result =
-										$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled}}";
+										$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 								}
 							}
 						}
