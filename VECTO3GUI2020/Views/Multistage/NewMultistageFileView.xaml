@@ -14,8 +14,7 @@
                 <Grid DockPanel.Dock="Top">
                     <customControls:FilePicker x:Name="NewMultistageFilePicker" Grid.Row="0" Text="{Binding VifPath}" HorizontalAlignment="Stretch" Command="{Binding AddVifFileCommand}"/>
                 </Grid>
-                <Button Style="{DynamicResource MultiStageButtonStyle1}" 
-                        Margin="4"  DockPanel.Dock="Bottom" 
+                <Button Style="{DynamicResource MultiStageButtonStyle1}" DockPanel.Dock="Bottom" 
                         Visibility="{Binding MultiStageJobViewModel, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
                         Command="{Binding CloseWindow}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
