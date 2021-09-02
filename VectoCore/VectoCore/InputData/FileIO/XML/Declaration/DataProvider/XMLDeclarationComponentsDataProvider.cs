@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected ITorqueConverterDeclarationInputData _torqueconverterInputData;
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
 		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
+		
 
 
 		public XMLDeclarationComponentsDataProviderV10(
@@ -292,7 +293,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-
+	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationHEVPxLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
 	{
@@ -306,4 +307,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
+	// ---------------------------------------------------------------------------------------
+	
+	public class XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-Px_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+		public XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
+																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+		
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+
+		#endregion
+	}
 }

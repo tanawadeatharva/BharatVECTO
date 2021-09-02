@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\";
+		private const string SCHEMA_FOLDER_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
 
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
@@ -227,11 +228,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 		
-		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml")]
-		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px_Capacitor.xml")]
-		public void TestHEVHeaveyLorry(string jobfile)
+		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
+		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", SCHEMA_FOLDER_DIR)]
+		public void TestHEVHeaveyLorry(string jobfile, string dir)
 		{
-			var filename = Path.Combine(BASE_DIR, jobfile);
+			var filename = Path.Combine(dir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
 			Assert.NotNull(dataProvider);
@@ -545,11 +546,43 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
+		
 
+		[TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml")]
+		public void TestHEVPrimaryBusAMTPx(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
+			Assert.NotNull(dataProvider);
+			Assert.NotNull(dataProvider.JobInputData);
+
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.IsNotNull(vehicle.Components.GearboxInputData);
+			TestTorqueConverter(vehicle);
+			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNotNull(vehicle.TorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+		}
+		
+		
 		#region Test existence of torque converter
 
-		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
+			private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
 		{
 			var torqueConverter = vehicle.Components.TorqueConverterInputData;
 			switch (vehicle.Components?.GearboxInputData?.Type)

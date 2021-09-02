@@ -31,16 +31,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVPxMediumLorryDataProviderV210>()
 				.Named(XMLDeclarationHEVPxMediumLorryDataProviderV210.QUALIFIED_XSD_TYPE);
 
+
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVPrimaryBusAMTPxDataProviderV210>()
+				.Named(XMLDeclarationHEVPrimaryBusAMTPxDataProviderV210.QUALIFIED_XSD_TYPE);
+
+
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompletedBusComponentsDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationHEVPxLorryComponentsDataProviderV210>()
 				.Named(XMLDeclarationHEVPxLorryComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
 
-
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210>()
+				.Named(XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
+			
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_CompletedBus>().Named(XMLComponentReaderV210_CompletedBus.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_HEV_PxHeavyLorry>().Named(XMLComponentReaderV210_HEV_PxHeavyLorry.QUALIFIED_XSD_TYPE);
+			
+			
+			Bind<IXMLComponentReader>().To<XMLPrimaryBusDeclarationComponentReaderV201>().Named(XMLPrimaryBusDeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV210>().Named(XMLElectricMachineSystemReaderV210.QUALIFIED_XSD_TYPE);
 
@@ -76,6 +86,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV210>()
 				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV210.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV210>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV210.QUALIFIED_XSD_HEV_P_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationMediumLorryVehicleDataProviderV210>()
 				.Named(XMLDeclarationMediumLorryVehicleDataProviderV210.QUALIFIED_XSD_TYPE);
