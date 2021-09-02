@@ -12,7 +12,7 @@
         <DockPanel>
             <customControls:FilePicker 
                 DockPanel.Dock="Top" 
-                Command="{Binding LoadVehicleDataCommand}" 
+                Command="{Binding ManufacturingStageViewModel.LoadVehicleDataCommand}" 
                 Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"/>
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted, Converter={StaticResource BooleanToVisibilityConverter}}">Exempted Vehicle</Label>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
