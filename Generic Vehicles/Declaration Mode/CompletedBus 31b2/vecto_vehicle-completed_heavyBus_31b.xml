@@ -24,6 +24,13 @@
 		<EntranceHeight>270</EntranceHeight>
 		<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
+		<VehicleTypeApprovalNumber>1234</VehicleTypeApprovalNumber>
+		<ADAS xsi:type="ADAS_Conventional_Type">
+			<EngineStopStart>true</EngineStopStart>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+		</ADAS>
 		<Components xsi:type="Components_Conventional_CompletedBusType">
 			<AirDrag>
 				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
