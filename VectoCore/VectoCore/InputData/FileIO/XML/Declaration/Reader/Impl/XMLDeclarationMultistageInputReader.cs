@@ -812,7 +812,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
 		{
-			return InputComplete(ATEcoRollReleaseLockupClutch, nameof(ATEcoRollReleaseLockupClutch));
+			return true;
+			//if (fullCheck) {
+			//	//use Binary AND to execute all Statements and gather information about missing parameters.
+			//	return InputComplete(EngineStopStart, nameof(EngineStopStart))
+			//			& InputComplete(EcoRoll, nameof(EcoRoll))
+			//			& InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl));
+			//}
+			//return InputComplete(EngineStopStart, nameof(EngineStopStart))
+			//		&& InputComplete(EcoRoll, nameof(EcoRoll))
+			//		&& InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl));
 		}
 
 		public override string GetInvalidEntry()
