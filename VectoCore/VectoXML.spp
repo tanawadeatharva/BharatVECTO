@@ -380,6 +380,35 @@
 			</Folder>
 		</Folder>
 	</Folder>
+	<Folder FolderName="XML Files Generic Vehicles">
+		<Folder FolderName="SingleBus">
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\SingleBus_31b\primary_heavyBus group_P31_32_Smart_ES.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\SingleBus_34f\primary_heavyBus group_P33_34_SmartPS.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\SingleBus_31b\vecto_vehicle-completed_heavyBus_31b.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\SingleBus_34f\vecto_vehicle-completed_heavyBus_34f.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="CompletedBus">
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\airdrag.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\completed_heavyBus_31b.VIF_Report_2.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 34f\completed_heavyBus_34f.VIF_Report_2.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\input_airdragonly.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\input_aux.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\primary_heavyBus group_P31_32_Smart_ES.VIF.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\primary_heavyBus group_P31_32_Smart_ES.VIF_incl TC.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 34f\primary_heavyBus group_P33_34_SmartPS.VIF.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 31b2\vecto_vehicle-completed_heavyBus_31b.xml" HomeFolder="Yes"/>
+			<File FilePath="V:\Generic Vehicles\Declaration Mode\CompletedBus 34f\vecto_vehicle-completed_heavyBus_34f.xml" HomeFolder="Yes"/>
+		</Folder>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL_DF-DM_WHR.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL_DF.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL_WHR.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group P39_40\primary_heavyBus group P39_40_nonSmart_ESS.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group P31_32\primary_heavyBus group_P31_32_Smart_ES.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group P33_34\primary_heavyBus group_P33_34_SmartPS.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group P35_36\primary_heavyBus group_P35_36_nonSmart.xml" HomeFolder="Yes"/>
+		<File FilePath="V:\Generic Vehicles\Declaration Mode\Group P37_38\primary_heavyBus group_P37_38_SmartES_PS.xml" HomeFolder="Yes"/>
+	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_quam\Documentation\XML\RenderTable.xslt" HomeFolder="Yes"/>
 		<File FilePath="E:\QUAM\Workspace\VECTO_quam\VectoCommon\VectoHashing\Resources\XSLT\SortInputData.xslt" HomeFolder="Yes"/>
