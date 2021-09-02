@@ -1163,7 +1163,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			
 			foreach (XmlNode electricMachineNode in electricMachineNodes) {
 				var powertrainPosition =
-					PowertrainPositionHelper.Parse("P" + GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
+					PowertrainPositionHelper.Parse(
+						GetString(XMLNames.ElectricMachine_Position, electricMachineNode),
+						BaseNode.SchemaInfo.SchemaType.Name);
 				
 				if(!motorTorqueLimits.ContainsKey(powertrainPosition))
 					motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
@@ -1246,6 +1248,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	}
 
 	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVSxHeavyLorryDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-Sx_HeavyLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		public XMLDeclarationHEVSxHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
+
+		public override TableData MaxPropulsionTorque => null;
+
+		#endregion
+	}
 
 
 }

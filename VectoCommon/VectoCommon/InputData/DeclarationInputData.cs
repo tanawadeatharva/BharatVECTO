@@ -773,9 +773,23 @@ namespace TUGraz.VectoCommon.InputData
 		public double MechanicalTransmissionEfficiency { get; set; }
 
 		public TableData MechanicalTransmissionLossMap { get; set; }
+
+		public IADCDeclarationInputData ADC {get; set; }
+	}
+	
+	public interface IADCDeclarationInputData : IComponentInputData
+	{
+		/// <summary>
+		/// P176
+		/// </summary>
+		double Ratio { get; }
+
+		/// <summary>
+		/// P173, P174, P175
+		/// </summary>
+		TableData LossMap { get; }
 	}
 
-	
 
 	public interface IElectricStorageSystemDeclarationInputData 
 	{

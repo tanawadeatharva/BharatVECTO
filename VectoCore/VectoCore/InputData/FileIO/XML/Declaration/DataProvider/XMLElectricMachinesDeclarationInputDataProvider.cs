@@ -14,7 +14,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public const string XSD_TYPE = "ElectricMachineType";
+		public const string XSD_GEN_TYPE = "ElectricMachineGENType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
 
 		private IXMLDeclarationVehicleData _vehicle;
 		private IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> _entries;
@@ -37,12 +39,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
 		{
 			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
-				Position = PowertrainPositionHelper.Parse("P" + GetString(XMLNames.ElectricMachine_PowertrainPosition)),
+				Position = PowertrainPositionHelper.Parse(
+					GetString(XMLNames.ElectricMachine_PowertrainPosition),
+					BaseNode.ParentNode.SchemaInfo.SchemaType.Name),
 				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
 			};
-			
-			SetGearRatios(machineEntry);
+			if(ElementExists(XMLNames.ElectricMachine_P2_5GearRatios))
+				SetGearRatios(machineEntry);
 			
 			return new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>>{machineEntry};
 		}

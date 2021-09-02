@@ -299,8 +299,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-Px_LorryType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public const string XSD_HEV_SX_TYPE = "Components_HEV-S2_LorryType";
 
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_HEV_SX_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_SX_TYPE);
 		
 		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }

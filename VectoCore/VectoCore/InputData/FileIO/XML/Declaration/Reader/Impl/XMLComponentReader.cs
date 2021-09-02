@@ -519,8 +519,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public const string XSD_TYPE = "ElectricMachineType";
+		public const string XSD_GEN_TYPE = "ElectricMachineGENType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
@@ -653,5 +655,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLHeavyLorryHEVS2DeclartionComponentReaderV201 : XMLComponentReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLHeavyLorryHEVS2DeclartionComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+
 	}
 }

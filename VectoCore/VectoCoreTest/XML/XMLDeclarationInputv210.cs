@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\";
-		private const string SCHEMA_FOLDER_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
+		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
 
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 		
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
-		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", SCHEMA_FOLDER_DIR)]
+		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", ADDITONAL_TESTS_DIR)]
 		public void TestHEVHeaveyLorry(string jobfile, string dir)
 		{
 			var filename = Path.Combine(dir, jobfile);
@@ -578,7 +578,25 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
-		
+
+		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml", BASE_DIR)]
+		[TestCase(@"HEV-S_heavyLorry_AMT_S2_ADC.xml", ADDITONAL_TESTS_DIR)]
+		public void TestHEVHeavyLorryAMTS2(string jobfile, string fileDir)
+		{
+			var filename = Path.Combine(fileDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider);
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
+		}
+
+
 		
 		#region Test existence of torque converter
 

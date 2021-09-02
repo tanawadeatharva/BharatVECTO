@@ -79,6 +79,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IElectricMotorDeclarationInputData CreateElectricMachineSystem(XmlNode electricMachineSystem);
 	}
 
+	public interface IXMLADCReader
+	{
+		IADCDeclarationInputData CreateADCInputData();
+	}
+
+
 	public interface IXMLREESSReader
 	{
 		IREESSPackInputData CreateREESSInputData(XmlNode storageNode, REESSType reessType);

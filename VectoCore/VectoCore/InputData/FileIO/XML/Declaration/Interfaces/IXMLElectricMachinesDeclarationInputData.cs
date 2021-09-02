@@ -6,5 +6,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 	public interface IXMLElectricMachinesDeclarationInputData : IElectricMachinesDeclarationInputData, IXMLResource
 	{
 		IXMLElectricMachineSystemReader ElectricMachineSystemReader { set; }
+
+		// IXMLADCReader ADCReader { set; }
 	}
 }
