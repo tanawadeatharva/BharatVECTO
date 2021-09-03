@@ -340,8 +340,10 @@ namespace TUGraz.VectoCore.OutputData
 			} else {
 				if (runData.ElectricMachinesData.Count > 0) {
 					if (!Table.Columns.Contains(Fields.ElectricEnergyConsumptionPerKm)) {
-						var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
-						col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+						lock (_tableLock) {
+							var col = Table.Columns.Add(Fields.ElectricEnergyConsumptionPerKm, typeof(ConvertedSI));
+							col.SetOrdinal(Table.Columns[Fields.CO2_KM].Ordinal);
+						}
 					}
 
 					row[Fields.ElectricEnergyConsumptionPerKm] =
@@ -522,10 +524,12 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				if (!Table.Columns.Contains(colName)) {
-					var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+					lock (_tableLock) {
+						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
 
-					// move the new column to correct position
-					col.SetOrdinal(Table.Columns[Fields.E_AUX].Ordinal);
+						// move the new column to correct position
+						col.SetOrdinal(Table.Columns[Fields.E_AUX].Ordinal);
+					}
 				}
 
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertToKiloWattHour();
@@ -545,7 +549,9 @@ namespace TUGraz.VectoCore.OutputData
 			for (uint i = 0; i <= gearCount; i++) {
 				var colName = string.Format(Fields.TIME_SHARE_PER_GEAR_FORMAT, i);
 				if (!Table.Columns.Contains(colName)) {
-					Table.Columns.Add(colName, typeof(ConvertedSI));
+					lock (_tableLock) {
+						Table.Columns.Add(colName, typeof(ConvertedSI));
+					}
 				}
 				row[colName] = (ConvertedSI)timeSharePerGear[i];
 			}
@@ -704,8 +710,10 @@ namespace TUGraz.VectoCore.OutputData
 				foreach (var entry in emColumns) {
 					var colName = string.Format(entry.Item1, em.Item1.GetName());
 					if (!Table.Columns.Contains(colName)) {
-						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
-						col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
+						lock (_tableLock) {
+							var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+							col.SetOrdinal(Table.Columns[Fields.E_GRAD].Ordinal + 1);
+						}
 					}
 					row[colName] = entry.Item2;
 				}
@@ -717,8 +725,10 @@ namespace TUGraz.VectoCore.OutputData
 						continue;
 					}
 
-					var col = Table.Columns.Add(field, typeof(double));
-					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+					lock (_tableLock) {
+						var col = Table.Columns.Add(field, typeof(double));
+						col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+					}
 				}
 
 				foreach (var field in new[] {
@@ -729,8 +739,10 @@ namespace TUGraz.VectoCore.OutputData
 						continue;
 					}
 
-					var col = Table.Columns.Add(field, typeof(ConvertedSI));
-					col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+					lock (_tableLock) {
+						var col = Table.Columns.Add(field, typeof(ConvertedSI));
+						col.SetOrdinal(Table.Columns[Fields.P_WHEEL].Ordinal);
+					}
 				}
 				row[Fields.E_REESS_LOSS] = modData.REESSLoss().ConvertToKiloWattHour();
 				row[Fields.E_REESS_T_chg] = modData.WorkREESSChargeTerminal().ConvertToKiloWattHour();
@@ -909,10 +921,12 @@ namespace TUGraz.VectoCore.OutputData
 				var colName = string.Format(Fields.AUX_TECH_FORMAT, aux.ID);
 
 				if (!Table.Columns.Contains(colName)) {
-					var col = Table.Columns.Add(colName, typeof(string));
+					lock (_tableLock) {
+						var col = Table.Columns.Add(colName, typeof(string));
 
-					// move the new column to correct position
-					col.SetOrdinal(Table.Columns[Fields.CARGO_VOLUME].Ordinal);
+						// move the new column to correct position
+						col.SetOrdinal(Table.Columns[Fields.CARGO_VOLUME].Ordinal);
+					}
 				}
 
 				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
