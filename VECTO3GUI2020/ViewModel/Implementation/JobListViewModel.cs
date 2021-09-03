@@ -709,7 +709,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
 
-			status.Report($"Simulation finished in {start.Elapsed.TotalSeconds} s");
+			status.Report($"Simulation finished in {start.Elapsed.TotalSeconds,0:F1} s");
 
 		}
 		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters, IProgress<MessageEntry> outputMessages)
