@@ -1185,13 +1185,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					case nameof(EcoRollTypeNullable):
 					case nameof(EngineStopStartNullable):
 					case nameof(PredictiveCruiseControlNullable):
-					case nameof(ATEcoRollReleaseLockupClutch):
-						if (AdasEditingEnabled == true && this.GetType().GetProperty(propertyName).GetValue(this) == null){
+                    case nameof(ATEcoRollReleaseLockupClutch): // only required for AT transmission
+                        if (AdasEditingEnabled == true && (!_parameterViewModels[propertyName].AllowNullValue && this.GetType().GetProperty(propertyName).GetValue(this) == null)) {
 							result = $"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 						}
 						break;
 					default:
-						if (_parameterViewModels[propertyName].EditingEnabled) {
+						if (_parameterViewModels[propertyName].EditingEnabled && !_parameterViewModels[propertyName].AllowNullValue) {
 							var propertyValue = this.GetType().GetProperty(propertyName)?.GetValue(this);
 							if (propertyValue == null) {
 								result =
