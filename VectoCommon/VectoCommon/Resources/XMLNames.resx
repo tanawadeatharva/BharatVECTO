@@ -1788,4 +1788,22 @@
   <data name="Capacitor_MinVoltage" xml:space="preserve">
     <value>MinVoltage</value>
   </data>
+  <data name="ADC_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="ADC_TorqueLossMap" xml:space="preserve">
+    <value>TorqueLossMap</value>
+  </data>
+  <data name="ADC_TorqueLossMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="ADC_TorqueLossMap_InputSpeed" xml:space="preserve">
+    <value>inputSpeed</value>
+  </data>
+  <data name="ADC_TorqueLossMap_InputTorque" xml:space="preserve">
+    <value>inputTorque</value>
+  </data>
+  <data name="ADC_TorqueLossMap_TorqueLoss" xml:space="preserve">
+    <value>torqueLoss</value>
+  </data>
 </root>

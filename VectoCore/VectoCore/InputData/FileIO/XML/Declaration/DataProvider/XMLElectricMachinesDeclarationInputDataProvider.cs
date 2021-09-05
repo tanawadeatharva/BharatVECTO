@@ -45,6 +45,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),
 			};
+
+			if (ElementExists("ADC"))
+				machineEntry.ADC = ElectricMachineSystemReader.ADCInputData;
+
 			if(ElementExists(XMLNames.ElectricMachine_P2_5GearRatios))
 				SetGearRatios(machineEntry);
 			
@@ -52,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		private void SetGearRatios(ElectricMachineEntry<IElectricMotorDeclarationInputData> machineEntry)
-		{
+		{ 
 			var gearRatios = GetNode(XMLNames.ElectricMachine_P2_5GearRatios, null, false);
 			if (gearRatios != null) {
 				var gears = GetNodes(XMLNames.GearRatio_Ratio, gearRatios);
@@ -66,10 +70,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		
+
+
+
 		#region Implementation of IXMLElectricMachinesDeclarationInputData
 
 		public IXMLElectricMachineSystemReader ElectricMachineSystemReader { protected get; set; }
-
+	
 		#endregion
 		
 		#region Overrides of AbstractXMLResource
@@ -96,4 +104,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
-}
+
+	public class XMLADCDeclarationInputDataV2101 : AbstractCommonComponentType, IXMLADCDeclarationInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public const string XSD_TYPE = "ADCDataDeclarationType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLADCDeclarationInputDataV2101(XmlNode componentNode, string sourceFile)
+			: base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		#region Implementation of IADCDeclarationInputData
+
+		public double Ratio => GetDouble(XMLNames.ADC_Ratio);
+
+		public TableData LossMap => ReadTableData(XMLNames.ADC_TorqueLossMap, XMLNames.ADC_TorqueLossMap_Entry,
+			new Dictionary<string, string> {
+				{ XMLNames.ADC_TorqueLossMap_InputSpeed, XMLNames.ADC_TorqueLossMap_InputSpeed },
+				{ XMLNames.ADC_TorqueLossMap_InputTorque, XMLNames.ADC_TorqueLossMap_InputTorque },
+				{ XMLNames.ADC_TorqueLossMap_TorqueLoss, XMLNames.ADC_TorqueLossMap_TorqueLoss },
+			});
+
+		#endregion
+	} }

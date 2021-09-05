@@ -61,6 +61,60 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ratio.
+        /// </summary>
+        public static string ADC_Ratio {
+            get {
+                return ResourceManager.GetString("ADC_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueLossMap.
+        /// </summary>
+        public static string ADC_TorqueLossMap {
+            get {
+                return ResourceManager.GetString("ADC_TorqueLossMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string ADC_TorqueLossMap_Entry {
+            get {
+                return ResourceManager.GetString("ADC_TorqueLossMap_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to inputSpeed.
+        /// </summary>
+        public static string ADC_TorqueLossMap_InputSpeed {
+            get {
+                return ResourceManager.GetString("ADC_TorqueLossMap_InputSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to inputTorque.
+        /// </summary>
+        public static string ADC_TorqueLossMap_InputTorque {
+            get {
+                return ResourceManager.GetString("ADC_TorqueLossMap_InputTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to torqueLoss.
+        /// </summary>
+        public static string ADC_TorqueLossMap_TorqueLoss {
+            get {
+                return ResourceManager.GetString("ADC_TorqueLossMap_TorqueLoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CdxA_0.
         /// </summary>
         public static string AirDrag_CdxA_0 {

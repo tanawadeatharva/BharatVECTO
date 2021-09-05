@@ -243,8 +243,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 
-			TestElectricMachines(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
+			TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First());
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
 			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
@@ -267,11 +267,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#region Test Electric Machines Reader
 
-		private void TestElectricMachines(IElectricMachinesDeclarationInputData electricMachines)
+		private void TestElectricMachinesData(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachineEntry)
 		{
-			Assert.IsNotNull(electricMachines);
-			Assert.AreEqual(1, electricMachines.Entries.Count);
-			var eMachine = electricMachines.Entries.First().ElectricMachine;
+			Assert.IsNotNull(eMachineEntry);
+			var eMachine = eMachineEntry.ElectricMachine;
 
 			Assert.IsNotNull(eMachine);
 			Assert.AreEqual("a", eMachine.Manufacturer);
@@ -594,13 +593,73 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
+			TestElectricMachines(vehicle.Components.ElectricMachines.Entries);
+			Assert.IsNotNull(vehicle.Components.GearboxInputData);
+
+			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+		}
+
+		private void TestElectricMachines(IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> eMachines)
+		{
+			foreach (var eMachine in eMachines) {
+				switch (eMachine.Position) {
+					case PowertrainPosition.GEN:
+						TestElectricMachineGEN(eMachine);
+						break;
+					case PowertrainPosition.BatteryElectricE2:
+						TestElectricMachine(eMachine);
+						break;
+				}
+			}
+		}
+
+		private void TestElectricMachineGEN(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachine)
+		{
+			Assert.AreEqual(1, eMachine.Count);
+			TestElectricMachinesData(eMachine);
+			TestADC(eMachine.ADC);
+		}
+
+		private void TestElectricMachine(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachine)
+		{
+			Assert.AreEqual(1, eMachine.Count);
+			TestElectricMachinesData(eMachine);
+			TestADC(eMachine.ADC);
+		}
+
+		private void TestADC(IADCDeclarationInputData adcData)
+		{
+			Assert.AreEqual("ADC Manufacturer", adcData.Manufacturer);
+			Assert.AreEqual("ADC Model", adcData.Model);
+			Assert.AreEqual("adcadc", adcData.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-01-01T00:00:00Z").ToUniversalTime(), adcData.Date);
+			Assert.AreEqual("adccda", adcData.AppVersion);
+			Assert.AreEqual(12.123, adcData.Ratio);
+			Assert.AreEqual(CertificationMethod.Option1, adcData.CertificationMethod);
+			Assert.IsNotNull(adcData.DigestValue);
+
+			TestTorqueLossMapEntry("10.00","40.00" ,"30.00", adcData.LossMap.Rows[0]);
+			TestTorqueLossMapEntry("11.00", "41.00", "31.00", adcData.LossMap.Rows[1]);
+			TestTorqueLossMapEntry("12.00", "41.00", "32.00", adcData.LossMap.Rows[2]);
+			TestTorqueLossMapEntry("13.00", "42.00", "33.00", adcData.LossMap.Rows[3]);
+		}
+
+		private void TestTorqueLossMapEntry(string inputSpeed, string inputTorque, string torqueLoss, DataRow row)
+		{
+			Assert.AreEqual(inputSpeed, row[XMLNames.ADC_TorqueLossMap_InputSpeed]);
+			Assert.AreEqual(inputTorque, row[XMLNames.ADC_TorqueLossMap_InputTorque]);
+			Assert.AreEqual(torqueLoss, row[XMLNames.ADC_TorqueLossMap_TorqueLoss]);
 		}
 
 
-		
 		#region Test existence of torque converter
 
-			private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
+		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
 		{
 			var torqueConverter = vehicle.Components.TorqueConverterInputData;
 			switch (vehicle.Components?.GearboxInputData?.Type)

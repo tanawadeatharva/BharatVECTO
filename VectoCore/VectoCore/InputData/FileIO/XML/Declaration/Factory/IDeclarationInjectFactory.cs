@@ -97,6 +97,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLSuperCapDeclarationInputData CreateSuperCapDeclarationInputData(
 			string version, XmlNode componentNode, string sourceFile);
 
+		IXMLADCDeclarationInputData CreateADCDeclarationInputData(
+			string version, XmlNode componentNode, string sourceFile);
+
 		IXMLTorqueConverterDeclarationInputData CreateTorqueconverterData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
