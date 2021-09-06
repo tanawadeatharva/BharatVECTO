@@ -299,10 +299,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-Px_LorryType";
-		public const string XSD_HEV_S2_TYPE = "Components_HEV-S2_LorryType";
-
+		
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		public static readonly string QUALIFIED_HEV_S2_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S2_TYPE);
 
 		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
@@ -310,20 +308,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------	
 
-	public class XMLDeclarationHEVS3LorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHEVS2LorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Components_HEV-S3_LorryType";
+		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHEVS3LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
+	}
+	
+	// ---------------------------------------------------------------------------------------	
 
-		#region Overrides of XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHEVSXLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public const string XSD_HEV_S3_TYPE = "Components_HEV-S3_LorryType";
+		public const string XSD_HEV_S4_TYPE = "Components_HEV-S4_LorryType";
 
-		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
-
-		#endregion
+		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
+		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
+		
+		public XMLDeclarationHEVSXLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------

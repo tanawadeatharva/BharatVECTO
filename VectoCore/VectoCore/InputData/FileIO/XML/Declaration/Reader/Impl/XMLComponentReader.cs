@@ -683,7 +683,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
-
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLHeavyLorryHEVS2DeclartionComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
@@ -696,18 +695,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-S3_LorryType";
-
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLHeavyLorryHEVS3DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle,
-			XmlNode componentsNode)
-			: base(vehicle, componentsNode) { }
+			XmlNode componentsNode) : base(vehicle, componentsNode) { }
 		
 		#region Overrides of XMLComponentReaderV10
 
 		public override IGearboxDeclarationInputData GearboxInputData => null;
 		public override IAngledriveInputData AngledriveInputData => null;
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
 		
 		#endregion
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLHeavyLorryHEVS4DeclarationComponentReaderV201 : XMLHeavyLorryHEVS3DeclarationComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S4_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLHeavyLorryHEVS4DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+		
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		#endregion
+	}
+
+
 }
