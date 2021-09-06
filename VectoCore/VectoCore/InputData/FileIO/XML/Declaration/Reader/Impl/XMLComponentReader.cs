@@ -706,7 +706,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLPrimaryBusHEVS4DeclarationComponentReaderV201 : XMLPrimaryBusHEVS3DeclarationComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S4_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		public XMLPrimaryBusHEVS4DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		#endregion
+	}
+	
+	// ---------------------------------------------------------------------------------------
+	
 	public class XMLHeavyLorryHEVS2DeclartionComponentReaderV201 : XMLComponentReaderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;

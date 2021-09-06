@@ -1252,7 +1252,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationPrimaryBusHEVS3ComponentDataProviderV210
+			Components is XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210
 				? null : base.TorqueLimits;
 
 		#endregion
