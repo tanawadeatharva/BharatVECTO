@@ -1255,18 +1255,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
+		
 		public XMLDeclarationHEVSxHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
-
-
+		
 		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
 
 		public override TableData MaxPropulsionTorque => null;
 
 		#endregion
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			Components is XMLDeclarationHEVS3LorryComponentsDataProviderV210 ? null : base.TorqueLimits;
+			
+		#endregion
 	}
-
-
 }
