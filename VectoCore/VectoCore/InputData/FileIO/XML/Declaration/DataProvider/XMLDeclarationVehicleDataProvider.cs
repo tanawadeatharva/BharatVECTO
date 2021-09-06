@@ -1248,6 +1248,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			Components is XMLDeclarationPrimaryBusHEVS3ComponentDataProviderV210
+				? null : base.TorqueLimits;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1297,7 +1305,4 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 
 	}
-
-	// ---------------------------------------------------------------------------------------
-
 }

@@ -110,6 +110,8 @@ namespace TUGraz.VectoCommon.InputData {
 				case "Components_HEV-S3_LorryType":
 				case "Components_HEV-S4_LorryType":
 				case "Components_HEV-S2_PrimaryBusType":
+				case "Components_HEV-S3_PrimaryBusType":
+				case "Components_HEV-S4_PrimaryBusType":
 				case "Components_PEV-E2_LorryType":
 				case "Components_PEV-E3_LorryType":
 				case "Components_PEV-E4_LorryType":

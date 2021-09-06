@@ -305,8 +305,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 			var electricMachine = Factory.CreateElectricMachinesData(version, Vehicle, componentNode, sourcefile);
 			electricMachine.ElectricMachineSystemReader = Factory.CreateElectricMotorReader(version, Vehicle, componentNode, sourcefile);
-			
-			//electricMachine.ADCReader = Factory.CreateADCReader(version, Vehicle, componentNode, sourcefile);
 			return electricMachine;
 		}
 
@@ -660,9 +658,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
 		public XMLPrimaryBusHEVPxDeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
-			: base(vehicle, componentsNode)
-		{
-		}
+			: base(vehicle, componentsNode) { }
 
 		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
 		
@@ -687,8 +683,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public XMLPrimaryBusHEVS2DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
 			: base(vehicle, componentsNode) { }
 	}
-	
+
 	// ---------------------------------------------------------------------------------------
+
+	public class XMLPrimaryBusHEVS3DeclarationComponentReaderV201 : XMLPrimaryBusHEVPxDeclarationComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S3_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLPrimaryBusHEVS3DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IGearboxDeclarationInputData GearboxInputData => null;
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
+		public override IAngledriveInputData AngledriveInputData => null;
+	
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 
 	public class XMLHeavyLorryHEVS2DeclartionComponentReaderV201 : XMLComponentReaderV10
 	{

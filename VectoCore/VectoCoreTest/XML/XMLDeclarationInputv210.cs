@@ -667,7 +667,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml")]
-		public void TestHeavyLorryS3(string jobfile)
+		public void TestHEVHeavyLorryS3(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -700,7 +700,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml")]
-		public void TestHeavyLorryS4(string jobfile)
+		public void TestHEVHeavyLorryS4(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -732,7 +732,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml")]
-		public void TestMediumLorryS2(string jobfile)
+		public void TestHEVMediumLorryS2(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -764,7 +764,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml")]
-		public void TestMediumLorryS3(string jobfile)
+		public void TestHEVMediumLorryS3(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -797,7 +797,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml")]
-		public void TestMediumLorryS4(string jobfile)
+		public void TestHEVMediumLorryS4(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -829,7 +829,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml")]
-		public void TestPrimaryBusS2(string jobfile)
+		public void TestHEVPrimaryBusS2(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -859,6 +859,39 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			Assert.IsNull(vehicle.MaxPropulsionTorque);
 		}
+
+		[TestCase(@"PrimaryBus\HEV-S_primaryBus_S3.xml")]
+		public void TestHEVPrimaryBusS3(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
+			Assert.IsNull(vehicle.Components.GearboxInputData);
+			Assert.IsNull(vehicle.Components.TorqueConverterInputData);
+			Assert.IsNull(vehicle.Components.AngledriveInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNull(vehicle.TorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNull(vehicle.MaxPropulsionTorque);
+		}
+		
 
 		#region Test existence of torque converter
 
