@@ -137,7 +137,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLAuxiliaryReader>().To<XMLComponentReaderV210_Lorry>()
 				.Named(XMLComponentReaderV210_Lorry.AUXILIARIES_READER_HEV_P_QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_PrimaryBus>().Named(XMLComponentReaderV210_PrimaryBus.QUALIFIED_XSD_TYPE);
+			Bind<IXMLAuxiliaryReader>().To<XMLComponentReaderV210_Lorry>()
+				.Named(XMLComponentReaderV210_Lorry.AUXILIARIES_READER_HEV_S2_QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLComponentReader>()
+				.To<XMLComponentReaderV210_PrimaryBus>().Named(XMLComponentReaderV210_PrimaryBus.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLADASReader>()
 				.To<XMLADASReaderV210>().Named(XMLADASReaderV210.QUALIFIED_XSD_TYPE_CONVENTIONAL);

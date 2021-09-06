@@ -595,13 +595,20 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
 			TestElectricMachines(vehicle.Components.ElectricMachines.Entries);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
-
+			TestTorqueConverter(vehicle);
 			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
 			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNotNull(vehicle.TorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 
 		private void TestElectricMachines(IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> eMachines)
@@ -622,14 +629,16 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			Assert.AreEqual(1, eMachine.Count);
 			TestElectricMachinesData(eMachine);
-			TestADC(eMachine.ADC);
+			if (eMachine.ADC != null)
+				TestADC(eMachine.ADC);
 		}
 
 		private void TestElectricMachine(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachine)
 		{
 			Assert.AreEqual(1, eMachine.Count);
 			TestElectricMachinesData(eMachine);
-			TestADC(eMachine.ADC);
+			if(eMachine.ADC != null)
+				TestADC(eMachine.ADC);
 		}
 
 		private void TestADC(IADCDeclarationInputData adcData)
