@@ -828,6 +828,37 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.MaxPropulsionTorque);
 		}
 
+		[TestCase(@"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml")]
+		public void TestPrimaryBusS2(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
+			Assert.IsNotNull(vehicle.Components.GearboxInputData);
+			TestTorqueConverter(vehicle);
+			Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNotNull(vehicle.TorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNull(vehicle.MaxPropulsionTorque);
+		}
 
 		#region Test existence of torque converter
 

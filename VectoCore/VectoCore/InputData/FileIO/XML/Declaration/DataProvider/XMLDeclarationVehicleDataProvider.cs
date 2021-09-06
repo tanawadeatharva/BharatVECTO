@@ -1228,17 +1228,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPrimaryBusAMTPxDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
+	public class XMLDeclarationHEVPxPrimaryBusDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLDeclarationHEVPrimaryBusAMTPxDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+		public XMLDeclarationHEVPxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVSxPrimaryBusDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-Sx_PrimaryBusDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 
 	public class XMLDeclarationHEVSxHeavyLorryDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
 	{

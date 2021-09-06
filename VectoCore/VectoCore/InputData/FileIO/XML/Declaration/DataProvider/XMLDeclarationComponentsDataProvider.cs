@@ -335,7 +335,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-Px_PrimaryBusType";
@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
 
-		public XMLDeclarationHEVPxPrimaryBusComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
@@ -354,5 +354,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IAirdragDeclarationInputData AirdragInputData => null;
 		
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S2_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 }
