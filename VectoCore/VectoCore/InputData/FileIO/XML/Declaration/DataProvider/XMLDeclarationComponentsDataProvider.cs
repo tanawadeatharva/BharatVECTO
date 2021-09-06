@@ -314,8 +314,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
-			: base(vehicle, componentNode, sourceFile) { }
+		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 	
 	// ---------------------------------------------------------------------------------------	
@@ -328,9 +328,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
 		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
-		
-		public XMLDeclarationHEVSXLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
-			: base(vehicle, componentNode, sourceFile) { }
+
+		public XMLDeclarationHEVSXLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -350,10 +350,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
 		
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		
 		public override IAirdragDeclarationInputData AirdragInputData => null;
-
+		
 		#endregion
 	}
 }

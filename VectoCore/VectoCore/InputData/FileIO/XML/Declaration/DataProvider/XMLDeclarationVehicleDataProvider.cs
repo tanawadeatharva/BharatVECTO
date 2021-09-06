@@ -1233,8 +1233,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
+		
 		public XMLDeclarationHEVPrimaryBusAMTPxDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 	}
@@ -1258,7 +1257,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
+		
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
 			Components is XMLDeclarationHEVSXLorryComponentsDataProviderV210 ? null : base.TorqueLimits;
 			
@@ -1267,7 +1266,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVSxMediumLorryDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
+	public class XMLDeclarationHEVSxMediumLorryDataProviderV210 : XMLDeclarationHEVSxHeavyLorryDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_MediumLorryDeclarationType";
@@ -1275,6 +1274,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLDeclarationHEVSxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override XmlElement PTONode => null;
+
+		#endregion
+
 	}
 
 	// ---------------------------------------------------------------------------------------
