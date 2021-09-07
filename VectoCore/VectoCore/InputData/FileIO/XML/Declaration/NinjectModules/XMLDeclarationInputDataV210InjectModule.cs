@@ -49,6 +49,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVIEPCSMediumLorryDataProviderV210>()
 				.Named(XMLDeclarationHEVIEPCSMediumLorryDataProviderV210.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210>()
+				.Named(XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210.QUALIFIED_XSD_TYPE);
+			
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompletedBusComponentsDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
 
@@ -79,6 +82,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210>()
 				.Named(XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210>()
+				.Named(XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_CompletedBus>().Named(XMLComponentReaderV210_CompletedBus.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_HEV_PxHeavyLorry>().Named(XMLComponentReaderV210_HEV_PxHeavyLorry.QUALIFIED_XSD_TYPE);
@@ -103,6 +109,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			
 			Bind<IXMLComponentReader>().To<XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201>()
 				.Named(XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLComponentReader>().To<XMLPrimaryBusHEVIEPCSDeclarationComponentReaderV201>()
+				.Named(XMLPrimaryBusHEVIEPCSDeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV210>().Named(XMLElectricMachineSystemReaderV210.QUALIFIED_XSD_TYPE);
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV210>().Named(XMLElectricMachineSystemReaderV210.QUALIFIED_GEN_XSD_TYPE);

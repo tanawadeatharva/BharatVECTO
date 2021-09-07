@@ -392,4 +392,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-IEPC-S_PrimaryBus";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+	}
+
 }

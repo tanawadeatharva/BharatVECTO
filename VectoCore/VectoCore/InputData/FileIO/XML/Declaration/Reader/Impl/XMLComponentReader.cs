@@ -805,6 +805,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	}
 
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLPrimaryBusHEVIEPCSDeclarationComponentReaderV201 : XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-IEPC-S_PrimaryBus";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+		public XMLPrimaryBusHEVIEPCSDeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+		
+		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
+		
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => _busAuxInputData ??
+			(_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+	}
 
 
 }

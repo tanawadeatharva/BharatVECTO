@@ -1352,5 +1352,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	// ---------------------------------------------------------------------------------------
+	
+	public class XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210 : XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_PrimaryBusDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		public XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+
+		public override XmlElement PTONode => null;
+
+		#endregion
+	}
 }
