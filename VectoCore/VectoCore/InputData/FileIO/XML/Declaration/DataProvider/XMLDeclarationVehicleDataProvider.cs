@@ -1328,4 +1328,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVIEPCSMediumLorryDataProviderV210 : XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_MediumLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHEVIEPCSMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override CubicMeter CargoVolume =>
+			ElementExists(XMLNames.Vehicle_CargoVolume)
+				? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>() : null;
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+
+		public override XmlElement PTONode => null;
+
+		#endregion
+	}
+
+
 }

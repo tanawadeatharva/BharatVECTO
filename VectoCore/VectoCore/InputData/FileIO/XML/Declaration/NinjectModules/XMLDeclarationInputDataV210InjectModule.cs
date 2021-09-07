@@ -45,7 +45,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210>()
 				.Named(XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210.QUALIFIED_XSD_TYPE);
-			
+
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVIEPCSMediumLorryDataProviderV210>()
+				.Named(XMLDeclarationHEVIEPCSMediumLorryDataProviderV210.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompletedBusComponentsDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
 

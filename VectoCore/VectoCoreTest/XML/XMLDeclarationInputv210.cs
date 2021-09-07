@@ -1003,8 +1003,39 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2000.00.SI<NewtonMeter>(), gears[1].MaxOutputShaftTorque);
 		}
 
-
 		#endregion
+
+
+		[TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml")]
+		public void TestHEVIEPCSMediumLorry(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
+			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[0].Position);
+			TestIEPCData(vehicle.Components.IEPC);
+			Assert.IsNotNull(vehicle.Components.IEPC);
+			Assert.IsNull(vehicle.Components.GearboxInputData);
+			Assert.IsNull(vehicle.Components.AngledriveInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNotNull(vehicle.CargoVolume);
+			Assert.IsNull(vehicle.TorqueLimits);
+			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNull(vehicle.MaxPropulsionTorque);
+		}
 		
 		#region Test existence of torque converter
 
