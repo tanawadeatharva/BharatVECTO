@@ -403,6 +403,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
+		public IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()
 		{

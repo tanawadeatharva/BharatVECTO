@@ -146,6 +146,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 
+		IXMLIEPCInputData CreateIEPCData(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile);
+
 		// ---------------------------------------------------------------------------------------------
 
 		IXMLDeclarationInputDataReader CreateInputReader(

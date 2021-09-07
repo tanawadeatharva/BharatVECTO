@@ -85,6 +85,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; set; }
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; set; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; set; }
+		public IIEPCDeclarationInputData IEPC { get; set; }
 
 		#endregion
 	}

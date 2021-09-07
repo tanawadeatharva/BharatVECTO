@@ -924,6 +924,88 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.MaxPropulsionTorque);
 		}
 
+
+		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml")]
+		public void TestHEVIEPCHeavyLorry(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.Components.EngineInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
+			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[0].Position);
+			TestIEPCData(vehicle.Components.IEPC);
+			Assert.IsNotNull(vehicle.Components.IEPC);
+			Assert.IsNull(vehicle.Components.GearboxInputData);
+			Assert.IsNull(vehicle.Components.AngledriveInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNull(vehicle.TorqueLimits);
+			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNull(vehicle.MaxPropulsionTorque);
+		}
+
+		#region Test IEPC reader data
+
+		private void TestIEPCData(IIEPCDeclarationInputData iepcData)
+		{
+			Assert.IsNotNull(iepcData);
+			Assert.AreEqual("a", iepcData.Manufacturer);
+			Assert.AreEqual("a", iepcData.Model);
+			Assert.AreEqual("token", iepcData.CertificationNumber);
+			Assert.AreEqual(DateTime.Parse("2017-01-01T00:00:00Z").ToUniversalTime(), iepcData.Date);
+			Assert.AreEqual("aaaaa", iepcData.AppVersion);
+			Assert.AreEqual(ElectricMachineType.ASM, iepcData.ElectricMachineType);
+			Assert.AreEqual(CertificationMethod.Measured, iepcData.CertificationMethod);
+			Assert.AreEqual(1.SI<Watt>(), iepcData.R85RatedPower);
+			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepcData.Inertia);//RotationalInertia
+			Assert.AreEqual(200.00.SI<NewtonMeter>(), iepcData.ContinuousTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepcData.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(400.00.SI<NewtonMeter>(), iepcData.OverloadTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepcData.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(30.00.SI<Second>(), iepcData.OverloadTime);
+			Assert.AreEqual(483.SI<Volt>(), iepcData.TestVoltageOverload);
+			Assert.AreEqual(false, iepcData.DifferentialIncluded);
+			Assert.AreEqual(false, iepcData.DesignTypeWheelMotor);
+			Assert.IsNull(iepcData.NrOfDesignTypeWheelMotorMeasured);
+			Assert.IsNotNull(iepcData.DigestValue);
+
+			TestGearsData(iepcData.Gears);
+			TestVoltageLevel(iepcData.VoltageLevels);
+			TestDragCurve(iepcData.DragCurve);
+		}
+
+		private void TestGearsData(IList<IGearEntry> gears)
+		{
+			Assert.IsNotNull(gears);
+			Assert.AreEqual(2, gears.Count);
+
+			Assert.AreEqual(1, gears[0].GearNumber);
+			Assert.AreEqual(3.000, gears[0].Ratio);
+			Assert.IsNull(gears[0].MaxOutputShaftSpeed);
+			Assert.IsNull(gears[0].MaxOutputShaftTorque);
+
+			Assert.AreEqual(2, gears[1].GearNumber);
+			Assert.AreEqual(1.000, gears[1].Ratio);
+			Assert.IsNull(gears[1].MaxOutputShaftSpeed);
+			Assert.AreEqual(2000.00.SI<NewtonMeter>(), gears[1].MaxOutputShaftTorque);
+		}
+
+
+		#endregion
+		
 		#region Test existence of torque converter
 
 		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)

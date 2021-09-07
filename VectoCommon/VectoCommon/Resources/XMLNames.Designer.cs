@@ -2797,6 +2797,51 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gear.
+        /// </summary>
+        public static string Gear_EntryName {
+            get {
+                return ResourceManager.GetString("Gear_EntryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to number.
+        /// </summary>
+        public static string Gear_GearNumber_Attr {
+            get {
+                return ResourceManager.GetString("Gear_GearNumber_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxOutShaftSpeed.
+        /// </summary>
+        public static string Gear_MaxOutputShaftSpeed {
+            get {
+                return ResourceManager.GetString("Gear_MaxOutputShaftSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxOutShaftTorque.
+        /// </summary>
+        public static string Gear_MaxOutputShaftTorque {
+            get {
+                return ResourceManager.GetString("Gear_MaxOutputShaftTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ratio.
+        /// </summary>
+        public static string Gear_Ratio {
+            get {
+                return ResourceManager.GetString("Gear_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to engineTorque.
         /// </summary>
         public static string Gear_ShiftPolygon_EngineTorque_Attr {
@@ -2991,6 +3036,42 @@ namespace TUGraz.VectoCommon.Resources {
         public static string GearRatio_Ratio {
             get {
                 return ResourceManager.GetString("GearRatio_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IEPC.
+        /// </summary>
+        public static string IEPC_Component {
+            get {
+                return ResourceManager.GetString("IEPC_Component", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DesignTypeWheelMotor.
+        /// </summary>
+        public static string IEPC_DesignTypeWheelMotor {
+            get {
+                return ResourceManager.GetString("IEPC_DesignTypeWheelMotor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DifferentialIncluded.
+        /// </summary>
+        public static string IEPC_DifferentialIncluded {
+            get {
+                return ResourceManager.GetString("IEPC_DifferentialIncluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NrOfDesignTypeWheelMotorMeasured.
+        /// </summary>
+        public static string IEPC_NrOfDesignTypeWheelMotorMeasured {
+            get {
+                return ResourceManager.GetString("IEPC_NrOfDesignTypeWheelMotorMeasured", resourceCulture);
             }
         }
         

@@ -1806,4 +1806,31 @@
   <data name="ADC_TorqueLossMap_TorqueLoss" xml:space="preserve">
     <value>torqueLoss</value>
   </data>
+  <data name="Gear_EntryName" xml:space="preserve">
+    <value>Gear</value>
+  </data>
+  <data name="Gear_GearNumber_Attr" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="Gear_MaxOutputShaftSpeed" xml:space="preserve">
+    <value>MaxOutShaftSpeed</value>
+  </data>
+  <data name="Gear_MaxOutputShaftTorque" xml:space="preserve">
+    <value>MaxOutShaftTorque</value>
+  </data>
+  <data name="Gear_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="IEPC_Component" xml:space="preserve">
+    <value>IEPC</value>
+  </data>
+  <data name="IEPC_DesignTypeWheelMotor" xml:space="preserve">
+    <value>DesignTypeWheelMotor</value>
+  </data>
+  <data name="IEPC_DifferentialIncluded" xml:space="preserve">
+    <value>DifferentialIncluded</value>
+  </data>
+  <data name="IEPC_NrOfDesignTypeWheelMotorMeasured" xml:space="preserve">
+    <value>NrOfDesignTypeWheelMotorMeasured</value>
+  </data>
 </root>

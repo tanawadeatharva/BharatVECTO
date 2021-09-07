@@ -878,6 +878,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => null;
+		public IIEPCDeclarationInputData IEPC => null;
 
 		private T GetComponentPropertyValue<T>(string propertyName)
 		{

@@ -235,6 +235,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
+
+		IIEPCDeclarationInputData IEPC { get; }
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -714,24 +716,21 @@ namespace TUGraz.VectoCommon.InputData
 		IList<string> Technology { get; }
 	}
 
-	public interface IElectricMotorDeclarationInputData : IComponentInputData
+	public interface IPowerRatingInputData
 	{
 		ElectricMachineType ElectricMachineType { get; }
-
 		Watt R85RatedPower { get; }
-
-		KilogramSquareMeter Inertia { get; }
-
+		KilogramSquareMeter Inertia { get; } //RotationalInertia
 		NewtonMeter ContinuousTorque { get; }
-		
 		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
-
 		NewtonMeter OverloadTorque { get; }
-
 		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-
 		Second OverloadTime { get; } //OverloadDuration
+	}
 
+
+	public interface IElectricMotorDeclarationInputData : IComponentInputData, IPowerRatingInputData
+	{
 		Volt TestVoltageOverload { get; }
 
 		bool DcDcConverterIncluded { get; }
@@ -739,6 +738,7 @@ namespace TUGraz.VectoCommon.InputData
 		string IHPCType { get; }
 
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
+
 		TableData DragCurve { get; }
 		
 		double OverloadRecoveryFactor { get; }
@@ -748,9 +748,9 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		Volt VoltageLevel { get; }
 
-		TableData FullLoadCurve { get; }
+		TableData FullLoadCurve { get; } //MaxTorqueCurve
 
-		TableData EfficiencyMap { get; }
+		TableData EfficiencyMap { get; } //PowerMap
 	}
 
 	public interface IElectricMachinesDeclarationInputData
@@ -791,6 +791,33 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 
+	public interface IIEPCDeclarationInputData : IComponentInputData , IPowerRatingInputData
+	{
+		Volt TestVoltageOverload { get; }
+
+		bool DifferentialIncluded { get; }
+
+		bool DesignTypeWheelMotor { get; }
+
+		int? NrOfDesignTypeWheelMotorMeasured { get; }
+
+		IList<IGearEntry> Gears { get; }
+
+		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
+
+		TableData DragCurve { get; }
+	}
+
+	public interface IGearEntry
+	{
+		int GearNumber { get; }
+
+		double Ratio { get; }
+		NewtonMeter MaxOutputShaftTorque { get; }
+		
+		PerSecond MaxOutputShaftSpeed { get; }
+	}
+	
 	public interface IElectricStorageSystemDeclarationInputData 
 	{
 		IList<IElectricStorageDeclarationInputData> ElectricStorageElements { get; }

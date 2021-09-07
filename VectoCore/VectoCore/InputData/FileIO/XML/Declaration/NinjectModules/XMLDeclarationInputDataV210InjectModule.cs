@@ -42,6 +42,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVSxPrimaryBusDataProviderV210>()
 				.Named(XMLDeclarationHEVSxPrimaryBusDataProviderV210.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210>()
+				.Named(XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210.QUALIFIED_XSD_TYPE);
 			
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompletedBusComponentsDataProviderV210>()
 				.Named(XMLDeclarationCompletedBusComponentsDataProviderV210.QUALIFIED_XSD_TYPE);
@@ -70,6 +73,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210>()
 				.Named(XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210.QUALIFIED_HEV_S4_XSD_TYPE);
 
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210>()
+				.Named(XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_CompletedBus>().Named(XMLComponentReaderV210_CompletedBus.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_HEV_PxHeavyLorry>().Named(XMLComponentReaderV210_HEV_PxHeavyLorry.QUALIFIED_XSD_TYPE);
@@ -91,6 +97,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLComponentReader>().To<XMLHeavyLorryHEVS3DeclarationComponentReaderV201>().Named(XMLHeavyLorryHEVS3DeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLHeavyLorryHEVS4DeclarationComponentReaderV201>().Named(XMLHeavyLorryHEVS4DeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
+			
+			Bind<IXMLComponentReader>().To<XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201>()
+				.Named(XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV210>().Named(XMLElectricMachineSystemReaderV210.QUALIFIED_XSD_TYPE);
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV210>().Named(XMLElectricMachineSystemReaderV210.QUALIFIED_GEN_XSD_TYPE);
@@ -160,7 +169,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV2101>()
 				.Named(XMLADCDeclarationInputDataV2101.QUALIFIED_XSD_TYPE);
-
+			
+			Bind<IXMLIEPCInputData>().To<XMLDeclarationIEPCDataProviderV2101>().Named(XMLDeclarationIEPCDataProviderV2101.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_Lorry>()
 				.Named(XMLComponentReaderV210_Lorry.QUALIFIED_XSD_TYPE);

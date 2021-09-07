@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected ITorqueConverterDeclarationInputData _torqueConverterInputData;
 		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
 		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
-
+		protected IIEPCDeclarationInputData _iepcDeclarationInputData;
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
@@ -118,6 +118,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 																				(_electricMachinesInputData = GetElectricMachineEntries());
 		public virtual IElectricStorageSystemDeclarationInputData ElectricStorageSystem => _electricStorageSystemInputData ?? 
 			(_electricStorageSystemInputData  = GetElectricEnergyStorageEntries());
+
+		public IIEPCDeclarationInputData IEPCInputData => _iepcDeclarationInputData ?? 
+														(_iepcDeclarationInputData = CreateComponent( XMLNames.IEPC_Component, IEPCCreator));
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
@@ -326,9 +329,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 			return electricStorage;
 		}
-
-
-
+		
+		protected virtual IIEPCDeclarationInputData IEPCCreator(string version, XmlNode componentNode,
+			string sourceFile)
+		{
+			return Factory.CreateIEPCData(version, Vehicle, componentNode, sourceFile);
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -772,6 +778,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#endregion
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201 : XMLComponentReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-IEPC-S_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLHeavyLorryHEVIEPCSDeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IGearboxDeclarationInputData GearboxInputData => null;
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
+
+		public override IAngledriveInputData AngledriveInputData => null;
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => null;
+		
+		#endregion
+	}
+
+
 
 
 }
