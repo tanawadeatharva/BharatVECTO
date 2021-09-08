@@ -1397,7 +1397,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override CubicMeter CargoVolume => null;
 
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationHeavyLorryPEVE3ComponentDataV210 ? null : base.TorqueLimits;
+			Components is XMLDeclarationHeavyLorryPEVExComponentDataV210 ? null : base.TorqueLimits;
 
 		#endregion
 	}
