@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public virtual IElectricStorageSystemDeclarationInputData ElectricStorageSystem => _electricStorageSystemInputData ?? 
 			(_electricStorageSystemInputData  = GetElectricEnergyStorageEntries());
 
-		public IIEPCDeclarationInputData IEPCInputData => _iepcDeclarationInputData ?? 
+		public virtual IIEPCDeclarationInputData IEPCInputData => _iepcDeclarationInputData ?? 
 														(_iepcDeclarationInputData = CreateComponent( XMLNames.IEPC_Component, IEPCCreator));
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
@@ -370,6 +370,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public new const string AUX_READER_TYPE = "AUX_Conventional_LorryDataType";
 		public const string AUX_HEV_P_READER_TYPE = "AUX_HEV-P_LorryDataType";
 		public const string AUX_HEV_S2_READER_TYPE = "AUX_HEV-S_LorryDataType";
+		public const string AUX_PEV_E2_READER_TYPE = "AUX_PEV_LorryDataType";
 
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -379,6 +380,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public new static readonly string AUXILIARIES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_READER_TYPE);
 		public static readonly string AUXILIARIES_READER_HEV_P_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_HEV_P_READER_TYPE);
 		public static readonly string AUXILIARIES_READER_HEV_S2_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_HEV_S2_READER_TYPE);
+		public static readonly string AUXILIARIES_READER_PEV_E2_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_PEV_E2_READER_TYPE);
 
 
 		public XMLComponentReaderV210_Lorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
@@ -829,5 +831,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------
 
+	public class XMLPEVHeavyLorryE2DeclarationComponentReaderV201 : XMLComponentReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E2_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLPEVHeavyLorryE2DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IEngineDeclarationInputData EngineInputData => null;
+
+		public override IIEPCDeclarationInputData IEPCInputData => null;
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData => null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLGearboxDeclarationComponentReaderV201 : XMLComponentReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new const string GEARBOX_READER_TYPE = "GearboxDataDeclarationType";
+		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		public XMLGearboxDeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+			: base(vehicle, componentsNode) { }
+	}
 }
