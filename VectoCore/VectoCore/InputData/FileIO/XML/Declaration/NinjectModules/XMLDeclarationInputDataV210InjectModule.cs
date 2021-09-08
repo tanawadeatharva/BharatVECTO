@@ -105,7 +105,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusPEVE2ComponentDataV210>()
 				.Named(XMLDeclarationPrimaryBusPEVE2ComponentDataV210.QUALIFIED_XSD_TYPE);
-			
+
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusPEVE3ComponentDataV210>()
+				.Named(XMLDeclarationPrimaryBusPEVE3ComponentDataV210.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_CompletedBus>().Named(XMLComponentReaderV210_CompletedBus.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV210_HEV_PxHeavyLorry>().Named(XMLComponentReaderV210_HEV_PxHeavyLorry.QUALIFIED_XSD_TYPE);
@@ -145,6 +148,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLComponentReader>().To<XMLPEVPrimaryBusE2DeclarationComponentReaderV201>()
 				.Named(XMLPEVPrimaryBusE2DeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLComponentReader>().To<XMLPEVPrimaryBusE3DeclarationComponentReaderV201>()
+				.Named(XMLPEVPrimaryBusE3DeclarationComponentReaderV201.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLGearboxReader>().To<XMLGearboxDeclarationComponentReaderV201>()
 				.Named(XMLGearboxDeclarationComponentReaderV201.GEARBOX_READER_QUALIFIED_XSD_TYPE);
