@@ -115,6 +115,7 @@ namespace TUGraz.VectoCommon.InputData {
 				case "Components_PEV-E2_LorryType":
 				case "Components_PEV-E3_LorryType":
 				case "Components_PEV-E4_LorryType":
+				case "Components_PEV-E2_PrimaryBusType":
 					return $"E{pos}";
 				default:
 					return null;
