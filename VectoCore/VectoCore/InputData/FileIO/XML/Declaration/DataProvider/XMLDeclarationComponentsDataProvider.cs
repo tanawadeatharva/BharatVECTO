@@ -414,11 +414,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHeavyLorryPEVE2ComponentDataV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+	}
 
-		#region Overrides of XMLDeclarationComponentsDataProviderV10
+	// ---------------------------------------------------------------------------------------
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries => null;
-
-		#endregion
+	public class XMLDeclarationHeavyLorryPEVE3ComponentDataV210 : XMLDeclarationHeavyLorryPEVE2ComponentDataV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E3_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLDeclarationHeavyLorryPEVE3ComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 }
