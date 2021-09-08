@@ -1021,9 +1021,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestIEPCData(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
 			Assert.IsNull(vehicle.Components.AngledriveInputData);
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData.LossMap);
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
-			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AxleWheels.AxlesDeclaration);
 			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
 			Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -1341,6 +1341,33 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.MaxPropulsionTorque);
 		}
 
+		[TestCase(@"HeavyLorry\IEPC_heavyLorry.xml")]
+		public void TestIEPCHeayLorry(string jobfile)
+		{
+			var filename = Path.Combine(BASE_DIR, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.IsNull(vehicle.Components.EngineInputData);
+			Assert.IsNull(vehicle.Components.ElectricMachines);
+			Assert.IsNotNull(vehicle.Components.IEPC);
+			Assert.IsNull(vehicle.Components.GearboxInputData);
+			Assert.IsNull(vehicle.Components.TorqueConverterInputData);
+			Assert.IsNull(vehicle.Components.AngledriveInputData);
+			Assert.IsNotNull(vehicle.Components.RetarderInputData);
+			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			Assert.IsNotNull(vehicle.Components.AxleWheels);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNull(vehicle.Components.BusAuxiliaries);
+			Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNotNull(vehicle.Components.ElectricStorage);
+			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
+			Assert.IsNull(vehicle.CargoVolume);
+			Assert.IsNull(vehicle.TorqueLimits);
+			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNull(vehicle.MaxPropulsionTorque);
+		}
 
 		#region Test existence of torque converter
 
