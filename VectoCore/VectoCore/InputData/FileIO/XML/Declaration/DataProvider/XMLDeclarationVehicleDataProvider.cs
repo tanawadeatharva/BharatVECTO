@@ -1404,19 +1404,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPEVMediumLorryE2DataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
+	public class XMLDeclarationPEVMediumLorryExDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_PEV_MediumLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLDeclarationPEVMediumLorryE2DataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationPEVMediumLorryExDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 		
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 		public override XmlElement PTONode => null;
+		
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			Components is XMLDeclarationHeavyLorryPEVExComponentDataV210 ? null : base.TorqueLimits;
 
 		#endregion
 
