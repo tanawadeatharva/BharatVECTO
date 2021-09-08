@@ -938,6 +938,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		#endregion
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLPEVPrimaryBusE4DeclarationComponentReaderV201 : XMLPEVPrimaryBusE3DeclarationComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E4_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLPEVPrimaryBusE4DeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+			: base(vehicle, componentsNode) { }
+
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		#endregion
+	}
 
 	// ---------------------------------------------------------------------------------------
 
