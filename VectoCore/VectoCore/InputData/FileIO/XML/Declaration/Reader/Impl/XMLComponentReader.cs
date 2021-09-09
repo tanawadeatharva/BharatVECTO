@@ -978,7 +978,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#endregion
 	}
-	
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLIEPCPrimaryBusComponentReaderV201 : XMLIEPCHeavyLorryComponentReaderV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_IEPC_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		private IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLIEPCPrimaryBusComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
+			: base(vehicle, componentsNode) { }
+
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
+		
+		#endregion
+
+		#region Overrides of XMLIEPCHeavyLorryComponentReaderV201
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData =>
+			_busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator));
+
+		#endregion
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLGearboxDeclarationComponentReaderV201 : XMLComponentReaderV10
@@ -997,7 +1030,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string AUX_READER_TYPE = "AUX_IEPC_LorryDataType";
+		public const string AUX_IEPC_READER_TYPE = "AUX_IEPC_PrimaryBusType";
+
 		public new static readonly string AUXILIARIES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_READER_TYPE);
+		public static readonly string AUXILIARIES_READER_IEPC_PRIMARY_QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_IEPC_READER_TYPE);
+
 		public XMLAuxiliaryDeclarationComponentReaderV201(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) 
 			: base(vehicle, componentsNode) { }
 	}
