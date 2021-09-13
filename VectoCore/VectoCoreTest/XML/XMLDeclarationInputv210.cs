@@ -688,11 +688,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.CargoVolume);
 		}
 
+
 		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml", BASE_DIR)]
 		[TestCase(@"HEV-S_heavyLorry_AMT_S2_ADC.xml", ADDITONAL_TESTS_DIR)]
-		public void TestHEVHeavyLorryAMTS2(string jobfile, string fileDir)
+		[TestCase(@"HEV-S_heavyLorry_AMT_S2_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestHEVHeavyLorryAMTS2(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(fileDir, jobfile);
+			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
 			Assert.NotNull(dataProvider);
@@ -700,24 +702,40 @@ namespace TUGraz.VectoCore.Tests.XML
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
 			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.ADAS);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
 			TestElectricMachines(vehicle.Components.ElectricMachines.Entries);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
-			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+
+			if (testDir == Optional_TESTS_DIR)
+			{
+				Assert.IsNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			}
+			else
+			{
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.AirdragInputData);
+				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+			}
+
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
-			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
-			Assert.IsNotNull(vehicle.TorqueLimits);
-			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 

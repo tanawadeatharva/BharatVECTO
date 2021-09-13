@@ -344,7 +344,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------	
 
-	public class XMLDeclarationHEVS2LorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHEVS2LorryComponentsDataProviderV210 : XMLDeclarationHEVPxLorryComponentsDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
@@ -352,6 +352,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		#endregion
 	}
 	
 	// ---------------------------------------------------------------------------------------	

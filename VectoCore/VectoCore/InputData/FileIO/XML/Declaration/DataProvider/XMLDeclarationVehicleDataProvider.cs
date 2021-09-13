@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -1173,30 +1174,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ReadElectricMotorTorqueLimits()
 		{
-			var torqueLimitNode = GetNode(XMLNames.ElectricMotorTorqueLimits);
-			var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
-			if (electricMachineNodes == null || electricMachineNodes.Count == 0)
-				return null;
-
+			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
 			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<int, TableData>>>();
-			
-			foreach (XmlNode electricMachineNode in electricMachineNodes) {
-				var powertrainPosition =
-					PowertrainPositionHelper.Parse(
-						GetString(XMLNames.ElectricMachine_Position, electricMachineNode),
-						BaseNode.SchemaInfo.SchemaType.Name);
+
+			foreach (XmlNode torqueLimitNode in torqueLimitNodes) {
+
+				var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
+				if (electricMachineNodes == null || electricMachineNodes.Count == 0)
+					return null;
+
 				
-				if(!motorTorqueLimits.ContainsKey(powertrainPosition))
-					motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
-				
-				var voltageLevelNodes = GetNodes( XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
-				foreach (XmlNode voltageLevelNode in voltageLevelNodes) {
-					var voltageLevel = ReadVoltageLevelNode(voltageLevelNode);
-					motorTorqueLimits[powertrainPosition].Add(voltageLevel);
+				foreach (XmlNode electricMachineNode in electricMachineNodes) {
+					var powertrainPosition =
+						PowertrainPositionHelper.Parse(
+							GetString(XMLNames.ElectricMachine_Position, electricMachineNode),
+							BaseNode.SchemaInfo.SchemaType.Name);
+					
+					if(!motorTorqueLimits.ContainsKey(powertrainPosition))
+						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
+					
+					var voltageLevelNodes = GetNodes( XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
+					foreach (XmlNode voltageLevelNode in voltageLevelNodes) {
+						var voltageLevel = ReadVoltageLevelNode(voltageLevelNode);
+						motorTorqueLimits[powertrainPosition].Add(voltageLevel);
+					}
 				}
+
 			}
 
-			return motorTorqueLimits;
+			return motorTorqueLimits.IsNullOrEmpty() ? null : motorTorqueLimits;
 		}
 
 		private Tuple<int, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
