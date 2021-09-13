@@ -5884,6 +5884,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_vehicle-sample_LNG.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\Conventional_mediumLorry_AMT_n_opt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\Conventional_heavyLorry_AMT_n_opt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

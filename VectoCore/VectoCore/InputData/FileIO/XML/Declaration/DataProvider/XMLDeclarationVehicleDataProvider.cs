@@ -572,6 +572,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
+
 		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
 
 		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
