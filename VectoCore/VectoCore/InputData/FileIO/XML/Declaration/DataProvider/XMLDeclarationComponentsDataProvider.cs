@@ -382,13 +382,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
 																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
 		
-		#region Overrides of XMLDeclarationComponentsDataProviderV10
-		
 		public override IAirdragDeclarationInputData AirdragInputData => null;
-		
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
 		#endregion
 	}
 
@@ -431,14 +440,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210
+	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Components_HEV-IEPC-S_PrimaryBus";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
 		public XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+		
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
+																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+		#endregion
+
 	}
 
 	// ---------------------------------------------------------------------------------------

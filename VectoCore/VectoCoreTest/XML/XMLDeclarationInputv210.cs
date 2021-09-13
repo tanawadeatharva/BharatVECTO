@@ -604,6 +604,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
 
@@ -639,10 +640,11 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 		
 
-		[TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml")]
-		public void TestHEVPrimaryBusAMTPx(string jobfile)
+		[TestCase(@"PrimaryBus\HEV_primaryBus_AMT_Px.xml", BASE_DIR)]
+		[TestCase(@"HEV_primaryBus_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestHEVPrimaryBusAMTPx(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(BASE_DIR, jobfile);
+			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
 			Assert.NotNull(dataProvider);
@@ -651,12 +653,31 @@ namespace TUGraz.VectoCore.Tests.XML
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
 			Assert.IsNotNull(vehicle.Components);
+			Assert.IsNotNull(vehicle.ADAS);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
+			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
-			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+
+			//optional test
+			if (testDir == Optional_TESTS_DIR)
+			{
+			 	Assert.IsNull(vehicle.Components.AngledriveInputData);
+			 	Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+				Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+			}
+			else
+			{
+			 	Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+			 	Assert.IsNotNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+				Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+			}
+
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
@@ -665,9 +686,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
-			Assert.IsNotNull(vehicle.TorqueLimits);
-			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
-			Assert.IsNotNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 
 		[TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml", BASE_DIR)]
