@@ -35,6 +35,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\";
 		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
+		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries";
 
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
@@ -133,10 +134,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			return runs;
 		}
 
-		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml")]
-		public void TestConventionalHeavyLorry(string jobfile)
+		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml", BASE_DIR)]
+		[TestCase(@"Conventional_heavyLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestConventionalHeavyLorry(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(BASE_DIR, jobfile);
+			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
 			Assert.NotNull(dataProvider);
@@ -144,27 +146,54 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
+			TestADASData(vehicle.ADAS);
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNull(vehicle.Components.ElectricMachines);
+			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
-			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+
+			if (testDir == Optional_TESTS_DIR) {//optional test
+				Assert.IsNull(vehicle.TankSystem);
+				Assert.IsNull(vehicle.Components.AngledriveInputData);//optional
+				Assert.IsNull(vehicle.Components.RetarderInputData);//optional
+				Assert.IsNull(vehicle.Components.AirdragInputData);//optional
+				Assert.IsNull(vehicle.TorqueLimits);//optional
+			} else {
+				Assert.IsNotNull(vehicle.TankSystem);
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+				Assert.IsNotNull(vehicle.Components.AirdragInputData);//optional
+				Assert.IsNotNull(vehicle.TorqueLimits);//optional
+			}
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
-			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNull(vehicle.Components.ElectricStorage);
-			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData); 
+			TestPTOData(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
-			Assert.IsNotNull(vehicle.TorqueLimits);
 			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limits
 		}
 
+		private void TestADASData(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			Assert.IsNotNull(adas);
+			Assert.AreEqual(true, adas.EngineStopStart);
+			Assert.AreEqual(EcoRollType.WithEngineStop, adas.EcoRoll);
+			Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, adas.PredictiveCruiseControl);
+		}
 
+		private void TestPTOData(IPTOTransmissionInputData pto)
+		{
+			Assert.IsNotNull(pto);
+			Assert.AreEqual(PTOShaftGearWheel.none, pto.PTOShaftGearWheel);
+			Assert.AreEqual(PTOOtherElement.none, pto.PTOOtherElement);
+		}
+		
 		[TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml")]
 		public void TestConventionalMediumLorry(string jobfile)
 		{

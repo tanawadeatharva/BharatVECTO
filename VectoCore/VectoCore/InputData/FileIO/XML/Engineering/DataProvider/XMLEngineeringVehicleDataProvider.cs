@@ -245,7 +245,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				BaseNode, DataSource.SourcePath, XMLNames.Vehicle_PTOCycle, XMLNames.Vehicle_PTOCycle_Entry,
 				AttributeMappings.PTOCycleMap);
 
-		public TableData PTOCycleWhileDriving => null;
+		public virtual TableData PTOCycleWhileDriving => null;
+		public virtual PTOShaftGearWheel? PTOShaftGearWheel => null;
+		public virtual PTOOtherElement? PTOOtherElement => null;
 
 		#endregion
 

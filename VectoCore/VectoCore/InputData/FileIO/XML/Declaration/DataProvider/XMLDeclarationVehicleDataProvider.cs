@@ -1132,6 +1132,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationHeavyLorryDataProviderV210(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+		
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+		
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
+
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
+
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------

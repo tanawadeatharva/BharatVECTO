@@ -589,15 +589,18 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property PTOCycleWhileDriving As TableData _
-        Implements IPTOTransmissionInputData.PTOCycleWhileDriving
-        Get
-            If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
-                Return Nothing
-            End If
-            Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
-        End Get
-    End Property
+	Public ReadOnly Property PTOCycleWhileDriving As TableData _
+		Implements IPTOTransmissionInputData.PTOCycleWhileDriving
+		Get
+			If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property PTOShaftGearWheel As PTOShaftGearWheel? Implements IPTOTransmissionInputData.PTOShaftGearWheel
+	Public ReadOnly Property PTOOtherElement As PTOOtherElement? Implements IPTOTransmissionInputData.PTOOtherElement
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
