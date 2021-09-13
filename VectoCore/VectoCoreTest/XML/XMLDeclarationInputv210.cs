@@ -287,9 +287,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", ADDITONAL_TESTS_DIR)]
-		public void TestHEVHeaveyLorry(string jobfile, string dir)
+		[TestCase(@"HEV_heavyLorry_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestHEVHeaveyLorry(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(dir, jobfile);
+			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 
 			Assert.NotNull(dataProvider);
@@ -297,29 +298,44 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.ADAS);
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
-
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
 			TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First());
+			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
-			Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
+			
+			//optional test
+			if (testDir == Optional_TESTS_DIR)
+			{
+				Assert.IsNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNull(vehicle.Components.AirdragInputData);
+				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+				Assert.IsNull(vehicle.MaxPropulsionTorque);
+			}
+			else
+			{
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.AirdragInputData);
+				Assert.IsNotNull(vehicle.TorqueLimits);
+				TestElectricMotorTorqueLimits(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
+				TestBoostingLimitations(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
+			}
+
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels); 
 			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData);
+			Assert.IsNotNull(vehicle.Components.AuxiliaryInputData.Auxiliaries);
 			Assert.IsNull(vehicle.Components.BusAuxiliaries);
-
-			Assert.IsNotNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			TestElectricStorageElements(vehicle.Components.ElectricStorage.ElectricStorageElements);
-			
 			Assert.IsNotNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
-			Assert.IsNotNull(vehicle.TorqueLimits);
-			TestElectricMotorTorqueLimits(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
-			TestBoostingLimitations(vehicle.MaxPropulsionTorque);//Vehicle Max Prop. Limit
 		}
 
 		#region Test Electric Machines Reader

@@ -327,6 +327,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+		
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------	

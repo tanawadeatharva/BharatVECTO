@@ -6031,6 +6031,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\Conventional_primaryBus_AMT_n_opt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\HEV_heavyLorry_AMT_Px_n_opt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.1\Tractor_4x2_vehicle-class-5_5_t_0.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
