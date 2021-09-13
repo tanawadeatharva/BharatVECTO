@@ -442,6 +442,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateAirdragData(version, Vehicle, componentNode, sourceFile);
 		}
 
+		public override IIEPCDeclarationInputData IEPCInputData => null;
 
 		#endregion
 

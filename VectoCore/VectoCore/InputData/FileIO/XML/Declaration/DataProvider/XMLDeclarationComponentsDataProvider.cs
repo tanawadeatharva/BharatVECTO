@@ -190,7 +190,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		#endregion
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries =>
+			_busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}

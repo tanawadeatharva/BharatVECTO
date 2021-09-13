@@ -455,13 +455,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override XmlElement PTONode => null;
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
+		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
 		public override LegislativeClass? LegislativeClass => VectoCommon.Models.LegislativeClass.M3;
-
-		#endregion
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
 		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
 
@@ -472,6 +468,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
 
 		public override Meter EntranceHeight => null;
+
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
 
 		#endregion
 
