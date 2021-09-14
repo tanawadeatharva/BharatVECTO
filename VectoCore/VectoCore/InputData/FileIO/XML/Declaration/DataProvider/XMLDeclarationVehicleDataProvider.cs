@@ -159,22 +159,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _ptoData ?? (_ptoData = PTOReader.PTOInputData);
 
-		public virtual RetarderType RetarderType
-		{
-			get {
-				var value = GetString(XMLNames.Vehicle_RetarderType); //.ParseEnum<RetarderType>(); 
-				switch (value) {
-					case "None": return RetarderType.None;
-					case "Losses included in Gearbox": return RetarderType.LossesIncludedInTransmission;
-					case "Engine Retarder": return RetarderType.EngineRetarder;
-					case "Transmission Input Retarder": return RetarderType.TransmissionInputRetarder;
-					case "Transmission Output Retarder": return RetarderType.TransmissionOutputRetarder;
-				}
-
-				throw new ArgumentOutOfRangeException("RetarderType", value);
-			}
-		}
-
+		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
+		
 		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
 		public virtual bool VocationalVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle));
@@ -658,7 +644,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
 		
-		public virtual RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
+		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
 
 		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
