@@ -231,9 +231,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLAuxiliaryDeclarationInputData>().To<XMLAuxiliaryDeclarationDataProviderV210_Lorry>()
 				.Named(XMLAuxiliaryDeclarationDataProviderV210_Lorry.QUALIFIED_XSD_PEV_E2_TYPE);
 
+			Bind<IXMLAuxiliaryDeclarationInputData>().To<XMLAuxiliaryDeclarationDataProviderV210_Lorry>()
+				.Named(XMLAuxiliaryDeclarationDataProviderV210_Lorry.QUALIFIED_XSD_IEPC_TYPE);
+
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
 				.To<XMLDeclarationADASDataProviderV210>().Named(XMLDeclarationADASDataProviderV210.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
+				.To<XMLDeclarationADASDataProviderV210>().Named(XMLDeclarationADASDataProviderV210.QUALIFIED_XSD_IEPC_TYPE);
+			
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPrimaryBusVehicleDataProviderV210>()
 				.Named(XMLDeclarationPrimaryBusVehicleDataProviderV210.QUALIFIED_XSD_TYPE);
 
