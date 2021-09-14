@@ -1859,22 +1859,34 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"PrimaryBus\IEPC_primaryBus.xml")]
-		public void TestIEPCPrimaryBus(string jobfile)
+		[TestCase(@"PrimaryBus\IEPC_primaryBus.xml", BASE_DIR)]
+		[TestCase(@"IEPC_primaryBus_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestIEPCPrimaryBus(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(BASE_DIR, jobfile);
+			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			Assert.NotNull(dataProvider.JobInputData);
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
+			Assert.IsNotNull(vehicle.ADAS);
 			Assert.IsNull(vehicle.Components.EngineInputData);
 			Assert.IsNull(vehicle.Components.ElectricMachines);
 			Assert.IsNotNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
 			Assert.IsNull(vehicle.Components.TorqueConverterInputData);
+
+			if (testDir == Optional_TESTS_DIR)
+			{
+				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNull(vehicle.Components.AxleGearInputData);
+			}
+			else
+			{
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.AxleGearInputData);
+			}
+
 			Assert.IsNull(vehicle.Components.AngledriveInputData);
-			Assert.IsNotNull(vehicle.Components.RetarderInputData);
-			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
