@@ -489,6 +489,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
 																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAxleGearInputData AxleGearInputData =>
+			ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
 		#endregion
 
 	}
