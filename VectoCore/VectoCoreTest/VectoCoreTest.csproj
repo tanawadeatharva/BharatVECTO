@@ -6046,6 +6046,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\HEV-S_mediumLorry_AMT_S2_n_opt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\HEV-S_mediumLorry_IEPC-S_n_opt.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries\HEV-S_mediumLorry_S3_n_opt.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
