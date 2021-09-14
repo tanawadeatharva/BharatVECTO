@@ -216,13 +216,15 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			//optional test
 			if (testDir == Optional_TESTS_DIR) {
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
-				Assert.AreEqual(0.SI<CubicMeter>(), vehicle.CargoVolume);
+				Assert.IsNull(vehicle.CargoVolume);
 				Assert.IsNull(vehicle.TorqueLimits);
 			}
 			else {
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -288,7 +290,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", ADDITONAL_TESTS_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
-		public void TestHEVHeaveyLorry(string jobfile, string testDir)
+		public void TestHEVHeavyLorry(string jobfile, string testDir)
 		{
 			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
@@ -310,6 +312,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
@@ -319,6 +322,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -611,6 +615,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
@@ -621,6 +626,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -663,7 +669,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR)
 			{
-			 	Assert.IsNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNull(vehicle.Components.AngledriveInputData);
 			 	Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
@@ -671,7 +677,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
-			 	Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 			 	Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
@@ -713,6 +719,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
@@ -721,6 +728,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -817,12 +825,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
@@ -865,12 +875,14 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
@@ -911,6 +923,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
@@ -920,6 +933,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -960,6 +974,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
@@ -967,6 +982,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.CargoVolume);
@@ -1009,6 +1025,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
@@ -1016,6 +1033,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.CargoVolume);
@@ -1193,12 +1211,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AxleGearInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
@@ -1288,6 +1308,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			if (testDir == Optional_TESTS_DIR)
 			{
+				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AxleGearInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
@@ -1295,6 +1316,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData.LossMap);
 				Assert.IsNotNull(vehicle.Components.AxleGearInputData);

@@ -20,7 +20,6 @@
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem><!-- optional -->
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S3</ArchitectureID>

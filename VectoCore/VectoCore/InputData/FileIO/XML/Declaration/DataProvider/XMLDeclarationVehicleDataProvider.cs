@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					throw new VectoException("Medium lorries with type Van require the input parameter cargo volume!");
 				}
 				return ElementExists(XMLNames.Vehicle_CargoVolume) ? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>()
-					: 0.SI<CubicMeter>();
+					: null;
 			}
 		}
 
@@ -1164,6 +1164,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
+		#region Overrides of XMLDeclarationVehicleDataProviderV20
+
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
+
+		#endregion
+
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
@@ -1340,6 +1350,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV20
+
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
+
+		#endregion
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
