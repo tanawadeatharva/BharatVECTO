@@ -243,7 +243,7 @@
 				</Battery>
 			</ElectricEnergyStorage>
 			<ElectricMachine>
-				<PowertrainPosition>2</PowertrainPosition>
+				<PowertrainPosition>3</PowertrainPosition>
 				<Count>1</Count>
 				<ElectricMachineSystem>
 					<v2.10.1:Data xsi:type="v2.10.1:ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">

@@ -817,7 +817,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2 ,vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN,vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -867,7 +867,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE4, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -966,7 +966,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -1017,7 +1017,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE4, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -1113,7 +1113,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -1158,7 +1158,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(2, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE4, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.AreEqual(PowertrainPosition.GEN, vehicle.Components.ElectricMachines.Entries[1].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
@@ -1441,7 +1441,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
@@ -1583,7 +1583,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
 			Assert.IsNull(vehicle.Components.TorqueConverterInputData);
@@ -1719,7 +1719,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.Components.EngineInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricMachines);
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
-			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, vehicle.Components.ElectricMachines.Entries[0].Position);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE3, vehicle.Components.ElectricMachines.Entries[0].Position);
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNull(vehicle.Components.GearboxInputData);
 			Assert.IsNull(vehicle.Components.TorqueConverterInputData);
