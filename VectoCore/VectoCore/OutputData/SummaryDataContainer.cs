@@ -338,7 +338,7 @@ namespace TUGraz.VectoCore.OutputData
 						}
 
 					row[Fields.ElectricEnergyConsumptionPerKm] =
-						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
+						(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
 				}
 			}
 
