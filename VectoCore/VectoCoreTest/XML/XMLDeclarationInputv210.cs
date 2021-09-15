@@ -1699,8 +1699,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-			// ToDo Airdrag not allowed at PEV primary bus as defined within the related xsd
-			// Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
@@ -1741,8 +1740,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-			// ToDo Airdrag not allowed at PEV primary bus as defined within the related xsd
-			//Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
@@ -1785,8 +1783,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
 			Assert.IsNull(vehicle.Components.AuxiliaryInputData);
 			Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-			// ToDo Airdrag not allowed at PEV primary bus as defined within the related xsd
-			// Assert.IsNotNull(vehicle.Components.AirdragInputData);
+			Assert.IsNull(vehicle.Components.AirdragInputData);
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);

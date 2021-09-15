@@ -920,6 +920,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
 		}
+
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+
 		#endregion
 	}
 
@@ -939,7 +942,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public override IGearboxDeclarationInputData GearboxInputData => null;
 		public override ITorqueConverterDeclarationInputData TorqueConverterInputData => null;
 		public override IAngledriveInputData AngledriveInputData => null;
-
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+		
 		#endregion
 	}
 
