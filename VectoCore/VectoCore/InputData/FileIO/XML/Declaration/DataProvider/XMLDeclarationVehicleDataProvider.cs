@@ -1319,13 +1319,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210
-				? null : base.TorqueLimits;
-
-		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1351,13 +1344,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override TableData MaxPropulsionTorque => null;
 
-		#endregion
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-		
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationHEVSXLorryComponentsDataProviderV210 ? null : base.TorqueLimits;
-			
 		#endregion
 	}
 
@@ -1510,9 +1496,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override CubicMeter CargoVolume => null;
 
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationHeavyLorryPEVExComponentDataV210 ? null : base.TorqueLimits;
-
 		#endregion
 	}
 
@@ -1537,9 +1520,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 		public override XmlElement PTONode => null;
-		
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationHeavyLorryPEVExComponentDataV210 ? null : base.TorqueLimits;
 
 		#endregion
 
@@ -1570,13 +1550,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override CubicMeter CargoVolume => null;
-
-		#endregion
-
-		#region Overrides of XMLDeclarationPEVMediumLorryExDataProviderV210
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			Components is XMLDeclarationPrimaryBusPEVExComponentDataV210 ? null : base.TorqueLimits;
 
 		#endregion
 	}
