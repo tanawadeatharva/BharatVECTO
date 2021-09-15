@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -115,11 +116,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
+#if USE_EXTENAL_DECLARATION_DATA
+					CycleFile = File.OpenRead(Path.Combine("DeclarationMissions", missionType.ToString().Replace("EMS", "") + ".vdri")),
+#else
 						CycleFile =
 							RessourceHelper.ReadStream(
 								DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
 								missionType.ToString().Replace("EMS", "") +
 								Constants.FileExtensions.CycleFile),
+#endif
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						BodyCurbWeight = 0.SI<Kilogram>(),
 						Trailer = new List<MissionTrailer>(),
