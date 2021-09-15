@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
 					"ElectricMotorTorqueLimits");*/
 
-		public override TableData MaxPropulsionTorque =>
+		public override TableData BoostingLimitations =>
 			Body["MaxPropulsionTorque"] == null
 				? null
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		
 		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
 		
-		public virtual TableData MaxPropulsionTorque => null;
+		public virtual TableData BoostingLimitations => null;
 		
 		public virtual Meter Length => null;
 

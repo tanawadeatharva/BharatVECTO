@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
 
-		public TableData MaxPropulsionTorque => null;
+		public TableData BoostingLimitations => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 

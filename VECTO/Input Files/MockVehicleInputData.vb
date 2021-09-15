@@ -57,7 +57,7 @@ Public Class MockVehicleInputData
     Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
     Public ReadOnly Property VehicleDeclarationType As VehicleDeclarationType Implements IVehicleDeclarationInputData.VehicleDeclarationType
     Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
-    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleDeclarationInputData.MaxPropulsionTorque
+    Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 End Class

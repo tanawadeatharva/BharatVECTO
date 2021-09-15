@@ -665,7 +665,7 @@ Public Class DummyVehicle
 	Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
 	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
 	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
-	Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
 	Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 	Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length

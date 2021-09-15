@@ -468,7 +468,7 @@ Public Class Vehicle
 	'    End Property
 	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
 
-	Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
 		Get
 			If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath)) Then
 				Return Nothing

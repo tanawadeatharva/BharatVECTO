@@ -510,7 +510,7 @@ Public Class VehicleForm
 			'tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
 			'ToDo ElectricMotorTorqueLimits changed
 			'tbEmTorqueLimits.Text = if (Not vehicle.ElectricMotorTorqueLimits Is Nothing, GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath), "")
-			tbPropulsionTorqueLimit.Text = if (Not vehicle.MaxPropulsionTorque Is Nothing, GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath), "")
+			tbPropulsionTorqueLimit.Text = if (Not vehicle.BoostingLimitations Is Nothing, GetRelativePath(vehicle.BoostingLimitations.Source, basePath), "")
 		End If
 
 		DeclInit()

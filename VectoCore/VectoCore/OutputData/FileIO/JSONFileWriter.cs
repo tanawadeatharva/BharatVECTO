@@ -515,8 +515,8 @@ public class JSONFileWriter : IOutputFileWriter
 		// if (vehicle.ElectricMotorTorqueLimits != null) {
 		// 	body.Add("EMTorqueLimits", GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath));
 		// }
-		if (vehicle.MaxPropulsionTorque != null) {
-			body.Add("MaxPropulsionTorque", GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath));
+		if (vehicle.BoostingLimitations != null) {
+			body.Add("MaxPropulsionTorque", GetRelativePath(vehicle.BoostingLimitations.Source, basePath));
 		}
 
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);

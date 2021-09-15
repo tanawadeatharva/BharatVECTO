@@ -200,7 +200,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
 
-		TableData MaxPropulsionTorque { get; }
+		TableData BoostingLimitations { get; }
 
 		// components
 

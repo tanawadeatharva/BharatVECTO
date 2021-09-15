@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
-		public virtual TableData MaxPropulsionTorque => null;
+		public virtual TableData BoostingLimitations => null;
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -705,7 +705,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
-		public TableData MaxPropulsionTorque { get; }
+		public TableData BoostingLimitations { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -1245,7 +1245,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
 
 		
-		public override TableData MaxPropulsionTorque 
+		public override TableData BoostingLimitations 
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
 				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
 					new Dictionary<string, string> {
@@ -1342,7 +1342,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
 
-		public override TableData MaxPropulsionTorque => null;
+		public override TableData BoostingLimitations => null;
 
 		#endregion
 	}
@@ -1406,7 +1406,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
-		public override TableData MaxPropulsionTorque => null;
+		public override TableData BoostingLimitations => null;
 
 		#endregion
 	}
@@ -1488,7 +1488,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
 
-		public override TableData MaxPropulsionTorque => null;
+		public override TableData BoostingLimitations => null;
 		
 		#endregion
 
@@ -1525,7 +1525,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
 
-		public override TableData MaxPropulsionTorque => null;
+		public override TableData BoostingLimitations => null;
 
 		#endregion
 	}
