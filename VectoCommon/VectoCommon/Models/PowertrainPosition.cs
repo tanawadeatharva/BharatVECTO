@@ -25,13 +25,12 @@ namespace TUGraz.VectoCommon.InputData {
 		public const string HybridPrefix = "Hybrid";
 		public const string BatteryElectriPrefix = "BatteryElectric";
 
-		public static PowertrainPosition Parse(string pos, string schemaName)
-		{
-			return pos == nameof(PowertrainPosition.GEN) ? PowertrainPosition.GEN : Parse(GetPowertrainPositionType(pos, schemaName));
-		}
-
 		public static PowertrainPosition Parse(string pos)
 		{
+			if (pos.EndsWith(nameof(PowertrainPosition.GEN))) {
+				return PowertrainPosition.GEN;
+			}
+
 			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
 				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
@@ -85,42 +84,6 @@ namespace TUGraz.VectoCommon.InputData {
 					return true;
 				default:
 					return false;
-			}
-		}
-
-		private static string GetPowertrainPositionType(string pos, string schemaName)
-		{
-			switch (schemaName) {
-				case "Vehicle_HEV-Px_HeavyLorryDeclarationType":
-				case "Vehicle_HEV-Px_MediumLorryDeclarationType":
-				case "Vehicle_HEV-Px_PrimaryBusDeclarationType":
-				case "Components_HEV-Px_LorryType":
-				case "Components_HEV-Px_PrimaryBusType":
-					return $"P{pos}";
-				case "Vehicle_HEV-Sx_HeavyLorryDeclarationType":
-				case "Vehicle_HEV-Sx_MediumLorryDeclarationType":
-				case "Vehicle_HEV-Sx_PrimaryBusDeclarationType":
-				case "Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType":
-				case "Vehicle_HEV-IEPC-S_MediumLorryDeclarationType":
-				case "Vehicle_HEV-IEPC-S_PrimaryBusDeclarationType":
-				case "Vehicle_PEV_HeavyLorryDeclarationType":
-				case "Vehicle_PEV_MediumLorryDeclarationType":
-				case "Vehicle_PEV_PrimaryBusDeclarationType":
-				case "Components_HEV-S2_LorryType":
-				case "Components_HEV-S3_LorryType":
-				case "Components_HEV-S4_LorryType":
-				case "Components_HEV-S2_PrimaryBusType":
-				case "Components_HEV-S3_PrimaryBusType":
-				case "Components_HEV-S4_PrimaryBusType":
-				case "Components_PEV-E2_LorryType":
-				case "Components_PEV-E3_LorryType":
-				case "Components_PEV-E4_LorryType":
-				case "Components_PEV-E2_PrimaryBusType":
-				case "Components_PEV-E3_PrimaryBusType":
-				case "Components_PEV-E4_PrimaryBusType":
-					return $"E{pos}";
-				default:
-					return null;
 			}
 		}
 	}

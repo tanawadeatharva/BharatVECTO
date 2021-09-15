@@ -1153,13 +1153,78 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV20
+	public abstract class XMLVehicleDataProviderHelperV201 : XMLDeclarationVehicleDataProviderV20
+	{
+		public virtual string PowertrainPositionPrefix => "P";
+
+		protected XMLVehicleDataProviderHelperV201(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+			: base(jobData, xmlNode, sourceFile) { }
+
+		
+		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits
+			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
+		
+		private Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ReadElectricMotorTorqueLimits()
+		{
+			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
+			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<int, TableData>>>();
+
+			foreach (XmlNode torqueLimitNode in torqueLimitNodes)
+			{
+				var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
+				if (electricMachineNodes == null || electricMachineNodes.Count == 0)
+					return null;
+				
+				foreach (XmlNode electricMachineNode in electricMachineNodes)
+				{
+					var powertrainPosition =
+						PowertrainPositionHelper.Parse(PowertrainPositionPrefix + GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
+
+					if (!motorTorqueLimits.ContainsKey(powertrainPosition))
+						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
+
+					var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
+					foreach (XmlNode voltageLevelNode in voltageLevelNodes)
+					{
+						var voltageLevel = ReadVoltageLevelNode(voltageLevelNode);
+						motorTorqueLimits[powertrainPosition].Add(voltageLevel);
+					}
+				}
+			}
+
+			return motorTorqueLimits.IsNullOrEmpty() ? null : motorTorqueLimits;
+		}
+
+		private Tuple<int, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
+		{
+			var voltage = Convert.ToInt32(GetString(XMLNames.VoltageLevel_Voltage, voltageLevelNode));
+			var entries = voltageLevelNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.MaxTorqueCurve, XMLNames.MaxTorqueCurve_Entry));
+			var mapping = new Dictionary<string, string> {
+							{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed},
+							{ XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque },
+							{ XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque}
+						};
+			var maxTorqueCurve = XMLHelper.ReadTableData(mapping, entries);
+			return new Tuple<int, TableData>(voltage, maxTorqueCurve);
+		}
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		#region Overrides of VehicleDataProviderHelper
+
+		public override string PowertrainPositionPrefix => "P";
+
+		#endregion
+		
 		public XMLDeclarationHEVPxHeavyLorryDataProviderV210(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
@@ -1179,54 +1244,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
 			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
 
-		public override Dictionary<PowertrainPosition,  List<Tuple<int, TableData>>> ElectricMotorTorqueLimits
-			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
-
-		private Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ReadElectricMotorTorqueLimits()
-		{
-			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
-			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<int, TableData>>>();
-
-			foreach (XmlNode torqueLimitNode in torqueLimitNodes) {
-
-				var electricMachineNodes = GetNodes(XMLNames.ElectricMotorTorqueLimit_ElectricMachine, torqueLimitNode);
-				if (electricMachineNodes == null || electricMachineNodes.Count == 0)
-					return null;
-
-				
-				foreach (XmlNode electricMachineNode in electricMachineNodes) {
-					var powertrainPosition =
-						PowertrainPositionHelper.Parse(
-							GetString(XMLNames.ElectricMachine_Position, electricMachineNode),
-							BaseNode.SchemaInfo.SchemaType.Name);
-					
-					if(!motorTorqueLimits.ContainsKey(powertrainPosition))
-						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
-					
-					var voltageLevelNodes = GetNodes( XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
-					foreach (XmlNode voltageLevelNode in voltageLevelNodes) {
-						var voltageLevel = ReadVoltageLevelNode(voltageLevelNode);
-						motorTorqueLimits[powertrainPosition].Add(voltageLevel);
-					}
-				}
-
-			}
-
-			return motorTorqueLimits.IsNullOrEmpty() ? null : motorTorqueLimits;
-		}
-
-		private Tuple<int, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
-		{
-			var voltage = Convert.ToInt32(GetString(XMLNames.VoltageLevel_Voltage, voltageLevelNode));
-			var entries = voltageLevelNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.MaxTorqueCurve, XMLNames.MaxTorqueCurve_Entry));
-			var mapping = new Dictionary<string, string> {
-							{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed},
-							{ XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque },
-							{ XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque}
-						};
-			var maxTorqueCurve = XMLHelper.ReadTableData(mapping, entries);
-			return new Tuple<int, TableData>(voltage, maxTorqueCurve);
-		}
 		
 		public override TableData MaxPropulsionTorque 
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
@@ -1252,6 +1269,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationHEVPxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
+		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "P";
+
+		#endregion
+
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -1268,7 +1291,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "P";
+
+		#endregion
+
 		public XMLDeclarationHEVPxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 	}
@@ -1280,7 +1309,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E"; 
+
+		#endregion
+
 		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -1302,7 +1337,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationHEVSxHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 		
@@ -1327,7 +1368,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_MediumLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of XMLDeclarationHEVSxHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationHEVSxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -1342,12 +1389,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV20
+	public class XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of VehicleDataProviderHelper
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -1380,6 +1433,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_MediumLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		#region Overrides of XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationHEVIEPCSMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -1404,6 +1463,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		#region Overrides of XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -1425,6 +1490,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new const string XSD_TYPE = "Vehicle_PEV_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
 
 		public XMLDeclarationPEVHeavyLorryE2DataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
@@ -1453,7 +1523,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_PEV_MediumLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
+
+		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationPEVMediumLorryExDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 		
@@ -1481,6 +1557,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_PEV_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		#region Overrides of XMLDeclarationPEVMediumLorryExDataProviderV210
+
+		public override string PowertrainPositionPrefix => "E";
+
+		#endregion
+
 		public XMLDeclarationPEVPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 
