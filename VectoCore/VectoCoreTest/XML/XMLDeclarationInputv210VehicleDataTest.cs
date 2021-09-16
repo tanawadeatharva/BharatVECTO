@@ -28,13 +28,20 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(@"Conventional_heavyLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
-		public void TestConventionalHeavyLorryVehicleData(string jobfile, string testDir) 
+		private IXMLDeclarationVehicleData ReadVehicleData(string jobfile, string testDir)
 		{
 			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-			
-			var vehicle = (IXMLDeclarationVehicleData) dataProvider.JobInputData.Vehicle;
+
+			return (IXMLDeclarationVehicleData)dataProvider.JobInputData.Vehicle;
+		}
+
+
+		[TestCase(@"Conventional_heavyLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestConventionalHeavyLorryVehicleData(string jobfile, string testDir)
+		{
+			var vehicle = ReadVehicleData(jobfile, testDir);
+
 			Assert.NotNull(vehicle);
 			Assert.AreEqual(LegislativeClass.N3, vehicle.LegislativeClass);
 			Assert.AreEqual(VehicleCategory.RigidTruck, vehicle.VehicleCategory);
@@ -48,18 +55,35 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.PTOTransmissionInputData);
 			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(false, vehicle.VocationalVehicle);
-			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
+			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual(false, vehicle.SleeperCab);
+			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
+		}
+		
+		[TestCase(@"Conventional_mediumLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestConventionalMediumLorryVehicleData(string jobfile, string testDir)
+		{
+			var vehicle = ReadVehicleData(jobfile, testDir);
+			
+			Assert.AreEqual(LegislativeClass.N2, vehicle.LegislativeClass);
+			Assert.AreEqual(VehicleCategory.Tractor, vehicle.VehicleCategory);
+			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+			Assert.AreEqual(3500.SI<Kilogram>(), vehicle.CurbMassChassis);
+			Assert.AreEqual(7100.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(650.00.RPMtoRad(), vehicle.EngineIdleSpeed);
+			Assert.AreEqual(RetarderType.None, vehicle.RetarderType);
+			Assert.AreEqual(10.000, vehicle.RetarderRatio);
+			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
 		}
 		
 		[TestCase(@"Conventional_primaryBus_AMT_n_opt.xml", Optional_TESTS_DIR)]
 		public void TestConventionalPrimaryBusVehicleData(string jobfile, string testDir)
 		{
-			var filename = Path.Combine(testDir, jobfile);
-			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			var vehicle = ReadVehicleData(jobfile, testDir);
 
-			var vehicle = (IXMLDeclarationVehicleData)dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
 			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
 			Assert.AreEqual(VehicleCategory.HeavyBusPrimaryVehicle, vehicle.VehicleCategory);
