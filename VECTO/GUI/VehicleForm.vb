@@ -532,7 +532,7 @@ Public Class VehicleForm
 
     Private Function CreateREESSPackListViewItem(batFile As String, count As Integer, stringid As Integer) As ListViewItem
         dim retval as new ListViewItem
-        retVal.SubItems(0).Text = GetRelativePath(batFile, Path.GetDirectoryName(_vehFile))
+        retVal.SubItems(0).Text = If(File.Exists(_vehFile), GetRelativePath(batFile, Path.GetDirectoryName(_vehFile)), batFile)
         retVal.SubItems.Add(count.ToGUIFormat())
 		retval.SubItems.Add(stringid.ToGUIFormat())
         return retval
