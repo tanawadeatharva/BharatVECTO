@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void StartSimulation(IInputDataProvider input)
 		{
 			_fileoutputWriter = new FileOutputWriter(_outputDirectory);
-			_tempFileOutputWriter = new TempFileOutputWriter(_outputDirectory);
+			_tempFileOutputWriter = new TempFileOutputWriter(_fileoutputWriter);
 			var runsFactory = new SimulatorFactory(_mode, input, _fileoutputWriter)
 			{
 				WriteModalResults = true,
