@@ -658,13 +658,25 @@ Public Class VehicleForm
 		    For Each reess As ListViewItem In lvREESSPacks.Items
 		        veh.ReessPacks.Add(tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
 		    Next
-			veh.InitialSOC = tbInitialSoC.Text.ToDouble() / 100.0
+			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
 
+			If tbElectricMotor.Text = "" then
+				MsgBox("Electric Motor File is required.")
+				tcVehicleComponents.SelectedTab = tpElectricComponents
+				tbElectricMotor.Focus()
+				return false
+			End If
 			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
-			veh.ElectricMotorCount = tbEmCount.Text.ToInt()
-			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble()
+			veh.ElectricMotorCount = tbEmCount.Text.ToInt(1)
+			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble(1)
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+			If tbEmADCLossMap.Text = "" then
+				MsgBox("Loss Map EM ADC is required.")
+				tcVehicleComponents.SelectedTab = tpElectricComponents
+				tbEmADCLossMap.Focus()
+				return false
+			End If
 			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
 			if (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) 
 				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
