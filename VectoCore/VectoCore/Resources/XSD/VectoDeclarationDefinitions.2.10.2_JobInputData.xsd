@@ -3216,7 +3216,7 @@
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChasisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>

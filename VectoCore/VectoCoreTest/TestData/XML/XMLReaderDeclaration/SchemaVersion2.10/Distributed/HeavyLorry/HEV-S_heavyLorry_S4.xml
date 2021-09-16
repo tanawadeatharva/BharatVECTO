@@ -7,7 +7,7 @@
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
 		<LegislativeCategory>N3</LegislativeCategory>
-		<ChasisConfiguration>Rigid Lorry</ChasisConfiguration>
+		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
