@@ -237,6 +237,7 @@
     <Compile Include="XML\XMLCompleteBusReaderTest.cs" />
     <Compile Include="XML\XMLDeclarationInputTest.cs" />
     <Compile Include="XML\XMLDeclarationInputv210.cs" />
+    <Compile Include="XML\XMLDeclarationInputv210VehicleDataTest.cs" />
     <Compile Include="XML\XMLDeclarationReaderVersionsTest.cs" />
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />

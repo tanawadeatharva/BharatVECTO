@@ -13,6 +13,7 @@
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>None</RetarderType>
+		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
 			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
@@ -20,6 +21,7 @@
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ADAS xsi:type="ADAS_Conventional_Type">

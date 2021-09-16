@@ -1,0 +1,56 @@
+﻿using System.IO;
+using System.Xml;
+using Ninject;
+using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+
+namespace TUGraz.VectoCore.Tests.XML
+{
+	[TestFixture]
+	public class XMLDeclarationInputv210VehicleDataTest
+    {
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+
+		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries";
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+		}
+
+		[TestCase(@"Conventional_heavyLorry_AMT_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestConventionalHeavyLorryVehicleData(string jobfile, string testDir) 
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			
+			var vehicle = (IXMLDeclarationVehicleData) dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.AreEqual(LegislativeClass.N3, vehicle.LegislativeClass);
+			Assert.AreEqual(VehicleCategory.RigidTruck, vehicle.VehicleCategory);
+			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+			Assert.AreEqual(6000.SI<Kilogram>(), vehicle.CurbMassChassis);
+			Assert.AreEqual(12000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(650.00.RPMtoRad(), vehicle.EngineIdleSpeed);
+			Assert.AreEqual(RetarderType.None, vehicle.RetarderType);
+			Assert.AreEqual(2.000, vehicle.RetarderRatio);
+			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.IsNotNull(vehicle.PTOTransmissionInputData);
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(false, vehicle.VocationalVehicle);
+			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
+			Assert.AreEqual(false, vehicle.SleeperCab);
+			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
+		}
+	}
+}

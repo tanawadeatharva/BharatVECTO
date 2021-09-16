@@ -576,8 +576,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
 			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
 
-		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString("ChassisConfiguration"));
-
+		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
+		
 		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 
 		public override bool SleeperCab => false;
@@ -1124,35 +1124,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_Conventional_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
-		public XMLDeclarationHeavyLorryDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-		
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-		
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
-
-		#endregion
-	}
-
 	// ---------------------------------------------------------------------------------------
 
 	public abstract class XMLVehicleDataProviderHelperV201 : XMLDeclarationVehicleDataProviderV20
@@ -1163,6 +1134,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(jobData, xmlNode, sourceFile) { }
 
 		
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+		
+		public override VehicleCategory VehicleCategory
+		{
+			get
+			{
+				var val = GetString(XMLNames.ChassisConfiguration);
+				return "Rigid Lorry".Equals(val, StringComparison.InvariantCultureIgnoreCase) 
+					? VehicleCategory.RigidTruck : val.ParseEnum<VehicleCategory>();
+			}
+		}
+		
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
+
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+		
+		#endregion
+		
+		#region Overrides of XMLDeclarationVehicleDataProviderV20
+
+		public override bool SleeperCab => GetBool(XMLNames.Vehicle_SleeperCab);
+
+		#endregion
+
 		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits
 			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
 		
@@ -1210,6 +1205,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return new Tuple<int, TableData>(voltage, maxTorqueCurve);
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Vehicle_Conventional_HeavyLorryDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHeavyLorryDataProviderV210(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
+
+		public override IList<ITorqueLimitInputData> TorqueLimits =>
+			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
+
+		public override TankSystem? TankSystem =>
+			ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
+				: (TankSystem?)null;
+
+		#endregion
+	}
+
+
 
 
 	// ---------------------------------------------------------------------------------------
