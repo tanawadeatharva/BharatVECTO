@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual double? MaxSOC => 
 			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) : (double?)null;
 
-		public virtual BatteryType BatteryType => BatteryTypeHelper.Parse(GetString(XMLNames.REESS_BatteryType));
+		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI<AmpereSecond>() * 3600;
 		public virtual bool ConnectorsSubsystemsIncluded => GetBool(XMLNames.REESS_ConnectorsSubsystemsIncluded);
 		public virtual bool JunctionboxIncluded => GetBool(XMLNames.REESS_JunctionboxIncluded);

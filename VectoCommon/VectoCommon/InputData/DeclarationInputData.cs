@@ -1137,54 +1137,10 @@ namespace TUGraz.VectoCommon.InputData
 		RM
 	}
 
-	public static class ElectricMachineTypeHelper
-	{
-		public static ElectricMachineType Parse(string parse)
-		{
-			switch (parse) {
-				case nameof(ElectricMachineType.ASM):
-					return ElectricMachineType.ASM;
-				case nameof(ElectricMachineType.ESM):
-					return ElectricMachineType.ESM;
-				case nameof(ElectricMachineType.PSM):
-					return ElectricMachineType.PSM;
-				case nameof(ElectricMachineType.RM):
-					return ElectricMachineType.RM;
-				default: 
-					throw new ArgumentOutOfRangeException();
-			}
-		}
-
-		public static string GetLabel(this ElectricMachineType type)
-		{
-			return nameof(type);
-		}
-	}
-
 	public enum BatteryType
 	{
 		HPBS,
 		HEBS
-	}
-
-	public static class BatteryTypeHelper
-	{
-		public static BatteryType Parse(string parse)
-		{
-			switch (parse) {
-				case nameof(BatteryType.HPBS):
-					return BatteryType.HPBS;
-				case nameof(BatteryType.HEBS):
-					return BatteryType.HEBS;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
-
-		public static string GetLabel(this BatteryType type)
-		{
-			return nameof(type);
-		}
 	}
 
 	public enum ArchitectureID

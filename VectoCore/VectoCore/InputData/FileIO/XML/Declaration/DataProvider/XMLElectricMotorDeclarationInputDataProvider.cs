@@ -25,8 +25,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		#region Implementation of IPowerRatingInputData
-		public virtual ElectricMachineType ElectricMachineType =>
-			ElectricMachineTypeHelper.Parse(GetString(XMLNames.ElectricMachine_ElectricMachineType));
+		public virtual ElectricMachineType ElectricMachineType => 
+			GetString(XMLNames.ElectricMachine_ElectricMachineType).ParseEnum<ElectricMachineType>();
 
 		public virtual Watt R85RatedPower =>
 			GetDouble(XMLNames.ElectricMachine_R85RatedPower).SI<Watt>();
