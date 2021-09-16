@@ -52,5 +52,25 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, vehicle.SleeperCab);
 			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
 		}
+		
+		[TestCase(@"Conventional_primaryBus_AMT_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestConventionalPrimaryBusVehicleData(string jobfile, string testDir)
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+
+			var vehicle = (IXMLDeclarationVehicleData)dataProvider.JobInputData.Vehicle;
+			Assert.NotNull(vehicle);
+			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
+			Assert.AreEqual(VehicleCategory.HeavyBusPrimaryVehicle, vehicle.VehicleCategory);
+			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+			Assert.AreEqual(false, vehicle.Articulated);
+			Assert.AreEqual(25000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(600.RPMtoRad(), vehicle.EngineIdleSpeed);
+			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.RetarderType);
+			Assert.AreEqual(1.000, vehicle.RetarderRatio);
+			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+		}
 	}
 }
