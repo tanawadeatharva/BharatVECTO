@@ -147,5 +147,28 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(true, vehicle.OvcHev);
 			Assert.AreEqual(12.SI<Watt>(), vehicle.MaxChargingPower);
 		}
+
+
+		[TestCase(@"HEV_primaryBus_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
+
+		public void TestHEVPrimaryBusPxVehicleData(string jobfile, string testDir)
+		{
+			var vehicle = ReadVehicleData(jobfile, testDir);
+
+			Assert.NotNull(vehicle);
+			Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
+			Assert.AreEqual(VehicleCategory.HeavyBusPrimaryVehicle, vehicle.VehicleCategory);
+			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
+			Assert.AreEqual(true, vehicle.Articulated);
+			Assert.AreEqual(25000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(600.00.RPMtoRad(), vehicle.EngineIdleSpeed);
+			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.RetarderType);
+			Assert.AreEqual(1.000, vehicle.RetarderRatio);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
+			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(5.SI<Watt>(), vehicle.MaxChargingPower);
+		}
 	}
 }

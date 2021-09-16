@@ -1148,16 +1148,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				var val = GetString(XMLNames.ChassisConfiguration);
 				return "Rigid Lorry".Equals(val, StringComparison.InvariantCultureIgnoreCase) 
-					? VehicleCategory.RigidTruck : val.ParseEnum<VehicleCategory>();
+					? VehicleCategory.RigidTruck : VehicleCategoryHelper.Parse(val);
 			}
 		}
 		
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+
+		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 		
 		#endregion
-		
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
 
 		public override bool SleeperCab => GetBool(XMLNames.Vehicle_SleeperCab);

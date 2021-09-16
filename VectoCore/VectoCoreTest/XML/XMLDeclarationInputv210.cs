@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml", BASE_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_Capacitor.xml", ADDITONAL_TESTS_DIR)]
 		[TestCase(@"HEV_heavyLorry_AMT_Px_n_opt.xml", Optional_TESTS_DIR)]
-		public void TestHEVHeavyLorry(string jobfile, string testDir)
+		public void TestHEVHeavyLorryPx(string jobfile, string testDir)
 		{
 			var filename = Path.Combine(testDir, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
