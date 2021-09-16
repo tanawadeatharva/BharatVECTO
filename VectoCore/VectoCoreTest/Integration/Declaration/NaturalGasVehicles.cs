@@ -177,6 +177,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			set => throw new NotImplementedException();
 		}
 
+		public XDocument MultistageXmlReport { get; }
+
 		#endregion
 
 		#region Implementation of ISummaryWriter

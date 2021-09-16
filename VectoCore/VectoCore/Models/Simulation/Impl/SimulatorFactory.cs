@@ -214,8 +214,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 							var mode = _mode;
 							var inputData =
-								inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
-									.XMLMultistageReportFileName);
+								inputDataReader.CreateDeclaration(
+									XmlReader.Create(ReportWriter.MultistageXmlReport.ToString().ToStream()));
+								//inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter)
+								//	.XMLMultistageReportFileName);
 							return new SimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate) {
 								
 							};
@@ -229,7 +231,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				System.Diagnostics.Debug.Assert(multiStagePrimaryAndStageInputData.PrimaryVehicle.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 
-				var tempOutputWriter = new TempFileOutputWriter(ReportWriter.JobFile, ReportType.DeclarationReportManufacturerXML);
+				var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
 				var originalReportWriter = ReportWriter;
 				ReportWriter = tempOutputWriter;
 
@@ -237,12 +239,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				
 				DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
 
-
 				var reportPrimary = new XMLDeclarationReportPrimaryVehicle(ReportWriter,
 										true);
 				
-
-
 				CreateFollowUpSimulatorFactory = true;
 				_followingSimulatorFactoryCreator = (() => {
 					//replace with dependency injection 

@@ -39,7 +39,6 @@ namespace TUGraz.VectoCore.OutputData
 	public interface IOutputDataWriter : IModalDataWriter, IReportWriter, ISummaryWriter
 	{
 		string JobFile { get; }
-		
 	}
 
 	public interface IModalDataWriter
@@ -61,6 +60,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		IDictionary<ReportType, string> GetWrittenFiles();
 		int NumberOfManufacturingStages { set; }
+
+		XDocument MultistageXmlReport { get; }
+
 	}
 
 

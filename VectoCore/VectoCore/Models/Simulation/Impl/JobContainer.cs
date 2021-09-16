@@ -306,15 +306,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void WaitFinished()
 		{
-			Task[] tasks;
-			try {
-				_runsRwLock.EnterReadLock();
-				tasks = Runs.Select(r => r.RunTask).ToArray();
-			} finally {
-				_runsRwLock.ExitReadLock();
-			}
+			Task[] prevTasks;
+			Task[] tasks = {};
+			for (var i = 0; i < 5; i++) {
+				try {
+					prevTasks = tasks;
+					_runsRwLock.EnterReadLock();
+					tasks = Runs.Select(r => r.RunTask).ToArray();
+				} finally {
+					_runsRwLock.ExitReadLock();
+				}
 
-			Task.WaitAll(tasks);
+				if (prevTasks.Length != tasks.Length) {
+					Task.WaitAll(tasks);
+				} else {
+					return;
+				}
+			}
 		}
 
 		//[MethodImpl(MethodImplOptions.Synchronized)]

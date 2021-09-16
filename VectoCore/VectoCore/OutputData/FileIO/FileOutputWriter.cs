@@ -68,6 +68,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			set => _numberOfManufacturingStages = value;
 		}
 
+		public XDocument MultistageXmlReport => XDocument.Load(XMLMultistageReportFileName);
+
 		public string XMLMultistageReportFileName
 		{
 			get
