@@ -242,8 +242,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
 		public virtual TableData BoostingLimitations => null;
 
-
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
+		
+		public virtual string VehicleTypeApprovalNumber => GetString(XMLNames.Vehicle_TypeApprovalNumber);
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
@@ -709,6 +710,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
+		public virtual string VehicleTypeApprovalNumber => null;
 
 
 		#region  Non seeded Properties

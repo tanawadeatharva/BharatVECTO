@@ -206,6 +206,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IVehicleComponentsDeclaration Components { get; }
 		XmlNode XMLSource { get; }
+
+		string VehicleTypeApprovalNumber { get; }
 	}
 
 	public interface IVehicleComponentsDeclaration

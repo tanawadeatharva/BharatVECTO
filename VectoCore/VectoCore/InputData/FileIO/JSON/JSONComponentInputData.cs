@@ -242,6 +242,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool? ATEcoRollReleaseLockupClutch => VehicleData.ADAS.ATEcoRollReleaseLockupClutch;
 
 		public XmlNode XMLSource => null;
+		public string VehicleTypeApprovalNumber { get; }
 
 		public Meter Length => VehicleData.Length;
 

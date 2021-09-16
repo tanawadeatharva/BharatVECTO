@@ -5128,6 +5128,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VehicleTypeApprovalNumber.
+        /// </summary>
+        public static string Vehicle_TypeApprovalNumber {
+            get {
+                return ResourceManager.GetString("Vehicle_TypeApprovalNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VehicleCategory.
         /// </summary>
         public static string Vehicle_VehicleCategory {

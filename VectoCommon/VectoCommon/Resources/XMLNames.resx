@@ -1833,4 +1833,7 @@
   <data name="IEPC_NrOfDesignTypeWheelMotorMeasured" xml:space="preserve">
     <value>NrOfDesignTypeWheelMotorMeasured</value>
   </data>
+  <data name="Vehicle_TypeApprovalNumber" xml:space="preserve">
+    <value>VehicleTypeApprovalNumber</value>
+  </data>
 </root>

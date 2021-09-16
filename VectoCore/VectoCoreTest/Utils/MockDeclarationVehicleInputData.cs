@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public TableData BoostingLimitations { get; }
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
+		public string VehicleTypeApprovalNumber { get; }
 
 		#endregion
 
@@ -137,6 +138,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => _components;
 
 		public XmlNode XMLSource { get; }
+		public string VehicleTypeApprovalNumber { get; }
 
 		public IVehicleComponentsEngineering Components => this;
 		public string Identifier { get; }

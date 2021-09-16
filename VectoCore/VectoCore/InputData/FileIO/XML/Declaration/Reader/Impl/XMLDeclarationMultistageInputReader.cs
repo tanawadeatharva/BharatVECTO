@@ -598,6 +598,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
+		public string VehicleTypeApprovalNumber { get; }
 
 		#endregion
 

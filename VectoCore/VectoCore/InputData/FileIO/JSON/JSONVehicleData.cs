@@ -294,6 +294,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
+		public virtual string VehicleTypeApprovalNumber { get; }
 
 		public GearshiftPosition PTO_DriveGear => Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
 

@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -146,6 +147,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			Assert.NotNull(vehicle);
+			TestAdditionalHeavyLorryVehicleEntries((IXMLDeclarationVehicleData)vehicle);
 			TestADASData(vehicle.ADAS);
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
@@ -178,6 +180,15 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limits
 		}
+
+		private void TestAdditionalHeavyLorryVehicleEntries(IXMLDeclarationVehicleData vehicle)
+		{
+			Assert.AreEqual(LegislativeClass.N3, vehicle.LegislativeClass);
+			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
+			Assert.AreEqual(false, vehicle.VocationalVehicle);
+		}
+
 
 		private void TestADASData(IAdvancedDriverAssistantSystemDeclarationInputData adas)
 		{

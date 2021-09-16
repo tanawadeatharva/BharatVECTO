@@ -153,6 +153,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public TableData BoostingLimitations => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
+		public string VehicleTypeApprovalNumber => null;
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 
