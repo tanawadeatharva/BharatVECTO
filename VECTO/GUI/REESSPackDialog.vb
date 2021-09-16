@@ -83,13 +83,9 @@ Public Class REESSPackDialog
             End If
         End If
 
-        If Not BatteryForm.Visible Then
-            BatteryForm.Show()
-        Else
-            If BatteryForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
-            BatteryForm.BringToFront()
-        End If
-
+        if BatteryForm.ShowDialog() = DialogResult.OK then
+			tbBattery.Text = BatteryForm.BatteryFile
+        end if
         If Not Trim(f) = "" Then
             Try
                 BatteryForm.OpenBatteryFile(f)
