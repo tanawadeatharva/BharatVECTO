@@ -599,6 +599,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		#endregion
 

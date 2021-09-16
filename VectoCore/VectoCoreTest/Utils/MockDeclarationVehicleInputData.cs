@@ -68,6 +68,9 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		#endregion
 
@@ -139,6 +142,9 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public IVehicleComponentsEngineering Components => this;
 		public string Identifier { get; }

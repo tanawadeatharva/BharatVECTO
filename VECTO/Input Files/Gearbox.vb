@@ -880,6 +880,9 @@ Public Class MockEngineeringVehicle
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
+    Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
+    Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+    Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 
     Public Property AirdragInputData As IAirdragEngineeringInputData _
         Implements IVehicleComponentsEngineering.AirdragInputData

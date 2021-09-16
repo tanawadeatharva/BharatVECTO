@@ -4669,6 +4669,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ArchitectureID.
+        /// </summary>
+        public static string Vehicle_ArchitectureID {
+            get {
+                return ResourceManager.GetString("Vehicle_ArchitectureID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Articulated.
         /// </summary>
         public static string Vehicle_Articulated {
@@ -4894,6 +4903,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MaxChargingPower.
+        /// </summary>
+        public static string Vehicle_MaxChargingPower {
+            get {
+                return ResourceManager.GetString("Vehicle_MaxChargingPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MaxNetPower1.
         /// </summary>
         public static string Vehicle_MaxNetPower1 {
@@ -4917,6 +4935,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_NgTankSystem {
             get {
                 return ResourceManager.GetString("Vehicle_NgTankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OvcHev.
+        /// </summary>
+        public static string Vehicle_OvcHev {
+            get {
+                return ResourceManager.GetString("Vehicle_OvcHev", resourceCulture);
             }
         }
         

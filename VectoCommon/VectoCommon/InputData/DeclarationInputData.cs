@@ -208,6 +208,13 @@ namespace TUGraz.VectoCommon.InputData
 		XmlNode XMLSource { get; }
 
 		string VehicleTypeApprovalNumber { get; }
+		
+		ArchitectureID ArchitectureID { get; }
+		
+		bool OvcHev { get; }
+
+		Watt MaxChargingPower { get; }
+
 	}
 
 	public interface IVehicleComponentsDeclaration
@@ -1177,6 +1184,71 @@ namespace TUGraz.VectoCommon.InputData
 		public static string GetLabel(this BatteryType type)
 		{
 			return nameof(type);
+		}
+	}
+
+	public enum ArchitectureID
+	{
+		E2,
+		E3,
+		E4,
+		E_IEPC,
+		P1,
+		P2,
+		P2_5,
+		P3,
+		P4,
+		S2,
+		S3,
+		S4,
+		S_IEPC
+	}
+
+
+	public static class ArchitectureIDHelper
+	{
+		private const string E_IEPC_ID = "E-IEPC";
+		private const string P2_5_ID = "P2.5";
+		private const string S_IEPC_ID = "S-IEPC";
+
+		public static ArchitectureID Parse(string parse)
+		{
+			switch (parse)
+			{
+				case nameof(ArchitectureID.E2):
+				case nameof(ArchitectureID.E3):
+				case nameof(ArchitectureID.E4):
+				case nameof(ArchitectureID.P1):
+				case nameof(ArchitectureID.P2):
+				case nameof(ArchitectureID.P3):
+				case nameof(ArchitectureID.P4):
+				case nameof(ArchitectureID.S2):
+				case nameof(ArchitectureID.S3):
+				case nameof(ArchitectureID.S4):
+					return parse.ParseEnum<ArchitectureID>();
+				case E_IEPC_ID:
+					return ArchitectureID.E_IEPC;
+				case P2_5_ID:
+					return ArchitectureID.P2_5;
+				case S_IEPC_ID:
+					return ArchitectureID.S_IEPC;
+				default:
+					throw new ArgumentOutOfRangeException($"{nameof(ArchitectureID)}");
+			}
+		}
+
+		public static string GetLabel(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.E_IEPC:
+					return E_IEPC_ID;
+				case ArchitectureID.P2_5:
+					return P2_5_ID;
+				case ArchitectureID.S_IEPC:
+					return S_IEPC_ID;
+				default:
+					return type.ToString();
+			}
 		}
 	}
 }

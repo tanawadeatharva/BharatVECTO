@@ -154,6 +154,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 		public string VehicleTypeApprovalNumber => null;
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 

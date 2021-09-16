@@ -243,6 +243,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public XmlNode XMLSource => null;
 		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public Meter Length => VehicleData.Length;
 
