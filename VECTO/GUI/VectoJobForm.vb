@@ -584,11 +584,9 @@ Public Class VectoJobForm
         if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
             cbEnableBusAux.Checked = True
             tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
-            pnBusAux.Enabled = true
         Else 
             cbEnableBusAux.Checked = False
             tbBusAuxParams.Text = ""
-            pnBusAux.Enabled = False
         End If
 
         DeclInit()
