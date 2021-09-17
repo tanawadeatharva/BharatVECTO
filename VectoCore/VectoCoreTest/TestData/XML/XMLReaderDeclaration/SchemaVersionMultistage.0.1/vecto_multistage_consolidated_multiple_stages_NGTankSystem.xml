@@ -780,9 +780,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<Date>2021-02-13T07:20:08.0187663Z</Date>
 				<LegislativeCategory>M3</LegislativeCategory>				
 				<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
-				<NgTankSystem>Liquefied</NgTankSystem>				
 				<ClassBus>B</ClassBus>			
+				<NgTankSystem>Liquefied</NgTankSystem>				
 				<VehicleDeclarationType>interim</VehicleDeclarationType>
+				<VehicleTypeApprovalNumber>1234</VehicleTypeApprovalNumber>
 				<ADAS xsi:type="ADAS_Conventional_Type">
 					<EngineStopStart>true</EngineStopStart>
 					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>

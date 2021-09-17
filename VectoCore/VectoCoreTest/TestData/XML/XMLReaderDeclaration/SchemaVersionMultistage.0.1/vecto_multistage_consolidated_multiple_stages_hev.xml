@@ -657,6 +657,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<VIN>VEH-1234567890</VIN>
 				<Date>2018-02-15T11:00:00Z</Date>
 				<Model>Intermediate Model 1</Model>
+				<ClassBus>B</ClassBus>
 				<NgTankSystem>Compressed</NgTankSystem>
 				<NumberPassengerSeatsLowerDeck>12</NumberPassengerSeatsLowerDeck>
 				<NumberPassengersStandingLowerDeck>5</NumberPassengersStandingLowerDeck>
@@ -668,6 +669,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<VehicleWidth>2500</VehicleWidth>
 				<EntranceHeight>2500</EntranceHeight>
 				<VehicleDeclarationType>interim</VehicleDeclarationType>
+				<VehicleTypeApprovalNumber>1234</VehicleTypeApprovalNumber>
 			</vif0.1:Vehicle>
 			<ApplicationInformation>
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
