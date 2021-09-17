@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			_stopWatch = new Stopwatch();
 			_stopWatch.Start();
-			_outputDirectory = TestContext.CurrentContext.TestDirectory + TestContext.CurrentContext.Test.Name;
+			_outputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory,TestContext.CurrentContext.Test.Name);
 			_sumFileWriter = new FileOutputWriter(_outputDirectory);
 			_sumContainer = new SummaryDataContainer(_sumFileWriter);
 			_jobContainer = new JobContainer(_sumContainer);
@@ -70,10 +70,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
 			StartSimulation(input);
 
-
-			while (!_jobContainer.AllCompleted) {
-				//Busy wait
-			}
+			_jobContainer.WaitFinished();
+			//while (!_jobContainer.AllCompleted) {
+			//	//Busy wait
+			//}
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -93,11 +93,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
 			StartSimulation(input);
 
-
-			while (!_jobContainer.AllCompleted)
-			{
-				//Busy wait
-			}
+			_jobContainer.WaitFinished();
+			//while (!_jobContainer.AllCompleted)
+			//{
+			//	//Busy wait
+			//}
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -121,18 +121,19 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 		//SpecialCase II
-		[Test, Timeout(1000 * 10 * 60)]
+		[Test, Timeout(1000 * 20 * 60)]
 		public void PrimaryAndCompletedTest()
 		{
 			var inputFile = Path.GetFullPath(CompletedDiesel);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
 			StartSimulation(input);
 
+			_jobContainer.WaitFinished();
+			//while (!_jobContainer.AllCompleted)
+			//{
+			//	//Busy wait
 
-			while (!_jobContainer.AllCompleted)
-			{
-				//Busy wait
-			}
+			//}
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -155,11 +156,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			
 			StartSimulation(input);
 
-
-			while (!_jobContainer.AllCompleted)
-			{
-				//Busy wait
-			}
+			_jobContainer.WaitFinished();
+			//while (!_jobContainer.AllCompleted)
+			//{
+			//	//Busy wait
+			//}
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
