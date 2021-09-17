@@ -212,10 +212,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var hvac = data.Vehicle.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, hvac.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.R_744, hvac.HeatPumpTypeCoolingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeHeatingDriverCompartment);
-			Assert.AreEqual(HeatPumpType.none, hvac.HeatPumpTypeCoolingPassengerCompartment);
-			Assert.AreEqual(HeatPumpType.non_R_744_continuous, hvac.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvac.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvac.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvac.HeatPumpTypeCoolingDriverCompartment);
 
 			Assert.AreEqual(50.SI<Watt>(), hvac.AuxHeaterPower);
 			Assert.AreEqual(false, hvac.DoubleGlazing);
@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(LegislativeClass.M3, data.Vehicle.LegislativeClass);
 			Assert.AreEqual(500, data.Vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(3500, data.Vehicle.GrossVehicleMassRating.Value());
-			Assert.AreEqual(null, data.Vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(true, data.Vehicle.AirdragModifiedMultistage);
 			Assert.AreEqual(TankSystem.Compressed, data.Vehicle.TankSystem);
 			Assert.AreEqual(RegistrationClass.II_III, data.Vehicle.RegisteredClass);
 			Assert.AreEqual(1, data.Vehicle.NumberPassengerSeatsLowerDeck);
