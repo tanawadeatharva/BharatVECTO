@@ -8,22 +8,24 @@
 		<Date>2017-01-01T00:00:00Z</Date>
 		<LegislativeCategory>N3</LegislativeCategory>
 		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
-		<AxleConfiguration>4x2</AxleConfiguration>
+		<AxleConfiguration>6x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
-		<IdlingSpeed>650</IdlingSpeed>
-		<RetarderType>None</RetarderType>
-		<AngledriveType>None</AngledriveType>
+		<IdlingSpeed>660</IdlingSpeed>
+		<RetarderType>Losses included in Gearbox</RetarderType>
+		<RetarderRatio>1.100</RetarderRatio>
+		<AngledriveType>Separate Angledrive</AngledriveType>
 		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
 			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
 			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
-		<SleeperCab>false</SleeperCab>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S2</ArchitectureID>
-		<OvcHev>false</OvcHev>
+		<OvcHev>true</OvcHev>
+		<MaxChargingPower>6</MaxChargingPower>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
 			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>

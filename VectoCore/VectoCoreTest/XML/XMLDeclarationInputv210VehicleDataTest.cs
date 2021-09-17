@@ -165,10 +165,37 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.RetarderType);
 			Assert.AreEqual(1.000, vehicle.RetarderRatio);
 			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
-			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
 			Assert.AreEqual(true, vehicle.OvcHev);
 			Assert.AreEqual(5.SI<Watt>(), vehicle.MaxChargingPower);
 		}
+
+
+		[TestCase(@"HEV-S_heavyLorry_AMT_S2_n_opt.xml", Optional_TESTS_DIR)]
+		public void TestHEVHeavyLorryS2VehicleData(string jobfile, string testDir)
+		{
+			var vehicle = ReadVehicleData(jobfile, testDir);
+
+			Assert.NotNull(vehicle);
+			Assert.AreEqual(LegislativeClass.N3, vehicle.LegislativeClass);
+			Assert.AreEqual(VehicleCategory.RigidTruck, vehicle.VehicleCategory);
+			Assert.AreEqual(AxleConfiguration.AxleConfig_6x2, vehicle.AxleConfiguration);
+			Assert.AreEqual(6000.SI<Kilogram>(), vehicle.CurbMassChassis);
+			Assert.AreEqual(12000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
+			Assert.AreEqual(660.00.RPMtoRad(), vehicle.EngineIdleSpeed);
+			Assert.AreEqual(RetarderType.LossesIncludedInTransmission, vehicle.RetarderType);
+			Assert.AreEqual(1.100, vehicle.RetarderRatio);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.IsNotNull(vehicle.PTOTransmissionInputData);
+			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(true, vehicle.VocationalVehicle);
+			Assert.AreEqual(true, vehicle.SleeperCab);
+			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
+			Assert.AreEqual(ArchitectureID.S2, vehicle.ArchitectureID);
+			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(6.SI<Watt>(), vehicle.MaxChargingPower);
+		}
+
 	}
 }

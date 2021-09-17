@@ -1138,20 +1138,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected XMLVehicleDataProviderHelperV201(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+		
 
-		
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
-		
-		public override VehicleCategory VehicleCategory
-		{
-			get
-			{
-				var val = GetString(XMLNames.ChassisConfiguration);
-				return "Rigid Lorry".Equals(val, StringComparison.InvariantCultureIgnoreCase) 
-					? VehicleCategory.RigidTruck : VehicleCategoryHelper.Parse(val);
-			}
-		}
-		
+
+		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
+
+		public override bool VocationalVehicle => GetBool(XMLNames.Vehicle_VocationalVehicle);
+
+		public override VehicleCategory VehicleCategory =>
+			VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
+
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
