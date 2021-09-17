@@ -8,7 +8,7 @@ using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
-	public class TempFileOutputWriter : LoggingObject, IOutputDataWriter //: FileOutputWriter
+	public class TempFileOutputWriter : FileOutputWriter
     {
 		private readonly Dictionary<ReportType, XDocument> _storedReports = new Dictionary<ReportType, XDocument>();
 		private readonly HashSet<ReportType> _reportsToWrite;
@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		#region Overrides of FileOutputWriter
 
-		public string XMLFullReportName => Path.ChangeExtension(BaseWriter.JobFile, "RSLT_MANUFACTURER_PRIMARY.xml");
+		public override string XMLFullReportName => Path.ChangeExtension(BaseWriter.JobFile, "RSLT_MANUFACTURER_PRIMARY.xml");
 
 		#endregion
 
@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		/// </summary>
 		/// <param name="jobFile"></param>
 		/// <param name="reportsToWrite">ReportTypes specified here are written to disk</param>
-		public TempFileOutputWriter(IOutputDataWriter baseWriter, params ReportType[] reportsToWrite)
+		public TempFileOutputWriter(IOutputDataWriter baseWriter, params ReportType[] reportsToWrite) : base(baseWriter.JobFile)
 		{
 			BaseWriter = baseWriter;
 			_reportsToWrite = new HashSet<ReportType>();
@@ -38,33 +38,37 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		#region Overrides of FileOutputWriter
 
-		public IDictionary<ReportType, string> GetWrittenFiles()
+		public override IDictionary<ReportType, string> GetWrittenFiles()
 		{
-			return BaseWriter.GetWrittenFiles();
+			return BaseWriter is FileOutputWriter ? base.GetWrittenFiles() : BaseWriter.GetWrittenFiles();
 		}
 
-		public int NumberOfManufacturingStages { get; set; }
+		//public int NumberOfManufacturingStages { get; set; }
 		
-		public XDocument MultistageXmlReport { get; }
+		//public XDocument MultistageXmlReport { get; }
 
 		#endregion
 
 
 		#region Overrides of FileOutputWriter
-		public void WriteReport(ReportType type, XDocument data)
+		public override void WriteReport(ReportType type, XDocument data)
 		{
 			if (type == ReportType.DeclarationReportPdf) {
 				throw new ArgumentOutOfRangeException("PDF is not supported by TempFileOutputWriter");
 			}
 
 			if (_reportsToWrite.Contains(type)) {
-				BaseWriter.WriteReport(type, data);
+				if (BaseWriter is FileOutputWriter) {
+					base.WriteReport(type, data);
+				} else {
+					BaseWriter.WriteReport(type, data);
+				}
 			}
 
 			_storedReports.Add(type, data);
 		}
 
-		public void WriteReport(ReportType type, Stream data)
+		public override void WriteReport(ReportType type, Stream data)
 		{
 			throw new NotImplementedException("PDF is not supported by TempFileOutputWriter");
 		}
@@ -82,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		#region Implementation of IModalDataWriter
 
-		public void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
+		public override void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
 			BaseWriter.WriteModData(jobRunId, runName, cycleName, runSuffix, modData);
 		}
@@ -91,7 +95,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		#region Implementation of ISummaryWriter
 
-		public void WriteSumData(DataTable sortedAndFilteredTable)
+		public override void WriteSumData(DataTable sortedAndFilteredTable)
 		{
 			BaseWriter.WriteSumData(sortedAndFilteredTable);
 		}
@@ -100,7 +104,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		#region Implementation of IOutputDataWriter
 
-		public string JobFile => BaseWriter.JobFile;
+		//public string JobFile => BaseWriter.JobFile;
 
 		#endregion
 	}

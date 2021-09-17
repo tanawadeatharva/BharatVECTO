@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string JobFile => _jobFile;
 
-		private ConcurrentDictionary<ReportType, string> _writtenReports = new ConcurrentDictionary<ReportType, string>();
+		protected ConcurrentDictionary<ReportType, string> _writtenReports = new ConcurrentDictionary<ReportType, string>();
 		public virtual IDictionary<ReportType, string> GetWrittenFiles()
 		{
 			return _writtenReports;
@@ -152,6 +152,22 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public virtual void WriteReport(ReportType type, XDocument data)
 		{
+			var fileName = GetReportFilename(type);
+			using (var writer = new FileStream(fileName, FileMode.Create)) {
+				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
+					xmlWriter.Formatting = Formatting.Indented;
+					data.WriteTo(xmlWriter);
+					xmlWriter.Flush();
+					xmlWriter.Close();
+				}
+			}
+
+			var added = _writtenReports.TryAdd(type, fileName);
+			System.Diagnostics.Debug.Assert(added);
+		}
+
+		protected virtual string GetReportFilename(ReportType type)
+		{
 			string fileName = null;
 			switch (type) {
 				case ReportType.DeclarationReportManufacturerXML:
@@ -175,20 +191,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				default:
 					throw new ArgumentOutOfRangeException("ReportType");
 			}
-			using (var writer = new FileStream(fileName, FileMode.Create)) {
-				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
-					xmlWriter.Formatting = Formatting.Indented;
-					data.WriteTo(xmlWriter);
-					xmlWriter.Flush();
-					xmlWriter.Close();
-				}
-			}
 
-			var added = _writtenReports.TryAdd(type, fileName);
-			System.Diagnostics.Debug.Assert(added);
+			return fileName;
 		}
 
-		
 
 		public virtual void WriteReport(ReportType type, Stream data)
 		{
