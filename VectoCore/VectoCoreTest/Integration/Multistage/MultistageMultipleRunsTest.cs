@@ -24,6 +24,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private const string CompletedDiesel = TestDataDir + "newVifCompletedConventional.vecto";
 		private const string CompletedExempted = TestDataDir + "newVifExempted.vecto";
 		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "newVifExempted-noTPMLM.vecto";
+		private string CompletedWithoutADAS = TestDataDir + "newVifCompletedConventional-noADAS.vecto";
+
 
 
 
@@ -138,6 +140,21 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 
+
+		}
+
+		[Test]
+		public void PrimaryAndCompletedWithoutADAS()
+		{
+			StartSimulation(CompletedWithoutADAS);
+
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
+
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 
 		}
 

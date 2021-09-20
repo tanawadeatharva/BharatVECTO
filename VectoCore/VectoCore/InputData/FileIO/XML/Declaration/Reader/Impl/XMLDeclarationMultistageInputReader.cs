@@ -542,11 +542,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{
-			if (GetVehiclePropertyValue<IAdvancedDriverAssistantSystemDeclarationInputData>(nameof(ADAS)) == null)
-				return null;
-
 			return _consolidatedADAS
-					?? (_consolidatedADAS = new ConsolidatedADASData(_manufacturingStages));
+					?? (_consolidatedADAS = new ConsolidatedADASData(
+						manufacturingStages: _manufacturingStages, 
+						primaryVehicleData: _primaryVehicle.Vehicle,
+						usePrimaryData: GetVehiclePropertyValue<IAdvancedDriverAssistantSystemDeclarationInputData>(nameof(ADAS)) == null));
 		}
 
 
@@ -777,8 +777,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class ConsolidatedADASData : ConsolidatedDataBase, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
-		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
-			: base(manufacturingStages) { }
+		private readonly bool _usePrimaryData;
+		private readonly IAdvancedDriverAssistantSystemDeclarationInputData _primaryAdas;
+
+		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages,
+			IVehicleDeclarationInputData primaryVehicleData, bool usePrimaryData)
+			: base(manufacturingStages)
+		{
+			_usePrimaryData = usePrimaryData;
+			_primaryAdas = primaryVehicleData.ADAS;
+		}
 
 		public bool EngineStopStart => GetADASPropertyValue<bool>(nameof(EngineStopStart));
 
@@ -793,6 +801,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private T GetADASPropertyValue<T>(string propertyName)
 		{
+			if (_usePrimaryData) {
+				return GetPropertyValue<T>(_primaryAdas, propertyName);
+			}
+
 			foreach (var manufacturingStage in _manufacturingStages) {
 				var adas = manufacturingStage.Vehicle.ADAS;
 				if (adas == null)

@@ -2359,6 +2359,9 @@
     <None Include="TestData\Integration\Buses\SingleBus.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\Multistage\newVifCompletedConventional-noADAS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\Multistage\newVifCompletedConventional.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -6039,6 +6042,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-exempted_input_interim-sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-stage_input_full-sample-final-noADAS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-stage_input_full-sample-final.xml">

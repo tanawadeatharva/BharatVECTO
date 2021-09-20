@@ -216,6 +216,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 			foreach (var multistageParameterViewModel in _parameterViewModels.Values)
 			{
+				//TODO: Nullable values getting enabled on loading a file.
 				multistageParameterViewModel.UpdateEditingEnabled();
 			}
 			OnPropertyChanged(String.Empty);
