@@ -6035,6 +6035,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E4.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-exempted_input_completewithoutTMPLM.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-exempted_input_interim-sample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

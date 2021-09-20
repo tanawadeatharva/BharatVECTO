@@ -327,11 +327,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			} 
 		}
 
-		
-		
-
-
-
 
 		public ConsolidatedDataBase(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 		{
@@ -511,7 +506,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public Kilogram CurbMassChassis => GetVehiclePropertyValue<Kilogram>(nameof(CurbMassChassis));
 
-		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating));
+		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating)) ?? _primaryVehicle.Vehicle.GrossVehicleMassRating;
 
 		public bool? AirdragModifiedMultistage => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
 
