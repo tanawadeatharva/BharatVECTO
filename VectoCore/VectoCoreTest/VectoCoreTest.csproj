@@ -2362,6 +2362,9 @@
     <None Include="TestData\Integration\Multistage\newVifCompletedConventional.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\Multistage\newVifExempted-noTPMLM.vecto">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\Multistage\newVifExempted.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

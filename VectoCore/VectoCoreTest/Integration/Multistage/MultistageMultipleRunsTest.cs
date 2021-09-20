@@ -23,6 +23,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private const string CompletedDiesel = TestDataDir + "newVifCompletedConventional.vecto";
 		private const string CompletedExempted = TestDataDir + "newVifExempted.vecto";
+		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "newVifExempted-noTPMLM.vecto";
+
+
+
+
 
 		private const string InterimExempted = TestDataDir + "newVifExemptedIncomplete.vecto";
 		private const string InterimDiesel = TestDataDir + "newVifInterimDiesel.vecto";
@@ -66,14 +71,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndCompletedTest()
 		{
-			var inputFile = Path.GetFullPath(CompletedExempted);
-			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			StartSimulation(input);
 
-			_jobContainer.WaitFinished();
-			//while (!_jobContainer.AllCompleted) {
-			//	//Busy wait
-			//}
+			StartSimulation(CompletedExempted);
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -82,23 +81,28 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
-			
 		}
 
-		
+		[Test]
+		public void ExemptedPrimaryAndCompletedWithoutTPMLMTest()
+		{
+
+			StartSimulation(CompletedExemptedWithoutTPMLM);
+
+			var writtenFiles = GetWrittenFiles();
+			ShowWrittenFiles(writtenFiles);
+
+			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+		}
+
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndInterimTest()
 		{
-			var inputFile = Path.GetFullPath(InterimExempted);
-			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			StartSimulation(input);
-
-			_jobContainer.WaitFinished();
-			//while (!_jobContainer.AllCompleted)
-			//{
-			//	//Busy wait
-			//}
-
+			StartSimulation(InterimExempted);
+			
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
@@ -124,16 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[Test, Timeout(1000 * 20 * 60)]
 		public void PrimaryAndCompletedTest()
 		{
-			var inputFile = Path.GetFullPath(CompletedDiesel);
-			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			StartSimulation(input);
-
-			_jobContainer.WaitFinished();
-			//while (!_jobContainer.AllCompleted)
-			//{
-			//	//Busy wait
-
-			//}
+			StartSimulation(CompletedDiesel);
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -150,17 +145,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[Test, Timeout(1000 * 10 * 60)]
 		public void PrimaryAndInterimTest()
 		{
-			var inputFile = Path.GetFullPath(InterimDiesel);
-			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
-			
-			
-			StartSimulation(input);
+			StartSimulation(InterimDiesel);
 
-			_jobContainer.WaitFinished();
-			//while (!_jobContainer.AllCompleted)
-			//{
-			//	//Busy wait
-			//}
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -169,6 +155,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+		}
+
+		private void StartSimulation(string path)
+		{
+			var inputFile = Path.GetFullPath(path);
+			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
+
+
+			StartSimulation(input);
+
+			_jobContainer.WaitFinished();
 		}
 
 
