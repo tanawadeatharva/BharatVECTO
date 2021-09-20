@@ -231,6 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
 
+			var gearboxInfo = DataBus.GearboxInfo as ATGearbox;
 			if (nextGear.Engaged && !nextGear.Equals(currentGear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
 					return null;
@@ -276,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				//	return null;
 				//}
 			} else {
-				TestPowertrain.Gearbox.RequestAfterGearshift = (DataBus.GearboxInfo as ATGearbox).RequestAfterGearshift;
+				TestPowertrain.Gearbox.RequestAfterGearshift = gearboxInfo.RequestAfterGearshift;
 			}
 			//TestPowertrain.Gearbox.ShiftToLocked = (DataBus.GearboxInfo as ATGearbox).ShiftToLocked;
 
@@ -286,31 +287,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			//if (!PreviousState.GearboxEngaged) {
-			TestPowertrain.CombustionEngine.Initialize(
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque,
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed);
-			TestPowertrain.CombustionEngine.PreviousState.EngineOn = //true;
-					(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn;
-			TestPowertrain.CombustionEngine.PreviousState.EnginePower =
-					(DataBus.EngineInfo as CombustionEngine).PreviousState.EnginePower;
-			TestPowertrain.CombustionEngine.PreviousState.dt = (DataBus.EngineInfo as CombustionEngine).PreviousState.dt;
-			TestPowertrain.CombustionEngine.PreviousState.EngineSpeed =
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineSpeed;
-			TestPowertrain.CombustionEngine.PreviousState.EngineTorque =
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorque;
-			TestPowertrain.CombustionEngine.PreviousState.EngineTorqueOut =
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineTorqueOut;
-			TestPowertrain.CombustionEngine.PreviousState.DynamicFullLoadTorque =
-				(DataBus.EngineInfo as CombustionEngine).PreviousState.DynamicFullLoadTorque;
+			var engineInfo = DataBus.EngineInfo as CombustionEngine;
+			var enginePrevious = engineInfo.PreviousState;
+			TestPowertrain.CombustionEngine.Initialize(enginePrevious.EngineTorque, enginePrevious.EngineSpeed);
+			var testEnginePrevious = TestPowertrain.CombustionEngine.PreviousState;
+			testEnginePrevious.EngineOn = enginePrevious.EngineOn;
+			testEnginePrevious.EnginePower = enginePrevious.EnginePower;
+			testEnginePrevious.dt = enginePrevious.dt;
+			testEnginePrevious.EngineSpeed = enginePrevious.EngineSpeed;
+			testEnginePrevious.EngineTorque = enginePrevious.EngineTorque;
+			testEnginePrevious.EngineTorqueOut = enginePrevious.EngineTorqueOut;
+			testEnginePrevious.DynamicFullLoadTorque = enginePrevious.DynamicFullLoadTorque;
 
 			switch (TestPowertrain.CombustionEngine.EngineAux) {
 				case EngineAuxiliary engineAux:
-					engineAux.PreviousState.AngularSpeed =
-						((DataBus.EngineInfo as CombustionEngine).EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
+					engineAux.PreviousState.AngularSpeed = (engineInfo.EngineAux as EngineAuxiliary).PreviousState.AngularSpeed;
 					break;
 				case BusAuxiliariesAdapter busAux:
-					busAux.PreviousState.AngularSpeed =
-						((DataBus.EngineInfo as CombustionEngine).EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
+					busAux.PreviousState.AngularSpeed = (engineInfo.EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
 					break;
 			}
 
@@ -319,28 +313,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
 			}
 
-			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity =
-				(DataBus.GearboxInfo as ATGearbox).PreviousState.OutAngularVelocity;
-			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
-				(DataBus.GearboxInfo as ATGearbox).PreviousState.InAngularVelocity;
-			TestPowertrain.Gearbox._powershiftLossEnergy =
-				(DataBus.GearboxInfo as ATGearbox)._powershiftLossEnergy;
-			TestPowertrain.Gearbox.PreviousState.PowershiftLossEnergy =
-				(DataBus.GearboxInfo as ATGearbox).PreviousState.PowershiftLossEnergy;
-			TestPowertrain.Gearbox.LastShift =
-				(DataBus.GearboxInfo as ATGearbox).LastShift;
-			TestPowertrain.Gearbox.PreviousState.Gear =
-				(DataBus.GearboxInfo as ATGearbox).PreviousState.Gear;
+			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity = gearboxInfo.PreviousState.OutAngularVelocity;
+			TestPowertrain.Gearbox.PreviousState.InAngularVelocity = gearboxInfo.PreviousState.InAngularVelocity;
+			TestPowertrain.Gearbox._powershiftLossEnergy = gearboxInfo._powershiftLossEnergy;
+			TestPowertrain.Gearbox.PreviousState.PowershiftLossEnergy = gearboxInfo.PreviousState.PowershiftLossEnergy;
+			TestPowertrain.Gearbox.LastShift = gearboxInfo.LastShift;
+			TestPowertrain.Gearbox.PreviousState.Gear = gearboxInfo.PreviousState.Gear;
 
 			if (nextGear.TorqueConverterLocked.HasValue && !nextGear.TorqueConverterLocked.Value) {
-				TestPowertrain.TorqueConverter.PreviousState.InAngularVelocity =
-					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.InAngularVelocity;
-				TestPowertrain.TorqueConverter.PreviousState.InTorque =
-					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.InTorque;
-				TestPowertrain.TorqueConverter.PreviousState.OutAngularVelocity =
-					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.OutAngularVelocity;
-				TestPowertrain.TorqueConverter.PreviousState.IgnitionOn =
-					(DataBus.TorqueConverterInfo as TorqueConverter).PreviousState.IgnitionOn;
+				var dataBusTorqueConverterInfo = DataBus.TorqueConverterInfo as TorqueConverter;
+				var prev = dataBusTorqueConverterInfo.PreviousState;
+				var testTCPrevious = TestPowertrain.TorqueConverter.PreviousState;
+				testTCPrevious.InAngularVelocity = prev.InAngularVelocity;
+				testTCPrevious.InTorque = prev.InTorque;
+				testTCPrevious.OutAngularVelocity = prev.OutAngularVelocity;
+				testTCPrevious.IgnitionOn = prev.IgnitionOn;
 			}
 
 			//TestPowertrain.Clutch.PreviousState.InAngularVelocity =
@@ -2272,8 +2259,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			CurrentState = new StrategyState {
-				ICEStartTStmp = PreviousState.ICEStartTStmp, 
-				GearshiftTriggerTstmp = PreviousState.GearshiftTriggerTstmp, 
+				ICEStartTStmp = PreviousState.ICEStartTStmp,
+				GearshiftTriggerTstmp = PreviousState.GearshiftTriggerTstmp,
 				ICEOn = DataBus.EngineCtl.CombustionEngineOn
 			};
 			AllowEmergencyShift = false;
