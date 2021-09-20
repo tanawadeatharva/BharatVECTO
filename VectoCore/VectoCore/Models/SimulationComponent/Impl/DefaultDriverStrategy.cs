@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -49,19 +48,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public enum PCCStates
+	{
+		OutsideSegment,
+		WithinSegment,
+		UseCase1,
+		UseCase2,
+		PCCinterrupt
+	}
+
 	public class DefaultDriverStrategy : LoggingObject, IDriverStrategy
 	{
-		public enum PCCStates
-		{
-			OutsideSegment,
-			WithinSegment,
-			UseCase1,
-			UseCase2,
-			PCCinterrupt
-		}
-
 		public static readonly SIBase<Meter> BrakingSafetyMargin = 0.1.SI<Meter>();
-
 		protected internal DrivingBehaviorEntry NextDrivingAction;
 
 		public enum DrivingMode
@@ -81,9 +79,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
-		protected internal PCCStates PCCState = PCCStates.OutsideSegment;
-		protected bool ATEcoRollReleaseLockupClutch;
 
+		public PCCStates PCCState => _PCCState;
+		protected internal PCCStates _PCCState = PCCStates.OutsideSegment;
+		protected bool ATEcoRollReleaseLockupClutch;
 
 		public DefaultDriverStrategy(IVehicleContainer container)
 		{
@@ -177,10 +176,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					val = -5;
 				}
 				container.SetDataValue("PCCSegment", val);
-				container.SetDataValue("PCCState", (int)PCCState);
+				container.SetDataValue("PCCState", (int)_PCCState);
 			} else {
 				container.SetDataValue("PCCSegment", 0);
-				container.SetDataValue("PCCState", (int)PCCState);
+				container.SetDataValue("PCCState", (int)_PCCState);
 			}
 		}
 
@@ -189,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (PCCSegments.Count > 0) {
 				if (Driver.DataBus.MileageCounter.Distance > PCCSegments.Current.EndDistance) {
 					PCCSegments.MoveNext();
-					PCCState = PCCStates.OutsideSegment;
+					_PCCState = PCCStates.OutsideSegment;
 				}
 			}
 		}
@@ -202,15 +201,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandlePCC(absTime, targetVelocity);
 			}
 			if (ADAS.EcoRoll != EcoRollType.None &&
-				(PCCState == PCCStates.OutsideSegment || PCCState == PCCStates.WithinSegment)
+				(_PCCState == PCCStates.OutsideSegment || _PCCState == PCCStates.WithinSegment)
 			) {
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
 			//if (ADAS.EcoRoll != EcoRollType.None) {
 			// todo MQ: keep something like this to prevent driver to turn on engine in every timestep (in combination with hybrids leads to errors!)
-			if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
-				PCCState != PCCStates.UseCase2) {
+			if (EcoRollState.State != EcoRollStates.EcoRollOn && _PCCState != PCCStates.UseCase1 &&
+				_PCCState != PCCStates.UseCase2) {
 				EngineOffTimestamp = null;
 				if (Driver.DataBus.PowertrainInfo.HasCombustionEngine && !Driver.DataBus.PowertrainInfo.HasElectricMotor) {
 					Driver.DataBus.EngineCtl.CombustionEngineOn = true;
@@ -291,28 +290,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			UpdatePCCState(targetVelocity);
 
-			switch (PCCState) {
+			switch (_PCCState) {
 				case PCCStates.UseCase1:
 					if (vehicleSpeed <= targetVelocity - Driver.DriverData.PCC.UnderSpeed * 1.05) {
-						PCCState = PCCStates.PCCinterrupt;
+						_PCCState = PCCStates.PCCinterrupt;
 					}
 					if (vehicleSpeed >= targetVelocity + 1.KMPHtoMeterPerSecond()) {
-						PCCState = PCCStates.WithinSegment;
+						_PCCState = PCCStates.WithinSegment;
 					}
 					break;
 				case PCCStates.UseCase2:
 					if (vehicleSpeed < Driver.DriverData.PCC.MinSpeed || vehicleSpeed > targetVelocity + 1.KMPHtoMeterPerSecond()) {
-						PCCState = PCCStates.WithinSegment;
+						_PCCState = PCCStates.WithinSegment;
 					}
 					break;
 				case PCCStates.PCCinterrupt:
 					if (vehicleSpeed >= targetVelocity - Driver.DriverData.PCC.UnderSpeed * 0.95) {
-						PCCState = PCCStates.UseCase1;
+						_PCCState = PCCStates.UseCase1;
 					}
 					break;
 			}
 
-			switch (PCCState) {
+			switch (_PCCState) {
 				case PCCStates.UseCase1:
 				case PCCStates.UseCase2:
 					switch (ADAS.EcoRoll) {
@@ -393,19 +392,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var currentEnergyHigherThanEndUseCase2 =
 					currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
 
-				if (PCCState == PCCStates.OutsideSegment) {
-					PCCState = PCCStates.WithinSegment;
+				if (_PCCState == PCCStates.OutsideSegment) {
+					_PCCState = PCCStates.WithinSegment;
 				}
-				if (PCCState == PCCStates.WithinSegment && speedSufficient && beforeVLow && currentEnergyHigherThanEndUseCase1 &&
+				if (_PCCState == PCCStates.WithinSegment && speedSufficient && beforeVLow && currentEnergyHigherThanEndUseCase1 &&
 					currentEnergyHigherThanMin) {
-					PCCState = PCCStates.UseCase1;
+					_PCCState = PCCStates.UseCase1;
 				}
-				if (PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && speedBelowTargetspeed && beyondVLow &&
+				if (_PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && speedBelowTargetspeed && beyondVLow &&
 					currentEnergyHigherThanEndUseCase2) {
-					PCCState = PCCStates.UseCase2;
+					_PCCState = PCCStates.UseCase2;
 				}
 			} else {
-				PCCState = PCCStates.OutsideSegment;
+				_PCCState = PCCStates.OutsideSegment;
 			}
 		}
 
@@ -433,15 +432,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
 			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
 
-			var coastingForce = airDragForce + rollResistanceForce +
-								(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
+			var coastingForce = airDragForce + rollResistanceForce + (gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
 			return coastingForce;
 		}
 
-		private Joule CalculateEnergy(Meter altitude, MeterPerSecond velocity, Kilogram mass)
-		{
-			return (mass * Physics.GravityAccelleration * altitude).Cast<Joule>() + mass * velocity * velocity / 2;
-		}
+		private Joule CalculateEnergy(Meter altitude, MeterPerSecond velocity, Kilogram mass) => 
+			(mass * Physics.GravityAccelleration * altitude).Cast<Joule>() + mass * velocity * velocity / 2;
 
 		private void HandleEcoRoll(Second absTime, MeterPerSecond targetVelocity)
 		{
@@ -752,15 +748,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public struct EcoRoll
 	{
 		public EcoRollStates State;
-
 		public Second StateChangeTstmp;
-
 		public GearshiftPosition Gear;
-
 		public Watt PreviousBrakePower;
-
 		public bool AcceleratorPedalIdle;
-
 		public bool AllConditionsMet;
 	}
 
@@ -853,8 +844,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool prohibitOverspeed = false);
 
 		protected abstract IResponse CheckRequestDoesNotExceedNextAction(
-			Second absTime, Meter ds,
-			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newSimulationDistance);
+			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newSimulationDistance);
 
 		public abstract void ResetMode();
 	}
@@ -1051,8 +1041,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
-			if (DriverStrategy.PCCState == DefaultDriverStrategy.PCCStates.UseCase1 ||
-				DriverStrategy.PCCState == DefaultDriverStrategy.PCCStates.UseCase2) {
+			if (DriverStrategy._PCCState == PCCStates.UseCase1 || DriverStrategy._PCCState == PCCStates.UseCase2) {
 				return Driver.DrivingActionCoast(absTime, ds, targetVelocity, gradient);
 			}
 
@@ -1546,14 +1535,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DrivingCycleData.DrivingCycleEntry CycleEntry;
 
-		public bool HasEqualTrigger(DrivingBehaviorEntry other)
-		{
-			return TriggerDistance.IsEqual(other.TriggerDistance) && NextTargetSpeed.IsEqual(other.NextTargetSpeed);
-		}
+		public bool HasEqualTrigger(DrivingBehaviorEntry other) => 
+			TriggerDistance.IsEqual(other.TriggerDistance) && NextTargetSpeed.IsEqual(other.NextTargetSpeed);
 
-		public override string ToString()
-		{
-			return $"action: {Action} @ {CoastingStartDistance} / {BrakingStartDistance}. trigger: {TriggerDistance} targetSpeed: {NextTargetSpeed}";
-		}
+		public override string ToString() => 
+			$"action: {Action} @ {CoastingStartDistance} / {BrakingStartDistance}. trigger: {TriggerDistance} targetSpeed: {NextTargetSpeed}";
 	}
 }

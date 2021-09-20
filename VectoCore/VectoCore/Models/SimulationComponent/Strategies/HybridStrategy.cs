@@ -1345,7 +1345,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
-			eval.Add(ResponseEmOff);
+			var result = ResponseEmOff;
+			if (DataBus.DriverInfo.PCCState == PCCStates.UseCase1 || DataBus.DriverInfo.PCCState == PCCStates.UseCase2)
+				result.ICEOff = true;
+			eval.Add(result);
 		}
 
 		protected virtual void HandleRollAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
@@ -1770,8 +1773,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (emOffResponse == null) {
 				return null;
 			}
-
-
 
 			var entry = new HybridResultEntry {
 				U = double.NaN,
