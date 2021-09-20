@@ -415,6 +415,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InvalidEntry  = variableName; 
 			return false;
 		}
+
+		protected bool InputComplete<T>(T value, string variableName, bool mandatory)
+		{
+			if (mandatory) {
+				return InputComplete(value, variableName);
+			} else {
+				return true;
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -779,12 +788,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		private readonly bool _usePrimaryData;
 		private readonly IAdvancedDriverAssistantSystemDeclarationInputData _primaryAdas;
+		private readonly IVehicleDeclarationInputData _primaryVehicleData;
 
 		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages,
 			IVehicleDeclarationInputData primaryVehicleData, bool usePrimaryData)
 			: base(manufacturingStages)
 		{
 			_usePrimaryData = usePrimaryData;
+			_primaryVehicleData = primaryVehicleData;
 			_primaryAdas = primaryVehicleData.ADAS;
 		}
 
@@ -819,16 +830,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
 		{
-			return true;
-			//if (fullCheck) {
-			//	//use Binary AND to execute all Statements and gather information about missing parameters.
-			//	return InputComplete(EngineStopStart, nameof(EngineStopStart))
-			//			& InputComplete(EcoRoll, nameof(EcoRoll))
-			//			& InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl));
-			//}
-			//return InputComplete(EngineStopStart, nameof(EngineStopStart))
-			//		&& InputComplete(EcoRoll, nameof(EcoRoll))
-			//		&& InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl));
+            if (fullCheck)
+            {
+                //use Binary AND to execute all Statements and gather information about missing parameters.
+                return InputComplete(EngineStopStart, nameof(EngineStopStart))
+                        & InputComplete(EcoRoll, nameof(EcoRoll))
+                        & InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl))
+						& InputComplete(IsATPEcoRollComplete(), "APTEcoRollReleaseLockupClutch");
+            }
+            return InputComplete(EngineStopStart, nameof(EngineStopStart))
+                    && InputComplete(EcoRoll, nameof(EcoRoll))
+                    && InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl))
+					&& InputComplete(IsATPEcoRollComplete(), "APTEcoRollReleaseLockupClutch");
+		}
+
+		private bool IsATPEcoRollComplete()
+		{
+			if (PrimaryGearboxIsAT()) {
+				return ATEcoRollReleaseLockupClutch != null;
+			} else {
+				return false;
+			}
+		}
+
+		private bool PrimaryGearboxIsAT()
+		{
+			switch (_primaryVehicleData.Components.GearboxInputData.Type) {
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
+					return true;
+				default: 
+					return false;
+			}
 		}
 
 		public override string GetInvalidEntry()
