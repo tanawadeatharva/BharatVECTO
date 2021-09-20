@@ -1368,34 +1368,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleHaltAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			var iceOn = ModelData.VehicleData.ADAS.EngineStopStart ? DataBus.EngineInfo.EngineOn : true;
+			var iceOn = DataBus.EngineInfo.EngineOn;
 
-			if (ModelData.VehicleData.ADAS.EngineStopStart) {
-				if (VehicleHaltTimestamp == null) {
-					VehicleHaltTimestamp = absTime;
-				}
+			if (VehicleHaltTimestamp == null) {
+				VehicleHaltTimestamp = absTime;
+			}
 
-				if ((absTime - VehicleHaltTimestamp).IsGreaterOrEqual(
-					ModelData.DriverData.EngineStopStart.EngineOffStandStillActivationDelay)) {
-					if (EngineOffTimestamp == null) {
-						EngineOffTimestamp = absTime;
-						iceOn = false;
-					}
+			if ((absTime - VehicleHaltTimestamp).IsGreaterOrEqual(
+				ModelData.DriverData.EngineStopStart.EngineOffStandStillActivationDelay)) {
+				if (EngineOffTimestamp == null) {
+					EngineOffTimestamp = absTime;
+					iceOn = false;
 				}
+			}
 
-				if (EngineOffTimestamp != null &&
-					(absTime - EngineOffTimestamp).IsGreaterOrEqual(ModelData.DriverData.EngineStopStart
-						.MaxEngineOffTimespan)) {
-					iceOn = true;
-				}
+			if (EngineOffTimestamp != null &&
+				(absTime - EngineOffTimestamp).IsGreaterOrEqual(ModelData.DriverData.EngineStopStart
+					.MaxEngineOffTimespan)) {
+				iceOn = true;
 			}
 
 			var tmp = ResponseEmOff;
 			tmp.Setting.GearboxInNeutral = false;
-			//tmp.Setting.NextGear = startg
 			tmp.Setting.CombustionEngineOn = iceOn;
 			tmp.ICEOff = !iceOn;
-
 			eval.Add(tmp);
 		}
 
