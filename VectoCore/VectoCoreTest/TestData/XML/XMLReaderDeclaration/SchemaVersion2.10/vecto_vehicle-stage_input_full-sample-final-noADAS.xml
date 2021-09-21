@@ -8,7 +8,6 @@
     <Model>Sample Bus Model</Model>
     <LegislativeCategory>M3</LegislativeCategory>
     <CorrectedActualMass>500</CorrectedActualMass>
-    <TechnicalPermissibleMaximumLadenMass>3500</TechnicalPermissibleMaximumLadenMass>
     <AirdragModifiedMultistage>true</AirdragModifiedMultistage>
     <ClassBus>II+III</ClassBus>
     <NgTankSystem>Compressed</NgTankSystem>

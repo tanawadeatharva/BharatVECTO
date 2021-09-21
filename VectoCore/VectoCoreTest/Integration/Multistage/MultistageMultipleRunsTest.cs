@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 		[Test]
-		public void PrimaryAndCompletedWithoutADAS()
+		public void PrimaryAndCompletedWithoutADASAndTPMLM()
 		{
 			StartSimulation(CompletedWithoutADAS);
 
