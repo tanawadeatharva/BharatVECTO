@@ -409,10 +409,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		/// <returns></returns>
 		public bool UpdateEditingEnabled()
 		{
-			if (!AllowNullValue && CurrentContent == null) {
-				EditingEnabled = false;
-			} else {
-				EditingEnabled = true;
+			if (!AllowNullValue) {
+				if (CurrentContent == null)
+				{
+					EditingEnabled = false;
+				}
+				else
+				{
+					EditingEnabled = true;
+				}
 			}
 
 			return EditingEnabled;
