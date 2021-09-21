@@ -888,8 +888,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				if (EngineStopStartNullable.HasValue 
 					|| EcoRollTypeNullable.HasValue
-					|| PredictiveCruiseControlNullable.HasValue
-					|| ATEcoRollReleaseLockupClutch.HasValue) {
+					|| PredictiveCruiseControlNullable.HasValue) {
 					return this;
 				} else {
 					return null;
@@ -1197,7 +1196,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 								result =
 									$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
 							} else { 
-								if (propertyValue.GetType() == typeof(string) && string.IsNullOrWhiteSpace(propertyValue as string))
+								if (propertyValue is string value && string.IsNullOrWhiteSpace(value))
 								{
 									result =
 										$"{NameResolver.ResolveName(propertyName, BusStrings.ResourceManager, Strings.ResourceManager)} has to be set if editing is enabled.";
