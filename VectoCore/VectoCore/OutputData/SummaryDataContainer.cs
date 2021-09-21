@@ -286,6 +286,18 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		protected Dictionary<string, object> GetResultDictionary(IModalDataContainer modData, VectoRunData runData)
+		{
+			if (modData.HasCombustionEngine)
+			{
+				lock (_tableLock) {
+					UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
+				}
+			}
+
+			return new Dictionary<string, object>();
+		}
+
 		protected void AddResultRow(DataRow row)
 		{
 			lock (_tableLock) {
@@ -293,11 +305,23 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
+		private void AddResultDictionary(Dictionary<string, object> row)
+		{
+			lock (_tableLock) {
+				var tableRow = Table.NewRow();
+				foreach (var keyValuePair in row) {
+					tableRow[keyValuePair.Key] = keyValuePair.Value;
+				}
+				Table.Rows.Add(tableRow);
+			}
+		}
+
 		//[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
-			var row = GetResultRow(modData, runData); // Replace row with dictionary
+			//var row = GetResultRow(modData, runData); // Replace row with dictionary
 
+			var row = GetResultDictionary(modData, runData);
 			row[Fields.SORT] = jobNr * 1000 + runNr;
 			row[Fields.JOB] = $"{jobNr}-{runNr}"; //ReplaceNotAllowedCharacters(current);
 			row[Fields.INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
@@ -388,13 +412,15 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteGearshiftStats(modData, row, gearCount);
 
-			AddResultRow(row); //Add dictionary to datatable
+			//AddResultRow(row); //Add dictionary to datatable
+			AddResultDictionary(row);
 		}
 
 
 
+
 		private void WriteFuelconsumptionEntries(
-			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
+			IModalDataContainer modData, Dictionary<string, object> row, Kilogram vehicleLoading,
 			CubicMeter cargoVolume, double? passengers, VectoRunData runData)
 		{
 			var multipleEngineModes = runData.EngineData.MultipleEngineFuelModes;
@@ -513,7 +539,7 @@ namespace TUGraz.VectoCore.OutputData
 			return string.Format(col, suffix);
 		}
 
-		private void WriteAuxiliaries(IModalDataContainer modData, DataRow row, bool writeBusAux)
+		private void WriteAuxiliaries(IModalDataContainer modData, Dictionary<string, object> row, bool writeBusAux)
 		{
 			foreach (var aux in modData.Auxiliaries) {
 				string colName;
@@ -541,7 +567,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void WriteGearshiftStats(IModalDataContainer modData, DataRow row, uint gearCount)
+		private void WriteGearshiftStats(IModalDataContainer modData, Dictionary<string, object> row, uint gearCount)
 		{
 			row[Fields.NUM_GEARSHIFTS] = (ConvertedSI)modData.GearshiftCount();
 			var timeSharePerGear = modData.TimeSharePerGear(gearCount);
@@ -557,7 +583,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void WritePerformanceEntries(VectoRunData runData, IModalDataContainer modData, DataRow row)
+		private void WritePerformanceEntries(VectoRunData runData, IModalDataContainer modData, Dictionary<string, object> row)
 		{
 			row[Fields.ACC] = (ConvertedSI)modData.AccelerationAverage();
 			row[Fields.ACC_POS] = (ConvertedSI)modData.AccelerationsPositive();
@@ -643,7 +669,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.AVERAGE_AXLEGEAR_EFFICIENCY] = eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
 		}
 
-		private void WriteWorkEntries(IModalDataContainer modData, DataRow row, VectoRunData runData)
+		private void WriteWorkEntries(IModalDataContainer modData, Dictionary<string, object> row, VectoRunData runData)
 		{
 			row[Fields.E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertToKiloWattHour();
 			row[Fields.E_FCMAP_NEG] = (-modData.TotalEngineWorkNegative()).ConvertToKiloWattHour();
@@ -766,7 +792,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
+		private void WriteFullPowertrain(VectoRunData runData, Dictionary<string, object> row)
 		{
 			WriteVehicleData(runData, row);
 
@@ -797,7 +823,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		}
 
-		private static void WriteVehicleData(VectoRunData runData, DataRow row)
+		private static void WriteVehicleData(VectoRunData runData, Dictionary<string, object> row)
 		{
 			var data = runData.VehicleData;
 			//if (runData.VehicleData.b)
@@ -839,7 +865,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.REESS_CAPACITY] = cap;
 		}
 
-		private static void WriteAirdragData(AirdragData data, DataRow row)
+		private static void WriteAirdragData(AirdragData data, Dictionary<string, object> row)
 		{
 			row[Fields.AIRDRAG_MODEL] = data.ModelName;
 			row[Fields.AIRDRAG_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
@@ -849,7 +875,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.CD_x_A] = (ConvertedSI)data.CrossWindCorrectionCurve.AirDragArea;
 		}
 
-		private static void WriteEngineData(CombustionEngineData data, DataRow row)
+		private static void WriteEngineData(CombustionEngineData data, Dictionary<string, object> row)
 		{
 			if (data == null) {
 				return;
@@ -875,7 +901,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = string.Join(" / ", data.Fuels.Select(x => x.FuelConsumptionCorrectionFactor));
 		}
 
-		private static void WriteAxleWheelsData(List<Axle> data, DataRow row)
+		private static void WriteAxleWheelsData(List<Axle> data, Dictionary<string, object> row)
 		{
 			var fields = new[] {
 				Tuple.Create(Fields.DECLARED_RRC_AXLE1, Fields.DECLARED_FZISO_AXLE1),
@@ -897,7 +923,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.NUM_AXLES_TRAILER] = data.Count(x => x.AxleType == AxleType.Trailer);
 		}
 
-		private static void WriteAxlegearData(AxleGearData data, DataRow row)
+		private static void WriteAxlegearData(AxleGearData data, Dictionary<string, object> row)
 		{
 			if (data == null) {
 				return;
@@ -911,7 +937,7 @@ namespace TUGraz.VectoCore.OutputData
 				: data.CertificationNumber;
 		}
 
-		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, IAuxiliaryConfig busAux, DataRow row)
+		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, IAuxiliaryConfig busAux, Dictionary<string, object> row)
 		{
 			foreach (var aux in auxData) {
 				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
@@ -944,7 +970,7 @@ namespace TUGraz.VectoCore.OutputData
 				busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
 
-		private static void WriteAngledriveData(AngledriveData data, DataRow row)
+		private static void WriteAngledriveData(AngledriveData data, Dictionary<string, object> row)
 		{
 			if (data != null) {
 				row[Fields.ANGLEDRIVE_MANUFACTURER] = data.Manufacturer;
@@ -964,7 +990,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private static void WriteRetarderData(RetarderData data, DataRow row)
+		private static void WriteRetarderData(RetarderData data, Dictionary<string, object> row)
 		{
 			row[Fields.RETARDER_TYPE] = (data?.Type ?? RetarderType.None).GetLabel();
 			if (data != null && data.Type.IsDedicatedComponent()) {
@@ -982,7 +1008,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private static void WriteGearboxData(GearboxData data, DataRow row)
+		private static void WriteGearboxData(GearboxData data, Dictionary<string, object> row)
 		{
 			if (data == null) {
 				return;
