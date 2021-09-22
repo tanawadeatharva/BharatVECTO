@@ -846,7 +846,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
+	[DebuggerDisplay("{Val.ToString(\"F1\"),nq} [rad/s] ({AsRPM.ToString(\"F1\"),nq} [rpm)")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly int[] Units = { 0, 0, -1, 0, 0, 0, 0 };
