@@ -346,66 +346,69 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void UpdatePCCState(MeterPerSecond targetVelocity)
 		{
-			var dataBus = Driver.DataBus;
-			var distance = dataBus.MileageCounter.Distance;
-			var withinPCCSegment = PCCSegments.Current != null && PCCSegments.Current.StartDistance < distance &&
-									PCCSegments.Current.EndDistance > distance;
+			// check if within PCC segment and update state ----------------------------
+			var distance = Driver.DataBus.MileageCounter.Distance;
+			var withinPCCSegment = PCCSegments.Current != null 
+									&& distance.IsBetween(PCCSegments.Current.StartDistance, PCCSegments.Current.EndDistance);
 
-			var vehicleSpeed = dataBus.VehicleInfo.VehicleSpeed;
-			if (withinPCCSegment) {
-				var currentEnergy = CalculateEnergy(dataBus.DrivingCycleInfo.Altitude, vehicleSpeed, dataBus.VehicleInfo.TotalMass);
+			if (!withinPCCSegment) {
+				_PCCState = PCCStates.OutsideSegment;
+				return;
+			}
+			if (_PCCState == PCCStates.OutsideSegment) {
+				_PCCState = PCCStates.WithinSegment;
+			}
+			if (_PCCState != PCCStates.WithinSegment)
+				return;
 
+			// check for PCC usecase 1 -------------------------------------------------
 				var endUseCase1 = PCCSegments.Current.EndDistance;
 				var endEnergyUseCase1 = PCCSegments.Current.EnergyEnd;
 				if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase1).IsSmallerOrEqual(endUseCase1)) {
 					endUseCase1 = distance + Driver.DriverData.PCC.PreviewDistanceUseCase1;
-					var endCycleEntry = dataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase1);
-					endEnergyUseCase1 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, dataBus.VehicleInfo.TotalMass);
+				var endCycleEntry = Driver.DataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase1);
+				endEnergyUseCase1 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 				}
 
+			var vehicleSpeed = Driver.DataBus.VehicleInfo.VehicleSpeed;
+			var currentEnergy = CalculateEnergy(Driver.DataBus.DrivingCycleInfo.Altitude, vehicleSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 				var coastingForce = CoastingForce(targetVelocity, vehicleSpeed);
-
-				var energyCoastingLow = (coastingForce * (PCCSegments.Current.DistanceMinSpeed - distance)).Cast<Joule>();
 				var energyCoastingEndUseCase1 = (coastingForce * (endUseCase1 - distance)).Cast<Joule>();
-
+			var currentEnergyHigherThanEndUseCase1 = currentEnergy.IsGreaterOrEqual(endEnergyUseCase1 + energyCoastingEndUseCase1);
+			var energyCoastingLow = (coastingForce * (PCCSegments.Current.DistanceMinSpeed - distance)).Cast<Joule>();
 				var speedSufficient = vehicleSpeed.IsGreaterOrEqual(targetVelocity - Driver.DriverData.PCC.UnderSpeed);
-				var currentEnergyHigherThanMin =
-					currentEnergy.IsGreaterOrEqual(PCCSegments.Current.EnergyMinSpeed + energyCoastingLow);
-				var currentEnergyHigherThanEndUseCase1 =
-					currentEnergy.IsGreaterOrEqual(endEnergyUseCase1 + energyCoastingEndUseCase1);
+			var beforeVLow = distance.IsSmaller(PCCSegments.Current.DistanceMinSpeed);
+			var currentEnergyHigherThanMin = currentEnergy.IsGreaterOrEqual(PCCSegments.Current.EnergyMinSpeed + energyCoastingLow);
+			if (true
+				&& beforeVLow
+				&& speedSufficient
+				&& currentEnergyHigherThanEndUseCase1
+				&& currentEnergyHigherThanMin) {
+				_PCCState = PCCStates.UseCase1;
+			}
 
+			// check for use case 2
 				var endUseCase2 = PCCSegments.Current.EndDistance;
 				var endEnergyUseCase2 = PCCSegments.Current.EnergyEnd;
 				if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase2).IsSmallerOrEqual(endUseCase1)) {
 					endUseCase2 = distance + Driver.DriverData.PCC.PreviewDistanceUseCase2;
-					var endCycleEntry = dataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase2);
-					endEnergyUseCase2 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, dataBus.VehicleInfo.TotalMass);
+				var endCycleEntry = Driver.DataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase2);
+				endEnergyUseCase2 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 				}
 
 				var energyCoastingEndUseCase2 = (coastingForce * (endUseCase2 - distance)).Cast<Joule>();
-
 				var beyondVLow = distance.IsGreaterOrEqual(PCCSegments.Current.DistanceMinSpeed);
-				var beforeVLow = distance.IsSmaller(PCCSegments.Current.DistanceMinSpeed);
-				var speedSufficientUseCase2 = vehicleSpeed.IsGreaterOrEqual(
-					VectoMath.Max(targetVelocity - Driver.DriverData.PCC.UnderSpeed, Driver.DriverData.PCC.MinSpeed));
+			var speedSufficientUseCase2 = vehicleSpeed.IsGreaterOrEqual(VectoMath.Max(targetVelocity - Driver.DriverData.PCC.UnderSpeed, Driver.DriverData.PCC.MinSpeed));
 				var speedBelowTargetspeed = vehicleSpeed.IsSmallerOrEqual(targetVelocity - 1.KMPHtoMeterPerSecond());
-				var currentEnergyHigherThanEndUseCase2 =
-					currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
+			var currentEnergyHigherThanEndUseCase2 = currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
 
-				if (_PCCState == PCCStates.OutsideSegment) {
-					_PCCState = PCCStates.WithinSegment;
-				}
-				if (_PCCState == PCCStates.WithinSegment && speedSufficient && beforeVLow && currentEnergyHigherThanEndUseCase1 &&
-					currentEnergyHigherThanMin) {
-					_PCCState = PCCStates.UseCase1;
-				}
-				if (_PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && speedBelowTargetspeed && beyondVLow &&
-					currentEnergyHigherThanEndUseCase2) {
+			if (true
+				&& speedSufficientUseCase2
+				&& speedBelowTargetspeed
+				&& beyondVLow
+				&& currentEnergyHigherThanEndUseCase2) {
 					_PCCState = PCCStates.UseCase2;
 				}
-			} else {
-				_PCCState = PCCStates.OutsideSegment;
-			}
 		}
 
 		private Newton CoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed)
