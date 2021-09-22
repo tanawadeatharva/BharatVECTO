@@ -871,7 +871,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("{Val} | {AsKmph}")]
+	[DebuggerDisplay("{Val.ToString(\"G4\"),nq} [m/s] ({AsKmph.ToString(\"G4\"),nq} [km/h])")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly int[] Units = { 0, 1, -1, 0, 0, 0, 0 };
@@ -1426,7 +1426,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <remarks>
 	/// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
 	/// </remarks>
-	[DebuggerDisplay("{Val} [{UnitString}]")]
+	[DebuggerDisplay("{SerializedValue,nq}")]
 	public class SI : IComparable
 	{
 		/// <summary>
