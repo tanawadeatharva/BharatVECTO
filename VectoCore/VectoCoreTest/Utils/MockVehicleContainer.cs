@@ -232,6 +232,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public DrivingAction DrivingAction { get; set; }
 
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
+		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public CycleData CycleData { get; set; }
 
