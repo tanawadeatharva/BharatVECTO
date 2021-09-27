@@ -51,7 +51,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 
-		[TestCase]
 		[TestCase(12000, 1256, 148, 148, 6087.03221)]
 		[TestCase(12000, 1256, -48, -148, 6087.03221)]
 		[TestCase(12000, 1256, 48, -148, 6087.03221)]
@@ -75,7 +74,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
-		[TestCase]
 		[TestCase(12000, 1256, 148, 148, 6087.0322)]
 		[TestCase(12000, 1256, -28, -27, 6087.0322)]
 		[TestCase(12000, 1256, -28, -29, 6087.0322)]
@@ -106,7 +104,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
-		[TestCase]
 		[TestCase(12000, 1256, -48, -28, 8954.1429)] // smart PS active - power demand below engine drag
 		[TestCase(12000, 1256, 48, -28, 6087.0322)] // no smart aux active - positive power demand
 		[TestCase(12000, 800, -48, -28, 8281.5129)] // smart PS active - power demand below engine drag
