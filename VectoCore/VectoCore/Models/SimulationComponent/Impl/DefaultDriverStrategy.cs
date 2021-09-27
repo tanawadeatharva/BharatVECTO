@@ -711,9 +711,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed)
 				: 0.SI<Watt>();
 
-			var emDragLoss = CalculateElectricMotorDragLoss();
-			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
-			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
+			var emDragLoss = CalculateElectricMotorDragLoss() ?? 0.SI<Watt>();
+			var gearboxLoss = Driver.DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();
+			var axleLoss = Driver.DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.SI<Watt>();
 
 			var coastingResistanceForce = airDragForce + rollResistanceForce
 				+ (gearboxLoss + axleLoss + emDragLoss - engineDragLoss) / vehicleSpeed;
