@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -38,6 +39,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public interface IDriverStrategy
 	{
 		IDriverActions Driver { get; set; }
+
+		PCCStates PCCState { get; }
 
 		IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
 

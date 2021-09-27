@@ -1471,5 +1471,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior DriverBehavior { get; set; }
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
+		public PCCStates PCCState => DriverStrategy.PCCState;
 	}
 }

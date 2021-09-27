@@ -379,6 +379,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
+		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public Meter Distance => CurrentState.Distance;
 	}

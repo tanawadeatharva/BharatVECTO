@@ -185,6 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public DrivingAction DrivingAction => realContainer?.DriverInfo?.DrivingAction ?? DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration => realContainer?.DriverInfo.DriverAcceleration;
+		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		#endregion
 

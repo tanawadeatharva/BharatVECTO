@@ -16,7 +16,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using static TUGraz.VectoCore.Models.SimulationComponent.Impl.DefaultDriverStrategy.PCCStates;
+using static TUGraz.VectoCore.Models.SimulationComponent.Impl.PCCStates;
 using static TUGraz.VectoCore.Models.SimulationComponent.Impl.DrivingAction;
 
 namespace TUGraz.VectoCore.Tests.Integration.ADAS
@@ -1377,7 +1377,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4723, 1e6, OutsideSegment, Accelerate));
 
 
-		private void TestPCC(string jobName, string cycleName, params (double start, double end, DefaultDriverStrategy.PCCStates pcc, DrivingAction action)[] data)
+		private void TestPCC(string jobName, string cycleName, params (double start, double end, PCCStates pcc, DrivingAction action)[] data)
 		{
 			jobName = Path.Combine(BasePath, jobName + ".vecto");
 
@@ -1395,7 +1395,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var expected = data;
 			var segmentWasTested = false;
 			var distances = mod.Columns[ModalResultField.dist.GetName()].Values<Meter>();
-			var pccStates = mod.Columns["PCCState"].Values<DefaultDriverStrategy.PCCStates>();
+			var pccStates = mod.Columns["PCCState"].Values<PCCStates>();
 			var actions = mod.Columns["DriverAction"].Values<DrivingAction>();
 			var vActs = mod.Columns[ModalResultField.v_act.GetName()].Values<MeterPerSecond>();
 
@@ -1432,7 +1432,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var pccCol = mod.Columns["PCCState"];
 			var driverActionCol = mod.Columns["DriverAction"];
 
-			var pccStates = pccCol.Values<DefaultDriverStrategy.PCCStates>();
+			var pccStates = pccCol.Values<PCCStates>();
 			var driverAction = driverActionCol.Values<DrivingAction>();
 			var distances = sCol.Values<Meter>();
 			var sections = GetDistancesOfStateChanges(pccStates.Zip(driverAction), distances).ToArray();
