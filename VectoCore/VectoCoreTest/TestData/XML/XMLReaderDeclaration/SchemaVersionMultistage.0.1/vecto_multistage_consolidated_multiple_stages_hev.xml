@@ -640,7 +640,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		</Signature>
 	</PrimaryVehicle>
 	<ManufacturingStep stepCount="2">
-		<Data xsi:type="BusManufacturingStageDataType" id="MSTG-1">
+		<Data xsi:type="BusManufacturingStepDataType" id="MSTG-1">
 			<HashPreviousStage>
 			<di:Reference URI="#PIF-d10aff76c5d149948046">
 				<di:Transforms>
@@ -688,7 +688,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		</Signature>
 	</ManufacturingStep>
 	<ManufacturingStep stepCount="3">
-		<Data xsi:type="BusManufacturingStageDataType" id="MSTG-2">
+		<Data xsi:type="BusManufacturingStepDataType" id="MSTG-2">
 			<HashPreviousStage>
 			<di:Reference URI="#RESULT-6f30c7fe665a47938f6b">
 				<di:Transforms>
@@ -759,7 +759,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		</Signature>
 	</ManufacturingStep>
 	<ManufacturingStep stepCount="4">
-		<Data xsi:type="BusManufacturingStageDataType" id="MST-3">
+		<Data xsi:type="BusManufacturingStepDataType" id="MST-3">
 			<HashPreviousStage>
 				<di:Reference URI="#RESULT-8f30c7fe665a47938f6b">
 					<di:Transforms>

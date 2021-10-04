@@ -563,7 +563,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
     </vif0.1:Signature>
   </vif0.1:PrimaryVehicle>
   <vif0.1:ManufacturingStep stepCount="2">
-    <vif0.1:Data xsi:type="BusManufacturingStageDataType" id="MST-ab066054c1bc431db1e3">
+    <vif0.1:Data xsi:type="BusManufacturingStepDataType" id="MST-ab066054c1bc431db1e3">
       <vif0.1:HashPreviousStage>
         <di:Reference URI="#PIF-4121ae4751874cefa376">
           <di:Transforms>

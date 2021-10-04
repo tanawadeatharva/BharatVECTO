@@ -603,7 +603,7 @@
     </vif0.1:Signature>
   </vif0.1:PrimaryVehicle>
   <vif0.1:ManufacturingStep stepCount="2">
-    <vif0.1:Data xsi:type="BusManufacturingStageDataType" id="MST-607e449d2b0e45228b69">
+    <vif0.1:Data xsi:type="BusManufacturingStepDataType" id="MST-607e449d2b0e45228b69">
       <vif0.1:HashPreviousStage>
         <di:Reference URI="#PIF-7f30aafa027a41a1864b">
           <di:Transforms>

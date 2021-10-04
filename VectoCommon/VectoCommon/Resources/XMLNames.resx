@@ -1587,4 +1587,7 @@
   <data name="VehicleTypeApprovalNumber" xml:space="preserve">
     <value>VehicleTypeApprovalNumber</value>
   </data>
+  <data name="BusManufacturingStepDataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
+  </data>
 </root>

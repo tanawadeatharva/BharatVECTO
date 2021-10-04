@@ -1303,6 +1303,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BusManufacturingStepDataType.
+        /// </summary>
+        public static string BusManufacturingStepDataType {
+            get {
+                return ResourceManager.GetString("BusManufacturingStepDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ChassisConfiguration.
         /// </summary>
         public static string ChassisConfiguration {

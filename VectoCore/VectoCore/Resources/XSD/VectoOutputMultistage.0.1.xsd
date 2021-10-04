@@ -366,7 +366,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="BusManufacturingStageDataType">
+	<xs:complexType name="BusManufacturingStepDataType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractManufacturingStepDataType">
 				<xs:sequence>

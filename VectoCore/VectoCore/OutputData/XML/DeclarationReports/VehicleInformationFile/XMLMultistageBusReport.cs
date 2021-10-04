@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var stage = new XElement(tns + XMLNames.ManufacturingStep,
 				new XAttribute(XMLNames.ManufacturingStep_StepCount, GetStageNumber()),
 				new XElement(tns + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStageDataType"),
+					new XAttribute(xsi + XMLNames.Attr_Type, XMLNames.BusManufacturingStepDataType),
 					new XAttribute(XMLNames.Component_ID_Attr, multistageId),
 					new XAttribute("xmlns", tns),
 					GetHashPreviousStageElement(),
