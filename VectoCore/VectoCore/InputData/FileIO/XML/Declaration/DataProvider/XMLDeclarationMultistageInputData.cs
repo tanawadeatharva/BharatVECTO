@@ -197,9 +197,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
-		public DigestData HashPreviousStage =>
+		public DigestData HashPreviousStep =>
 			_hashPreviousStage ??
-			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
+			(_hashPreviousStage = Reader.GetDigestData(GetNode(XMLNames.HashPreviousStep)));
 
 		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 

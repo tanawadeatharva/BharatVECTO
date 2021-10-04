@@ -439,7 +439,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryVehicle = primaryVehicle;
 		}
 
-		public DigestData HashPreviousStage => _manufacturingStages.First().HashPreviousStage;
+		public DigestData HashPreviousStep => _manufacturingStages.First().HashPreviousStep;
 
 		public int StepCount => _manufacturingStages.First().StepCount;
 

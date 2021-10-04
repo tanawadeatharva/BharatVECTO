@@ -2617,6 +2617,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HashPreviousStep.
+        /// </summary>
+        public static string HashPreviousStep {
+            get {
+                return ResourceManager.GetString("HashPreviousStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
         public static string LookAheadCoasting_SpeedDependentDecisionFactor_Entry {

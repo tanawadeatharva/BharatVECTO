@@ -604,7 +604,7 @@
   </vif0.1:PrimaryVehicle>
   <vif0.1:ManufacturingStep stepCount="2">
     <vif0.1:Data xsi:type="BusManufacturingStepDataType" id="MST-607e449d2b0e45228b69">
-      <vif0.1:HashPreviousStage>
+      <vif0.1:HashPreviousStep>
         <di:Reference URI="#PIF-7f30aafa027a41a1864b">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -613,7 +613,7 @@
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
           <di:DigestValue>a3ai89pd92w4O1za7mc+ut712QqNJqAfX0FeeZdfrFk=</di:DigestValue>
         </di:Reference>
-      </vif0.1:HashPreviousStage>
+      </vif0.1:HashPreviousStep>
       <vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-684dbf252718426b9fde" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
         <Manufacturer>Some Manufacturer</Manufacturer>
         <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>

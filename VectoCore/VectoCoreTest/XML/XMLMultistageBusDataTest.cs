@@ -547,7 +547,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, manufacturingStage.StepCount);
 
 			TestDigestData("#PIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				manufacturingStage.HashPreviousStage);
+				manufacturingStage.HashPreviousStep);
 
 			TestVehicleDataStage01(manufacturingStage.Vehicle);
 
@@ -602,7 +602,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(3, manufacturingStage.StepCount);
 
 			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
-				manufacturingStage.HashPreviousStage);
+				manufacturingStage.HashPreviousStep);
 
 			TestVehicleDataStage02(manufacturingStage.Vehicle);
 		}
@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, stageData.StepCount);
 
 			TestDigestData("#PIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				stageData.HashPreviousStage);
+				stageData.HashPreviousStep);
 
 			TestVehicleDataVIF02(stageData.Vehicle);
 

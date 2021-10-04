@@ -370,7 +370,7 @@
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractManufacturingStepDataType">
 				<xs:sequence>
-					<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
+					<xs:element name="HashPreviousStep" type="v1.0:SignatureType"/>
 					<xs:element name="Vehicle" type="v2.10.2:AbstractCompletedBusVehicleType"/>
 					<xs:element name="ApplicationInformation" type="vif:ApplicationInformationPrimaryVehicleType"/>
 				</xs:sequence>

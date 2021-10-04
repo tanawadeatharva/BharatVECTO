@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void TestVifStage2Data(IManufacturingStageInputData data)
 		{
 			Assert.AreEqual(2, data.StepCount);
-			TestSignatureData(data.HashPreviousStage, "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
+			TestSignatureData(data.HashPreviousStep, "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				"#PIF-d10aff76c5d149948046");
 
 			Assert.AreEqual("Intermediate Manufacturer 1", data.Vehicle.Manufacturer);
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void TestVifStage3Data(IManufacturingStageInputData data)
 		{
 			Assert.AreEqual(3, data.StepCount);
-			TestSignatureData(data.HashPreviousStage, "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
+			TestSignatureData(data.HashPreviousStep, "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
 				"#RESULT-6f30c7fe665a47938f6b");
 
 			Assert.AreEqual("Intermediate Manufacturer 2", data.Vehicle.Manufacturer);
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private void TestVifStage4Data(IManufacturingStageInputData data)
 		{
 			Assert.AreEqual(4, data.StepCount);
-			TestSignatureData(data.HashPreviousStage, "GHpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
+			TestSignatureData(data.HashPreviousStep, "GHpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
 				"#RESULT-8f30c7fe665a47938f6b");
 			
 			Assert.AreEqual("Some Manufacturer", data.Vehicle.Manufacturer);

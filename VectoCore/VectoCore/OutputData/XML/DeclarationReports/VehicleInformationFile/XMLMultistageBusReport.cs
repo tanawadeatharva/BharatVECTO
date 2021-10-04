@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				digitData = _manufacturingStageInputData.Last().Signature;
 			}
 
-			return new XElement(tns + "HashPreviousStage",
+			return new XElement(tns + XMLNames.HashPreviousStep,
 				   digitData.ToXML(di));
 		}
 

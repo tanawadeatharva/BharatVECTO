@@ -580,12 +580,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
   </PrimaryVehicle>
 	<ManufacturingStep stepCount="2">
 		<Data xsi:type="vif0.1:BusManufacturingStepDataType" id="asdf">
-			<HashPreviousStage>
+			<HashPreviousStep>
 				<di:Reference>
 					<di:DigestMethod Algorithm=""></di:DigestMethod>
 					<di:DigestValue></di:DigestValue>
 				</di:Reference>
-			</HashPreviousStage>
+			</HashPreviousStep>
 			<vif0.1:Vehicle xsi:type="v2.8:InterimStageInputType" id="MST-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8">
 				<Manufacturer>Some Manufacturer</Manufacturer>
 		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>

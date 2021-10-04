@@ -1590,4 +1590,7 @@
   <data name="BusManufacturingStepDataType" xml:space="preserve">
     <value>BusManufacturingStepDataType</value>
   </data>
+  <data name="HashPreviousStep" xml:space="preserve">
+    <value>HashPreviousStep</value>
+  </data>
 </root>

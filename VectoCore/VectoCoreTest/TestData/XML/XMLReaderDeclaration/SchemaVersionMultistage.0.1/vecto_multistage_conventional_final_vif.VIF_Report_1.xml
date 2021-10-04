@@ -576,7 +576,7 @@
   </PrimaryVehicle>
   <ManufacturingStep stepCount="2">
     <Data xsi:type="BusManufacturingStepDataType" id="MST-0adf9390bde54a23a113" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
-      <HashPreviousStage>
+      <HashPreviousStep>
         <di:Reference URI="#VEH-622a60d3b3cf4340a362">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -585,7 +585,7 @@
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
           <di:DigestValue>PMrdzQUpL67ALWFQpWjxSieZ4KQ2iqS2y4BmHV3nJ0g=</di:DigestValue>
         </di:Reference>
-      </HashPreviousStage>
+      </HashPreviousStep>
       <vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-09ab483f390a40d58f5a" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
         <Manufacturer>Some Manufacturer</Manufacturer>
         <ManufacturerAddress>Some Manufacturer Address</ManufacturerAddress>
