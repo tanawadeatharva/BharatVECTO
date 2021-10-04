@@ -50,12 +50,25 @@ namespace TUGraz.VectoCore.Utils
 		MultistageOutputData = 1 << 10
 	}
 
+	public static class XmlDocumentTypeExtensions
+	{
+		public static string GetName(this XmlDocumentType docType)
+		{
+			switch (docType) {
+				case XmlDocumentType.MultistageOutputData:
+					return "Multistep output data";
+				default:
+					return docType.ToString();
+			}
+		}
+	}
+
 	
 	public static class XMLDefinitions
 	{
 		//public const string SchemaBaseURL = "file:///E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/";
 		public const string SCHEMA_BASE_LOCATION = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
-
+		
 		public const string DEV = ":DEV";
 
 		public const string ENGINEERING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions"; 

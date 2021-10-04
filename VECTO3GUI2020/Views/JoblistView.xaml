@@ -111,7 +111,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding DocumentName}"></DataGridTextColumn>
-                            <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentType}"></DataGridTextColumn>
+                            <DataGridTextColumn IsReadOnly ="True" Header="Type" Binding="{Binding DocumentTypeName}"></DataGridTextColumn>
                             <DataGridTextColumn IsReadOnly ="True" Header="File" Binding="{Binding DataSource.SourceFile}"></DataGridTextColumn>
                         </DataGrid.Columns>
 

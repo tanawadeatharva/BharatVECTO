@@ -293,6 +293,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public XmlDocumentType? DocumentType => XmlDocumentType.MultistageOutputData;
 
+		public string DocumentTypeName => DocumentType?.GetName();
+
 		public DataSource DataSource => _dataSource;
 
 		public IEditViewModel EditViewModel => this;

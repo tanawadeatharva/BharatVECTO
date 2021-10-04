@@ -106,6 +106,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public XmlDocumentType? DocumentType => _documentType;
 
+		public string DocumentTypeName => "Step input";
+
 		public DataSource DataSource
 		{
 			get => _dataSource;

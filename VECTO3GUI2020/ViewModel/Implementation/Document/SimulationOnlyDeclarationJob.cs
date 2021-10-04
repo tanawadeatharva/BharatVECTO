@@ -23,6 +23,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 			get => _documentType;
 		}
 
+		public string DocumentTypeName => _documentType?.GetName();
+
 		public DataSource DataSource
 		{
 			get => _dataSource;

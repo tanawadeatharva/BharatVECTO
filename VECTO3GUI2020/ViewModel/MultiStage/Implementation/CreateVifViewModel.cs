@@ -460,6 +460,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		//Remove this from
 		public XmlDocumentType? DocumentType => null;
 
+		public string DocumentTypeName => "New VIF";
+
 		public DataSource DataSource
 		{
 			get => _dataSource;

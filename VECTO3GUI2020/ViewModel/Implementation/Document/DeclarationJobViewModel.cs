@@ -16,7 +16,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
         public XmlDocumentType? DocumentType { get; }
 
-        public DataSource DataSource => _jobEditViewModel.DataSource;
+		public string DocumentTypeName => DocumentType?.GetName();
+
+		public DataSource DataSource => _jobEditViewModel.DataSource;
 
 
 		private IJobEditViewModel _jobEditViewModel;
