@@ -72,6 +72,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vecto3GUI2020Test", "Vecto3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParameterDocumentation", "..\vecto-SchemaDocumentation\ParameterDocumentation\ParameterDocumentation.csproj", "{E672322E-44DC-41C8-A3A4-603233C72F92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParameterDocumentationTest", "..\vecto-SchemaDocumentation\ParameterDocumentation\ParameterDocumentationTest\ParameterDocumentationTest.csproj", "{057580BE-320A-4DF4-AA35-D97530F688D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PerformanceStats|Any CPU = Debug PerformanceStats|Any CPU
@@ -861,6 +863,48 @@ Global
 		{E672322E-44DC-41C8-A3A4-603233C72F92}.ReleaseTUG|x64.Build.0 = Release|Any CPU
 		{E672322E-44DC-41C8-A3A4-603233C72F92}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
 		{E672322E-44DC-41C8-A3A4-603233C72F92}.ReleaseTUG|x86.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|Any CPU.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|Any CPU.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|x64.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|x64.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|x86.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceStats|x86.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|Any CPU.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|Any CPU.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|x64.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|x64.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|x86.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug PerformanceTrace|x86.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|x64.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Debug|x86.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|Any CPU.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|Any CPU.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|x64.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|x64.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|x86.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.DebugTUG|x86.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|x64.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|x64.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|x86.ActiveCfg = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Deploy|x86.Build.0 = Debug|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|x64.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|x64.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|x86.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.Release|x86.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|Any CPU.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|Any CPU.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|x64.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|x64.Build.0 = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
+		{057580BE-320A-4DF4-AA35-D97530F688D5}.ReleaseTUG|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
