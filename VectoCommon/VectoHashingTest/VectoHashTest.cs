@@ -647,13 +647,13 @@ namespace VectoHashingTest
 
 			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.VehicleSignatureHash.DigestValue);
 
-			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[0].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[0].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim1, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[1].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim1, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[1].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim2, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[2].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim2, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[2].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStep.DigestValue);
 
 		}
 	}
