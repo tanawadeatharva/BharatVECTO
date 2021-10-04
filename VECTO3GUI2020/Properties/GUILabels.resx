@@ -172,12 +172,24 @@
     <value>Components_Conventional_CompletedBusType</value>
   </data>
   <data name="CreateInterimCompletedInputToolTip" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="CreateExemptedInterimCompletedInput" xml:space="preserve">
     <value>Create Exempted Interim/Completed Input</value>
   </data>
   <data name="CreateExemptedInterimCompletedInputToolTip" xml:space="preserve">
     <value>Create Exempted Interim/Completed Input</value>
+  </data>
+  <data name="ManufacturingSteps" xml:space="preserve">
+    <value>Manufacturing Step</value>
+  </data>
+  <data name="New_Multistep_File" xml:space="preserve">
+    <value>New Multistep File</value>
+  </data>
+  <data name="Edit_Multistep_Job" xml:space="preserve">
+    <value>Edit Multistep Job</value>
+  </data>
+  <data name="Edit_step_input" xml:space="preserve">
+    <value>Edit step input</value>
   </data>
 </root>

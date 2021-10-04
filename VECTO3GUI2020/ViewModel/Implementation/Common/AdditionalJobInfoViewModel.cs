@@ -55,7 +55,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		public AdditionalJobInfoViewModelMultiStage()
 		{
-			Title = "Multistage Job Info";
+			Title = "Multistep Job Info";
 			InvalidEntries.CollectionChanged += (sender, args) => OnPropertyChanged(nameof(InvalidEntriesPresent));
 		}
 

@@ -169,6 +169,24 @@ namespace VECTO3GUI2020.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Multistep Job.
+        /// </summary>
+        public static string Edit_Multistep_Job {
+            get {
+                return ResourceManager.GetString("Edit_Multistep_Job", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit step input.
+        /// </summary>
+        public static string Edit_step_input {
+            get {
+                return ResourceManager.GetString("Edit_step_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Airdrag Entries.
         /// </summary>
         public static string IsAirdragEntriesValid {
@@ -183,6 +201,24 @@ namespace VECTO3GUI2020.Properties {
         public static string IsTankSystemValid {
             get {
                 return ResourceManager.GetString("IsTankSystemValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manufacturing Step.
+        /// </summary>
+        public static string ManufacturingSteps {
+            get {
+                return ResourceManager.GetString("ManufacturingSteps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Multistep File.
+        /// </summary>
+        public static string New_Multistep_File {
+            get {
+                return ResourceManager.GetString("New_Multistep_File", resourceCulture);
             }
         }
         

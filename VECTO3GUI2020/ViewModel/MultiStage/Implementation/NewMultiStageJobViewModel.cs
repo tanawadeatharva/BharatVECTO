@@ -54,7 +54,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_dialogHelper = dialogHelper;
 			_vmFactory = vmFactory;
 			_jobListViewModel = jobListViewModel;
-			Title = "New Multistage File";
+			Title = GUILabels.New_Multistep_File;
 			VifPath = "Select VIF File";
 		}
 
