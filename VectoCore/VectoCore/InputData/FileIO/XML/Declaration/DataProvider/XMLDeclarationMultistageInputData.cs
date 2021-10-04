@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "ManufacturingStageType";
+		public const string XSD_TYPE = "ManufacturingStepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_hashPreviousStage ??
 			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
 
-		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StepCount));
+		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.Vehicle);
 

@@ -81,7 +81,7 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoPrimaryVehicleInformation:
 					return "PrimaryVehicle";
 				case VectoComponents.VectoManufacturingStage:
-					return "ManufacturingStage";
+					return XMLNames.ManufacturingStep;
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}

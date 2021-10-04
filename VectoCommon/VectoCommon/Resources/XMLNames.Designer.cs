@@ -2662,20 +2662,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ManufacturingStage.
+        ///   Looks up a localized string similar to ManufacturingStep.
         /// </summary>
-        public static string ManufacturingStage {
+        public static string ManufacturingStep {
             get {
-                return ResourceManager.GetString("ManufacturingStage", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to stepCount.
         /// </summary>
-        public static string ManufacturingStage_StepCount {
+        public static string ManufacturingStep_StepCount {
             get {
-                return ResourceManager.GetString("ManufacturingStage_StepCount", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
             }
         }
         

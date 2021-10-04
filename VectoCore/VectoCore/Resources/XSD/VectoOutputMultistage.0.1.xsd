@@ -19,7 +19,7 @@
 	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractEngineDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractManufacturingStageDataType" abstract="true">
+	<xs:complexType name="AbstractManufacturingStepDataType" abstract="true">
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
@@ -368,7 +368,7 @@
 	</xs:complexType>
 	<xs:complexType name="BusManufacturingStageDataType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractManufacturingStageDataType">
+			<xs:extension base="vif:AbstractManufacturingStepDataType">
 				<xs:sequence>
 					<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
 					<xs:element name="Vehicle" type="v2.10.2:AbstractCompletedBusVehicleType"/>
@@ -471,9 +471,9 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="ManufacturingStageType">
+	<xs:complexType name="ManufacturingStepType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractManufacturingStageDataType"/>
+			<xs:element name="Data" type="vif:AbstractManufacturingStepDataType"/>
 			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
 		<xs:attribute name="stepCount" use="required">
@@ -724,7 +724,7 @@
 	<xs:complexType name="VectoOutputMultistageType">
 		<xs:sequence>
 			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ManufacturingStep" type="vif:ManufacturingStepType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VehicleComponentsPIFType">

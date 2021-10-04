@@ -578,7 +578,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
     </di:Reference>
   </Signature>
   </PrimaryVehicle>
-	<ManufacturingStage stepCount="2">
+	<ManufacturingStep stepCount="2">
 		<Data xsi:type="vif0.1:BusManufacturingStageDataType" id="asdf">
 			<HashPreviousStage>
 				<di:Reference>
@@ -669,5 +669,5 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue></di:DigestValue>
 			</di:Reference>
 		</Signature>
-	</ManufacturingStage>
+	</ManufacturingStep>
 </VectoOutputMultistage>

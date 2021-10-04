@@ -571,7 +571,7 @@
       </di:Reference>
     </Signature>
   </PrimaryVehicle>
-  <ManufacturingStage stepCount="2">
+  <ManufacturingStep stepCount="2">
     <Data xsi:type="BusManufacturingStageDataType" id="MST-aec22451f48f47c484ac">
       <HashPreviousStage>
         <di:Reference URI="#VEH-88dcf76d37a64b5eaf70">
@@ -673,5 +673,5 @@
         <di:DigestValue>aVAzUfhrvuQA2Q7Yb8IBOuVuRp0QVgDRI2NX5BiZZgI=</di:DigestValue>
       </di:Reference>
     </Signature>
-  </ManufacturingStage>
+  </ManufacturingStep>
 </VectoOutputMultistage>
