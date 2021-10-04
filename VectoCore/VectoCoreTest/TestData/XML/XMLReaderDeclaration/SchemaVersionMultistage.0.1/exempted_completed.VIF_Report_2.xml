@@ -57,7 +57,7 @@
       </di:Reference>
     </Signature>
   </PrimaryVehicle>
-  <vif0.1:ManufacturingStage stageCount="2">
+  <vif0.1:ManufacturingStage stepCount="2">
     <Data xsi:type="BusManufacturingStageDataType" id="MST-b0420da682c648adac83" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
       <HashPreviousStage>
         <di:Reference URI="#VEH-4cb168560c0d4b3d886d">

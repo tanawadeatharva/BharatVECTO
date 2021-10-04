@@ -1425,8 +1425,8 @@
   <data name="ManufacturingStage" xml:space="preserve">
     <value>ManufacturingStage</value>
   </data>
-  <data name="ManufacturingStage_StageCount" xml:space="preserve">
-    <value>stageCount</value>
+  <data name="ManufacturingStage_StepCount" xml:space="preserve">
+    <value>stepCount</value>
   </data>
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>
@@ -1572,12 +1572,12 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
-<data name="BusHVACHeatPumpCooling" xml:space="preserve">
-	<value>Cooling</value>
-</data>
-<data name="BusHVACHeatPumpHeating" xml:space="preserve">
-	<value>Heating</value>
-</data>
+  <data name="BusHVACHeatPumpCooling" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="BusHVACHeatPumpHeating" xml:space="preserve">
+    <value>Heating</value>
+  </data>
   <data name="Exempted_SumNetPower" xml:space="preserve">
     <value>SumNetPower</value>
   </data>

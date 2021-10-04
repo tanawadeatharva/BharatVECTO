@@ -571,7 +571,7 @@
       </di:Reference>
     </Signature>
   </PrimaryVehicle>
-  <ManufacturingStage stageCount="2">
+  <ManufacturingStage stepCount="2">
     <Data xsi:type="BusManufacturingStageDataType" id="MST-aec22451f48f47c484ac">
       <HashPreviousStage>
         <di:Reference URI="#VEH-88dcf76d37a64b5eaf70">

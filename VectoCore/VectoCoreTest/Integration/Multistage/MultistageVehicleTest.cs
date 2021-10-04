@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		
 		private void TestVifStage2Data(IManufacturingStageInputData data)
 		{
-			Assert.AreEqual(2, data.StageCount);
+			Assert.AreEqual(2, data.StepCount);
 			TestSignatureData(data.HashPreviousStage, "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				"#PIF-d10aff76c5d149948046");
 
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private void TestVifStage3Data(IManufacturingStageInputData data)
 		{
-			Assert.AreEqual(3, data.StageCount);
+			Assert.AreEqual(3, data.StepCount);
 			TestSignatureData(data.HashPreviousStage, "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
 				"#RESULT-6f30c7fe665a47938f6b");
 
@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		private void TestVifStage4Data(IManufacturingStageInputData data)
 		{
-			Assert.AreEqual(4, data.StageCount);
+			Assert.AreEqual(4, data.StepCount);
 			TestSignatureData(data.HashPreviousStage, "GHpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
 				"#RESULT-8f30c7fe665a47938f6b");
 			

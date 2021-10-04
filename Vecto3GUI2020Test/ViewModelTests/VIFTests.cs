@@ -31,7 +31,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void loadPrimaryVehicleOnlyAndCreateNewVIF()
 		{
 			var multistagevm = LoadFileFromTestDirectory(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
+			var stage = multistagevm.ManufacturingStageViewModel.StepCount;
 
 			Assert.AreEqual(2, stage);
 
@@ -62,7 +62,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			[Values(LegislativeClass.M3)] LegislativeClass legCategory)
 		{
 			var multistagevm = LoadFileFromTestDirectory(primary_vehicle_only).MultiStageJobViewModel as MultiStageJobViewModel_v0_1;
-			var stage = multistagevm.ManufacturingStageViewModel.StageCount;
+			var stage = multistagevm.ManufacturingStageViewModel.StepCount;
 
 			Assert.AreEqual(2, stage);
 

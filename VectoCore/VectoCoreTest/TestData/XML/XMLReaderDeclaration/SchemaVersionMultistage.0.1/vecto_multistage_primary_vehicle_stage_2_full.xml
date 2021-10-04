@@ -639,7 +639,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</di:Reference>
 		</Signature>
 	</PrimaryVehicle>
-	<ManufacturingStage stageCount="2">
+	<ManufacturingStage stepCount="2">
 		<Data xsi:type="BusManufacturingStageDataType" id="MSTG-1">
 			<HashPreviousStage>
 			<di:Reference URI="#PIF-d11aff76c5d149948046">

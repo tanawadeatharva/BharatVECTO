@@ -2671,11 +2671,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to stageCount.
+        ///   Looks up a localized string similar to stepCount.
         /// </summary>
-        public static string ManufacturingStage_StageCount {
+        public static string ManufacturingStage_StepCount {
             get {
-                return ResourceManager.GetString("ManufacturingStage_StageCount", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStage_StepCount", resourceCulture);
             }
         }
         

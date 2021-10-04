@@ -981,7 +981,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IManufacturingStageInputData
 	{
 		DigestData HashPreviousStage { get; }
-		int StageCount { get; }
+		int StepCount { get; }
 
 		IVehicleDeclarationInputData Vehicle { get; }
 

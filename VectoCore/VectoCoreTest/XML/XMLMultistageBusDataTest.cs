@@ -544,7 +544,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		private void TestManufacturingStag01(IManufacturingStageInputData manufacturingStage)
 		{
-			Assert.AreEqual(2, manufacturingStage.StageCount);
+			Assert.AreEqual(2, manufacturingStage.StepCount);
 
 			TestDigestData("#PIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				manufacturingStage.HashPreviousStage);
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestManufacturingStag02(IManufacturingStageInputData manufacturingStage)
 		{
-			Assert.AreEqual(3, manufacturingStage.StageCount);
+			Assert.AreEqual(3, manufacturingStage.StepCount);
 
 			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
 				manufacturingStage.HashPreviousStage);
@@ -681,7 +681,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, manufacturingStages.Count);
 			
 			var stageData = manufacturingStages[0];
-			Assert.AreEqual(2, stageData.StageCount);
+			Assert.AreEqual(2, stageData.StepCount);
 
 			TestDigestData("#PIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
 				stageData.HashPreviousStage);

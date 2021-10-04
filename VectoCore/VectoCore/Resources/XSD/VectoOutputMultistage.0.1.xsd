@@ -476,7 +476,7 @@
 			<xs:element name="Data" type="vif:AbstractManufacturingStageDataType"/>
 			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
-		<xs:attribute name="stageCount" use="required">
+		<xs:attribute name="stepCount" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:int">
 					<xs:minInclusive value="2"/>

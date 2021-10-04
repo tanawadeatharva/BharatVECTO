@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public DigestData HashPreviousStage => _manufacturingStages.First().HashPreviousStage;
 
-		public int StageCount => _manufacturingStages.First().StageCount;
+		public int StepCount => _manufacturingStages.First().StepCount;
 
 		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 

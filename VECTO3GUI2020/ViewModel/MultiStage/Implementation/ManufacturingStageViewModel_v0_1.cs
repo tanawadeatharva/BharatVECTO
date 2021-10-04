@@ -26,10 +26,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _hashPreviousStage, value);
 		}
 
-		public int StageCount
+		public int StepCount
 		{
-			get => _stageCount;
-			set => SetProperty(ref _stageCount, value);
+			get => _stepCount;
+			set => SetProperty(ref _stepCount, value);
 		}
 
 		public IVehicleDeclarationInputData Vehicle => _vehicleViewModel;
@@ -60,7 +60,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Title = "Edit Manufacturing Stage";
 			
 			
-			_stageCount = consolidatedManufacturingStageInputData?.StageCount + 1 ?? 2;
+			_stepCount = consolidatedManufacturingStageInputData?.StepCount + 1 ?? 2;
 
 			_consolidatedManufacturingStageInputData = consolidatedManufacturingStageInputData;
 
@@ -76,7 +76,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 		
-		private int _stageCount;
+		private int _stepCount;
 		private DigestData _hashPreviousStage;
 		private IManufacturingStageInputData _consolidatedManufacturingStageInputData;
 
