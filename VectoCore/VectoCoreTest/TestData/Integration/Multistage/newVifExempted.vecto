@@ -7,7 +7,7 @@
   },
   "Body": {
     "PrimaryVehicle": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\exempted_primary_heavyBus.xml",
-    "InterimStage": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\vecto_vehicle-exempted_input_full-sample.xml",
+    "InterimStep": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.10\\vecto_vehicle-exempted_input_full-sample.xml",
     "Completed": false
   }
 }

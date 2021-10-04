@@ -579,7 +579,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
   </Signature>
   </PrimaryVehicle>
 	<ManufacturingStep stepCount="2">
-		<Data xsi:type="vif0.1:BusManufacturingStageDataType" id="asdf">
+		<Data xsi:type="vif0.1:BusManufacturingStepDataType" id="asdf">
 			<HashPreviousStage>
 				<di:Reference>
 					<di:DigestMethod Algorithm=""></di:DigestMethod>

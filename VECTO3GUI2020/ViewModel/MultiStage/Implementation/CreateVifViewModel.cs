@@ -298,7 +298,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				},
 				Body = new JSONJobBody() {
 					PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
-					InterimStage = PathHelper.GetRelativePath(path, StageInputPath)
+					InterimStep = PathHelper.GetRelativePath(path, StageInputPath)
 				}
 			};
 
