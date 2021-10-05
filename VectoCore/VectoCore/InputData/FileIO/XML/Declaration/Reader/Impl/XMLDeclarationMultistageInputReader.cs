@@ -129,10 +129,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				if (ManufacturingStages.IsNullOrEmpty())
-					return null;
+                //if (ManufacturingStages.IsNullOrEmpty())
+                //    return null;
 
-				return _consolidateManufacturingStages ??
+                return _consolidateManufacturingStages ??
 						(_consolidateManufacturingStages = GetConsolidateManufacturingStage());
 			}
 		}
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private ConsolidateManufacturingStages GetConsolidateManufacturingStage()
 		{
-			return new ConsolidateManufacturingStages(PrimaryVehicle, ManufacturingStages.Reverse());
+			return new ConsolidateManufacturingStages(PrimaryVehicle, ManufacturingStages?.Reverse());
 		}
 
 
@@ -439,15 +439,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryVehicle = primaryVehicle;
 		}
 
-		public DigestData HashPreviousStep => _manufacturingStages.First().HashPreviousStep;
+		public DigestData HashPreviousStep => _manufacturingStages?.First().HashPreviousStep;
 
-		public int StepCount => _manufacturingStages.First().StepCount;
+		public int StepCount => _manufacturingStages?.First().StepCount ?? 0;
 
 		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 
-		public IApplicationInformation ApplicationInformation => _manufacturingStages.First().ApplicationInformation;
+		public IApplicationInformation ApplicationInformation => _manufacturingStages?.First().ApplicationInformation;
 
-		public DigestData Signature => _manufacturingStages.First().Signature;
+		public DigestData Signature => _manufacturingStages?.First().Signature;
 
 
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
@@ -493,15 +493,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region ManufacturingStage mandatory properties
 
-		public string Manufacturer => _manufacturingStages.First().Vehicle.Manufacturer;
+		public string Manufacturer => _manufacturingStages?.First().Vehicle.Manufacturer;
 
-		public string ManufacturerAddress => _manufacturingStages.First().Vehicle.ManufacturerAddress;
+		public string ManufacturerAddress => _manufacturingStages?.First().Vehicle.ManufacturerAddress;
 
-		public DateTime Date => _manufacturingStages.First().Vehicle.Date;
+		public DateTime Date => _manufacturingStages?.First().Vehicle.Date ?? DateTime.MinValue;
 
-		public string VIN => _manufacturingStages.First().Vehicle.VIN;
+		public string VIN => _manufacturingStages?.First().Vehicle.VIN;
 
-		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
+		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
 
 
@@ -583,7 +583,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string Identifier { get; }
 		public bool ExemptedVehicle
 		{
-			get { return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle); }
+			get
+			{
+				return _primaryVehicle.Vehicle.ExemptedVehicle;
+				//if (_primaryVehicle.Vehicle.ExemptedVehicle) {
+				//	return true;
+				//}
+				////return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle);
+			}
 		}
 		public VehicleCategory VehicleCategory { get; }
 		public AxleConfiguration AxleConfiguration { get; }
@@ -608,10 +615,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private T GetVehiclePropertyValue<T>(string propertyName)
 		{
-			foreach (var manufacturingStage in _manufacturingStages) {
-				var value = GetPropertyValue<T>(manufacturingStage.Vehicle, propertyName);
-				if (value != null)
-					return value;
+			if (_manufacturingStages != null) {
+				foreach (var manufacturingStage in _manufacturingStages)
+				{
+					var value = GetPropertyValue<T>(manufacturingStage.Vehicle, propertyName);
+					if (value != null)
+						return value;
+				}
 			}
 			return default;
 		}
@@ -646,8 +656,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var checkAirdragModified = false;
 			var validAirdragEntries = true;
-
-			var t = _manufacturingStages.ToList(); 
+			if (_manufacturingStages == null) {
+				return default(bool);
+			}
 
 			var stages = _manufacturingStages.Reverse().ToList();
 			foreach (var manufacturingStage in stages) {
