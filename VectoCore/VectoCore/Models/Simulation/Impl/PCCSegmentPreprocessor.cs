@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -24,21 +24,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			PCCDriverData = driverDataPCC;
 		}
 
-		#region Implementation of ISimulationPreprocessor
-
 		public void RunPreprocessing()
 		{
 			var slopes = new Dictionary<MeterPerSecond, Radian>();
-			new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed,
-					VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed,
-					Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)))
-				.RunPreprocessing();
+			var maxSpeed = VectoMath.Max(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed));
+			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
+			preProcessor.RunPreprocessing();
+			
+			Debug.WriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.Value()}\t{p.Value.Value()}")));
 
 			var runData = Container.RunData;
 
-#if DEBUG
-			Console.WriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.Value()}\t{p.Value.Value()}")));
-#endif
 			var combustionEngineDrag = runData.EngineData?.FullLoadCurves[0].FullLoadEntries.Average(x =>
 											x.EngineSpeed.Value() * x.TorqueDrag.Value()).SI<Watt>()
 										?? 0.SI<Watt>();
@@ -90,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					pccSegment = null;
 					continue;
 				}
-				
+
 				var slope = VectoMath.InclinationToAngle(
 					(end.Altitude - start.Altitude) / (end.Distance - start.Distance));
 
@@ -124,6 +120,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		#endregion
 	}
 }
