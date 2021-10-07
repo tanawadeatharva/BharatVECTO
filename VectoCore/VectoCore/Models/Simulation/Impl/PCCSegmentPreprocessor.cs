@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -30,8 +31,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var maxSpeed = VectoMath.Max(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed));
 			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
 			preProcessor.RunPreprocessing();
-			
-			Debug.WriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.Value()}\t{p.Value.Value()}")));
+
+			DebugWriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.Value():F}\t{Math.Tan(p.Value.Value()):P}")));
 
 			var runData = Container.RunData;
 
@@ -119,6 +120,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 		}
-
+		[Conditional("DEBUG")]
+		private static void DebugWriteLine(object value) => Console.WriteLine(value);
 	}
 }
