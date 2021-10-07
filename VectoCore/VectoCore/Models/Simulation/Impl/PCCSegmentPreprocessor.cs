@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
 			preProcessor.RunPreprocessing();
 
-			DebugWriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.Value():F}\t{Math.Tan(p.Value.Value()):P}")));
+			DebugWriteLine("Slopes:\n" + string.Join("\n", slopes.Select(p => $"{p.Key.AsKmph:F}\t{p.Value.ToInclinationPercent():P}")));
 
 			var runData = Container.RunData;
 
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var minSlope = (slopes.Interpolate(x => x.Key.Value(), y => y.Value.Value(), start.VehicleTargetSpeed.Value())
 								+ slopeEngineDrag / start.VehicleTargetSpeed.Value()).SI<Radian>();
-
+				//DebugWriteLine($"MinSlope:{minSlope.ToInclinationPercent():P}");
 				if (pccSegment == null && slope < minSlope) {
 					pccSegment = new PCCSegment {
 						DistanceMinSpeed = start.Distance,

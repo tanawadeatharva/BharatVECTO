@@ -135,6 +135,10 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerHidden]
 		private Radian(double val) : base(val, Units) { }
+
+		public double ToInclinationPercent() {
+			return Math.Tan(Val);
+		}
 	}
 
 	/// <summary>
