@@ -95,11 +95,31 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_ADAS_ConventionalType">
 				<xs:sequence>
-					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType"/>
-					<xs:element name="EcoRollWithoutEngineStop" type="v2.1:EcoRollWithoutEngineStopType"/>
-					<xs:element name="EcoRollWithEngineStop" type="v2.1:EcoRollWithEngineStopType"/>
-					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType"/>
-					<xs:element name="APTEcoRollReleaseLockupClutch" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType">
+						<xs:annotation>
+							<xs:documentation>P271 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="EcoRollWithoutEngineStop" type="v2.1:EcoRollWithoutEngineStopType">
+						<xs:annotation>
+							<xs:documentation>P272 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="EcoRollWithEngineStop" type="v2.1:EcoRollWithEngineStopType">
+						<xs:annotation>
+							<xs:documentation>P273 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
+						<xs:annotation>
+							<xs:documentation>P274 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="APTEcoRollReleaseLockupClutch" type="xs:boolean" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P333 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -108,8 +128,16 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_ADAS_HEVType">
 				<xs:sequence>
-					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType"/>
-					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType"/>
+					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType">
+						<xs:annotation>
+							<xs:documentation>P271 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
+						<xs:annotation>
+							<xs:documentation>P274 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -118,7 +146,11 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_ADAS_IEPCType">
 				<xs:sequence>
-					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType"/>
+					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
+						<xs:annotation>
+							<xs:documentation>P274 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -127,7 +159,11 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.2:Abstract_ADAS_PEVType">
 				<xs:sequence>
-					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType"/>
+					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
+						<xs:annotation>
+							<xs:documentation>P274 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -219,7 +255,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - [-]</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -230,7 +266,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - [-]</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -255,7 +291,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P183</xs:documentation>
+										<xs:documentation>P183 - [-]</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -266,7 +302,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P184</xs:documentation>
+										<xs:documentation>P184 - [-]</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -296,7 +332,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -307,7 +343,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -350,8 +386,16 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
-								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P326 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -368,7 +412,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -379,7 +423,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -404,7 +448,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P183</xs:documentation>
+										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -415,7 +459,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P184</xs:documentation>
+										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -426,7 +470,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P185</xs:documentation>
+										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -445,7 +489,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -456,7 +500,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -481,7 +525,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P183</xs:documentation>
+										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -492,7 +536,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P184</xs:documentation>
+										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -503,7 +547,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P185</xs:documentation>
+										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -522,7 +566,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -533,7 +577,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -581,8 +625,16 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
-								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P326 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -599,7 +651,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
+										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -610,7 +662,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -657,8 +709,16 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
-								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P326 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -675,7 +735,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -700,7 +760,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P183</xs:documentation>
+										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -711,7 +771,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
-										<xs:documentation>P184</xs:documentation>
+										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -722,7 +782,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P185</xs:documentation>
+										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -741,7 +801,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -772,7 +832,11 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -789,7 +853,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" maxOccurs="4">
 									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
+										<xs:documentation>P182 - enum</xs:documentation>
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
@@ -814,7 +878,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P183</xs:documentation>
+										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -825,7 +889,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
-										<xs:documentation>P184</xs:documentation>
+										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -836,7 +900,7 @@
 							<xs:sequence>
 								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
 									<xs:annotation>
-										<xs:documentation>P185</xs:documentation>
+										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
 							</xs:sequence>
@@ -886,7 +950,11 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1265,8 +1333,15 @@
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineGENType">
 		<xs:sequence>
-			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionGENType"/>
+			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionGENType">
+				<xs:annotation>
+					<xs:documentation>P403 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Count">
+				<xs:annotation>
+					<xs:documentation>P404 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:int">
 						<xs:minInclusive value="1"/>
@@ -1308,8 +1383,15 @@
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
-			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionDriveType"/>
+			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionDriveType">
+				<xs:annotation>
+					<xs:documentation>P403 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Count">
+				<xs:annotation>
+					<xs:documentation>P404 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:int">
 						<xs:minInclusive value="1"/>
@@ -1319,6 +1401,9 @@
 			<xs:element name="ElectricMachineSystem" type="v2.10.1:ElectricMachineSystemComponentDeclarationType"/>
 			<xs:element name="ADC" type="v2.10.1:ADCComponentDeclarationType" minOccurs="0"/>
 			<xs:element name="P2.5GearRatios" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P407 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="Ratio" maxOccurs="unbounded">
@@ -1338,6 +1423,9 @@
 	<xs:complexType name="REESSBatteryType">
 		<xs:sequence>
 			<xs:element name="StringID">
+				<xs:annotation>
+					<xs:documentation>P411 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:int">
 						<xs:minInclusive value="0"/>
@@ -1354,6 +1442,9 @@
 			</xs:element>
 			<xs:sequence minOccurs="0">
 				<xs:element name="SOCmin">
+					<xs:annotation>
+						<xs:documentation>P413 - [%]</xs:documentation>
+					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="xs:int">
 							<xs:minInclusive value="0"/>
@@ -1362,6 +1453,9 @@
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="SOCmax">
+					<xs:annotation>
+						<xs:documentation>P414 - [%]</xs:documentation>
+					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="xs:int">
 							<xs:minInclusive value="0"/>
@@ -1414,7 +1508,11 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P352 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType" minOccurs="0"/>
 				</xs:sequence>
@@ -1473,7 +1571,11 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_PrimaryBusDeclarationType"/>
@@ -1491,7 +1593,7 @@
 					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
 					<xs:element name="Model" type="v1.0:ModelType" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation>P236</xs:documentation>
+							<xs:documentation>P236 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
@@ -1564,8 +1666,16 @@
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="SleeperCab" type="xs:boolean"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SleeperCab" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P276 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="SumNetPower" type="xs:int">
 						<xs:annotation>
 							<xs:documentation>P331 - [W]</xs:documentation>
@@ -1622,7 +1732,11 @@
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="SumNetPower" type="xs:int">
 						<xs:annotation>
 							<xs:documentation>P331 - [W]</xs:documentation>
@@ -1654,7 +1768,11 @@
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="SumNetPower" type="xs:int">
 						<xs:annotation>
 							<xs:documentation>P331 - [W]</xs:documentation>
@@ -1717,7 +1835,11 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P352 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -1735,7 +1857,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1757,7 +1883,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1784,8 +1914,16 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1807,7 +1945,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1829,7 +1971,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1856,8 +2002,16 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1879,7 +2033,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1900,7 +2058,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1926,8 +2088,16 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -1968,7 +2138,11 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P352 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -1981,7 +2155,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_LorryDeclarationType"/>
@@ -1995,7 +2173,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_LorryDeclarationType"/>
@@ -2014,8 +2196,16 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_PrimaryBusDeclarationType"/>
@@ -2054,7 +2244,11 @@
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0"/>
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P352 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
@@ -2067,7 +2261,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -2083,7 +2281,11 @@
 				<xs:sequence>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type"/>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -2104,8 +2306,16 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -2797,7 +3007,7 @@
 		<xs:sequence>
 			<xs:element name="SystemConfiguration">
 				<xs:annotation>
-					<xs:documentation>P317 - int</xs:documentation>
+					<xs:documentation>P317 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:int">
@@ -2807,12 +3017,13 @@
 				</xs:simpleType>
 			</xs:element>
 			<xs:element name="HeatPumpTypeDriverCompartment">
-				<xs:annotation>
-					<xs:documentation>P318 - enum</xs:documentation>
-				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypeDriverCompartmentType"/>
+						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P318 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 						<xs:element name="Heating" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P319 - enum</xs:documentation>
@@ -2822,12 +3033,13 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="HeatPumpTypePassengerCompartment">
-				<xs:annotation>
-					<xs:documentation>P320 - enum</xs:documentation>
-				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypePassengerCompartmentType"/>
+						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P320 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 						<xs:element name="Heating" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P321 - enum</xs:documentation>
@@ -2861,12 +3073,12 @@
 		<xs:sequence>
 			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
 				<xs:annotation>
-					<xs:documentation>P312</xs:documentation>
+					<xs:documentation>P312 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="AirsuspensionControl">
 				<xs:annotation>
-					<xs:documentation>P315</xs:documentation>
+					<xs:documentation>P315 - enum</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
@@ -2877,14 +3089,18 @@
 			</xs:element>
 			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
 				<xs:annotation>
-					<xs:documentation>P316</xs:documentation>
+					<xs:documentation>P316 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_Conventional_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorDrive">
 				<xs:annotation>
 					<xs:documentation>P310 - enum</xs:documentation>
@@ -2896,7 +3112,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorRatio">
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
@@ -2904,12 +3124,20 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P313 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorDrive">
 				<xs:annotation>
 					<xs:documentation>P310 - enum</xs:documentation>
@@ -2921,7 +3149,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorRatio">
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
@@ -2929,12 +3161,20 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P313 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_HEV-S_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorDrive">
 				<xs:annotation>
 					<xs:documentation>P310 - enum</xs:documentation>
@@ -2946,7 +3186,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorRatio">
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
@@ -2986,7 +3230,11 @@
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGroup_HEV-S">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType"/>
+			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorDrive">
 				<xs:annotation>
 					<xs:documentation>P310 - enum</xs:documentation>
@@ -2998,7 +3246,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType"/>
+			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="CompressorRatio">
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
@@ -3006,8 +3258,15 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315 - enum</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value="mechanically"/>
@@ -3015,7 +3274,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
+			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P316 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Components_HEV-IEPC-S_GenSetSequenceGroup">
@@ -3065,7 +3328,11 @@
 					<xs:documentation>P037 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Articulated" type="xs:boolean"/>
+			<xs:element name="Articulated" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P281 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType">
 				<xs:annotation>
 					<xs:documentation>P041 - [kg]</xs:documentation>
@@ -3101,22 +3368,22 @@
 		<xs:sequence>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 				<xs:annotation>
-					<xs:documentation>P235</xs:documentation>
+					<xs:documentation>P235 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
 				<xs:annotation>
-					<xs:documentation>P252</xs:documentation>
+					<xs:documentation>P252 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VIN" type="v1.0:VINType">
 				<xs:annotation>
-					<xs:documentation>P238</xs:documentation>
+					<xs:documentation>P238 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 				<xs:annotation>
-					<xs:documentation>P239</xs:documentation>
+					<xs:documentation>P239 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -3149,7 +3416,7 @@
 		<xs:sequence>
 			<xs:element name="Model" type="v1.0:ModelType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>P236</xs:documentation>
+					<xs:documentation>P236 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
@@ -3183,27 +3450,27 @@
 		<xs:sequence>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 				<xs:annotation>
-					<xs:documentation>P235</xs:documentation>
+					<xs:documentation>P235 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
 				<xs:annotation>
-					<xs:documentation>P252</xs:documentation>
+					<xs:documentation>P252 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Model" type="v1.0:ModelType">
 				<xs:annotation>
-					<xs:documentation>P236</xs:documentation>
+					<xs:documentation>P236 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VIN" type="v1.0:VINType">
 				<xs:annotation>
-					<xs:documentation>P238</xs:documentation>
+					<xs:documentation>P238 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 				<xs:annotation>
-					<xs:documentation>P239</xs:documentation>
+					<xs:documentation>P239 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -3238,11 +3505,31 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="VocationalVehicle" type="xs:boolean"/>
-			<xs:element name="NgTankSystem" type="v2.1:NgTankSystemType" minOccurs="0"/>
-			<xs:element name="SleeperCab" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VocationalVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P270 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="v2.1:NgTankSystemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P275 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P276 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_HeavyLorryPEVParametersSequenceGroup_2">
@@ -3254,10 +3541,26 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="VocationalVehicle" type="xs:boolean"/>
-			<xs:element name="SleeperCab" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VocationalVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P270 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P276 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_1">
@@ -3284,6 +3587,9 @@
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_2">
 		<xs:sequence>
 			<xs:element name="CargoVolume" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P292 - [m³]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minExclusive value="0.000"/>
@@ -3296,14 +3602,29 @@
 					<xs:documentation>P180 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P275 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryPEVParametersSequenceGroup_2">
 		<xs:sequence>
 			<xs:element name="CargoVolume" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P292 - [m³]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minExclusive value="0.000"/>
@@ -3316,8 +3637,16 @@
 					<xs:documentation>P180 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P269 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType">
+				<xs:annotation>
+					<xs:documentation>P352 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_PrimaryBusParametersSequenceGroup">
@@ -3342,8 +3671,15 @@
 	</xs:group>
 	<xs:group name="Vehicle_xEV-Parameters_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="OvcHev" type="xs:boolean"/>
+			<xs:element name="OvcHev" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P401 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="MaxChargingPower" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P402 - [W]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="xs:int">
 						<xs:minExclusive value="0"/>
