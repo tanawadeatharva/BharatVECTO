@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -59,17 +56,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
-			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
-				//gearbox.TorqueConverterLocked = true;
 				gearbox.DisengageGearbox = true;
-
-				//gearbox._nextGear = new GearInfo(gear, true);
 				vehicle.Initialize(speed, 0.SI<Radian>());
-
 				var slope = SearchSlope(vehicle, Container);
-
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
@@ -80,22 +72,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
-			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
 				vehicle.Initialize(speed, 0.SI<Radian>());
 				var slope = SearchSlope(vehicle, Container);
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
-
-			if (!SlopeData.ContainsKey(MaxSpeed)) {
-				vehicle.Initialize(MaxSpeed, 0.SI<Radian>());
-				var slope = SearchSlope(vehicle, Container);
-				modData?.Reset();
-				SlopeData[MaxSpeed] = slope;
-			}
-
-
-
 		}
 
 		private void RunPreprocessingAMTGearbox(Gearbox gearbox, Vehicle vehicle)
@@ -103,15 +85,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
-			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
 				gearbox.DisengageGearbox = true;
 				gearbox._nextGear = gear;
 				vehicle.Initialize(speed, 0.SI<Radian>());
-
 				var slope = SearchSlope(vehicle, Container);
-
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
