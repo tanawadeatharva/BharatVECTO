@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// check if within PCC segment and update state ----------------------------
 			var distance = Driver.DataBus.MileageCounter.Distance;
-			var withinPCCSegment = PCCSegments.Current != null 
+			var withinPCCSegment = PCCSegments.Current != null
 									&& distance.IsBetween(PCCSegments.Current.StartDistance, PCCSegments.Current.EndDistance);
 
 			if (!withinPCCSegment) {
@@ -371,9 +371,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var vehicleSpeed = Driver.DataBus.VehicleInfo.VehicleSpeed;
 			var coastingForce = CoastingForce(targetVelocity, vehicleSpeed);
-			var energyCoastingEndUseCase1 = (coastingForce * (endUseCase1 - distance)).Cast<Joule>();
+			var energyCoastingEndUseCase1 = coastingForce * (endUseCase1 - distance);
 			var currentEnergy = CalculateEnergy(Driver.DataBus.DrivingCycleInfo.Altitude, vehicleSpeed, Driver.DataBus.VehicleInfo.TotalMass);
-			var energyCoastingLow = (coastingForce * (PCCSegments.Current.DistanceMinSpeed - distance)).Cast<Joule>();
+			var energyCoastingLow = coastingForce * (PCCSegments.Current.DistanceMinSpeed - distance);
 
 			var beforeVLow = distance.IsSmaller(PCCSegments.Current.DistanceMinSpeed);
 			var speedSufficient = vehicleSpeed.IsGreaterOrEqual(targetVelocity - Driver.DriverData.PCC.UnderSpeed);
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var endCycleEntry = Driver.DataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase2);
 				endEnergyUseCase2 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 			}
-			var energyCoastingEndUseCase2 = (coastingForce * (endUseCase2 - distance)).Cast<Joule>();
+			var energyCoastingEndUseCase2 = coastingForce * (endUseCase2 - distance);
 
 			var beyondVLow = distance.IsGreaterOrEqual(PCCSegments.Current.DistanceMinSpeed);
 			var currentEnergyHigherThanEndUseCase2 = currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
@@ -415,14 +415,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dataBus = Driver.DataBus;
 			var airDragForce = Driver.DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
 			var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
-			var engineDragLoss = 0.SI<Watt>();
+			var iceDragLoss = 0.SI<Watt>();
 			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
-					engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
+					iceDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
 				}
 			} else {
 				if (ADAS.EcoRoll == EcoRollType.None) {
-					engineDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
+					iceDragLoss = Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed);
 				}
 			}
 
@@ -430,12 +430,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
 			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
 
-			var coastingResistanceForce = airDragForce + rollResistanceForce + (gearboxLoss + axleLoss + emDragLoss - engineDragLoss) / vehicleSpeed;
+			var coastingResistanceForce = airDragForce
+										+ rollResistanceForce
+										+ (gearboxLoss + axleLoss + emDragLoss - iceDragLoss) / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
 		private Joule CalculateEnergy(Meter altitude, MeterPerSecond velocity, Kilogram mass) =>
-			(mass * Physics.GravityAccelleration * altitude).Cast<Joule>() + mass * velocity * velocity / 2;
+			mass * Physics.GravityAccelleration * altitude + mass * velocity * velocity / 2;
 
 		private void HandleEcoRoll(Second absTime, MeterPerSecond targetVelocity)
 		{
@@ -707,7 +709,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(
 				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.MileageCounter.Distance))
 				.Value().SI<Radian>());
-			var engineDragLoss = Driver.DataBus.PowertrainInfo.HasCombustionEngine
+			var iceDragLoss = Driver.DataBus.PowertrainInfo.HasCombustionEngine
 				? Driver.DataBus.EngineInfo.EngineDragPower(Driver.DataBus.EngineInfo.EngineSpeed)
 				: 0.SI<Watt>();
 
@@ -715,12 +717,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLoss = Driver.DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();
 			var axleLoss = Driver.DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.SI<Watt>();
 
-			var coastingResistanceForce = airDragForce + rollResistanceForce
-				+ (gearboxLoss + axleLoss + emDragLoss - engineDragLoss) / vehicleSpeed;
+			var coastingResistanceForce = airDragForce
+										+ rollResistanceForce
+										+ (gearboxLoss + axleLoss + emDragLoss - iceDragLoss) / vehicleSpeed;
 
 			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(
-				targetSpeed,
-				vehicleSpeed - targetSpeed);
+				targetSpeed, vehicleSpeed - targetSpeed);
 			var coastingDistance = (energyDifference / (coastingDecisionFactor * coastingResistanceForce)).Cast<Meter>();
 			return coastingDistance;
 		}
