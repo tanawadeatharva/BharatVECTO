@@ -385,12 +385,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				&& currentEnergyHigherThanEndUseCase1
 				&& currentEnergyHigherThanMin) {
 				_PCCState = PCCStates.UseCase1;
+				return;
 			}
 
 			// check for PCC use case 2 ------------------------------------------------
 			var endUseCase2 = PCCSegments.Current.EndDistance;
 			var endEnergyUseCase2 = PCCSegments.Current.EnergyEnd;
-			if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase2).IsSmallerOrEqual(endUseCase1)) {
+			if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase2).IsSmallerOrEqual(endUseCase2)) {
 				endUseCase2 = distance + Driver.DriverData.PCC.PreviewDistanceUseCase2;
 				var endCycleEntry = Driver.DataBus.DrivingCycleInfo.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase2);
 				endEnergyUseCase2 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, Driver.DataBus.VehicleInfo.TotalMass);
