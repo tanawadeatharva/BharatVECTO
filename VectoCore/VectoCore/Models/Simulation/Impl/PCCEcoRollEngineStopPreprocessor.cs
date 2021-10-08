@@ -184,13 +184,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class PCCSegment
 	{
 		public Meter StartDistance { get; set; }
-
-		public Meter DistanceMinSpeed { get; set; }
+		public Meter DistanceAtLowestSpeed { get; set; }
 		public Meter EndDistance { get; set; }
 		public MeterPerSecond TargetSpeed { get; set; }
 		public Meter Altitude { get; set; }
-
-		public Joule EnergyMinSpeed { get; set; }
-		public Joule EnergyEnd { get; set; }
+		public Joule EnergyAtLowestSpeed { get; set; }
+		public Joule EnergyAtEnd { get; set; }
 	}
 }

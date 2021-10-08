@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					continue;
 				}
 
-				// target speed must not change within PCC segment
+				// target speed must not change within cycle pairs
 				if (!start.VehicleTargetSpeed.IsEqual(end.VehicleTargetSpeed)) {
 					targetSpeedChanged = end.Distance;
 					pccSegment = null;
@@ -95,27 +95,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 								+ slopeEngineDrag / start.VehicleTargetSpeed.Value()).SI<Radian>();
 				//DebugWriteLine($"MinSlope:{minSlope.ToInclinationPercent():P}");
 				var potentialEnergy = runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * start.Altitude;
+
 				if (pccSegment is null && slope < minSlope) {
-					var lowestKineticEnergy = runData.VehicleData.TotalVehicleMass 
-						* (start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) 
-						* (start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) / 2;
+					var lowestSpeed = start.VehicleTargetSpeed - PCCDriverData.UnderSpeed;
+					var lowestKineticEnergy = runData.VehicleData.TotalVehicleMass * lowestSpeed * lowestSpeed / 2;
 					pccSegment = new PCCSegment {
-						DistanceMinSpeed = start.Distance,
+						DistanceAtLowestSpeed = start.Distance,
 						StartDistance = start.Distance - VectoMath.Min(
 								start.Distance - targetSpeedChanged - 1.SI<Meter>(),
 								PCCDriverData.PreviewDistanceUseCase1),
 						TargetSpeed = start.VehicleTargetSpeed,
 						Altitude = start.Altitude,
-						EnergyMinSpeed = potentialEnergy + lowestKineticEnergy,
+						EnergyAtLowestSpeed = potentialEnergy + lowestKineticEnergy,
 					};
 				}
 
 				if (pccSegment != null && slope > minSlope) {
 					pccSegment.EndDistance = start.Distance;
 					var currentKineticEnergy = runData.VehicleData.TotalVehicleMass
-						* start.VehicleTargetSpeed
-						* start.VehicleTargetSpeed / 2;
-					pccSegment.EnergyEnd = potentialEnergy + currentKineticEnergy;
+						* start.VehicleTargetSpeed * start.VehicleTargetSpeed / 2;
+					pccSegment.EnergyAtEnd = potentialEnergy + currentKineticEnergy;
 					PCCSegments.Segments.Add(pccSegment);
 					pccSegment = null;
 				}
