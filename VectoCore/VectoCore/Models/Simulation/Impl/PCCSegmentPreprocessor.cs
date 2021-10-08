@@ -94,7 +94,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var minSlope = (slopes.Interpolate(x => x.Key.Value(), y => y.Value.Value(), start.VehicleTargetSpeed.Value())
 								+ slopeEngineDrag / start.VehicleTargetSpeed.Value()).SI<Radian>();
 				//DebugWriteLine($"MinSlope:{minSlope.ToInclinationPercent():P}");
-				if (pccSegment == null && slope < minSlope) {
+				var potentialEnergy = runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * start.Altitude;
+				if (pccSegment is null && slope < minSlope) {
+					var lowestKineticEnergy = runData.VehicleData.TotalVehicleMass 
+						* (start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) 
+						* (start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) / 2;
 					pccSegment = new PCCSegment {
 						DistanceMinSpeed = start.Distance,
 						StartDistance = start.Distance - VectoMath.Min(
@@ -102,19 +106,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 								PCCDriverData.PreviewDistanceUseCase1),
 						TargetSpeed = start.VehicleTargetSpeed,
 						Altitude = start.Altitude,
-						EnergyMinSpeed = (runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * start.Altitude)
-										.Cast<Joule>() +
-										runData.VehicleData.TotalVehicleMass * (start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) *
-										(start.VehicleTargetSpeed - PCCDriverData.UnderSpeed) / 2,
+						EnergyMinSpeed = potentialEnergy + lowestKineticEnergy,
 					};
 				}
 
 				if (pccSegment != null && slope > minSlope) {
 					pccSegment.EndDistance = start.Distance;
-					pccSegment.EnergyEnd =
-						(runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * start.Altitude).Cast<Joule>() +
-						runData.VehicleData.TotalVehicleMass * start.VehicleTargetSpeed *
-						start.VehicleTargetSpeed / 2;
+					var currentKineticEnergy = runData.VehicleData.TotalVehicleMass
+						* start.VehicleTargetSpeed
+						* start.VehicleTargetSpeed / 2;
+					pccSegment.EnergyEnd = potentialEnergy + currentKineticEnergy;
 					PCCSegments.Segments.Add(pccSegment);
 					pccSegment = null;
 				}
