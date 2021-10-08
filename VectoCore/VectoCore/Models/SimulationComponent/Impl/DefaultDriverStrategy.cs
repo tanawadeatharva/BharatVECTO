@@ -349,7 +349,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// check if within PCC segment and update state ----------------------------
 			var distance = Driver.DataBus.MileageCounter.Distance;
 			var withinPCCSegment = PCCSegments.Current != null
-									&& distance.IsBetween(PCCSegments.Current.StartDistance, PCCSegments.Current.EndDistance);
+									&& PCCSegments.Current.StartDistance <= distance
+									&& distance <= PCCSegments.Current.EndDistance;
 
 			if (!withinPCCSegment) {
 				_PCCState = PCCStates.OutsideSegment;
@@ -370,7 +371,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				endEnergyUseCase1 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 			}
 			var vehicleSpeed = Driver.DataBus.VehicleInfo.VehicleSpeed;
-			var coastingForce = CalculateCoastingForce(targetVelocity, vehicleSpeed);
+			var coastingForce = CalculateCoastingForce(targetVelocity, vehicleSpeed, PCCSegments.Current.Altitude, endUseCase1);
 			var energyCoastingEndUseCase1 = coastingForce * (endUseCase1 - distance);
 			var currentEnergy = CalculateEnergy(Driver.DataBus.DrivingCycleInfo.Altitude, vehicleSpeed, Driver.DataBus.VehicleInfo.TotalMass);
 			var energyCoastingLow = coastingForce * (PCCSegments.Current.DistanceAtLowestSpeed - distance);
@@ -411,11 +412,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		private Newton CalculateCoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed)
+		private Newton CalculateCoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed, Meter targetAltitude, Meter targetDistance)
 		{
 			var dataBus = Driver.DataBus;
 			var airDragForce = Driver.DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
 			var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
+
+			//mk20211008 shouldn't we calculate it the same as in ComputeCoastingDistance?
+			//var rollResistanceForce = Driver.DataBus.VehicleInfo.RollingResistance(
+			//	((targetAltitude - Driver.DataBus.DrivingCycleInfo.Altitude) / (targetDistance - Driver.DataBus.MileageCounter.Distance))
+			//	.Value().SI<Radian>());
+
+			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
+			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
+			var emDragLoss = CalculateElectricMotorDragLoss();
 			var iceDragLoss = 0.SI<Watt>();
 			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
@@ -427,13 +437,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			var emDragLoss = CalculateElectricMotorDragLoss();
-			var gearboxLoss = Driver.DataBus.GearboxInfo.GearboxLoss();
-			var axleLoss = Driver.DataBus.AxlegearInfo.AxlegearLoss();
-
-			var coastingResistanceForce = airDragForce
-										+ rollResistanceForce
-										+ (gearboxLoss + axleLoss + emDragLoss - iceDragLoss) / vehicleSpeed;
+			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
+			var coastingResistanceForce = airDragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
