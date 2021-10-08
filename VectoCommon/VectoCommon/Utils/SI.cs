@@ -37,6 +37,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -942,7 +943,7 @@ namespace TUGraz.VectoCommon.Utils
 
 	/// <summary>
 	/// SI Class for NewtonMeter [Nm].
-	/// N = kgm/s^2
+	/// Nm = kgm^2/s^2
 	/// </summary>
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
@@ -993,6 +994,10 @@ namespace TUGraz.VectoCommon.Utils
 		public static NewtonMeterSecond operator /(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
 			return SIBase<NewtonMeterSecond>.Create(newtonMeter.Val / perSecond.Value());
+		}
+
+		public static implicit operator Joule(NewtonMeter self) {
+			return SIBase<Joule>.Create(self.Val);
 		}
 	}
 
