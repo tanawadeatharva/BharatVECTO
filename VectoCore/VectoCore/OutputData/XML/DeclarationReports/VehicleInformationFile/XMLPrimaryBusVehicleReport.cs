@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(tns + XMLNames.VectoOutputMultistage,
+				new XElement(tns + XMLNames.VectoOutputMultistep,
 					new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 					new XAttribute(XNamespace.Xmlns + "vif0.1", tns),

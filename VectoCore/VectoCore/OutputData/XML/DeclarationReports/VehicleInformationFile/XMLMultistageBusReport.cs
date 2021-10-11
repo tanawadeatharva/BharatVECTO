@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return;
 			XmlAttributeCollection namespaceAttributes = null;
 			foreach (var node in nodes) {
-				if (node.LocalName == XMLNames.VectoOutputMultistage) {
+				if (node.LocalName == XMLNames.VectoOutputMultistep) {
 					namespaceAttributes = node.Attributes;
 					break;
 				}
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(tns + XMLNames.VectoOutputMultistage,
+				new XElement(tns + XMLNames.VectoOutputMultistep,
 					_namespaceAttributes,
 					new XAttribute(XNamespace.Xmlns + "tns", tns),
 					_primaryVehicle,

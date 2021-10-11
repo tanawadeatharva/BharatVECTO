@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName))
 			{
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 
 			TestNewVifData(writer.XMLMultistageReportFileName);
@@ -451,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			using (var xmlReader = XmlReader.Create(writer.XMLPrimaryVehicleReportName))
 			{
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 
 			ValidateVIFData(writer.XMLPrimaryVehicleReportName);

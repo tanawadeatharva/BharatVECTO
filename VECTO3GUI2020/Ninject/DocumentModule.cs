@@ -18,7 +18,7 @@ namespace VECTO3GUI2020.Ninject
 
             Bind<IDocumentViewModel>().To<DeclarationJobViewModel>().Named(XmlDocumentType.DeclarationJobData.ToString());
 			Bind<IDocumentViewModel>().To<MultiStageJobViewModel_v0_1>()
-				.Named(XmlDocumentType.MultistageOutputData.ToString());
+				.Named(XmlDocumentType.MultistepOutputData.ToString());
 
 			Bind<IDocumentViewModel>().To<CreateVifViewModel>()
 				.Named(typeof(JSONInputDataV10_PrimaryAndStageInputBus).ToString());

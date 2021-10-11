@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InputData = inputData;
 		}
 
-		public IDeclarationMultistageJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistage, JobCreator));
+		public IDeclarationMultistageJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistep, JobCreator));
 
 		protected virtual IDeclarationMultistageJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
