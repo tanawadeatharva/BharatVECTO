@@ -3118,6 +3118,9 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minInclusive value="0.000"/>
@@ -3155,6 +3158,9 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minInclusive value="0.000"/>
@@ -3192,6 +3198,9 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minInclusive value="0.000"/>
@@ -3252,6 +3261,9 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double3">
 						<xs:minInclusive value="0.000"/>
