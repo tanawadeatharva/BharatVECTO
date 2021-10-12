@@ -7,17 +7,19 @@
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
 		<LegislativeCategory>N2</LegislativeCategory>
-		<ChassisConfiguration>Van</ChassisConfiguration>
-		<AxleConfiguration>4x2</AxleConfiguration>
+		<ChassisConfiguration>Tractor</ChassisConfiguration>
+		<AxleConfiguration>6x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>650</IdlingSpeed>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Losses included in Gearbox</RetarderType>
+		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S2</ArchitectureID>
-		<OvcHev>false</OvcHev>
+		<OvcHev>true</OvcHev>
+		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>

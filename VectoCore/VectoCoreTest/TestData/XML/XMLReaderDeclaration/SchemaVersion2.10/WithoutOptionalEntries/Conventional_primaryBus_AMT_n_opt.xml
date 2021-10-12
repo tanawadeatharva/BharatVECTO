@@ -9,13 +9,13 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
-		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
+		<Articulated>true</Articulated>
+		<TechnicalPermissibleMaximumLadenMass>26000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-		<RetarderType>Transmission Output Retarder</RetarderType>
-		<RetarderRatio>1.000</RetarderRatio>
-		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<RetarderType>Losses included in Gearbox</RetarderType>
+		<RetarderRatio>2.000</RetarderRatio>
+		<AngledriveType>Separate Angledrive</AngledriveType>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>

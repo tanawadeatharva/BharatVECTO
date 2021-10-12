@@ -11,18 +11,20 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType>None</RetarderType>
-		<AngledriveType>None</AngledriveType>
+		<RetarderType>Losses included in Gearbox</RetarderType>
+		<RetarderRatio>2.000</RetarderRatio>
+		<AngledriveType>Separate Angledrive</AngledriveType>
 		<PTO xsi:type="v2.0:PTOType">
 			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
 			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
-		<SleeperCab>false</SleeperCab>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E-IEPC</ArchitectureID>
-		<OvcHev>false</OvcHev>
+		<OvcHev>true</OvcHev>
+		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>

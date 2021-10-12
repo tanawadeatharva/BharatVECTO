@@ -247,7 +247,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual string VehicleTypeApprovalNumber => GetString(XMLNames.Vehicle_TypeApprovalNumber);
 		public virtual ArchitectureID ArchitectureID => ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID));
 		public virtual bool OvcHev => GetBool(XMLNames.Vehicle_OvcHev);
-		public virtual Watt MaxChargingPower => XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>();
+		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
+			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
@@ -476,6 +477,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
 			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV20
+
+		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
+
+		#endregion
 
 		#endregion
 
@@ -1604,8 +1611,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override CubicMeter CargoVolume => null;
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-		
+
+		public override VehicleCategory VehicleCategory =>
+			VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
+
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
+
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+
 		#endregion
+
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1626,7 +1642,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 		public override XmlElement PTONode => null;
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-		
+
+		public override VehicleCategory VehicleCategory =>
+			VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
+
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
+
+		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+
 		#endregion
 	}
 
@@ -1645,7 +1668,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override CubicMeter CargoVolume => null;
-		
+
+		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
+
 		#endregion
 	}
 }

@@ -8,14 +8,14 @@
 		<Date>2017-01-01T00:00:00Z</Date>
 		<LegislativeCategory>N2</LegislativeCategory>
 		<ChassisConfiguration>Tractor</ChassisConfiguration>
-		<AxleConfiguration>4x2</AxleConfiguration>
-		<CorrectedActualMass>3500</CorrectedActualMass>
-		<TechnicalPermissibleMaximumLadenMass>7100</TechnicalPermissibleMaximumLadenMass>
+		<AxleConfiguration>6x2</AxleConfiguration>
+		<CorrectedActualMass>6000</CorrectedActualMass>
+		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>650</IdlingSpeed>
-		<RetarderType>None</RetarderType>
-		<RetarderRatio>10.000</RetarderRatio>
+		<RetarderType>Losses included in Gearbox</RetarderType>
+		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ADAS xsi:type="ADAS_Conventional_Type">
 			<EngineStopStart>true</EngineStopStart>
