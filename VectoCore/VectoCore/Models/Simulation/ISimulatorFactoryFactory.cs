@@ -38,7 +38,13 @@ namespace TUGraz.VectoCore.Models.Simulation
 	public interface ISimulatorFactoryFactory
 	{
 		ISimulatorFactory Factory(
-			ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true);
+			ExecutionMode mode, IInputDataProvider dataProvider,
+			IOutputDataWriter writer);
+
+		ISimulatorFactory Factory(IInputDataProvider dataProvider,
+			IOutputDataWriter writer,
+			IDeclarationReport declarationReport = null,
+			IVTPReport vtpReport = null,
+			bool validate = true);
 	}
 }

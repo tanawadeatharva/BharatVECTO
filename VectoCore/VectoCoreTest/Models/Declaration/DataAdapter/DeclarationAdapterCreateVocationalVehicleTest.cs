@@ -12,6 +12,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
@@ -65,10 +66,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var sumData = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumData);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport);
+			runsFactory.WriteModalResults = false;
+			runsFactory.Validate = false;
 			jobContainer.AddRuns(runsFactory);
 
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered

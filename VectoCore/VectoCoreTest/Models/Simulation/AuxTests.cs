@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -277,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(
 				@"TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 		}
@@ -292,7 +293,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var inputData =
 				JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 		}
@@ -305,7 +306,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			AssertHelper.Exception<VectoException>(() => jobContainer.AddRuns(runsFactory));
 		}

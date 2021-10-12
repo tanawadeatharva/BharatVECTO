@@ -33,10 +33,13 @@ using System.Collections.Generic;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils.Ninject;
 using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -47,9 +50,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public override void Load()
 		{
-			Bind<ISimulatorFactoryFactory>().ToFactory();
+			Bind<ISimulatorFactoryFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
 
-			Bind<ISimulatorFactory>().To<SimulatorFactory>();
+			Bind<ISimulatorFactory>().To<SimulatorFactoryDeclaration>().Named(ExecutionMode.Declaration.ToString());
+			Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
+
 
 			Bind<IDeclarationReport>().To<NullDeclarationReport>();
 			Bind<IVTPReport>().To<NullVTPReport>();

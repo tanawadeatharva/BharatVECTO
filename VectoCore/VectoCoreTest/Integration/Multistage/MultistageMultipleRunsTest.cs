@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
@@ -190,14 +191,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		{
 			_fileoutputWriter = new FileOutputWriter(_outputDirectory);
 			_tempFileOutputWriter = new TempFileOutputWriter(_fileoutputWriter);
-			var runsFactory = new SimulatorFactory(_mode, input, _fileoutputWriter)
-			{
-				WriteModalResults = true,
-				ModalResults1Hz = true,
-				Validate = true,
-				ActualModalData = true,
-				SerializeVectoRunData = true,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(_mode, input, _fileoutputWriter);
+			runsFactory.WriteModalResults = true;
+			runsFactory.ModalResults1Hz = true;
+			runsFactory.Validate = true;
+			runsFactory.ActualModalData = true;
+			runsFactory.SerializeVectoRunData = true;
 
 			var timeout = 1000;
 

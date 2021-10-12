@@ -28,6 +28,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -517,14 +518,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
-					{
-						WriteModalResults = Settings.Default.WriteModalResults,
-						ModalResults1Hz = Settings.Default.ModalResults1Hz,
-						Validate = Settings.Default.Validate,
-						ActualModalData = Settings.Default.ActualModalData,
-						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
-					};
+					var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
+					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
+					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
+					runsFactory.Validate = Settings.Default.Validate;
+					runsFactory.ActualModalData = Settings.Default.ActualModalData;
+					runsFactory.SerializeVectoRunData = Settings.Default.SerializeVectoRunData;
 
 					var stopwatch = new Stopwatch();
 					stopwatch.Start();

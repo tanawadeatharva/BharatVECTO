@@ -51,6 +51,7 @@ using System.IO;
 using Ninject;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -166,9 +167,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var writer = new FileOutputWriter(filename);
 			var inputData = xmlInputReader.CreateDeclaration(filename);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -312,7 +312,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(mode, inputData, fileWriter) { WriteModalResults = true };
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, double>>();
@@ -614,7 +615,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
 			var runsFactory =
-				new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) { WriteModalResults = true };
+				SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, Meter>>();

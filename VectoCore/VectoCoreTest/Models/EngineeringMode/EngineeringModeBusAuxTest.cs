@@ -27,6 +27,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
@@ -128,12 +129,10 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var sumContainer = new SummaryDataContainer(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-                SumData = sumContainer,
-                //ActualModalData = true,
-                Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.SumData = sumContainer; //ActualModalData = true,
+			factory.Validate = false;
 
 			var jobContainer = new JobContainer(sumContainer);
 
