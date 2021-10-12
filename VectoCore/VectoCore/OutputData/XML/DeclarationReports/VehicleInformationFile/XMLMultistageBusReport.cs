@@ -291,11 +291,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (_consolidatedInputData?.Vehicle?.Components?.AirdragInputData == null)
 				return null;
 
-			switch (_vehicleInputData.AirdragModifiedMultistage) {
+			switch (_vehicleInputData.AirdragModifiedMultistep) {
 				case null:
 					throw new VectoException("AirdragModifiedMultistage must be set if an airdrag component has been set in previous stages.");
 				default:
-					return new XElement(v210 + XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage);
+					return new XElement(v210 + XMLNames.Bus_AirdragModifiedMultistep, _vehicleInputData.AirdragModifiedMultistep);
 			}
 		}
 
@@ -334,10 +334,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetBusAirdrag(IAirdragDeclarationInputData airdrag)
 		{
-			if (airdrag != null && _vehicleInputData.AirdragModifiedMultistage != false) 
+			if (airdrag != null && _vehicleInputData.AirdragModifiedMultistep != false) 
 				return GetAirdragElement(airdrag);
 
-			return _vehicleInputData.AirdragModifiedMultistage == true
+			return _vehicleInputData.AirdragModifiedMultistep == true
 				? GetBusAirdragUseStandardValues()
 				: null;
 		}

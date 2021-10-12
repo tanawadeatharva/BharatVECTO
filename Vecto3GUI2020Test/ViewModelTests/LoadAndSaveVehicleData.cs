@@ -86,12 +86,12 @@ namespace Vecto3GUI2020Test
 			Assert.NotNull(vehicle);
 
 
-			Assert.True(vehicle.AirdragModifiedMultistageEditingEnabled);
+			Assert.True(vehicle.AirdragModifiedMultistepEditingEnabled);
 
 			newMultistageJobViewModel.AddVifFile(GetTestDataPath(consolidated_multiple_stages_hev));
 			Assert.AreEqual(GetTestDataPath(consolidated_multiple_stages_hev), newMultistageJobViewModel.VifPath);
 			vehicle = newMultistageJobViewModel.MultiStageJobViewModel.VehicleInputData as InterimStageBusVehicleViewModel_v2_8;
-			Assert.IsFalse(vehicle.AirdragModifiedMultistageEditingEnabled);
+			Assert.IsFalse(vehicle.AirdragModifiedMultistepEditingEnabled);
 
 		}
 
@@ -179,15 +179,15 @@ namespace Vecto3GUI2020Test
 			Assert.Null(vehicleViewModelV28.ConsolidatedEntranceHeightInMm);
 
 
-			Assert.IsFalse(vehicleViewModelV28.AirdragModifiedMultistageEditingEnabled);
+			Assert.IsFalse(vehicleViewModelV28.AirdragModifiedMultistepEditingEnabled);
 
-			Assert.IsNull(vehicleViewModelV28.AirdragModifiedMultistage);
+			Assert.IsNull(vehicleViewModelV28.AirdragModifiedMultistep);
 			Assert.IsNull(vehicleViewModelV28.ConsolidatedAirdragModifiedEnum);
 			Assert.IsTrue(vehicleViewModelV28.AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN || vehicleViewModelV28.AirdragModifiedEnum == null);
 			
 
 
-			Assert.AreEqual(vehicleViewModelV28.AirdragModifiedMultistageEditingEnabled, false);
+			Assert.AreEqual(vehicleViewModelV28.AirdragModifiedMultistepEditingEnabled, false);
 
 			Assert.Null(vehicleViewModelV28.BusAuxiliaries);
 
@@ -245,7 +245,7 @@ namespace Vecto3GUI2020Test
 			Assert.NotNull(inputData.JobInputData.Vehicle.Components.AirdragInputData, "No Airdrag Component loaded");
 			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;
 			
-			Assert.AreEqual(expectedAirdragModifiedValue, vehicleVm.AirdragModifiedMultistage);
+			Assert.AreEqual(expectedAirdragModifiedValue, vehicleVm.AirdragModifiedMultistep);
 
 			TestContext.WriteLine("Done!");
 
@@ -292,7 +292,7 @@ namespace Vecto3GUI2020Test
 			Assert.AreEqual(LegislativeClass.M3, vehicleViewModel.LegislativeClass);
 			Assert.AreEqual(500, vehicleViewModel.CurbMassChassis.Value());//CorrectedActualMass
 			Assert.AreEqual(3500, vehicleViewModel.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
-			Assert.AreEqual(true, vehicleViewModel.AirdragModifiedMultistage);
+			Assert.AreEqual(true, vehicleViewModel.AirdragModifiedMultistep);
 			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.AirdragModifiedEnum);
 			Assert.AreEqual(AIRDRAGMODIFIED.TRUE, vehicleViewModel.ParameterViewModels[nameof(vehicleViewModel.AirdragModifiedEnum)].CurrentContent);
 			Assert.AreEqual(TankSystem.Compressed, vehicleViewModel.TankSystem);//NgTankSystem

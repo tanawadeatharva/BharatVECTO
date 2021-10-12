@@ -517,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating)) ?? _primaryVehicle.Vehicle.GrossVehicleMassRating;
 
-		public bool? AirdragModifiedMultistage => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
+		public bool? AirdragModifiedMultistep => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistep));
 
 		public TankSystem? TankSystem => GetVehiclePropertyValue<TankSystem?>(nameof(TankSystem));
 
@@ -667,7 +667,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					continue;
 				}
 
-				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) {
+				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistep == null) {
 					validAirdragEntries = false;
 					break;
 				}

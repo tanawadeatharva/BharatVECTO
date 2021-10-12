@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual bool SleeperCab => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab));
 
-		public virtual bool? AirdragModifiedMultistage { get; }
+		public virtual bool? AirdragModifiedMultistep { get; }
 
 		public virtual TankSystem? TankSystem =>
 			ElementExists(XMLNames.Vehicle_NgTankSystem)
@@ -705,7 +705,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
 		public bool SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 
 		public bool HybridElectricHDV { get; }
@@ -829,9 +829,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
 				: null;
 
-		public override bool? AirdragModifiedMultistage =>
-			ElementExists(XMLNames.Bus_AirdragModifiedMultistage)
-				? GetBool(XMLNames.Bus_AirdragModifiedMultistage)
+		public override bool? AirdragModifiedMultistep =>
+			ElementExists(XMLNames.Bus_AirdragModifiedMultistep)
+				? GetBool(XMLNames.Bus_AirdragModifiedMultistep)
 				: (bool?)null;
 
 		public override RegistrationClass? RegisteredClass =>

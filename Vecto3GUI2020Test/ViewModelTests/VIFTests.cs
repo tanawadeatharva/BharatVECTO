@@ -270,7 +270,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";
-			vehicle.AirdragModifiedMultistage = true;
+			vehicle.AirdragModifiedMultistep = true;
 			vehicle.VehicleDeclarationType = VehicleDeclarationType.interim;
 			
 			var writer = GetFileOutputVIFWriter(multiStageViewModel);

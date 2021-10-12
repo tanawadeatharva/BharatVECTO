@@ -595,7 +595,7 @@
         <LegislativeCategory>M3</LegislativeCategory>
         <CorrectedActualMass>500</CorrectedActualMass>
         <TechnicalPermissibleMaximumLadenMass>3500</TechnicalPermissibleMaximumLadenMass>
-        <AirdragModifiedMultistage>true</AirdragModifiedMultistage>
+        <AirdragModifiedMultistep>true</AirdragModifiedMultistep>
         <ClassBus>II+III</ClassBus>
         <NgTankSystem>Compressed</NgTankSystem>
         <NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>

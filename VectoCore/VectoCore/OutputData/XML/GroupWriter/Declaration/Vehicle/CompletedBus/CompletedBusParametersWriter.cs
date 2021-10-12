@@ -40,9 +40,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 					vehicle.GrossVehicleMassRating.ToXMLFormat(0)));
 			}
 
-			if (vehicle.AirdragModifiedMultistage != null) {
-				elements.Add(new XElement(writerNamespace + XMLNames.Bus_AirdragModifiedMultistage,
-					vehicle.AirdragModifiedMultistage));
+			if (vehicle.AirdragModifiedMultistep != null) {
+				elements.Add(new XElement(writerNamespace + XMLNames.Bus_AirdragModifiedMultistep,
+					vehicle.AirdragModifiedMultistep));
 			}
 
 			if (vehicle.RegisteredClass != null) {

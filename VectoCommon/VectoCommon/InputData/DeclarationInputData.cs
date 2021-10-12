@@ -146,7 +146,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SleeperCab { get; }
 
-		bool? AirdragModifiedMultistage { get; }
+		bool? AirdragModifiedMultistep { get; }
 
 		TankSystem? TankSystem { get; }
 
