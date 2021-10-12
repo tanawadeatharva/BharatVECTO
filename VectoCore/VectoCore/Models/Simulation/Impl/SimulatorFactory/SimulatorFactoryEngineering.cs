@@ -18,35 +18,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
             CreateEngineeringDataReader(dataProvider);
         }
 
-
-
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
-			if (dataProvider is IVTPEngineeringInputDataProvider vtpProvider)
-			{
-				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry())
-				{
+			switch (dataProvider) {
+				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
 					DataReader = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
-				}
-				if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus())
-				{
+					return;
+				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
 					DataReader = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
-				}
-				return;
-			}
-			if (dataProvider is IEngineeringInputDataProvider engDataProvider)
-			{
-				if (engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation)
-				{
+					return;
+				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
 					DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
-				}
-				else
-				{
+					return;
+				case IEngineeringInputDataProvider engDataProvider:
 					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
-				}
-				return;
+					return;
+				default:
+					throw new VectoException("Unknown InputData for Engineering Mode!");
 			}
-			throw new VectoException("Unknown InputData for Engineering Mode!");
 		}
 
 		#region Overrides of SimulatorFactory
