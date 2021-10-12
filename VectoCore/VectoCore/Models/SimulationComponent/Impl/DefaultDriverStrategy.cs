@@ -1052,7 +1052,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity)) {
 				first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add(new { action = "Coast", first });
-				if (first is ResponseSuccess && first.Driver.Acceleration < 0) {
+				if (first is ResponseSuccess && first.Driver.Acceleration < 0 && DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(targetVelocity, 0.1.KMPHtoMeterPerSecond())) {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
