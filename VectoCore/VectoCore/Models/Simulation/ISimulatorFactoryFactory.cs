@@ -41,7 +41,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 			ExecutionMode mode, IInputDataProvider dataProvider,
 			IOutputDataWriter writer);
 
-		ISimulatorFactory Factory(IInputDataProvider dataProvider,
+		ISimulatorFactory Factory(ExecutionMode mode, 
+			IInputDataProvider dataProvider,
 			IOutputDataWriter writer,
 			IDeclarationReport declarationReport = null,
 			IVTPReport vtpReport = null,

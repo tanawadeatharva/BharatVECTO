@@ -48,6 +48,7 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
+Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.OutputData
@@ -1024,7 +1025,7 @@ lbFound:
                 Dim outFile As String = GetOutputDirectory(jobFile)
                 Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
 
-                Dim runsFactory As SimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
+                Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 runsFactory.WriteModalResults = Cfg.ModOut
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked

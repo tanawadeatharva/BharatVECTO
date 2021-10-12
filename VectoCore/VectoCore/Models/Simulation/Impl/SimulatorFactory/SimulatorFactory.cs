@@ -71,30 +71,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			get => CreateFollowUpSimulatorFactory ? _followingSimulatorFactoryCreator?.Invoke() : null;
 		}
-
-		public bool CreateFollowUpSimulatorFactory = false;
+		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 
 
 		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
 
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
-		public static SimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
+		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
-			switch (mode)
-			{
-				case ExecutionMode.Declaration:
-					ISimulatorFactoryFactory simFactoryFactory =
-						new StandardKernel(new VectoNinjectModule()).Get<ISimulatorFactoryFactory>();
-					return new SimulatorFactoryDeclaration(dataProvider, writer, declarationReport, vtpReport, validate);
-				case ExecutionMode.Engineering:
-					return new SimulatorFactoryEngineering(dataProvider, writer, validate);
-				default:
-					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
-			}
+			return new StandardKernel(new VectoNinjectModule()).Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, writer, declarationReport, vtpReport, validate);
+			//switch (mode)
+			//{
+			//	case ExecutionMode.Declaration:
+
+			//		return new SimulatorFactoryDeclaration(dataProvider, writer, declarationReport, vtpReport, validate);
+			//	case ExecutionMode.Engineering:
+			//		return new SimulatorFactoryEngineering(dataProvider, writer, validate);
+			//	default:
+			//		throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
+			//}
 		}
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
-		public static SimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
+		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
 		{
 			return CreateSimulatorFactory(mode, dataProvider, writer, null, null, true);
 		}
