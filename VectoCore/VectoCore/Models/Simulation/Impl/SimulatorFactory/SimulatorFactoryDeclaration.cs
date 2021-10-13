@@ -78,9 +78,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						DataReader = new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
 							multistageVifInputData.MultistageJobInputData,
 							reportCompleted);
-
-						
-
 					}
 					else
 					{
@@ -142,7 +139,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 #pragma warning disable 618
 							var factory = CreateSimulatorFactory(_mode,
 #pragma warning restore 618
-								vifInputData, originalReportWriter,
+								vifInputData, 
+								originalReportWriter,
 								null,
 								vtpReport,
 								Validate);

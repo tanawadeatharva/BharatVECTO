@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 	public abstract class SimulatorFactory : LoggingObject, ISimulatorFactory
 	{
 		private static int _jobNumberCounter;
-		
+		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
 
 		protected Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
 
@@ -80,22 +80,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
-			return new StandardKernel(new VectoNinjectModule()).Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, writer, declarationReport, vtpReport, validate);
-			//switch (mode)
-			//{
-			//	case ExecutionMode.Declaration:
-
-			//		return new SimulatorFactoryDeclaration(dataProvider, writer, declarationReport, vtpReport, validate);
-			//	case ExecutionMode.Engineering:
-			//		return new SimulatorFactoryEngineering(dataProvider, writer, validate);
-			//	default:
-			//		throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
-			//}
-		}
-		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
-		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
-		{
-			return CreateSimulatorFactory(mode, dataProvider, writer, null, null, true);
+			lock (_kernel) {
+				if (_kernel == null) {
+					_kernel = new StandardKernel(new VectoNinjectModule());
+				}
+			}
+			return _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, writer, declarationReport, vtpReport, validate);
 		}
 
 		protected SimulatorFactory(ExecutionMode mode, IOutputDataWriter writer, bool validate = true)
