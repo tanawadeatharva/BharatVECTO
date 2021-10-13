@@ -526,7 +526,6 @@
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLMultistageBusReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLPrimaryBusVehicleReport.cs" />
     <Compile Include="OutputData\XML\GroupWriter\XMLGroupWriterNinjectModule.cs" />
-    <Compile Include="Utils\Ninject\PerMethodInstanceProvider.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
