@@ -1048,23 +1048,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			IResponse first;
-			if (DriverStrategy.IsOverspeedAllowed(targetVelocity, prohibitOverspeed) &&
-				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity)) {
+			var isOverspeedAllowed = DriverStrategy.IsOverspeedAllowed(targetVelocity, prohibitOverspeed);
+			var isDrivingWithOverspeed = DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity);
+			if (isOverspeedAllowed && isDrivingWithOverspeed) {
+				//driving in overspeed (VehicleSpeed >= targetVelocity)
 				first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add(new { action = "Coast", first });
-				if (first is ResponseSuccess && first.Driver.Acceleration < 0 && DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(targetVelocity, 0.1.KMPHtoMeterPerSecond())) {
+				if (first is ResponseSuccess && first.Driver.Acceleration < 0 && first.Vehicle.VehicleSpeed <= targetVelocity) {
+					//do accelerate action if we would come below targetVelocity due to coasting
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
 				}
-				if (DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn && first is ResponseOverload) {
+				if (first is ResponseOverload && DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", first });
 				}
-				if (!DataBus.PowertrainInfo.HasCombustionEngine && first is ResponseOverload) {
+				if (first is ResponseOverload && !DataBus.PowertrainInfo.HasCombustionEngine) {
 					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					debug.Add(new { action = "Coast:(Overload & BEV) -> Accelerate", first });
 				}
 			} else {
+				//not driving in overspeed (VehicleSpeed < targetVelocity)
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.DisengageGearbox) {
 					first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				} else {
