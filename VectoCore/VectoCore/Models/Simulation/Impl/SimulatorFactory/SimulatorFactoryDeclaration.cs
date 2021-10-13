@@ -35,7 +35,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
 			_simulate = CanBeSimulated(dataProvider);
-			CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
+			if (_simulate) {
+				CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
+			}
+		
 		}
 
 		private bool CanBeSimulated(IInputDataProvider dataProvider)
@@ -53,8 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					return false;
 				}
 			}
-
-
+			
 			return true;
 		}
 
@@ -91,39 +93,44 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						//DataReader = CreateRunDataReader(multistageVifInputData, report);
 						DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 
-						_followingSimulatorFactoryCreator = () => {
-							var inputData = _xmlInputDataReader.CreateDeclaration(
-									XmlReader.Create(ReportWriter.MultistageXmlReport.ToString().ToStream()));
-#pragma warning disable 618
-							return CreateSimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate);
-#pragma warning restore 618
-						};
+						CreateFollowUpSimulatorFactory = true;
+							_followingSimulatorFactoryCreator = () => {
+							//Take output from this stage and provide it as input for next stage.
+							var output = _xmlInputDataReader.CreateDeclaration(
+									XmlReader.Create(ReportWriter.MultistageXmlReport.ToString().ToStream())) as IMultistageBusInputDataProvider;
+							var nextStageInput = new XMLDeclarationVIFInputData(output, null);
+
+							return _simFactoryFactory.Factory(_mode, nextStageInput, ReportWriter, report, vtpReport,
+								Validate);
+							
+							//#pragma warning disable 618
+//							return CreateSimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate);
+//#pragma warning restore 618
+							};
 
 					}
 					return;
 				}
 				case IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData: {
-					System.Diagnostics.Debug.Assert(multiStagePrimaryAndStageInputData.PrimaryVehicle.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 
+
+					//Create Temporary Writer to hold the files only in Memory
 					var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
 					var originalReportWriter = ReportWriter;
 					ReportWriter = tempOutputWriter;
-
 					var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter, true);
 
 
 					DataReader = CreateRunDataReader(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
-					//DataReader = new DeclarationModePrimaryBusVectoRunDataFactory(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
 
 
 					CreateFollowUpSimulatorFactory = true;
-					_followingSimulatorFactoryCreator = (() => {
-						//replace with dependency injection 
+					_followingSimulatorFactoryCreator = () => {
 						try
 						{
 							var primaryInputData = _xmlInputDataReader.CreateDeclaration(tempOutputWriter
 								.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
-							//var primaryInputData = inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter).XMLPrimaryVehicleReportName);
+
 							var vifInputData = new XMLDeclarationVIFInputData(
 								primaryInputData as IMultistageBusInputDataProvider,
 								multiStagePrimaryAndStageInputData.StageInputData);
@@ -132,23 +139,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 								vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
 
 							originalReportWriter.NumberOfManufacturingStages = manStagesCount;
-#pragma warning disable 618
-							var factory = CreateSimulatorFactory(_mode,
-#pragma warning restore 618
-								vifInputData, 
-								originalReportWriter,
-								null,
-								vtpReport,
-								Validate);
-							factory.CreateFollowUpSimulatorFactory = true;
-							return factory;
+
+							return _simFactoryFactory.Factory(_mode, vifInputData, originalReportWriter, null,
+								vtpReport, Validate);
+
+//#pragma warning disable 618
+//							var factory = CreateSimulatorFactory(_mode,
+//#pragma warning restore 618
+//								vifInputData, 
+//								originalReportWriter,
+//								null,
+//								vtpReport,
+//								Validate);
+
+//							return factory;
 						}
 						catch (Exception ex)
 						{
 							Log.Error($"Failed to create additional Simulation run: {ex.Message}");
 							return null;
 						}
-					});
+					};
 					return;
 				}
 				default:
