@@ -38,10 +38,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 		}
 
-		#region Overrides of SimulatorFactory
-
-		public override IOutputDataWriter ReportWriter { get; protected set; }
-
-		#endregion
 	}
 }

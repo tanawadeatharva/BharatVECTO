@@ -21,14 +21,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
     public class SimulatorFactoryDeclaration : SimulatorFactory
     {
-		//private readonly ISimulatorFactoryFactory _simFactoryFactory;
+		private readonly IXMLInputDataReader _xmlInputDataReader;
+		private readonly ISimulatorFactoryFactory _simFactoryFactory;
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
 			IOutputDataWriter writer,
 			IDeclarationReport declarationReport, 
 			IVTPReport vtpReport,
+			IXMLInputDataReader xmlInputDataReader,
+			ISimulatorFactoryFactory simulatorFactoryFactory,
 			bool validate) : base(ExecutionMode.Declaration, writer, validate)
 		{
+			_xmlInputDataReader = xmlInputDataReader;
+			_simFactoryFactory = simulatorFactoryFactory;
 			_simulate = CanBeSimulated(dataProvider);
 			CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
 		}
@@ -87,12 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 
 						_followingSimulatorFactoryCreator = () => {
-							var container = new StandardKernel(
-								new VectoNinjectModule()
-							);
-							var inputDataReader = container.Get<IXMLInputDataReader>();
-							var inputData =
-								inputDataReader.CreateDeclaration(
+							var inputData = _xmlInputDataReader.CreateDeclaration(
 									XmlReader.Create(ReportWriter.MultistageXmlReport.ToString().ToStream()));
 #pragma warning disable 618
 							return CreateSimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate);
@@ -119,13 +119,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					CreateFollowUpSimulatorFactory = true;
 					_followingSimulatorFactoryCreator = (() => {
 						//replace with dependency injection 
-						var container = new StandardKernel(
-							new VectoNinjectModule()
-						);
 						try
 						{
-							var inputDataReader = container.Get<IXMLInputDataReader>();
-							var primaryInputData = inputDataReader.CreateDeclaration(tempOutputWriter
+							var primaryInputData = _xmlInputDataReader.CreateDeclaration(tempOutputWriter
 								.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
 							//var primaryInputData = inputDataReader.CreateDeclaration(((FileOutputWriter)ReportWriter).XMLPrimaryVehicleReportName);
 							var vifInputData = new XMLDeclarationVIFInputData(
@@ -218,10 +214,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				$"Could not create RunDataFactory for Vehicle Category{vtpProvider.JobInputData.Vehicle.VehicleCategory}");
 		}
 
-		#region Overrides of SimulatorFactory
-
-		public override IOutputDataWriter ReportWriter { get; protected set; }
-
-		#endregion
 	}
 }
