@@ -735,7 +735,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var db = Driver.DataBus;
 			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions)
 				sum += db.ElectricMotorInfo(pos).DragPower(
-					db.BatteryInfo.InternalVoltage, 
+					db.BatteryInfo.InternalVoltage,
 					db.ElectricMotorInfo(pos).ElectricMotorSpeed);
 			return sum;
 		}
@@ -1047,36 +1047,44 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 			}
 
-			IResponse first;
 			var isOverspeedAllowed = DriverStrategy.IsOverspeedAllowed(targetVelocity, prohibitOverspeed);
 			var isDrivingWithOverspeed = DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity);
 			if (isOverspeedAllowed && isDrivingWithOverspeed) {
 				//driving in overspeed (VehicleSpeed >= targetVelocity)
-				first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
-				debug.Add(new { action = "Coast", first });
-				if (first is ResponseSuccess && first.Driver.Acceleration < 0 && first.Vehicle.VehicleSpeed <= targetVelocity) {
+				
+				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+				debug.Add(new { action = "Coast", response });
+
+				if (response is ResponseSuccess
+					&& response.Driver.Acceleration < 0 && response.Vehicle.VehicleSpeed <= targetVelocity) {
 					//do accelerate action if we would come below targetVelocity due to coasting
-					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
+					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", response });
 				}
-				if (first is ResponseOverload && DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
-					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", first });
+				if (response is ResponseOverload
+					&& DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
+					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", response });
 				}
-				if (first is ResponseOverload && !DataBus.PowertrainInfo.HasCombustionEngine) {
-					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Overload & BEV) -> Accelerate", first });
+				if (response is ResponseOverload
+					&& !DataBus.PowertrainInfo.HasCombustionEngine) {
+					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Coast:(Overload & BEV) -> Accelerate", response });
 				}
+				return response;
 			} else {
 				//not driving in overspeed (VehicleSpeed < targetVelocity)
+				
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.DisengageGearbox) {
-					first = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+					var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+					debug.Add(new { action = "Coast", response });
+					return response;
 				} else {
-					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					var response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Accelerate", response });
+					return response;
 				}
-				debug.Add(new { action = "Accelerate", first });
 			}
-			return first;
 		}
 
 		protected override IResponse CheckRequestDoesNotExceedNextAction(
