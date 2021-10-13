@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 	public abstract class SimulatorFactory : LoggingObject, ISimulatorFactory
 	{
 		private static int _jobNumberCounter;
+
+		private static object _kernelLock = new object();
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
 
 		protected Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
@@ -80,7 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
-			lock (_kernel) {
+			lock (_kernelLock) {
 				if (_kernel == null) {
 					_kernel = new StandardKernel(new VectoNinjectModule());
 				}
@@ -119,7 +121,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public SummaryDataContainer SumData { get; set; }
 
-		public abstract IOutputDataWriter ReportWriter { get; protected set; }
+		public IOutputDataWriter ReportWriter { get; protected set; }
 
 		public int JobNumber { get; set; }
 
