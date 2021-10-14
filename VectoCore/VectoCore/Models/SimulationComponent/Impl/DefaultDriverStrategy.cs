@@ -80,8 +80,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
 
-		public PCCStates PCCState => _PCCState;
-		protected internal PCCStates _PCCState = PCCStates.OutsideSegment;
+		public PCCStates PCCState => pccState;
+		protected internal PCCStates pccState = PCCStates.OutsideSegment;
 		protected bool ATEcoRollReleaseLockupClutch;
 
 		public DefaultDriverStrategy(IVehicleContainer container)
@@ -176,10 +176,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					val = -5;
 				}
 				container.SetDataValue("PCCSegment", val);
-				container.SetDataValue("PCCState", (int)_PCCState);
+				container.SetDataValue("PCCState", (int)pccState);
 			} else {
 				container.SetDataValue("PCCSegment", 0);
-				container.SetDataValue("PCCState", (int)_PCCState);
+				container.SetDataValue("PCCState", (int)pccState);
 			}
 		}
 
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (PCCSegments.Count > 0) {
 				if (Driver.DataBus.MileageCounter.Distance > PCCSegments.Current.EndDistance) {
 					PCCSegments.MoveNext();
-					_PCCState = PCCStates.OutsideSegment;
+					pccState = PCCStates.OutsideSegment;
 				}
 			}
 		}
@@ -201,15 +201,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandlePCC(absTime, targetVelocity);
 			}
 			if (ADAS.EcoRoll != EcoRollType.None &&
-				(_PCCState == PCCStates.OutsideSegment || _PCCState == PCCStates.WithinSegment)
+				(pccState == PCCStates.OutsideSegment || pccState == PCCStates.WithinSegment)
 			) {
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
 			//if (ADAS.EcoRoll != EcoRollType.None) {
 			// todo MQ: keep something like this to prevent driver to turn on engine in every timestep (in combination with hybrids leads to errors!)
-			if (EcoRollState.State != EcoRollStates.EcoRollOn && _PCCState != PCCStates.UseCase1 &&
-				_PCCState != PCCStates.UseCase2) {
+			if (EcoRollState.State != EcoRollStates.EcoRollOn && pccState != PCCStates.UseCase1 &&
+				pccState != PCCStates.UseCase2) {
 				EngineOffTimestamp = null;
 				if (Driver.DataBus.PowertrainInfo.HasCombustionEngine && !Driver.DataBus.PowertrainInfo.HasElectricMotor) {
 					Driver.DataBus.EngineCtl.CombustionEngineOn = true;
@@ -290,28 +290,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			UpdatePCCState(targetVelocity);
 
-			switch (_PCCState) {
+			switch (pccState) {
 				case PCCStates.UseCase1:
 					if (vehicleSpeed <= targetVelocity - Driver.DriverData.PCC.UnderSpeed * 1.05) {
-						_PCCState = PCCStates.PCCinterrupt;
+						pccState = PCCStates.PCCinterrupt;
 					}
 					if (vehicleSpeed >= targetVelocity + 1.KMPHtoMeterPerSecond()) {
-						_PCCState = PCCStates.WithinSegment;
+						pccState = PCCStates.WithinSegment;
 					}
 					break;
 				case PCCStates.UseCase2:
 					if (vehicleSpeed < Driver.DriverData.PCC.MinSpeed || vehicleSpeed > targetVelocity + 1.KMPHtoMeterPerSecond()) {
-						_PCCState = PCCStates.WithinSegment;
+						pccState = PCCStates.WithinSegment;
 					}
 					break;
 				case PCCStates.PCCinterrupt:
 					if (vehicleSpeed >= targetVelocity - Driver.DriverData.PCC.UnderSpeed * 0.95) {
-						_PCCState = PCCStates.UseCase1;
+						pccState = PCCStates.UseCase1;
 					}
 					break;
 			}
 
-			switch (_PCCState) {
+			switch (pccState) {
 				case PCCStates.UseCase1:
 				case PCCStates.UseCase2:
 					switch (ADAS.EcoRoll) {
@@ -353,13 +353,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									&& distance <= PCCSegments.Current.EndDistance;
 
 			if (!withinPCCSegment) {
-				_PCCState = PCCStates.OutsideSegment;
+				pccState = PCCStates.OutsideSegment;
 				return;
 			}
-			if (_PCCState == PCCStates.OutsideSegment) {
-				_PCCState = PCCStates.WithinSegment;
+			if (pccState == PCCStates.OutsideSegment) {
+				pccState = PCCStates.WithinSegment;
 			}
-			if (_PCCState != PCCStates.WithinSegment)
+			if (pccState != PCCStates.WithinSegment)
 				return;
 
 			// check for PCC usecase 1 -------------------------------------------------
@@ -385,7 +385,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				&& speedSufficient
 				&& currentEnergyHigherThanEndUseCase1
 				&& currentEnergyHigherThanMin) {
-				_PCCState = PCCStates.UseCase1;
+				pccState = PCCStates.UseCase1;
 				return;
 			}
 
@@ -408,7 +408,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				&& currentEnergyHigherThanEndUseCase2
 				&& speedSufficientUseCase2
 				&& speedBelowTargetspeed) {
-				_PCCState = PCCStates.UseCase2;
+				pccState = PCCStates.UseCase2;
 			}
 		}
 
@@ -1043,7 +1043,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
-			if (DriverStrategy._PCCState == PCCStates.UseCase1 || DriverStrategy._PCCState == PCCStates.UseCase2) {
+			if (DriverStrategy.pccState == PCCStates.UseCase1 || DriverStrategy.pccState == PCCStates.UseCase2) {
 				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				if (response is ResponseSuccess) {
 					return response;
