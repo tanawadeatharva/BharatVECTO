@@ -483,8 +483,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			
-
 			CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * effectiveRatio, outTorque,
 				outAngularVelocity);
 			CurrentState.Gear = ModelData.GearList.First();

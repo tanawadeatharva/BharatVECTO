@@ -38,12 +38,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 				{
 					var entry = CreateEntry(row);
 					if (entry.Torque.IsGreaterOrEqual(0)) {
-						delaunayMap.AddPoint(-entry.Torque.Value() * count, // * ratio * efficiency,
-							entry.MotorSpeed.Value(), // / ratio,
+						delaunayMap.AddPoint(-entry.Torque.Value() * count,
+							entry.MotorSpeed.Value(), 
 							-entry.PowerElectrical.Value() * count);
 					} else {
-						delaunayMap.AddPoint(-entry.Torque.Value() * count, // * ratio / efficiency, 
-							entry.MotorSpeed.Value(), // / ratio,
+						delaunayMap.AddPoint(-entry.Torque.Value() * count,
+							entry.MotorSpeed.Value(),
 							-entry.PowerElectrical.Value() * count);
 					}
 				}
