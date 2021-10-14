@@ -1053,8 +1053,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var isOverspeedAllowed = DriverStrategy.IsOverspeedAllowed(targetVelocity, prohibitOverspeed);
 			var isDrivingWithOverspeed = DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(targetVelocity);
 			if (isOverspeedAllowed && isDrivingWithOverspeed) {
-				//driving in overspeed (VehicleSpeed >= targetVelocity)
-				
+				//we are driving in overspeed (VehicleSpeed >= targetVelocity)
+
 				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 				debug.Add(new { action = "Coast", response });
 
@@ -1062,22 +1062,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					&& response.Driver.Acceleration < 0 && response.Vehicle.VehicleSpeed <= targetVelocity) {
 					//do accelerate action if we would come below targetVelocity due to coasting
 					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", response });
+					debug.Add(new { action = "Accelerate(Success && Acc<0 && VehSpeed <= targetVelocity)", response });
 				}
 				if (response is ResponseOverload
 					&& DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
 					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Overload & ICE off) -> Accelerate", response });
+					debug.Add(new { action = "Accelerate(Overload && ICE off)", response });
 				}
 				if (response is ResponseOverload
 					&& !DataBus.PowertrainInfo.HasCombustionEngine) {
 					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Coast:(Overload & BEV) -> Accelerate", response });
+					debug.Add(new { action = "Accelerate(Overload && BEV)", response });
+				}
+				if (response is ResponseOverload) {
+					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Accelerate(Overload)", response });
 				}
 				return response;
 			} else {
-				//not driving in overspeed (VehicleSpeed < targetVelocity)
-				
+				//we are not driving in overspeed (VehicleSpeed < targetVelocity)
+
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.DisengageGearbox) {
 					var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add(new { action = "Coast", response });
