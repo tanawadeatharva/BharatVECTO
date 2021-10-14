@@ -28,6 +28,28 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests() => Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
+		[TestCase]
+		public void TestVECTO_1483()
+		{
+			var jobName = @"TestData\Integration\ADAS-PEV\VECTO-1483\E4_Group 5 LH_ll.vecto";
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				Validate = false,
+				SumData = sumContainer
+			};
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+		}
+
+
+
 		#region E2
 
 		[TestCase]
