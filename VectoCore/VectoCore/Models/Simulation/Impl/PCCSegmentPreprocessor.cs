@@ -28,7 +28,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void RunPreprocessing()
 		{
 			var slopes = new Dictionary<MeterPerSecond, Radian>();
-			var maxSpeed = VectoMath.Max(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed));
+			var maxOverspeed = VectoMath.Max(Container.RunData.DriverData.OverSpeed.OverSpeed, Container.RunData.DriverData.PCC.OverspeedUseCase3);
+			var maxSpeed = VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)+maxOverspeed);
+			
 			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
 			preProcessor.RunPreprocessing();
 
