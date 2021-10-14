@@ -22,11 +22,13 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
@@ -106,6 +108,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
 			IMultiStageViewModelFactory multiStageViewModelFactory,
+			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IOutputViewModel outputViewModel) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
@@ -114,6 +117,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_inputDataReader = inputDataReader;
 			_multiStageViewModelFactory = multiStageViewModelFactory;
 			_outputViewModel = outputViewModel;
+			_simFactoryFactory = simulatorFactoryFactory;
 
 			_outputMessage = new Progress<MessageEntry>((message) => {
 				_outputViewModel.AddMessage(message);
@@ -518,7 +522,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
+					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter);
+					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
 					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
 					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
 					runsFactory.Validate = Settings.Default.Validate;
@@ -793,6 +798,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _openAdditionalJobInformationCommand;
 		private IRelayCommand _openSourceFileCommand;
 		private IRelayCommand _showSourceFileInExplorerCommand;
+		private readonly ISimulatorFactoryFactory _simFactoryFactory;
 
 
 		public ICommand OpenSourceFileCommand
