@@ -44,9 +44,16 @@ namespace TUGraz.VectoCommon.Models {
 		public IResponse Response { get; set; }
 
 
-		public double Score =>
-			(FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
-			RampUpPenalty) / GearshiftPenalty;
+		public double Score
+		{
+			get
+			{
+				var cost = (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
+				RampUpPenalty);
+				var gearshift = cost.IsSmaller(0) ? GearshiftPenalty : 1 / GearshiftPenalty;
+				return cost * gearshift;
+			}
+		}
 
 		public double FuelCosts { get; set; }
 
