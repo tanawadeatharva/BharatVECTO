@@ -248,7 +248,7 @@
 						</Gear>
 						<Gear number="2">
 							<Ratio>1.000</Ratio>
-							<MaxOutShaftTorque>2000.00</MaxOutShaftTorque>
+							<MaxOutShaftTorque>2000</MaxOutShaftTorque>
 						</Gear>
 					</Gears>
 					<VoltageLevel>

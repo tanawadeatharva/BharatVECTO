@@ -885,11 +885,21 @@
 				<xs:annotation>
 					<xs:documentation>P498 - [Nm]</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minExclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="MaxOutShaftSpeed" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P499 - [1/min]</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minExclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="number" type="v1.0:GearboxGearNumberType" use="required">
