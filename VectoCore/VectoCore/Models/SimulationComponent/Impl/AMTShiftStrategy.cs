@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// PTO Active while drive (roadsweeping) shift rules
 			if (DataBus.DrivingCycleInfo.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
-				if (gear == DesiredGearRoadsweeping) {
+				if (gear.Equals(DesiredGearRoadsweeping)) {
 					return false;
 				}
 

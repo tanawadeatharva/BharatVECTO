@@ -2096,7 +2096,6 @@ End Sub
 '	Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
 '	Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
 '	Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
-'>>>>>>> VECTO_CERT/master
 	Friend WithEvents Label17 As System.Windows.Forms.Label
 	Friend WithEvents btDelMaxTorqueEntry As System.Windows.Forms.Button
 	Friend WithEvents btAddMaxTorqueEntry As System.Windows.Forms.Button
@@ -2119,7 +2118,6 @@ End Sub
     Friend WithEvents GroupBox9 As GroupBox
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
-'<<<<<<< HEAD
     Friend WithEvents cbAtEcoRollReleaseLockupClutch As CheckBox
     Friend WithEvents tpElectricComponents As TabPage
     Friend WithEvents gpElectricMotor As GroupBox

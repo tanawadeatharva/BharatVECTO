@@ -938,7 +938,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var job = input.JobInputData;
 
 		body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
-		body.Add("EngineOnlyMode", job.JobType);
+		body.Add("EngineOnlyMode", job.JobType == VectoSimulationJobType.EngineOnlySimulation);
 
 		
 			body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath));

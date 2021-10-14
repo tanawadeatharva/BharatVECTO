@@ -38,7 +38,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 
 namespace TUGraz.VectoCommon.InputData

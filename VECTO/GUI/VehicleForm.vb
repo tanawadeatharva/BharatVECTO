@@ -438,7 +438,7 @@ Public Class VehicleForm
 			if (declVehicle.TankSystem.HasValue) then
 				cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
 			End If
-
+        else
 			tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
 			tbPtoGear.Text = if (not vehicle.PTO_DriveGear is nothing, vehicle.PTO_DriveGear.Gear.ToString() ,"")
 		End If

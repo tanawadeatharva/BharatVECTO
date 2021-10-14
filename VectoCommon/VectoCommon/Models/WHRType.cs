@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TUGraz.VectoCore.Models.Declaration {
+namespace TUGraz.VectoCommon.Models {
 
 	[Flags]
 	public enum WHRType

@@ -76,9 +76,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			
-			
-
 			var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(gbxType);
