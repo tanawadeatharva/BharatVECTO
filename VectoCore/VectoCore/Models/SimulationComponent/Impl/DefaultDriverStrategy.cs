@@ -1044,7 +1044,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
 			if (DriverStrategy._PCCState == PCCStates.UseCase1 || DriverStrategy._PCCState == PCCStates.UseCase2) {
-				return Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+				var response = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+				if (response is ResponseSuccess) {
+					return response;
+				}
 			}
 
 			var isOverspeedAllowed = DriverStrategy.IsOverspeedAllowed(targetVelocity, prohibitOverspeed);
