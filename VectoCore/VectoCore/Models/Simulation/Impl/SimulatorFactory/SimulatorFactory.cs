@@ -71,8 +71,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
-			get => CreateFollowUpSimulatorFactory ? _followingSimulatorFactoryCreator?.Invoke() : null;
+			get
+			{
+				if (!CreateFollowUpSimulatorFactory)
+					return null;
+
+
+				Log.Info("Starting next Simulation Step\n");
+				return _followingSimulatorFactoryCreator?.Invoke();
+
+			}
 		}
+
 		public bool CreateFollowUpSimulatorFactory { get; set; } = false;
 		protected readonly ExecutionMode _mode;
 

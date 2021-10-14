@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IOutputDataWriter writer,
 			IDeclarationReport declarationReport, 
 			IVTPReport vtpReport,
+			bool validate,
 			IXMLInputDataReader xmlInputDataReader,
-			ISimulatorFactoryFactory simulatorFactoryFactory,
-			bool validate) : base(ExecutionMode.Declaration, writer, validate)
+			ISimulatorFactoryFactory simulatorFactoryFactory
+			) : base(ExecutionMode.Declaration, writer, validate)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
@@ -38,7 +40,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (_simulate) {
 				CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
 			}
-		
+		}
+
+		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider,
+			IOutputDataWriter writer, IXMLInputDataReader xmlInputDataReader,
+			ISimulatorFactoryFactory simulatorFactoryFactory, bool validate) : this(
+			dataProvider: dataProvider, 
+			declarationReport: null,
+			writer: writer,
+			vtpReport: null, 
+			validate: true,
+			xmlInputDataReader: xmlInputDataReader, 
+			simulatorFactoryFactory: simulatorFactoryFactory)
+		{
+
 		}
 
 		private bool CanBeSimulated(IInputDataProvider dataProvider)
