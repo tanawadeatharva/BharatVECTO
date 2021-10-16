@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -13,6 +14,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
     public class SimulatorFactoryEngineering : SimulatorFactory
     {
+		[UsedImplicitly]
         public SimulatorFactoryEngineering(IInputDataProvider dataProvider, IOutputDataWriter writer, bool validate) : base(ExecutionMode.Engineering, writer, validate)
         {
             CreateEngineeringDataReader(dataProvider);

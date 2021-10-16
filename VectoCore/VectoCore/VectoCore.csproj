@@ -439,6 +439,7 @@
     <Compile Include="Models\SimulationComponent\Impl\ATClutchInfo.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
     <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\IFollowUpSimulatorFactoryCreator.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryDeclaration.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryEngineering.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.ServiceModel.PeerResolvers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using JetBrains.Annotations;
 using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -24,6 +26,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
     {
 		private readonly IXMLInputDataReader _xmlInputDataReader;
 		private readonly ISimulatorFactoryFactory _simFactoryFactory;
+		private IInputDataProvider _currentStageInputData;
+		private IDeclarationReport _currentStageDeclarationReport;
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
 			IOutputDataWriter writer,
@@ -36,12 +40,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
+			_currentStageInputData = dataProvider;
+			_currentStageDeclarationReport = declarationReport;
+			_followUpSimulatorFactoryCreator = CreateFollowUpFactoryCreator();
+			UpdateCurrentStageInput();
 			_simulate = CanBeSimulated(dataProvider);
 			if (_simulate) {
-				CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
+				CreateDeclarationDataReader(_currentStageInputData, _currentStageDeclarationReport, vtpReport);
 			}
 		}
 
+		/// <summary>
+		/// Modifies the input and output of the current simulation step based on the Following step
+		/// </summary>
+		private void UpdateCurrentStageInput()
+		{
+			ReportWriter = _followUpSimulatorFactoryCreator?.CurrentStageOutputDataWriter ??
+										ReportWriter;
+
+			_currentStageDeclarationReport = _followUpSimulatorFactoryCreator?.CurrentStageDeclarationReport ??
+											_currentStageDeclarationReport;
+
+			_currentStageInputData = _followUpSimulatorFactoryCreator?.CurrentStageInputData ??
+									_currentStageInputData;
+		}
+
+		[UsedImplicitly]
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider,
 			IOutputDataWriter writer, IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory, bool validate) : this(
@@ -75,6 +99,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			return true;
 		}
 
+		private IFollowUpSimulatorFactoryCreator CreateFollowUpFactoryCreator()
+		{
+			switch (_currentStageInputData) {
+				case IMultistageBusInputDataProvider multistageBusInputDataProvider:
+					break;
+				case IMultistagePrimaryAndStageInputDataProvider multistagePrimaryAndStageInputDataProvider:
+					return new RunInterimAfterPrimary(
+							multistagePrimaryAndStageInputDataProvider, 
+							ReportWriter,
+						_simFactoryFactory, _xmlInputDataReader, Validate);
+				case IMultiStageTypeInputData multiStageTypeInputData:
+					break;
+				default:
+					return null;
+			}
+			return null;
+		}
+
 		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport, IVTPReport vtpReport)
 		{
 			switch (dataProvider) {
@@ -105,7 +147,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					{
 						var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ReportWriter);
 
-						//DataReader = CreateRunDataReader(multistageVifInputData, report);
 						DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 
 						CreateFollowUpSimulatorFactory = true;
@@ -118,9 +159,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 							return _simFactoryFactory.Factory(_mode, nextStageInput, ReportWriter, report, vtpReport,
 								Validate);
 							
-							//#pragma warning disable 618
-//							return CreateSimulatorFactory(_mode, new XMLDeclarationVIFInputData(inputData as IMultistageBusInputDataProvider, null), ReportWriter, report, vtpReport, Validate);
-//#pragma warning restore 618
 							};
 
 					}
@@ -128,55 +166,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				}
 				case IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData: {
 
+					throw new VectoException("Why are we here ? ");
+                        //TODO: REPLACE WITH RunInterimAfterPrimary
+                        //Create Temporary Writer to hold the files only in Memory
+#pragma warning disable 162
+						var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
+                        var originalReportWriter = ReportWriter;
+                        ReportWriter = tempOutputWriter;
+                        var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter, true);
 
-					//Create Temporary Writer to hold the files only in Memory
-					var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
-					var originalReportWriter = ReportWriter;
-					ReportWriter = tempOutputWriter;
-					var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter, true);
+
+                        DataReader = CreateRunDataReader(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
 
 
-					DataReader = CreateRunDataReader(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
+                        CreateFollowUpSimulatorFactory = true;
+                        _followingSimulatorFactoryCreator = () =>
+                        {
+                            try
+                            {
+                                var primaryInputData = _xmlInputDataReader.CreateDeclaration(tempOutputWriter
+                                    .GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
 
+                                var vifInputData = new XMLDeclarationVIFInputData(
+                                    primaryInputData as IMultistageBusInputDataProvider,
+                                    multiStagePrimaryAndStageInputData.StageInputData);
 
-					CreateFollowUpSimulatorFactory = true;
-					_followingSimulatorFactoryCreator = () => {
-						try
-						{
-							var primaryInputData = _xmlInputDataReader.CreateDeclaration(tempOutputWriter
-								.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
+                                var manStagesCount =
+                                    vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
 
-							var vifInputData = new XMLDeclarationVIFInputData(
-								primaryInputData as IMultistageBusInputDataProvider,
-								multiStagePrimaryAndStageInputData.StageInputData);
+                                originalReportWriter.NumberOfManufacturingStages = manStagesCount;
 
-							var manStagesCount =
-								vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
+                                return _simFactoryFactory.Factory(_mode, vifInputData, originalReportWriter, null,
+                                    vtpReport, Validate);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error($"Failed to create additional Simulation run: {ex.Message}");
+                                return null;
+                            }
+                        };
+                        return;
+#pragma warning restore 162
 
-							originalReportWriter.NumberOfManufacturingStages = manStagesCount;
-
-							return _simFactoryFactory.Factory(_mode, vifInputData, originalReportWriter, null,
-								vtpReport, Validate);
-
-//#pragma warning disable 618
-//							var factory = CreateSimulatorFactory(_mode,
-//#pragma warning restore 618
-//								vifInputData, 
-//								originalReportWriter,
-//								null,
-//								vtpReport,
-//								Validate);
-
-//							return factory;
-						}
-						catch (Exception ex)
-						{
-							Log.Error($"Failed to create additional Simulation run: {ex.Message}");
-							return null;
-						}
-					};
-					return;
-				}
+					}
 				default:
 					throw new VectoException("Unknown InputData for Declaration Mode!");
 			}

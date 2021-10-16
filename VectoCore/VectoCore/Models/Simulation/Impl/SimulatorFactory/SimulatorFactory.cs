@@ -66,16 +66,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
 
 		protected Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
+		protected IFollowUpSimulatorFactoryCreator _followUpSimulatorFactoryCreator = null;
 
 		protected bool _simulate = true;
+
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
 			get
 			{
-				if (!CreateFollowUpSimulatorFactory)
-					return null;
+				//if (!CreateFollowUpSimulatorFactory)
+				//	return null;
 
+
+				if (_followUpSimulatorFactoryCreator != null) {
+					return _followUpSimulatorFactoryCreator.GetNextFactory();
+				}
 
 				Log.Info("Starting next Simulation Step\n");
 				return _followingSimulatorFactoryCreator?.Invoke();
@@ -92,9 +98,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
 		{
-			lock (_kernelLock) {
-				if (_kernel == null) {
-					_kernel = new StandardKernel(new VectoNinjectModule());
+			if (_kernel == null) {
+				lock (_kernelLock) {
+					if (_kernel == null) {
+						_kernel = new StandardKernel(new VectoNinjectModule());
+					}
 				}
 			}
 			return _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, writer, declarationReport, vtpReport, validate);
