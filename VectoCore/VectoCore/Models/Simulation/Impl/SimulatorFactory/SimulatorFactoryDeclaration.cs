@@ -102,14 +102,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IFollowUpSimulatorFactoryCreator CreateFollowUpFactoryCreator()
 		{
 			switch (_currentStageInputData) {
-				case IMultistageBusInputDataProvider multistageBusInputDataProvider:
-					break;
 				case IMultistagePrimaryAndStageInputDataProvider multistagePrimaryAndStageInputDataProvider:
-					return new RunInterimAfterPrimary(
+					return new InterimAfterPrimaryFactoryCreator(
 							multistagePrimaryAndStageInputDataProvider, 
 							ReportWriter,
 						_simFactoryFactory, _xmlInputDataReader, Validate);
-				case IMultiStageTypeInputData multiStageTypeInputData:
+				case IMultistageVIFInputData multistageVifInputData:
+					if (multistageVifInputData.VehicleInputData != null) {
+						return new CompletedAfterInterimPrimaryFactoryCreator(
+							multistageVifInputData,
+							ReportWriter,
+							_currentStageDeclarationReport,
+							_xmlInputDataReader,
+							_simFactoryFactory, Validate);
+					}
 					break;
 				default:
 					return null;
@@ -133,41 +139,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					return;
 				}
 				case IMultistageVIFInputData multistageVifInputData: {
-					if (multistageVifInputData.VehicleInputData == null)
-					{
-						var reportCompleted = new XMLDeclarationReportCompletedVehicle(ReportWriter, true)
-						{
-							PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
-						};
-						DataReader = new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-							multistageVifInputData.MultistageJobInputData,
-							reportCompleted);
-					}
-					else
-					{
-						var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ReportWriter);
-
-						DataReader = new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
-
-						CreateFollowUpSimulatorFactory = true;
-							_followingSimulatorFactoryCreator = () => {
-							//Take output from this stage and provide it as input for next stage.
-							var output = _xmlInputDataReader.CreateDeclaration(
-									XmlReader.Create(ReportWriter.MultistageXmlReport.ToString().ToStream())) as IMultistageBusInputDataProvider;
-							var nextStageInput = new XMLDeclarationVIFInputData(output, null);
-
-							return _simFactoryFactory.Factory(_mode, nextStageInput, ReportWriter, report, vtpReport,
-								Validate);
-							
-							};
-
-					}
+					DataReader = CreateRunDataReader(multistageVifInputData, declarationReport);
 					return;
 				}
 				case IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData: {
 
 					throw new VectoException("Why are we here ? ");
-                        //TODO: REPLACE WITH RunInterimAfterPrimary
+					
                         //Create Temporary Writer to hold the files only in Memory
 #pragma warning disable 162
 						var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
@@ -211,6 +189,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					}
 				default:
 					throw new VectoException("Unknown InputData for Declaration Mode!");
+			}
+		}
+
+		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport declarationReport)
+		{
+			if (multistageVifInputData.VehicleInputData == null)
+			{
+				var reportCompleted = new XMLDeclarationReportCompletedVehicle(ReportWriter, true)
+				{
+					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
+				};
+				return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
+					multistageVifInputData.MultistageJobInputData,
+					reportCompleted);
+			} else {
+				var report = declarationReport ?? new XMLDeclarationReportMultistageBusVehicle(ReportWriter);
+				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
+
+
 			}
 		}
 
