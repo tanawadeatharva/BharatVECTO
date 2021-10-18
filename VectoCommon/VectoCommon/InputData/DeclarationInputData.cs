@@ -749,6 +749,8 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
 		TableData DragCurve { get; }
+
+		TableData Conditioning { get; }
 		
 		double OverloadRecoveryFactor { get; }
 	}
@@ -815,6 +817,8 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
 		TableData DragCurve { get; }
+
+		TableData Conditioning { get; }
 	}
 
 	public interface IGearEntry

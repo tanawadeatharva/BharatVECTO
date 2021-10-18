@@ -1735,6 +1735,42 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conditioning.
+        /// </summary>
+        public static string Conditioning {
+            get {
+                return ResourceManager.GetString("Conditioning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to coolantTempInlet.
+        /// </summary>
+        public static string Conditioning_CoolantTempInlet {
+            get {
+                return ResourceManager.GetString("Conditioning_CoolantTempInlet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to coolingPower.
+        /// </summary>
+        public static string Conditioning_CoolingPower {
+            get {
+                return ResourceManager.GetString("Conditioning_CoolingPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string Conditioning_Entry {
+            get {
+                return ResourceManager.GetString("Conditioning_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CorrectedActualMass.
         /// </summary>
         public static string CorrectedActualMass {

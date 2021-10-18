@@ -12,7 +12,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -305,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components);
 			Assert.IsNotNull(vehicle.Components.EngineInputData);
 			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
-			TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First());
+
 			Assert.IsNull(vehicle.Components.IEPC);
 			Assert.IsNotNull(vehicle.Components.GearboxInputData);
 			TestTorqueConverter(vehicle);
@@ -313,6 +312,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//optional test
 			if (testDir == Optional_TESTS_DIR)
 			{
+				TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First(), true);
 				Assert.IsNull(vehicle.TankSystem);
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
@@ -323,6 +323,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 			else
 			{
+				TestElectricMachinesData(vehicle.Components.ElectricMachines.Entries.First());
 				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
@@ -345,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#region Test Electric Machines Reader
 
-		private void TestElectricMachinesData(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachineEntry)
+		private void TestElectricMachinesData(ElectricMachineEntry<IElectricMotorDeclarationInputData> eMachineEntry, bool optional = false)
 		{
 			Assert.IsNotNull(eMachineEntry);
 			var eMachine = eMachineEntry.ElectricMachine;
@@ -371,6 +372,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestVoltageLevel(eMachine.VoltageLevels);
 			TestDragCurve(eMachine.DragCurve);
+			TestConditioning(eMachine.Conditioning, optional);
 		}
 
 		private void TestVoltageLevel(IList<IElectricMotorVoltageLevel> voltageLevels)
@@ -423,6 +425,20 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			Assert.AreEqual(outShaftSpeed, row[XMLNames.DragCurve_OutShaftSpeed]);
 			Assert.AreEqual(dragTorque, row[XMLNames.DragCurve_DragTorque]);
+		}
+
+		private void TestConditioning(TableData eMachineConditioning , bool optional)
+		{
+			if(optional)
+				Assert.IsNull(eMachineConditioning);
+			else
+				TestConditioningEntry("30", "5000", eMachineConditioning.Rows[0]);
+		}
+
+		private void TestConditioningEntry(string coolantTempInlet, string coolingPower, DataRow row)
+		{
+			Assert.AreEqual(coolantTempInlet, row[XMLNames.Conditioning_CoolantTempInlet]);
+			Assert.AreEqual(coolingPower, row[XMLNames.Conditioning_CoolingPower]);
 		}
 
 		#endregion
@@ -1266,6 +1282,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestGearsData(iepcData.Gears);
 			TestVoltageLevel(iepcData.VoltageLevels);
 			TestDragCurve(iepcData.DragCurve);
+
+			
 		}
 
 		private void TestGearsData(IList<IGearEntry> gears)

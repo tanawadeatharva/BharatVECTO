@@ -82,6 +82,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData DragCurve => ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve");
 
+		public virtual TableData Conditioning =>
+			ReadTableData(Body.GetEx<string>("Conditioning"), "ElectricMotor Conditioning", false);
+
 		public virtual TableData EfficiencyMap => ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map");
 
 		public ElectricMachineType ElectricMachineType { get; }

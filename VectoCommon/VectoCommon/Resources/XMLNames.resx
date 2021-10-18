@@ -1845,4 +1845,16 @@
   <data name="Vehicle_OvcHev" xml:space="preserve">
     <value>OvcHev</value>
   </data>
+  <data name="Conditioning" xml:space="preserve">
+    <value>Conditioning</value>
+  </data>
+  <data name="Conditioning_CoolantTempInlet" xml:space="preserve">
+    <value>coolantTempInlet</value>
+  </data>
+  <data name="Conditioning_CoolingPower" xml:space="preserve">
+    <value>coolingPower</value>
+  </data>
+  <data name="Conditioning_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
 </root>

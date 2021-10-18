@@ -274,8 +274,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLElectricMachinesDeclarationInputData>().To<XMLElectricMachinesDeclarationInputDataProvider>()
 				.Named(XMLElectricMachinesDeclarationInputDataProvider.QUALIFIED_GEN_XSD_TYPE);
 
-			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorDeclarationInputDataProvider>()
-				.Named(XMLElectricMotorDeclarationInputDataProvider.QUALIFIED_XSD_TYPE);
+			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorDeclarationInputDataProviderV2101>()
+				.Named(XMLElectricMotorDeclarationInputDataProviderV2101.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorIHPCDeclarationInputDataProviderV2101>()
+				.Named(XMLElectricMotorIHPCDeclarationInputDataProviderV2101.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV2101>()
+				.Named(XMLElectricMotorIEPCIInputDataProviderV2101.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputData>()
 				.Named(XMLElectricStorageSystemDeclarationInputData.QUALIFIED_XSD_TYPE);
@@ -289,8 +295,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV2101>()
 				.Named(XMLADCDeclarationInputDataV2101.QUALIFIED_XSD_TYPE);
 			
-			Bind<IXMLIEPCInputData>().To<XMLDeclarationIEPCDataProviderV2101>().Named(XMLDeclarationIEPCDataProviderV2101.QUALIFIED_XSD_TYPE);
-
 			Bind<IXMLAuxiliaryReader>().To<XMLComponentReaderV210_Lorry>()
 				.Named(XMLComponentReaderV210_Lorry.AUXILIARIES_READER_QUALIFIED_XSD_TYPE);
 
