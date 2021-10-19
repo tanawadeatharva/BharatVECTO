@@ -761,8 +761,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData FullLoadCurve { get; } //MaxTorqueCurve
 
-		TableData EfficiencyMap { get; } //PowerMap
-
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
 

@@ -96,7 +96,7 @@ public class JSONFileWriter : IOutputFileWriter
 			vlevel.Add("Voltage", entry.VoltageLevel.Value());
 			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
 			// vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
-			vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
+			// vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename))); //PowerMap
 			vlevels.Add(vlevel);
         }
 
