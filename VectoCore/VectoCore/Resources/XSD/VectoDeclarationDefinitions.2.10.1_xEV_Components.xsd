@@ -512,7 +512,13 @@
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
-							<xs:attribute name="gear" use="required"/>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -729,11 +735,18 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
-					<xs:element name="PowerMap">
+					<xs:element name="PowerMap" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -751,11 +764,18 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="PowerMap">
+					<xs:element name="PowerMap" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
