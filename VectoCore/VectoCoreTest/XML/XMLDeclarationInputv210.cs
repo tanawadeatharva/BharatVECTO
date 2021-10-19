@@ -380,25 +380,50 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, voltageLevels.Count);
 			var voltageLevel = voltageLevels[0];
 			Assert.AreEqual(400.SI<Volt>(), voltageLevel.VoltageLevel);
-
-			TestMaxTorqueCurveEntry("0.00","450.00","-450.00", voltageLevel.FullLoadCurve.Rows[0]);
-			TestMaxTorqueCurveEntry("4000.00", "100.00", "-100.00", voltageLevel.FullLoadCurve.Rows[1]);
-
-			TestPowerMapEntry("0.00", "400.00", "1000.00", voltageLevel.EfficiencyMap.Rows[0]);
-			TestPowerMapEntry("0.00", "-400.00", "-1000.00", voltageLevel.EfficiencyMap.Rows[1]);
-			TestPowerMapEntry("4000.00", "4000.00", "20000.00", voltageLevel.EfficiencyMap.Rows[2]);
-			TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", voltageLevel.EfficiencyMap.Rows[3]);
+			
+			TestMaxTorqueCurve(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
 
 			voltageLevel = voltageLevels[1];
 			Assert.AreEqual(600.SI<Volt>(), voltageLevel.VoltageLevel);
 
-			TestMaxTorqueCurveEntry("0.00", "450.00", "-450.00", voltageLevel.FullLoadCurve.Rows[0]);
-			TestMaxTorqueCurveEntry("4000.00", "100.00", "-100.00", voltageLevel.FullLoadCurve.Rows[1]);
+			TestMaxTorqueCurve(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
 
-			TestPowerMapEntry("0.00", "400.00", "1000.00", voltageLevel.EfficiencyMap.Rows[0]);
-			TestPowerMapEntry("0.00", "-400.00", "-1000.00", voltageLevel.EfficiencyMap.Rows[1]);
-			TestPowerMapEntry("4000.00", "4000.00", "20000.00", voltageLevel.EfficiencyMap.Rows[2]);
-			TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", voltageLevel.EfficiencyMap.Rows[3]);
+		}
+
+		private void TestPowerMap(IList<IElectricMotorPowerMap> powerMap)
+		{
+			for (int i = 1; i <= powerMap.Count; i++) {
+				Assert.AreEqual(i, powerMap[i-1].Gear);
+			}
+
+			if (powerMap.Count >= 1) {
+				TestPowerMapEntry("0.00", "400.00", "1000.00",  powerMap[0].PowerMap.Rows[0]);
+				TestPowerMapEntry("0.00", "-400.00", "-1000.00", powerMap[0].PowerMap.Rows[1]);
+				TestPowerMapEntry("4000.00", "4000.00", "20000.00", powerMap[0].PowerMap.Rows[2]);
+				TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", powerMap[0].PowerMap.Rows[3]);
+			}
+			if (powerMap.Count >= 2) {
+				TestPowerMapEntry("0.00", "500.00", "1100.00", powerMap[1].PowerMap.Rows[0]);
+				TestPowerMapEntry("0.00", "-500.00", "-1100.00", powerMap[1].PowerMap.Rows[1]);
+				TestPowerMapEntry("5000.00", "5000.00", "30000.00", powerMap[1].PowerMap.Rows[2]);
+				TestPowerMapEntry("5000.00", "-5000.00", "-30000.00", powerMap[1].PowerMap.Rows[3]);
+			}
+
+			if (powerMap.Count == 3) {
+				TestPowerMapEntry("0.00", "600.00", "1200.00", powerMap[2].PowerMap.Rows[0]);
+				TestPowerMapEntry("0.00", "-600.00", "-1200.00", powerMap[2].PowerMap.Rows[1]);
+				TestPowerMapEntry("6000.00", "6000.00", "40000.00", powerMap[2].PowerMap.Rows[2]);
+				TestPowerMapEntry("6000.00", "-6000.00", "-40000.00", powerMap[2].PowerMap.Rows[3]);
+			}
+		}
+
+
+		private void TestMaxTorqueCurve(TableData torqueCurve)
+		{
+			TestMaxTorqueCurveEntry("0.00", "450.00", "-450.00", torqueCurve.Rows[0]);
+			TestMaxTorqueCurveEntry("4000.00", "100.00", "-100.00", torqueCurve.Rows[1]);
 		}
 		
 		private void TestMaxTorqueCurveEntry(string outShaftSpeed, string maxTorque, string minTorque, DataRow row)
