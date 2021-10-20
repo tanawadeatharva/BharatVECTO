@@ -81,15 +81,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		}
 
 		[UsedImplicitly]
-		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider,
+		public SimulatorFactoryDeclaration(
+			IInputDataProvider dataProvider,
 			IOutputDataWriter writer,
-			bool validate, IXMLInputDataReader xmlInputDataReader,
+			bool validate, 
+			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory, IXMLDeclarationReportFactory xmlDeclarationReportFactory) : this(
 			dataProvider: dataProvider, 
 			declarationReport: null,
 			writer: writer,
 			vtpReport: null, 
-			validate: true,
+			validate: validate,
 			xmlInputDataReader: xmlInputDataReader, 
 			simulatorFactoryFactory: simulatorFactoryFactory,
 			xmlDeclarationReportFactory: xmlDeclarationReportFactory)
