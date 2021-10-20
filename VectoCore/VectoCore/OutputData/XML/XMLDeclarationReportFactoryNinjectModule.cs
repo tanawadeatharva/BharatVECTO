@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public class XMLReportFactoryNinjectModule : AbstractNinjectModule
+	public class XMLDeclarationReportFactoryNinjectModule : AbstractNinjectModule
 	{
 		#region Overrides of NinjectModule
 
