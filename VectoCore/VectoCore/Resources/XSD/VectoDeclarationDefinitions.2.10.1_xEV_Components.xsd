@@ -735,18 +735,11 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
-					<xs:element name="PowerMap" maxOccurs="unbounded">
+					<xs:element name="PowerMap">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
-							<xs:attribute name="gear" use="required">
-								<xs:simpleType>
-									<xs:restriction base="xs:int">
-										<xs:minInclusive value="1"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -764,18 +757,11 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="PowerMap" maxOccurs="unbounded">
+					<xs:element name="PowerMap">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
-							<xs:attribute name="gear" use="required">
-								<xs:simpleType>
-									<xs:restriction base="xs:int">
-										<xs:minInclusive value="1"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -892,6 +878,34 @@
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="IEPCSystemVoltageLevelMeasuredType">
+		<xs:complexContent>
+			<xs:extension base="v2.10.1:AbstractElectricMachineSystemVoltageLevelType">
+				<xs:sequence>
+					<xs:element name="Voltage" type="v2.10.1:VoltageLevelVoltageType">
+						<xs:annotation>
+							<xs:documentation>P467, P500 - [V]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
+					<xs:element name="PowerMap" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
+							</xs:sequence>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="IEPCGearDeclarationType">
 		<xs:sequence>
 			<xs:element name="Ratio" type="v1.0:GearboxGearRatioType">
@@ -987,12 +1001,19 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Gears" type="v2.10.1:AbstractIEPCGearsDeclarationType"/>
-					<xs:element name="VoltageLevel" type="v2.10.1:ElectricMachineSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
-					<xs:element name="DragCurve">
+					<xs:element name="VoltageLevel" type="v2.10.1:IEPCSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
+					<xs:element name="DragCurve" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="Conditioning" minOccurs="0">
@@ -1056,6 +1077,49 @@
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="BatteryMaxCurrentType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="BatterySystem/CurrentLimits">530</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/CurrentLimits">531</vectoParam:parameterId>
+					<vectoParam:unit>A</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minInclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BatteryOCVType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="BatterySystem/OCV">523</vectoParam:parameterId>
+					<vectoParam:unit>V</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minExclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BatterySoCType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="BatterySystem/OCV">522</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">524</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/CurrentLimits">529</vectoParam:parameterId>
+					<vectoParam:unit>%</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="BatteryTypeType">
 		<xs:annotation>
 			<xs:appinfo>
@@ -1068,6 +1132,47 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="HPBS"/>
 			<xs:enumeration value="HEBS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CapacitanceType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
+					<vectoParam:unit>F</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minExclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CapacitorMaxCurrentType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="CapacitorSystem">542</vectoParam:parameterId>
+					<vectoParam:parameterId component="CapacitorSystem">543</vectoParam:parameterId>
+					<vectoParam:unit>A</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minExclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CapacitorVoltageType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
+					<vectoParam:parameterId component="CapacitorSystem">541</vectoParam:parameterId>
+					<vectoParam:unit>V</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minInclusive value="0.00"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="CertificationMethodType">
@@ -1142,6 +1247,22 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
 			<xs:enumeration value="IHPC Type 1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InternalResistanceType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="BatterySystem/DCIR">525</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">526</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">527</vectoParam:parameterId>
+					<vectoParam:parameterId component="BatterySystem/DCIR">528</vectoParam:parameterId>
+					<vectoParam:unit>mOhm</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minExclusive value="0.00"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MaxTorqueType">
@@ -1368,45 +1489,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="IEPCPowerRatingsSequenceGroup">
-		<xs:sequence>
-			<xs:element name="R85RatedPower" type="v2.10.1:R85RatedPowerType">
-				<xs:annotation>
-					<xs:documentation>P485 - [W]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="RotationalInertia" type="v2.10.1:RotationalInertiaType">
-				<xs:annotation>
-					<xs:documentation>P486 [ kgm2]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P487 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P488 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P489 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P490 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
-				<xs:annotation>
-					<xs:documentation>P491 - [s]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:group>
 	<xs:group name="IEPCCommonParametersSequenceGroup">
 		<xs:sequence>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
@@ -1471,104 +1553,43 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:simpleType name="InternalResistanceType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="BatterySystem/DCIR">525</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/DCIR">526</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/DCIR">527</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/DCIR">528</vectoParam:parameterId>
-					<vectoParam:unit>mOhm</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minExclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="BatterySoCType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="BatterySystem/OCV">522</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/DCIR">524</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/CurrentLimits">529</vectoParam:parameterId>
-					<vectoParam:unit>%</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="xs:int">
-			<xs:minInclusive value="0"/>
-			<xs:maxInclusive value="100"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="BatteryMaxCurrentType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="BatterySystem/CurrentLimits">530</vectoParam:parameterId>
-					<vectoParam:parameterId component="BatterySystem/CurrentLimits">531</vectoParam:parameterId>
-					<vectoParam:unit>A</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minInclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="BatteryOCVType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="BatterySystem/OCV">523</vectoParam:parameterId>
-					<vectoParam:unit>V</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minExclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="CapacitorVoltageType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
-					<vectoParam:parameterId component="CapacitorSystem">541</vectoParam:parameterId>
-					<vectoParam:unit>V</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minInclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="CapacitorMaxCurrentType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="CapacitorSystem">542</vectoParam:parameterId>
-					<vectoParam:parameterId component="CapacitorSystem">543</vectoParam:parameterId>
-					<vectoParam:unit>A</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minExclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="CapacitanceType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
-					<vectoParam:unit>F</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-			<xs:minExclusive value="0.00"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:group name="IEPCPowerRatingsSequenceGroup">
+		<xs:sequence>
+			<xs:element name="R85RatedPower" type="v2.10.1:R85RatedPowerType">
+				<xs:annotation>
+					<xs:documentation>P485 - [W]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RotationalInertia" type="v2.10.1:RotationalInertiaType">
+				<xs:annotation>
+					<xs:documentation>P486 [ kgm2]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+				<xs:annotation>
+					<xs:documentation>P487 - [Nm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+				<xs:annotation>
+					<xs:documentation>P488 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+				<xs:annotation>
+					<xs:documentation>P489 - [Nm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+				<xs:annotation>
+					<xs:documentation>P490 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+				<xs:annotation>
+					<xs:documentation>P491 - [s]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 </xs:schema>
