@@ -515,8 +515,11 @@
     </Compile>
     <Compile Include="OutputData\XML\GroupWriter\GroupWriter.cs" />
     <Compile Include="OutputData\XML\GroupWriter\IGroupWriterFactory.cs" />
+    <Compile Include="OutputData\XML\IXMLReportFactory.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationNamespaces.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactory.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactoryNinjectModule.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportCompletedBus.cs" />
