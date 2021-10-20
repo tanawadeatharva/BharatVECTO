@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					break;
 					
 			}
-			throw new VectoException($"Couldnot create DeclarationReport for {input.GetType()}");
+			throw new VectoException($"Could not create Declaration Report for {input.GetType()}");
 		}
 
 		public IVTPReport CreateVTPReport(IInputDataProvider input, IOutputDataWriter outputWriter)
