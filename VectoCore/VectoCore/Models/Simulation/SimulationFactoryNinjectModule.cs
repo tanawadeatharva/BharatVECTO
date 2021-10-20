@@ -44,7 +44,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
-	public class SimulationFactoryNinjectModule : NinjectModule
+	public class SimulationFactoryNinjectModule : VectoNinjectModule
 	{
 		#region Overrides of NinjectModule
 
@@ -59,9 +59,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IDeclarationReport>().To<NullDeclarationReport>();
 			Bind<IVTPReport>().To<NullVTPReport>();
 
-			//if (Kernel != null && !Kernel.HasModule(typeof(PowertrainBuilderInjectModule).FullName)) {
-			//	Kernel.Load(new[] { new PowertrainBuilderInjectModule() });
-			//}
 		}
 
 		#endregion

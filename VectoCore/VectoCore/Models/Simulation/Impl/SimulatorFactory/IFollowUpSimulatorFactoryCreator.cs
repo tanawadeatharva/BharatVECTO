@@ -44,7 +44,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public abstract ISimulatorFactory GetNextFactory();
 		public abstract IOutputDataWriter CurrentStageOutputDataWriter { get; }
 		public abstract IDeclarationReport CurrentStageDeclarationReport { get; }
-
 		public abstract IInputDataProvider CurrentStageInputData { get; }
 
 		#endregion
@@ -58,9 +57,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private readonly IDeclarationReport _currentStageDeclarationReport = null;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private readonly IMultistagePrimaryAndStageInputDataProvider _originalStageInputData;
+		private readonly IDeclarationReport _originalDeclarationReport;
 
 		public InterimAfterPrimaryFactoryCreator(IMultistagePrimaryAndStageInputDataProvider originalStageInputData,
 			IOutputDataWriter originalReportWriter, 
+			IDeclarationReport originalDeclarationReport,
 			ISimulatorFactoryFactory simFactoryFactory, 
 			IXMLInputDataReader inputDataReader, bool validate) : base(simFactoryFactory, validate)
 		{
@@ -68,6 +69,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			_originalStageInputData = originalStageInputData;
 			_inputDataReader = inputDataReader;
 			_originalOriginalReportWriter = originalReportWriter;
+			_originalDeclarationReport = originalDeclarationReport;
 			_currentStageOutputDataWriter =
 				new TempFileOutputWriter(originalReportWriter, ReportType.DeclarationReportManufacturerXML)
 				;
@@ -93,8 +95,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				nextStageInput.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
 
 			_originalOriginalReportWriter.NumberOfManufacturingStages = manStagesCount;
-
-			return _simulatorFactoryFactory.Factory(ExecutionMode.Declaration, nextStageInput, _originalOriginalReportWriter, null,
+			return _simulatorFactoryFactory.Factory(ExecutionMode.Declaration, nextStageInput, _originalOriginalReportWriter, _originalDeclarationReport,
 				null, _validate);
 		}
 
@@ -104,7 +105,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		#region Overrides of FollowUpSimulatorFactoryCreator
 
 		public override IInputDataProvider CurrentStageInputData => _originalStageInputData.PrimaryVehicle;
-
 		public override IOutputDataWriter CurrentStageOutputDataWriter => _currentStageOutputDataWriter;
 		public override IDeclarationReport CurrentStageDeclarationReport => _currentStageDeclarationReport;
 

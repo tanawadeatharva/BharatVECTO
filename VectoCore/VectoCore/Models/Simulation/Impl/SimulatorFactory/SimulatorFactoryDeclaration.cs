@@ -28,6 +28,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private readonly ISimulatorFactoryFactory _simFactoryFactory;
 		private IInputDataProvider _currentStageInputData;
 		private IDeclarationReport _currentStageDeclarationReport;
+		private IVTPReport _currentStageVTPReport;
+		private readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
+
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
 			IOutputDataWriter writer,
@@ -35,13 +38,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IVTPReport vtpReport,
 			bool validate,
 			IXMLInputDataReader xmlInputDataReader,
-			ISimulatorFactoryFactory simulatorFactoryFactory
+			ISimulatorFactoryFactory simulatorFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory
 			) : base(ExecutionMode.Declaration, writer, validate)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;
 			_currentStageInputData = dataProvider;
-			_currentStageDeclarationReport = declarationReport;
+			_currentStageDeclarationReport = declarationReport ?? xmlDeclarationReportFactory.CreateReport(dataProvider, writer);
+			_currentStageVTPReport = vtpReport ?? xmlDeclarationReportFactory.CreateVTPReport(dataProvider, writer);
+			_xmlDeclarationReportFactory = xmlDeclarationReportFactory;
+
 			_followUpSimulatorFactoryCreator = CreateFollowUpFactoryCreator();
 			UpdateCurrentStageInput();
 			_simulate = CanBeSimulated(dataProvider);
@@ -49,6 +56,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				CreateDeclarationDataReader(_currentStageInputData, _currentStageDeclarationReport, vtpReport);
 			}
 		}
+
+		private void CreateReport()
+		{
+			if (_currentStageDeclarationReport != null && _currentStageInputData != null) {
+
+			}
+		}
+
 
 		/// <summary>
 		/// Modifies the input and output of the current simulation step based on the Following step
@@ -67,15 +82,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		[UsedImplicitly]
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider,
-			IOutputDataWriter writer, IXMLInputDataReader xmlInputDataReader,
-			ISimulatorFactoryFactory simulatorFactoryFactory, bool validate) : this(
+			IOutputDataWriter writer,
+			bool validate, IXMLInputDataReader xmlInputDataReader,
+			ISimulatorFactoryFactory simulatorFactoryFactory, IXMLDeclarationReportFactory xmlDeclarationReportFactory) : this(
 			dataProvider: dataProvider, 
 			declarationReport: null,
 			writer: writer,
 			vtpReport: null, 
 			validate: true,
 			xmlInputDataReader: xmlInputDataReader, 
-			simulatorFactoryFactory: simulatorFactoryFactory)
+			simulatorFactoryFactory: simulatorFactoryFactory,
+			xmlDeclarationReportFactory: xmlDeclarationReportFactory)
 		{
 
 		}
@@ -104,8 +121,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			switch (_currentStageInputData) {
 				case IMultistagePrimaryAndStageInputDataProvider multistagePrimaryAndStageInputDataProvider:
 					return new InterimAfterPrimaryFactoryCreator(
-							multistagePrimaryAndStageInputDataProvider, 
+							multistagePrimaryAndStageInputDataProvider,
 							ReportWriter,
+							_currentStageDeclarationReport,
 						_simFactoryFactory, _xmlInputDataReader, Validate);
 				case IMultistageVIFInputData multistageVifInputData:
 					if (multistageVifInputData.VehicleInputData != null) {
