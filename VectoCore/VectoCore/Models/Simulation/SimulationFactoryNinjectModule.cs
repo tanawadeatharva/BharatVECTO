@@ -44,7 +44,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
-	public class SimulationFactoryNinjectModule : VectoNinjectModule
+	public class SimulatorFactoryNinjectModule : VectoNinjectModule
 	{
 		#region Overrides of NinjectModule
 

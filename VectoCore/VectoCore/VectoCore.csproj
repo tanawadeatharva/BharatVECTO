@@ -282,9 +282,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
-    <Compile Include="InputData\IVectoRunDataFactoryFactory.cs" />
+    <Compile Include="InputData\Reader\IVectoRunDataFactoryFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryFactory.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryNinjectModule.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
