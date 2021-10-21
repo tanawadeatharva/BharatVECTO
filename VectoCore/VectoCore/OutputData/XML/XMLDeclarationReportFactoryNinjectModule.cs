@@ -11,8 +11,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void Load()
 		{
-			Bind<IXMLDeclarationReportFactory>().To<XMLDeclarationReportFactory>();
-
+			Bind<IXMLDeclarationReportFactory>().To<XMLDeclarationReportFactory>().InSingletonScope();
 		}
 
 		#endregion
