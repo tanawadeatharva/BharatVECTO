@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.InputSpeed,
 					Fields.InputTorque,
 					Fields.TorqeLoss,
-					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).JoinString());
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 
 				entries = CreateFromColumIndizes(data);
 			}

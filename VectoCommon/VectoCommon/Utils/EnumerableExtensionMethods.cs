@@ -39,6 +39,9 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumerableExtensionMethods
 	{
+		/// <summary>
+		/// Joins the items of the enumerable into a string.
+		/// </summary>
 		public static string Join<T>(this IEnumerable<T> list, string separator = ", ") =>
 			string.Join(separator, list ?? Enumerable.Empty<T>());
 
@@ -53,13 +56,6 @@ namespace TUGraz.VectoCommon.Utils
 			Array.ConstrainedCopy(source, start, dest, 0, end - start);
 			return dest;
 		}
-
-		/// <summary>
-		/// Joins the items of the enumerable into a string.
-		/// </summary>
-		public static string JoinString(this IEnumerable<string> self, string separator = ", ") =>
-			string.Join(separator, self ?? Enumerable.Empty<string>());
-
 
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self, double? defaultValue = null)
 		{
