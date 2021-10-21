@@ -5,6 +5,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
@@ -33,10 +34,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 			if (!HeaderIsValid(data.Columns)) {
 				LoggingObject.Logger<ShareIdleLowLookup>().Warn(
-					"{0} lookup: header line is not valid. Expected: '{1}', Got: {2}",
+					"{0} lookup: Header line is not valid. Expected: '{1}', Got: {2}",
 					_name,
-					string.Join(", ", _columns),
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					_columns.Join(),
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 				for (var i = 0; i < Math.Min(_columns.Length, data.Columns.Count); i++) {
 					data.Columns[i].Caption = _columns[i];
 				}
