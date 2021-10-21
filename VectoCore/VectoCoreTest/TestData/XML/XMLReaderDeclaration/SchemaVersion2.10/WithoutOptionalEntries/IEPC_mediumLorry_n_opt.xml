@@ -77,7 +77,7 @@
 							<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 						</PowerMap>
 					</VoltageLevel>
-					<DragCurve>
+					<DragCurve gear="1">
 						<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 						<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
 					</DragCurve>
