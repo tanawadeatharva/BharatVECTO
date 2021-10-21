@@ -78,9 +78,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				entries = CreateFromColumnNames(data);
 			} else {
 				LoggingObject.Logger<TransmissionLossMap>().Warn(
-					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}'. Got: '{4}'. Falling back to column index.",
-					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
+					"TransmissionLossMap {0}: Header line is not valid. Expected: '{1}, {2}, {3}'. Got: '{4}'. Falling back to column index.",
+					gearName,
+					Fields.InputSpeed,
+					Fields.InputTorque,
+					Fields.TorqeLoss,
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).JoinString());
 
 				entries = CreateFromColumIndizes(data);
 			}
