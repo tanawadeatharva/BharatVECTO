@@ -31,8 +31,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("Invalid header for pneumatic actuations. expected: {0}, got: {1}",
-					string.Join(", ", Header),
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Header.Join(), data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
 			var retVal = new Dictionary<MissionType, IActuations>();

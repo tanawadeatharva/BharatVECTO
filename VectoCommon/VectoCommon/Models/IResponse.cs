@@ -44,7 +44,7 @@ namespace TUGraz.VectoCommon.Models
 		public override string ToString()
 		{
 			var t = GetType();
-			return $"{t.Name}{{{string.Join(", ", t.GetProperties().Select(p => $"{p.Name}: {p.GetValue(this)}"))}}}";
+			return $"{t.Name}{{{t.GetProperties().Select(p => $"{p.Name}: {p.GetValue(this)}").Join()}}}";
 		}
 	}
 

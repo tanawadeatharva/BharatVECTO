@@ -22,11 +22,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 
 			if (!data.Columns.Contains(Fields.StateOfCharge) || !data.Columns.Contains(Fields.MaxDischargeCurrent) || !data.Columns.Contains(Fields.MaxChargeCurrent)) {
+				LoggingObject.Logger<InternalResistanceMap>().Warn(
+					"Max Current  Map Header is invalid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
+					Fields.StateOfCharge,
+					Fields.MaxChargeCurrent,
+					Fields.MaxDischargeCurrent,
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 				data.Columns[0].ColumnName = Fields.StateOfCharge;
 				data.Columns[1].ColumnName = Fields.MaxChargeCurrent;
 				data.Columns[2].ColumnName = Fields.MaxDischargeCurrent;
-				LoggingObject.Logger<InternalResistanceMap>().Warn("Max Current  Map Header is invalid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
-					Fields.StateOfCharge, Fields.MaxChargeCurrent, Fields.MaxDischargeCurrent, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 			return new MaxCurrentMap(data.Rows.Cast<DataRow>().Select(row => new MaxCurrentMap.MaxCurrentEntry() {
 				SoC = row.ParseDouble(Fields.StateOfCharge) / 100,

@@ -283,7 +283,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (limitBB.Count > 0) {
-					Log.Debug($"BB ${string.Join(", ", limitBB.Keys)} are at max - recalculating power distribution");
+					Log.Debug($"BB ${limitBB.Keys.Join()} are at max - recalculating power distribution");
 				}
 			} while (!(distributedPower + (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>())) .IsEqual(powerDemand, 1e-3.SI<Watt>()));
 

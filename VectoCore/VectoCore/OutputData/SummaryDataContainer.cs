@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.OutputData
 				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
-			row[Fields.VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
+			row[Fields.VEHICLE_FUEL_TYPE] = modData.FuelData.Select(x => x.GetLabel().Join());
 
 			var totalTime = modData.Duration;
 			row[Fields.TIME] = (ConvertedSI)totalTime;
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.OutputData
 											fuel => modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
 													modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
 										.Select(dummy => (double)dummy).ToArray();
-				row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = string.Join(" / ", fuelsWhtc);
+				row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = fuelsWhtc.Join(" / ");
 			}
 
 			row[Fields.P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
@@ -840,7 +840,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.ENGINE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.ENGINE_MODEL] = data.ModelName;
 			row[Fields.ENGINE_CERTIFICATION_NUMBER] = data.CertificationNumber;
-			row[Fields.ENGINE_FUEL_TYPE] = string.Join(" / ", data.Fuels.Select(x => x.FuelData.GetLabel()));
+			row[Fields.ENGINE_FUEL_TYPE] = data.Fuels.Select(x => x.FuelData.GetLabel()).Join(" / ");
 			row[Fields.ENGINE_RATED_POWER] = data.RatedPowerDeclared != null && data.RatedPowerDeclared > 0
 				? data.RatedPowerDeclared.ConvertToKiloWatt()
 				: data.FullLoadCurves[0].MaxPower.ConvertToKiloWatt();
@@ -850,12 +850,12 @@ namespace TUGraz.VectoCore.OutputData
 				: (ConvertedSI)data.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>();
 			row[Fields.ENGINE_DISPLACEMENT] = data.Displacement.ConvertToCubicCentiMeter();
 
-			row[Fields.ENGINE_WHTC_URBAN] = string.Join(" / ", data.Fuels.Select(x => x.WHTCUrban));
-			row[Fields.ENGINE_WHTC_RURAL] = string.Join(" / ", data.Fuels.Select(x => x.WHTCRural));
-			row[Fields.ENGINE_WHTC_MOTORWAY] = string.Join(" / ", data.Fuels.Select(x => x.WHTCMotorway));
-			row[Fields.ENGINE_BF_COLD_HOT] = string.Join(" / ", data.Fuels.Select(x => x.ColdHotCorrectionFactor));
-			row[Fields.ENGINE_CF_REG_PER] = string.Join(" / ", data.Fuels.Select(x => x.CorrectionFactorRegPer));
-			row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = string.Join(" / ", data.Fuels.Select(x => x.FuelConsumptionCorrectionFactor));
+			row[Fields.ENGINE_WHTC_URBAN] = data.Fuels.Select(x => x.WHTCUrban).Join(" / ");
+			row[Fields.ENGINE_WHTC_RURAL] = data.Fuels.Select(x => x.WHTCRural).Join(" / ");
+			row[Fields.ENGINE_WHTC_MOTORWAY] = data.Fuels.Select(x => x.WHTCMotorway).Join(" / ");
+			row[Fields.ENGINE_BF_COLD_HOT] = data.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / ");
+			row[Fields.ENGINE_CF_REG_PER] = data.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / ");
+			row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = data.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
 		}
 
 		private static void WriteAxleWheelsData(List<Axle> data, DataRow row)
@@ -913,7 +913,7 @@ namespace TUGraz.VectoCore.OutputData
 						col.SetOrdinal(Table.Columns[Fields.CARGO_VOLUME].Ordinal);
 					}
 
-				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
+				row[colName] = aux.Technology == null ? "" : aux.Technology.Join("; ");
 			}
 
 			if (busAux == null) {
@@ -923,7 +923,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] =
 				busAux.SSMInputs is ISSMDeclarationInputs inputs ? inputs.HVACTechnology : "engineering mode";
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] =
-				string.Join("/", busAux.ElectricalUserInputsConfig.AlternatorType.GetLabel());
+				busAux.ElectricalUserInputsConfig.AlternatorType.GetLabel().Join("/");
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = runData.JobType == VectoSimulationJobType.BatteryElectricVehicle ? "-" :
 				busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}

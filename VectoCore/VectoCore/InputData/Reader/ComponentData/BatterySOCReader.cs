@@ -30,8 +30,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			{
 				data.Columns[0].ColumnName = Fields.StateOfCharge;
 				data.Columns[1].ColumnName = Fields.BatteryVoltage;
-				LoggingObject.Logger<SOCMap>().Warn("SoC-Map Header is invalid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					Fields.StateOfCharge, Fields.BatteryVoltage, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+				LoggingObject.Logger<SOCMap>().Warn(
+					"SoC-Map Header is invalid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
+					Fields.StateOfCharge, 
+					Fields.BatteryVoltage,
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 			return new SOCMap(data.Rows.Cast<DataRow>().Select(row => new SOCMap.SOCMapEntry
 			{

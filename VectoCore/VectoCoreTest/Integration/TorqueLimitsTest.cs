@@ -262,7 +262,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 			var view = new DataView(sumData.Table, "", SummaryDataContainer.Fields.SORT, DataViewRowState.CurrentRows).ToTable();
-			Console.WriteLine(string.Join("; ", view.AsEnumerable().Select(x => x[string.Format(SummaryDataContainer.Fields.FCMAP_KM, "")].ToString().ToDouble())));
+			Console.WriteLine(view.AsEnumerable().Select(x => x[string.Format(SummaryDataContainer.Fields.FCMAP_KM, "")].ToString().ToDouble()).Join("; "));
 			Assert.AreEqual(203.978084968944, view.Rows[0][string.Format(SummaryDataContainer.Fields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(243.590313650134, view.Rows[1][string.Format(SummaryDataContainer.Fields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(174.648229443338, view.Rows[2][string.Format(SummaryDataContainer.Fields.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
