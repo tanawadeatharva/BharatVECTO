@@ -65,7 +65,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private static object _kernelLock = new object();
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
 
-		protected Func<ISimulatorFactory> _followingSimulatorFactoryCreator = null;
 		protected IFollowUpSimulatorFactoryCreator _followUpSimulatorFactoryCreator = null;
 
 		protected bool _simulate = true;
@@ -81,10 +80,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 				if (_followUpSimulatorFactoryCreator != null) {
 					return _followUpSimulatorFactoryCreator.GetNextFactory();
+				} else {
+					return null;
 				}
-
-				Log.Info("Starting next Simulation Step\n");
-				return _followingSimulatorFactoryCreator?.Invoke();
+				//return _followingSimulatorFactoryCreator?.Invoke();
 
 			}
 		}
