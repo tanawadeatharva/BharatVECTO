@@ -228,7 +228,8 @@ Public Class Engine
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Dim dummyVehicle As IVehicleEngineeringInputData = New DummyVehicle() With {
-						.IVehicleComponentsEngineering_EngineInputData = engine
+						.IVehicleComponentsEngineering_EngineInputData = engine,
+						.TankSystem = TankSystem.Compressed
 						}
 				engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
 			End If
