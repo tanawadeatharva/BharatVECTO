@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case WeightingGroup.Group9LH:
 				case WeightingGroup.Group10RD:
 				case WeightingGroup.Group10LH:
-					return string.Join("-", Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)));
+					return Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)).Join("-");
 				default:
 					return Constants.NOT_AVAILABLE;
 			}

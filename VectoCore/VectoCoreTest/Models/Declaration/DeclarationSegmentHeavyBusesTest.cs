@@ -691,8 +691,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(lowLoad, m.LowLoad.Value(), 1e-9);
 			foreach (var tuple in axleWeightDistribution.ZipAll(m.AxleWeightDistribution, Tuple.Create))
 			{
-				Assert.AreEqual(tuple.Item1, tuple.Item2, 1e-0, "Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
-					string.Join(",", m.AxleWeightDistribution));
+				Assert.AreEqual(tuple.Item1, tuple.Item2, 1e-0, "Axle distribution not equal.\nexpected: {0}\nactual: {1}", 
+					axleWeightDistribution.Join(), m.AxleWeightDistribution.Join());
 			}
 
 			foreach (var entry in expVehicleEquipment) {

@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (smallValues.Count >= 2) {
 				Log.Error(
 					"Found small velocity entries in Driver-Acceleration/Deceleration file. Values dismissed:" +
-					string.Join(", ", smallValues.Skip(1).Select(e => e.Key.AsKmph.ToString("F1"))));
+					smallValues.Skip(1).Select(e => e.Key.AsKmph.ToString("F1")).Join());
 				foreach (var kv in smallValues.Skip(1)) {
 					_entries.Remove(kv);
 				}

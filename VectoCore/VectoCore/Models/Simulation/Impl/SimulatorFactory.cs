@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var validationErrors = run.Validate(_mode, jobType, emPosition, gearboxtype, isEms);
 			if (validationErrors.Any()) {
 				throw new VectoException("Validation of Run-Data Failed: " +
-										string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
+										$"{validationErrors.Select(r => r.ErrorMessage + r.MemberNames.Join("; ")).Join("\n")}");
 			}
 		}
 

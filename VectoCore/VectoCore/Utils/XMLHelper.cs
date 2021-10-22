@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static string QueryLocalName(params string[] nodePath)
 		{
-			return "./" + string.Join("/", nodePath.Where(x => x != null).Select(x => $"/*[local-name()='{x}']").ToArray());
+			return "./" + nodePath.Where(x => x != null).Select(x => $"/*[local-name()='{x}']").Join("/");
 		}
 
 
