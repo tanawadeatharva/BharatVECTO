@@ -38,6 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -163,7 +164,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			}
 
 			var added = _writtenReports.TryAdd(type, fileName);
-			System.Diagnostics.Debug.Assert(added);
+			if (!added)
+			{
+				throw new VectoException("Report with type: {type} {fileName} already written from this reportwriter");
+			}
 		}
 
 		protected virtual string GetReportFilename(ReportType type)
