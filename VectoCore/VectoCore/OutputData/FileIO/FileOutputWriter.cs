@@ -154,6 +154,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public virtual void WriteReport(ReportType type, XDocument data)
 		{
 			var fileName = GetReportFilename(type);
+
+			if (File.Exists(fileName)) {
+				Log.Warn($"Overwriting file ({fileName})");
+			}
 			using (var writer = new FileStream(fileName, FileMode.Create)) {
 				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
 					xmlWriter.Formatting = Formatting.Indented;
@@ -164,10 +168,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			}
 
 			var added = _writtenReports.TryAdd(type, fileName);
-			if (!added)
-			{
-				throw new VectoException("Report with type: {type} {fileName} already written from this reportwriter");
-			}
 		}
 
 		protected virtual string GetReportFilename(ReportType type)
