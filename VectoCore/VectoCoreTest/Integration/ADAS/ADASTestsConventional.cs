@@ -1237,7 +1237,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5932, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_PCC123EcoRollEngineStop_CaseB_Conventional_Conventional() => TestPCC(MethodBase.GetCurrentMethod().Name,
+		public void Class5_PCC123EcoRollEngineStop_CaseB_Conventional() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 4352, OutsideSegment, Accelerate),        // len: 4352m
 			(4352, 5216, WithinSegment, Accelerate),      // len: 864m
 			(5216, 6698, UseCase1, Roll),                 // len: 1482m
