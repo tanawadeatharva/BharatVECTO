@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 			IOutputDataWriter writer,
 			IDeclarationReport declarationReport,
 			IVTPReport vtpReport,
-			bool validate
-			);
+			bool validate = true
+		);
 	}
 }
