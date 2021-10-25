@@ -53,7 +53,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					report);
 			}
 			else {
-				CastReport<DeclarationModeMultistageBusVectoRunDataFactory>(report);
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 			}
 		}
