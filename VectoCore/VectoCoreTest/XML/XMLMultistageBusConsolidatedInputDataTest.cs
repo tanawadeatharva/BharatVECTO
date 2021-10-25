@@ -112,7 +112,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
 
 			Assert.AreEqual(null, inputDataProvider.JobInputData.ManufacturingStages);
-			Assert.AreEqual(null, inputDataProvider.JobInputData.ConsolidateManufacturingStage);
+			//The consolidated ManufacturingStage is now always created, and can hold some values from the primary vehicle (i.e. TPMLM)
+			//Assert.AreEqual(null, inputDataProvider.JobInputData.ConsolidateManufacturingStage);
 			Assert.AreEqual(false, inputDataProvider.JobInputData.InputComplete);
 		}
 
