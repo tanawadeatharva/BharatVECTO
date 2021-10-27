@@ -1962,6 +1962,49 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
+
+		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml", BASE_DIR)]
+		public void TestHEVHeavyLorryAMTPxIHPC(string jobfile, string testDir)
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+
+
+			var eMachine = vehicle.Components.ElectricMachines.Entries.First();
+			Assert.IsNotNull(eMachine);
+			
+			Assert.AreEqual(PowertrainPosition.HybridP2, eMachine.Position);
+			Assert.AreEqual(1, eMachine.Count);
+
+			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachine.ElectricMachineType);
+			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
+			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);
+			Assert.AreEqual(200.00.SI<NewtonMeter>(), eMachine.ElectricMachine.ContinuousTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.ElectricMachine.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(400.00.SI<NewtonMeter>(), eMachine.ElectricMachine.OverloadTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.ElectricMachine.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(30.00.SI<Second>(), eMachine.ElectricMachine.OverloadTime);//OverloadDuration
+			Assert.AreEqual(483.SI<Volt>(), eMachine.ElectricMachine.TestVoltageOverload);
+			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
+			Assert.AreEqual("IHPC Type 1", eMachine.ElectricMachine.IHPCType);
+
+			Assert.AreEqual(2, eMachine.ElectricMachine.VoltageLevels.Count);
+			Assert.AreEqual(400.SI<Volt>(), eMachine.ElectricMachine.VoltageLevels[0].VoltageLevel);
+			Assert.AreEqual(2, eMachine.ElectricMachine.VoltageLevels[0].PowerMap.Count);
+			Assert.AreEqual(1, eMachine.ElectricMachine.VoltageLevels[0].PowerMap[0].Gear);
+			Assert.AreEqual(2, eMachine.ElectricMachine.VoltageLevels[0].PowerMap[1].Gear);
+
+			Assert.AreEqual(600.SI<Volt>(), eMachine.ElectricMachine.VoltageLevels[1].VoltageLevel);
+			Assert.AreEqual(2, eMachine.ElectricMachine.VoltageLevels[1].PowerMap.Count);
+			Assert.AreEqual(1, eMachine.ElectricMachine.VoltageLevels[1].PowerMap[0].Gear);
+			Assert.AreEqual(2, eMachine.ElectricMachine.VoltageLevels[1].PowerMap[1].Gear);
+
+			Assert.AreEqual(2, eMachine.ElectricMachine.DragCurve.Rows.Count);
+			Assert.AreEqual(1, eMachine.ElectricMachine.Conditioning.Rows.Count);
+		}
+
 		#region Test existence of torque converter
 
 		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
@@ -1977,6 +2020,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		#endregion
+
+
+
+
 
 	}
 }

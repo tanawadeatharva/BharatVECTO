@@ -3265,6 +3265,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string PowerMap_Gear {
+            get {
+                return ResourceManager.GetString("PowerMap_Gear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to outShaftSpeed.
         /// </summary>
         public static string PowerMap_OutShaftSpeed {

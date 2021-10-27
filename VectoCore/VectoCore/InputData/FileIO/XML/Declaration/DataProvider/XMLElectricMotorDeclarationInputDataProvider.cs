@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			
 			#region Implementation of IElectricMotorPowerMap
 
-			public virtual int Gear => Convert.ToInt32(GetAttribute(BaseNode, "gear"));
+			public virtual int Gear => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.PowerMap_Gear));
 			public virtual TableData PowerMap => ReadPowerMap();
 
 			private TableData ReadPowerMap()

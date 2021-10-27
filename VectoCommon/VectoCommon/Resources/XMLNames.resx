@@ -1857,4 +1857,7 @@
   <data name="Conditioning_Entry" xml:space="preserve">
     <value>Entry</value>
   </data>
+  <data name="PowerMap_Gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
 </root>
