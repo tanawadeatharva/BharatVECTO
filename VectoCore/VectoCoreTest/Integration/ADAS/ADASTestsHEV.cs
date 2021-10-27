@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 		[TestCase]
-		public void Class5_PCC123_CaseA_HEV_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
+		public void Class5_PCC123_CaseA_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 4130, OutsideSegment, Accelerate),        // len: 4130m
 			(4130, 5472, WithinSegment, Accelerate),      // len: 1342m
 			(5472, 5765, UseCase1, Coast),                // len: 293m
