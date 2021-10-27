@@ -2005,6 +2005,32 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, eMachine.ElectricMachine.Conditioning.Rows.Count);
 		}
 
+
+		[TestCase(@"MediumLorry\PEV_mediumLorry_AMT_E2_EM_Std.xml", BASE_DIR)]
+		public void TestPEVMediumLorryAMTE2EMStd(string jobfile, string testDir)
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+			
+
+			Assert.IsNotNull(vehicle.Components.ElectricMachines.Entries);
+		}
+
+
+		[TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S_IEPC_Std.xml", BASE_DIR)]
+		public void TestHEVSPrimaryBusIEPCStd(string jobfile, string testDir)
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+
+			Assert.IsNotNull(vehicle.Components.IEPC);
+		}
+
+
 		#region Test existence of torque converter
 
 		private void TestTorqueConverter(IVehicleDeclarationInputData vehicle)
