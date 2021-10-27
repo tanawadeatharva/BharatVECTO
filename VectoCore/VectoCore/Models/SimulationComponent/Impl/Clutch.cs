@@ -240,7 +240,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class ClutchState : SimpleComponentState
 		{
-			public Watt ClutchLoss = 0.SI<Watt>();
+			public ClutchState()
+			{
+				ClutchLoss = 0.SI<Watt>();
+			}
+			public Watt ClutchLoss { get; set; }
 		}
 	}
 }
