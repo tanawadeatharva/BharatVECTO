@@ -453,8 +453,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return best.Key;
 			}
 
-			var retVal = candidates.Where(x => x.Value < VoltageLevels.MaxSpeed).MaxBy(x => x.Value).Key;
-			return retVal;
+			if (candidates.Any(x => x.Value < VoltageLevels.MaxSpeed))
+				return candidates.Where(x => x.Value < VoltageLevels.MaxSpeed).MaxBy(x => x.Value).Key;
+			else {
+				return candidates.MaxBy(x => x.Value).Key;
+			}
 		}
 
 		protected virtual GearshiftPosition CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque,
