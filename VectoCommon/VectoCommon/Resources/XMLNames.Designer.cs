@@ -1879,6 +1879,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string DragCurve_Gear {
+            get {
+                return ResourceManager.GetString("DragCurve_Gear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to outShaftSpeed.
         /// </summary>
         public static string DragCurve_OutShaftSpeed {

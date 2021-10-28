@@ -59,16 +59,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IElectricMotorVoltageLevel
 
-		public virtual Volt VoltageLevel => GetDouble(XMLNames.VoltageLevel_Voltage).SI<Volt>();
+		public virtual Volt VoltageLevel => ElementExists(XMLNames.VoltageLevel_Voltage) ? 
+			GetDouble(XMLNames.VoltageLevel_Voltage).SI<Volt>() : null ;
 
 		public virtual TableData FullLoadCurve => ReadFullLoadCurve();
 		
-
-		public virtual TableData EfficiencyMap => ReadTableData(XMLNames.PowerMap, XMLNames.PowerMap_Entry, new Dictionary<string, string> {
-			{ XMLNames.PowerMap_OutShaftSpeed, XMLNames.PowerMap_OutShaftSpeed },
-			{ XMLNames.PowerMap_Torque, XMLNames.PowerMap_Torque },
-			{ XMLNames.PowerMap_ElectricPower, XMLNames.PowerMap_ElectricPower }
-		});
 
 		public virtual IList<IElectricMotorPowerMap> PowerMap => GetPowerMaps();
 
@@ -102,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		protected virtual IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
-			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel);
+			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, BaseNode);
 			if (voltageLevelNodes.IsNullOrEmpty())
 				return null;
 
@@ -248,8 +243,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				var certMethod = GetString(XMLNames.Component_Gearbox_CertificationMethod, required: false) ??
 								GetString(XMLNames.Component_CertificationMethod, required: false);
 
-				if (certMethod != null && certMethod == "Measured for complete component")
-					return CertificationMethod.Measured;
+				if (certMethod != null) {
+					switch (certMethod) {
+						case "Measured for complete component":
+						case "Measured for EM and standard values for other components":
+							return CertificationMethod.Measured;
+						case "Standard values for all components":
+							return CertificationMethod.StandardValues;
+					}
+				}
 
 				return certMethod != null
 					? EnumHelper.ParseEnum<CertificationMethod>(certMethod)
@@ -278,12 +280,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IList<IElectricMotorVoltageLevel> VoltageLevels =>
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
 
-		public virtual TableData DragCurve => ReadDragCurve();
+		public IList<IDragCurve> DragCurves => GetDragCurves();
 
 		public virtual TableData Conditioning => ElementExists(XMLNames.Conditioning)
 			? ReadConditioning() : null;
 
 		#endregion
+
+		private IList<IDragCurve> GetDragCurves()
+		{
+			var dragCurveNodes = GetNodes(XMLNames.DragCurve, BaseNode);
+			if (dragCurveNodes.IsNullOrEmpty())
+				return null;
+
+			var dragCurves = new List<IDragCurve>();
+			foreach (XmlNode dragCurve in dragCurveNodes) {
+				dragCurves.Add(new DragCurveEntry(dragCurve));
+			}
+			return dragCurves;
+		}
+
 		
 		private IList<IGearEntry> GetGearEntries()
 		{
@@ -292,11 +308,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				return null;
 
 			var gears = new List<IGearEntry>();
-			foreach (XmlNode gearNode in gearNodes)
-			{
+			foreach (XmlNode gearNode in gearNodes) {
 				gears.Add(new GearEntry(gearNode));
 			}
-
 			return gears;
 		}
 
@@ -321,6 +335,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			#endregion
 		}
 		
+		public class DragCurveEntry : AbstractXMLType, IDragCurve
+		{
+			private Dictionary<string, string> dargCurveMapping = new Dictionary<string, string> {
+				{XMLNames.DragCurve_OutShaftSpeed, XMLNames.DragCurve_OutShaftSpeed },
+				{XMLNames.DragCurve_DragTorque, XMLNames.DragCurve_DragTorque }
+			};
+			
+			public DragCurveEntry(XmlNode node) : base(node) { }
+
+			#region Implementation of IDragCurve
+			
+			public int? Gear
+			{
+				get
+				{
+					var gear = GetAttribute(BaseNode, XMLNames.DragCurve_Gear);
+					return gear != null ? Convert.ToInt32(gear) : (int?)null;
+				}
+			}
+
+			public TableData DragCurve
+			{
+				get
+				{
+					var dragCurveEntryNodes = GetNodes(XMLNames.DragCurve_Entry);
+					return XMLHelper.ReadTableData(dargCurveMapping, dragCurveEntryNodes);
+				}
+			}
+
+			#endregion
+		}
+
+
+
 		#region Overrides of AbstractXMLResource
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
@@ -329,4 +377,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+
+	// ---------------------------------------------------------------------------------------
+	
+	public class XMLElectricMotorIEPCIStandardInputDataProviderV2101 : XMLElectricMotorIEPCIInputDataProviderV2101
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new const string XSD_TYPE = "IEPCStandardValuesDataDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLElectricMotorIEPCIStandardInputDataProviderV2101(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLElectricMotorIEPCIInputDataProviderV2101
+
+		public override TableData Conditioning => null;
+
+		#endregion
+	}
 }

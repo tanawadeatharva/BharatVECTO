@@ -398,25 +398,38 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.AreEqual(i, powerMap[i-1].Gear);
 			}
 
-			if (powerMap.Count >= 1) {
-				TestPowerMapEntry("0.00", "400.00", "1000.00",  powerMap[0].PowerMap.Rows[0]);
-				TestPowerMapEntry("0.00", "-400.00", "-1000.00", powerMap[0].PowerMap.Rows[1]);
-				TestPowerMapEntry("4000.00", "4000.00", "20000.00", powerMap[0].PowerMap.Rows[2]);
-				TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", powerMap[0].PowerMap.Rows[3]);
-			}
-			if (powerMap.Count >= 2) {
-				TestPowerMapEntry("0.00", "500.00", "1100.00", powerMap[1].PowerMap.Rows[0]);
-				TestPowerMapEntry("0.00", "-500.00", "-1100.00", powerMap[1].PowerMap.Rows[1]);
-				TestPowerMapEntry("5000.00", "5000.00", "30000.00", powerMap[1].PowerMap.Rows[2]);
-				TestPowerMapEntry("5000.00", "-5000.00", "-30000.00", powerMap[1].PowerMap.Rows[3]);
-			}
+			if (powerMap.Count >= 1) 
+				TestPowerMapData01(powerMap[0]);
+			
+			if (powerMap.Count >= 2) 
+				TestPowerMapData02(powerMap[1]);
+			
+			if (powerMap.Count == 3) 
+				TestPowerMapData03(powerMap[2]);
+		}
 
-			if (powerMap.Count == 3) {
-				TestPowerMapEntry("0.00", "600.00", "1200.00", powerMap[2].PowerMap.Rows[0]);
-				TestPowerMapEntry("0.00", "-600.00", "-1200.00", powerMap[2].PowerMap.Rows[1]);
-				TestPowerMapEntry("6000.00", "6000.00", "40000.00", powerMap[2].PowerMap.Rows[2]);
-				TestPowerMapEntry("6000.00", "-6000.00", "-40000.00", powerMap[2].PowerMap.Rows[3]);
-			}
+		private void TestPowerMapData01(IElectricMotorPowerMap powerMap)
+		{
+			TestPowerMapEntry("0.00", "400.00", "1000.00", powerMap.PowerMap.Rows[0]);
+			TestPowerMapEntry("0.00", "-400.00", "-1000.00", powerMap.PowerMap.Rows[1]);
+			TestPowerMapEntry("4000.00", "4000.00", "20000.00", powerMap.PowerMap.Rows[2]);
+			TestPowerMapEntry("4000.00", "-4000.00", "-20000.00", powerMap.PowerMap.Rows[3]);
+		}
+
+		private void TestPowerMapData02(IElectricMotorPowerMap powerMap)
+		{
+			TestPowerMapEntry("0.00", "500.00", "1500.00", powerMap.PowerMap.Rows[0]);
+			TestPowerMapEntry("0.00", "-500.00", "-1500.00", powerMap.PowerMap.Rows[1]);
+			TestPowerMapEntry("5000.00", "5000.00", "25000.00", powerMap.PowerMap.Rows[2]);
+			TestPowerMapEntry("5000.00", "-5000.00", "-25000.00", powerMap.PowerMap.Rows[3]);
+		}
+
+		private void TestPowerMapData03(IElectricMotorPowerMap powerMap)
+		{
+			TestPowerMapEntry("0.00", "600.00", "1200.00", powerMap.PowerMap.Rows[0]);
+			TestPowerMapEntry("0.00", "-600.00", "-1200.00", powerMap.PowerMap.Rows[1]);
+			TestPowerMapEntry("6000.00", "6000.00", "40000.00", powerMap.PowerMap.Rows[2]);
+			TestPowerMapEntry("6000.00", "-6000.00", "-40000.00", powerMap.PowerMap.Rows[3]);
 		}
 
 
@@ -442,9 +455,21 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestDragCurve(TableData dragCurve)
 		{
+			TestDragCurveData01(dragCurve);
+		}
+
+		private void TestDragCurveData01(TableData dragCurve)
+		{
 			TestDragCurveEntry("0.00", "10.00", dragCurve.Rows[0]);
 			TestDragCurveEntry("4000.00", "30.00", dragCurve.Rows[1]);
 		}
+
+		private void TestDragCurveData02(TableData dragCurve)
+		{
+			TestDragCurveEntry("0.00", "15.00", dragCurve.Rows[0]);
+			TestDragCurveEntry("4500.00", "35.00", dragCurve.Rows[1]);
+		}
+
 
 		private void TestDragCurveEntry(string outShaftSpeed, string dragTorque, DataRow row)
 		{
@@ -1306,11 +1331,18 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestGearsData(iepcData.Gears);
 			TestVoltageLevel(iepcData.VoltageLevels);
-			TestDragCurve(iepcData.DragCurve);
-
-			
+			TestDragCurves(iepcData.DragCurves);
 		}
 
+		private void TestDragCurves(IList<IDragCurve> dragCurves)
+		{
+			Assert.AreEqual(1, dragCurves[0].Gear);
+			TestDragCurveData01(dragCurves[0].DragCurve);
+			
+			Assert.AreEqual(2, dragCurves[1].Gear);
+			TestDragCurveData02(dragCurves[1].DragCurve);
+		}
+		
 		private void TestGearsData(IList<IGearEntry> gears)
 		{
 			Assert.IsNotNull(gears);
@@ -2026,9 +2058,30 @@ namespace TUGraz.VectoCore.Tests.XML
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			Assert.NotNull(dataProvider.JobInputData);
 			var vehicle = dataProvider.JobInputData.Vehicle;
+			
+			var iepc = vehicle.Components.IEPC;
+			Assert.IsNotNull(iepc);
+			Assert.AreEqual(ElectricMachineType.ASM, iepc.ElectricMachineType);
+			Assert.AreEqual(CertificationMethod.StandardValues, vehicle.Components.IEPC.CertificationMethod);
+			
+			Assert.AreEqual(1.SI<Watt>(), iepc.R85RatedPower);
+			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepc.Inertia);//RotationalInertia
+			Assert.AreEqual(200.00.SI<NewtonMeter>(), iepc.ContinuousTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(400.00.SI<NewtonMeter>(), iepc.OverloadTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(30.00.SI<Second>(), iepc.OverloadTime);//OverloadDuration
+			Assert.AreEqual(false, iepc.DifferentialIncluded);
+			Assert.AreEqual(false, iepc.DesignTypeWheelMotor);
+            Assert.AreEqual(1, iepc.NrOfDesignTypeWheelMotorMeasured);
 
-			Assert.IsNotNull(vehicle.Components.IEPC);
+			TestGearsData(iepc.Gears);
+			Assert.AreEqual(1, iepc.VoltageLevels.Count);
+			TestMaxTorqueCurve(iepc.VoltageLevels[0].FullLoadCurve);
+			TestPowerMapData01(iepc.VoltageLevels[0].PowerMap[0]);
+			TestDragCurve(iepc.DragCurves[0].DragCurve);
 		}
+		
 
 
 		#region Test existence of torque converter
@@ -2046,10 +2099,6 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		#endregion
-
-
-
-
-
+		
 	}
 }

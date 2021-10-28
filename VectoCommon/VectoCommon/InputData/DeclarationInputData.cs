@@ -823,10 +823,18 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
-		TableData DragCurve { get; }
+		IList<IDragCurve> DragCurves { get; }
 
 		TableData Conditioning { get; }
 	}
+
+	public interface IDragCurve
+	{
+		int? Gear { get; }
+
+		TableData DragCurve { get; }
+	}
+
 
 	public interface IGearEntry
 	{
