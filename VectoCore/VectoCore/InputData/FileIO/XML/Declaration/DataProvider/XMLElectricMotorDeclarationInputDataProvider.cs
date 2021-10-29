@@ -201,7 +201,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	// ---------------------------------------------------------------------------------------
 
+	public class XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101 :
+			XMLElectricMotorDeclarationInputDataProviderV2101
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new const string XSD_TYPE = "ElectricMachineSystemStandardValuesDataDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101(XmlNode componentNode, string sourceFile) 
+			: base(componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLElectricMotorDeclarationInputDataProviderV2101
+
+		public override Volt TestVoltageOverload => null;
+		public override TableData Conditioning => null;
+
+		#endregion
+	}
+	
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLElectricMotorIHPCDeclarationInputDataProviderV2101 : XMLElectricMotorDeclarationInputDataProviderV2101

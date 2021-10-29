@@ -10,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-    public class XMLElectricMachinesDeclarationInputDataProvider : AbstractCommonComponentType, IXMLElectricMachinesDeclarationInputData
+	public class XMLElectricMachinesDeclarationInputDataProvider : AbstractCommonComponentType, IXMLElectricMachinesDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public const string XSD_TYPE = "ElectricMachineType";

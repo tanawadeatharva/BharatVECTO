@@ -277,6 +277,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorDeclarationInputDataProviderV2101>()
 				.Named(XMLElectricMotorDeclarationInputDataProviderV2101.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101>()
+				.Named(XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101.QUALIFIED_XSD_TYPE);
+			
 			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorIHPCDeclarationInputDataProviderV2101>()
 				.Named(XMLElectricMotorIHPCDeclarationInputDataProviderV2101.QUALIFIED_XSD_TYPE);
 

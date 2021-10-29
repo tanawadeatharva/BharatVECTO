@@ -737,7 +737,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR)
 			{
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
-			 	Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
@@ -745,7 +745,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			else
 			{
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
-			 	Assert.IsNotNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNotNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
@@ -2046,8 +2046,31 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.NotNull(dataProvider.JobInputData);
 			var vehicle = dataProvider.JobInputData.Vehicle;
 			
+			Assert.AreEqual(1, vehicle.Components.ElectricMachines.Entries.Count);
+			var eMachine = vehicle.Components.ElectricMachines.Entries[0];
+			Assert.AreEqual(1, eMachine.Count);
+			Assert.AreEqual(PowertrainPosition.BatteryElectricE2, eMachine.Position);
+			
+			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachine.ElectricMachineType);
+			Assert.AreEqual(CertificationMethod.StandardValues, eMachine.ElectricMachine.CertificationMethod);
+			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
+			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);//RotationalInertia
+			Assert.AreEqual(200.00.SI<NewtonMeter>(), eMachine.ElectricMachine.ContinuousTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.ElectricMachine.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(400.00.SI<NewtonMeter>(), eMachine.ElectricMachine.OverloadTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.ElectricMachine.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(30.00.SI<Second>(), eMachine.ElectricMachine.OverloadTime);//OverloadDuration
+		    Assert.IsNull(eMachine.ElectricMachine.TestVoltageOverload);
+			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
+			Assert.AreEqual("None", eMachine.ElectricMachine.IHPCType);
+			
+			Assert.AreEqual(1, eMachine.ElectricMachine.VoltageLevels.Count);
+			TestMaxTorqueCurve(eMachine.ElectricMachine.VoltageLevels[0].FullLoadCurve);
+			Assert.IsNotNull(eMachine.ElectricMachine.VoltageLevels[0].PowerMap);
+			TestPowerMapData01(eMachine.ElectricMachine.VoltageLevels[0].PowerMap[0]);
+			Assert.IsNull(eMachine.ElectricMachine.Conditioning);
 
-			Assert.IsNotNull(vehicle.Components.ElectricMachines.Entries);
+			Assert.IsNotNull(eMachine.RatioPerGear);
 		}
 
 
@@ -2073,7 +2096,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(30.00.SI<Second>(), iepc.OverloadTime);//OverloadDuration
 			Assert.AreEqual(false, iepc.DifferentialIncluded);
 			Assert.AreEqual(false, iepc.DesignTypeWheelMotor);
-            Assert.AreEqual(1, iepc.NrOfDesignTypeWheelMotorMeasured);
+			Assert.AreEqual(1, iepc.NrOfDesignTypeWheelMotorMeasured);
 
 			TestGearsData(iepc.Gears);
 			Assert.AreEqual(1, iepc.VoltageLevels.Count);
