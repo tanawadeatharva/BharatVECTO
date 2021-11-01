@@ -394,9 +394,6 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestPowerMap(IList<IElectricMotorPowerMap> powerMap)
 		{
-			for (int i = 1; i <= powerMap.Count; i++) {
-				Assert.AreEqual(i, powerMap[i-1].Gear);
-			}
 
 			if (powerMap.Count >= 1) 
 				TestPowerMapData01(powerMap[0]);
@@ -1994,6 +1991,38 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
+		[TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S_IEPC_Std.xml", BASE_DIR)]
+		public void TestHEVSPrimaryBusIEPCStd(string jobfile, string testDir)
+		{
+			var filename = Path.Combine(testDir, jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.NotNull(dataProvider.JobInputData);
+			var vehicle = dataProvider.JobInputData.Vehicle;
+
+			var iepc = vehicle.Components.IEPC;
+			Assert.IsNotNull(iepc);
+			Assert.AreEqual(ElectricMachineType.ASM, iepc.ElectricMachineType);
+			Assert.AreEqual(CertificationMethod.StandardValues, vehicle.Components.IEPC.CertificationMethod);
+
+			Assert.AreEqual(1.SI<Watt>(), iepc.R85RatedPower);
+			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepc.Inertia);//RotationalInertia
+			Assert.AreEqual(200.00.SI<NewtonMeter>(), iepc.ContinuousTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
+			Assert.AreEqual(400.00.SI<NewtonMeter>(), iepc.OverloadTorque);
+			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.OverloadTestSpeed);//TestSpeedOverloadTorque
+			Assert.AreEqual(30.00.SI<Second>(), iepc.OverloadTime);//OverloadDuration
+			Assert.AreEqual(false, iepc.DifferentialIncluded);
+			Assert.AreEqual(false, iepc.DesignTypeWheelMotor);
+			Assert.AreEqual(1, iepc.NrOfDesignTypeWheelMotorMeasured);
+
+			TestGearsData(iepc.Gears);
+			Assert.AreEqual(1, iepc.VoltageLevels.Count);
+			TestMaxTorqueCurve(iepc.VoltageLevels[0].FullLoadCurve);
+			TestPowerMapData01(iepc.VoltageLevels[0].PowerMap[0]);
+			TestDragCurve(iepc.DragCurves[0].DragCurve);
+		}
+
+
 
 		[TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml", BASE_DIR)]
 		public void TestHEVHeavyLorryAMTPxIHPC(string jobfile, string testDir)
@@ -2074,36 +2103,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase(@"PrimaryBus\HEV-S_primaryBus_IEPC-S_IEPC_Std.xml", BASE_DIR)]
-		public void TestHEVSPrimaryBusIEPCStd(string jobfile, string testDir)
-		{
-			var filename = Path.Combine(testDir, jobfile);
-			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-			Assert.NotNull(dataProvider.JobInputData);
-			var vehicle = dataProvider.JobInputData.Vehicle;
-			
-			var iepc = vehicle.Components.IEPC;
-			Assert.IsNotNull(iepc);
-			Assert.AreEqual(ElectricMachineType.ASM, iepc.ElectricMachineType);
-			Assert.AreEqual(CertificationMethod.StandardValues, vehicle.Components.IEPC.CertificationMethod);
-			
-			Assert.AreEqual(1.SI<Watt>(), iepc.R85RatedPower);
-			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepc.Inertia);//RotationalInertia
-			Assert.AreEqual(200.00.SI<NewtonMeter>(), iepc.ContinuousTorque);
-			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
-			Assert.AreEqual(400.00.SI<NewtonMeter>(), iepc.OverloadTorque);
-			Assert.AreEqual(2000.00.SI<PerSecond>(), iepc.OverloadTestSpeed);//TestSpeedOverloadTorque
-			Assert.AreEqual(30.00.SI<Second>(), iepc.OverloadTime);//OverloadDuration
-			Assert.AreEqual(false, iepc.DifferentialIncluded);
-			Assert.AreEqual(false, iepc.DesignTypeWheelMotor);
-			Assert.AreEqual(1, iepc.NrOfDesignTypeWheelMotorMeasured);
 
-			TestGearsData(iepc.Gears);
-			Assert.AreEqual(1, iepc.VoltageLevels.Count);
-			TestMaxTorqueCurve(iepc.VoltageLevels[0].FullLoadCurve);
-			TestPowerMapData01(iepc.VoltageLevels[0].PowerMap[0]);
-			TestDragCurve(iepc.DragCurves[0].DragCurve);
-		}
 		
 
 

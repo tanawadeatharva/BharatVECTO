@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Castle.Core.Internal;
@@ -244,6 +245,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IXMLDeclarationVehicleData _vehicle;
 		private IList<IElectricMotorVoltageLevel> _voltageLevels;
 		private IList<IGearEntry> _gears;
+		private IList<IDragCurve> _dragCurves;
 
 
 		public XMLElectricMotorIEPCIInputDataProviderV2101(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
@@ -251,6 +253,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			_vehicle = vehicle;
 			SourceType = DataSourceType.XMLEmbedded;
+			ValidateGearCount();
 		}
 
 		#region Overrides of AbstractCommonComponentType
@@ -299,12 +302,59 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IList<IElectricMotorVoltageLevel> VoltageLevels =>
 			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
 
-		public IList<IDragCurve> DragCurves => GetDragCurves();
+		public IList<IDragCurve> DragCurves => _dragCurves ?? (_dragCurves = GetDragCurves());
 
 		public virtual TableData Conditioning => ElementExists(XMLNames.Conditioning)
 			? ReadConditioning() : null;
 
 		#endregion
+		
+		protected virtual void ValidateGearCount()
+		{
+			if (Gears == null)
+				return;
+			
+			var currentGears = new Dictionary<int, bool>();
+			foreach (var gear in Gears) {
+				currentGears.Add(gear.GearNumber, false);
+			}
+
+			foreach (var voltageLevel in VoltageLevels) {
+				foreach (var powerMap in voltageLevel.PowerMap) {
+					if (currentGears.ContainsKey(powerMap.Gear))
+						currentGears[powerMap.Gear] = true;
+					else
+						throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+				}
+				if(AnyMissingGear(currentGears))
+					throw new ArgumentException("The PowerMaps contains a gear which was not specified under gears");
+			}
+
+			foreach (var dragCurve in DragCurves) {
+				if(dragCurve.Gear == null)
+					continue;
+
+				if (currentGears.ContainsKey((int)dragCurve.Gear))
+					currentGears[(int)dragCurve.Gear] = true;
+				else
+					throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+			}
+
+			if (AnyMissingGear(currentGears))
+				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
+		}
+
+		private bool AnyMissingGear(Dictionary<int, bool> foundedGears)
+		{
+			var keys = foundedGears.Keys.ToList();
+			foreach (var key in keys) {
+				if(!foundedGears[key])
+					return true;
+				foundedGears[key] = false;
+			}
+
+			return false;
+		}
 
 		private IList<IDragCurve> GetDragCurves()
 		{
@@ -408,7 +458,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLElectricMotorIEPCIStandardInputDataProviderV2101(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
 			: base(vehicle, componentNode, sourceFile) { }
 
-
+		protected override void ValidateGearCount()
+		{
+			return;
+		}
+		
 		#region Overrides of XMLElectricMotorIEPCIInputDataProviderV2101
 
 		public override TableData Conditioning => null;
