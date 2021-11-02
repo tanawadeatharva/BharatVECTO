@@ -15,21 +15,21 @@
 	<xs:complexType name="Abstract_ADAS_HEVType" abstract="true"/>
 	<xs:complexType name="Abstract_ADAS_IEPCType" abstract="true"/>
 	<xs:complexType name="Abstract_ADAS_PEVType" abstract="true"/>
-	<xs:complexType name="Abstract_AUX_Conventional_CompletedBusDeclarationType"/>
+	<xs:complexType name="Abstract_AUX_Conventional_CompletedBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_Conventional_LorryDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_Conventional_PrimaryBusDeclarationType" abstract="true"/>
-	<xs:complexType name="Abstract_AUX_HEV_CompletedBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_HEV-P_LorryDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_HEV-S_LorryDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_IEPC_CompletedBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_IEPC_LorryDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_PEV_CompletedBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_PEV_LorryDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
-	<xs:complexType name="Abstract_AUX_xEV_CompletedBusDeclarationType"/>
+	<xs:complexType name="Abstract_AUX_HEV_CompletedBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-P_LorryDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-S_LorryDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-P_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-S_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_IEPC_CompletedBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_IEPC_LorryDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_IEPC_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_PEV_CompletedBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_PEV_LorryDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_PEV_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_xEV_CompletedBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_Components_Conventional_CompletedBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_Components_Conventional_LorryDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_Components_Conventional_PrimaryBusDeclarationType" abstract="true"/>
