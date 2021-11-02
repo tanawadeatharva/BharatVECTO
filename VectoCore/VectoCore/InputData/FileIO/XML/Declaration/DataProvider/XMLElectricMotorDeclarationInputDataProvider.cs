@@ -321,6 +321,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			foreach (var voltageLevel in VoltageLevels) {
 				foreach (var powerMap in voltageLevel.PowerMap) {
+					if(powerMap.Gear <= 0)
+						continue;
+
 					if (currentGears.ContainsKey(powerMap.Gear))
 						currentGears[powerMap.Gear] = true;
 					else
