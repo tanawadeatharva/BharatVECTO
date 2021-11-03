@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 		CustomerReport = 1 << 7,
 		MonitoringReport = 1 << 8,
 		VTPReport = 1 << 9,
-		MultistageOutputData = 1 << 10
+		MultistepOutputData = 1 << 10
 	}
 
 	public static class XmlDocumentTypeExtensions
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetName(this XmlDocumentType docType)
 		{
 			switch (docType) {
-				case XmlDocumentType.MultistageOutputData:
+				case XmlDocumentType.MultistepOutputData:
 					return "Multistep output data";
 				default:
 					return docType.ToString();
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
-			{XmlDocumentType.MultistageOutputData, "VectoOutputMultistage.0.1.xsd"}
+			{XmlDocumentType.MultistepOutputData, "VectoOutputMultistage.0.1.xsd"}
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";

@@ -1383,8 +1383,8 @@
   <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
     <value>APTEcoRollReleaseLockupClutch</value>
   </data>
-  <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
-    <value>AirdragModifiedMultistage</value>
+  <data name="Bus_AirdragModifiedMultistep" xml:space="preserve">
+    <value>AirdragModifiedMultistep</value>
   </data>
   <data name="CorrectedActualMass" xml:space="preserve">
     <value>CorrectedActualMass</value>
@@ -1416,8 +1416,8 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
-  <data name="VectoOutputMultistage" xml:space="preserve">
-    <value>VectoOutputMultistage</value>
+  <data name="VectoOutputMultistep" xml:space="preserve">
+    <value>VectoOutputMultistep</value>
   </data>
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>

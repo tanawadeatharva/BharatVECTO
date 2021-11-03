@@ -9,7 +9,7 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<CorrectedActualMass>500</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>3500</TechnicalPermissibleMaximumLadenMass>
-		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
+		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
 		<NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>10</NumberPassengersStandingLowerDeck>

@@ -80,7 +80,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			set => SetProperty(ref _jobListVm, value);
 		}
 
-		public string Version => "VECTO Multistage " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
 
 		#endregion
 

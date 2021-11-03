@@ -281,7 +281,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			xElement.Load(fileName);
 
 			var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
-			if (documentType == XmlDocumentType.MultistageOutputData)
+			if (documentType == XmlDocumentType.MultistepOutputData)
 			{
 				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
@@ -491,7 +491,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								}
 
 								mode = ExecutionMode.Declaration;
-							} else if (XMLNames.VectoOutputMultistage.Equals(rootNode,
+							} else if (XMLNames.VectoOutputMultistep.Equals(rootNode,
 								StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
 									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);

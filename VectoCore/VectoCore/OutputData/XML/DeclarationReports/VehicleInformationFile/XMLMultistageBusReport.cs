@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return;
 			XmlAttributeCollection namespaceAttributes = null;
 			foreach (var node in nodes) {
-				if (node.LocalName == XMLNames.VectoOutputMultistage) {
+				if (node.LocalName == XMLNames.VectoOutputMultistep) {
 					namespaceAttributes = node.Attributes;
 					break;
 				}
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(tns + XMLNames.VectoOutputMultistage,
+				new XElement(tns + XMLNames.VectoOutputMultistep,
 					_namespaceAttributes,
 					new XAttribute(XNamespace.Xmlns + "tns", tns),
 					_primaryVehicle,
@@ -291,11 +291,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (_consolidatedInputData?.Vehicle?.Components?.AirdragInputData == null)
 				return null;
 
-			switch (_vehicleInputData.AirdragModifiedMultistage) {
+			switch (_vehicleInputData.AirdragModifiedMultistep) {
 				case null:
 					throw new VectoException("AirdragModifiedMultistage must be set if an airdrag component has been set in previous stages.");
 				default:
-					return new XElement(v210 + XMLNames.Bus_AirdragModifiedMultistage, _vehicleInputData.AirdragModifiedMultistage);
+					return new XElement(v210 + XMLNames.Bus_AirdragModifiedMultistep, _vehicleInputData.AirdragModifiedMultistep);
 			}
 		}
 
@@ -334,10 +334,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetBusAirdrag(IAirdragDeclarationInputData airdrag)
 		{
-			if (airdrag != null && _vehicleInputData.AirdragModifiedMultistage != false) 
+			if (airdrag != null && _vehicleInputData.AirdragModifiedMultistep != false) 
 				return GetAirdragElement(airdrag);
 
-			return _vehicleInputData.AirdragModifiedMultistage == true
+			return _vehicleInputData.AirdragModifiedMultistep == true
 				? GetBusAirdragUseStandardValues()
 				: null;
 		}

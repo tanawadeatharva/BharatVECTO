@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			using (var xmlReader = XmlReader.Create(writer.XMLMultistageReportFileName))
 			{
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 
 			TestNewVifData(writer.XMLMultistageReportFileName);
@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(LegislativeClass.M3, data.Vehicle.LegislativeClass);
 			Assert.AreEqual(500, data.Vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(3500, data.Vehicle.GrossVehicleMassRating.Value());
-			Assert.AreEqual(true, data.Vehicle.AirdragModifiedMultistage);
+			Assert.AreEqual(true, data.Vehicle.AirdragModifiedMultistep);
 			Assert.AreEqual(TankSystem.Compressed, data.Vehicle.TankSystem);
 			Assert.AreEqual(RegistrationClass.II_III, data.Vehicle.RegisteredClass);
 			Assert.AreEqual(1, data.Vehicle.NumberPassengerSeatsLowerDeck);
@@ -451,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			using (var xmlReader = XmlReader.Create(writer.XMLPrimaryVehicleReportName))
 			{
 				var validator = new XMLValidator(xmlReader);
-				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistageOutputData), validator.ValidationError);
+				Assert.IsTrue(validator.ValidateXML(VectoCore.Utils.XmlDocumentType.MultistepOutputData), validator.ValidationError);
 			}
 
 			ValidateVIFData(writer.XMLPrimaryVehicleReportName);

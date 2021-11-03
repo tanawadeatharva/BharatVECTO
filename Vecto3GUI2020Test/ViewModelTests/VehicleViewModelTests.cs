@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -126,9 +127,31 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.Null(vehicleData.ADAS);
 
 		}
+
+
+
+
 		#endregion
 
 
+		[Test]
+		public void ConsolidatedADASandTPMLMFromPrimaryVehicle()
+		{
+
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			Assert.NotNull(vm);
+
+			var vehicleViewModel =
+				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+
+			Assert.IsTrue(vm.MultiStageJobViewModel.ManufacturingStages.IsNullOrEmpty());
+
+			Assert.NotNull(vehicleViewModel.ConsolidatedVehicleData);
+			var consolidatedADAS = vehicleViewModel.ConsolidatedVehicleData.ADAS;
+			Assert.NotNull(consolidatedADAS);
+
+			Assert.NotNull(vehicleViewModel.ConsolidatedVehicleData.GrossVehicleMassRating);
+		}
 
 
 	}

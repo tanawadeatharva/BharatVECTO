@@ -262,7 +262,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_TPMLM,
 				_inputData.GrossVehicleMassRating?.ToXMLFormat(0)));
 
-			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AirdragModifiedMultistage, _inputData.AirdragModifiedMultistage));
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_AirdragModifiedMultistep, _inputData.AirdragModifiedMultistep));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_NgTankSystem, _inputData.TankSystem));
 			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Vehicle_RegisteredClass, _inputData.RegisteredClass.ToXMLFormat()));
 

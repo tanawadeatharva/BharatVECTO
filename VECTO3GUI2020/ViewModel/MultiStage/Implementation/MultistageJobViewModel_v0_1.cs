@@ -231,7 +231,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 				using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
 					var validator = new XMLValidator(reader);
-					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
+					var valid = validator.ValidateXML(XmlDocumentType.MultistepOutputData);
 					if (!valid) {
 						dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
 							MessageBoxButton.OK, MessageBoxImage.Error);
@@ -291,7 +291,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public string DocumentName => Path.GetFileNameWithoutExtension(_inputData.DataSource.SourceFile);
 
-		public XmlDocumentType? DocumentType => XmlDocumentType.MultistageOutputData;
+		public XmlDocumentType? DocumentType => XmlDocumentType.MultistepOutputData;
 
 		public string DocumentTypeName => DocumentType?.GetName();
 

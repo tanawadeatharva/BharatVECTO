@@ -53,7 +53,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsTrue(File.Exists(writer.XMLMultistageReportFileName));
 
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
+			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistepOutputData));
 		}
 
 		[Test, Combinatorial]
@@ -270,7 +270,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			vehicle.ManufacturerAddress = "Address";
 			vehicle.Manufacturer = "Manufacturer";
 			vehicle.VIN = "VIN12345678";
-			vehicle.AirdragModifiedMultistage = true;
+			vehicle.AirdragModifiedMultistep = true;
 			vehicle.VehicleDeclarationType = VehicleDeclarationType.interim;
 			
 			var writer = GetFileOutputVIFWriter(multiStageViewModel);
@@ -281,7 +281,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			multiStageViewModel.SaveVif(multiStageViewModel, writer);
 			
 			var validator = new XMLValidator(XmlReader.Create(writer.XMLMultistageReportFileName));
-			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistageOutputData));
+			Assert.True(validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.MultistepOutputData));
 		}
 
 

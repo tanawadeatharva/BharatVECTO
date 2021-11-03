@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
 
-		public virtual bool? AirdragModifiedMultistage { get; }
+		public virtual bool? AirdragModifiedMultistep { get; }
 
 		public virtual TankSystem? TankSystem => DeclarationData.Vehicle.TankSystemDefault;
 

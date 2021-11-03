@@ -238,7 +238,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
-		public bool? AirdragModifiedMultistage => throw new NotImplementedException();
+		public bool? AirdragModifiedMultistep => throw new NotImplementedException();
 
 		public virtual TankSystem? TankSystem
 		{

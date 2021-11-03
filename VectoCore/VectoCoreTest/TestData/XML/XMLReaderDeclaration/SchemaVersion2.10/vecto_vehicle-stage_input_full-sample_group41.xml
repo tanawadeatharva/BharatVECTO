@@ -15,7 +15,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<LegislativeCategory>M3</LegislativeCategory>
 		<CorrectedActualMass>8300</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<AirdragModifiedMultistage>false</AirdragModifiedMultistage>
+		<AirdragModifiedMultistep>false</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
 		<NgTankSystem>Compressed</NgTankSystem>
 		<NumberPassengerSeatsLowerDeck>2</NumberPassengerSeatsLowerDeck>

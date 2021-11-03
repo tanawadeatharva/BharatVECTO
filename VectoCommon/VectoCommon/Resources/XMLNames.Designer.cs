@@ -529,11 +529,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AirdragModifiedMultistage.
+        ///   Looks up a localized string similar to AirdragModifiedMultistep.
         /// </summary>
-        public static string Bus_AirdragModifiedMultistage {
+        public static string Bus_AirdragModifiedMultistep {
             get {
-                return ResourceManager.GetString("Bus_AirdragModifiedMultistage", resourceCulture);
+                return ResourceManager.GetString("Bus_AirdragModifiedMultistep", resourceCulture);
             }
         }
         
@@ -3778,11 +3778,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VectoOutputMultistage.
+        ///   Looks up a localized string similar to VectoOutputMultistep.
         /// </summary>
-        public static string VectoOutputMultistage {
+        public static string VectoOutputMultistep {
             get {
-                return ResourceManager.GetString("VectoOutputMultistage", resourceCulture);
+                return ResourceManager.GetString("VectoOutputMultistep", resourceCulture);
             }
         }
         

@@ -575,7 +575,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicleData.LegislativeClass);			
 			Assert.AreEqual(null, vehicleData.CurbMassChassis);
 			Assert.AreEqual(null, vehicleData.GrossVehicleMassRating);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(null, vehicleData.TankSystem);
 			Assert.AreEqual(null, vehicleData.RegisteredClass);
 			Assert.AreEqual(null, vehicleData.NumberPassengerSeatsLowerDeck);
@@ -614,7 +614,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Intermediate Manufacturer Address 2", vehicleData.ManufacturerAddress);
 			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
 			Assert.AreEqual(true, vehicleData.ADAS.EngineStopStart);
@@ -705,7 +705,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
 			Assert.AreEqual(25000.SI<Kilogram>(), vehicleData.CurbMassChassis);
 			Assert.AreEqual(30000.SI<Kilogram>(), vehicleData.GrossVehicleMassRating);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
 			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
 			Assert.AreEqual(24, vehicleData.NumberPassengerSeatsLowerDeck);

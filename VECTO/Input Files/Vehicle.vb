@@ -794,7 +794,7 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+	Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
 
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 		Get

@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public bool SleeperCab => false;
 
-		public virtual bool? AirdragModifiedMultistage => null;
+		public virtual bool? AirdragModifiedMultistep => null;
 
 		public TankSystem? TankSystem =>
 			ElementExists(XMLNames.Vehicle_NgTankSystem)
