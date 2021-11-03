@@ -151,6 +151,12 @@
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 						<xs:annotation>
 							<xs:documentation>P514 - [-]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">514</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="AppVersion" type="v1.0:AppVersionType">
@@ -177,6 +183,12 @@
 					<xs:element name="RatedCapacity">
 						<xs:annotation>
 							<xs:documentation>P518 - [Ah]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">518</vectoParam:parameterId>
+									<vectoParam:unit>Ah</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v1.0:Double2">
@@ -187,11 +199,23 @@
 					<xs:element name="ConnectorsSubsystemsIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P519 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">519</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="JunctionboxIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P520 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">520</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
@@ -342,16 +366,34 @@
 					<xs:element name="Capacitance" type="v2.10.1:CapacitanceType">
 						<xs:annotation>
 							<xs:documentation>P538 - [F]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
+									<vectoParam:unit>F</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="InternalResistance" type="v2.10.1:InternalResistanceType">
 						<xs:annotation>
 							<xs:documentation>P539 - [mOhm]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
+									<vectoParam:unit>mOhm</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MinVoltage" type="v2.10.1:CapacitorVoltageType">
 						<xs:annotation>
 							<xs:documentation>P540 - [V]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
+									<vectoParam:unit>V</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxVoltage" type="v2.10.1:CapacitorVoltageType">
