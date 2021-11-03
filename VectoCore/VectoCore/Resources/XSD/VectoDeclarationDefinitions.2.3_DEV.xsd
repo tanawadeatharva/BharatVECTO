@@ -217,8 +217,8 @@
 			<xs:element name="WHRCorrectionFactors" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Electrical" type="v2.3:WHRCorrectionFactorsType" minOccurs="0"/>
-						<xs:element name="Mechanical" type="v2.3:WHRCorrectionFactorsType" minOccurs="0"/>
+						<xs:element name="Electrical" type="v2.3:WHRElectricalCorrectionFactorsType" minOccurs="0"/>
+						<xs:element name="Mechanical" type="v2.3:WHRMechanicalCorrectionFactorsType" minOccurs="0"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -342,11 +342,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="WHRCorrectionFactorsType">
+	<xs:complexType name="WHRElectricalCorrectionFactorsType">
 		<xs:sequence>
 			<xs:element name="Urban">
 				<xs:annotation>
-					<xs:documentation>P338, P343 - [-]</xs:documentation>
+					<xs:documentation>P338 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
@@ -356,7 +356,7 @@
 			</xs:element>
 			<xs:element name="Rural">
 				<xs:annotation>
-					<xs:documentation>P339, P344 - [-]</xs:documentation>
+					<xs:documentation>P339 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
@@ -366,7 +366,7 @@
 			</xs:element>
 			<xs:element name="Motorway">
 				<xs:annotation>
-					<xs:documentation>P340, P345 - [-]</xs:documentation>
+					<xs:documentation>P340 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
@@ -376,7 +376,7 @@
 			</xs:element>
 			<xs:element name="BFColdHot">
 				<xs:annotation>
-					<xs:documentation>P341, P346 - [-]</xs:documentation>
+					<xs:documentation>P341 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
@@ -386,7 +386,61 @@
 			</xs:element>
 			<xs:element name="CFRegPer">
 				<xs:annotation>
-					<xs:documentation>P342, P347 - [-]</xs:documentation>
+					<xs:documentation>P342 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WHRMechanicalCorrectionFactorsType">
+		<xs:sequence>
+			<xs:element name="Urban">
+				<xs:annotation>
+					<xs:documentation>P343 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Rural">
+				<xs:annotation>
+					<xs:documentation>P344 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Motorway">
+				<xs:annotation>
+					<xs:documentation>P345 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BFColdHot">
+				<xs:annotation>
+					<xs:documentation>P346 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CFRegPer">
+				<xs:annotation>
+					<xs:documentation>P347 - [-]</xs:documentation>
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
