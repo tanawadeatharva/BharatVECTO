@@ -197,6 +197,12 @@
 					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P521 - [°C]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">521</vectoParam:parameterId>
+									<vectoParam:unit>°C</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="OCV">
