@@ -2734,6 +2734,8 @@
 				<vectoParam:description>
 					<vectoParam:parameterId component="Vehicle">283</vectoParam:parameterId>
 					<vectoParam:parameterId component="Vehicle">284</vectoParam:parameterId>
+					<vectoParam:parameterId component="Vehicle">355</vectoParam:parameterId>
+					<vectoParam:parameterId component="Vehicle">354</vectoParam:parameterId>
 					<vectoParam:unit>-</vectoParam:unit>
 				</vectoParam:description>
 			</xs:appinfo>
