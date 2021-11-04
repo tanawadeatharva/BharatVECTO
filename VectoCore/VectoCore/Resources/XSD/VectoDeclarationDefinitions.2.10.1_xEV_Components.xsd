@@ -539,6 +539,12 @@
 					<xs:element name="CertificationMethod">
 						<xs:annotation>
 							<xs:documentation>P456 - enum</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">456</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v2.10.1:CertificationMethodType">
@@ -662,6 +668,12 @@
 					<xs:element name="CertificationMethod">
 						<xs:annotation>
 							<xs:documentation>P456 - enum</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">456</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v2.10.1:CertificationMethodType">
@@ -735,6 +747,12 @@
 					<xs:element name="CertificationMethod">
 						<xs:annotation>
 							<xs:documentation>P456 - enum</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">456</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v2.10.1:CertificationMethodType">
