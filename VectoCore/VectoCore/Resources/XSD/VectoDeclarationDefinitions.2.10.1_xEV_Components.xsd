@@ -495,12 +495,12 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="IEPCSystemDragTorqueEntryType">
-		<xs:attribute name="outShaftSpeed" use="required" type="v2.10.1:OutShaftSpeedType">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P504 - [rpm]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="dragTorque" use="required" type="v2.10.1:DragTorqueType">
+		<xs:attribute name="dragTorque" type="v2.10.1:DragTorqueType" use="required">
 			<xs:annotation>
 				<xs:documentation>P505 - [Nm]</xs:documentation>
 			</xs:annotation>
@@ -508,25 +508,24 @@
 	</xs:complexType>
 	<xs:simpleType name="DragTorqueType">
 		<xs:annotation>
-				<xs:documentation>P472, P505 - [Nm]</xs:documentation>
-				<xs:appinfo>
-					<vectoParam:description>
-						<vectoParam:parameterId component="ElectricMachine/DragTorque">472</vectoParam:parameterId>
-						<vectoParam:parameterId component="IEPC/DragTorque">505</vectoParam:parameterId>
-						<vectoParam:unit>Nm</vectoParam:unit>
-					</vectoParam:description>
-				</xs:appinfo>
-			</xs:annotation>
-		<xs:restriction base="v1.0:Double2">
-		</xs:restriction>
+			<xs:documentation>P472, P505 - [Nm]</xs:documentation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="ElectricMachine/DragTorque">472</vectoParam:parameterId>
+					<vectoParam:parameterId component="IEPC/DragTorque">505</vectoParam:parameterId>
+					<vectoParam:unit>Nm</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2"/>
 	</xs:simpleType>
 	<xs:complexType name="ElectricMachineSystemDragTorqueEntryType">
-		<xs:attribute name="outShaftSpeed" use="required" type="v2.10.1:OutShaftSpeedType">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P471 - [rpm]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="dragTorque" use="required" type="v2.10.1:DragTorqueType">
+		<xs:attribute name="dragTorque" type="v2.10.1:DragTorqueType" use="required">
 			<xs:annotation>
 				<xs:documentation>P472 - [Nm]</xs:documentation>
 			</xs:annotation>
@@ -556,6 +555,12 @@
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P465 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">465</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="IHPCType">
@@ -563,10 +568,10 @@
 							<xs:documentation>P466 - enum</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-										<vectoParam:parameterId component="ElectricMachine">466</vectoParam:parameterId>
-										<vectoParam:unit>-</vectoParam:unit>
-									</vectoParam:description>
-								</xs:appinfo>
+									<vectoParam:parameterId component="ElectricMachine">466</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="v2.10.1:IHPCTypeType">
@@ -741,6 +746,12 @@
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P465 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">465</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="IHPCType">
@@ -748,8 +759,8 @@
 							<xs:documentation>P466 - enum</xs:documentation>
 							<xs:appinfo>
 								<vectoParam:description>
-										<vectoParam:parameterId component="ElectricMachine">466</vectoParam:parameterId>
-										<vectoParam:unit>-</vectoParam:unit>
+									<vectoParam:parameterId component="ElectricMachine">466</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
 								</vectoParam:description>
 							</xs:appinfo>
 						</xs:annotation>
