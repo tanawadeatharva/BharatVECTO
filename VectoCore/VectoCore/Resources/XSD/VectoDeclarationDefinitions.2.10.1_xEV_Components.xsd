@@ -507,8 +507,7 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:simpleType name="DragTorqueType">
-		<xs:restriction base="v1.0:Double2">
-			<xs:annotation>
+		<xs:annotation>
 				<xs:documentation>P472, P505 - [Nm]</xs:documentation>
 				<xs:appinfo>
 					<vectoParam:description>
@@ -518,6 +517,7 @@
 					</vectoParam:description>
 				</xs:appinfo>
 			</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="ElectricMachineSystemDragTorqueEntryType">
