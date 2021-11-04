@@ -164,7 +164,7 @@
 			</ElectricMachine>
 			<ElectricEnergyStorage>			
 				<Capacitor>
-					<v2.10.2:Data id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.10.2:Data id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1"  xsi:type="CapacitorDataType">
 						<Manufacturer>Capacitor Manufacturer</Manufacturer>
 						<Model>Capacitor Model</Model>
 						<CertificationNumber>ccccccc</CertificationNumber>

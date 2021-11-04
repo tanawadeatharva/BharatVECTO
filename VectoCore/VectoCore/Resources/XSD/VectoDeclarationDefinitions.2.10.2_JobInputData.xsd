@@ -1441,7 +1441,7 @@
 			<xs:element name="REESS">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Data" type="v2.10.1:BatterySystemDataType"/>
+						<xs:element name="Data" type="v2.10.1:AbstractBatteryDataType"/>
 						<xs:element name="Signature" type="v2.0:SignatureType"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -1474,7 +1474,7 @@
 	</xs:complexType>
 	<xs:complexType name="REESSCapacitorType">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.1:CapacitorDataType"/>
+			<xs:element name="Data" type="v2.10.1:AbstractCapacitorDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
