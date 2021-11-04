@@ -3451,6 +3451,12 @@
 			<xs:element name="AirdragModifiedMultistage" type="xs:boolean" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P334 - bool</xs:documentation>
+					<xs:appinfo>
+						<vectoParam:description>
+							<vectoParam:parameterId component="Vehicle">334</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description>
+					</xs:appinfo>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ClassBus" type="v2.10.2:RegisteredClassType" minOccurs="0">
