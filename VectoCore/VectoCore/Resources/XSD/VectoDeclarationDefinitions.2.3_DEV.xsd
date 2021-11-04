@@ -300,6 +300,12 @@
 					<xs:element name="TyreClass">
 						<xs:annotation>
 							<xs:documentation>P370 - enum</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="Tyre">370</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -314,6 +320,12 @@
 					<xs:element name="FuelEfficiencyClass">
 						<xs:annotation>
 							<xs:documentation>P371 - enum</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="Tyre">371</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
