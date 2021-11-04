@@ -118,6 +118,12 @@
 					<xs:element name="APTEcoRollReleaseLockupClutch" type="xs:boolean" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P333 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="Vehicle">333</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
