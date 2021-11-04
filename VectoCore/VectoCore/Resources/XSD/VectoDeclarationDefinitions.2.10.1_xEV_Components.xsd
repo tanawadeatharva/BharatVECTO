@@ -494,25 +494,20 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemDragTorqueEntryType">
-		<xs:attribute name="outShaftSpeed" use="required">
+	<xs:complexType name="IEPCSystemDragTorqueEntryType">
+		<xs:attribute name="outShaftSpeed" use="required" type="v2.10.1:OutShaftSpeedType">
 			<xs:annotation>
-				<xs:documentation>P471, P504 - [rpm]</xs:documentation>
-				<xs:appinfo>
-					<vectoParam:description>
-						<vectoParam:parameterId component="ElectricMachine/DragTorque">471</vectoParam:parameterId>
-						<vectoParam:parameterId component="IEPC/DragTorque">504</vectoParam:parameterId>
-						<vectoParam:unit>1/min</vectoParam:unit>
-					</vectoParam:description>
-				</xs:appinfo>
+				<xs:documentation>P504 - [rpm]</xs:documentation>
 			</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="v1.0:Double2">
-					<xs:minInclusive value="0.00"/>
-				</xs:restriction>
-			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="dragTorque" use="required">
+		<xs:attribute name="dragTorque" use="required" type="v2.10.1:DragTorqueType">
+			<xs:annotation>
+				<xs:documentation>P505 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="DragTorqueType">
+		<xs:restriction base="v1.0:Double2">
 			<xs:annotation>
 				<xs:documentation>P472, P505 - [Nm]</xs:documentation>
 				<xs:appinfo>
@@ -523,11 +518,18 @@
 					</vectoParam:description>
 				</xs:appinfo>
 			</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="v1.0:Double2">
-					<xs:minInclusive value="0.00"/>
-				</xs:restriction>
-			</xs:simpleType>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ElectricMachineSystemDragTorqueEntryType">
+		<xs:attribute name="outShaftSpeed" use="required" type="v2.10.1:OutShaftSpeedType">
+			<xs:annotation>
+				<xs:documentation>P471 - [rpm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="dragTorque" use="required" type="v2.10.1:DragTorqueType">
+			<xs:annotation>
+				<xs:documentation>P472 - [Nm]</xs:documentation>
+			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineSystemIHPCMeasuredDataDeclarationType">
@@ -625,7 +627,7 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
-		<xs:attribute name="outShaftSpeed" type="v2.10.1:outShaftSpeedType" use="required">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P468 - [rpm]</xs:documentation>
 			</xs:annotation>
@@ -698,7 +700,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineSystemPowerMapEntryType">
-		<xs:attribute name="outShaftSpeed" type="v2.10.1:outShaftSpeedType" use="required">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P473 - [rpm]</xs:documentation>
 			</xs:annotation>
@@ -1009,7 +1011,7 @@
 					<xs:element name="DragCurve" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.10.1:IEPCSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
 							<xs:attribute name="gear" use="required">
 								<xs:simpleType>
@@ -1067,7 +1069,7 @@
 					<xs:element name="DragCurve">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="v2.10.1:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.10.1:IEPCSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1076,7 +1078,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="IEPCSystemMaxTorqueEntryType">
-		<xs:attribute name="outShaftSpeed" type="v2.10.1:outShaftSpeedType" use="required">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P501 - [rpm]</xs:documentation>
 			</xs:annotation>
@@ -1093,7 +1095,7 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="IEPCSystemPowerMapEntryType">
-		<xs:attribute name="outShaftSpeed" type="v2.10.1:outShaftSpeedType" use="required">
+		<xs:attribute name="outShaftSpeed" type="v2.10.1:OutShaftSpeedType" use="required">
 			<xs:annotation>
 				<xs:documentation>P506 - [rpm]</xs:documentation>
 			</xs:annotation>
@@ -1413,15 +1415,17 @@
 			<xs:enumeration value="2"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="outShaftSpeedType">
+	<xs:simpleType name="OutShaftSpeedType">
 		<xs:annotation>
-			<xs:documentation>P468, P501 - [rpm]</xs:documentation>
+			<xs:documentation>P468, P471, P473, P501, P504, P506 - [rpm]</xs:documentation>
 			<xs:appinfo>
 				<vectoParam:description>
 					<vectoParam:parameterId component="ElectricMachine/MaxMinTorque">468</vectoParam:parameterId>
 					<vectoParam:parameterId component="ElectricMachine/PowerMap">473</vectoParam:parameterId>
 					<vectoParam:parameterId component="IEPC/MaxMinTorque">501</vectoParam:parameterId>
 					<vectoParam:parameterId component="IEPC/PowerMap">506</vectoParam:parameterId>
+					<vectoParam:parameterId component="ElectricMachine/DragTorque">471</vectoParam:parameterId>
+					<vectoParam:parameterId component="IEPC/DragTorque">504</vectoParam:parameterId>
 					<vectoParam:unit>1/min</vectoParam:unit>
 				</vectoParam:description>
 			</xs:appinfo>
