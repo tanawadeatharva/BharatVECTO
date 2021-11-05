@@ -59,6 +59,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IPTOTransmissionInputData _ptoInputData;
 		protected IXMLDeclarationVehicleData _vehicle;
 		protected ITorqueConverterDeclarationInputData _torqueconverterInputData;
+		protected IElectricMachinesDeclarationInputData _electricMachinesInputData;
+		protected IElectricStorageSystemDeclarationInputData _electricStorageSystemInputData;
+		protected IIEPCDeclarationInputData _iepcInputData;
+
 
 
 		public XMLDeclarationComponentsDataProviderV10(
@@ -93,8 +97,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
 		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries => null;
-		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage => null;
-		public virtual IElectricMachinesDeclarationInputData ElectricMachines => null;
+		public virtual IElectricStorageSystemDeclarationInputData ElectricStorage =>  _electricStorageSystemInputData  ?? (_electricStorageSystemInputData = ComponentReader.ElectricStorageSystem);
+		public virtual IElectricMachinesDeclarationInputData ElectricMachines => _electricMachinesInputData ?? (_electricMachinesInputData = ComponentReader.ElectricMachines);
+		public virtual IIEPCDeclarationInputData IEPC => _iepcInputData ?? (_iepcInputData = ComponentReader.IEPCInputData);
 
 		#endregion
 
@@ -148,6 +153,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{ }
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAngledriveInputData AngledriveInputData
+			=> ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData
+			=> ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData
+			=> ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -168,9 +186,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{ }
 
 
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+		
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData => null;
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		#endregion
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries =>
+			_busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData);
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
@@ -283,5 +314,319 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				return null;
 			return busAux;
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHEVPxLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-Px_LorryType";
+		
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+		
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------	
+
+	public class XMLDeclarationHEVS2LorryComponentsDataProviderV210 : XMLDeclarationHEVPxLorryComponentsDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		#endregion
+	}
+	
+	// ---------------------------------------------------------------------------------------	
+
+	public class XMLDeclarationHEVSXLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public const string XSD_HEV_S3_TYPE = "Components_HEV-S3_LorryType";
+		public const string XSD_HEV_S4_TYPE = "Components_HEV-S4_LorryType";
+
+		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
+		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
+
+		public XMLDeclarationHEVSXLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-Px_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+		public XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
+																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+		
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-S2_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210 : XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public const string XSD_HEV_S3_TYPE = "Components_HEV-S3_PrimaryBusType";
+		public const string XSD_HEV_S4_TYPE = "Components_HEV-S4_PrimaryBusType";
+		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
+		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
+
+		public XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-IEPC-S_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAxleGearInputData AxleGearInputData =>
+			ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData => 
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+		
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_HEV-IEPC-S_PrimaryBus";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+		public XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAirdragDeclarationInputData AirdragInputData => null;
+		
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesDeclarationInputData ??
+																		(_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAxleGearInputData AxleGearInputData =>
+			ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+		#endregion
+
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHeavyLorryPEVE2ComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E2_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationHeavyLorryPEVE2ComponentDataV210(IXMLDeclarationVehicleData vehicle,
+			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+		
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationHeavyLorryPEVExComponentDataV210 : XMLDeclarationHeavyLorryPEVE2ComponentDataV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E3_LorryType";
+		public const string XSD_PEV_E4_TYPE = "Components_PEV-E4_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_PEV_E4_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E4_TYPE);
+		public XMLDeclarationHeavyLorryPEVExComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusPEVE2ComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E2_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+		public XMLDeclarationPrimaryBusPEVE2ComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IEngineDeclarationInputData EngineInputData => null;
+
+		public override IIEPCDeclarationInputData IEPC => null;
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries  => _busAuxiliariesDeclarationInputData ??
+																 	 (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+
+		public override IAngledriveInputData AngledriveInputData =>
+			ElementExists(XMLNames.Component_Angledrive) ? base.AngledriveInputData : null;
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusPEVExComponentDataV210 : XMLDeclarationPrimaryBusPEVE2ComponentDataV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_PEV-E3_PrimaryBusType";
+		public const string XSD_PEV_E4_TYPE = "Components_PEV-E4_PrimaryBusType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_PEV_E4_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E4_TYPE);
+
+		public XMLDeclarationPrimaryBusPEVExComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationIEPCHeavyLorryComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_IEPC_LorryType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationIEPCHeavyLorryComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAxleGearInputData AxleGearInputData =>
+			ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+
+		public override IAirdragDeclarationInputData AirdragInputData =>
+			ElementExists(XMLNames.Component_AirDrag) ? base.AirdragInputData : null;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationIEPCPrimaryBusComponentDataV210 : XMLDeclarationPrimaryBusComponentsDataProviderV210
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new const string XSD_TYPE = "Components_IEPC_PrimaryBusType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationIEPCPrimaryBusComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IRetarderInputData RetarderInputData =>
+			ElementExists(XMLNames.Component_Retarder) ? base.RetarderInputData : null;
+
+		public override IAxleGearInputData AxleGearInputData =>
+			ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
+		
+		#endregion
 	}
 }

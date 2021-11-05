@@ -727,8 +727,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
                 for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
-						MinSOC = b.MinSOC,
-						MaxSOC = b.MaxSOC,
+						MinSOC = b.MinSOC.Value,
+						MaxSOC = b.MaxSOC.Value,
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
@@ -804,8 +804,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
 					FullLoadCurve = fullLoadCurveCombined,
-					DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					//EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count), //PowerMap
 				});
 			}
 

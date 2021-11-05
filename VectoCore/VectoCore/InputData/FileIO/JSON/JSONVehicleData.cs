@@ -145,13 +145,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new JSONElectricStorageSystemEngineeringInputData(entries);
 		}
 
-		public override TableData ElectricMotorTorqueLimits =>
+		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits =>
+			throw new NotImplementedException();
+		/*public override TableData ElectricMotorTorqueLimits =>
 			Body["EMTorqueLimits"] == null
 				? null
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
-					"ElectricMotorTorqueLimits");
+					"ElectricMotorTorqueLimits");*/
 
-		public override TableData MaxPropulsionTorque =>
+		public override TableData BoostingLimitations =>
 			Body["MaxPropulsionTorque"] == null
 				? null
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),
@@ -275,12 +277,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool Articulated => false;
 
 		public virtual Meter Height => Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
-
-		public virtual TableData ElectricMotorTorqueLimits => null;
-
-		public virtual TableData MaxPropulsionTorque => null;
-
-
+		
+		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
+		
+		public virtual TableData BoostingLimitations => null;
+		
 		public virtual Meter Length => null;
 
 		public virtual Meter Width => null;
@@ -293,6 +294,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
+		public virtual string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public GearshiftPosition PTO_DriveGear => Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
 
@@ -402,6 +407,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
+		public IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()
 		{

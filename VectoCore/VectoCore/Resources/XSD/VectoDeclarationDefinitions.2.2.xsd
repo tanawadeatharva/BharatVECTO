@@ -11,27 +11,27 @@
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
-							<xs:documentation>P230</xs:documentation>
+							<xs:documentation>P230 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Model" type="v1.0:ModelType">
 						<xs:annotation>
-							<xs:documentation>P231</xs:documentation>
+							<xs:documentation>P231 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P267</xs:documentation>
+							<xs:documentation>P267 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 						<xs:annotation>
-							<xs:documentation>P233</xs:documentation>
+							<xs:documentation>P233 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="AppVersion" type="v1.0:AppVersionType">
 						<xs:annotation>
-							<xs:documentation>P234</xs:documentation>
+							<xs:documentation>P234 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Dimension" type="v2.2:TyreDimensionType">

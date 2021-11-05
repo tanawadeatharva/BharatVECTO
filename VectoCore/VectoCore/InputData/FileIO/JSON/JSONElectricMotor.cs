@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return Body["VoltageLevels"].Select(entry => new ElectricMotorVoltageLevel() {
 				VoltageLevel = entry.GetEx<double>("Voltage").SI<Volt>(),
 				EfficiencyMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"),
-				DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
+				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
 				FullLoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
 			}).Cast<IElectricMotorVoltageLevel>().ToList();
 		}
@@ -64,13 +64,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				new ElectricMotorVoltageLevel() {
 					VoltageLevel = 0.SI<Volt>(),
 					EfficiencyMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"),
-					DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
+					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
 					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
 				},
 				new ElectricMotorVoltageLevel() {
 					VoltageLevel = 1e9.SI<Volt>(),
 					EfficiencyMap = ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map"),
-					DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
+					// DragCurve = ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
 					FullLoadCurve = ReadTableData(Body.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
 				},
 			};
@@ -82,12 +82,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData DragCurve => ReadTableData(Body.GetEx<string>("DragCurve"), "ElectricMotor DragCurve");
 
+		public virtual TableData Conditioning =>
+			ReadTableData(Body.GetEx<string>("Conditioning"), "ElectricMotor Conditioning", false);
+
 		public virtual TableData EfficiencyMap => ReadTableData(Body.GetEx<string>("EfficiencyMap"), "ElectricMotor Map");
 
+		public ElectricMachineType ElectricMachineType { get; }
+		public Watt R85RatedPower => null;
 		public virtual KilogramSquareMeter Inertia => Body.GetEx<double>("Inertia").SI<KilogramSquareMeter>();
 
 		public virtual Joule OverloadBuffer => Body.GetValueOrDefault<double>("ThermalOverloadBuffer")?.SI(Unit.SI.Mega.Joule).Cast<Joule>() ?? 1e18.SI<Joule>();
 
+		public string IHPCType => null;
 		public virtual double OverloadRecoveryFactor => Body.GetValueOrDefault<double>("ThermalOverloadRecoveryFactor") ?? 0.9;
 
 		public virtual NewtonMeter ContinuousTorque => (Body.GetValueOrDefault<double>("ContinuousPower")?.SI<Watt>() ?? 1e12.SI<Watt>()) / (Body.GetValueOrDefault<double>("ContinuousPowerSpeed")?.RPMtoRad() ?? 1.SI<PerSecond>());
@@ -99,5 +105,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual PerSecond OverloadTestSpeed => null;
 
 		public virtual Second OverloadTime => Body.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>();
+		public Volt TestVoltageOverload => null;
+		public bool DcDcConverterIncluded { get; }
 	}
 }

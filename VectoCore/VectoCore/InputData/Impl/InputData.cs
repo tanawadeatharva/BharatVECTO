@@ -299,8 +299,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public Volt VoltageLevel { get; internal set; }
 		public TableData FullLoadCurve { get; internal set; }
-		public TableData DragCurve { get; internal set; }
 		public TableData EfficiencyMap { get; internal set; }
+		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion
 	}

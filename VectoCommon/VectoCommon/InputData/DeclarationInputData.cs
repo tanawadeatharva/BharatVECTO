@@ -198,10 +198,23 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
+		Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
+
+		TableData BoostingLimitations { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
 		XmlNode XMLSource { get; }
+
+		string VehicleTypeApprovalNumber { get; }
+		
+		ArchitectureID ArchitectureID { get; }
+		
+		bool OvcHev { get; }
+
+		Watt MaxChargingPower { get; }
+
 	}
 
 	public interface IVehicleComponentsDeclaration
@@ -231,6 +244,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
+
+		IIEPCDeclarationInputData IEPC { get; }
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -710,36 +725,52 @@ namespace TUGraz.VectoCommon.InputData
 		IList<string> Technology { get; }
 	}
 
-	public interface IElectricMotorDeclarationInputData : IComponentInputData
+	public interface IPowerRatingInputData
 	{
+		ElectricMachineType ElectricMachineType { get; }
+		Watt R85RatedPower { get; }
+		KilogramSquareMeter Inertia { get; } //RotationalInertia
+		NewtonMeter ContinuousTorque { get; }
+		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
+		NewtonMeter OverloadTorque { get; }
+		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+		Second OverloadTime { get; } //OverloadDuration
+	}
+
+
+	public interface IElectricMotorDeclarationInputData : IComponentInputData, IPowerRatingInputData
+	{
+		Volt TestVoltageOverload { get; }
+
+		bool DcDcConverterIncluded { get; }
+
+		string IHPCType { get; }
+
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
-		KilogramSquareMeter Inertia { get; }
+		TableData DragCurve { get; }
 
-		Second OverloadTime { get; }
-
+		TableData Conditioning { get; }
+		
 		double OverloadRecoveryFactor { get; }
-
-		NewtonMeter ContinuousTorque { get; }
-
-		PerSecond ContinuousTorqueSpeed { get; }
-
-		NewtonMeter OverloadTorque { get; }
-
-		PerSecond OverloadTestSpeed { get; }
 	}
 
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
 
-		TableData FullLoadCurve { get; }
+		TableData FullLoadCurve { get; } //MaxTorqueCurve
 
-		TableData DragCurve { get; }
-
-		TableData EfficiencyMap { get; }
+		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
 
+	public interface IElectricMotorPowerMap
+	{
+		int Gear { get; }
+
+		TableData PowerMap { get; }
+	}
+	
 	public interface IElectricMachinesDeclarationInputData
 	{
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
@@ -760,10 +791,61 @@ namespace TUGraz.VectoCommon.InputData
 		public double MechanicalTransmissionEfficiency { get; set; }
 
 		public TableData MechanicalTransmissionLossMap { get; set; }
+
+		public IADCDeclarationInputData ADC {get; set; }
+	}
+	
+	public interface IADCDeclarationInputData : IComponentInputData
+	{
+		/// <summary>
+		/// P176
+		/// </summary>
+		double Ratio { get; }
+
+		/// <summary>
+		/// P173, P174, P175
+		/// </summary>
+		TableData LossMap { get; }
 	}
 
-	
 
+	public interface IIEPCDeclarationInputData : IComponentInputData , IPowerRatingInputData
+	{
+		Volt TestVoltageOverload { get; }
+
+		bool DifferentialIncluded { get; }
+
+		bool DesignTypeWheelMotor { get; }
+
+		int? NrOfDesignTypeWheelMotorMeasured { get; }
+
+		IList<IGearEntry> Gears { get; }
+
+		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
+
+		IList<IDragCurve> DragCurves { get; }
+
+		TableData Conditioning { get; }
+	}
+
+	public interface IDragCurve
+	{
+		int? Gear { get; }
+
+		TableData DragCurve { get; }
+	}
+
+
+	public interface IGearEntry
+	{
+		int GearNumber { get; }
+
+		double Ratio { get; }
+		NewtonMeter MaxOutputShaftTorque { get; }
+		
+		PerSecond MaxOutputShaftSpeed { get; }
+	}
+	
 	public interface IElectricStorageSystemDeclarationInputData 
 	{
 		IList<IElectricStorageDeclarationInputData> ElectricStorageElements { get; }
@@ -792,12 +874,19 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBatteryPackDeclarationInputData : IREESSPackInputData
 	{
-		
-		double MinSOC { get; }
+		double? MinSOC { get; }
 
-		double MaxSOC { get; }
+		double? MaxSOC { get; }
+
+		BatteryType BatteryType { get; }
 
 		AmpereSecond Capacity { get; }
+
+		bool ConnectorsSubsystemsIncluded { get; }
+
+		bool JunctionboxIncluded { get; }
+
+		Kelvin TestingTemperature { get; }
 
 		TableData InternalResistanceCurve { get; }
 
@@ -820,6 +909,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Ampere MaxCurrentDischarge { get; }
 
+		Kelvin TestingTemperature { get; }
 	}
 
 
@@ -1057,4 +1147,83 @@ namespace TUGraz.VectoCommon.InputData
 		}
 	}
 
+
+	public enum ElectricMachineType
+	{
+		ASM,
+		ESM,
+		PSM,
+		RM
+	}
+
+	public enum BatteryType
+	{
+		HPBS,
+		HEBS
+	}
+
+	public enum ArchitectureID
+	{
+		E2,
+		E3,
+		E4,
+		E_IEPC,
+		P1,
+		P2,
+		P2_5,
+		P3,
+		P4,
+		S2,
+		S3,
+		S4,
+		S_IEPC
+	}
+
+
+	public static class ArchitectureIDHelper
+	{
+		private const string E_IEPC_ID = "E-IEPC";
+		private const string P2_5_ID = "P2.5";
+		private const string S_IEPC_ID = "S-IEPC";
+
+		public static ArchitectureID Parse(string parse)
+		{
+			switch (parse)
+			{
+				case nameof(ArchitectureID.E2):
+				case nameof(ArchitectureID.E3):
+				case nameof(ArchitectureID.E4):
+				case nameof(ArchitectureID.P1):
+				case nameof(ArchitectureID.P2):
+				case nameof(ArchitectureID.P3):
+				case nameof(ArchitectureID.P4):
+				case nameof(ArchitectureID.S2):
+				case nameof(ArchitectureID.S3):
+				case nameof(ArchitectureID.S4):
+					return parse.ParseEnum<ArchitectureID>();
+				case E_IEPC_ID:
+					return ArchitectureID.E_IEPC;
+				case P2_5_ID:
+					return ArchitectureID.P2_5;
+				case S_IEPC_ID:
+					return ArchitectureID.S_IEPC;
+				default:
+					throw new ArgumentOutOfRangeException($"{nameof(ArchitectureID)}");
+			}
+		}
+
+		public static string GetLabel(this ArchitectureID type)
+		{
+			switch (type) {
+				case ArchitectureID.E_IEPC:
+					return E_IEPC_ID;
+				case ArchitectureID.P2_5:
+					return P2_5_ID;
+				case ArchitectureID.S_IEPC:
+					return S_IEPC_ID;
+				default:
+					return type.ToString();
+			}
+		}
+	}
 }

@@ -46,7 +46,7 @@
 						</Gear>
 						<Gear number="2">
 							<Ratio>1.000</Ratio>
-							<MaxOutShaftTorque>2000.00</MaxOutShaftTorque>
+							<MaxOutShaftTorque>2000</MaxOutShaftTorque>
 						</Gear>
 					</Gears>
 					<VoltageLevel>
@@ -55,11 +55,17 @@
 							<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 							<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 						</MaxTorqueCurve>
-						<PowerMap>
+						<PowerMap gear="1">
 							<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 							<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+						</PowerMap>
+						<PowerMap gear="2">
+							<Entry outShaftSpeed="0.00" torque="500.00" electricPower="1500.00"/>
+							<Entry outShaftSpeed="0.00" torque="-500.00" electricPower="-1500.00"/>
+							<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="25000.00"/>
+							<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-25000.00"/>
 						</PowerMap>
 					</VoltageLevel>
 					<VoltageLevel>
@@ -68,18 +74,28 @@
 							<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 							<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 						</MaxTorqueCurve>
-						<PowerMap>
+						<PowerMap gear="1">
 							<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 							<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 							<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 						</PowerMap>
+						<PowerMap gear="2">
+							<Entry outShaftSpeed="0.00" torque="500.00" electricPower="1500.00"/>
+							<Entry outShaftSpeed="0.00" torque="-500.00" electricPower="-1500.00"/>
+							<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="25000.00"/>
+							<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-25000.00"/>
+						</PowerMap>
 					</VoltageLevel>
-					<DragCurve>
+					<DragCurve gear="1">
 						<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 						<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
 					</DragCurve>
-					<Conditioning circuitId="0">
+					<DragCurve gear="2">
+						<Entry outShaftSpeed="0.00" dragTorque="15.00"/>
+						<Entry outShaftSpeed="4500.00" dragTorque="35.00"/>
+					</DragCurve>
+					<Conditioning>
 						<Entry coolantTempInlet="30" coolingPower="5000"/>
 					</Conditioning>
 				</v2.10.1:Data>
@@ -94,7 +110,7 @@
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1"  xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -115,8 +131,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>
@@ -132,7 +148,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1"  xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -153,8 +169,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>

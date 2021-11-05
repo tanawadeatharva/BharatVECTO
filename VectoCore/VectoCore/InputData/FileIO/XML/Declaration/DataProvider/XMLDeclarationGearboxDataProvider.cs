@@ -84,6 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					case "AMT": return GearboxType.AMT;
 					case "APT-S":
 					case "AT - Serial": return GearboxType.ATSerial;
+					case "APT-N":
 					case "APT-P":
 					case "AT - PowerSplit": return GearboxType.ATPowerSplit;
 				}
@@ -189,5 +190,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 		
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationGearboxDataProviderV2101 : XMLDeclarationGearboxDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new const string XSD_TYPE = "GearboxDataDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationGearboxDataProviderV2101(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 }

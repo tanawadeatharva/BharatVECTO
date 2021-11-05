@@ -22,9 +22,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
 		public const string XSD_TYPE = "AUX_Conventional_PrimaryBusType";
+		public const string XSD_HEV_P_TYPE = "AUX_HEV-P_PrimaryBusType";
+		public const string XSD_HEV_S_TYPE = "AUX_HEV-S_PrimaryBusType";
+		public const string XSD_PEV_E2_TYPE = "AUX_PEV_PrimaryBusType";
+		public const string XSD_IEPC_PRIMARY_BUS_TYPE = "AUX_IEPC_PrimaryBusType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
+		public static readonly string QUALIFIED_XSD_HEV_P_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_P_TYPE);
+		public static readonly string QUALIFIED_XSD_HEV_S_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S_TYPE);
+		public static readonly string QUALIFIED_XSD_PEV_E2_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E2_TYPE);
+		public static readonly string QUALIFIED_XSD_IEPC_PRIMARY_BUS_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_IEPC_PRIMARY_BUS_TYPE);
 
 		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV210(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }

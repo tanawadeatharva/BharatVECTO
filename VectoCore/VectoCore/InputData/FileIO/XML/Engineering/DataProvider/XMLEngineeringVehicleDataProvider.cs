@@ -148,9 +148,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public TableData MaxPropulsionTorque => null;
+		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
+
+		public TableData BoostingLimitations => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
+		public string VehicleTypeApprovalNumber => null;
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 
@@ -211,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual Meter Height => GetNode("VehicleHeight")?.InnerText.ToDouble().SI<Meter>();
 
-		public TableData ElectricMotorTorqueLimits => null;
+
 
 		public virtual Meter Length => null;
 
@@ -243,7 +249,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				BaseNode, DataSource.SourcePath, XMLNames.Vehicle_PTOCycle, XMLNames.Vehicle_PTOCycle_Entry,
 				AttributeMappings.PTOCycleMap);
 
-		public TableData PTOCycleWhileDriving => null;
+		public virtual TableData PTOCycleWhileDriving => null;
+		public virtual PTOShaftGearWheel? PTOShaftGearWheel => null;
+		public virtual PTOOtherElement? PTOOtherElement => null;
 
 		#endregion
 

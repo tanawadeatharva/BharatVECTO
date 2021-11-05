@@ -664,8 +664,8 @@ Public Class DummyVehicle
 	Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
 	Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
 	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
-    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
-    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
 	Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 	Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
@@ -681,6 +681,10 @@ Public Class DummyVehicle
 	End Property
 
 	Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
+	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
+	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
+	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+	Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 
 	Public Property AirdragInputData As IAirdragDeclarationInputData Implements IVehicleComponentsDeclaration.AirdragInputData
 	Public Property IVehicleComponentsEngineering_GearboxInputData As IGearboxEngineeringInputData Implements IVehicleComponentsEngineering.GearboxInputData
@@ -707,6 +711,7 @@ Public Class DummyVehicle
 	Public ReadOnly Property ElectricStorage As IElectricStorageSystemDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
 	Public ReadOnly Property IVehicleComponentsEngineering_ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
 	Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
+	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
 End Class
 
 

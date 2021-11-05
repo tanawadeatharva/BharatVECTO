@@ -147,8 +147,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
 		public new const string XSD_TYPE = "ADAS_Conventional_Type";
+		public const string XSD_IEPC_TYPE = "ADAS_IEPC_Type";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_IEPC_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_IEPC_TYPE);
 
 		public XMLDeclarationADASDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }

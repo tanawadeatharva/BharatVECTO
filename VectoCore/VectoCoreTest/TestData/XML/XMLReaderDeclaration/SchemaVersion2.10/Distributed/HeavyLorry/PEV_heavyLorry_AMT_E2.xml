@@ -7,7 +7,7 @@
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
 		<LegislativeCategory>N3</LegislativeCategory>
-		<ChasisConfiguration>Rigid Lorry</ChasisConfiguration>
+		<ChassisConfiguration>Rigid Lorry</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
@@ -102,7 +102,7 @@
 							<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 							<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
 						</DragCurve>
-						<Conditioning circuitId="0">
+						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
 						</Conditioning>
 					</v2.10.1:Data>
@@ -122,7 +122,7 @@
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -143,8 +143,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>
@@ -160,7 +160,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -181,8 +181,8 @@
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChagingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChagingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
+								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
 						</v2.10.2:Data>
 						<Signature>
