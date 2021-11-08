@@ -647,6 +647,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.E_AIR] = modData.WorkAirResistance().ConvertToKiloWattHour();
 			row[Fields.E_ROLL] = modData.WorkRollingResistance().ConvertToKiloWattHour();
 			row[Fields.E_GRAD] = modData.WorkRoadGradientResistance().ConvertToKiloWattHour();
+			row[Fields.E_AUX_ESS_missing] = modData.CorrectedModalData.WorkESSMissing.ConvertToKiloWattHour();
 			if (runData.Cycle.CycleType == CycleType.VTP) {
 				row[Fields.E_WHEEL] = modData.WorkWheels().ConvertToKiloWattHour();
 			}
@@ -1194,6 +1195,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			public const string E_BusAux_HVAC_Mech = "E_BusAux_HVAC_mech [kWh]";
 			public const string E_BusAux_HVAC_El = "E_BusAux_HVAC_el [kWh]";
+
+			public const string E_AUX_ESS_missing = "E_aux_ESS_missing [kWh]";
 
 			public const string SPECIFIC_FC = "Specific FC{0} [g/kWh] wheel pos.";
 
