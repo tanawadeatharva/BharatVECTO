@@ -31,19 +31,17 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
-	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public enum GearboxType
 	{
 		MT, // Manual Transmission
 		AMT, // Automated Manual Transmission
 		ATSerial, // Automatic Transmission
 		ATPowerSplit,
-		//Custom,
+		APTN, // Automatic Power Transmission - No Torque Converter
 		DrivingCycle,
 		NoGearbox
 	}
@@ -53,68 +51,46 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetLabel(this GearboxType type)
 		{
 			switch (type) {
-				case GearboxType.MT:
-					return "Manual Transmission (MT)";
-				case GearboxType.AMT:
-					return "Automated Transmission (AMT)";
-				case GearboxType.ATSerial:
-					return "Automatic Transmission - Serial (AT-S)";
-				case GearboxType.ATPowerSplit:
-					return "Automatic Transmission - PowerSplit (AT-P)";
-				case GearboxType.DrivingCycle:
-					return "Gear from Driving Cycle";
-				default:
-					throw new ArgumentOutOfRangeException("GearboxType", type, null);
+				case GearboxType.MT: return "Manual Transmission (MT)";
+				case GearboxType.AMT: return "Automated Transmission (AMT)";
+				case GearboxType.ATSerial: return "Automatic Transmission - Serial (AT-S)";
+				case GearboxType.ATPowerSplit: return "Automatic Transmission - PowerSplit (AT-P)";
+				case GearboxType.APTN: return "Automatic Power Transmission - No Torque Converter (APT-N)";
+				case GearboxType.DrivingCycle: return "Gear from Driving Cycle";
+				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
 		}
 
 		[DebuggerStepThrough]
-		public static string ShortName(this GearboxType type)
-		{
-			return type.ToString();
-		}
+		public static string ShortName(this GearboxType type) => type.ToString();
 
 		[DebuggerStepThrough]
-		public static bool AutomaticTransmission(this GearboxType type)
-		{
-			return type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
-		}
+		public static bool AutomaticTransmission(this GearboxType type) =>
+			type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
 
 		[DebuggerStepThrough]
-		public static bool ManualTransmission(this GearboxType type)
-		{
-			return type == GearboxType.MT || type == GearboxType.AMT;
-		}
+		public static bool ManualTransmission(this GearboxType type) =>
+			type == GearboxType.MT || type == GearboxType.AMT || type == GearboxType.APTN;
 
 		public static Second TractionInterruption(this GearboxType type)
 		{
 			switch (type) {
-				case GearboxType.MT:
-					return 2.SI<Second>();
-				case GearboxType.AMT:
-					return 1.SI<Second>();
-				case GearboxType.ATSerial:
-				case GearboxType.ATPowerSplit:
-					return 0.0.SI<Second>();
+				case GearboxType.MT: return 2.SI<Second>();
+				case GearboxType.AMT: return 1.SI<Second>();
+				default: return 0.SI<Second>();
 			}
-			return 0.SI<Second>();
 		}
 
 		public static string ToXMLFormat(this GearboxType type)
 		{
 			switch (type) {
-				case GearboxType.MT:
-					return "SMT";
-				case GearboxType.AMT:
-					return "AMT";
-				case GearboxType.DrivingCycle:
-					return type.ToString();
-				case GearboxType.ATSerial:
-					return "APT-S";
-				case GearboxType.ATPowerSplit:
-					return "APT-P";
-				default:
-					throw new ArgumentOutOfRangeException("GearboxType", type, null);
+				case GearboxType.MT: return "SMT";
+				case GearboxType.AMT: return "AMT";
+				case GearboxType.DrivingCycle: return type.ToString();
+				case GearboxType.ATSerial: return "APT-S";
+				case GearboxType.ATPowerSplit: return "APT-P";
+				case GearboxType.APTN: return "APT-N";
+				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
 		}
 	}
