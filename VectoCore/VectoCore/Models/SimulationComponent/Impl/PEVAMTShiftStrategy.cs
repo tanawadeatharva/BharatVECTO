@@ -731,4 +731,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 	}
 
+
+
+	public class APTNShiftStrategy : PEVAMTShiftStrategy
+	{
+		public APTNShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
+	}
 }
