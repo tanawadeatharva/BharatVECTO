@@ -784,7 +784,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var data = runData.VehicleData;
 			//if (runData.VehicleData.b)
-			var gbxType = runData.GearboxData?.Type ?? GearboxType.NoGeabox;
+			var gbxType = runData.GearboxData?.Type ?? GearboxType.NoGearbox;
 
 			row[Fields.VEHICLE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.VIN_NUMBER] = data.VIN;

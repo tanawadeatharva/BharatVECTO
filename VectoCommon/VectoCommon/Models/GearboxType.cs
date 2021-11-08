@@ -45,7 +45,7 @@ namespace TUGraz.VectoCommon.Models
 		ATPowerSplit,
 		//Custom,
 		DrivingCycle,
-		NoGeabox
+		NoGearbox
 	}
 
 	public static class GearBoxTypeHelper
