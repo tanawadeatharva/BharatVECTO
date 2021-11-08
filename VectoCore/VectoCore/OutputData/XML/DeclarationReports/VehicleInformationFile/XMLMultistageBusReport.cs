@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		
 		private XElement _primaryVehicle;
 		private List<XElement> _manufacturingStages;
-		private List<XAttribute> _namespaceAttributes;
+		private HashSet<XAttribute> _namespaceAttributes;
 		
 		private IPrimaryVehicleInformationInputDataProvider _primaryVehicleInputData;
 		private IList<IManufacturingStageInputData> _manufacturingStageInputData;
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XMLMultistageBusReport()
 		{
 			_manufacturingStages = new List<XElement>();
-			_namespaceAttributes = new List<XAttribute>();
+			_namespaceAttributes = new HashSet<XAttribute>(new XAttributeEqualityComparer());
 		}
 		
 		public virtual void Initialize(VectoRunData modelData)
@@ -174,11 +174,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public virtual void GenerateReport()
 		{
+			_namespaceAttributes.Add(new XAttribute(XNamespace.Xmlns + "tns", tns));
 			var retVal = new XDocument();
 			retVal.Add(
 				new XElement(tns + XMLNames.VectoOutputMultistage,
 					_namespaceAttributes,
-					new XAttribute(XNamespace.Xmlns + "tns", tns),
+					//new XAttribute(XNamespace.Xmlns + "tns", tns),
 					_primaryVehicle,
 					_manufacturingStages,
 					GenerateInputManufacturingStage()
