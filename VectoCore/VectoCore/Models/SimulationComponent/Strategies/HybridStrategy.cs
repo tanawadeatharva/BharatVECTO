@@ -227,6 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
+			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
@@ -305,6 +306,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					break;
 				case BusAuxiliariesAdapter busAux:
 					busAux.PreviousState.AngularSpeed = (engineInfo.EngineAux as BusAuxiliariesAdapter).PreviousState.AngularSpeed;
+					if (busAux.ElectricStorage is SimpleBattery bat) {
+						bat.SOC = (engineInfo.EngineAux as BusAuxiliariesAdapter)
+							.ElectricStorage
+							.SOC;
+					}
 					break;
 			}
 
