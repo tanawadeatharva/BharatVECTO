@@ -372,9 +372,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var vehicleSpeed = Driver.DataBus.VehicleInfo.VehicleSpeed;
 			var coastingForce = CalculateCoastingForce(targetVelocity, vehicleSpeed, PCCSegments.Current.Altitude, endUseCase1);
-			var energyCoastingEndUseCase1 = coastingForce * (endUseCase1 - distance);
+			var energyCoastingEndUseCase1 = (coastingForce * (endUseCase1 - distance)).Cast<Joule>();
 			var currentEnergy = CalculateEnergy(Driver.DataBus.DrivingCycleInfo.Altitude, vehicleSpeed, Driver.DataBus.VehicleInfo.TotalMass);
-			var energyCoastingLow = coastingForce * (PCCSegments.Current.DistanceAtLowestSpeed - distance);
+			var energyCoastingLow = (coastingForce * (PCCSegments.Current.DistanceAtLowestSpeed - distance)).Cast<Joule>();
 
 			var beforeVLow = distance.IsSmaller(PCCSegments.Current.DistanceAtLowestSpeed);
 			var speedSufficient = vehicleSpeed.IsGreaterOrEqual(targetVelocity - Driver.DriverData.PCC.UnderSpeed);

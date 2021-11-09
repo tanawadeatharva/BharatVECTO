@@ -20,7 +20,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
-			var r = new CorrectedModalData();
+			var essParams = runData.DriverData.EngineStopStart;
+			var r = new CorrectedModalData {
+				UtilityFactorDriving = essParams.UtilityFactorDriving,
+				UtilityFactorStandstill = essParams.UtilityFactorStandstill
+			};
 			var duration = modData.Duration;
 			var distance = modData.Distance;
 			
@@ -130,15 +134,13 @@ namespace TUGraz.VectoCore.OutputData
 				FcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel),
 				FcESS_EngineStart = engLine * modData.WorkEngineStart(),
 
-				FcESS_AuxStandstill_ICEOff = r.EnergyAuxICEOffStandstill * engLine *
-											essParams.UtilityFactorStandstill,
-				FcESS_AuxStandstill_ICEOn =
-					r.EnergyAuxICEOnStandstill * engLine * (1 - essParams.UtilityFactorStandstill) +
-					fcIceIdle * r.ICEOffTimeStandstill * (1 - essParams.UtilityFactorStandstill),
+				FcESS_AuxStandstill_ICEOff = r.EnergyAuxICEOffStandstill_UF * engLine,
+				FcESS_AuxStandstill_ICEOn = r.EnergyAuxICEOnStandstill_UF * engLine +
+											fcIceIdle * r.ICEOffTimeStandstill * (1 - r.UtilityFactorStandstill),
 
-				FcESS_AuxDriving_ICEOff = r.EnergyAuxICEOffDriving * engLine * essParams.UtilityFactorDriving,
-				FcESS_AuxDriving_ICEOn = r.EnergyAuxICEOnDriving * engLine * (1 - essParams.UtilityFactorDriving) +
-										fcIceIdle * r.ICEOffTimeDriving * (1 - essParams.UtilityFactorDriving),
+				FcESS_AuxDriving_ICEOff = r.EnergyAuxICEOffDriving_UF * engLine,
+				FcESS_AuxDriving_ICEOn = r.EnergyAuxICEOnDriving_UF * engLine +
+										fcIceIdle * r.ICEOffTimeDriving * (1 - r.UtilityFactorDriving),
 
 				FcESS_DCDCMissing = r.EnergyDCDCMissing * engLine,
 				FcBusAuxPSAirDemand = engLine * r.WorkBusAuxPSCorr,
@@ -289,6 +291,18 @@ namespace TUGraz.VectoCore.OutputData
 	}
 
 
+	public class BatteryElectricPostprocessingCorrection : IModalDataPostProcessor
+	{
+		#region Implementation of IModalDataPostProcessor
+
+		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		{
+			return new NoCorrectionModalData(modData);
+		}
+
+		#endregion
+	}
+
 	public class CorrectedModalData : ICorrectedModalData
 	{
 		public SI kAir { get; set; }
@@ -300,6 +314,12 @@ namespace TUGraz.VectoCore.OutputData
 			FuelCorrection = new Dictionary<FuelType, IFuelConsumptionCorrection>();
 		}
 
+		public WattSecond WorkESSMissing {
+			get {
+				return EnergyAuxICEOffStandstill_UF + EnergyAuxICEOffDriving_UF + EnergyAuxICEOnDriving_UF +
+						EnergyAuxICEOnStandstill_UF;
+			}
+		}
 		//public WattSecond WorkESS { get; set; }
 		public WattSecond WorkWHREl { get; set; }
 		public WattSecond WorkWHRElMech { get; set; }
@@ -340,13 +360,32 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Second ICEOffTimeStandstill { get; set; }
 		public WattSecond EnergyAuxICEOffStandstill { get; set; }
+		public WattSecond EnergyAuxICEOffStandstill_UF {
+			get {
+				return EnergyAuxICEOffStandstill * UtilityFactorStandstill;
+			}
+		}
+
+		public double UtilityFactorStandstill { get; set; }
+
 		public WattSecond EnergyAuxICEOnStandstill { get; set; }
+		public WattSecond EnergyAuxICEOnStandstill_UF {
+			get { return EnergyAuxICEOnStandstill * (1 - UtilityFactorStandstill); }
+		}
 		public Watt AvgAuxPowerICEOnStandstill => ICEOffTimeStandstill.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnStandstill / ICEOffTimeStandstill;
 
 
 		public Second ICEOffTimeDriving { get; set; }
 		public WattSecond EnergyAuxICEOffDriving { get; set; }
+		public WattSecond EnergyAuxICEOffDriving_UF { get { return EnergyAuxICEOffDriving * UtilityFactorDriving; } }
+		public double UtilityFactorDriving { get; set; }
+
 		public WattSecond EnergyAuxICEOnDriving { get; set; }
+		public WattSecond EnergyAuxICEOnDriving_UF {
+			get {
+				return EnergyAuxICEOnDriving * (1 - UtilityFactorDriving);
+			}
+		}
 		public Watt AvgAuxPowerICEOnDriving => ICEOffTimeDriving.IsEqual(0) ? 0.SI<Watt>() : EnergyAuxICEOnDriving / ICEOffTimeDriving;
 
 		public WattSecond EnergyDCDCMissing { get; set; }
@@ -441,4 +480,72 @@ namespace TUGraz.VectoCore.OutputData
 		#endregion
 	}
 
+
+	public class NoCorrectionModalData : ICorrectedModalData
+	{
+		private IModalDataContainer _modData;
+
+		public NoCorrectionModalData(IModalDataContainer modData)
+		{
+			_modData = modData;
+		}
+
+		#region Implementation of ICorrectedModalData
+
+		public WattSecond WorkESSMissing => 0.SI<WattSecond>();
+		public WattSecond WorkWHREl => 0.SI<WattSecond>();
+		public WattSecond WorkWHRElMech => 0.SI<WattSecond>();
+		public WattSecond WorkWHRMech => 0.SI<WattSecond>();
+		public WattSecond WorkWHR => 0.SI<WattSecond>();
+		public WattSecond WorkBusAuxPSCorr => 0.SI<WattSecond>();
+		public WattSecond WorkBusAuxESMech => 0.SI<WattSecond>();
+		public WattSecond WorkBusAuxCorr => 0.SI<WattSecond>();
+		public WattSecond EnergyDCDCMissing => 0.SI<WattSecond>();
+		public Joule AuxHeaterDemand => 0.SI<WattSecond>();
+		public IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)
+		{
+			return new NoFuelConsumptionCorrection();
+		}
+
+		public KilogramPerMeter KilogramCO2PerMeter => 0.SI<KilogramPerMeter>();
+		public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection => new Dictionary<FuelType, IFuelConsumptionCorrection>();
+		public Kilogram CO2Total => 0.SI<Kilogram>();
+		public Joule EnergyConsumptionTotal => 0.SI<Joule>();
+
+		#endregion
+	}
+
+	public class NoFuelConsumptionCorrection : IFuelConsumptionCorrection
+	{
+		#region Implementation of IFuelConsumptionCorrection
+
+		public IFuelProperties Fuel { get; }
+		public KilogramPerWattSecond EngineLineCorrectionFactor { get; }
+		public KilogramPerWattSecond VehicleLine { get; }
+		public KilogramPerSecond FC_ESS_H { get; }
+		public KilogramPerSecond FC_ESS_CORR_H { get; }
+		public KilogramPerSecond FC_BusAux_PS_CORR_H { get; }
+		public KilogramPerSecond FC_BusAux_ES_CORR_H { get; }
+		public KilogramPerSecond FC_WHR_CORR_H { get; }
+		public KilogramPerSecond FC_AUXHTR_H { get; }
+		public KilogramPerSecond FC_AUXHTR_H_CORR { get; }
+		public KilogramPerSecond FC_REESS_SOC_H { get; }
+		public KilogramPerSecond FC_REESS_SOC_CORR_H { get; }
+		public KilogramPerSecond FC_FINAL_H { get; }
+		public KilogramPerMeter FC_WHR_CORR_KM { get; }
+		public KilogramPerMeter FC_BusAux_PS_CORR_KM { get; }
+		public KilogramPerMeter FC_BusAux_ES_CORR_KM { get; }
+		public KilogramPerMeter FC_AUXHTR_KM { get; }
+		public KilogramPerMeter FC_AUXHTR_KM_CORR { get; }
+		public KilogramPerMeter FC_REESS_SOC_KM { get; }
+		public KilogramPerMeter FC_REESS_SOC_CORR_KM { get; }
+		public KilogramPerMeter FC_ESS_KM { get; }
+		public KilogramPerMeter FC_ESS_CORR_KM { get; }
+		public KilogramPerMeter FC_FINAL_KM { get; }
+		public VolumePerMeter FuelVolumePerMeter { get; }
+		public Kilogram TotalFuelConsumptionCorrected { get; }
+		public Joule EnergyDemand { get; }
+
+		#endregion
+	}
 }

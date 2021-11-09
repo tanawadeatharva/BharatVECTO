@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -34,6 +35,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly VelocityRollingLookup VelocityDropData = new VelocityRollingLookup();
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
+		private Battery TestContainerBattery;
+		private BatterySystem TestContainerBatterySystem;
+		private SuperCap TestContainerSuperCap;
 
 		private VoltageLevelData VoltageLevels;
 		private SI TransmissionRatio;
@@ -91,6 +95,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestContainer = new SimplePowertrainContainer(runData);
 			builder.BuildSimplePowertrainElectric(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			TestContainerBattery = TestContainer.BatteryInfo as Battery;
+			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
+			TestContainerSuperCap = TestContainer.BatteryInfo as SuperCap;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
@@ -349,7 +356,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 			var fcCurrent = GetFCRating(responseCurrent);
 
-			var minFc = results.MinBy(x => x.Item2);
+			var minFc = results.MaxBy(x => x.Item2);
 
 			var ratingFactor = outTorque < 0
 				? 1 / shiftStrategyParameters.RatingFactorCurrentGear
@@ -514,7 +521,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
 				: response.ElectricMotor.MaxDriveTorque;
 
-			var tqCurrent = (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricMotor.AngularVelocity);
+			var tqCurrent = (-response.ElectricMotor.TorqueRequest); // / response.ElectricMotor.AngularVelocity);
 			if (!tqCurrent.IsBetween(maxDriveTorque, maxGenTorque)) {
 				return double.NaN;
 			}
@@ -536,6 +543,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LogEnabled = false;
 			TestContainerGbx.Disengaged = false;
 			TestContainerGbx.Gear = tryNextGear;
+
+			TestContainerBattery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			//TestContainerBatterySystem?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			//TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+			if (TestContainerBattery != null) {
+				TestContainerBattery.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
+			}
+			if (TestContainerBatterySystem != null) {
+				var batSystem = DataBus.BatteryInfo as BatterySystem;
+				foreach (var bsKey in batSystem.Batteries.Keys) {
+					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
+						TestContainerBatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
+					}
+				}
+				TestContainerBatterySystem.PreviousState.PulseDuration =
+					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
+			}
+			TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
 			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
 			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
