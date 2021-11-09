@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData
 					Fields.E_BusAux_PS_corr, Fields.E_BusAux_ES_mech_corr,
 					Fields.E_BusAux_HVAC_Mech, Fields.E_BusAux_HVAC_El,
 					Fields.E_BusAux_AuxHeater,
-					Fields.E_WHR_EL, Fields.E_WHR_MECH, Fields.E_ICE_START, Fields.NUM_ICE_STARTS, Fields.ACC,
+					Fields.E_WHR_EL, Fields.E_WHR_MECH, Fields.E_ICE_START, Fields.E_AUX_ESS_missing, Fields.NUM_ICE_STARTS, Fields.ACC,
 					Fields.ACC_POS, Fields.ACC_NEG, Fields.ACC_TIMESHARE, Fields.DEC_TIMESHARE, Fields.CRUISE_TIMESHARE,
 					Fields.MAX_SPEED, Fields.MAX_ACCELERATION, Fields.MAX_DECELERATION, Fields.AVG_ENGINE_SPEED,
 					Fields.MAX_ENGINE_SPEED, Fields.NUM_GEARSHIFTS, Fields.STOP_TIMESHARE, Fields.ICE_FULL_LOAD_TIME_SHARE, Fields.ICE_OFF_TIME_SHARE,
