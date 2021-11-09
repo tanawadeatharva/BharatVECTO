@@ -899,7 +899,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Inertia = motorData.Inertia,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
-				OverloadTorque = motorData.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
+				OverloadTorque = (motorData.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
 				OverloadTestSpeed = motorData.OverloadTestSpeed ?? 0.RPMtoRad(),
 				OverloadTime = motorData.OverloadTime,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,

@@ -48,12 +48,14 @@ namespace TUGraz.VectoCommon.Models {
 		{
 			get
 			{
-				var cost = (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
+				Cost = (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
 				RampUpPenalty);
-				var gearshift = cost.IsSmaller(0) ? GearshiftPenalty : 1 / GearshiftPenalty;
-				return cost * gearshift;
+				var gearshift = Cost.IsSmaller(0) ? GearshiftPenalty : 1 / GearshiftPenalty;
+				return Cost * gearshift;
 			}
 		}
+
+		public double Cost { get; set; }
 
 		public double FuelCosts { get; set; }
 

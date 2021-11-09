@@ -143,6 +143,7 @@ namespace TUGraz.VectoCore.OutputData
 			CurrentRow = Data.NewRow();
 
 			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
 				return;
 			}
 
