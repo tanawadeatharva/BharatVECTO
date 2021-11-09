@@ -1881,6 +1881,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsSmallerOrEqual(SI si, SI tolerance = null)
 		{
 			if (!HasEqualUnit(si)) {

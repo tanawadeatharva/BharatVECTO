@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool CombustionEngineOn { get; set; }
 
+		public override bool EngineOn => CombustionEngineOn;
+
 		#region Overrides of CombustionEngine
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)

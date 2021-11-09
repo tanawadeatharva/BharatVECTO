@@ -1192,6 +1192,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 
 				// full recuperation is not possible - ICE would need to propel - search max possible EM torque
+				DataBus.EngineCtl.CombustionEngineOn = true;
+
 				var emRecuperationTq = SearchAlgorithm.Search(
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
 					maxRecuperationResponse.ElectricMotor.AngularVelocity,
