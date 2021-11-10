@@ -248,6 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// electric motor is directly connected to the ICE, ICE is off and EM is off - do not apply drag loss
 				emTorqueDt = 0.SI<NewtonMeter>();
 				emTorque = 0.SI<NewtonMeter>();
+				emOff = true;
 			}
 
 			if (ElectricPower == null || emTorqueDt == null) {

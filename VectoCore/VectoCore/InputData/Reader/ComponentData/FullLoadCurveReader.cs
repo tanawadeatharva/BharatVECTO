@@ -71,8 +71,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			} else {
 				LoggingObject.Logger<EngineFullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
-					Fields.EngineSpeed, Fields.TorqueFullLoad,
-					Fields.TorqueDrag, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.EngineSpeed, 
+					Fields.TorqueFullLoad,
+					Fields.TorqueDrag, 
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 
 				entriesFld = CreateFromColumnIndizes(data);
 			}
@@ -88,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 										.Select(g => g.Key).ToList();
 			if (duplicates.Count > 0) {
 				throw new VectoException(
-					"Error reading full-load curve: multiple entries for engine speeds {0}", string.Join(", ", duplicates));
+					"Error reading full-load curve: multiple entries for engine speeds {0}", duplicates.Join());
 			}
 			return new EngineFullLoadCurve(entriesFld, tmp);
 		}

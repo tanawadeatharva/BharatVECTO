@@ -27,12 +27,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (data.Columns.Count == 2) {
 				if (!data.Columns.Contains(Fields.StateOfCharge) || !data.Columns.Contains(Fields.InternalResistance)) {
-					data.Columns[0].ColumnName = Fields.StateOfCharge;
-					data.Columns[1].ColumnName = Fields.InternalResistance;
 					LoggingObject.Logger<InternalResistanceMap>().Warn(
 						"Internal Resistance Map Header is invalid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-						Fields.StateOfCharge, Fields.InternalResistance,
-						string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+						Fields.StateOfCharge, 
+						Fields.InternalResistance,
+						data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
+					data.Columns[0].ColumnName = Fields.StateOfCharge;
+					data.Columns[1].ColumnName = Fields.InternalResistance;
 				}
 
 				return new InternalResistanceMap(data.Rows.Cast<DataRow>().Select(row => {
@@ -78,8 +79,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				}
 				LoggingObject.Logger<InternalResistanceMap>().Warn(
 					"Internal Resistance Map Header is invalid. Expected: '{0}', Got: '{1}'. Falling back to column index.",
-					string.Join(", ", col1.Select(x => x.Item2)),
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					col1.Select(x => x.Item2).Join(),
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
 			

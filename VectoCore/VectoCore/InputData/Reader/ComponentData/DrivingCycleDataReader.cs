@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var diff = headerStr.GroupBy(c => c).Where(g => g.Count() > 2).SelectMany(g => g).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
-						throw new VectoException("Column(s) defined more than once: " + string.Join(", ", diff.OrderBy(x => x)));
+						throw new VectoException($"Column(s) defined more than once: {diff.OrderBy(x => x).Join()}");
 					}
 
 					return false;
@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				diff = headerStr.Except(allowedCols.Select(x => x.ToLowerInvariant())).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
-						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
+						throw new VectoException($"Column(s) not allowed: {diff.Join()}");
 					}
 
 					return false;
@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				diff = requiredCols.Select(x => x.ToLowerInvariant()).Except(headerStr).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
-						throw new VectoException("Column(s) required: " + string.Join(", ", diff));
+						throw new VectoException($"Column(s) required: {diff.Join()}");
 					}
 
 					return false;
@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 				if (colCount != 0 && colCount != cols.Length) {
 					if (throwExceptions) {
-						throw new VectoException("Either all columns have to be defined or none of them: {0}", string.Join(", ", cols));
+						throw new VectoException("Either all columns have to be defined or none of them: {0}", cols.Join());
 					}
 
 					return false;

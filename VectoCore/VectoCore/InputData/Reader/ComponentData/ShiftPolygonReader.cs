@@ -68,11 +68,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				entriesDown = CreateFromColumnNames(data, Fields.AngularSpeedDown);
 				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
-				LoggingObject.Logger<ShiftPolygon>()
-					.Warn(
+				LoggingObject.Logger<ShiftPolygon>().Warn(
 						"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
-						Fields.Torque, Fields.AngularSpeedUp, Fields.AngularSpeedDown,
-						string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+						Fields.Torque, 
+						Fields.AngularSpeedUp, 
+						Fields.AngularSpeedDown,
+						data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 				entriesDown = CreateFromColumnIndizes(data, 1);
 				entriesUp = CreateFromColumnIndizes(data, 2);
 			}

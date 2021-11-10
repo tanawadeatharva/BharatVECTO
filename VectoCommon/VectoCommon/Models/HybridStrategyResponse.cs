@@ -84,9 +84,8 @@ namespace TUGraz.VectoCommon.Models {
 			return ToString().Equals(other.ToString(), StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		public override string ToString()
-		{
-			var setting = string.Join(", ", Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}"));
+		public override string ToString() {
+			var setting = Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}").Join();
 			return $"{U}: {setting} {Score} G{Gear}";
 		}
 	}
@@ -157,7 +156,7 @@ namespace TUGraz.VectoCommon.Models {
 				}
 			}
 
-			return string.Join("/", retVal);
+			return retVal.Join("/");
 		}
 
 		public static bool InvalidEngineSpeed(this HybridConfigurationIgnoreReason x)
