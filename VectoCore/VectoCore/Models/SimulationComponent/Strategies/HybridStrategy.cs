@@ -1191,6 +1191,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return;
 				}
 
+				var iceOn = DataBus.EngineInfo.EngineOn;
+				// if Hybrid P1 and Engine is off, the search for braking power is not possible:
+				// Therefore, switch on engine (if reasonable), otherwise simply do NOT search for mechanicalAssistPower.
+				if (emPos == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
+					
+					var gearboxOut = firstResponse.Gearbox.OutputSpeed * firstResponse.Gearbox.OutputTorque;
+					var elMotor = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1);
+					var powerToleranceEl = 0.1 * elMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, firstResponse.Engine.EngineSpeed);
+					if (gearboxOut - firstResponse.Engine.DragPower < powerToleranceEl) {
+						DataBus.EngineCtl.CombustionEngineOn = true;
+						iceOn = true;
+					} else {
+						return;
+					}
+				}
+
 				// full recuperation is not possible - ICE would need to propel - search max possible EM torque
 				var emRecuperationTq = SearchAlgorithm.Search(
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
@@ -1208,7 +1224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					},
 					evaluateFunction: emTq => {
 						var cfg = new HybridStrategyResponse {
-							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
+							CombustionEngineOn = iceOn,
 							GearboxInNeutral = false,
 							NextGear = nextGear,
 							MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {

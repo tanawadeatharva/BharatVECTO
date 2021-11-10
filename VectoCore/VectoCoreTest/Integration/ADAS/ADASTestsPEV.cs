@@ -53,20 +53,20 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		#region E2
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5647, OutsideSegment, Accelerate),        // len: 5647m
 			(5647, 5846, OutsideSegment, Coast),          // len: 199m
 			(5846, 1e6, OutsideSegment, Accelerate));
 
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 6196, OutsideSegment, Accelerate),        // len: 6196m
 			(6196, 7628, OutsideSegment, Coast),          // len: 1432m
 			(7628, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5496, OutsideSegment, Accelerate),        // len: 5496m
 			(5496, 5849, OutsideSegment, Coast),          // len: 353m
 			(5849, 7111, OutsideSegment, Brake),          // len: 1262m
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2147, OutsideSegment, Accelerate),        // len: 2147m
 			(2147, 2300, OutsideSegment, Coast),          // len: 153m
 			(2300, 2469, OutsideSegment, Brake),          // len: 169m
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6947, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2194, OutsideSegment, Accelerate),        // len: 2194m
 			(2194, 2440, OutsideSegment, Coast),          // len: 246m
 			(2440, 3350, OutsideSegment, Accelerate),     // len: 910m
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4208, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 2206, OutsideSegment, Accelerate),        // len: 2206m
 			(2206, 2463, OutsideSegment, Coast),          // len: 257m
 			(2463, 2907, OutsideSegment, Accelerate),     // len: 444m
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3400, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5437, OutsideSegment, Accelerate),        // len: 5437m
 			(5437, 5614, OutsideSegment, Coast),          // len: 177m
 			(5614, 6467, OutsideSegment, Brake),          // len: 853m
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6990, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 5332, OutsideSegment, Accelerate),        // len: 5332m
 			(5332, 5722, OutsideSegment, Coast),          // len: 390m
 			(5722, 5962, OutsideSegment, Brake),          // len: 240m
@@ -121,11 +121,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6224, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4794, OutsideSegment, Accelerate),        // len: 4794m
 			(4794, 4805, OutsideSegment, Roll),           // len: 11m
 			(4805, 4837, OutsideSegment, Accelerate),     // len: 32m
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6366, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_NoADAS_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_NoADAS_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -189,14 +189,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4107, OutsideSegment, Accelerate),        // len: 4107m
 			(4107, 5566, WithinSegment, Accelerate),      // len: 1459m
 			(5566, 5834, UseCase1, Coast),                // len: 268m
 			(5834, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4585, OutsideSegment, Accelerate),        // len: 4585m
 			(4585, 5682, WithinSegment, Accelerate),      // len: 1097m
 			(5682, 7315, UseCase1, Coast),                // len: 1633m
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7385, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3955, OutsideSegment, Accelerate),        // len: 3955m
 			(3955, 4982, WithinSegment, Accelerate),      // len: 1027m
 			(4982, 6112, UseCase1, Coast),                // len: 1130m
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7533, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 654, OutsideSegment, Accelerate),         // len: 654m
 			(654, 1949, WithinSegment, Accelerate),       // len: 1295m
 			(1949, 2483, UseCase1, Coast),                // len: 534m
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7007, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2112, WithinSegment, Accelerate),       // len: 1423m
 			(2112, 2380, UseCase1, Coast),                // len: 268m
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4147, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2124, WithinSegment, Accelerate),       // len: 1435m
 			(2124, 2403, UseCase1, Coast),                // len: 279m
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3286, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3932, OutsideSegment, Accelerate),        // len: 3932m
 			(3932, 5134, WithinSegment, Accelerate),      // len: 1202m
 			(5134, 5917, UseCase1, Coast),                // len: 783m
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3804, OutsideSegment, Accelerate),        // len: 3804m
 			(3804, 4982, WithinSegment, Accelerate),      // len: 1178m
 			(4982, 6011, UseCase1, Coast),                // len: 1029m
@@ -266,11 +266,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6105, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3547, OutsideSegment, Accelerate),        // len: 3547m
 			(3547, 4794, WithinSegment, Accelerate),      // len: 1247m
 			(4794, 4805, WithinSegment, Roll),            // len: 11m
@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6473, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -336,14 +336,14 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4107, OutsideSegment, Accelerate),        // len: 4107m
 			(4107, 5566, WithinSegment, Accelerate),      // len: 1459m
 			(5566, 5834, UseCase1, Coast),                // len: 268m
 			(5834, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4585, OutsideSegment, Accelerate),        // len: 4585m
 			(4585, 5682, WithinSegment, Accelerate),      // len: 1097m
 			(5682, 7315, UseCase1, Coast),                // len: 1633m
@@ -351,7 +351,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7385, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3955, OutsideSegment, Accelerate),        // len: 3955m
 			(3955, 4982, WithinSegment, Accelerate),      // len: 1027m
 			(4982, 6112, UseCase1, Coast),                // len: 1130m
@@ -362,7 +362,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7418, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 654, OutsideSegment, Accelerate),         // len: 654m
 			(654, 1949, WithinSegment, Accelerate),       // len: 1295m
 			(1949, 2483, UseCase1, Coast),                // len: 534m
@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6941, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2112, WithinSegment, Accelerate),       // len: 1423m
 			(2112, 2380, UseCase1, Coast),                // len: 268m
@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4147, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2124, WithinSegment, Accelerate),       // len: 1435m
 			(2124, 2403, UseCase1, Coast),                // len: 279m
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3932, OutsideSegment, Accelerate),        // len: 3932m
 			(3932, 5134, WithinSegment, Accelerate),      // len: 1202m
 			(5134, 5917, UseCase1, Coast),                // len: 783m
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6980, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3804, OutsideSegment, Accelerate),        // len: 3804m
 			(3804, 4982, WithinSegment, Accelerate),      // len: 1178m
 			(4982, 6011, UseCase1, Coast),                // len: 1029m
@@ -419,11 +419,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3547, OutsideSegment, Accelerate),        // len: 3547m
 			(3547, 4794, WithinSegment, Accelerate),      // len: 1247m
 			(4794, 4805, WithinSegment, Roll),            // len: 11m
@@ -450,7 +450,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6365, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E2_PCC12_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -470,7 +470,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E2_PCC12_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E2_PCC12_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 13, OutsideSegment, Accelerate),          // len: 13m
 			(13, 18, OutsideSegment, Roll),               // len: 5m
@@ -494,7 +494,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		#region E3
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4130, OutsideSegment, Accelerate),        // len: 4130m
 			(4130, 5531, WithinSegment, Accelerate),      // len: 1401m
 			(5531, 5810, UseCase1, Coast),                // len: 279m
@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4655, OutsideSegment, Accelerate),        // len: 4655m
 			(4655, 5612, WithinSegment, Accelerate),      // len: 957m
 			(5612, 7240, UseCase1, Coast),                // len: 1628m
@@ -511,7 +511,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3979, OutsideSegment, Accelerate),        // len: 3979m
 			(3979, 4971, WithinSegment, Accelerate),      // len: 992m
 			(4971, 6090, UseCase1, Coast),                // len: 1119m
@@ -522,7 +522,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7548, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 654, OutsideSegment, Accelerate),         // len: 654m
 			(654, 1926, WithinSegment, Accelerate),       // len: 1272m
 			(1926, 2479, UseCase1, Coast),                // len: 553m
@@ -535,7 +535,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7046, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 700, OutsideSegment, Accelerate),         // len: 700m
 			(700, 2101, WithinSegment, Accelerate),       // len: 1401m
 			(2101, 2379, UseCase1, Coast),                // len: 278m
@@ -547,7 +547,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(4152, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 700, OutsideSegment, Accelerate),         // len: 700m
 			(700, 2112, WithinSegment, Accelerate),       // len: 1412m
 			(2112, 2391, UseCase1, Coast),                // len: 279m
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3321, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3944, OutsideSegment, Accelerate),        // len: 3944m
 			(3944, 5122, WithinSegment, Accelerate),      // len: 1178m
 			(5122, 5893, UseCase1, Coast),                // len: 771m
@@ -568,7 +568,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3815, OutsideSegment, Accelerate),        // len: 3815m
 			(3815, 4947, WithinSegment, Accelerate),      // len: 1132m
 			(4947, 5996, UseCase1, Coast),                // len: 1049m
@@ -576,11 +576,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6125, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3559, OutsideSegment, Accelerate),        // len: 3559m
 			(3559, 5374, WithinSegment, Accelerate),      // len: 1815m
 			(5374, 5713, UseCase2, Coast),                // len: 339m
@@ -589,7 +589,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6477, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E3_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 3410, OutsideSegment, Accelerate),        // len: 3410m
 			(3410, 4441, OutsideSegment, Coast),          // len: 1031m
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E3_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E3_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 3614, OutsideSegment, Accelerate),        // len: 3614m
 			(3614, 4148, OutsideSegment, Coast),          // len: 534m
@@ -612,7 +612,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		#region E4
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseA() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4130, OutsideSegment, Accelerate),        // len: 4130m
 			(4130, 5531, WithinSegment, Accelerate),      // len: 1401m
 			(5531, 5810, UseCase1, Coast),                // len: 279m
@@ -621,7 +621,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseB() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 4655, OutsideSegment, Accelerate),        // len: 4655m
 			(4655, 5601, WithinSegment, Accelerate),      // len: 946m
 			(5601, 7252, UseCase1, Coast),                // len: 1651m
@@ -629,7 +629,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7522, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseC() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3979, OutsideSegment, Accelerate),        // len: 3979m
 			(3979, 4959, WithinSegment, Accelerate),      // len: 980m
 			(4959, 6088, UseCase1, Coast),                // len: 1129m
@@ -640,7 +640,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(7523, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseD() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 654, OutsideSegment, Accelerate),         // len: 654m
 			(654, 1926, WithinSegment, Accelerate),       // len: 1272m
 			(1926, 2480, UseCase1, Coast),                // len: 554m
@@ -654,7 +654,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2101, WithinSegment, Accelerate),       // len: 1412m
 			(2101, 2379, UseCase1, Coast),                // len: 278m
@@ -667,7 +667,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 700, OutsideSegment, Accelerate),         // len: 700m
 			(700, 2112, WithinSegment, Accelerate),       // len: 1412m
 			(2112, 2391, UseCase1, Coast),                // len: 279m
@@ -678,7 +678,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3320, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3941, OutsideSegment, Accelerate),        // len: 3941m
 			(3941, 5117, WithinSegment, Accelerate),      // len: 1176m
 			(5117, 5888, UseCase1, Coast),                // len: 771m
@@ -689,7 +689,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseH() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3815, OutsideSegment, Accelerate),        // len: 3815m
 			(3815, 4936, WithinSegment, Accelerate),      // len: 1121m
 			(4936, 5994, UseCase1, Coast),                // len: 1058m
@@ -697,11 +697,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6135, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseI() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CaseJE4() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CaseJE4() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 3430, OutsideSegment, Accelerate),        // len: 3430m
 			(3430, 5236, WithinSegment, Accelerate),      // len: 1806m
 			(5236, 6125, UseCase2, Coast),                // len: 889m
@@ -710,7 +710,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(6531, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 3417, OutsideSegment, Accelerate),        // len: 3417m
 			(3417, 4400, OutsideSegment, Coast),          // len: 983m
@@ -719,7 +719,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(5422, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_E4_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).JoinString("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
+		public void Class5_E4_PCC123_CrestCoast2() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
 			(0, 0, OutsideSegment, Halt),                 // len: 0m
 			(0, 3612, OutsideSegment, Accelerate),        // len: 3612m
 			(3612, 4126, OutsideSegment, Coast),          // len: 514m

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {
 
@@ -27,7 +28,7 @@ namespace TUGraz.VectoCommon.Models {
 				options.Add("electrical output");
 			}
 
-			return options.Count == 0 ? "none" : string.Join(", ", options);
+			return options.Count == 0 ? "none" : options.Join();
 		}
 		
 		public static bool IsElectrical(this WHRType whrType)

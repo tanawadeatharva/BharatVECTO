@@ -2022,11 +2022,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             Assert.AreEqual(missionType, m.MissionType);
             Assert.AreEqual(cosswindCorrection, m.CrossWindCorrectionParameters);
             CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
-                "Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
-                string.Join(",", m.AxleWeightDistribution));
+                "Axle distribution not equal.\nexpected: {0}\nactual: {1}", axleWeightDistribution.Join(),
+                m.AxleWeightDistribution.Join());
             CollectionAssert.AreEqual(trailerAxleWeightDistribution, m.Trailer.Select(t => t.TrailerAxleWeightShare),
-                "Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", trailerAxleWeightDistribution),
-                string.Join(",", m.Trailer.Select(t => t.TrailerAxleWeightShare)));
+                "Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", trailerAxleWeightDistribution.Join(),
+                m.Trailer.Select(t => t.TrailerAxleWeightShare).Join());
             Assert.AreEqual(bodyCurbWeight.SI<Kilogram>(), m.BodyCurbWeight);
             CollectionAssert.AreEqual(trailerCurbWeight, m.Trailer.Select(t => t.TrailerCurbWeight.Value()));
             CollectionAssert.AreEqual(trailerType, m.Trailer.Select(t => t.TrailerType));

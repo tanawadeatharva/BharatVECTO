@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 
 			if (Gears.Any(x => !x.TorqueConverterLocked.HasValue)) {
-				throw new VectoException("Gear list must have TC info for all gears! {0}", string.Join(", ", Gears));
+				throw new VectoException("Gear list must have TC info for all gears! {0}", Gears.Join());
 			}
 
 			MaxStartGear = Gears.Any() ? Gears.First() : new GearshiftPosition(0);

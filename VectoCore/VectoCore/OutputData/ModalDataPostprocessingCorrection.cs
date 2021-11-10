@@ -183,8 +183,8 @@ namespace TUGraz.VectoCore.OutputData
 				// case C3a
 				if (runData.ElectricMachinesData.Count != 1) {
 					throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
-						runData.ElectricMachinesData.Count,
-						string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
+						runData.ElectricMachinesData.Count, 
+						runData.ElectricMachinesData.Select(x => x.Item1.ToString()).Join());
 				}
 
 				var emPos = runData.ElectricMachinesData.First().Item1;
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.OutputData
 					if (runData.ElectricMachinesData.Count != 1) {
 						throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
 							runData.ElectricMachinesData.Count,
-							string.Join(",", runData.ElectricMachinesData.Select(x => x.Item1.ToString())));
+							runData.ElectricMachinesData.Select(x => x.Item1.ToString()).Join());
 					}
 
 					var emPos = runData.ElectricMachinesData.First().Item1;
