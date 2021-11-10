@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var results = VectoMath.Polynom4Solver(a, b, c, d, e);
 
-			Console.WriteLine(string.Join(", ", results));
+			Console.WriteLine(results.Join());
 
 			Assert.AreEqual(expected.Length, results.Length);
 

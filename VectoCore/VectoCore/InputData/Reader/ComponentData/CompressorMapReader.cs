@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class CompressorMapReader
 	{
-		public static readonly string[] Header = new[] { Fields.RPM, Fields.FlowRate, Fields.PowerOn, Fields.PowerOff };
+		public static readonly string[] Header = { Fields.RPM, Fields.FlowRate, Fields.PowerOn, Fields.PowerOff };
 
 		public static ICompressorMap ReadFile(string filename, double dragCurveFactorClutch, string technology)
 		{
@@ -27,10 +27,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static IList<CompressorMapValues> Create(DataTable data, double dragCurveFactorClutch)
 		{
 			if (!HeaderIsValid(data.Columns)) {
-				throw new VectoException(
-					"Invalid column header. expected: {0}, got: {1}", 
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(x => x.ColumnName)),
-					string.Join(", ", Header));
+				throw new VectoException("Invalid column header. Expected: {0}, Got: {1}",
+					Header.Join(),
+					data.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Join());
 			}
 
 			if (data.Rows.Count < 3) {

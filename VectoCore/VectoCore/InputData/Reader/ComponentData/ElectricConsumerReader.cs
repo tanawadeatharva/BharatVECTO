@@ -28,14 +28,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static ElectricalConsumerList Create(TableData data)
 		{
 			if (!HeaderValid(data.Columns)) {
-				throw new VectoException("Invalid header. Expected: {0}, got: {1}",
-					string.Join(", ", Header),
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+				throw new VectoException("Invalid header. Expected: {0}, Got: {1}",
+					Header.Join(),
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
 			var retVal = new List<ElectricalConsumer>();
 			foreach (DataRow row in data.Rows) {
-				var consumer = new ElectricalConsumer() {
+				var consumer = new ElectricalConsumer {
 					Category = row.Field<string>(Fields.Category),
 					ConsumerName = row.Field<string>(Fields.Consumer),
 					BaseVehicle = row.ParseBoolean(Fields.BaseVehicle),

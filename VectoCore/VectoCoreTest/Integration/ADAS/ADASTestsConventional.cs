@@ -1400,7 +1400,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		private void TestPCC(string testname,
 			params (double start, double end, PCCStates pcc, DrivingAction action)[] data)
 		{
-			var jobName = testname.Split('_').Slice(0, -2).JoinString("_");
+			var jobName = testname.Split('_').Slice(0, -2).Join("_");
 			var cycleName = testname.Split('_').Reverse().Skip(1).First();
 			DoTestPCC(jobName, cycleName, data);
 		}

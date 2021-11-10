@@ -41,13 +41,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (!headerValid) {
 				LoggingObject.Logger<FuelConsumptionMap>().Warn(
 					"WHRMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.EngineSpeed, Fields.Torque, Fields.ElectricPower,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.EngineSpeed, 
+					Fields.Torque, 
+					Fields.ElectricPower,
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
 			// todo mk-2021-08-26 this check is redundant. Previous code would have thrown exception otherwise.
 			if (!headerValid && (type == WHRType.ElectricalOutput || type == WHRType.MechanicalOutputDrivetrain)) {
-				throw new VectoException("expected column headers: {0}", string.Join(", ", whrColumn));
+				throw new VectoException("expected column headers: {0}", whrColumn.Join());
 			}
 
 			if (!headerValid) {

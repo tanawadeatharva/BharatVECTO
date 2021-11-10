@@ -39,6 +39,12 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumerableExtensionMethods
 	{
+		/// <summary>
+		/// Joins the items of the enumerable into a string.
+		/// </summary>
+		public static string Join<T>(this IEnumerable<T> list, string separator = ", ") =>
+			string.Join(separator, list ?? Enumerable.Empty<T>());
+
 		public static IEnumerable<(T value, int index)> Select<T>(this IEnumerable<T> self) =>
 			self.Select((value, index) => (value, index));
 
@@ -50,13 +56,6 @@ namespace TUGraz.VectoCommon.Utils
 			Array.ConstrainedCopy(source, start, dest, 0, end - start);
 			return dest;
 		}
-
-		/// <summary>
-		/// Joins the items of the enumerable into a string.
-		/// </summary>
-		public static string JoinString(this IEnumerable<string> self, string separator = ", ") =>
-			string.Join(separator, self ?? Enumerable.Empty<string>());
-
 
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self, double? defaultValue = null)
 		{
@@ -156,16 +155,16 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
-		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T> => 
+		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T> =>
 			values.Sum(x => x);
 
 		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
 			where TResult : SIBase<TResult> =>
 			values.Select(selector).DefaultIfEmpty().Aggregate((sum, current) => sum + current);
 
-		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> => 
+		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T> =>
 			values.Average(v => v.Value()).SI<T>();
-		
+
 		/// <summary>
 		/// Get the first two items where the predicate changes from true to false.
 		/// If the predicate is always true, the last 2 elements are returned.
