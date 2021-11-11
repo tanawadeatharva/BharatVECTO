@@ -181,6 +181,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
+				var gear = DataBus.GearboxInfo.Gear;
+				var maxSpeed = VectoMath.Min(DataBus.GearboxInfo.GetGearData(gear.Gear).MaxSpeed,
+					DataBus.EngineInfo.EngineN95hSpeed);
+				if (!dryRun && retVal is ResponseSuccess && DataBus.GearboxInfo.GearEngaged(absTime) && retVal.Gearbox.InputSpeed.IsGreater(maxSpeed)) {
+					Strategy.AllowEmergencyShift = true;
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, false, retVal);
+					continue;
+				}
+
 				if (!dryRun && strategySettings.CombustionEngineOn && retVal is ResponseEngineSpeedTooHigh && !strategySettings.ProhibitGearshift) {
 					retryCount++;
 					retry = true;

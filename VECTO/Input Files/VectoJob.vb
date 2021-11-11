@@ -509,6 +509,7 @@ Public Class VectoJob
         Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.JobInputData.Vehicle
         Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.Components.EngineInputData
         Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.Components.GearboxInputData
+        Dim gearshiftInputData As IGearshiftEngineeringInputData = vectoJob.DriverInputData.GearshiftInputData
 
         If vehicleInputData Is Nothing Then _
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
@@ -517,6 +518,9 @@ Public Class VectoJob
         If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
              AndAlso gearboxInputData Is Nothing Then _
             result.Add(New ValidationResult("Gearbox File is missing or invalid"))
+        If (mode = ExecutionMode.Engineering andalso vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
+             AndAlso gearshiftInputData Is Nothing Then _
+            result.Add(New ValidationResult("Gearshift File is missing or invalid"))
 
         If result.Any() Then
             Return _
