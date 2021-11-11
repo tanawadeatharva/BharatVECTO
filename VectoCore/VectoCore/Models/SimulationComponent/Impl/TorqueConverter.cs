@@ -143,7 +143,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal1.ElectricMotor.TorqueRequest = engineResponse.ElectricMotor.TorqueRequest;
 					retVal1.ElectricMotor.InertiaTorque = engineResponse.ElectricMotor.InertiaTorque;
 					retVal1.ElectricMotor.TotalTorqueDemand = engineResponse.ElectricMotor.TotalTorqueDemand;
-
+					retVal1.ElectricMotor.MaxDriveTorque = engineResponse.ElectricMotor.MaxDriveTorque;
+					retVal1.ElectricMotor.MaxDriveTorqueEM = engineResponse.ElectricMotor.MaxDriveTorqueEM;
+					retVal1.ElectricMotor.MaxRecuperationTorque = engineResponse.ElectricMotor.MaxRecuperationTorque;
+					retVal1.ElectricMotor.MaxRecuperationTorqueEM = engineResponse.ElectricMotor.MaxRecuperationTorqueEM;
+					retVal1.ElectricMotor.AngularVelocity = engineResponse.ElectricMotor.AngularVelocity;
+					retVal1.ElectricMotor.ElectricMotorPowerMech = engineResponse.ElectricMotor.ElectricMotorPowerMech;
 					return retVal1;
 				}
 			}
