@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -24,6 +26,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Helper.Converter;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util;
@@ -206,64 +209,123 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			FileOutputVIFWriter writer = null, IDialogHelper dialogHelper = null)
 		{
 			try {
-				FileHelper.CreateDirectory(outputFile);
+				
 				if (writer == null) {
 					var numberOfManufacturingStages =
 						vifData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? 0;
 					writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 				}
 
-				var inputData =
-					new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
+				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
-				var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
-				var jobContainer = new JobContainer(new NullSumWriter());
+				if (WriteTempVIFAndValidate(inputData, writer, dialogHelper))
+				{
+					FileHelper.CreateDirectory(outputFile);
+					var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
-				jobContainer.AddRuns(factory);
-				//var runs = factory.SimulationRuns().ToList();
-				//foreach (var run in runs) {
-				//	jobContainer.AddRun(run);
-				//}
+					var jobContainer = new JobContainer(new NullSumWriter());
 
-				jobContainer.Execute();
-				jobContainer.WaitFinished();
+					jobContainer.AddRuns(factory);
+					jobContainer.Execute();
+					jobContainer.WaitFinished();
 
-				using (var reader = XmlReader.Create(writer.XMLMultistageReportFileName)) {
-					var validator = new XMLValidator(reader);
-					var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
-					if (!valid) {
-						dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
-							MessageBoxButton.OK, MessageBoxImage.Error);
-						Debug.WriteLine("Invalid Outputfile");
-						return null;
-					} else {
-						dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
-							MessageBoxButton.OK, MessageBoxImage.Information);
+					dialogHelper?.ShowMessageBox($"Written to {writer.XMLMultistageReportFileName}", "Info",
+						MessageBoxButton.OK, MessageBoxImage.Information);
 
-						var runSimulation = vifData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final && 
-											(_dialogHelper.Value.ShowMessageBox("Do you want to start the simulation?",
-												"Run Simulation",
-												MessageBoxButton.YesNo,
-												MessageBoxImage.Question) == MessageBoxResult.Yes);
-						_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, runSimulation);
+					var runSimulation = vifData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final &&
+										(_dialogHelper.Value.ShowMessageBox("Do you want to start the simulation?",
+											"Run Simulation",
+											MessageBoxButton.YesNo,
+											MessageBoxImage.Question) == MessageBoxResult.Yes);
+					_jobListViewModel.AddJobAsync(writer.XMLMultistageReportFileName, runSimulation);
 
-						Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
-						return writer.XMLMultistageReportFileName;
-					}
-				}
-
+					Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
+					return writer.XMLMultistageReportFileName;
+                }
 			}catch (Exception e) {
 				dialogHelper?.ShowMessageBox($"{e.GetInnerExceptionMessages()}", "Error writing VIF", MessageBoxButton.OK,
 					MessageBoxImage.Error);
-				return null;
 			}
+			return null;
 		}
 
+        private bool WriteTempVIFAndValidate(XMLDeclarationVIFInputData inputData, FileOutputVIFWriter writer, IDialogHelper dialogHelper)
+        {
+			var tempWriter = new TempFileOutputWriter(writer);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, tempWriter);
+
+			var jobContainer = new JobContainer(new NullSumWriter());
+
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var resultXDoc = tempWriter.GetDocument(ReportType.DeclarationReportMultistageVehicleXML);
 
 
-	
-		private readonly Lazy<IDialogHelper> _dialogHelper;
+			using (var reader = resultXDoc.Root.CreateReader())
+			{
+				var validator = new XMLValidator(reader);
+				var valid = validator.ValidateXML(XmlDocumentType.MultistageOutputData);
+				if (!valid)
+				{
+					dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
+						MessageBoxButton.OK, MessageBoxImage.Error);
+					Debug.WriteLine("Invalid Outputfile");
+					return false;
+				}
+			}
+			using (var reader = resultXDoc.Root.CreateReader())
+            {
+
+				if (inputData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final)
+				{
+					var inputDataProvider = _inputDataReader.Create(reader) as IMultistageBusInputDataProvider;
+					if (!inputDataProvider.JobInputData.InputComplete)
+					{
+						var errorCaption = "Step marked as final with incomplete/invalid input";
+						var errorStringBuilder = new StringBuilder();
+						errorStringBuilder.AppendLine("The following parameters are invalid:\n");
+						var converter = new PropertyNameToLabelTextConverter();
+						var resourceManagers = new List<ResourceManager>()
+						{
+							GUILabels.ResourceManager,
+							BusStrings.ResourceManager,
+							Strings.ResourceManager
+						};
+						foreach (var invalidEntry in inputDataProvider.JobInputData.InvalidEntries)
+						{
+							string name;
+							var conversionResult = converter.Convert(invalidEntry,
+								typeof(string),
+								resourceManagers,
+								System.Globalization.CultureInfo.CurrentCulture);
+							if (conversionResult is string convString)
+							{
+								name = convString;
+							}
+							else
+							{
+								name = invalidEntry;
+							}
+							errorStringBuilder.AppendLine(name);
+						}
+						dialogHelper?.ShowErrorMessage(errorStringBuilder.ToString(), errorCaption);
+						return false;
+					}
+				
+				}
+			}
+
+			
+
+
+
+			return true;
+		}
+
+        private readonly Lazy<IDialogHelper> _dialogHelper;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private string _vehicleInputDataFilePath = null;
 		private readonly IMultistageDependencies _multistageDependencies;
