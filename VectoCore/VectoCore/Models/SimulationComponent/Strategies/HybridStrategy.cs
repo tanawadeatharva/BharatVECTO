@@ -684,6 +684,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (best == null) {
 				best = ResponseEmOff;
 				best.ICEOff = false;
+				if (AllowEmergencyShift && GearList.HasSuccessor(currentGear)) {
+					var testResponse = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, currentGear);
+					if (testResponse.Response.Engine.EngineSpeed.IsGreaterOrEqual(ModelData.EngineData.FullLoadCurves[0]
+						.RatedSpeed)) {
+						best.Gear = GearList.Successor(currentGear);
+					}
+				}
 			}
 
 			var retVal = CreateResponse(best, currentGear);
