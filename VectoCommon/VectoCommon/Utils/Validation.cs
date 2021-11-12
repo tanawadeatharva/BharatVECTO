@@ -206,8 +206,7 @@ namespace TUGraz.VectoCommon.Utils
 								if (kvResults.Any()) {
 									return new ValidationResult(
 										string.Format("{1}[{0}] in {1} invalid: {2}", valueType.GetProperty("Key").GetValue(element),
-											validationContext.DisplayName,
-											string.Join("\n", kvResults)));
+											validationContext.DisplayName, kvResults.Join("\n")));
 								}
 							}
 						}
@@ -215,8 +214,7 @@ namespace TUGraz.VectoCommon.Utils
 						var results = element.Validate(mode, jobType, emPos, gbxType, isEmsCycle);
 						if (results.Any()) {
 							return new ValidationResult(
-								string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
-									string.Join("\n", results)));
+								$"{validationContext.DisplayName}[{i}] in {validationContext.DisplayName} invalid: {results.Join("\n")}");
 						}
 					}
 					i++;
@@ -226,12 +224,12 @@ namespace TUGraz.VectoCommon.Utils
 				if (!results.Any()) {
 					return ValidationResult.Success;
 				}
-				var messages = results.Select(r => String.Join(", ", r.MemberNames.Distinct()));
+				var messages = results.Select(r => r.MemberNames.Distinct().Join());
 				if (validationContext.MemberName == "Container" || validationContext.MemberName == "RunData") {
-					return new ValidationResult(string.Join("\n", results), messages);
+					return new ValidationResult(results.Join("\n"), messages);
 				}
 				return new ValidationResult(
-					$"{{{validationContext.DisplayName}}} invalid: {string.Join("\n", results)}", messages);
+					$"{{{validationContext.DisplayName}}} invalid: {results.Join("\n")}", messages);
 			}
 
 			return ValidationResult.Success;

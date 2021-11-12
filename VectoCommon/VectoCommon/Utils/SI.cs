@@ -37,6 +37,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -135,6 +136,10 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerHidden]
 		private Radian(double val) : base(val, Units) { }
+
+		public double ToInclinationPercent() {
+			return Math.Tan(Val);
+		}
 	}
 
 	/// <summary>
@@ -846,7 +851,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
+	[DebuggerDisplay("{Val.ToString(\"F1\"),nq} [rad/s] ({AsRPM.ToString(\"F1\"),nq} [rpm)")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly int[] Units = { 0, 0, -1, 0, 0, 0, 0 };
@@ -871,7 +876,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("{Val} | {AsKmph}")]
+	[DebuggerDisplay("{Val.ToString(\"G4\"),nq} [m/s] ({AsKmph.ToString(\"G4\"),nq} [km/h])")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly int[] Units = { 0, 1, -1, 0, 0, 0, 0 };
@@ -938,7 +943,7 @@ namespace TUGraz.VectoCommon.Utils
 
 	/// <summary>
 	/// SI Class for NewtonMeter [Nm].
-	/// N = kgm/s^2
+	/// Nm = kgm^2/s^2
 	/// </summary>
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
@@ -989,6 +994,10 @@ namespace TUGraz.VectoCommon.Utils
 		public static NewtonMeterSecond operator /(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
 			return SIBase<NewtonMeterSecond>.Create(newtonMeter.Val / perSecond.Value());
+		}
+
+		public static implicit operator Joule(NewtonMeter self) {
+			return SIBase<Joule>.Create(self.Val);
 		}
 	}
 
@@ -1426,7 +1435,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <remarks>
 	/// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
 	/// </remarks>
-	[DebuggerDisplay("{Val} [{UnitString}]")]
+	[DebuggerDisplay("{SerializedValue,nq}")]
 	public class SI : IComparable
 	{
 		/// <summary>
@@ -1872,6 +1881,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsSmallerOrEqual(SI si, SI tolerance = null)
 		{
 			if (!HasEqualUnit(si)) {

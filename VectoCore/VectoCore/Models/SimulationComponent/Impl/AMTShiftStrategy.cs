@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return
 				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed,
-																				DataBus.EngineInfo.EngineN95hSpeed));
+																				DataBus.EngineInfo.EngineN95hSpeed - 1.RPMtoRad()));
 		}
 
 		public override GearshiftPosition NextGear => _nextGear;
@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// PTO Active while drive (roadsweeping) shift rules
 			if (DataBus.DrivingCycleInfo.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
-				if (gear == DesiredGearRoadsweeping) {
+				if (gear.Equals(DesiredGearRoadsweeping)) {
 					return false;
 				}
 

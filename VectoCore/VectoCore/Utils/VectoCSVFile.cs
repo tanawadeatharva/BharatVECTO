@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			entries.Add(string.Join(Delimiter, header));
+			entries.Add(header.Join(Delimiter));
 
 			var columnFormatter = new Func<ConvertedSI, string>[table.Columns.Count];
 			for (var i = 0; i < table.Columns.Count; i++) {
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Utils
 						formattedList[i] = $"\"{formattedList[i]}\"";
 					}
 				}
-				entries.Add(string.Join(Delimiter, formattedList));
+				entries.Add(formattedList.Join(Delimiter));
 			}
 
 			if (addDigest) {

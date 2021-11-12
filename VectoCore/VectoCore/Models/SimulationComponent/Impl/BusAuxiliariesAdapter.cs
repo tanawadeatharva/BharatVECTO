@@ -343,6 +343,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.ExcessiveDragPower = drivetrainPower -
 												(DataBus.EngineInfo.EngineDragPower(avgAngularSpeed) - preExistingAuxPower) - DataBus.Brakes.BrakePower;
 			}
+
+			if (!dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && torquePowerTrain.IsGreater(0) &&
+				DataBus.GearboxInfo.Gear.TorqueConverterLocked.HasValue &&
+				!DataBus.GearboxInfo.Gear.TorqueConverterLocked.Value) {
+				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
+			}
 			if (!dryRun && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
 				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
 			}

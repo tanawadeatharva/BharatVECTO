@@ -2119,7 +2119,7 @@ Imports TUGraz.VectoCore.Utils
         'End Try
     End Sub
 
-    Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseClick
+    Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles  LvGEN.MouseDown
         If e.Button = MouseButtons.Right Then
             _conMenTarget = LvGEN
             _conMenTarJob = True

@@ -287,7 +287,7 @@ Public Class BusAuxiliariesEngParametersForm
             End If
         End If
 
-        HCUFileBrowser.UpdateHistory(file)
+        BusAuxFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
 

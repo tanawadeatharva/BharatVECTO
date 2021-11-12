@@ -60,7 +60,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase]
 		[TestCase(12000, 1256, 148, 148, 6087.03221)]
 		[TestCase(12000, 1256, -45, -30, 8954.1396)]
 		[TestCase(15700, 1319, -45.79263, -24.0441, 9093.9473)]

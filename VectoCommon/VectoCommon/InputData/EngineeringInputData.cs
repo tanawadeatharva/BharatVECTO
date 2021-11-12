@@ -51,7 +51,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ICycleData> Cycles { get; }
 
-		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
 	}
 

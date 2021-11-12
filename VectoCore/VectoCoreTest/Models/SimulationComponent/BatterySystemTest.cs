@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 
 			var socs = bat.Batteries.SelectMany(x => x.Value.Batteries.Select(y => y.StateOfCharge)).ToArray();
-			Console.WriteLine(string.Join(", ", socs));
+			Console.WriteLine(socs.Join());
 			for (var i = 0; i < socs.Length; i++) {
 				Assert.AreEqual(expectedSoC[i], socs[i], 1e-9, $"Bat_{i} SoC");
 			}
@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 
 			var socs = bat.Batteries.SelectMany(x => x.Value.Batteries.Select(y => y.StateOfCharge)).ToArray();
-			Console.WriteLine(string.Join(", ", socs));
+			Console.WriteLine(socs.Join());
 			Console.WriteLine(bat.StateOfCharge);
 			for (var i = 0; i < socs.Length; i++) {
 				Assert.AreEqual(expectedSoC[i], socs[i], 1e-9, $"Bat_{i} SoC");
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 
 			var socs = bat.Batteries.SelectMany(x => x.Value.Batteries.Select(y => y.StateOfCharge)).ToArray();
-			Console.WriteLine(string.Join(", ", socs));
+			Console.WriteLine(socs.Join());
 			Console.WriteLine(bat.StateOfCharge);
 			for (var i = 0; i < socs.Length; i++) {
 				Assert.AreEqual(expectedSoC[i], socs[i], 1e-9, $"Bat_{i} SoC");

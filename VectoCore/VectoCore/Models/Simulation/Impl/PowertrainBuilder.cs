@@ -1121,7 +1121,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IEngineControl
 
-		public bool CombustionEngineOn { get; set; }
+		public bool CombustionEngineOn
+		{
+			get { return false; } set { } }
 
 		#endregion
 	}
@@ -1182,6 +1184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
+		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		#endregion
 	}

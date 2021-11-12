@@ -830,6 +830,7 @@ Partial Class VectoJobForm
         Me.pnBusAux.Controls.Add(Me.tbBusAuxParams)
         Me.pnBusAux.Controls.Add(Me.btnBrowsBusAuxParams)
         Me.pnBusAux.Location = New System.Drawing.Point(6, 40)
+        Me.pnBusAux.Enabled = false
         Me.pnBusAux.Name = "pnBusAux"
         Me.pnBusAux.Size = New System.Drawing.Size(503, 26)
         Me.pnBusAux.TabIndex = 16

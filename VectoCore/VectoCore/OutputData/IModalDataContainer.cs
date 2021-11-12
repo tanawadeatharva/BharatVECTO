@@ -155,6 +155,7 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface ICorrectedModalData
 	{
+		WattSecond WorkESSMissing { get; }
 		WattSecond WorkWHREl { get;  }
 		WattSecond WorkWHRElMech { get;  }
 		WattSecond WorkWHRMech { get;  }

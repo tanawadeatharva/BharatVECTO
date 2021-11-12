@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case MissionType.Coach:
 					return "Coach";
 				case MissionType.VerificationTest:
-					return "Verirication Test";
+					return "Verification Test";
 				case MissionType.ExemptedMission:
 					return "Exempted";
 				default:
