@@ -916,16 +916,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//var maxTorque = DataBus.e
 			var tcOp = DataBus.TorqueConverterInfo.CalculateOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.01, response.Gearbox.InputSpeed);
 
-			if (!tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
+			//if (tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
 				_previousGearboxDisengaged = DataBus.GearboxInfo.DisengageGearbox;
 				DataBus.GearboxCtl.DisengageGearbox = true;
 				operatingPoint = SearchBrakingPower(
 					absTime, operatingPoint.SimulationDistance, gradient,
 					operatingPoint.Acceleration, response);
 				return operatingPoint;
-			}
+			//}
 
-			return null;
+			//return null;
 		}
 
 		private OperatingPoint AdaptDecelerationToTargetDistance(Meter ds, MeterPerSecond nextTargetSpeed,
