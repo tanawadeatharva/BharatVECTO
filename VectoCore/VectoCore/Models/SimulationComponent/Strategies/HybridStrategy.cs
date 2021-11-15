@@ -1253,10 +1253,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (emRecuperationTq.IsBetween(
 					firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
 					var entry = new HybridResultEntry {
-						ICEOff = !DataBus.EngineInfo.EngineOn,
+						ICEOff = !iceOn,
 						Gear = nextGear,
 						Setting = new HybridStrategyResponse {
-							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
+							CombustionEngineOn = iceOn,
 							GearboxInNeutral = false,
 							NextGear = nextGear,
 							MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -1270,10 +1270,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					if (emRecuperationTq.IsGreater(0)) {
 						eval.Add(
 							new HybridResultEntry {
-								ICEOff = !DataBus.EngineInfo.EngineOn,
+								ICEOff = !iceOn,
 								Gear = nextGear,
 								Setting = new HybridStrategyResponse {
-									CombustionEngineOn = DataBus.EngineInfo.EngineOn,
+									CombustionEngineOn = iceOn,
 									GearboxInNeutral = false,
 									NextGear = nextGear,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
