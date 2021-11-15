@@ -326,6 +326,7 @@ namespace TUGraz.VectoCore.OutputData
 			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
 						emPos.GetName())),
 					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(),
@@ -336,7 +337,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0))) {
+			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0) && !x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
@@ -353,6 +354,7 @@ namespace TUGraz.VectoCore.OutputData
 			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), 
 						emPos.GetName())),
 					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), 
@@ -363,7 +365,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0))) {
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0) && !x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
@@ -407,13 +409,14 @@ namespace TUGraz.VectoCore.OutputData
 			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
-					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
-						emPos.GetName())),
-					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotorLoss_.GetCaption(),
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+					//P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					//	emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(),
 						emPos.GetName())) * dt,
 				};
 			});
-			return selected.Where(x => x.P_em.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
+			return selected.Where(x => !x.EM_off.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
 		}
 
 		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
