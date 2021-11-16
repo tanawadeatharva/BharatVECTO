@@ -1121,9 +1121,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region Implementation of IEngineControl
 
-		public bool CombustionEngineOn
-		{
-			get { return false; } set { } }
+		public bool CombustionEngineOn { get; set; }
 
 		#endregion
 	}

@@ -227,7 +227,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
-			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
@@ -1197,22 +1196,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return;
 				}
 
-				var iceOn = DataBus.EngineInfo.EngineOn;
-				// if Hybrid P1 and Engine is off, the search for recuperation torque is not possible:
-				// Therefore, either switch on engine (if reasonable), or do not search at all.
-				if (emPos == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
-
-					var gearboxIn = firstResponse.Gearbox.InputSpeed * firstResponse.Gearbox.InputTorque;
-					var eMotor = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1);
-					var powerToleranceEl = 0.1 * eMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, firstResponse.Gearbox.InputSpeed);
-					if (gearboxIn - firstResponse.Engine.DragPower < powerToleranceEl) {
-						DataBus.EngineCtl.CombustionEngineOn = true;
-						iceOn = true;
-					} else {
-						return;
-					}
-				}
-
 				// full recuperation is not possible - ICE would need to propel - search max possible EM torque
 				var emRecuperationTq = SearchAlgorithm.Search(
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
@@ -1230,7 +1213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					},
 					evaluateFunction: emTq => {
 						var cfg = new HybridStrategyResponse {
-							CombustionEngineOn = iceOn,
+							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
 							GearboxInNeutral = false,
 							NextGear = nextGear,
 							MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -1253,10 +1236,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (emRecuperationTq.IsBetween(
 					firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
 					var entry = new HybridResultEntry {
-						ICEOff = !iceOn,
+						ICEOff = !DataBus.EngineInfo.EngineOn,
 						Gear = nextGear,
 						Setting = new HybridStrategyResponse {
-							CombustionEngineOn = iceOn,
+							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
 							GearboxInNeutral = false,
 							NextGear = nextGear,
 							MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -1270,10 +1253,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					if (emRecuperationTq.IsGreater(0)) {
 						eval.Add(
 							new HybridResultEntry {
-								ICEOff = !iceOn,
+								ICEOff = !DataBus.EngineInfo.EngineOn,
 								Gear = nextGear,
 								Setting = new HybridStrategyResponse {
-									CombustionEngineOn = iceOn,
+									CombustionEngineOn = DataBus.EngineInfo.EngineOn,
 									GearboxInNeutral = false,
 									NextGear = nextGear,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
