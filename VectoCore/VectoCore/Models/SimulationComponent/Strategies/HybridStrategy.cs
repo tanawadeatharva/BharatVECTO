@@ -988,11 +988,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual bool AllowICEOff(Second absTime)
 		{
-			//if (!ModelData.VehicleData.ADAS.EngineStopStart) {
-			//	return false;
-			//}
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			if (/*ModelData.VehicleData.ADAS.EngineStopStart &&*/ emPos == PowertrainPosition.HybridP1) {
+			if (emPos == PowertrainPosition.HybridP1 && !ModelData.VehicleData.ADAS.EngineStopStart) {
 				return false;
 			}
 			return PreviousState.ICEStartTStmp == null ||
@@ -1351,7 +1348,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var result = ResponseEmOff;
-			if (DataBus.DriverInfo.PCCState == PCCStates.UseCase1 || DataBus.DriverInfo.PCCState == PCCStates.UseCase2)
+			var isPCC = DataBus.DriverInfo.PCCState == PCCStates.UseCase1 || DataBus.DriverInfo.PCCState == PCCStates.UseCase2;
+			if (isPCC && AllowICEOff(absTime))
 				result.ICEOff = true;
 			eval.Add(result);
 		}
