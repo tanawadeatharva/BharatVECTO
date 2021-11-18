@@ -684,6 +684,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (best == null) {
 				best = ResponseEmOff;
 				best.ICEOff = false;
+				if (AllowEmergencyShift && GearList.HasSuccessor(currentGear)) {
+					var testResponse = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity, currentGear);
+					if (testResponse.Response.Engine.EngineSpeed.IsGreaterOrEqual(ModelData.EngineData.FullLoadCurves[0]
+						.RatedSpeed)) {
+						best.Gear = GearList.Successor(currentGear);
+					}
+				}
 			}
 
 			var retVal = CreateResponse(best, currentGear);
@@ -1762,13 +1769,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return null;
 			}
 
-			if (StrategyParameters.MaxPropulsionTorque != null && ModelData.GearboxData.Type.AutomaticTransmission()) {
-				var maxTqNextGear =
-					StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(emOffEntry.Response.Gearbox.InputSpeed);
-				if (((emOffEntry.Response.Gearbox.InputTorque - maxTqNextGear) * emOffEntry.Response.Gearbox.InputSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
-					return null;
-				}
-			}
+			//if (StrategyParameters.MaxPropulsionTorque != null && ModelData.GearboxData.Type.AutomaticTransmission()) {
+			//	var maxTqNextGear =
+			//		StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(emOffEntry.Response.Gearbox.InputSpeed);
+			//	if (!AllowEmergencyShift && ((emOffEntry.Response.Gearbox.InputTorque - maxTqNextGear) * emOffEntry.Response.Gearbox.InputSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
+			//		return null;
+			//	}
+			//}
 
 			CalculateCosts(emOffEntry.Response, dt, emOffEntry, allowICEOff, dryRun);
 
@@ -1815,8 +1822,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var maxEmTorque = firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>();
 			var maxU = allowIceOff
 				? -1.0
-				: Math.Min(maxEmTorque / emTqReq, -1.0);
-			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+				: Math.Min(maxEmTorque.Value() / emTqReq.Value(), -1.0);
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake || double.IsNaN(maxU)) {
+				maxU = 0;
+			}
+
+			if (emTqReq.IsEqual(0, 1)) {
 				maxU = 0;
 			}
 

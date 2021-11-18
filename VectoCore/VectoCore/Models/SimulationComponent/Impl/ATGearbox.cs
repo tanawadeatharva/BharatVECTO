@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected internal set => throw new System.NotImplementedException();
 		}
 
-		public override GearshiftPosition NextGear => _strategy.NextGear;
+		public override GearshiftPosition NextGear => _strategy?.NextGear ?? _gear;
 
 		#region Overrides of AbstractGearbox<ATGearboxState>
 

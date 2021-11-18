@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public GearData GetGearData(uint gear)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public PerSecond EngineSpeed { get; set; }
