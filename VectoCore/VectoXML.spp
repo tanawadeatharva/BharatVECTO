@@ -72,6 +72,7 @@
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\vecto_vehicle-stage_vif_input.xml" HomeFolder="Yes"/>
 		</Folder>
 		<Folder FolderName="Schema 2.10_Components" ValidFileSet="Yes" ValidFile="VectoCore\Resources\XSD\VectoComponent.2.10.xsd">
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ADC.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\BatterySystem_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\CapacitorSystem_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml" HomeFolder="Yes"/>
@@ -164,6 +165,7 @@
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\CompletedBus\PEV_completedBus_1.xml"/>
 				</Folder>
 				<Folder FolderName="ComponentData">
+					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ADC.xml" HomeFolder="Yes"/>
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\BatterySystem_1.xml"/>
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\CapacitorSystem_1.xml"/>
 					<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ComponentData\ElectricMachineSystem-IHPC_1.xml"/>
@@ -386,7 +388,7 @@
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_quam\Documentation\XML\RenderTable.xslt" HomeFolder="Yes"/>
-		<File FilePath="E:\QUAM\Workspace\VECTO_quam\VectoCommon\VectoHashing\Resources\XSLT\SortInputData.xslt" HomeFolder="Yes"/>
+		<File FilePath="V:\VectoCommon\VectoHashing\Resources\XSLT\SortInputData.xslt" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery;xqu"/>
 	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
