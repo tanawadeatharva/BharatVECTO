@@ -1452,7 +1452,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (best == null) {
 				return null;
 			}
-			if (!best.IgnoreReason.InvalidEngineSpeed() || best.ICEOff ||
+			if (!best.IgnoreReason.InvalidEngineSpeed() || /*best.ICEOff ||*/
 				eval.Select(x => x.Gear).Distinct().Count() <= 1) {
 				best.SimulationInterval = dt;
 				return best;
