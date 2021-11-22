@@ -166,10 +166,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var voltage = DataBus.BatteryInfo.InternalVoltage;
 
-			var avgDtSpeed = (PreviousState.DrivetrainSpeed + outAngularVelocity) / 2;
+			var iceOn =  Position == PowertrainPosition.HybridP1 &&
+						!DataBus.EngineInfo.EngineOn && DataBus.EngineCtl.CombustionEngineOn;
+			var prevDtSpeed = iceOn ? DataBus.EngineInfo.EngineSpeed : PreviousState.DrivetrainSpeed;
+			var prevEmSpeed = iceOn ? prevDtSpeed * ModelData.RatioADC : PreviousState.EMSpeed;
+
+			var avgDtSpeed = (prevDtSpeed + outAngularVelocity) / 2;
 			var emSpeed = outAngularVelocity * ModelData.RatioADC;
 
-			var avgEmSpeed = (PreviousState.EMSpeed + emSpeed) / 2;
+			var avgEmSpeed = (prevEmSpeed + emSpeed) / 2;
 			var inertiaTorqueEm = avgEmSpeed.IsEqual(0)
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(avgEmSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
@@ -368,6 +373,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricSystem = electricSupplyResponse;
 			
 			if (!dryRun) {
+				CurrentState.IceSwitchedOn = iceOn;
+				CurrentState.ICEOnSpeed = DataBus.EngineInfo.EngineSpeed;
 				CurrentState.EMSpeed = emSpeed;
 				CurrentState.EMTorque = emOff ? null : emTorque;
 				CurrentState.EmTorqueMap = emTorqueMap;
@@ -474,8 +481,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			var avgEMSpeed = (PreviousState.EMSpeed + CurrentState.EMSpeed) / 2;
-			var avgDTSpeed = (PreviousState.DrivetrainSpeed + CurrentState.DrivetrainSpeed) / 2;
+			var prevDtSpeed = CurrentState.IceSwitchedOn ? CurrentState.ICEOnSpeed : PreviousState.DrivetrainSpeed;
+			var prevEmSpeed = CurrentState.IceSwitchedOn ? prevDtSpeed * ModelData.RatioADC : PreviousState.EMSpeed;
+
+			var avgEMSpeed = (prevEmSpeed + CurrentState.EMSpeed) / 2;
+			var avgDTSpeed = (prevDtSpeed + CurrentState.DrivetrainSpeed) / 2;
 
 			container[ModalResultField.EM_ratio_, Position] = ModelData.RatioADC.SI<Scalar>();
 			container[ModalResultField.n_EM_electricMotor_, Position] = avgEMSpeed;
@@ -570,6 +580,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TransmissionTorqueLoss;
 
 		public PerSecond EMSpeed { get; set; }
+		public bool IceSwitchedOn { get; set; }
+		public PerSecond ICEOnSpeed { get; set; }
+
 		public NewtonMeter EMTorque;
 		public NewtonMeter EmTorqueMap;
 
