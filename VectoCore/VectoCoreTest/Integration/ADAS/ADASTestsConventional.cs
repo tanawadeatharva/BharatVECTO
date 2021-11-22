@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_PCC123_CaseE() => TestPCC(MethodBase.GetCurrentMethod().Name,
+		public void Class5_PCC123_CaseE_Conventional() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 689, OutsideSegment, Accelerate),         // len: 689m
 			(689, 2066, WithinSegment, Accelerate),       // len: 1377m
 			(2066, 2377, UseCase1, Coast),                // len: 311m
@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 		[TestCase]
-		public void Class5_PCC123_CaseF() => TestPCC(MethodBase.GetCurrentMethod().Name,
+		public void Class5_PCC123_CaseF_Conventional() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 700, OutsideSegment, Accelerate),         // len: 700m
 			(700, 2066, WithinSegment, Accelerate),       // len: 1366m
 			(2066, 2400, UseCase1, Coast),                // len: 334m
@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3283, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
-		public void Class5_PCC123_CaseG() => TestPCC(MethodBase.GetCurrentMethod().Name,
+		public void Class5_PCC123_CaseG_Conventional() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 3944, OutsideSegment, Accelerate),        // len: 3944m
 			(3944, 5076, WithinSegment, Accelerate),      // len: 1132m
 			(5076, 5899, UseCase1, Coast),                // len: 823m
