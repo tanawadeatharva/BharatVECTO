@@ -555,7 +555,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricE2:
+				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type != GearboxType.APTN:
 					var strategy = new PEVAMTShiftStrategy(container);
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
 						container, es, ctl);
@@ -564,6 +564,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(em);
 					new ATClutchInfo(container);
 					break;
+
+				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type == GearboxType.APTN:
+					var strategyAPTN = new APTNShiftStrategy(container);
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
+						container, es, ctl);
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(new APTNGearbox(container, strategyAPTN))
+						.AddComponent(em);
+					new ATClutchInfo(container);
+					break;
+
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
 			}
 
@@ -1019,7 +1030,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return new PEVAMTShiftStrategy(container);
 						}
 						throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}", runData.GearboxData.Type, runData.JobType);
-					//return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
 						runData.ShiftStrategy = MTShiftStrategy.Name;
 						return new MTShiftStrategy(container);
@@ -1027,7 +1037,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					case GearboxType.ATSerial:
 						runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 						return new ATShiftStrategyOptimized(container);
-					//return new ATShiftStrategy(runData, container);
+					case GearboxType.APTN:
+						runData.ShiftStrategy = APTNShiftStrategy.Name;
+						return new APTNShiftStrategy(container);
 					default:
 						throw new ArgumentOutOfRangeException("GearboxType",
 							$"Unknown Gearbox Type {runData.GearboxData.Type.ToString()}");

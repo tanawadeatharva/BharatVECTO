@@ -187,7 +187,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, GearshiftPosition gear, Second lastShiftTime, IResponse response)
+		private bool DoCheckShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, 
+			PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, 
+			GearshiftPosition gear, Second lastShiftTime, IResponse response)
 		{
 			// no shift when vehicle stands
 			if (DataBus.VehicleInfo.VehicleStopped) {
@@ -424,7 +426,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return nextGear;
 			}
 
-			if (response.ElectricMotor.TorqueRequestEmMap != null && response.ElectricMotor.TorqueRequestEmMap.IsEqual(
+			if (response.ElectricMotor.TorqueRequestEmMap != null && response.ElectricMotor.MaxRecuperationTorqueEM is null)
+				Console.WriteLine("DEBUG");
+			if (response.ElectricMotor.TorqueRequestEmMap != null 
+				&& response.ElectricMotor.MaxRecuperationTorqueEM != null 
+				&& response.ElectricMotor.TorqueRequestEmMap.IsEqual(
 				response.ElectricMotor.MaxRecuperationTorqueEM,
 				response.ElectricMotor.MaxRecuperationTorqueEM * 0.1)) {
 				// no early downshift when close to max recuperation line
@@ -756,12 +762,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		
 		#endregion
-	}
-
-
-
-	public class APTNShiftStrategy : PEVAMTShiftStrategy
-	{
-		public APTNShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
 	}
 }

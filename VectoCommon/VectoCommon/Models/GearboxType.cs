@@ -51,11 +51,11 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetLabel(this GearboxType type)
 		{
 			switch (type) {
-				case GearboxType.MT: return "Manual Transmission (MT)";
-				case GearboxType.AMT: return "Automated Transmission (AMT)";
-				case GearboxType.ATSerial: return "Automatic Transmission - Serial (AT-S)";
+				case GearboxType.MT:           return "Manual Transmission (MT)";
+				case GearboxType.AMT:          return "Automated Transmission (AMT)";
+				case GearboxType.ATSerial:     return "Automatic Transmission - Serial (AT-S)";
 				case GearboxType.ATPowerSplit: return "Automatic Transmission - PowerSplit (AT-P)";
-				case GearboxType.APTN: return "Automatic Power Transmission - No Torque Converter (APT-N)";
+				case GearboxType.APTN:         return "Automatic Transmission - No TorqueConverter (APT-N)";
 				case GearboxType.DrivingCycle: return "Gear from Driving Cycle";
 				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
