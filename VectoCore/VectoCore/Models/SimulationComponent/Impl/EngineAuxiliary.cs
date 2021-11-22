@@ -121,8 +121,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
-			var avgAngularSpeed = PreviousState.AngularSpeed != null
-				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
+			var iceOn = !DataBus.EngineInfo.EngineOn && DataBus.EngineCtl.CombustionEngineOn;
+			var prevAngularSpeed = iceOn ? DataBus.EngineInfo.EngineSpeed : PreviousState.AngularSpeed;
+
+			var avgAngularSpeed = prevAngularSpeed != null
+				? (angularSpeed + prevAngularSpeed) / 2.0
 				: angularSpeed;
 			if (!dryRun) {
 				CurrentState.AngularSpeed = angularSpeed;
