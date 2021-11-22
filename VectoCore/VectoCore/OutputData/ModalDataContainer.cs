@@ -265,11 +265,22 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool HasCombustionEngine => _runData.JobType != VectoSimulationJobType.BatteryElectricVehicle;
 
-		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos) =>
-			!ElectricMotors.Contains(emPos)
-				? null
-				: -_eEmDrive.GetOrAdd(emPos, _ => TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x < 0));
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos))
+				return null;
+			else {
+				var eEmDrive = Data.AsEnumerable().Select(r => {
+					var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+					return new {
+						EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
+								dt
+					};
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsSmaller(0)).Sum(x => x.E_EM);
+				return -_eEmDrive.GetOrAdd(emPos, _ => eEmDrive);
+			}
+		}
 
 		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos) =>
 			!ElectricMotors.Contains(emPos)
@@ -277,11 +288,22 @@ namespace TUGraz.VectoCore.OutputData
 				: -_eEmDriveMot.GetOrAdd(emPos, _ => TimeIntegral<WattSecond>(
 					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x < 0));
 
-		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos) =>
-			!ElectricMotors.Contains(emPos)
-				? null
-				: _eEmRecuperate.GetOrAdd(emPos, _ => TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0));
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		{
+			if (!ElectricMotors.Contains(emPos))
+				return null;
+			else {
+				var eEmRecup = Data.AsEnumerable().Select(r => {
+					var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+					return new {
+						EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
+								dt
+					};
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsGreater(0)).Sum(x => x.E_EM);
+				return _eEmRecuperate.GetOrAdd(emPos, _ => eEmRecup);
+			}
+		}
 
 		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos) =>
 			!ElectricMotors.Contains(emPos)
