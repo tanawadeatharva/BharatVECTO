@@ -954,9 +954,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
 						second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocityWithOverspeed, debug, second);
 					} else {
-						second = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
-							? Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient, overrideAction: DrivingAction.Accelerate)
-							: Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
+						// overrideAction: in case of hybrids with an AT gearbox after an underload we search for braking power because the torque converter
+						// may be in creeping condition (e.g. engine propels but torque converter is below drag. -> engine propells and remaining power is 
+						// dissipated in brakes.
+						// in order that the hybrid controller still selects a solution where the EM propells as well, the brake action announces the 
+						// accelerate action.
+						// unfortunately, this causes issues for P1 hybrid configurations with AT gearbox in torque converter gear. If the EM propells, the torque
+						// converter cannot find an operating point close to the drag point. therefore, do not announce the different action except for driving off from
+						// standstill.
+						var overrideAction = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() 
+											&& (DataBus.GearboxInfo.Gear.TorqueConverterLocked.HasValue && !DataBus.GearboxInfo.Gear.TorqueConverterLocked.Value)
+											&& (DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null || DataBus.VehicleInfo.VehicleStopped)
+							? DrivingAction.Accelerate
+							: (DrivingAction?)null;
+						second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient,
+							overrideAction: overrideAction);
 						debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
 					}
 					break;

@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						airDragArea,
 						DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
-								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count), airDragArea,
+								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,
 							height),
 						CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
@@ -155,13 +155,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles)
+		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles,
+			Kilogram tpmlm)
 		{
 			//TODO: check if is i
 			switch (vehicleCategory) {
 				case VehicleCategory.Van:
 					return "MediumLorriesVan";
-				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
+				case VehicleCategory.RigidTruck:
+					if (tpmlm.IsSmallerOrEqual(7400)) {
+						return "MediumLorriesRigid";
+					}
+					return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor: return "TractorSemitrailer";
 				case VehicleCategory.CityBus:
 				//case VehicleCategory.InterurbanBus:
