@@ -158,30 +158,31 @@ Partial Class BusAuxiliariesEngParametersForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(936, 505)
+        Me.ButCancel.Location = New System.Drawing.Point(936, 398)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 13
+        Me.ButCancel.TabIndex = 4
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = true
         '
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(855, 505)
+        Me.ButOK.Location = New System.Drawing.Point(855, 398)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 12
+        Me.ButOK.TabIndex = 3
         Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = true
         '
         'ToolStrip1
         '
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1023, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1023, 31)
         Me.ToolStrip1.TabIndex = 30
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -191,7 +192,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtNew.Text = "ToolStripButton1"
         Me.ToolStripBtNew.ToolTipText = "New"
         '
@@ -201,7 +202,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtOpen.Text = "ToolStripButton1"
         Me.ToolStripBtOpen.ToolTipText = "Open..."
         '
@@ -211,7 +212,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripBtSave.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_icon
         Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSave.Text = "ToolStripButton1"
         Me.ToolStripBtSave.ToolTipText = "Save"
         '
@@ -221,14 +222,14 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripBtSaveAs.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_as_icon
         Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSaveAs.Text = "ToolStripButton1"
         Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripBtSendTo
         '
@@ -236,14 +237,14 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripBtSendTo.Image = Global.TUGraz.VECTO.My.Resources.Resources.export_icon
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSendTo.Text = "Send to Job Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripButton1
         '
@@ -251,13 +252,14 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripButton1.Text = "Help"
         '
         'StatusStrip1
         '
+        Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 531)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 424)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1023, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -282,6 +284,7 @@ Partial Class BusAuxiliariesEngParametersForm
         '
         'CmOpenFile
         '
+        Me.CmOpenFile.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
         Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
@@ -321,8 +324,8 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.gbElectricSystem.Controls.Add(Me.pnCurrentDemand)
         Me.gbElectricSystem.Location = New System.Drawing.Point(12, 74)
         Me.gbElectricSystem.Name = "gbElectricSystem"
-        Me.gbElectricSystem.Size = New System.Drawing.Size(317, 403)
-        Me.gbElectricSystem.TabIndex = 49
+        Me.gbElectricSystem.Size = New System.Drawing.Size(317, 339)
+        Me.gbElectricSystem.TabIndex = 0
         Me.gbElectricSystem.TabStop = false
         Me.gbElectricSystem.Text = "Electric System"
         '
@@ -334,7 +337,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnDCDCEff.Location = New System.Drawing.Point(10, 294)
         Me.pnDCDCEff.Name = "pnDCDCEff"
         Me.pnDCDCEff.Size = New System.Drawing.Size(288, 28)
-        Me.pnDCDCEff.TabIndex = 26
+        Me.pnDCDCEff.TabIndex = 9
         '
         'lblDCDCEff
         '
@@ -367,7 +370,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnES_HEVREESS.Location = New System.Drawing.Point(10, 265)
         Me.pnES_HEVREESS.Name = "pnES_HEVREESS"
         Me.pnES_HEVREESS.Size = New System.Drawing.Size(288, 28)
-        Me.pnES_HEVREESS.TabIndex = 54
+        Me.pnES_HEVREESS.TabIndex = 8
         '
         'cbES_HEVREESS
         '
@@ -386,7 +389,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnAlternatorTechnology.Location = New System.Drawing.Point(10, 139)
         Me.pnAlternatorTechnology.Name = "pnAlternatorTechnology"
         Me.pnAlternatorTechnology.Size = New System.Drawing.Size(288, 28)
-        Me.pnAlternatorTechnology.TabIndex = 26
+        Me.pnAlternatorTechnology.TabIndex = 4
         '
         'cbAlternatorTechnology
         '
@@ -413,7 +416,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnSmartElectricParams.Location = New System.Drawing.Point(10, 168)
         Me.pnSmartElectricParams.Name = "pnSmartElectricParams"
         Me.pnSmartElectricParams.Size = New System.Drawing.Size(288, 96)
-        Me.pnSmartElectricParams.TabIndex = 27
+        Me.pnSmartElectricParams.TabIndex = 5
         '
         'pnBattEfficiency
         '
@@ -423,7 +426,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnBattEfficiency.Location = New System.Drawing.Point(0, 63)
         Me.pnBattEfficiency.Name = "pnBattEfficiency"
         Me.pnBattEfficiency.Size = New System.Drawing.Size(300, 28)
-        Me.pnBattEfficiency.TabIndex = 28
+        Me.pnBattEfficiency.TabIndex = 2
         '
         'lblBatEfficiency
         '
@@ -458,7 +461,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnElectricStorageCapacity.Location = New System.Drawing.Point(0, 33)
         Me.pnElectricStorageCapacity.Name = "pnElectricStorageCapacity"
         Me.pnElectricStorageCapacity.Size = New System.Drawing.Size(300, 28)
-        Me.pnElectricStorageCapacity.TabIndex = 27
+        Me.pnElectricStorageCapacity.TabIndex = 1
         '
         'lblElectricStorageCapacity
         '
@@ -493,7 +496,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnMaxAlternatorPower.Location = New System.Drawing.Point(0, 3)
         Me.pnMaxAlternatorPower.Name = "pnMaxAlternatorPower"
         Me.pnMaxAlternatorPower.Size = New System.Drawing.Size(288, 28)
-        Me.pnMaxAlternatorPower.TabIndex = 26
+        Me.pnMaxAlternatorPower.TabIndex = 0
         '
         'lblMaxAlternatorPower
         '
@@ -528,7 +531,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnAlternatorEfficiency.Location = New System.Drawing.Point(10, 109)
         Me.pnAlternatorEfficiency.Name = "pnAlternatorEfficiency"
         Me.pnAlternatorEfficiency.Size = New System.Drawing.Size(288, 28)
-        Me.pnAlternatorEfficiency.TabIndex = 25
+        Me.pnAlternatorEfficiency.TabIndex = 3
         '
         'lblAlternatorEfficiency
         '
@@ -563,7 +566,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnCurrentDemandEngineOffStandstill.Location = New System.Drawing.Point(10, 79)
         Me.pnCurrentDemandEngineOffStandstill.Name = "pnCurrentDemandEngineOffStandstill"
         Me.pnCurrentDemandEngineOffStandstill.Size = New System.Drawing.Size(288, 28)
-        Me.pnCurrentDemandEngineOffStandstill.TabIndex = 26
+        Me.pnCurrentDemandEngineOffStandstill.TabIndex = 2
         '
         'lblCurrentDemandEngineIffStandstill
         '
@@ -598,7 +601,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnCurrentDemandEngineOffDriving.Location = New System.Drawing.Point(10, 49)
         Me.pnCurrentDemandEngineOffDriving.Name = "pnCurrentDemandEngineOffDriving"
         Me.pnCurrentDemandEngineOffDriving.Size = New System.Drawing.Size(288, 28)
-        Me.pnCurrentDemandEngineOffDriving.TabIndex = 25
+        Me.pnCurrentDemandEngineOffDriving.TabIndex = 1
         '
         'lblCurrentDemandEngineOffDriving
         '
@@ -633,7 +636,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnCurrentDemand.Location = New System.Drawing.Point(10, 19)
         Me.pnCurrentDemand.Name = "pnCurrentDemand"
         Me.pnCurrentDemand.Size = New System.Drawing.Size(288, 28)
-        Me.pnCurrentDemand.TabIndex = 4
+        Me.pnCurrentDemand.TabIndex = 0
         '
         'lblCurrentDemand
         '
@@ -669,7 +672,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.bgPneumaticSystem.Location = New System.Drawing.Point(335, 74)
         Me.bgPneumaticSystem.Name = "bgPneumaticSystem"
         Me.bgPneumaticSystem.Size = New System.Drawing.Size(317, 181)
-        Me.bgPneumaticSystem.TabIndex = 51
+        Me.bgPneumaticSystem.TabIndex = 1
         Me.bgPneumaticSystem.TabStop = false
         Me.bgPneumaticSystem.Text = "Pneumatic System"
         '
@@ -679,7 +682,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnSmartCompressor.Location = New System.Drawing.Point(10, 141)
         Me.pnSmartCompressor.Name = "pnSmartCompressor"
         Me.pnSmartCompressor.Size = New System.Drawing.Size(288, 28)
-        Me.pnSmartCompressor.TabIndex = 53
+        Me.pnSmartCompressor.TabIndex = 3
         '
         'cbSmartCompressor
         '
@@ -699,7 +702,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnCompressorRatio.Location = New System.Drawing.Point(10, 111)
         Me.pnCompressorRatio.Name = "pnCompressorRatio"
         Me.pnCompressorRatio.Size = New System.Drawing.Size(288, 28)
-        Me.pnCompressorRatio.TabIndex = 52
+        Me.pnCompressorRatio.TabIndex = 2
         '
         'lblCompressorRatio
         '
@@ -734,7 +737,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnCompressorMap.Location = New System.Drawing.Point(10, 19)
         Me.pnCompressorMap.Name = "pnCompressorMap"
         Me.pnCompressorMap.Size = New System.Drawing.Size(288, 56)
-        Me.pnCompressorMap.TabIndex = 52
+        Me.pnCompressorMap.TabIndex = 0
         '
         'lblCompressorMap
         '
@@ -753,7 +756,6 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.btnBrowseCompressorMap.Name = "btnBrowseCompressorMap"
         Me.btnBrowseCompressorMap.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseCompressorMap.TabIndex = 2
-        Me.btnBrowseCompressorMap.TabStop = false
         Me.btnBrowseCompressorMap.UseVisualStyleBackColor = true
         '
         'tbCompressorMap
@@ -773,7 +775,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnAverageAirDemand.Location = New System.Drawing.Point(10, 81)
         Me.pnAverageAirDemand.Name = "pnAverageAirDemand"
         Me.pnAverageAirDemand.Size = New System.Drawing.Size(300, 28)
-        Me.pnAverageAirDemand.TabIndex = 51
+        Me.pnAverageAirDemand.TabIndex = 1
         '
         'lblAverageAirDemand
         '
@@ -809,7 +811,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.gbHVAC.Location = New System.Drawing.Point(658, 74)
         Me.gbHVAC.Name = "gbHVAC"
         Me.gbHVAC.Size = New System.Drawing.Size(317, 160)
-        Me.gbHVAC.TabIndex = 52
+        Me.gbHVAC.TabIndex = 2
         Me.gbHVAC.TabStop = false
         Me.gbHVAC.Text = "HVAC System"
         '
@@ -821,7 +823,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacHeatingDemand.Location = New System.Drawing.Point(10, 109)
         Me.pnHvacHeatingDemand.Name = "pnHvacHeatingDemand"
         Me.pnHvacHeatingDemand.Size = New System.Drawing.Size(288, 28)
-        Me.pnHvacHeatingDemand.TabIndex = 27
+        Me.pnHvacHeatingDemand.TabIndex = 3
         '
         'lblHvacHeatingDemand
         '
@@ -856,7 +858,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacAuxHeaterPwr.Location = New System.Drawing.Point(10, 79)
         Me.pnHvacAuxHeaterPwr.Name = "pnHvacAuxHeaterPwr"
         Me.pnHvacAuxHeaterPwr.Size = New System.Drawing.Size(288, 28)
-        Me.pnHvacAuxHeaterPwr.TabIndex = 27
+        Me.pnHvacAuxHeaterPwr.TabIndex = 2
         '
         'lblHvacAuxHEaterPwr
         '
@@ -891,7 +893,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacElecPowerDemand.Location = New System.Drawing.Point(10, 49)
         Me.pnHvacElecPowerDemand.Name = "pnHvacElecPowerDemand"
         Me.pnHvacElecPowerDemand.Size = New System.Drawing.Size(288, 28)
-        Me.pnHvacElecPowerDemand.TabIndex = 27
+        Me.pnHvacElecPowerDemand.TabIndex = 1
         '
         'lblHvacElectricPowerDemand
         '
@@ -926,7 +928,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.pnHvacMechPowerDemand.Location = New System.Drawing.Point(10, 19)
         Me.pnHvacMechPowerDemand.Name = "pnHvacMechPowerDemand"
         Me.pnHvacMechPowerDemand.Size = New System.Drawing.Size(288, 28)
-        Me.pnHvacMechPowerDemand.TabIndex = 27
+        Me.pnHvacMechPowerDemand.TabIndex = 0
         '
         'lblHvacMechPowerDemand
         '
@@ -959,7 +961,7 @@ Partial Class BusAuxiliariesEngParametersForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1023, 553)
+        Me.ClientSize = New System.Drawing.Size(1023, 446)
         Me.Controls.Add(Me.gbHVAC)
         Me.Controls.Add(Me.bgPneumaticSystem)
         Me.Controls.Add(Me.gbElectricSystem)

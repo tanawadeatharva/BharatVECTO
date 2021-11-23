@@ -77,7 +77,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.OK_Button.Location = New System.Drawing.Point(3, 3)
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New System.Drawing.Size(67, 23)
-        Me.OK_Button.TabIndex = 0
+        Me.OK_Button.TabIndex = 5
         Me.OK_Button.Text = "OK"
         '
         'Cancel_Button
@@ -87,7 +87,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.Cancel_Button.Location = New System.Drawing.Point(76, 3)
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
-        Me.Cancel_Button.TabIndex = 1
+        Me.Cancel_Button.TabIndex = 6
         Me.Cancel_Button.Text = "Cancel"
         '
         'Label1
@@ -140,7 +140,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.CbTech.Location = New System.Drawing.Point(75, 6)
         Me.CbTech.Name = "CbTech"
         Me.CbTech.Size = New System.Drawing.Size(352, 21)
-        Me.CbTech.TabIndex = 27
+        Me.CbTech.TabIndex = 1
         '
         'PnTech
         '
@@ -191,7 +191,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.CbTech4.Location = New System.Drawing.Point(75, 87)
         Me.CbTech4.Name = "CbTech4"
         Me.CbTech4.Size = New System.Drawing.Size(352, 21)
-        Me.CbTech4.TabIndex = 30
+        Me.CbTech4.TabIndex = 4
         '
         'CbTech3
         '
@@ -200,7 +200,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.CbTech3.Location = New System.Drawing.Point(75, 60)
         Me.CbTech3.Name = "CbTech3"
         Me.CbTech3.Size = New System.Drawing.Size(352, 21)
-        Me.CbTech3.TabIndex = 29
+        Me.CbTech3.TabIndex = 3
         '
         'CbTech2
         '
@@ -209,7 +209,7 @@ Partial Class VehicleAuxiliariesDialog
         Me.CbTech2.Location = New System.Drawing.Point(75, 33)
         Me.CbTech2.Name = "CbTech2"
         Me.CbTech2.Size = New System.Drawing.Size(352, 21)
-        Me.CbTech2.TabIndex = 28
+        Me.CbTech2.TabIndex = 2
         '
         'VehicleAuxiliariesDialog
         '
