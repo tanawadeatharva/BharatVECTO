@@ -133,7 +133,6 @@ Public Class ElectricMotorForm
         tbMakeModel.Text = ""
         tbInertia.Text = ""
         tbMapHi.Text = ""
-        tbDragTorqueHi.Text = ""
         tbMaxTorqueHi.Text = ""
 
         DeclInit()
@@ -180,16 +179,17 @@ Public Class ElectricMotorForm
         tbRatedSpeed.Text = engine.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
         tbOverloadRecoveryFactor.Text = engine.OverloadRecoveryFactor.ToGUIFormat()
 
+        tbDragTorqueLow.Text = GetRelativePath(engine.DragCurve.Source, basePath)
+
         Dim voltageLevelHigh As IElectricMotorVoltageLevel = engine.VoltageLevels.MaxBy(function(level) level.VoltageLevel.Value())
 
-        tbDragTorqueHi.Text = GetRelativePath(voltageLevelHigh.DragCurve.Source, basePath)
         tbMaxTorqueHi.Text = GetRelativePath(voltageLevelHigh.FullLoadCurve.Source, basePath)
         tbMapHi.Text = GetRelativePath(voltageLevelHigh.EfficiencyMap.Source, basePath)
         tbVoltageHi.Text = voltageLevelHigh.VoltageLevel.Value().ToGUIFormat()
 
         Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
 
-        tbDragTorqueLow.Text = GetRelativePath(voltageLevelLow.DragCurve.Source, basePath)
+        
         tbMaxTorqueLow.Text = GetRelativePath(voltageLevelLow.FullLoadCurve.Source, basePath)
         tbMapLow.Text = GetRelativePath(voltageLevelLow.EfficiencyMap.Source, basePath)
         tbVoltageLow.Text = voltageLevelLow.VoltageLevel.Value().ToGUIFormat()
@@ -236,12 +236,11 @@ Public Class ElectricMotorForm
         em.OverloadRecoveryFactor = tbOverloadRecoveryFactor.Text.ToDouble(0)
 
         em.PathMaxTorqueLow = tbMaxTorqueLow.Text
-        em.PathDragLow = tbDragTorqueLow.Text
+        em.PathDrag = tbDragTorqueLow.Text
         em.PathMapLow = tbMapLow.Text
         em.VoltageLevelLow = tbVoltageLow.Text.ToDouble(0)
 
         em.PathMaxTorqueHi = tbMaxTorqueHi.Text
-        em.PathDragHi = tbDragTorqueHi.Text
         em.PathMapHi = tbMapHi.Text
         em.VoltageLevelHigh = tbVoltageHi.Text.ToDouble(0)
 
@@ -304,7 +303,7 @@ Public Class ElectricMotorForm
     End Sub
 
     Private Sub DataChangedUpdatePic(sender As Object, e As EventArgs) _
-        Handles tbDragTorqueHi.TextChanged, tbMaxTorqueLow.TextChanged, tbMaxTorqueHi.TextChanged, tbDragTorqueLow.TextChanged
+        Handles  tbMaxTorqueLow.TextChanged, tbMaxTorqueHi.TextChanged, tbDragTorqueLow.TextChanged
         UpdatePic()
         Change()
     End Sub
@@ -335,7 +334,7 @@ Public Class ElectricMotorForm
 
         Try
             Dim fldFile As String =
-                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMaxTorqueHi.Text), tbDragTorqueHi.Text)
+                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbMaxTorqueHi.Text), tbDragTorqueLow.Text)
             If File.Exists(fldFile) Then _
                 fullLoadCurve = ElectricFullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), 1)
         Catch ex As Exception
@@ -350,7 +349,7 @@ Public Class ElectricMotorForm
 
         Try
             Dim dragFile As String =
-                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbDragTorqueHi.Text), tbMapHi.Text)
+                    If(Not String.IsNullOrWhiteSpace(_emFile), Path.Combine(Path.GetDirectoryName(_emFile), tbDragTorqueLow.Text), tbMapHi.Text)
             If File.Exists(dragFile) Then dragCurve = ElectricMotorDragCurveReader.Create(VectoCSVFile.Read(dragFile), 1)
         Catch ex As Exception
         End Try
@@ -371,7 +370,7 @@ Public Class ElectricMotorForm
             series.ChartType = SeriesChartType.FastLine
             series.BorderWidth = 2
             series.Color = Color.DarkBlue
-            series.Name = "Max drive torque (" & tbDragTorqueHi.Text & ")"
+            series.Name = "Max drive torque (" & tbDragTorqueLow.Text & ")"
             chart.Series.Add(series)
 
             series = New Series
@@ -495,9 +494,6 @@ Public Class ElectricMotorForm
         CreateNewFile(tbMaxTorqueHi)
     End Sub
 
-    Private Sub btnDragCurveOpen_Click(sender As Object, e As EventArgs) Handles btnDragCurveOpenHi.Click
-        CreateNewFile(tbDragTorqueHi)
-    End Sub
 
     Private Sub btnEmMapOpen_Click(sender As Object, e As EventArgs) Handles btnEmMapOpenHi.Click
         CreateNewFile(tbMapHi)
@@ -519,11 +515,7 @@ Public Class ElectricMotorForm
         SelectFile(ElectricMachineMaxTorqueFileBrowser, tbMaxTorqueHi)
     End Sub
 
-    Private Sub btnBrowseDragCurve_Click(sender As Object, e As EventArgs) Handles btnBrowseDragCurveHi.Click
-        SelectFile(ElectricMachineDragTorqueFileBrowser, tbDragTorqueHi)
-    End Sub
-
-    Private Sub btnBrowseEmMap_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapHi.Click
+   Private Sub btnBrowseEmMap_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapHi.Click
         SelectFile(ElectricMachineEfficiencyMapFileBrowser, tbMapHi)
     End Sub
 
