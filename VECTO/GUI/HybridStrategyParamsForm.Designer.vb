@@ -143,7 +143,7 @@ Partial Class HybridStrategyParamsForm
         Me.ButCancel.Location = New System.Drawing.Point(362, 381)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 13
+        Me.ButCancel.TabIndex = 11
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = true
         '
@@ -153,17 +153,18 @@ Partial Class HybridStrategyParamsForm
         Me.ButOK.Location = New System.Drawing.Point(281, 381)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 12
+        Me.ButOK.TabIndex = 10
         Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = true
         '
         'ToolStrip1
         '
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(449, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(449, 31)
         Me.ToolStrip1.TabIndex = 30
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -173,7 +174,7 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtNew.Text = "ToolStripButton1"
         Me.ToolStripBtNew.ToolTipText = "New"
         '
@@ -183,7 +184,7 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtOpen.Text = "ToolStripButton1"
         Me.ToolStripBtOpen.ToolTipText = "Open..."
         '
@@ -193,7 +194,7 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripBtSave.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_icon
         Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSave.Text = "ToolStripButton1"
         Me.ToolStripBtSave.ToolTipText = "Save"
         '
@@ -203,14 +204,14 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripBtSaveAs.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_as_icon
         Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSaveAs.Text = "ToolStripButton1"
         Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripBtSendTo
         '
@@ -218,14 +219,14 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripBtSendTo.Image = Global.TUGraz.VECTO.My.Resources.Resources.export_icon
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSendTo.Text = "Send to Job Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripButton1
         '
@@ -233,11 +234,12 @@ Partial Class HybridStrategyParamsForm
         Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripButton1.Text = "Help"
         '
         'StatusStrip1
         '
+        Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 407)
         Me.StatusStrip1.Name = "StatusStrip1"
@@ -264,6 +266,7 @@ Partial Class HybridStrategyParamsForm
         '
         'CmOpenFile
         '
+        Me.CmOpenFile.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
         Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
@@ -288,7 +291,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnEquivFactor.Location = New System.Drawing.Point(12, 74)
         Me.pnEquivFactor.Name = "pnEquivFactor"
         Me.pnEquivFactor.Size = New System.Drawing.Size(288, 28)
-        Me.pnEquivFactor.TabIndex = 3
+        Me.pnEquivFactor.TabIndex = 0
         '
         'lblTitle
         '
@@ -309,7 +312,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnMinSoC.Location = New System.Drawing.Point(12, 134)
         Me.pnMinSoC.Name = "pnMinSoC"
         Me.pnMinSoC.Size = New System.Drawing.Size(288, 28)
-        Me.pnMinSoC.TabIndex = 25
+        Me.pnMinSoC.TabIndex = 2
         '
         'lblMinSoC
         '
@@ -344,7 +347,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnMaxSoC.Location = New System.Drawing.Point(12, 164)
         Me.pnMaxSoC.Name = "pnMaxSoC"
         Me.pnMaxSoC.Size = New System.Drawing.Size(288, 28)
-        Me.pnMaxSoC.TabIndex = 26
+        Me.pnMaxSoC.TabIndex = 3
         '
         'lblMaxSoC
         '
@@ -379,7 +382,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnTargetSoC.Location = New System.Drawing.Point(12, 194)
         Me.pnTargetSoC.Name = "pnTargetSoC"
         Me.pnTargetSoC.Size = New System.Drawing.Size(288, 28)
-        Me.pnTargetSoC.TabIndex = 27
+        Me.pnTargetSoC.TabIndex = 4
         '
         'lblTargetSoC
         '
@@ -414,7 +417,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferTime.Location = New System.Drawing.Point(12, 254)
         Me.pnAuxBufferTime.Name = "pnAuxBufferTime"
         Me.pnAuxBufferTime.Size = New System.Drawing.Size(288, 28)
-        Me.pnAuxBufferTime.TabIndex = 28
+        Me.pnAuxBufferTime.TabIndex = 6
         '
         'lblAuxBufferTime
         '
@@ -449,7 +452,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnAuxBufferChgTime.Location = New System.Drawing.Point(12, 284)
         Me.pnAuxBufferChgTime.Name = "pnAuxBufferChgTime"
         Me.pnAuxBufferChgTime.Size = New System.Drawing.Size(288, 28)
-        Me.pnAuxBufferChgTime.TabIndex = 29
+        Me.pnAuxBufferChgTime.TabIndex = 7
         '
         'Label1
         '
@@ -484,7 +487,7 @@ Partial Class HybridStrategyParamsForm
         Me.Panel1.Location = New System.Drawing.Point(12, 224)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(288, 28)
-        Me.Panel1.TabIndex = 29
+        Me.Panel1.TabIndex = 5
         '
         'lblMinIceOnTime
         '
@@ -519,7 +522,7 @@ Partial Class HybridStrategyParamsForm
         Me.Panel2.Location = New System.Drawing.Point(12, 104)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(288, 28)
-        Me.Panel2.TabIndex = 25
+        Me.Panel2.TabIndex = 1
         '
         'EquivalenceFactorChg
         '
@@ -554,7 +557,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnICEStartPenaltyFactor.Location = New System.Drawing.Point(12, 314)
         Me.pnICEStartPenaltyFactor.Name = "pnICEStartPenaltyFactor"
         Me.pnICEStartPenaltyFactor.Size = New System.Drawing.Size(288, 28)
-        Me.pnICEStartPenaltyFactor.TabIndex = 30
+        Me.pnICEStartPenaltyFactor.TabIndex = 8
         '
         'lblICEStartPenaltyFactor
         '
@@ -589,7 +592,7 @@ Partial Class HybridStrategyParamsForm
         Me.pnCostFactorSoCExponent.Location = New System.Drawing.Point(12, 344)
         Me.pnCostFactorSoCExponent.Name = "pnCostFactorSoCExponent"
         Me.pnCostFactorSoCExponent.Size = New System.Drawing.Size(288, 28)
-        Me.pnCostFactorSoCExponent.TabIndex = 31
+        Me.pnCostFactorSoCExponent.TabIndex = 9
         '
         'lblCostFactorSoCExponent
         '
