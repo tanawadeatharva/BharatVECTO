@@ -1043,6 +1043,7 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
+    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
 	Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
 	Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed

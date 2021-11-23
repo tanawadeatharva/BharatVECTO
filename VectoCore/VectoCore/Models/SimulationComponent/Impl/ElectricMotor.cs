@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt DragPower(Volt volt, PerSecond electricMotorSpeed)
 		{
-			return ModelData.EfficiencyData.LookupDragTorque(volt, electricMotorSpeed) * electricMotorSpeed;
+			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
 		public Watt MaxPowerDrive(Volt volt, PerSecond electricMotorSpeed)
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// no electric system or EM shall be off - apply drag only
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
 				// add inertia, drag is positive
-				emTorque =  ModelData.EfficiencyData.LookupDragTorque(voltage, avgEmSpeed) + inertiaTorqueEm;
+				emTorque =  ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm;
 				emTorqueDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, emTorque);
 				emOff = true;
 			}
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorqueMap = null;
 			}
 
-			var electricPower = emOff || (ModelData.EfficiencyData.LookupDragTorque(voltage, avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
+			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
 				? 0.SI<Watt>()
 				: ModelData.EfficiencyData
 					.LookupElectricPower(voltage, avgEmSpeed, emTorqueMap, DataBus.ExecutionMode != ExecutionMode.Declaration)
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
-				? ModelData.EfficiencyData.LookupDragTorque(volt, avgSpeed)
+				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			if (maxTorqueRecuperate < 0) {
@@ -437,7 +437,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var maxBatDriveTorque = maxBatPower.IsEqual(0, 1e-3)
-				? ModelData.EfficiencyData.LookupDragTorque(volt, avgSpeed)
+				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
 			
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
