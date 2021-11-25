@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt DragPower(Volt volt, PerSecond electricMotorSpeed)
 		{
-			return ModelData.EfficiencyData.LookupDragTorque(volt, electricMotorSpeed) * electricMotorSpeed;
+			return ModelData.DragCurve.Lookup(electricMotorSpeed) * electricMotorSpeed;
 		}
 
 		public Watt MaxPowerDrive(Volt volt, PerSecond electricMotorSpeed)
@@ -166,10 +166,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var voltage = DataBus.BatteryInfo.InternalVoltage;
 
-			var avgDtSpeed = (PreviousState.DrivetrainSpeed + outAngularVelocity) / 2;
+			var iceOn =  Position == PowertrainPosition.HybridP1 &&
+						!DataBus.EngineInfo.EngineOn && DataBus.EngineCtl.CombustionEngineOn;
+			var prevDtSpeed = iceOn ? DataBus.EngineInfo.EngineSpeed : PreviousState.DrivetrainSpeed;
+			var prevEmSpeed = iceOn ? prevDtSpeed * ModelData.RatioADC : PreviousState.EMSpeed;
+
+			var avgDtSpeed = (prevDtSpeed + outAngularVelocity) / 2;
 			var emSpeed = outAngularVelocity * ModelData.RatioADC;
 
-			var avgEmSpeed = (PreviousState.EMSpeed + emSpeed) / 2;
+			var avgEmSpeed = (prevEmSpeed + emSpeed) / 2;
 			var inertiaTorqueEm = avgEmSpeed.IsEqual(0)
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(avgEmSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
@@ -255,7 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// no electric system or EM shall be off - apply drag only
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
 				// add inertia, drag is positive
-				emTorque =  ModelData.EfficiencyData.LookupDragTorque(voltage, avgEmSpeed) + inertiaTorqueEm;
+				emTorque =  ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm;
 				emTorqueDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, emTorque);
 				emOff = true;
 			}
@@ -269,7 +274,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorqueMap = null;
 			}
 
-			var electricPower = emOff || (ModelData.EfficiencyData.LookupDragTorque(voltage, avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
+			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
 				? 0.SI<Watt>()
 				: ModelData.EfficiencyData
 					.LookupElectricPower(voltage, avgEmSpeed, emTorqueMap, DataBus.ExecutionMode != ExecutionMode.Declaration)
@@ -368,6 +373,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.ElectricSystem = electricSupplyResponse;
 			
 			if (!dryRun) {
+				CurrentState.IceSwitchedOn = iceOn;
+				CurrentState.ICEOnSpeed = DataBus.EngineInfo.EngineSpeed;
 				CurrentState.EMSpeed = emSpeed;
 				CurrentState.EMTorque = emOff ? null : emTorque;
 				CurrentState.EmTorqueMap = emTorqueMap;
@@ -402,7 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
-				? ModelData.EfficiencyData.LookupDragTorque(volt, avgSpeed)
+				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			if (maxTorqueRecuperate < 0) {
@@ -430,7 +437,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var maxBatDriveTorque = maxBatPower.IsEqual(0, 1e-3)
-				? ModelData.EfficiencyData.LookupDragTorque(volt, avgSpeed)
+				? ModelData.DragCurve.Lookup(avgSpeed)
 				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
 			
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
@@ -474,8 +481,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			var avgEMSpeed = (PreviousState.EMSpeed + CurrentState.EMSpeed) / 2;
-			var avgDTSpeed = (PreviousState.DrivetrainSpeed + CurrentState.DrivetrainSpeed) / 2;
+			var prevDtSpeed = CurrentState.IceSwitchedOn ? CurrentState.ICEOnSpeed : PreviousState.DrivetrainSpeed;
+			var prevEmSpeed = CurrentState.IceSwitchedOn ? prevDtSpeed * ModelData.RatioADC : PreviousState.EMSpeed;
+
+			var avgEMSpeed = (prevEmSpeed + CurrentState.EMSpeed) / 2;
+			var avgDTSpeed = (prevDtSpeed + CurrentState.DrivetrainSpeed) / 2;
 
 			container[ModalResultField.EM_ratio_, Position] = ModelData.RatioADC.SI<Scalar>();
 			container[ModalResultField.n_EM_electricMotor_, Position] = avgEMSpeed;
@@ -570,6 +580,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TransmissionTorqueLoss;
 
 		public PerSecond EMSpeed { get; set; }
+		public bool IceSwitchedOn { get; set; }
+		public PerSecond ICEOnSpeed { get; set; }
+
 		public NewtonMeter EMTorque;
 		public NewtonMeter EmTorqueMap;
 

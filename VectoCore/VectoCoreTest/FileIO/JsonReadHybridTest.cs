@@ -140,6 +140,12 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var daa = new EngineeringDataAdapter();
 			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null).First().Item2;
 
+
+			Assert.AreEqual(26, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
+			Assert.AreEqual(33, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
+			Assert.AreEqual(29.5, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
+			Assert.AreEqual(31.25, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
+
 			var em = emData.EfficiencyData;
 
 			Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
@@ -151,11 +157,6 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(406.076, em.FullGenerationTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
 			Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
 			Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
-
-			Assert.AreEqual(26, em.LookupDragTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(33, em.LookupDragTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(29.5, em.LookupDragTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(31.25, em.LookupDragTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
 
 			Assert.AreEqual(-101.760, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
             Assert.AreEqual(-115.1818, em.EfficiencyMapLookupTorque(600.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);

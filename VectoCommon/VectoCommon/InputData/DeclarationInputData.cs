@@ -713,6 +713,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
+		TableData DragCurve { get; }
+
 		KilogramSquareMeter Inertia { get; }
 
 		Second OverloadTime { get; }
@@ -733,8 +735,6 @@ namespace TUGraz.VectoCommon.InputData
 		Volt VoltageLevel { get; }
 
 		TableData FullLoadCurve { get; }
-
-		TableData DragCurve { get; }
 
 		TableData EfficiencyMap { get; }
 	}
