@@ -374,7 +374,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			if (!dryRun) {
 				CurrentState.IceSwitchedOn = iceOn;
-				CurrentState.ICEOnSpeed = DataBus.EngineInfo.EngineSpeed;
+				CurrentState.ICEOnSpeed = DataBus.EngineInfo?.EngineSpeed;
 				CurrentState.EMSpeed = emSpeed;
 				CurrentState.EMTorque = emOff ? null : emTorque;
 				CurrentState.EmTorqueMap = emTorqueMap;
