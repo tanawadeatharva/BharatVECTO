@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -7,13 +8,44 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	/// <summary>
+	/// Gearbox for Automatic Power Transmission - No Torque Converter.
+	/// </summary>
 	public class APTNGearbox : Gearbox
 	{
 		public APTNGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
 		{
 			ModelData.TractionInterruption = 0.SI<Second>();
-			Disengaged = false;
 		}
+
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var absTime = 0.SI<Second>();
+			var dt = Constants.SimulationSettings.TargetTimeInterval;
+
+			EngageTime = -double.MaxValue.SI<Second>();
+
+			if (_strategy != null && (Disengaged || DisengageGearbox)) {
+				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			}
+
+			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear.Gear].Ratio;
+			var gearboxTorqueLoss = ModelData.Gears[Gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			CurrentState.TorqueLossResult = gearboxTorqueLoss;
+
+			var inTorque = outTorque / ModelData.Gears[Gear.Gear].Ratio
+							+ gearboxTorqueLoss.Value;
+
+			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
+			PreviousState.Gear = Gear;
+			Disengaged = false;
+
+			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
+
+			return response;
+		}
+
 
 		protected internal override ResponseDryRun Initialize(Second absTime, GearshiftPosition gear,
 			NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -43,14 +75,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
-		public override void TriggerGearshift(Second absTime, Second dt)
-		{
-
-		}
-
-		public override bool GearEngaged(Second absTime)
-		{
-			return !Disengaged;
-		}
 	}
 }
