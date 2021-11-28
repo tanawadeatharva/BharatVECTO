@@ -1,14 +1,22 @@
 # Create a new Job
 
-New jobs and files can be created via the file menu.
+New jobs can be created via the file menu.
 
 ![](images/2-new-job/new_job_1_edited.png){width=70%}\
 \
 
+Three different types of jobs can be created with the multistep tool:
+
+- **[Interim/Completed Job](#new-interimcompleted-job---general-case)**
+- **[Primary Job with Interim Input](#new-primary-job-with-interim-input---special-case-i)**
+- **[Complete Job](#new-complete-job---special-case-ii)**
+
+They are described in more detail in the following chapters.
+
 
 ## New Interim/Completed Job - General Case
+The general case is applicable to interim manufacturing steps and completed manufacturing steps. Required inputs in these steps are the VIF from the previous step and the input parameters of the current step. The latter can be entered via the graphical user interface. 
 
-Used to create the VIF for a complete or a interim job. 
 ![](images/2-new-job/general-case.png){width=70%}\
 \
 
@@ -17,30 +25,40 @@ Used to create the VIF for a complete or a interim job.
 \
 
 
-### 1 Load VIF from previous stage
+### 1 Load VIF from previous step
+To create a VIF for the current step, the VIF from the previous step has to be loaded.
+After the VIF is loaded, the consolidated data from the previous steps is displayed and the input data for the current step can be added.
 
-### 2 (optional) Load input for current step
-Load exisitng XML for interim/completed step.
+Note: It is also possible to directly add the VIF from the previous step to the job list.
+
+### 2 Load input for current step (optional)
+Instead of editing the input data for the current step manually, it is also possible to import previously saved input parameters. The input parameters can be saved during the creation of a VIF (see [Save and Close](#save-and-close)) or can be created using **File -> New File -> Create Interim/Completed Input** (see [Create a step input file](#create-a-step-input-file)).
 
 ### 3 The input data is split into three components.
 - **Vehicle**
+    Contains the main vehicle parameters (manufacturer, model, masses, seats, dimensions, ADAS etc.)
 
-- **Airdrag** []
+- **Airdrag**
+    Allows the loading of an airdrag component file, and displays the consolidated airdrag data from the previous steps. For more information see [Airdrag](#airdrag)
 
 - **Auxiliaries**
-
+    Contains the paremeters concering auxiliaries (HVAC, LED-Lights etc.).
 
 ### 4 Mandatory input fields for every simulation step.
-Red borders indicate missing or wrong parameters.
+At the interim and completed step most input parameters can be provided individually. Four input parameters are mandatory (Manufacturer, Manufacturer Address, and VIN).
 
 ### 5 Consolidated Data
-The left column is readonly and shows the consolidated data from the previous steps.
+The third column is readonly and shows the consolidated data from the previous steps. These are currently applicable values for the simulation. 
+In case of the first interim step of course no previous values are available and therefore nothing is shown.
 
 ### 6 Enable editing
-To edit a parameter in the current stage, the editing has to be enabled by checking the corresponding checkbox.
+To edit a parameter in the current step, the editing has to be enabled by checking the corresponding checkbox.
+A special case is editing the input parameters that have to be provided as a group (i.e., dimensions, passenger count, ADAS). If the editing for one parameter of this group is enabled, all parameters from the group need to be provided.
 
-### 7 Current stage input Data
-In this column the input data of the current step is displayed, and can be edited.
+
+### 7 Current step input Data
+In this column the input data of the current step is displayed, and can be edited. The entries are checked with regard to the data type. The entered data is available and can be edited as long as VECTO wasn't closed and the job wasn't removed from the job list.
+In case a mandatory input field is empty, or the value provided by the user is invalid the input element is highlighted with a red border. To remove an entry from the current step uncheck the corresponding checkbox.
 
 ### 8 Save and Close
 - **Save Input As ...**:\
@@ -54,49 +72,46 @@ In this column the input data of the current step is displayed, and can be edite
 
 
 ## New Primary Job with Interim Input - Special Case I
+If the manufacturer of the primary vehicle also adds certain components of the completed step (e.g., HVAC compressor), it is required that the VIF created at the primary step already contains the provided input parameters of the completed step. Therefore, at the primary step the input consists on the one hand of the input XML for the primary vehicle and on the other hand the XML with parts of the completed vehicle.
+
 ![](images/2-new-job/special-case-1.png){width=70%}\
 \
 
-Allows creating a VIF from a primary bus input and a step input in one step. The job is automatically added to the job list for further editing, but simulation is only possible when the job is saved.
+
+
+To create primary job with interim input create new job with **File -> New File -> New Primary Job with Interim Input**
+The job is automatically added to the job list for further editing, but simulation is only possible when the job is saved.
 
 ![](images/2-new-job/special-case-1-edited.png){width=70%}\
 \
 
+
+
 ### 1 Load primary input file
-In the first simulation step the primary input is simulated and an intermediate VIF and a MRF are created. The step input is then appended and the resulting VIF is written to disk.
+In the first simulation step the primary input is simulated and an intermediate VIF and a MRF are created. The step input is then added and the resulting VIF is written to disk.
+
+
 
 ### 2 Select step input file
+Select the step input that should be applied in the first manufacturing step.
+
 Note: If an exempted primary input is loaded, the step input has also be for an exempted vehicle.
 
 ### 3 Save and Close
 After saving the file the job can be simulated.
 
-## New Complete Job - Special Case II
-![](images/2-new-job/special-case-2.png){width=35%}
+Note: If the applied step input is completed and marked as "final", VECTO automatically starts the simulation (as in Special Case II).
 
-The steps to create a complete job are the same as creating a [primary job with interim input](#new-primary-job-with-interim-input---special-case-i).
+
+## New Complete Job - Special Case II
+If a bus is produced and homologated in a single step (“complete”) it is required that the simulation of the whole vehicle is done in one VECTO invocation, applying the factor method. VECTO in this case creates the MRF of the primary step, the MRF of the completed step, the VIF of the first manufacturing step with the complete vehicle information, and the CIF. Thus, the input consists of both, the input XML for the primary vehicle and the XML with all parameters of the completed vehicle. 
+
+![](images/2-new-job/special-case-2.png){width=35%}\
+\
+
+
+To create a job for Special Case II, select **File -> New File -> New Complete Job**, the further steps are identical to [Special Case I](#new-primary-job-with-interim-input---special-case-i).
 
 Note: If the VIF resulting from the primary input and the step input, cannot be simulated, add the resulting VIF to the job list and click the info icon to get additional information.
 
-
-# Create a step input file
-As mentioned before it is possible to load step input files when creating new jobs. They can be created externally, while creating or editing a new interim/completed job or using **File -> New File -> Create Interim/Completed Job**.
-
-
-![](images/2-new-job/new_step_input_1_edited.png){width=70%}
-
-When creating a new step input, the step input is automatically added to the job list for further editing.
-
-![](images/2-new-job/new_step_input_2_edited.png){width=70%}
-
-### 1 Mandatory fields
-Mandatory fields don't have a checkbox and are marked red while empty.
-
-### 2 Enable editing
-To edit an optional parameter, this checkbox has to be ticked.
-
-### 3 Parameters for step input
-
-### 4 Save and Close
-Save the input data to .xml, the data will still be editable via the job list as long as Vecto was not closed and the file was not removed from the joblist.
 
