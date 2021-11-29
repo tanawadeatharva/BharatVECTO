@@ -426,8 +426,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return nextGear;
 			}
 
-			if (response.ElectricMotor.TorqueRequestEmMap != null && response.ElectricMotor.MaxRecuperationTorqueEM is null)
-				Console.WriteLine("DEBUG");
 			if (response.ElectricMotor.TorqueRequestEmMap != null 
 				&& response.ElectricMotor.MaxRecuperationTorqueEM != null 
 				&& response.ElectricMotor.TorqueRequestEmMap.IsEqual(
