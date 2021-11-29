@@ -8,7 +8,7 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" schemaLocation="VectoDeclarationDefinitions.2.10.2_JobInputData.xsd"/>
-	<xs:element name="VectoOutputMultistage" type="vif:VectoOutputMultistageType">
+	<xs:element name="VectoOutputMultistep" type="vif:VectoOutputMultistepType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
@@ -19,7 +19,7 @@
 	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
 	<xs:complexType name="AbstractEngineDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractManufacturingStageDataType" abstract="true">
+	<xs:complexType name="AbstractManufacturingStepDataType" abstract="true">
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
@@ -105,13 +105,13 @@
 										<xs:restriction base="xs:string">
 											<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 											<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 stages"/>
-											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 steps"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 steps"/>
 											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
 											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 stages"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 stages"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 steps"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 steps"/>
 											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
 											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
 											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
@@ -366,11 +366,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="BusManufacturingStageDataType">
+	<xs:complexType name="BusManufacturingStepDataType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractManufacturingStageDataType">
+			<xs:extension base="vif:AbstractManufacturingStepDataType">
 				<xs:sequence>
-					<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
+					<xs:element name="HashPreviousStep" type="v1.0:SignatureType"/>
 					<xs:element name="Vehicle" type="v2.10.2:AbstractCompletedBusVehicleType"/>
 					<xs:element name="ApplicationInformation" type="vif:ApplicationInformationPrimaryVehicleType"/>
 				</xs:sequence>
@@ -471,12 +471,12 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="ManufacturingStageType">
+	<xs:complexType name="ManufacturingStepType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractManufacturingStageDataType"/>
+			<xs:element name="Data" type="vif:AbstractManufacturingStepDataType"/>
 			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
-		<xs:attribute name="stageCount" use="required">
+		<xs:attribute name="stepCount" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:int">
 					<xs:minInclusive value="2"/>
@@ -721,10 +721,10 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="VectoOutputMultistageType">
+	<xs:complexType name="VectoOutputMultistepType">
 		<xs:sequence>
 			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ManufacturingStep" type="vif:ManufacturingStepType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VehicleComponentsPIFType">

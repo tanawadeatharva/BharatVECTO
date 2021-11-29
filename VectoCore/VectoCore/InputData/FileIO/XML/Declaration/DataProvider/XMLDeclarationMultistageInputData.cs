@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly XNamespace NAMESPACE_URI =
 			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly XNamespace NAMESPACE_URI =
 			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "ManufacturingStageType";
+		public const string XSD_TYPE = "ManufacturingStepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -199,9 +199,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public DigestData HashPreviousStage =>
 			_hashPreviousStage ??
-			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
+			(_hashPreviousStage = Reader.GetDigestData(GetNode(XMLNames.ManufacturingStep_HashPreviousStep)));
 
-		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount));
+		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.Vehicle);
 

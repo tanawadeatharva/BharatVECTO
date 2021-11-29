@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" 
+<VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.10="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
 xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
   <PrimaryVehicle>
   <Data xsi:type="PrimaryVehicleDataType" id="PIF-584956b9e3ab43acaf97">
     <Vehicle xsi:type="VehiclePIFType">
@@ -242,7 +242,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
               <SupplyFromHEVPossible>false</SupplyFromHEVPossible>
             </ElectricSystem>
             <PneumaticSystem>
-              <SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+              <SizeOfAirSupply>Large Supply 2-step</SizeOfAirSupply>
               <CompressorDrive>mechanically</CompressorDrive>
               <Clutch>none</Clutch>
               <CompressorRatio>1.000</CompressorRatio>
@@ -578,15 +578,15 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
     </di:Reference>
   </Signature>
   </PrimaryVehicle>
-	<ManufacturingStage stageCount="2">
-		<Data xsi:type="vif0.1:BusManufacturingStageDataType" id="asdf">
-			<HashPreviousStage>
+	<ManufacturingStep stepCount="2">
+		<Data xsi:type="vif0.1:BusManufacturingStepDataType" id="asdf">
+			<HashPreviousStep>
 				<di:Reference>
 					<di:DigestMethod Algorithm=""></di:DigestMethod>
 					<di:DigestValue></di:DigestValue>
 				</di:Reference>
-			</HashPreviousStage>
-			<vif0.1:Vehicle xsi:type="v2.8:InterimStageInputType" id="MST-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8">
+			</HashPreviousStep>
+			<vif0.1:Vehicle xsi:type="v2.10:Vehicle_Conventional_CompletedBusDeclarationType" id="MST-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
 				<Manufacturer>Some Manufacturer</Manufacturer>
 		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
 		<VIN>VEH-1234567890</VIN>
@@ -595,7 +595,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		<LegislativeCategory>M3</LegislativeCategory>
 		<CorrectedActualMass>8300</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
+		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>I+II</ClassBus>
 		<NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
@@ -609,8 +609,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 		<EntranceHeight>120</EntranceHeight>
 		<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
-		<Components xsi:type="CompletedVehicleComponentsDeclarationType">
-			<v2.8:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+		<Components xsi:type="Components_Conventional_CompletedBusType">
+			<v2.10:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
@@ -631,9 +631,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
 					</di:Reference>
 				</Signature>
-			</v2.8:AirDrag>
+			</v2.10:AirDrag>
 			<Auxiliaries>
-				<Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
+				<Data xsi:type="AUX_Conventional_CompletedBusType">
 					<ElectricSystem>
 						<LEDLights>
 							<Interiorlights>false</Interiorlights>
@@ -645,10 +645,14 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 					</ElectricSystem>
 					<HVAC>
 						<SystemConfiguration>7</SystemConfiguration>
-						<HeatPumpTypeDriverCompartment>non R-744 2-stage</HeatPumpTypeDriverCompartment>
-						<HeatPumpModeDriverCompartment>cooling</HeatPumpModeDriverCompartment>
-						<HeatPumpTypePassengerCompartment>non R-744 4-stage</HeatPumpTypePassengerCompartment>
-						<HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+						<HeatPumpTypeDriverCompartment>
+						<Cooling>non R-744 2-step</Cooling>
+						<Heating>none</Heating>
+						</HeatPumpTypeDriverCompartment>
+						<HeatPumpTypePassengerCompartment>
+						<Cooling>non R-744 4-step</Cooling>
+						<Heating>none</Heating>
+						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
 						<DoubleGlazing>true</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
@@ -669,5 +673,5 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue></di:DigestValue>
 			</di:Reference>
 		</Signature>
-	</ManufacturingStage>
-</VectoOutputMultistage>
+	</ManufacturingStep>
+</VectoOutputMultistep>

@@ -491,7 +491,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								}
 
 								mode = ExecutionMode.Declaration;
-							} else if (XMLNames.VectoOutputMultistage.Equals(rootNode,
+							} else if (XMLNames.VectoOutputMultistep.Equals(rootNode,
 								StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
 									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);

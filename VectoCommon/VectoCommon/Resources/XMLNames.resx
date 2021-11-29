@@ -1416,17 +1416,17 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
-  <data name="VectoOutputMultistage" xml:space="preserve">
-    <value>VectoOutputMultistage</value>
+  <data name="VectoOutputMultistep" xml:space="preserve">
+    <value>VectoOutputMultistep</value>
   </data>
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
-  <data name="ManufacturingStage" xml:space="preserve">
-    <value>ManufacturingStage</value>
+  <data name="ManufacturingStep" xml:space="preserve">
+    <value>ManufacturingStep</value>
   </data>
-  <data name="ManufacturingStage_StageCount" xml:space="preserve">
-    <value>stageCount</value>
+  <data name="ManufacturingStep_StepCount" xml:space="preserve">
+    <value>stepCount</value>
   </data>
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>
@@ -1572,12 +1572,12 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
-<data name="BusHVACHeatPumpCooling" xml:space="preserve">
-	<value>Cooling</value>
-</data>
-<data name="BusHVACHeatPumpHeating" xml:space="preserve">
-	<value>Heating</value>
-</data>
+  <data name="BusHVACHeatPumpCooling" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="BusHVACHeatPumpHeating" xml:space="preserve">
+    <value>Heating</value>
+  </data>
   <data name="Exempted_SumNetPower" xml:space="preserve">
     <value>SumNetPower</value>
   </data>
@@ -1586,5 +1586,14 @@
   </data>
   <data name="VehicleTypeApprovalNumber" xml:space="preserve">
     <value>VehicleTypeApprovalNumber</value>
+  </data>
+  <data name="ManufacturingStep_HashPreviousStep" xml:space="preserve">
+    <value>HashPreviousStep</value>
+  </data>
+  <data name="ManufacturingStep_stepCount_Attr" xml:space="preserve">
+    <value>stepCount</value>
+  </data>
+  <data name="ManufacturingStep_Bus_DataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
   </data>
 </root>

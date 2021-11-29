@@ -2662,20 +2662,47 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ManufacturingStage.
+        ///   Looks up a localized string similar to ManufacturingStep.
         /// </summary>
-        public static string ManufacturingStage {
+        public static string ManufacturingStep {
             get {
-                return ResourceManager.GetString("ManufacturingStage", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to stageCount.
+        ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
-        public static string ManufacturingStage_StageCount {
+        public static string ManufacturingStep_Bus_DataType {
             get {
-                return ResourceManager.GetString("ManufacturingStage_StageCount", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HashPreviousStep.
+        /// </summary>
+        public static string ManufacturingStep_HashPreviousStep {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_HashPreviousStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_StepCount {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_stepCount_Attr {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_stepCount_Attr", resourceCulture);
             }
         }
         
@@ -3760,11 +3787,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VectoOutputMultistage.
+        ///   Looks up a localized string similar to VectoOutputMultistep.
         /// </summary>
-        public static string VectoOutputMultistage {
+        public static string VectoOutputMultistep {
             get {
-                return ResourceManager.GetString("VectoOutputMultistage", resourceCulture);
+                return ResourceManager.GetString("VectoOutputMultistep", resourceCulture);
             }
         }
         

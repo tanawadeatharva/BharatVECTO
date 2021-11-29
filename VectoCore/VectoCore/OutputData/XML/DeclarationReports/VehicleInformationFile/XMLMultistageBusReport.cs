@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			{
 				if(xElement.Name.LocalName == XMLNames.Bus_PrimaryVehicle)
 					_primaryVehicle = xElement;
-				else if (xElement.Name.LocalName == XMLNames.ManufacturingStage)
+				else if (xElement.Name.LocalName == XMLNames.ManufacturingStep)
 					_manufacturingStages.Add(xElement);
 			}
 
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return;
 			XmlAttributeCollection namespaceAttributes = null;
 			foreach (var node in nodes) {
-				if (node.LocalName == XMLNames.VectoOutputMultistage) {
+				if (node.LocalName == XMLNames.VectoOutputMultistep) {
 					namespaceAttributes = node.Attributes;
 					break;
 				}
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			_namespaceAttributes.Add(new XAttribute(XNamespace.Xmlns + "tns", tns));
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(tns + XMLNames.VectoOutputMultistage,
+				new XElement(tns + XMLNames.VectoOutputMultistep,
 					_namespaceAttributes,
 					//new XAttribute(XNamespace.Xmlns + "tns", tns),
 					_primaryVehicle,
@@ -207,13 +207,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GenerateInputManufacturingStage()
 		{
-			var multistageId = $"{VectoComponents.VectoManufacturingStage.HashIdPrefix()}{GetGUID()}";
+			var multistageId = $"{VectoComponents.VectoManufacturingStep.HashIdPrefix()}{GetGUID()}";
 			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
 
-			var stage = new XElement(tns + XMLNames.ManufacturingStage,
-				new XAttribute("stageCount", GetStageNumber()),
+			var stage = new XElement(tns + XMLNames.ManufacturingStep,
+				new XAttribute(XMLNames.ManufacturingStep_stepCount_Attr, GetStageNumber()),
 				new XElement(tns + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStageDataType"),
+					new XAttribute(xsi + XMLNames.Attr_Type, XMLNames.ManufacturingStep_Bus_DataType),
 					new XAttribute(XMLNames.Component_ID_Attr, multistageId),
 					new XAttribute("xmlns", tns),
 					GetHashPreviousStageElement(),
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				digitData = _manufacturingStageInputData.Last().Signature;
 			}
 
-			return new XElement(tns + "HashPreviousStage",
+			return new XElement(tns + "HashPreviousStep",
 				   digitData.ToXML(di));
 		}
 

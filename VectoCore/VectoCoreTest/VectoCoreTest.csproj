@@ -5710,7 +5710,6 @@
     <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Integration\Buses\vecto_vehicle-stage_input_full-sample_final_noNG.xml" />
     <Content Include="TestData\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
