@@ -1,9 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Data;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 	[TestFixture]
@@ -65,6 +69,97 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 
 			Assert.IsNull(tq);
 
+		}
+
+		[TestCase(@"E:\QUAM\Downloads\VECTO-1437_E2_EM-inv_Interpolation\VECTO_model\vem_P_inverter_DC_90.vemo")]
+		public void TestInterpolationMethod_Proposal(string filename)
+		{
+			var speedOffset = 0.01.RPMtoRad();
+
+			var tbl = VectoCSVFile.Read(filename);
+			var delaunayMap = new DelaunayMap("ElectricMotorEfficiencyMap Test");
+			foreach (DataRow row in tbl.Rows) {
+				var entry = new EfficiencyMap.Entry(
+					speed: row.ParseDouble("n").RPMtoRad(),
+					torque: row.ParseDouble("T").SI<NewtonMeter>(),
+					powerElectrical: row.ParseDouble("P_el").SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+				
+					delaunayMap.AddPoint(-entry.Torque.Value(), 
+						(entry.MotorSpeed).Value(), 
+						-((entry.PowerElectrical - entry.MotorSpeed * entry.Torque) / (entry.MotorSpeed + speedOffset)).Value());
+			}
+
+			delaunayMap.Triangulate();
+			var emMap = new EfficiencyMap(delaunayMap);
+
+			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
+				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {
+					if (tq.IsEqual(0)) {
+						continue;
+					}
+					try {
+						var pwr = emMap.LookupElectricPower(n, tq);
+						if (pwr.ElectricalPower == null) {
+							continue;
+						}
+						Console.WriteLine($"{pwr.Speed.AsRPM}, {pwr.Torque.Value()}, {((pwr.ElectricalPower.Value() * (pwr.Speed + speedOffset).Value()).SI<Watt>() + pwr.Speed * pwr.Torque).Value()}, {pwr.Extrapolated}, {(n * tq).Value()}");
+					} catch (Exception e) {
+						Console.WriteLine(e.Message);
+					}
+				}
+			}
+		}
+
+		[TestCase(@"E:\QUAM\Downloads\VECTO-1437_E2_EM-inv_Interpolation\VECTO_model\vem_P_inverter_DC_90.vemo")]
+		public void TestInterpolationMethod_Proposal2(string filename)
+		{
+			EfficiencyMap emMap;
+			using (var fs = File.OpenRead(filename)) {
+				emMap = ElectricMotorMapReaderNew.Create(fs, 1);
+			}
+
+			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
+				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {
+					if (tq.IsEqual(0)) {
+						continue;
+					}
+					try {
+						var pwr = emMap.LookupElectricPower(n, tq);
+						if (pwr.ElectricalPower == null) {
+							continue;
+						}
+						Console.WriteLine($"{pwr.Speed.AsRPM}, {pwr.Torque.Value()}, {pwr.ElectricalPower.Value()}, {pwr.Extrapolated}, {(n * tq).Value()}");
+					} catch (Exception e) {
+						Console.WriteLine(e.Message);
+					}
+				}
+			}
+		}
+
+		[TestCase(@"E:\QUAM\Downloads\VECTO-1437_E2_EM-inv_Interpolation\VECTO_model\vem_P_inverter_DC_90.vemo")]
+		public void TestInterpolationMethod_Current(string filename)
+		{
+			EfficiencyMap emMap;
+			using (var fs = File.OpenRead(filename)) {
+				emMap = ElectricMotorMapReader.Create(fs, 1);
+			}
+
+			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
+				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {
+					if (tq.IsEqual(0)) {
+						continue;
+					}
+					try {
+						var pwr = emMap.LookupElectricPower(n, tq);
+						if (pwr.ElectricalPower == null) {
+							continue;
+						}
+						Console.WriteLine($"{pwr.Speed.AsRPM}, {pwr.Torque.Value()}, {pwr.ElectricalPower.Value()}, {pwr.Extrapolated}, {(n * tq).Value()}");
+					} catch (Exception e) {
+						Console.WriteLine(e.Message);
+					}
+				}
+			}
 		}
 	}
 }

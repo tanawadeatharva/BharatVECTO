@@ -9,9 +9,41 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 {
+
+	public class EfficiencyMapNew : EfficiencyMap
+	{
+		private static readonly PerSecond speedOffset = 0.01.RPMtoRad();
+		protected internal EfficiencyMapNew(DelaunayMap efficiencyMapMech2El) : base(efficiencyMapMech2El) { }
+
+		public override EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
+		{
+			var result = new EfficiencyResult();
+			result.Torque = torque;
+			result.Speed = angularSpeed;
+			var value = _efficiencyMapMech2El.Interpolate(torque, angularSpeed);
+			if (!value.IsNaN()) {
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed + speedOffset) + angularSpeed * torque;
+				return result;
+			}
+			if (allowExtrapolation) {
+				value = _efficiencyMapMech2El.Extrapolate(torque, angularSpeed);
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed + speedOffset) + angularSpeed * torque;
+				result.Extrapolated = true;
+				return result;
+			}
+			return result;
+		}
+
+		public double GetDelaunayZValue(Entry entry)
+		{
+			return - ((entry.PowerElectrical - entry.MotorSpeed * entry.Torque) /
+						(entry.MotorSpeed + EfficiencyMapNew.speedOffset)).Value();
+		}
+	}
+
 	public class EfficiencyMap : LoggingObject
 	{
-		private readonly DelaunayMap _efficiencyMapMech2El;
+		protected readonly DelaunayMap _efficiencyMapMech2El;
 		private PerSecond _maxSpeed;
 
 		protected internal EfficiencyMap(DelaunayMap efficiencyMapMech2El)
@@ -20,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 		}
 
 
-		public EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
+		public virtual EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
 		{
 			var result = new EfficiencyResult();
 			result.Torque = torque;
@@ -38,34 +70,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 				return result;
 			}
 			return result;
-		}
-
-		public EfficiencyResult SearchMechanicalPower(Watt electricPower, PerSecond angularSpeed,
-			bool allowExtrapolation = false)
-		{
-			if (electricPower.IsEqual(0))
-			{
-				return new EfficiencyResult
-				{
-					ElectricalPower = electricPower,
-					Speed = angularSpeed,
-					Torque = 0.SI<NewtonMeter>()
-				};
-			}
-			var torque = electricPower / angularSpeed;
-			var response = LookupElectricPower(angularSpeed, torque, true);
-			var delta = response.ElectricalPower - electricPower;
-			torque = SearchAlgorithm.Search(torque, delta, torque * 0.1,
-				getYValue: result => ((EfficiencyResult)result).ElectricalPower - electricPower,
-				evaluateFunction: x => LookupElectricPower(angularSpeed, x, true),
-				criterion: result => (((EfficiencyResult)result).ElectricalPower - electricPower).Value());
-
-			return new EfficiencyResult
-			{
-				ElectricalPower = electricPower,
-				Speed = angularSpeed,
-				Torque = torque
-			};
 		}
 
 		public string[] SerializedEntries
