@@ -199,16 +199,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 				GetLoadings(
 					out var lowLoad, out var refLoad, payloads, (p, l) => GetLoading(p, weight, vehicleWeight, trailers, l), maxLoad);
 				
+				// TODO: MQ 2021-11-30: REMOVE IN PRODUCTION
+				Stream cycle;
+				var cycleFile = Path.Combine("DeclarationMissions",
+					missionType.ToString().Replace("EMS", "") + ".vdri");
+				if (File.Exists(cycleFile)) {
+					cycle = File.OpenRead(cycleFile);
+				} else {
+					cycle = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix +
+														".MissionCycles." +
+														missionType.ToString().Replace("EMS", "") +
+														Constants.FileExtensions.CycleFile);
+				}
+				
 				var mission = new Mission {
 					MissionType = missionType,
 					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType, true)),
-#if USE_EXTENAL_DECLARATION_DATA
-					CycleFile = File.OpenRead(Path.Combine("DeclarationMissions", missionType.ToString().Replace("EMS", "") + ".vdri")),
-#else
-					CycleFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-												missionType.ToString().Replace("EMS", "") +
-												Constants.FileExtensions.CycleFile),
-#endif
+					CycleFile = cycle,
+					//CycleFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+					//							missionType.ToString().Replace("EMS", "") +
+					//							Constants.FileExtensions.CycleFile),
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
 					BodyCurbWeight = body.CurbWeight,
 					Trailer = trailers,
