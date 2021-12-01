@@ -75,43 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		[TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_fine.vemo", 0.8999, 0.9001),
 		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_coarse.vemo", 0.8999, 0.9001),
 		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_std.vemo", 0, 1)]
-		public void TestInterpolationMethod_Proposal2(string filename, double etaMin, double etaMax)
-		{
-			EfficiencyMap emMap;
-			using (var fs = File.OpenRead(filename)) {
-				emMap = ElectricMotorMapReaderNew.Create(fs, 1);
-			}
-
-			var efficiencies = new List<double>();
-			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
-				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {
-					if (tq.IsEqual(0)) {
-						continue;
-					}
-					try {
-						var pwr = emMap.LookupElectricPower(n, tq);
-						if (pwr.ElectricalPower == null) {
-							continue;
-						}
-						Console.WriteLine($"{pwr.Speed.AsRPM}, {pwr.Torque.Value()}, {pwr.ElectricalPower.Value()}, {pwr.Extrapolated}, {(n * tq).Value()}");
-						var efficiency = tq < 0
-							? pwr.Speed * pwr.Torque / pwr.ElectricalPower
-							: pwr.ElectricalPower / (pwr.Speed * pwr.Torque);
-						// set efficiencies close to 0 to exactly 0 because later assertion uses sharp bounds without tolerance
-						efficiencies.Add(efficiency.IsEqual(0) ? 0.0 : efficiency);
-					} catch (Exception e) {
-						Console.WriteLine(e.Message);
-					}
-				}
-			}
-
-			Assert.IsTrue(efficiencies.All(x => x.IsBetween(etaMin, etaMax)), $"{efficiencies.Min()} - {efficiencies.Max()}");
-		}
-
-		[TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_fine.vemo", 0.8999, 0.9001),
-		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_coarse.vemo", 0.8999, 0.9001),
-		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_std.vemo", 0, 1)]
-		public void TestInterpolationMethod_Current(string filename, double etaMin, double etaMax)
+		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
 		{
 			EfficiencyMap emMap;
 			using (var fs = File.OpenRead(filename)) {
@@ -140,7 +104,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 					}
 				}
 			}
+
 			Assert.IsTrue(efficiencies.All(x => x.IsBetween(etaMin, etaMax)), $"{efficiencies.Min()} - {efficiencies.Max()}");
 		}
+
+		
 	}
 }
