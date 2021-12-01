@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 
 	public class EfficiencyMapNew : EfficiencyMap
 	{
-		private static readonly PerSecond speedOffset = 0.01.RPMtoRad();
+		
 		protected internal EfficiencyMapNew(DelaunayMap efficiencyMapMech2El) : base(efficiencyMapMech2El) { }
 
 		public override EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
@@ -22,12 +22,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			result.Speed = angularSpeed;
 			var value = _efficiencyMapMech2El.Interpolate(torque, angularSpeed);
 			if (!value.IsNaN()) {
-				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed + speedOffset) + angularSpeed * torque;
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed) + angularSpeed * torque;
 				return result;
 			}
 			if (allowExtrapolation) {
 				value = _efficiencyMapMech2El.Extrapolate(torque, angularSpeed);
-				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed + speedOffset) + angularSpeed * torque;
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed) + angularSpeed * torque;
 				result.Extrapolated = true;
 				return result;
 			}
@@ -36,8 +36,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 
 		public double GetDelaunayZValue(Entry entry)
 		{
+			if (entry.MotorSpeed.IsEqual(0)) {
+				throw new VectoException("Electric motor speed has to be greater than 0");
+			}
 			return - ((entry.PowerElectrical - entry.MotorSpeed * entry.Torque) /
-						(entry.MotorSpeed + EfficiencyMapNew.speedOffset)).Value();
+						(entry.MotorSpeed)).Value();
 		}
 	}
 
@@ -108,6 +111,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			public readonly PerSecond MotorSpeed;
 			public readonly NewtonMeter Torque;
 			public readonly Watt PowerElectrical;
+
+			public override string ToString()
+			{
+				return $"{MotorSpeed.AsRPM} / {Torque} / {PowerElectrical}";
+			}
 		}
 
 		public class EfficiencyResult
