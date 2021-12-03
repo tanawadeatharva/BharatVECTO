@@ -70,7 +70,10 @@ Partial Class VectoVTPJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.tbFanDiameter = New System.Windows.Forms.TextBox()
+        Me.tbC4 = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnFanParameters = New System.Windows.Forms.Panel()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -91,9 +94,6 @@ Partial Class VectoVTPJobForm
         Me.Label8 = New System.Windows.Forms.Label()
         Me.tbManufacturerRecord = New System.Windows.Forms.TextBox()
         Me.ButtonManR = New System.Windows.Forms.Button()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.tbC4 = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
         Me.StatusStrip1.SuspendLayout
@@ -120,7 +120,7 @@ Partial Class VectoVTPJobForm
         Me.GrCycles.Location = New System.Drawing.Point(11, 324)
         Me.GrCycles.Name = "GrCycles"
         Me.GrCycles.Size = New System.Drawing.Size(515, 166)
-        Me.GrCycles.TabIndex = 10
+        Me.GrCycles.TabIndex = 3
         Me.GrCycles.TabStop = false
         Me.GrCycles.Text = "Cycles"
         '
@@ -202,7 +202,7 @@ Partial Class VectoVTPJobForm
         Me.GrAux.Location = New System.Drawing.Point(11, 178)
         Me.GrAux.Name = "GrAux"
         Me.GrAux.Size = New System.Drawing.Size(515, 140)
-        Me.GrAux.TabIndex = 9
+        Me.GrAux.TabIndex = 2
         Me.GrAux.TabStop = false
         Me.GrAux.Text = "Auxiliaries"
         '
@@ -246,7 +246,7 @@ Partial Class VectoVTPJobForm
         Me.TbVEH.Location = New System.Drawing.Point(128, 86)
         Me.TbVEH.Name = "TbVEH"
         Me.TbVEH.Size = New System.Drawing.Size(373, 20)
-        Me.TbVEH.TabIndex = 1
+        Me.TbVEH.TabIndex = 0
         '
         'ButtonVEH
         '
@@ -256,11 +256,11 @@ Partial Class VectoVTPJobForm
         Me.ButtonVEH.Name = "ButtonVEH"
         Me.ButtonVEH.Size = New System.Drawing.Size(24, 24)
         Me.ButtonVEH.TabIndex = 2
-        Me.ButtonVEH.TabStop = false
         Me.ButtonVEH.UseVisualStyleBackColor = true
         '
         'StatusStrip1
         '
+        Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 660)
         Me.StatusStrip1.Name = "StatusStrip1"
@@ -281,7 +281,7 @@ Partial Class VectoVTPJobForm
         Me.ButOK.Location = New System.Drawing.Point(778, 633)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 0
+        Me.ButOK.TabIndex = 5
         Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = true
         '
@@ -292,17 +292,18 @@ Partial Class VectoVTPJobForm
         Me.ButCancel.Location = New System.Drawing.Point(859, 633)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 1
+        Me.ButCancel.TabIndex = 6
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = true
         '
         'ToolStrip1
         '
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(944, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(944, 31)
         Me.ToolStrip1.TabIndex = 20
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -312,7 +313,7 @@ Partial Class VectoVTPJobForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtNew.Text = "New"
         Me.ToolStripBtNew.ToolTipText = "New"
         '
@@ -322,7 +323,7 @@ Partial Class VectoVTPJobForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtOpen.Text = "Open"
         Me.ToolStripBtOpen.ToolTipText = "Open..."
         '
@@ -332,7 +333,7 @@ Partial Class VectoVTPJobForm
         Me.ToolStripBtSave.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_icon
         Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSave.Text = "Save"
         Me.ToolStripBtSave.ToolTipText = "Save"
         '
@@ -342,14 +343,14 @@ Partial Class VectoVTPJobForm
         Me.ToolStripBtSaveAs.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_as_icon
         Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSaveAs.Text = "Save As"
         Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripBtSendTo
         '
@@ -357,14 +358,14 @@ Partial Class VectoVTPJobForm
         Me.ToolStripBtSendTo.Image = Global.TUGraz.VECTO.My.Resources.Resources.export_icon
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripBtSendTo.Text = "Send to Job List"
         Me.ToolStripBtSendTo.ToolTipText = "Send to Job List"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 31)
         '
         'ToolStripButton1
         '
@@ -372,7 +373,7 @@ Partial Class VectoVTPJobForm
         Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
         Me.ToolStripButton1.Text = "Help"
         '
         'PictureBox1
@@ -389,6 +390,7 @@ Partial Class VectoVTPJobForm
         '
         'CmOpenFile
         '
+        Me.CmOpenFile.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
         Me.CmOpenFile.ShowImageMargin = false
@@ -507,16 +509,41 @@ Partial Class VectoVTPJobForm
         Me.GroupBox1.Location = New System.Drawing.Point(10, 496)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(517, 144)
-        Me.GroupBox1.TabIndex = 39
+        Me.GroupBox1.TabIndex = 4
         Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Fan Power"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = true
+        Me.Label13.Location = New System.Drawing.Point(463, 120)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(16, 13)
+        Me.Label13.TabIndex = 53
+        Me.Label13.Text = "[-]"
         '
         'tbFanDiameter
         '
         Me.tbFanDiameter.Location = New System.Drawing.Point(371, 13)
         Me.tbFanDiameter.Name = "tbFanDiameter"
         Me.tbFanDiameter.Size = New System.Drawing.Size(86, 20)
-        Me.tbFanDiameter.TabIndex = 46
+        Me.tbFanDiameter.TabIndex = 0
+        '
+        'tbC4
+        '
+        Me.tbC4.Location = New System.Drawing.Point(371, 117)
+        Me.tbC4.Name = "tbC4"
+        Me.tbC4.Size = New System.Drawing.Size(86, 20)
+        Me.tbC4.TabIndex = 2
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = true
+        Me.Label14.Location = New System.Drawing.Point(342, 120)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(23, 13)
+        Me.Label14.TabIndex = 51
+        Me.Label14.Text = "C4:"
         '
         'Label7
         '
@@ -541,7 +568,7 @@ Partial Class VectoVTPJobForm
         Me.pnFanParameters.Location = New System.Drawing.Point(290, 36)
         Me.pnFanParameters.Name = "pnFanParameters"
         Me.pnFanParameters.Size = New System.Drawing.Size(218, 78)
-        Me.pnFanParameters.TabIndex = 48
+        Me.pnFanParameters.TabIndex = 1
         '
         'Label11
         '
@@ -584,7 +611,7 @@ Partial Class VectoVTPJobForm
         Me.tbC1.Location = New System.Drawing.Point(81, 3)
         Me.tbC1.Name = "tbC1"
         Me.tbC1.Size = New System.Drawing.Size(86, 20)
-        Me.tbC1.TabIndex = 40
+        Me.tbC1.TabIndex = 0
         '
         'Label3
         '
@@ -600,14 +627,14 @@ Partial Class VectoVTPJobForm
         Me.tbC3.Location = New System.Drawing.Point(81, 55)
         Me.tbC3.Name = "tbC3"
         Me.tbC3.Size = New System.Drawing.Size(86, 20)
-        Me.tbC3.TabIndex = 44
+        Me.tbC3.TabIndex = 2
         '
         'tbC2
         '
         Me.tbC2.Location = New System.Drawing.Point(81, 29)
         Me.tbC2.Name = "tbC2"
         Me.tbC2.Size = New System.Drawing.Size(86, 20)
-        Me.tbC2.TabIndex = 42
+        Me.tbC2.TabIndex = 1
         '
         'Label4
         '
@@ -647,7 +674,7 @@ Partial Class VectoVTPJobForm
         Me.pnManufacturerRecord.Location = New System.Drawing.Point(11, 112)
         Me.pnManufacturerRecord.Name = "pnManufacturerRecord"
         Me.pnManufacturerRecord.Size = New System.Drawing.Size(525, 66)
-        Me.pnManufacturerRecord.TabIndex = 41
+        Me.pnManufacturerRecord.TabIndex = 1
         '
         'lblMileageUnit
         '
@@ -665,7 +692,7 @@ Partial Class VectoVTPJobForm
         Me.tbMileage.Location = New System.Drawing.Point(117, 40)
         Me.tbMileage.Name = "tbMileage"
         Me.tbMileage.Size = New System.Drawing.Size(76, 20)
-        Me.tbMileage.TabIndex = 48
+        Me.tbMileage.TabIndex = 2
         '
         'lblMileage
         '
@@ -692,7 +719,7 @@ Partial Class VectoVTPJobForm
         Me.tbManufacturerRecord.Location = New System.Drawing.Point(117, 8)
         Me.tbManufacturerRecord.Name = "tbManufacturerRecord"
         Me.tbManufacturerRecord.Size = New System.Drawing.Size(374, 20)
-        Me.tbManufacturerRecord.TabIndex = 41
+        Me.tbManufacturerRecord.TabIndex = 0
         '
         'ButtonManR
         '
@@ -701,34 +728,8 @@ Partial Class VectoVTPJobForm
         Me.ButtonManR.Location = New System.Drawing.Point(492, 6)
         Me.ButtonManR.Name = "ButtonManR"
         Me.ButtonManR.Size = New System.Drawing.Size(24, 24)
-        Me.ButtonManR.TabIndex = 42
-        Me.ButtonManR.TabStop = false
+        Me.ButtonManR.TabIndex = 1
         Me.ButtonManR.UseVisualStyleBackColor = true
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(463, 120)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(16, 13)
-        Me.Label13.TabIndex = 53
-        Me.Label13.Text = "[-]"
-        '
-        'tbC4
-        '
-        Me.tbC4.Location = New System.Drawing.Point(371, 117)
-        Me.tbC4.Name = "tbC4"
-        Me.tbC4.Size = New System.Drawing.Size(86, 20)
-        Me.tbC4.TabIndex = 52
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(342, 120)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(23, 13)
-        Me.Label14.TabIndex = 51
-        Me.Label14.Text = "C4:"
         '
         'VectoVTPJobForm
         '

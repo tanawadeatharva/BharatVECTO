@@ -889,7 +889,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
 					FullLoadCurve = fullLoadCurveCombined,
-					DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					//DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
 					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
 				});
 			}
@@ -901,6 +901,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
+				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
