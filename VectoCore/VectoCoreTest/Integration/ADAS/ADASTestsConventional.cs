@@ -1031,8 +1031,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			(3410, 3468, OutsideSegment, Coast),          // len: 58m
 			(3468, 3854, OutsideSegment, Roll),           // len: 386m
 			(3854, 3864, OutsideSegment, Brake),          // len: 10m
-			(3864, 3884, OutsideSegment, Coast),          // len: 20m
-			(3884, 5012, OutsideSegment, Brake),          // len: 1128m
+			(3864, 3915, OutsideSegment, Coast),          // len: 20m
+			(3915, 5012, OutsideSegment, Brake),          // len: 1128m
 			(5012, 5420, OutsideSegment, Coast),          // len: 408m
 			(5420, 1e6, OutsideSegment, Accelerate));
 
