@@ -142,10 +142,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 
 			Assert.AreEqual(26, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
-			Assert.AreEqual(33, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
-			Assert.AreEqual(29.5, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
-			Assert.AreEqual(31.25, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
-
+			
 			var em = emData.EfficiencyData;
 
 			Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
@@ -158,10 +155,17 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
 			Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
 
-			Assert.AreEqual(-101.760, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(-115.1818, em.EfficiencyMapLookupTorque(600.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(14.5383, em.EfficiencyMapLookupTorque(500.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(14.5383, em.EfficiencyMapLookupTorque(550.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+            Assert.AreEqual(-101.70072, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(400.SI<Volt>(), 2000.RPMtoRad(), -101.70072.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-1);
+
+			Assert.AreEqual(-114.51788, em.EfficiencyMapLookupTorque(600.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(600.SI<Volt>(), 2000.RPMtoRad(), -114.51788.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-1);
+
+			Assert.AreEqual(-107.772009, em.EfficiencyMapLookupTorque(500.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(500.SI<Volt>(), 2000.RPMtoRad(), -107.772009.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-1);
+
+			Assert.AreEqual(-111.053784, em.EfficiencyMapLookupTorque(550.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(550.SI<Volt>(), 2000.RPMtoRad(), -111.053784.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-1);
 
 		}
 
