@@ -23,10 +23,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		}
 
 		
-		[TestCase(-10000, 700, -120.6737), // EM drive has negative torque and thus negative electric power
-		TestCase(-20000, 1200, -141.5367),
-		TestCase(10000, 700, 153.5121),
-		TestCase(20000, 1200, 177.4109)]
+		[TestCase(-10000, 700, -118.916545), // EM drive has negative torque and thus negative electric power
+		TestCase(-20000, 1200, -141.451404),
+		TestCase(10000, 700, 155.046977),
+		TestCase(20000, 1200, 177.530544)]
 		public void TestLookupTorqueForBatPower(double batPwr, double emSpeed, double expectedTq)
 		{
 			var inputProvider =
