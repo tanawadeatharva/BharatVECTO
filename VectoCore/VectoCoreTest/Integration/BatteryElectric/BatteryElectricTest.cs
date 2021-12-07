@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -164,6 +165,47 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
+			TestCase(30, 0.5, 0, TestName = "PEV E4 Halt 30km/h SoC: 0.5, level"),
+			TestCase(50, 0.5, 0, TestName = "PEV E4 Halt 50km/h SoC: 0.5, level"),
+			//TestCase(80, 0.5, 0, TestName = "PEV E4 Halt 80km/h SoC: 0.5, level"), // max vehicle speed: 56
+			TestCase(30, 0.25, 0, TestName = "PEV E4 Halt 30km/h SoC: 0.25, level"),
+
+		TestCase(50, 0.5, 12, TestName = "PEV E4 Halt 50km/h SoC: 0.5, uphill 12"),
+
+		]
+		public void B4PEVHalt(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1}, 0
+				   900,   0, {1}, 3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B4_stop_{vmax}-{initialSoC}_{slope}";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
+				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
+				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
+					speed = r.Field<SI>(ModalResultField.v_act.GetName()),
+					brakePwr = r.Field<SI>(ModalResultField.P_brake_loss.GetName())
+				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
+				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
+			}
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
 			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
@@ -310,6 +352,47 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			Assert.IsTrue(modData.Rows.Count > 0);
 			
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
+			TestCase(30, 0.5, 0, TestName = "PEV E3 Halt 30km/h SoC: 0.5, level"),
+			TestCase(50, 0.5, 0, TestName = "PEV E3 Halt 50km/h SoC: 0.5, level"),
+			//TestCase(80, 0.5, 0, TestName = "PEV E3 Halt 80km/h SoC: 0.5, level"),  // max vehicle speed: 56 km/h
+			TestCase(30, 0.25, 0, TestName = "PEV E3 Halt 30km/h SoC: 0.25, level"),
+
+			TestCase(50, 0.5, 12, TestName = "PEV E3 Halt 50km/h SoC: 0.5, uphill 12"),
+
+		]
+		public void B3PEVHalt(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				   900,   0, {1},    3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B3_halt_{vmax}-{initialSoC}_{slope}";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
+				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
+				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
+					speed = r.Field<SI>(ModalResultField.v_act.GetName()),
+					brakePwr = r.Field<SI>(ModalResultField.P_brake_loss.GetName())
+				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
+				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
+			}
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
 		}
