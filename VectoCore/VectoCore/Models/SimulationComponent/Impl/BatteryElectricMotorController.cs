@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -34,12 +36,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				//var dragTorque = ElectricMotorData.DragCurve.Lookup()
 				return (-inertiaTorqueLoss); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
 			}
-			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
-				DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
-				return null;
-			}
+            if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
+                DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+                return null;
+            }
 
-			if (maxDriveTorque == null) {
+            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
+                return null;
+            }
+
+            if (maxDriveTorque == null) {
 				return null;
 			}
 
