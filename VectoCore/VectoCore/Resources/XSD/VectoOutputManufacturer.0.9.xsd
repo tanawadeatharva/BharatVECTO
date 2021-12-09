@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- Imports_______________________________________________ -->
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" schemaLocation="VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" schemaLocation="VectoDeclarationDefinitions.2.10.2_JobInputData.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
+	<!-- End imports___________________________________________ -->
+	<xs:element name="VectoOutput" type="mrf:VectoManufacturerOutputType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="VectoManufacturerOutputType">
+		<xs:sequence>
+			<xs:element name="Data" type="out:AbstractVectoOutputManufacturerDataType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AbstractManufacturerOutputVehicleType" abstract="true"/>
+	<xs:complexType name="ConventionalLorryVehicleOutputDataType">
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractManufacturerOutputVehicleType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="GeneralVehicleOutputGroup">
+		<xs:sequence>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>1.1.2. Vehicle model/Commercial Name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VIN" type="v1.0:VINType">
+				<xs:annotation>
+					<xs:documentation>1.1.3. Vehicle identification number (VIN)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AxleConfiguration">
+				<xs:annotation>
+					<xs:documentation>1.1.5 Axle configuration</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TPMLM">
+				<xs:annotation>
+					<xs:documentation>1.1.6. Technical Permissible Maximum Laden Mass [t]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VehicleGroup" type="v1.0:LegislativeClassDeclarationType">
+				<xs:annotation>
+					<xs:documentation>1.1.7.Vehicle group (Annex 1)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="OffVehicleChargingGroup">
+		<xs:annotation>
+			<xs:documentation>			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OffVehicleChargingCapability" type="v1.0:ManufacturerType"/>
+			<xs:element name="OffVehicleChargingMaxPower" type="v1.0:ManufacturerAddressType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="ManufacturerGroup">
+		<xs:annotation>
+			<xs:documentation>1.1.1. Name and address of manufacturer (s)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="CompletedBusGeneralVehicleOutputGroup">
+		<xs:sequence>
+			<xs:element name="Manufacturers">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="Step">
+							<xs:complexType>
+								<xs:group ref="mrf:ManufacturerGroup"/>
+								<xs:attribute name="Count" type="xs:int"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="LorryGeneralVehicleOutputGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+			<xs:element name="CO2StandardGroup" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>1.1.7a (Sub)group for CO2 standards</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+				<xs:annotation>
+					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VocationalVehicle" type="v1.0:VocationalVehicleType">
+				<xs:annotation>
+					<xs:documentation>1.1.9. Vocational Vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType">
+				<xs:annotation>
+					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HybridElectricHDV" type="v1.0:HybridElectricHDVType">
+				<xs:annotation>
+					<xs:documentation>1.1.11 Hyprid electric heavy-duty vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PrimaryBusGeneralVehicleOutputGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="Conventional-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-Px_HPC-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HEVArchitecture"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S2-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S3-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S4-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-IEPC-S-Lorry-VehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="v1.0:DualFuelType">
+				<xs:annotation>
+					<xs:documentation>1.1.12. Dual-fuel vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E2-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E3-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E4-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-IEPC-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType">
+				<xs:annotation>
+					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PEVArchitecture"/>
+			<xs:group ref="mrf:OffVehicleChargingGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Conventional-PrimaryBus-VehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-Px_IHPC-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S2-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S3-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-S4-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-IEPC-S-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E2-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E3-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-E4-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV-IEPC-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Conventional-CompletedBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:CompletedBusGeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-CompletedBusVehicleOutputType"/>
+	<xs:complexType name="PEV-CompletedBusVehicleOutputType"/>
+	<xs:complexType name="Exempted-LorryVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
+		<xs:sequence>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted-CompletedBusVehicleOutputType"/>
+</xs:schema>
