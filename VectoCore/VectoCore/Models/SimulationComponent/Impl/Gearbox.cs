@@ -288,10 +288,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.DrivingBehavior = DataBus.DriverInfo.DriverBehavior;
 			}
 
-			return GearEngaged(absTime)
-				? RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque, inTorqueLossResult,
-					inertiaTorqueLossOut, dryRun)
-				: RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
+			if (GearEngaged(absTime)) {
+				return RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, inTorque, inTorqueLossResult, inertiaTorqueLossOut, dryRun);
+			} else {
+				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
+			}
 		}
 
 		/// <summary>
