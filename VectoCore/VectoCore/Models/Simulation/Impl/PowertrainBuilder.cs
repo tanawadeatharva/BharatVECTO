@@ -1040,16 +1040,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return new ATShiftStrategyOptimized(container);
 				//return new ATShiftStrategy(runData, container);
 				case GearboxType.APTN:
-					if (container.IsTestPowertrain
-						|| runData.JobType == VectoSimulationJobType.ParallelHybridVehicle
-						|| runData.JobType == VectoSimulationJobType.SerialHybridVehicle
-						|| runData.JobType == VectoSimulationJobType.BatteryElectricVehicle
-						) {
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ParallelHybridVehicle:
+						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.BatteryElectricVehicle:
 						runData.ShiftStrategy = APTNShiftStrategy.Name;
 						return new APTNShiftStrategy(container);
-					}
+						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
+							return null;
+						default:
 					throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
-
+					}
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType",
 						$"Unknown Gearbox Type {runData.GearboxData.Type}");
