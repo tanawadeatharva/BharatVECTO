@@ -11,7 +11,7 @@ The [job file (.vecto)](#job-file) includes all informations to run a VECTO calc
 -   Filepath to the [Vehicle File (.vveh)](#vehicle-editor) which defines the not-engine/gearbox-related vehicle parameters
 -   Filepath to the [Engine File (.veng)](#engine-editor) which includes full load curve(s) and the fuel consumption map
 -   Filepath to the [Gearbox File (.vgbx)](#gearbox-editor) which defines gear ratios and transmission losses
--   Filepath to the [Gearshift Parameters File (.vtcu)](#gearshift-parameters-file) which allows to override parameters of the [Effshift Gearshift Strategy](#gear-shift-model). The gearshift parameters cannot be edited via the graphical user interface. In case the default parameters shall be used either an empty .vtcu file ([see .vtcy](#gearshift-parameters-file)) or the gearbox file (.vgbx) can be provided. An example .vtcu file is provided [here](#gearshift-parameters-file)
+-   Filepath to the [Gearshift Parameters File (.vtcu)](#gearshift-parameters-file) which allows to override parameters of the [Effshift Gearshift Strategy](#gear-shift-model). The gearshift parameters cannot be edited via the graphical user interface. In case the default parameters shall be used either an empty .vtcu file ([see .vtcu](#gearshift-parameters-file)) or the gearbox file (.vgbx) can be provided. An example .vtcu file is provided [here](#gearshift-parameters-file)
 -   Auxiliaries
 -   Driver Assist parameters
 -   Driving Cycles (only in Engineering Mode)
@@ -55,28 +55,23 @@ Filepath ot the Hybrid Strategy Parameters File(.vhctl)
 
 <div class="declaration">
 Auxiliaries
-:	This group contains input elements to define the vehicle's load from the auxiliaries.
-In Declaration Mode only the pre-defined auxiliaries are available and their power-demand is also pre-defined, depending on the vehicle category and driving cycle. This means the Auxiliary Type is set to 'Classic: Vecto Auxiliary' and no 'Constant Aux Load' can be specified.
-The following list contains the pre-defined auxiliaries where the concrete technology for each auxiliary can be configured using the [Auxiliary Dialog](#auxiliary-dialog). 
-**Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
+:	This group contains input elements to define the engine's load from the auxiliaries.
+In Declaration Mode only the pre-defined auxiliaries are available and their power-demand is also pre-defined, depending on the vehicle category and driving cycle. 
+The list contains the pre-defined auxiliaries where the concrete technology for each auxiliary can be configured using the [Auxiliary Dialog](#auxiliary-dialog). 
+**Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog). No other types of auxiliaries can be used in declaration mode.
 </div>
 
 <div class="engineering">
 Auxiliaries
-:	In Engineering Mode the set of auxiliaries can be freely defined.
-First, the Auxiliary Type can be selected. If the Bus Auxiliaries are selected a configuration file for the Advanced Auxiliaries has to be specified. When using the Bus Auxiliaries, the standard auxiliaries can  be added as well in the list below to take into account the steering pump, etc.
-The 'Constant Aux Load' can be used to define a constant power demand from the auxiliaries (similar to P_add in the driving cycle, but constant over the whole cycle).
-The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
- For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles-.vdri) must include the corresponding supply power.
-**Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
-: ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
-: ![remaux](pics/minus-circle-icon.png) Remove the selected Auxiliary from the list
+:	In Engineerin Mode the auxiliary power demand can be defined in three ways. 
+
+The first option is to define the power demand directly in the driving cycle in the column "Padd" (see (Driving Cycles)[#driving-cycles-.vdri]. This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
+
+The second option is to define a constant power demand over the whole cycle. The auxiliary power demand can be specified depending on whether the combustion engine is on or off and the vehicle is driving. The auxiliary power demand during engine-off phase is corrected in the (post-processing)[#engine-fuel-consumption-correction].
+
+The third option is to use the bus-auxiliaries model. For details see the (Bus Auxiliaries model)[#bus-auxiliaries].
 </div>
 
-<div class="engineering">
-Electric Auxiliaries
-:   In Engineering mode it is possible to add electric auxiliaires. These auxiliaries are connected to the high-voltage battery.
-</div>
 
 See [Auxiliaries](#auxiliaries) for details.
 
@@ -87,6 +82,15 @@ See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
 :	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles-.vdri).
+
+<div class="declaration">
+	In Declaration Mode, the cycles to be simulated depend on the vehicle group. The cycles are listed in this window for reference.
+</div>
+
+<div class="engineering">
+	In Engineering Mode the cycles can be freely selected. All declaration cycles are provided in the Folder "Mission Profiles" and can be used or a custom cycle can be created and used.
+</div>
+
 **Double-click** an entry to open the file (see [File Open Command](#settings)).
 **Click** selected items to edit file paths.
 
@@ -99,7 +103,7 @@ Cycles
 ![](pics/JobForm_DriverModel.png)
 
 
-In this tab the driver assistance functions are enabled and parameterised.
+In this tab the driver assistance functions are enabled and parameterised. The parameters for overspeed, look-ahead coasting and driver acceleration can only be modified in Engineering Mode.
 
 Overspeed
 :	See [Overspeed](#overspeed) for details.
@@ -117,9 +121,11 @@ Acceleration Limiting
 
 In this tab certain general parameters for the advanced driver assistant system model can be set. Which ADAS feature is available can be selected in the vehicle itself, in Engineering Mode parameters like minimum activation speed, activation delay, or allowed overspeed can be adjusted. In Declaration Mode all parameters are fixed.
 
+For details on the individual parameters see the corresponding section [Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [Eco-Roll](#advanced-driver-assistant-systems-eco-roll), [Predictive Cruise Control](#advanced-driver-assistant-systems-predictive-cruise-control)
+
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor the main vehicle parameters like HDV group and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
+The chart area on the right shows the main vehicle parameters like HDV group and axle configuration if a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
 ###Controls
 
