@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 
@@ -19,7 +17,6 @@ namespace TUGraz.VectoCore.Utils
 
 		protected void SetData(TEntry[] entries)
 		{
-			var stop = Stopwatch.StartNew();
 			_data = new DataTable();
 			var xEntries = new List<KeyValuePair<TKeyX, int>>();
 			var idx = 0;
@@ -45,8 +42,6 @@ namespace TUGraz.VectoCore.Utils
 				var row = entriesY.First(x => x.Key.IsEqual(GetYValue(entry)));
 				_data.Rows[row.Value][col.Value] = GetZValue(entry);
 			}
-			stop.Stop();
-			//Console.WriteLine("setData: {0}", stop.ElapsedMilliseconds);
 		}
 
 		protected abstract TKeyX GetXValue(TEntry entry);
