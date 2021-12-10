@@ -1200,6 +1200,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -1237,6 +1238,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -1279,6 +1281,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -1380,7 +1383,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
-
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -1418,6 +1421,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -1460,6 +1464,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
@@ -2227,6 +2232,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 
 				// WHR
@@ -2270,6 +2276,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				// WHR
 				modData[ModalResultField.P_WHR_el_corr] = P_WHR;
@@ -2501,6 +2508,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = 120.SI<Watt>() * emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = 120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				modData[ModalResultField.P_reess_int] = P_bat;
 				modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1/batEff);
@@ -2551,6 +2559,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_EM_electricMotor_el_, emPos] = -120.SI<Watt>() / emEff;
 				modData[ModalResultField.P_EM_mech_, emPos] = -120.SI<Watt>();
+				modData[ModalResultField.EM_Off_, emPos] = 0.SI<Scalar>();
 
 				modData[ModalResultField.P_reess_int] = P_bat;
 				modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);

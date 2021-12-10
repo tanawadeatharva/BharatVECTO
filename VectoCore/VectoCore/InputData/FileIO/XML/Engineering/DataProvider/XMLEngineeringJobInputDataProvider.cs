@@ -79,8 +79,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual TableData PTOCycleWhileDrive => null;
 
-		public string ShiftStrategy => null;
-
 		public virtual VectoSimulationJobType JobType { get; }
 
 

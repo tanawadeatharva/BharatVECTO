@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		//	RunJob_DeclSingle(jobName, 9);
 		//}
 
-		public void RunJob_DeclSingle(string jobName, int runIdx)
+        public void RunJob_DeclSingle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);

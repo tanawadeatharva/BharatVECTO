@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.OutputData
 						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
 								dt
 					};
-				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsSmaller(0)).Sum(x => x.E_EM);
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsSmaller(0)).Sum(x => x.E_EM) ?? 0.SI<WattSecond>();
 				return -_eEmDrive.GetOrAdd(emPos, _ => eEmDrive);
 			}
 		}
@@ -300,7 +300,7 @@ namespace TUGraz.VectoCore.OutputData
 						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
 								dt
 					};
-				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsGreater(0)).Sum(x => x.E_EM);
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsGreater(0)).Sum(x => x.E_EM) ?? 0.SI<WattSecond>();
 				return _eEmRecuperate.GetOrAdd(emPos, _ => eEmRecup);
 			}
 		}
@@ -387,7 +387,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0) && !x.EM_off.IsEqual(0))) {
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0) && x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}

@@ -72,7 +72,6 @@ Public Class VectoJob
 
     Public LookAheadMinSpeed As Double
     Public EngineStopStartActivationThreshold As Double
-    Private _shiftStrategy As String
     public EngineOffTimeLimit As double
     public EngineStStUtilityFactor As Double
     public EngineStStUtilityFactorDriving as Double
@@ -698,15 +697,7 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
-    Get
-            Return _shiftStrategy
-    End Get
-        set (value as string)
-            _shiftStrategy = value
-        End set
-    End Property
-
+    
     Public Property AuxPwrICEOn As Double
 
     Public ReadOnly Property IAuxiliariesDeclarationInputData_SavedInDeclarationMode As Boolean _
