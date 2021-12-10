@@ -1045,8 +1045,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						|| runData.JobType == VectoSimulationJobType.SerialHybridVehicle
 						|| runData.JobType == VectoSimulationJobType.BatteryElectricVehicle
 						) {
-					runData.ShiftStrategy = APTNShiftStrategy.Name;
-					return new APTNShiftStrategy(container);
+						runData.ShiftStrategy = APTNShiftStrategy.Name;
+						return new APTNShiftStrategy(container);
 					}
 					throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
 
