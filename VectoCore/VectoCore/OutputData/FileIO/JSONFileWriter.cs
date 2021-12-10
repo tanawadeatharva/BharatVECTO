@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.OutputData;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 public class JSONFileWriter : IOutputFileWriter
 {
@@ -34,7 +35,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private const int ElectricMotorFormatVersion = 3;
+	private const int ElectricMotorFormatVersion = 4;
 
 	private const int REESSFormatVersion = 1;
 
@@ -89,13 +90,14 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("OverloadTorqueSpeed", electricMachine.OverloadTestSpeed.AsRPM);
 		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
+		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 
 		var vlevels = new List<Dictionary<string, object>>();
 		foreach (var entry in electricMachine.VoltageLevels) {
 			var vlevel = new Dictionary<string, object>();
 			vlevel.Add("Voltage", entry.VoltageLevel.Value());
 			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-			vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
+			//vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
 			vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
 			vlevels.Add(vlevel);
         }
@@ -662,7 +664,6 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
 
 		var auxList = new List<object>();
@@ -978,9 +979,7 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 			
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
-
-
+		
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
 			var aux = declVehicle.Components.AuxiliaryInputData;
 			var auxList = new List<object>();

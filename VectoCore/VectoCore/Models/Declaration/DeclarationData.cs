@@ -482,7 +482,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double DownhillSlope = -5;
 			public const double UphillSlope = 5;
 
-			public static string DefaultShiftStrategy = "";
 			public const double DragMarginFactor = 0.7;
 
 
@@ -530,10 +529,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				if (tcuData.MinEngineSpeedPostUpshift != null) {
 					MinEngineSpeedPostUpshift = tcuData.MinEngineSpeedPostUpshift;
-				}
-				var tmp = tcuData as JSONFile;
-				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
-					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
 				}
 				//#endif
 			}

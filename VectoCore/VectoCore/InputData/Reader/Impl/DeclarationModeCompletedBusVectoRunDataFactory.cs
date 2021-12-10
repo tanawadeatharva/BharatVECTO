@@ -101,7 +101,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_angledriveData = DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
 			
 			var tmpRunData = new VectoRunData() {
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 				GearboxData = new GearboxData() {
 					Type = PrimaryVehicle.Components.GearboxInputData.Type,
 				}

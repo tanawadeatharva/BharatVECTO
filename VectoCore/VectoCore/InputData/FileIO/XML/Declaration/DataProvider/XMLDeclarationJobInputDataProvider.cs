@@ -71,8 +71,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string JobName => Vehicle.Identifier;
 
-		public virtual string ShiftStrategy => null;
-
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
@@ -126,8 +124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 		public bool SavedInDeclarationMode { get; }
 		public string JobName { get; }
-		public string ShiftStrategy => null;
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 		public IXMLJobDataReader Reader { protected get; set; }
 		public IXMLPrimaryVehicleBusInputData InputData { get; }

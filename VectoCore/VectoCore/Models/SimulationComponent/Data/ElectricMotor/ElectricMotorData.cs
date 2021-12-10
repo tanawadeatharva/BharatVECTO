@@ -41,6 +41,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[ValidateObject]
 		public VoltageLevelData EfficiencyData { get; internal set; }
+
+		[ValidateObject]
+		public DragCurve DragCurve { get; internal set; }
 	}
 
 	public class VoltageLevelData
@@ -54,12 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			_maxSpeed ?? (_maxSpeed = VoltageLevels
 				.Min(v => VectoMath.Min(v.EfficiencyMap.MaxSpeed, v.FullLoadCurve.MaxSpeed)));
 
-		public NewtonMeter LookupDragTorque(Volt voltage, PerSecond avgSpeed) {
-			var (a, b) = GetSection(voltage);
-			return VectoMath.Interpolate(a.Voltage, b.Voltage, 
-				a.DragCurve.Lookup(avgSpeed), b.DragCurve.Lookup(avgSpeed), voltage);
-		}
-
+		
 		public NewtonMeter EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
 		{
 			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
@@ -82,9 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var searchResult = SearchAlgorithm.Search(retVal, electricPower - elPwr.ElectricalPower,
 				interval: 10.SI<NewtonMeter>(),
-				getYValue: x => (Watt)x,
+				getYValue: x => (Watt)x - electricPower,
 				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
-				criterion: x => ((Watt)x).Value()
+				criterion: x => ((Watt)x - electricPower).Value()
 			);
 
 			return searchResult;
@@ -156,9 +154,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[ValidateObject]
 		public ElectricMotorFullLoadCurve FullLoadCurve { get; internal set; }
-
-		[ValidateObject]
-		public DragCurve DragCurve { get; internal set; }
 
 		[ValidateObject]
 		public EfficiencyMap EfficiencyMap { get; internal set; }

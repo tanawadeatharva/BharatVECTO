@@ -837,7 +837,7 @@ Public Class GearboxForm
 
                 'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
                 Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
+				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
                 If (Not IsNothing(shiftLines)) Then
 
 
@@ -906,7 +906,7 @@ Public Class GearboxForm
     End Sub
 
 
-    Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer, shiftStrategy As String) _
+    Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer) _
         As ShiftPolygon
         Dim maxTqStr As String = LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text
         Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
@@ -928,7 +928,6 @@ Public Class GearboxForm
         End If
 
         Dim tmpRunData as VectoRunData = New VectoRunData() With {
-            .ShiftStrategy = shiftStrategy,
             .GearboxData = New GearboxData() with {
                 .Type = CType(CbGStype.SelectedValue, GearboxType)
             }
@@ -1085,7 +1084,7 @@ Public Class GearboxForm
 
 			If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
                 Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
+				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
                 If (Not IsNothing(shiftLines)) Then
                     ShiftPolygonExport.WriteShiftPolygon(shiftLines, jobFile & "_Gear " & gear & ".vgbs")
                 End If

@@ -541,8 +541,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 
 		public string JobName { get; set; }
-		public string ShiftStrategy { get; set; }
-
+		
 		#endregion
 	}
 
