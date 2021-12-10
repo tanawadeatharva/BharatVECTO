@@ -175,8 +175,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string JobName => "";
 
-		public string ShiftStrategy => "";
-
 		public string Identifier => Vehicle.Identifier;
 
 		public bool ExemptedVehicle => false;

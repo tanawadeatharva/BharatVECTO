@@ -50,8 +50,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		string JobName { get; }
 
-		string ShiftStrategy { get; }
-
 		VectoSimulationJobType JobType { get; }
 	}
 
