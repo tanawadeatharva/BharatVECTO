@@ -1004,6 +1004,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.ATSerial:
 					new ATClutchInfo(container);
 					return new ATGearbox(container, strategy);
+				case GearboxType.APTN:
+					return new APTNGearbox(container, strategy);
 				default:
 					throw new ArgumentOutOfRangeException("Unknown Gearbox Type", container.RunData.GearboxData.Type.ToString());
 			}
