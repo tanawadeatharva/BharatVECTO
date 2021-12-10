@@ -1037,9 +1037,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 					return new ATShiftStrategyOptimized(container);
 				//return new ATShiftStrategy(runData, container);
+				case GearboxType.APTN:
+					runData.ShiftStrategy = APTNShiftStrategy.Name;
+					return new APTNShiftStrategy(container);
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType",
-						$"Unknown Gearbox Type {runData.GearboxData.Type.ToString()}");
+						$"Unknown Gearbox Type {runData.GearboxData.Type}");
 			}
 		}
 
