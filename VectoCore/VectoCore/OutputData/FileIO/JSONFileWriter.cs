@@ -664,7 +664,6 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
 
 		var auxList = new List<object>();
@@ -980,9 +979,7 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 			
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
-
-
+		
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
 			var aux = declVehicle.Components.AuxiliaryInputData;
 			var auxList = new List<object>();

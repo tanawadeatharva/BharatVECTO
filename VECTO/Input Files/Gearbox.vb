@@ -923,7 +923,6 @@ Public Class MockJobInputData
     Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
     Public Property JobName As String Implements IDeclarationJobInputData.JobName
-    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
 End Class
 
 Public Class MockDriverInputData

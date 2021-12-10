@@ -376,7 +376,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(6, genericGearbox.Gears.Count);
 			Assert.AreEqual(genericGearbox.Gears.Count, specificGearbox.Gears.Count);
 
-			AssertGearShiftParameters(relatedRun);
 			AssertGears(genericGearbox.Gears.Values.ToList());
 			AssertGears(specificGearbox.Gears.Values.ToList());
 			AssertGearsLossmap(
@@ -410,12 +409,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			}
 		}
 
-		private void AssertGearShiftParameters(RelatedRun relatedRun)
-		{
-			Assert.AreEqual(relatedRun.VectoRunDataGenericBody.ShiftStrategy, relatedRun.VectoRunDataSpezificBody.ShiftStrategy);
-		}
-
-
+		
 		#endregion
 
 		#region Torque Converter Asserts
@@ -1272,7 +1266,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			public bool SavedInDeclarationMode => true;
 			public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 			public string JobName { get; }
-			public string ShiftStrategy => "";
 			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 			#endregion

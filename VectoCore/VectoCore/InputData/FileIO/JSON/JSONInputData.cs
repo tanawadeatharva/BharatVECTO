@@ -327,18 +327,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VectoSimulationJobType JobType => Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 
 		public virtual string JobName => _jobname;
-
-		public string ShiftStrategy
-		{
-			get {
-				if (Body["ShiftStrategy"] == null) {
-					return "";
-				}
-
-				return Body.GetEx<string>("ShiftStrategy");
-			}
-		}
-
+		
 		#endregion
 
 		#region DriverInputData
@@ -1018,8 +1007,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 		public string JobName { get; }
-		public string ShiftStrategy => "";
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
@@ -1076,8 +1064,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
-		public string ShiftStrategy => "";
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion

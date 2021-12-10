@@ -178,7 +178,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
 				GearshiftParameters = _gearshiftData,
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

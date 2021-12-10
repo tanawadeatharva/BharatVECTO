@@ -102,7 +102,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
 					var tmpRunData = new VectoRunData() {
 						JobType = VectoSimulationJobType.BatteryElectricVehicle,
-						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 						GearboxData = new GearboxData() {
 							Type = vehicle.Components.GearboxInputData.Type,
 						},
@@ -157,7 +156,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 					GearshiftParameters = gearshiftParams,
-					ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
 				};
 			}
@@ -183,7 +181,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var axlegearData = dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 					var tmpRunData = new VectoRunData() {
-						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 						GearboxData = new GearboxData() {
 							Type = vehicle.Components.GearboxInputData.Type,
 						}
@@ -281,7 +278,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |
 										SimulationType.PWheel,
 						GearshiftParameters = gearshiftParams,
-						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
 							.Auxiliaries.ElectricPowerDemand,
 					};
