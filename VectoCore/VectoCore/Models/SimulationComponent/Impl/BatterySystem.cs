@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IList<IRESSResponse> Request(Second absTime, Second dt, Watt powerDemand, Second tPulse, bool dryRun)
 			{
 				var current = 0.SI<Ampere>();
-				if (!powerDemand.IsEqual(0)) {
+				if (!powerDemand.IsEqual(0, 1e-3)) {
 					var solutions = VectoMath.QuadraticEquationSolver(InternalResistance(tPulse).Value(), OpenCircuitVoltage.Value(),
 						-powerDemand.Value());
 					current = SelectSolution(solutions, powerDemand.Value(), dt);
