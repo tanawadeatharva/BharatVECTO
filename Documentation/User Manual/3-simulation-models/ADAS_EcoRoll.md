@@ -1,11 +1,6 @@
 ##Driver: Overspeed
 
-
-Both functions control the vehicle's behaviour on uneven road sections (slope ≠ 0) and can be configured in the [Job File](#job-file)'s Driver Assist Tab. Overspeed is designed to model an average driver's behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
-
-
-###Overspeed
-
+Overspeed controls the vehicle's behaviour on uneven road sections (slope ≠ 0) and can be configured in the [Job File](#job-file)'s Driver Assist Tab. Overspeed is designed to model an average driver's behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
 
 Overspeed activates as soon as the total power demand at the wheels (Pwheel) falls below zero, i.e. the vehicle accelerates on a negative slope. The clutch remains closed, engine in motoring operation, and the vehicle accelerates beyond the cycle's target speed. When the speed limit (target speed plus **Max. Overspeed**) is reached the mechanical brakes are engaged to prevent further acceleration.
 
@@ -67,9 +62,9 @@ In Declaration Mode the energy demand of all auxiliaries except the engine cooli
 **Auxiliary energy demand**
 
 In Engineering Mode the energy demand of the auxiliaries can be specified for the cases:
-  - ICE on
-  - ICE off, vehicle standstill
-  - ICE off, vehicle driving
+   - ICE on
+   - ICE off, vehicle standstill
+   - ICE off, vehicle driving
 
 
 </div>
@@ -92,7 +87,12 @@ In Declaration Mode the energy demand of all auxiliaries is applied in the fuel 
 <div class="engineering">
 **Auxiliary energy demand**
 
-In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine-off periods and the fuel consumption is corrected in a post-processing step.
+In Engineering Mode the energy demand for the different states 
+   - ICE on
+   - Vehicle driving, ICE off
+   - Vehicle standstill, ICE off
+
+can be specified. When the ICE is on, the auxiliary energy demand is directly applied. The auxiliary energy demand during ICE-off phases is [corrected in post-processing](#engine-fuel-consumption-correction).
 </div>
 
 

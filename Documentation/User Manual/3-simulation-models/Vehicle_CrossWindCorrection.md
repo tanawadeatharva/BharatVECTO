@@ -32,7 +32,7 @@ The following table gives the coefficients per vehicle type:
 
 In a pre-processing step VECTO calculates the function for $C_dA$ value as a function of vehicle speed. This is done by integration of all possible directions of the ambient wind from ground level to maximum vehicle height considering the boundary layer effect based on the following formulas: 
 
-$C_{d,v}A(v_{veh}) = \frac{1}{2 \pi v_{veh}^2 h_{veh}}\int_{\alpha = 0°}^{\alpha = 360°}{\int_{h=0}^{h=h_{veh}}{C_dA(\beta)\cdot v_{air}(h, \alpha)^2} \text{d}h\ \text{d}\alpha}$
+$C_{d,v}A(v_{veh}) = \frac{1}{2 \pi v_{veh}^2 h_{veh}}\int_{\alpha = 0^{\circ}}^{\alpha = 360^{\circ}}{\int_{h=0}^{h=h_{veh}}{C_dA(\beta)\cdot v_{air}(h, \alpha)^2} \textit{d}h\ \textit{d}\alpha}$
 
 $v_{air}(h) = \sqrt{(v_{wind}(h)\cdot\cos\alpha + v_{veh})^2 + (v_{wind}(h)\cdot\sin\alpha)^2}$
 

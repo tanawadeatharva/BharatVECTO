@@ -55,7 +55,7 @@ The Chart Area displays the battery's internal voltage (blue) and the internal r
 Make and Model
 :   Free text defining the model, type, etc.
 
-Capacity \[F\]
+Capacitance \[F\]
 :   Nominal capacity of the capacitor
 
 Min Voltage \[V\]
