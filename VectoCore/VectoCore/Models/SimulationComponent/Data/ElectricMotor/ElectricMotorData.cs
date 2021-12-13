@@ -80,9 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var searchResult = SearchAlgorithm.Search(retVal, electricPower - elPwr.ElectricalPower,
 				interval: 10.SI<NewtonMeter>(),
-				getYValue: x => (Watt)x,
+				getYValue: x => (Watt)x - electricPower,
 				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
-				criterion: x => ((Watt)x).Value()
+				criterion: x => ((Watt)x - electricPower).Value()
 			);
 
 			return searchResult;

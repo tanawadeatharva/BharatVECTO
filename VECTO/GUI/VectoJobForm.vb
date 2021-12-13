@@ -88,10 +88,6 @@ Public Class VectoJobForm
 
 		_changed = False
 
-		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-		cbGearshiftStrategy.DisplayMember = "Label"
-        cbGearshiftStrategy.ValueMember = "Value"
-
         'Attempt to select that found in Config
 
         UpdateEnabledControls()
@@ -570,17 +566,6 @@ Public Class VectoJobForm
 
         '-------------------------------------------------------------
 
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle OrElse Not IsNothing(inputData.JobInputData.Vehicle.Components.GearboxInputData)) Then
-            cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type) _
-            .Concat({Tuple.Create("", "Not specified - use default")}) _
-            .Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-            cbGearshiftStrategy.DisplayMember = "Label"
-            cbGearshiftStrategy.ValueMember = "Value"
-        End If
-        If (Not inputData.JobInputData.ShiftStrategy Is Nothing) Then
-            cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
-        End If
-
         if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
             cbEnableBusAux.Checked = True
             tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
@@ -641,7 +626,6 @@ Public Class VectoJobForm
 
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
-        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
         vectoJob.PathHybridStrategyParams = tbHybridStrategyParams.Text
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text

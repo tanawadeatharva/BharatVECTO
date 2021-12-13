@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = xmlInputReader.CreateEngineering(outFile);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("325kW 12.7l Engine", xml.JobInputData.JobName);
+			Assert.AreEqual("N/A N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = xmlInputReader.CreateEngineering(outFile);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("325kW 12.7l Engine", xml.JobInputData.JobName);
+			Assert.AreEqual("N/A N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = xmlInputReader.CreateEngineering(Path.Combine(outDir, outFile));
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("325kW 12.7l Engine", xml.JobInputData.JobName);
+			Assert.AreEqual("N/A N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
