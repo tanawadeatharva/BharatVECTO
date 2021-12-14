@@ -102,7 +102,7 @@ For up-shifts from a torque converter gear ("C") to a locked gear ("L") the esti
 
 The search algorithm for the next gear is as follows:
 
-  $FC_{gear} = min⁡(FC_{gear + i})   \forall i \in \textrm{Allowed gear range}$
+  $FC_{gear} = min(FC_{gear + i})   \forall i \in \textrm{Allowed gear range}$
 
 Additionally the candidate gear has to fulfil the boundary conditions below for an efficiency upshift.  
 
@@ -140,7 +140,7 @@ If the estimated engine speed after a C -> L shift is calculated to be equal or 
 
 Boundary values between engine load stages (values for torque ratio in [%]) (relevant for C -> L shifts)
 
-|                  | 1<->2 | 2<->3  | 3<->4  | 4<->5  |  5<->6 |
+| Load stage       | 1<->2 | 2<->3  | 3<->4  | 4<->5  |  5<->6 |
 |------------------|-------|--------|--------|--------|--------|
 | Hysteresis upper | 19.70 |  36.34 |  53.01 |  69.68 |  86.35 |
 | Hysteresis lower | 13.70 |  30.34 |  47.01 |  63.68 |  80.35 |
