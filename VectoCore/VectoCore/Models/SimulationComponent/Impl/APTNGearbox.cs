@@ -3,8 +3,10 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -17,6 +19,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public APTNGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
 		{
 			ModelData.TractionInterruption = 0.SI<Second>();
+		}
+
+		public override void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			base.CommitSimulationStep(time, simulationInterval, container);
+		}
+
+		public override void Connect(ITnOutPort other)
+		{
+			base.Connect(other);
+		}
+
+		public override bool GearEngaged(Second absTime)
+		{
+			return base.GearEngaged(absTime);
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -47,6 +64,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		{
+			var response = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			if (response is ResponseGearShift) {
+				response = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			}
+			return response;
+		}
+
+		public override void TriggerGearshift(Second absTime, Second dt)
+		{
+			base.TriggerGearshift(absTime, dt);
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			base.DoCommitSimulationStep(time, simulationInterval);
+		}
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			base.DoWriteModalResults(time, simulationInterval, container);
+		}
 
 		protected internal override ResponseDryRun Initialize(Second absTime, GearshiftPosition gear,
 			NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -65,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var response = NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque, inAngularVelocity, true);
-			
+
 			var eMotor = DataBus.ElectricMotorInfo(DataBus.PowertrainInfo.ElectricMotorPositions[0]);
 			var fullLoad = -eMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, inAngularVelocity);
 
