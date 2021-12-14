@@ -335,5 +335,10 @@ namespace TUGraz.VectoCommon.Utils
 				item7 = enumerator.Current;
 			}
 		}
+
+		/// <summary>
+		/// Checks if a value is one of the candidate values.
+		/// </summary>
+		public static bool IsOneOf<T>(this T self, params T[] candidates) => candidates.Contains(self);
 	}
 }
