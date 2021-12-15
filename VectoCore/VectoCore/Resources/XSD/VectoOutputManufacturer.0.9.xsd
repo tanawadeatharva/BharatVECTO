@@ -124,22 +124,62 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E2_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ConventionalPrimaryBusManufacturerOutputDataType">
