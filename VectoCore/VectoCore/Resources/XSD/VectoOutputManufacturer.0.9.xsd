@@ -26,6 +26,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -43,6 +44,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -60,6 +62,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -792,7 +795,7 @@
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="TransmissionGroup">
+	<xs:complexType name="TransmissionType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="Type" type="v1.0:GearboxTransmissionTypeType"/>
@@ -801,7 +804,7 @@
 			<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
 			<xs:element name="PowerTakeOff" type="xs:boolean" minOccurs="0"/>
 		</xs:sequence>
-	</xs:group>
+	</xs:complexType>
 	<xs:complexType name="EngineOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
