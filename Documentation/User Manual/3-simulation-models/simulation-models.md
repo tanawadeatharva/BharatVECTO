@@ -2,6 +2,7 @@
 
 In this chapter the used component models for the simulation are described.
 
+* [Supported Powertrain Architectures](#supported-powertrain-architectures)
 * [Powertrain and Components Structure](#powertrain-and-components-structure)
 * [Driver: Acceleration Limiting](#driver-acceleration-limiting)
 * [Driver: Look-Ahead Coasting](#driver-look-ahead-coasting)

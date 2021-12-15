@@ -46,7 +46,7 @@ SoC , Ri
 ~~~
 SoC , Ri-2 , Ri-10 , Ri-20
 0   , 0.04 , 0.06  , 0.08
-0   , 0.04 , 0.06  , 0.08
+100 , 0.04 , 0.06  , 0.08
 ~~~
 
 ##Battery Max Current Map (.vimax)

@@ -51,7 +51,9 @@ The electric motor's maximum drive and maximum recuperation curve can be overrid
 
 For hybrid electric vehicles the electric machine may provide additional torque to the powertrain and thus cause higher accelerations than a conventional vehicle. To limit such boosting by the electric motor. 
 
-The input is the additional torque the electric motor is allowed to boost in addition to the ICE over ICE speed. Note: this boosting torque has to be provided from 0 rpm up to the max. ICE speed. The angular speed refers to the gearbox input shaft.
+The input is the additional torque the electric motor is allowed to boost in addition to the ICE over ICE speed.
+
+*Note:* this boosting torque has to be provided from 0 rpm up to the max. ICE speed. The angular speed refers to the gearbox input shaft.
 
 
 ####Example 1: No boosting
@@ -64,13 +66,11 @@ If the electric motor shall not be allowed to provide additional torque beyond t
 
 ~~~
 n [rpm] , T_drive [Nm]
-0       , 300
-599     , 300
-600     , 0
+0       , 0
 2500    , 0
 ~~~
 
-For speeds below idle speed the propulsion torque limit is set to the electric motor's maximum torque so that the vehicle can drive off without the combustion engine. 
+For speeds below idle speed the full-load torque available from the ICE equals the ICE full-load torque at engine idling speed due to the modeling of the clutch behavior during vehicle starts.
 
 ####Example 2: 
 
@@ -80,9 +80,7 @@ In this example the electric motor is allowed to provide torque in addition to t
 
 ~~~
 n [rpm] , T_drive [Nm]
-0       , 300
-599     , 300
-600     , 100
+0       , 100
 2500    , 100
 ~~~
 

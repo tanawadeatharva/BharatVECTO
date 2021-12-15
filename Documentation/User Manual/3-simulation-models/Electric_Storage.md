@@ -23,7 +23,7 @@ $I_\textrm{disch,max} = \frac{U(\textrm{SoC})}{4 * R_i(\textrm{SoC})}$
 
 ####Time-dependent Internal Resistance
 
-If the internal resistance shall is provided for different pulse durations, the actual internal resistance is interpolated between the provided resistance values with the current pulse duration. No extrapolation is applied. For pulses below Ri_2, Ri_2 is applied, for pulse durations longer then Ri_20 (or Ri_120 if provided) this value is used. The pulse duration is reset every time the current changes its sign.
+If the internal resistance is provided for different pulse durations, the actual internal resistance is interpolated between the provided resistance values with the current pulse duration. No extrapolation is applied. For pulses below Ri_2, Ri_2 is applied, for pulse durations longer then Ri_20 (or Ri_120 if provided) this value is used. The pulse duration is reset every time the current changes its sign.
 
 ###Modular Battery System
 

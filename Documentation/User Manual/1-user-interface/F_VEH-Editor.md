@@ -166,9 +166,10 @@ However, it is possible that more than one electric machine is used at a certain
 
 The *Loss map EM ADC* can be used to consider the losses of a transmission step between drivetrain and electric machine or to consider losses of a summation gear. The loss map has the same format as for all other transmission components (see [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)). For simplicity or if no such transmission step is used it is possible to enter the efficiency directly (i.e., "1" if no transmission step is used).
 
-In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the tranmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters.
+In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the tranmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defeined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
-For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#foo) for details). This is only supported for batteries and **not** for SuperCaps.
+
+For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#ress) for details). This is only supported for batteries and **not** for SuperCaps.
 
 **Double-click** an entry to edit.
 
@@ -185,20 +186,35 @@ In the REESS Dialog the battery file itself and how it is connected to the elect
 
 ![](pics/VehicleForm_TorqueLimits.png)
 
-On this tab different torque limits can be applied at the vehicle level. 
+On this tab different torque limits can be applied at the vehicle level. For details which limits are applicable and who the limits are applied in the simulation [see here](#torque-and-speed-limitations).
 
 First, the maximum torque of the ICE may be limited for certain gears (see [Engine Torque Limitations](#torque-and-speed-limitations)).
 In case that the gearbox' maximum torque is lower than the engine's maximum torque or to model certain features like Top-Torque (where in the highest gear more torque is available) it is possible to limit the engine's maximum torque depending on the engaged gear. 
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
 
 ##Vehicle Editor -- ADAS Tab
 
 ![](pics/VehicleForm_ADAS.png)
 
 On the ADAS tab, the advanced driver assistant systems present in the vehicle can be selected.  See [ADAS - Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [ADAS - EcoRoll](#advanced-driver-assistant-systems-eco-roll), and [ADAS - Predictive Cruise Control](#advanced-driver-assistant-systems-predictive-cruise-control)
+
+The following table describes which ADAS technology can be used and is supported for different powertrain architectures (X: supported, O: optional, -: not supported):
+
+| ADAS Technology \ Powertrain Architecture  | Conventional   | HEV   | PEV   |
+| ------------------------------------------ | -------------- | ----- | ----- |
+| Engine Stop/Start                          | X              | X     | -     |
+| EcoRoll Without Engine Stop                | X              | -     | -     |
+| EcoRoll with Engine Stop                   | X              | -     | -     |
+| Predictive Cruise Control                  | X              | X     | X     |
+| APT Gearbox EcoRoll Release Lockup Clutch  | O              | -     | -     |
+
+* Engine Stop/Start not allowed for PEV
+* EcoRoll for HEV always with ICE off
+* For PEV no clutch for disconnecting the EM present, thus no EcoRoll foreseen (very low drag of EM in any case)
+* Inputs for EcoRoll possible in GUI, but no effect in simulation
 
 
 ##Vehicle Editor -- PTO Tab

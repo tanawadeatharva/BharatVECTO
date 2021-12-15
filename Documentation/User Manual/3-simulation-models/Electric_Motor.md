@@ -8,7 +8,7 @@ The electric motor is modeled by basically 4 map files:
  - Drag curve (i.e., the motor is not energized) over motor speed
  - Continuous torque ($T_\textrm{cont}$)
  - Engine speed for continuous torqe ($n_\textrm{T,cont}$)
- - Overload torque ($T_\textrm{ovl})
+ - Overload torque ($T_\textrm{ovl}$)
  - Engine speed for overload torque  ($n_\textrm{T,ovl}$)
  - Maximum overload time ($t_\textrm{ovl}$)
 
@@ -63,7 +63,7 @@ $P_\textrm{el}(n_\textrm{em}, T_\textrm{em}) = \textrm{Delaunay}_\textrm{EM-Map}
 
 The electric machine can be overloaded for a certain period. In addition to the maximum drive and generation torque (which already is in overload condition) the mechanical power the electric machine can generate is required.
 
-The basic principal of the thermal de-rating is as follows: based on the continuous power and the angular velocity for the continuous power as well as the maximum overload time a thermal energy buffer is calculated. During the simulation the difference between the current losses in the electric machine and the losses at the continuous power operating point are integrated over time. If this value reaches the capacity of the thermal energy buffer the electric machine can only deliver the specified continuous power until the thermal energy buffer goes below a certain.
+The basic principal of the thermal de-rating is as follows: based on the continuous power and the angular velocity for the continuous power as well as the maximum overload time a thermal energy buffer is calculated. During the simulation the difference between the current losses in the electric machine and the losses at the continuous power operating point are integrated over time. If this value reaches the capacity of the thermal energy buffer the electric machine can only deliver the specified continuous power until the thermal energy buffer goes below a certain threshold.
 
 
 $E_\textrm{th,buf} = (P_\textrm{loss,ovl} - P_\textrm{loss,cont}) \cdot t_\textrm{ovl}$
@@ -79,5 +79,5 @@ $E_{\textrm{ovl,} i + 1} = E_{\textrm{ovl,} i} + (P_\textrm{loss, i} - P_\textrm
 $P_\textrm{loss, i} = T_\textrm{em, mech} \cdot n_\textrm{em} - P_\textrm{map, el}(T_\textrm{em, mech}, n_\textrm{em})$
 
 
-If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous power until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by a certain factor. Then the maximum torque is available again.
+If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous power until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by the thermal overload recovery factor. Then the maximum torque is available again.
 
