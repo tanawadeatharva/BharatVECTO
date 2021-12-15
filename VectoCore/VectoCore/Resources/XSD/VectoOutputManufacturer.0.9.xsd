@@ -29,6 +29,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -49,6 +50,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -69,6 +71,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -210,6 +213,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -230,6 +234,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -250,6 +255,7 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -843,13 +849,13 @@
 			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="AngledriveGroup">
+	<xs:complexType name="AngledriveType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType"/>
 			<xs:element name="AngledriveRatio" type="v1.0:AngledriveRatioType"/>
 		</xs:sequence>
-	</xs:group>
+	</xs:complexType>
 	<xs:group name="AerodynamicsGroup">
 		<xs:sequence>
 			<xs:element name="Model" type="v1.0:ModelType"/>
