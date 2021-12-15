@@ -6,7 +6,7 @@
 
 The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and masses.
 
-The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The third tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the fourth tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The fifth tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The last tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road speepers with dedicated PTO activation either during driving or during standstill. 
+The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The third tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the fourth tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The fifth tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The last tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
 
 ###Relative File Paths
 
@@ -168,7 +168,7 @@ The *Loss map EM ADC* can be used to consider the losses of a transmission step 
 
 In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the tranmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters.
 
-For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a string identifier need to be specified. Battery packs on the same string are connected in series (e.g., two different battery packs on string nuber 1 are in series) while all strings are then connected in parallel (see [Battery Model](#foo) for details). This is only supported for batteries and **not** for SuperCaps.
+For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#foo) for details). This is only supported for batteries and **not** for SuperCaps.
 
 **Double-click** an entry to edit.
 
@@ -176,7 +176,7 @@ For the electric energy storage multiple battery packs can be configured either 
 : ![addcycle](pics/plus-circle-icon.png) Add REESS (.vbat)
 : ![remcycle](pics/minus-circle-icon.png) Remove the selected REESS from the list
 
-In the REESS Dialog the battery file itself and how it is connected to the electric system (i.e, the string identifier and number of packs used) can be modified.
+In the REESS Dialog the battery file itself and how it is connected to the electric system (i.e, the stream identifier and number of packs used) can be modified.
 
 ![](pics/BatteryPackDialog.png)
 
@@ -192,7 +192,7 @@ In case that the gearbox' maximum torque is lower than the engine's maximum torq
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., electric motor plus combusion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
 
 ##Vehicle Editor -- ADAS Tab
 

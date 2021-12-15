@@ -21,7 +21,7 @@ In case you do not have execute permissions, please ask your system administrato
 
 If the ExecutionMode is set to `install` (this is also possible when running VECTO from an arbitrary directory), VECTO does not write its configuration files and log files to the application directory but to the directories `%APPDATA%` and `%LOCALAPPDATA%` (usually `C:\Users\<username>\AppData\Roaming` and `C:\Users\<username>\AppData\Local`).
 
-**Important:** If VECO is run from a directory without write permissions it is necessary that you copy the generic VECTO models distributed with VECTO to a location where you have write permissions or set the output path to a directory with write permissions (see the [Options in the main window](#main-form)).
+**Important:** If VECTO is run from a directory without write permissions it is necessary that you copy the generic VECTO models distributed with VECTO to a location where you have write permissions or set the output path to a directory with write permissions (see the [Options in the main window](#main-form)).
 
 
 User Manual
