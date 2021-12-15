@@ -13,6 +13,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 			PEV_DownshiftMinSpeedFactor = 0.1;
 			PEV_TargetSpeedBrakeNorm = 0.7;
 			PEV_DeRatedDownshiftSpeedFactor = 1;
+			PEV_DownshiftSpeedFactor = 1;
 		}
 
 		public MeterPerSecond StartVelocity { get; internal set; }
@@ -109,6 +110,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public double[] LoadStageThresoldsDown { get; set; }
 		public double[][] ShiftSpeedsTCToLocked { get; set; }
 		public double PEV_TargetSpeedBrakeNorm { get; set; }
+
+		public double PEV_DownshiftSpeedFactor { get; set; }
 		public double PEV_DeRatedDownshiftSpeedFactor { get; set; }
 		public double PEV_DownshiftMinSpeedFactor { get; set; }
 	}
