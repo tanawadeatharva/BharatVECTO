@@ -90,7 +90,7 @@ Torque reserve
 :   The minimal torque reserve which has to be provided after a gearshift. Only used for MT transmissions.
 
 Minimum time between gearshifts
-:   Defines the time interval between two consecutive gearshifts. Has to be greater than 0. This time interval is ingored if the engine speed gets too high or too low.
+:   Defines the time interval between two consecutive gearshifts. Has to be greater than 0. This time interval is ignored if the engine speed gets too high or too low.
 
 ####Shift Strategy Parameters
 

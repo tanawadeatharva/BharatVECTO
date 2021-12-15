@@ -63,7 +63,7 @@ The list contains the pre-defined auxiliaries where the concrete technology for 
 
 <div class="engineering">
 Auxiliaries
-:	In Engineerin Mode the auxiliary power demand can be defined in three ways. 
+:	In Engineering Mode the auxiliary power demand can be defined in three ways. 
 
 The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
 

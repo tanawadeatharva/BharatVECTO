@@ -13,7 +13,7 @@ The power demand for the engine cooling fan depends on the selected technology o
 
 ###Steering Pump
 
-The power demand of the steering pump can either be electrical or mechanical. The actual demand depends on the selected technolgy, vehicle dimensions and number of steered axles.
+The power demand of the steering pump can either be electrical or mechanical. The actual demand depends on the selected technology, vehicle dimensions and number of steered axles.
 
 ###Pneumatic System
 

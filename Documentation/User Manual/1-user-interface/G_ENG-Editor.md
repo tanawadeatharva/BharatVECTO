@@ -72,7 +72,7 @@ If the engine is operated in dual-fuel mode, enabling the checkbox "Dual Fuel En
 
 ![](pics/EngineForm_WHR.png)
 
-In case the engine is equipped with a waste heat recovery system (WHR) the WHR type can be selected in the lower right part of the window. For WHR systems that generate mechanlical power that is directly delivered to the engine's crankshaft no further input is required - the WHR shall be considered in the fuel consumption map already. 
+In case the engine is equipped with a waste heat recovery system (WHR) the WHR type can be selected in the lower right part of the window. For WHR systems that generate mechanical power that is directly delivered to the engine's crankshaft no further input is required - the WHR shall be considered in the fuel consumption map already. 
 
 For WHR systems with electrical power output the generated electrical power needs to be provided in the [Fuel Consumption Map](#fuel-consumption-map-.vmap) of the primary fuel. 
 
