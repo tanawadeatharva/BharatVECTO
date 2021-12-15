@@ -1,16 +1,11 @@
 ##Gearbox Editor
 
-
-
 ![](pics/GearboxForm.png)
-
 
 ###Description
 
-
-
 The [Gearbox File (.vgbx)](#gearbox-file-.vgbx) defines all gearbox-related input parameters like gear ratios and transmission loss maps. 
-Furthermore, certain parameters for the gearshift strategy such as the gearshift lines can be provided (see [Gear Shift Model](#gearbox-gear-shift-model) for details).
+Furthermore, certain parameters for the gearshift strategy such as the gearshift lines can be provided (see [Gear Shift Model](#gear-shift-model) for details).
 
 
 ###Relative File Paths
@@ -52,22 +47,22 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 -   Gear **"Axle"** defines the ratio of the axle transmission / differential.
 -    **"Ratio"** defines the ratio between the input speed and output speed for the current gear. Must be greater than 0.
 -    **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map-.vtlm). <span class="engineering">Note: efficiency values are only allowed in engineering mode</span>
--    **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not allowed in [Declaration Mode](#declaration-mode). See [GearShift Model](#gearbox-gear-shift-model) for details.
--	 **"Max Torque"** defines the maximum allowed torque (if applicable) for a gear. It is used for limiting the engine's torque in certain gears. Note: in Declaration mode the [generic shift polygons](#gearbox-gear-shift-model) are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the [generic shift polygons](#gearbox-gear-shift-model)!
+-    **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not allowed in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
+-	 **"Max Torque"** defines the maximum allowed torque (if applicable) for a gear. It is used for limiting the engine's torque in certain gears. Note: in Declaration mode the [generic shift polygons](#gear-shift-model) are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the [generic shift polygons](#gear-shift-model)!
 
 
 ###Gear shift strategy parameters
 
 ![](pics/Vecto_ShiftStrategyParameters.svg)
 
-Some parameters influencing the gearshift behavior can be defined in the gearbox file. Therefore, the gearbox file has to be provided as input for the shift strategy parameters as well. See [Gearbox-TCU](#gearbox-tcu) for more details.
+Some parameters influencing the gearshift behavior can be defined in the gearbox file. Therefore, the gearbox file has to be provided as input for the shift strategy parameters as well. See [Gearbox-TCU](#gearshift-parameters-file-.vtcu) for more details.
 
 In addition, the gearshift polygon affects the gearshift behavior to a certain degree. The gearshift polygon can be defined individually for each gear. If no shift polygon is provided the declaration mode shift polygons for the selected transmission type are used.
 
 The gearshift strategy depends on the transmission type:
 
 Manual Transmission
-:   Shiftline based approach. The calculation of gearshift lines and the gearshift rules are [described here](#gearbox-mt-and-amt-gearshift-rules)
+:   Shiftline based approach. The calculation of gearshift lines and the gearshift rules are [described here](#shift-strategy-mt-gearshift-rules)
 
 Automated Manual Transmission - Conventional vehicle
 :   Efficiency shift. The calculation of gearshift lines and the gearshift rules are [described here](#shift-strategy-amt-gearshift-rules)
@@ -79,7 +74,7 @@ Automated Manual Transmission - Pure Electric vehicle
 :   Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#FFOOO)
 
 Automatic Transmission - Conventional vehicle
-:   Efficiency shift. The calculation of gearshift lines and the gearshift rules are [described here](#gearbox-at-gearshift-rules)
+:   Efficiency shift. The calculation of gearshift lines and the gearshift rules are [described here](#shift-strategy-apt-gearshift-rules)
 
 Automatic Transmission - Hybrid Electric vehicle
 :   Gearshift is handled by the hybrid controller. Shift lines (calculated in the same way as for conventional vehicles) are used as upper and lower boundary for allowed ICE operating points.
@@ -133,7 +128,7 @@ Max. Speed
 :   Defines the maximum input speed the torque converter can handle.
 
 Torque converter shift polygon
-:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#gearbox-at-gearshift-rules).
+:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#shift-strategy-apt-gearshift-rules).
 
 
 ###Torque Converter: Minimal acceleration after upshift

@@ -8,10 +8,10 @@
 
 The [job file (.vecto)](#job-file) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
 
--   Filepath to the [Vehicle File (.vveh)](#vehicle-editor) which defines the not-engine/gearbox-related vehicle parameters
+-   Filepath to the [Vehicle File (.vveh)](#vehicle-editor-general-tab) which defines the not-engine/gearbox-related vehicle parameters
 -   Filepath to the [Engine File (.veng)](#engine-editor) which includes full load curve(s) and the fuel consumption map
 -   Filepath to the [Gearbox File (.vgbx)](#gearbox-editor) which defines gear ratios and transmission losses
--   Filepath to the [Gearshift Parameters File (.vtcu)](#gearshift-parameters-file) which allows to override parameters of the [Effshift Gearshift Strategy](#gear-shift-model). The gearshift parameters cannot be edited via the graphical user interface. In case the default parameters shall be used either an empty .vtcu file ([see .vtcu](#gearshift-parameters-file)) or the gearbox file (.vgbx) can be provided. An example .vtcu file is provided [here](#gearshift-parameters-file)
+-   Filepath to the [Gearshift Parameters File (.vtcu)](#gearshift-parameters-file-.vtcu) which allows to override parameters of the [Effshift Gearshift Strategy](#gear-shift-model). The gearshift parameters cannot be edited via the graphical user interface. In case the default parameters shall be used either an empty .vtcu file ([see .vtcu](#gearshift-parameters-file-.vtcu)) or the gearbox file (.vgbx) can be provided. An example .vtcu file is provided [here](#gearshift-parameters-file-.vtcu)
 -   Auxiliaries
 -   Driver Assist parameters
 -   Driving Cycles (only in Engineering Mode)
@@ -35,7 +35,7 @@ VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is
 
 
 Filepath to the Vehicle File (.vveh)
-:	Files can be created and edited using the [Vehicle Editor](#vehicle-editor).
+:	Files can be created and edited using the [Vehicle Editor](#vehicle-editor-general-tab).
 
 Filepath to the Engine File (.veng)
 :	Files can be created and edited using the [Engine Editor](#engine-editor).
@@ -65,11 +65,11 @@ The list contains the pre-defined auxiliaries where the concrete technology for 
 Auxiliaries
 :	In Engineerin Mode the auxiliary power demand can be defined in three ways. 
 
-The first option is to define the power demand directly in the driving cycle in the column "Padd" (see (Driving Cycles)[#driving-cycles-.vdri]. This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
+The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
 
-The second option is to define a constant power demand over the whole cycle. The auxiliary power demand can be specified depending on whether the combustion engine is on or off and the vehicle is driving. The auxiliary power demand during engine-off phase is corrected in the (post-processing)[#engine-fuel-consumption-correction].
+The second option is to define a constant power demand over the whole cycle. The auxiliary power demand can be specified depending on whether the combustion engine is on or off and the vehicle is driving. The auxiliary power demand during engine-off phase is corrected in the [post-processing](#engine-fuel-consumption-correction).
 
-The third option is to use the bus-auxiliaries model. For details see the (Bus Auxiliaries model)[#bus-auxiliaries].
+The third option is to use the bus-auxiliaries model. For details see the [Bus Auxiliaries model](#bus-auxiliaries).
 </div>
 
 
@@ -84,16 +84,16 @@ Cycles
 :	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles-.vdri).
 
 <div class="declaration">
-	In Declaration Mode, the cycles to be simulated depend on the vehicle group. The cycles are listed in this window for reference.
+In Declaration Mode, the cycles to be simulated depend on the vehicle group. The cycles are listed in this window for reference.
 </div>
 
 <div class="engineering">
-	In Engineering Mode the cycles can be freely selected. All declaration cycles are provided in the Folder "Mission Profiles" and can be used or a custom cycle can be created and used.
+In Engineering Mode the cycles can be freely selected. All declaration cycles are provided in the Folder "Mission Profiles" and can be used or a custom cycle can be created and used.
 </div>
 
 **Double-click** an entry to open the file (see [File Open Command](#settings)).
-**Click** selected items to edit file paths.
 
+**Click** selected items to edit file paths.
 : ![addcycle](pics/plus-circle-icon.png) Add cycle (.vdri)
 : ![remcycle](pics/minus-circle-icon.png) Remove the selected cycle from the list
 
@@ -106,7 +106,7 @@ Cycles
 In this tab the driver assistance functions are enabled and parameterised. The parameters for overspeed, look-ahead coasting and driver acceleration can only be modified in Engineering Mode.
 
 Overspeed
-:	See [Overspeed](#overspeed) for details.
+:	See [Overspeed](#driver-overspeed) for details.
 
 Look-Ahead Coasting
 :	See [Look-Ahead Coasting](#driver-look-ahead-coasting) for details.
@@ -125,7 +125,7 @@ For details on the individual parameters see the corresponding section [Engine S
 
 ###Chart Area
 
-The chart area on the right shows the main vehicle parameters like HDV group and axle configuration if a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
+The chart area on the right shows the main vehicle parameters like HDV group and axle configuration if a valid [Vehicle File](#vehicle-editor-general-tab), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
 ###Controls
 
@@ -142,7 +142,7 @@ The chart area on the right shows the main vehicle parameters like HDV group and
 ![sendto](pics/export-icon.png) Send current file to Job List in [Main Form](#main-form)
 :	**Note:** The file will be sent to the Job List automatically when saved.
 
-![veh](pics/Veh.png) ***Open [Vehicle Editor](#vehicle-editor)***
+![veh](pics/Veh.png) ***Open [Vehicle Editor](#vehicle-editor-general-tab)***
 
 ![eng](pics/Eng.png) ***Open [Engine Editor](#engine-editor)***
 

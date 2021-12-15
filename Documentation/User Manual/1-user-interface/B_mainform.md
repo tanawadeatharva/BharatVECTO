@@ -101,7 +101,7 @@ Output values in vmod at beginning and end of simulation iterval
 
 ![tools](pics/Misc-Tools-icon.png) ***Tools***
 
-- **[Job](#job-editor), [Vehicle](#vehicle-editor), [Engine](#engine-editor), [Gearbox](#gearbox-editor) Editor**
+- **[Job](#job-editor), [Vehicle](#vehicle-editor-general-tab), [Engine](#engine-editor), [Gearbox](#gearbox-editor) Editor**
     - Opens the respective Editor
 - **Graph**
     -   Open a new [Graph Window](#graph-window)

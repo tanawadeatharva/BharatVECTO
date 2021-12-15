@@ -13,6 +13,7 @@ The hybrid control is located in the simulated power train right after the wheel
 * MaxSoC
 * TargetSoC
 * EquivalenceFactor
+* Cost Factor SoC Exponent $e$
 * AuxReserveTime
 * AuxReserveChargeTime
 
@@ -97,7 +98,7 @@ $C = \sum_{i \in  \textrm{Fuels}}{FC_{i} \cdot NCV_{i} \cdot dt} + f_{\textrm{eq
     If the battery's SoC is below the lower SoC threshold $\textrm{SoC}_{low}$ then $P_\textrm{Pen1}$ is set to 0.
 * $C_\textrm{Pen2}$ is a penalty considering idling costs of the combustion engine, currently set to 0.
 
-$f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (\textrm{SoC}_\textrm{max} - \textrm{SoC}_{min}}  \right)^5 + C_\textrm{SoC}$
+$f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (\textrm{SoC}_\textrm{max} - \textrm{SoC}_{min}}  \right)^e + C_\textrm{SoC}$
 
 $C_\textrm{SoC} = \left\{
 	\begin{array}{ll} 

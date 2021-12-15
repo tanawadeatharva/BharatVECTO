@@ -52,11 +52,14 @@ Fuel Consumption Map
 The input file (.vmap) file format is described [here](#fuel-consumption-map-.vmap).
 
 WHTC Correction Factors
-: <div class="declaration">
+: 
+
+<div class="declaration">
 The WHTC Correction Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#engine-fuel-consumption-calculation).
 
 The Cold/Hot Emission Balancing Factor is an additional correction factor that is used to correct the fuel consumption.
 </div>
+
 <div class="engineering">
 In engineering a single correction factor for correcting WHTC, Cold/Hot Balancing, ... can be specified. 
 </div>
@@ -109,3 +112,4 @@ The Chart Area shows the fuel consumption map and the selected full load curve. 
 :   If necessary the file path in the [VECTO Editor](#job-editor) will be updated.
 
 ![Cancel](pics/Cancel.png)***Cancel without saving***
+

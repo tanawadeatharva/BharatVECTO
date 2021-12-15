@@ -9,7 +9,7 @@ The battery model uses the following model parameters:
 - Minimum state of charge
 - Maximum state of charge
 - Voltage of the battery pack over state of charge
-- Internal resistance of the battery pack over state of charge. The internal resistance can either be constant over the pulse duration or depending on the length of the pulse duration
+- Internal resistance of the battery pack over state of charge. The internal resistance can either be constant over the pulse duration or depending on the length of the pulse duration (see [.vbatr Battery Internal Resistance](#battery-internal-resistance-file-.vbatr))
 
 The voltage curve over state of charge is described in [Battery Internal Voltage File (.vbatv)](#battery-internal-voltage-file-.vbatv) and the internal resistance curve over state of charge is described in [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatr). The file format of the maximum current map is described in [Battery Max Current Map (.vimax)](#battery-max-current-map-.vimax).
 

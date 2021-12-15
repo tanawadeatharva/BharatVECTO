@@ -1,3 +1,4 @@
+
 ##Rechargeable Electric Energy Storage Editor
 
 Two types of rechargeable electric energy storage can be configured in VECTO: either a battery pack or a super capacitor.
@@ -38,7 +39,7 @@ SoC Curve
 :   Battery internal voltage depending on the battery's state of charge (see [Battery Internal Voltage File (.vbatv)](#battery-internal-voltage-file-.vbatv))
 
 Internal Resistance Curve
-:   Defines the battery's internal resistance depending on its state of charge. The file must cover the SOC range from 0 to 100%! (see [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatv))
+:   Defines the battery's internal resistance depending on its state of charge. The file must cover the SOC range from 0 to 100%! (see [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatr))
 
 
 ####Chart Area

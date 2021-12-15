@@ -16,5 +16,5 @@ The following components are accounted as transmission components (see [Powertra
 
 * [Gearbox](#gearbox-editor)
 * Axle Gear (see [Gearbox](#gearbox-editor))
-* Angledrive (see [Vehicle](#vehicle-editor))
+* Angledrive (see [Vehicle](#vehicle-editor-powertrain-tab))
 

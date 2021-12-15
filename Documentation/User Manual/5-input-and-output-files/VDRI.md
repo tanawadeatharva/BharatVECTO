@@ -29,7 +29,7 @@ In Declaration Mode driving cycles are automatically chosen depending on vehicle
 ###Verification Test Cycle
 This kind of cycle is used for simulating vehicles defined in declaration mode (xml) on a real driving cycle.
 
-Header: **t>, v>, n\_eng>,n\_fan>, tq\_left>, tq\_right>, n\_wh\_left>, n\_wh\_right>***, fc>, gear>*
+Header: **t, v, n\_eng,n\_fan, tq\_left, tq\_right, n\_wh\_left, n\_wh\_right***, fc_<Fuel Type>, gear*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -68,7 +68,7 @@ t [s]              , v [km/h]    , n_eng [rpm] , n_fan [rpm] , tq_left [Nm] , tq
 ###Engineering Mode: Target-Speed, Distance-Based Cycle
 This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.
 
-Header: **s>, v>, stop>***\[, Padd>]\[, grad>]\[, PTO>]\[, vair\_res>, vair\_beta>]*
+Header: **s, v, stop***\[, Padd]\[, grad]\[, PTO]\[, vair\_res, vair\_beta]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -80,11 +80,11 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 |-------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                                        |
 | **v**       | [km/h] | The target vehicle velocity.  Must be >= 0 km/h.                                                                                                                                                                                                                                                     |
-| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to v>. If during a stop phase the PTO cycle is activated, it is recommended to use at least 2 seconds of stop time (which gets split up: first half before the PTO cycle, second half after the PTO cycle). |
+| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to v. If during a stop phase the PTO cycle is activated, it is recommended to use at least 2 seconds of stop time (which gets split up: first half before the PTO cycle, second half after the PTO cycle). |
 | *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                          |
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                   |
 | *HW*        | [0/1]  | Marks highway sections (1) of the driving cycle. Predictive cruise control is only enabled on highway parts of the cycle                                                                                                                                                                             |
-| *PTO*       | [0/1/2/3]  | "0"=disabled, "1"=PTO active during standstill, "2"=PTO active during driving with PTO power from driving cycle, "3"=PTO active during driving, separate time-based PTO cycle. If at a vehicle stop (defined by target velocity=0) "1" is specified, the PTO cycle as specified in the *.vptoc–File is simulated. This is described in the [PTO Simulation Model](#pto)  The PTO activation is added to the simulation time in the middle of the stopping time as defined by the cycle parameter "stop". The PTO Cycle can be specified in the [**Vehicle Editor**](#vehicle-editor). When PTO is activated it is recommended to use at least 2 seconds as stop time. |
+| *PTO*       | [0/1/2/3]  | "0"=disabled, "1"=PTO active during standstill, "2"=PTO active during driving with PTO power from driving cycle, "3"=PTO active during driving, separate time-based PTO cycle. If at a vehicle stop (defined by target velocity=0) "1" is specified, the PTO cycle as specified in the *.vptoc–File is simulated. This is described in the [PTO Simulation Model](#pto)  The PTO activation is added to the simulation time in the middle of the stopping time as defined by the cycle parameter "stop". The PTO Cycle can be specified in the [**Vehicle Editor**](#vehicle-editor-pto-tab). When PTO is activated it is recommended to use at least 2 seconds as stop time. |
 | *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                               |
 | *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                              |
 | *P_PTO*     | [kW]   | Auxiliary power applied for PTO activation mode 2 (PTO active during drive, PTO demand defined in cycle)
@@ -103,7 +103,7 @@ s [m]              , v [km/h]    , stop [s]    , grad [%]    , Padd [kW] |
 This driving cycle defines the actual measured speed over time. Vecto tries to simulate the vehicle model using this speed as the actual vehicle speed.
 Due to differences in the real and simulated shift strategies a small difference in speed can occur, but Vecto immediately tries to catch up after the gear is engaged again.
 
-Header: **t>, v>***\[, grad>]\[, Padd>]\[, vair\_res>, vair\_beta>\]*
+Header: **t, v***\[, grad]\[, Padd]\[, vair\_res, vair\_beta\]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -133,7 +133,7 @@ This driving cycle defines the actual measured speed of the vehicle, the gear, a
 It overrides the shift strategy of Vecto and also directly sets the engine speed.
 
 
-Header: **t>, v>, gear>***\[, tc\_active>, grad>]\[, Padd>]\[, vair\_res>, vair\_beta>]\[, Aux\_ID>\]*
+Header: **t, v, gear***\[, tc\_active, grad]\[, Padd]\[, vair\_res, vair\_beta]\[, Aux\_ID\]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -162,7 +162,7 @@ t [s]              , v [km/h]    , gear [-]    , grad [%]    , Padd [kW]
 ###Engineering Mode: Pwheel (SiCo), Time-Based
 This driving cycle defines the power measured at the wheels over time. Vecto tries to simulate the vehicle with this power requirement.
 
-Header: **t>, Pwheel>, gear>, n>***\[, Padd>]*
+Header: **t, Pwheel, gear, n***\[, Padd]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -189,7 +189,7 @@ t [s]              , Pwheel [kW] , gear [-]    , n [rpm]     , Padd [kW]
 
 This driving cycle directly defines the engine's power or torque at the output shaft over time. Vecto adds the engine's inertia to the given power demand and simulates the engine.
 
-Header: **t>, n>, (Pe>|Me>)***\[, Padd>]*
+Header: **t, n, (Pe|Me)***\[, Padd]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".

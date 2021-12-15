@@ -158,7 +158,7 @@ Three options are available:
 
 ![](pics/VECTO_VehicleEditor_ParHyb_El.png)
 
-For hybrid vehicles and battery electric vehicles the input elements on the *electric components* tab are enabled. Here the component file for the eletric motor and battery pack can be loaded or created (see [Electric Motor Editor](#electric-motor-editor), [Electric Energy Storage Editor](#electric-energy-storage-editor))
+For hybrid vehicles and battery electric vehicles the input elements on the *electric components* tab are enabled. Here the component file for the eletric motor and battery pack can be loaded or created (see [Electric Motor Editor](#electric-motor-editor), [Electric Energy Storage Editor](#rechargeable-electric-energy-storage-editor))
 
 The position where the electric machine is positioned in the powertrain can be selected. It is possible that the electric machine is connected to the powertrain via a fixed gear ratio.
 At the moment electric machines are supported to be present at a single position only. It is not possible to have an electric motor at position P2 and another at position P4!
@@ -171,6 +171,7 @@ In case of a P2.5 configuration (the electric motor is connected to an internal 
 For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a string identifier need to be specified. Battery packs on the same string are connected in series (e.g., two different battery packs on string nuber 1 are in series) while all strings are then connected in parallel (see [Battery Model](#foo) for details). This is only supported for batteries and **not** for SuperCaps.
 
 **Double-click** an entry to edit.
+
 **Click** selected item.
 : ![addcycle](pics/plus-circle-icon.png) Add REESS (.vbat)
 : ![remcycle](pics/minus-circle-icon.png) Remove the selected REESS from the list
@@ -186,12 +187,12 @@ In the REESS Dialog the battery file itself and how it is connected to the elect
 
 On this tab different torque limits can be applied at the vehicle level. 
 
-First, the maximum torque of the ICE may be limited for certain gears (see [Engine Torque Limitations](#engine-torque-and-engine-speed-limitations)).
+First, the maximum torque of the ICE may be limited for certain gears (see [Engine Torque Limitations](#torque-and-speed-limitations)).
 In case that the gearbox' maximum torque is lower than the engine's maximum torque or to model certain features like Top-Torque (where in the highest gear more torque is available) it is possible to limit the engine's maximum torque depending on the engaged gear. 
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., electric motor plus combusion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Propulsion Torque Limit File](#propulsion-torque-limit-file-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., electric motor plus combusion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
 
 ##Vehicle Editor -- ADAS Tab
 

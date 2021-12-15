@@ -11,7 +11,6 @@ Refers to other files:
 * [Engine (VENG)](#engine-file-.veng)
 * [Gearbox (VGBX)](#gearbox-file-.vgbx)
 * [Driving Cycle (VDRI)](#driving-cycles-.vdri)
-* [Auxiliary Input File (VAUX)](#auxiliary-input-file-.vaux)
 * [Acceleration Limiting (VACC)](#acceleration-limiting-input-file-.vacc)
 
 
