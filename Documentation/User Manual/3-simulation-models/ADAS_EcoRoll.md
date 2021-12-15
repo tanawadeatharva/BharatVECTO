@@ -184,8 +184,9 @@ If the vehicle enters a potential PCC section, the following calculations are pe
 1. Current vehicle position: $x$
 2. Position in the cycle where the PCC event shall be finished: $x_{end} = min(x + d_{preview}, x_{end, max})$
 3. Estimation of coasting resistance force:  
-$F_{coast}(x) = \frac{P_{roll}(x) + P_{aero}(x, v_{target}) + P_{ice, drag}}{v_{target}}$  
-$P_{ice, drag}$ is set to 0 in case the vehicle is equipped with eco-roll
+$F_{coast}(x) = \frac{P_{roll}(x) + P_{aero}(x, v_{target}) + P_{ice, drag} + P_{em, drag}}{v_{target}}$  
+$P_{ice, drag}$ is set to 0 in case the vehicle is equipped with eco-roll and pure electric vehicles.
+$P_{em,drag}$ is set to 0 for conventional vehicles.
 4. Energy demand/gain for coasting from the vehicle's current position to the point with the minimum velocity $x_{v_{low}}$:  
 $E_{coast, v_{low}} = F_{coast} \cdot (x_{v_{low}} - x)$
 5. Energy demand/gain for coasting from the vehicle's current position to the end of the PCC event $x_{end}$:  
@@ -197,9 +198,13 @@ $E(x_{end}) = m \cdot g \cdot h(x_{end}) + \frac{m \cdot v_{target}(x_{end})^2}{
 
 **PCC State Diagram**
 
-The following state diagram depicts when a PCC event is activated during the simulation.
+The following state diagram depicts when a PCC event is activated during the simulation for conventional vehicles.
 
-![](pics/PredictiveCruiseControlActivation.svg)
+![](pics/PredictiveCruiseControl_Conventional.png)
+
+The following state diagram depicts the activation of a PCC event during the simulation for xEV vehicles.
+
+![](pics/PredictiveCruiseControl_xEV.png)
 
 The fuel consumption of vehicles equipped with PCC option 1 & 2 and eco-roll with engine stop/start will be corrected for engine stop/start as described in [engine stop/start correction](#engine-fuel-consumption-correction).
 
