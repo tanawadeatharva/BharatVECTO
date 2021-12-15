@@ -708,6 +708,13 @@ Public Class Gearbox
         Return Nothing
     End Get
     End Property
+
+    Public ReadOnly Property PEV_DownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftSpeedFactor
+        get
+            return nothing
+        End Get
+    End Property
+
     Public ReadOnly Property PEV_DeRatingDownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DeRatingDownshiftSpeedFactor
     get
         return Nothing
