@@ -19,4 +19,4 @@ with:
 | g           | [m/s²] | Earth gravity acceleration (constant = 9.81, Vecto 3.x: 9.80665)                                                 | [constant model parameter] |
 | β           | [-]    | Constant parameter = 0.9                                                                                         | [constant model parameter] |
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the [Vehicle-Editor](#vehicle-editor).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the [Vehicle-Editor](#vehicle-editor-general-tab).
