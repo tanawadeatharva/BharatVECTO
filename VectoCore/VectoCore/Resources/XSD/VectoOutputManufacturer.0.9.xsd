@@ -27,6 +27,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -45,6 +46,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -63,6 +65,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -80,6 +83,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -114,6 +118,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -131,6 +136,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -146,7 +152,9 @@
 					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
 					<xs:element name="Components">
 						<xs:complexType>
-							<xs:sequence/>
+							<xs:sequence>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
+							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="Results"/>
@@ -176,7 +184,9 @@
 					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
 					<xs:element name="Components">
 						<xs:complexType>
-							<xs:sequence/>
+							<xs:sequence>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
+							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="Results"/>
@@ -194,6 +204,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -212,6 +223,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -230,6 +242,7 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -247,6 +260,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -281,6 +295,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -298,6 +313,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -311,7 +327,13 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Components"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="Result"/>
 				</xs:sequence>
 			</xs:extension>
@@ -333,7 +355,13 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Components"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Retarder" type="mrf:RetarderType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="Result"/>
 				</xs:sequence>
 			</xs:extension>
@@ -840,12 +868,12 @@
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="RetarderGroup">
+	<xs:complexType name="RetarderType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 		</xs:sequence>
-	</xs:group>
+	</xs:complexType>
 	<xs:complexType name="TransmissionType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
