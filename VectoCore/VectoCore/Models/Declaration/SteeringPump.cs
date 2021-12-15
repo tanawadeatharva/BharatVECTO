@@ -121,11 +121,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public SteeringPumpValues<double> Lookup(string tech, MissionType mission)
 			{
 				var values = base.Lookup(tech);
-				if (tech == "Electric") {
-					var alternator = new ElectricSystem.Alternator();
-					values.Banking /= alternator.Lookup(mission);
-					values.Steering /= alternator.Lookup(mission);
-				}
 				return values;
 			}
 
