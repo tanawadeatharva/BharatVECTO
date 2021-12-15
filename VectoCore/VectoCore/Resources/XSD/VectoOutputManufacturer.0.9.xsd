@@ -129,7 +129,9 @@
 					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
 					<xs:element name="Components">
 						<xs:complexType>
-							<xs:sequence/>
+							<xs:sequence>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="Results"/>
@@ -191,6 +193,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -208,6 +211,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -225,6 +229,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -289,7 +294,13 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Components"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Transmission" type="mrf:TransmissionType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="Result"/>
 				</xs:sequence>
 			</xs:extension>
