@@ -608,7 +608,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
 					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
 
-					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, nMax));
+					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, fullLoadCurve.NP80low));
 					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));
 
 				}

@@ -782,6 +782,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retVal.PEV_DeRatedDownshiftSpeedFactor = gsInputData.PEV_DeRatingDownshiftSpeedFactor.Value;
 			}
 
+			if (gsInputData.PEV_DownshiftSpeedFactor != null) {
+				retVal.PEV_DownshiftSpeedFactor = gsInputData.PEV_DownshiftSpeedFactor.Value;
+			}
+
 			if (gsInputData.PEV_TargetSpeedBrakeNorm != null) {
 				retVal.PEV_TargetSpeedBrakeNorm = gsInputData.PEV_TargetSpeedBrakeNorm.Value;
 			}

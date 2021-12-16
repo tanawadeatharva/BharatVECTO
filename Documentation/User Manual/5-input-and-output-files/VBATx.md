@@ -30,7 +30,8 @@ SOC , V
 This file contains the battery's internal resistance as function of the state of charge (SoC). The file must cover the SOC range from 0 to 100%! The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vbatr
-- Header: **SOC, R**
+- Header: **SOC, Ri** in case of pulse independent internal resistance
+- Header: **SoC, Ri-2, Ri-10, Ri-20** *,Ri-120*
 - Requires at least 2 data entries
 
 
@@ -42,6 +43,11 @@ SoC , Ri
 100 , 0.04
 ~~~
 
+~~~
+SoC , Ri-2 , Ri-10 , Ri-20
+0   , 0.04 , 0.06  , 0.08
+100 , 0.04 , 0.06  , 0.08
+~~~
 
 ##Battery Max Current Map (.vimax)
 

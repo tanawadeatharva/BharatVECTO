@@ -6,11 +6,11 @@ The final fuel consumption is corrected in a post-processing to reflect systems 
 
 As the energy demand of auxiliaries is modeled as an average power demand over the whole simulated cycle, the demand of certain auxiliaries during engine-off periods needs to be compensated during engine-on periods. This is done using the [Engine-Line approach](#engine-line-approach).
 
-During the simulation the combustion engine is allways off. In this phases the "missing" auxiliary demand is balanced in separate colums for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
+When either the driver model (eco-roll, engine stop/start) or the hybrid controller decides to turn off the combustion engine, it is fully off, i.e. the fuel consumption is 0 and no auxiliary power is provided. In this phases the "missing" auxiliary demand is balanced in separate colums for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
 
-A general goal is that the actual auxiliary demand matches the target auxiliary demand over the cycle. So in case the ICE is off, some systems still consume electric energy but no electric energy is created during ICE-off phases. Or in case of bus auxiliaries the total air demand is pre-calculated and thus leading to an average air demand over the cycle. During ICE-off phases, however, no compressed air is generated. This 'missing' compressed air is corrected in the post-processing.
+A general goal is that the actual auxiliary demand matches the target auxiliary demand over the cycle. So in case the ICE is off, some systems still consume electric energy but no electric energy is generated during ICE-off phases. Or in case of bus auxiliaries the total air demand is pre-calculated and thus leading to an average air demand over the cycle. During ICE-off phases, however, no compressed air is generated. This 'missing' compressed air is corrected in the post-processing.
 
-A utility factor (UF) considers that the ICE is not off in all cases. Therefore the fuel consumption for compensating the missing auxiliary demand consists of two parts. The first part considers the fuel consumption required for the 'missing' auxiliary demand if the ICE is really off. Here the according auxiliary energy demand is multiplied by the utility factor and the engine line. The second part considers the fuel consumption in case the ICE would not be switched off. Here the 'missing' auxiliary energy demand is multiplied by (1 - utility factor) and the engine line and the idle fuel consumption is added for time periods the ICE would be on.
+A utility factor (UF) considers that the ICE is not off in all cases. Therefore the fuel consumption for compensating the missing auxiliary demand consists of two parts. The first part considers the fuel consumption required for the 'missing' auxiliary demand if the ICE is really off. Here the according auxiliary energy demand is multiplied by the utility factor and the engine line. The second part considers the fuel consumption in case the ICE would not be turned off. Here the 'missing' auxiliary energy demand is multiplied by (1 - utility factor) and the engine line and the idle fuel consumption is added for time periods the ICE would be on.
 
 For the post-processing two different utility factors are considered. One for ICE-off phases during vehicle standstill and one for ICE-off phases during driving.
 
@@ -71,7 +71,7 @@ air demand is calculated with an estimated cycle driving time, the first step is
 The missing (or excessive) amout of air is transferred into mechanical energy demand using $k_\textrm{Air}$. This value depicts the delta energy demand for a certain delta compressed air.
 $k_\textrm{Air}$ is derived from two points. on the one hand the compressor runs in idle mode, applying only the drag load and producing no compressed air and the second point is that the compressor 
 is always on, applying the always-on mechanical power demand and generating the maximum possible amount of compressed air.
-The mechanical energy is then corrected using the engineline.
+The mechanical energy is then corrected using the [engineline](#engine-fuel-consumption-correction) (below).
 
 $\textrm{E\_busAux\_PS\_drag} = \sum_{\textrm{Nl\_busAux\_consumed}_i = \textrm{Nl\_busAux\_gen}_i}{\textrm{P\_busAux\_PS\_drag}\cdot dt}$
 
@@ -110,7 +110,7 @@ $$
 
 ####Bus Auxiliaries Correction -- Aux Heater
 
-The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the main fuel:
+The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the primary fuel:
 
 
 $E_\textrm{ice,waste heat} = \sum_\textrm{fuels} FC_\textrm{final,sum}(fuel) * NCV_\textrm{fuel}$

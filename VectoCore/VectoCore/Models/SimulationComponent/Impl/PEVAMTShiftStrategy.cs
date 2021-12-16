@@ -120,8 +120,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData = null)
 		{
+			if (electricMotorData == null) {
+				throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
+			}
+			var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
 			return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
-				null, shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve.RatedSpeed);
+				shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed, shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
 		}
 
 

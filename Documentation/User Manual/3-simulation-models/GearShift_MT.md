@@ -1,6 +1,6 @@
 ##Shift Strategy: MT Gearshift Rules
 
-This section describes the gearshift rules for manual transmission models. When a gearshift is triggered, gears may be skipped for (see [Gearbox: Gear Shift Model](#gearbox-gear-shift-model)). 
+This section describes the gearshift rules for manual transmission models. When a gearshift is triggered, gears may be skipped for (see [Gearbox: Gear Shift Model](#gear-shift-model)). 
 
 ###Shift Polygons in Declaration Mode (According to ACEA Whitebook 2016)
 
