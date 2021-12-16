@@ -906,7 +906,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
-				Inertia = motorData.Inertia,
+				Inertia = motorData.Inertia * count,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
 				OverloadTorque = (motorData.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
