@@ -30,6 +30,9 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -51,6 +54,9 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -72,6 +78,9 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -90,6 +99,9 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -107,6 +119,8 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -125,6 +139,9 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -144,6 +161,9 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -161,6 +181,9 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -176,7 +199,10 @@
 					<xs:element name="Vehicle" type="mrf:PEV-LorryVehicleOutputType"/>
 					<xs:element name="Components">
 						<xs:complexType>
-							<xs:sequence/>
+							<xs:sequence>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="Results"/>
@@ -193,6 +219,9 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
+								<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -214,6 +243,8 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -235,6 +266,8 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -256,6 +289,8 @@
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 								<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -274,6 +309,8 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -291,6 +328,7 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -309,6 +347,8 @@
 							<xs:sequence>
 								<xs:element name="Engine" type="mrf:EngineOutputType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -328,6 +368,8 @@
 								<xs:element name="Transmission" type="mrf:TransmissionType"/>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
 								<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -345,6 +387,8 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -358,7 +402,13 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Components"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="Result"/>
 				</xs:sequence>
 			</xs:extension>
@@ -373,6 +423,8 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Retarder" type="mrf:RetarderType"/>
+								<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
+								<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -383,17 +435,53 @@
 	</xs:complexType>
 	<xs:complexType name="ConventionalCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Airdrag" type="mrf:AirdragType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Airdrag" type="mrf:AirdragType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:PEV-CompletedBusVehicleOutputType"/>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Airdrag" type="mrf:AirdragType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Results"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ExemptedLorryManufacturerOutputDataType">
@@ -841,22 +929,21 @@
 			<xs:element name="DigestValue" type="xs:token"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="AxleGroup">
+	<xs:complexType name="AxlesType">
+		<xs:sequence>
+			<xs:element name="Axle" type="mrf:AxleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AxleType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="CertificationMethod" type="v1.0:AxlegearCertificationOptionType"/>
 			<xs:element name="AxleType" type="v1.0:AxleTypeType"/>
 			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
 		</xs:sequence>
-	</xs:group>
-	<xs:complexType name="AngledriveType">
-		<xs:sequence>
-			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType"/>
-			<xs:element name="AngledriveRatio" type="v1.0:AngledriveRatioType"/>
-		</xs:sequence>
+		<xs:attribute name="Count" type="xs:int"/>
 	</xs:complexType>
-	<xs:group name="AerodynamicsGroup">
+	<xs:complexType name="AirdragType">
 		<xs:sequence>
 			<xs:element name="Model" type="v1.0:ModelType"/>
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
@@ -864,7 +951,14 @@
 			<xs:element name="CdxA" type="v1.0:AirdragCdxAType"/>
 			<xs:element name="DigestValue" type="xs:token"/>
 		</xs:sequence>
-	</xs:group>
+	</xs:complexType>
+	<xs:complexType name="AngledriveType">
+		<xs:sequence>
+			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
+			<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType"/>
+			<xs:element name="AngledriveRatio" type="v1.0:AngledriveRatioType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:group name="PrimaryBusGeneralVehicleOutputGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
