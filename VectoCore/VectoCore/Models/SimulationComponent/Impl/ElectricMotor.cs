@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
 			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
-				Log.Error("Overload buffer for thermal de-rating is negative! Please check electric motor data!");
+				Log.Error("Overload buffer for thermal de-rating is zero or negative! Please check electric motor data!");
 			}
 		}
 
