@@ -38,6 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Battery TestContainerBattery;
 		private BatterySystem TestContainerBatterySystem;
 		private SuperCap TestContainerSuperCap;
+		private ElectricMotor TestContainerElectricMotor;
 
 		private VoltageLevelData VoltageLevels;
 		private SI TransmissionRatio;
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private Dictionary<uint, ShiftPolygon> DeRatedShiftpolygons;
 
 
-        public static string Name => "AMT - EffShift (BEV)";
+		public static string Name => "AMT - EffShift (BEV)";
 
 
 		protected bool DriveOffStandstill { get; set; }
@@ -98,6 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
 			TestContainerSuperCap = TestContainer.BatteryInfo as SuperCap;
+			TestContainerElectricMotor =
+				TestContainer.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
@@ -407,7 +410,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var resp = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, nextGear);
 
 					inAngularVelocity = resp.ElectricMotor.AngularVelocity;
-					inTorque = resp.ElectricMotor.PowerRequest / inAngularVelocity;
+					inTorque = resp.ElectricMotor.PowerRequest / resp.ElectricMotor.AvgDrivetrainSpeed;
+
+					if (IsAboveUpShiftCurve(nextGear, inTorque, inAngularVelocity, resp.ElectricMotor.DeRatingActive)) {
+						nextGear = GearList.Successor(nextGear);
+						break;
+					}
 
 					var maxTorque = VectoMath.Min(-resp.ElectricMotor.MaxDriveTorque,
 						!nextGear.Equals(GearList.First())
@@ -421,6 +429,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
+					
 					nextGear = GearList.Successor(nextGear);
 					break;
 				}
@@ -567,6 +576,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
 			}
 			TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
+
+			//var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
+			TestContainerElectricMotor.ThermalBuffer =
+				(DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor).ThermalBuffer;
+			TestContainerElectricMotor.DeRatingActive =
+				(DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor).DeRatingActive;
 
 			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
 			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
