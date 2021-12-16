@@ -36,6 +36,9 @@ namespace TUGraz.VectoCore.OutputData
 				SetBusAuxMissingPSWork(modData, runData, r);
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
+				if (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.None) {
+					workBusAuxES = 0.SI<WattSecond>();
+				}
 				r.WorkBusAuxESMech = workBusAuxES /
 									runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
 									runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
