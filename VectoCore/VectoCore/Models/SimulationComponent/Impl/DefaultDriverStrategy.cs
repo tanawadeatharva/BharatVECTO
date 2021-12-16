@@ -286,8 +286,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void HandlePCC(Second absTime, MeterPerSecond targetVelocity)
 		{
-			var dataBus = DataBus;
-			var vehicleSpeed = dataBus.VehicleInfo.VehicleSpeed;
+			var vehicleSpeed = DataBus.VehicleInfo.VehicleSpeed;
 
 			UpdatePCCState(targetVelocity);
 
@@ -318,12 +317,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					switch (ADAS.EcoRoll) {
 						case EcoRollType.None: break;
 						case EcoRollType.WithoutEngineStop:
-							dataBus.GearboxCtl.DisengageGearbox = true;
+							DataBus.GearboxCtl.DisengageGearbox = true;
 							break;
 						case EcoRollType.WithEngineStop:
-							dataBus.GearboxCtl.DisengageGearbox = true;
-							if (dataBus.EngineCtl != null) {
-								dataBus.EngineCtl.CombustionEngineOn = false;
+							DataBus.GearboxCtl.DisengageGearbox = true;
+							if (DataBus.EngineCtl != null) {
+								DataBus.EngineCtl.CombustionEngineOn = false;
 							}
 							break;
 						default: throw new ArgumentOutOfRangeException();
@@ -333,12 +332,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case PCCStates.OutsideSegment:
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
-					if (dataBus.GearboxCtl != null) {
-						dataBus.GearboxCtl.DisengageGearbox = false;
+					if (DataBus.GearboxCtl != null) {
+						DataBus.GearboxCtl.DisengageGearbox = false;
 					}
 
-					if (dataBus.EngineCtl != null) {
-						dataBus.EngineCtl.CombustionEngineOn = true;
+					if (DataBus.EngineCtl != null) {
+						DataBus.EngineCtl.CombustionEngineOn = true;
 					}
 					break;
 				default: throw new ArgumentOutOfRangeException();
