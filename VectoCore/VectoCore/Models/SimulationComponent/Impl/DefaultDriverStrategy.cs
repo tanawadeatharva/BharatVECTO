@@ -203,8 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandlePCC(absTime, targetVelocity);
 			}
 			if (ADAS.EcoRoll != EcoRollType.None &&
-				(pccState == PCCStates.OutsideSegment || pccState == PCCStates.WithinSegment)
-			) {
+				(pccState == PCCStates.OutsideSegment || pccState == PCCStates.WithinSegment)) {
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
@@ -962,7 +961,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						// unfortunately, this causes issues for P1 hybrid configurations with AT gearbox in torque converter gear. If the EM propells, the torque
 						// converter cannot find an operating point close to the drag point. therefore, do not announce the different action except for driving off from
 						// standstill.
-						var overrideAction = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() 
+						var overrideAction = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
 											&& (DataBus.GearboxInfo.Gear.TorqueConverterLocked.HasValue && !DataBus.GearboxInfo.Gear.TorqueConverterLocked.Value)
 											&& (DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null || DataBus.VehicleInfo.VehicleStopped)
 							? DrivingAction.Accelerate
