@@ -36,6 +36,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+
+		[TestCase(1),
+		TestCase(2),
+		]
+		public void ElectricMotorModelDataTest(int count)
+		{
+			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
+			var dao = new EngineeringDataAdapter();
+			var electricMachine = new MockElectricMachinesInputData() {
+				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
+					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
+						ElectricMachine = inputData,
+						Count = count,
+						RatioADC = 1,
+						MechanicalTransmissionEfficiency = 1
+					}
+				}
+			};
+			var data = dao.CreateElectricMachines(electricMachine, null);
+			var emModelData = data.First().Item2;
+
+			Assert.AreEqual(0.15 * count, emModelData.Inertia.Value(), 1e-3);
+
+			Assert.AreEqual(2000, emModelData.ContinuousTorqueSpeed.AsRPM, 1e-3);
+			Assert.AreEqual(238.7323 * count, emModelData.ContinuousTorque.Value(), 1e-3);
+
+			Assert.AreEqual(334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullLoadDriveTorque(2000.RPMtoRad()).Value(), 1e-3);
+			Assert.AreEqual(-334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullGenerationTorque(2000.RPMtoRad()).Value(), 1e-3);
+
+			Assert.AreEqual(30 * count, emModelData.DragCurve.Lookup(2500.RPMtoRad()).Value(), 1e-3);
+
+			Assert.AreEqual(-14579 * count,
+				emModelData.EfficiencyData.VoltageLevels.First().EfficiencyMap
+					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), false).ElectricalPower.Value(),
+				1e-3);
+
+
+		}
+
 		[TestCase(100, 100, -1484.401151),
 		 TestCase(100, 30, -498.336701),
 		 TestCase(100, 300, -5058.393920),

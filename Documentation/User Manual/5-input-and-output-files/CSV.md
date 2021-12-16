@@ -32,17 +32,13 @@ Following files use the csv:
 - [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs)
 - [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)
 - [Torque Converter Characteristics (.vtcc)](#torque-converter-characteristics-.vtcc)
-- [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux)
 - [Driving Cycles (.vdri)](#driving-cycles-.vdri)
 - [Acceleration Limiting Input File (.vacc)](#acceleration-limiting-input-file-.vacc)
 - [Modal Results (.vmod)](#modal-results-.vmod)
 - [Summary Results (.vsum)](#summary-results-.vsum)
 
-**Notes:**
-The [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) uses a modified csv format with some special headers.
-
-
 ###Examples###
+
 ####Exampl 1: Acceleration Limiting File####
 ~~~
 v [km/h],acc [m/s^2]     ,dec [m/s^2]

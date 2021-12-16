@@ -780,6 +780,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retVal.PEV_DeRatedDownshiftSpeedFactor = gsInputData.PEV_DeRatingDownshiftSpeedFactor.Value;
 			}
 
+			if (gsInputData.PEV_DownshiftSpeedFactor != null) {
+				retVal.PEV_DownshiftSpeedFactor = gsInputData.PEV_DownshiftSpeedFactor.Value;
+			}
+
 			if (gsInputData.PEV_TargetSpeedBrakeNorm != null) {
 				retVal.PEV_TargetSpeedBrakeNorm = gsInputData.PEV_TargetSpeedBrakeNorm.Value;
 			}
@@ -902,7 +906,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
-				Inertia = motorData.Inertia,
+				Inertia = motorData.Inertia * count,
 				ContinuousTorque = motorData.ContinuousTorque * count,
 				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
 				OverloadTorque = (motorData.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,

@@ -343,6 +343,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double? PEV_TargetSpeedBrakeNorm { get; }
 
+		double? PEV_DownshiftSpeedFactor { get; }
 		double? PEV_DeRatingDownshiftSpeedFactor { get; }
 		double? PEV_DownshiftMinSpeedFactor { get; }
 	}

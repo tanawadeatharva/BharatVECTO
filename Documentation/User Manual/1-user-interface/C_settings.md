@@ -22,7 +22,7 @@ File Open Command
 
 <div class="engineering">
 Air Density \[kg/m³\]
-:	The Air Density is needed to calculate the air resistance together with the **Drag Coefficient** and the **Cross Sectional Area** (see [Vehicle Editor](#vehicle-editor)).
+:	The Air Density is needed to calculate the air resistance together with the **Drag Coefficient** and the **Cross Sectional Area** (see [Vehicle Editor](#vehicle-editor-general-tab)).
 
 This  setting is only used in Engineering mode. In Declaration mode the default value of 1.188 \[kg/m³\] is used.
 </div>

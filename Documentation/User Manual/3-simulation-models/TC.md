@@ -37,7 +37,7 @@ The torque converter characteristics must also be defined for speed ratios  grea
 <div class="declaration">
 In declaration mode, the torque converter for drag points is automatically appended by VECTO. Input data with a speed ratio &geq; 1 are skipped.
 
-For Power Split transmissions, where the torque converter characteristics already contains the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
+For Power Split transmissions, where the torque converter characteristics already includes the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
 
 $\nu_{PS} = \nu / ratio_i$
 

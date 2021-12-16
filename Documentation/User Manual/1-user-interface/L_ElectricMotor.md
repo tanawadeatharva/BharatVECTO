@@ -22,26 +22,35 @@ Make and Model
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
 
-Continuous Power \[W\]
-:    The nominal power the electric machine can provide continuously
+Continuous Torque \[Nm\]
+:    The nominal torque the electric machine can provide continuously
 
-Rated Speed (cont. Pwr) \[rpm\]
-:    Speed applied when determining the continuous power. Used for determining the continuous losses in the overload model
+Test Speed Continous Torque \[rpm\]
+:    Angular speed at which the continouos torque can be provided
 
-Peak Performance Time \[s\]
+Overload Torque \[Nm\]
+:    Maximum torque above the continuous torque the electric motor can provide for a certain time
+
+Test Speed Overload Torque \[rpm\]
+:    Angular speed at which the overload torque was measured
+
+Overload Duration \[s\]
 :    The time interval the electric machine can operate at its peak performance
 
 Thermal Overload Recovery Factor
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
-Max. Drive and Max. Generation Torque Curve
-:   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp))
-
 Drag Torque Curve
 :   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd))
 
+Max. Drive and Max. Generation Torque Curve
+:   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The max drive and max generation torque have to be provided for two different voltage levels.
+
 Electric Power Consumption Map
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo))
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels.
+
+Voltage Level Low/High
+:    Applicable voltage level for the electric power consumption map and max drive/generation torque curve
 
 
 

@@ -265,6 +265,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double? PEV_DownshiftSpeedFactor
+		{
+			get
+			{
+				if (Body["PEV_DownshiftSpeedFactor"] != null) {
+					return Body.GetEx<double>("PEV_DownshiftSpeedFactor");
+				}
+
+				return null;
+			}
+		}
+
 		public double? PEV_DeRatingDownshiftSpeedFactor
 		{
 			get

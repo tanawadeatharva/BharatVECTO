@@ -950,12 +950,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(fcModSum + fcPSAir + fcPSICEOffDriving + fcESS, f.FcFinal.Value(), 1e-6);
 		}
 
-		[TestCase(500, 0, 4000),
-		TestCase(500, 500, 4000),
-		TestCase(500, 0, 550)]
-		public void TestBusAuxSmartES_ModDataCorrection(double p_es_cons, double p_es_gen, double p_es_smartgen)
+		[TestCase(500, 0, 4000, AlternatorType.Conventional),
+		TestCase(500, 500, 4000, AlternatorType.Conventional),
+		TestCase(500, 0, 550, AlternatorType.Conventional),
+		TestCase(500, 0, 4000, AlternatorType.None),
+		TestCase(500, 500, 4000, AlternatorType.None),
+		TestCase(500, 0, 550, AlternatorType.None),
+		]
+		public void TestBusAuxSmartES_ModDataCorrection(double p_es_cons, double p_es_gen, double p_es_smartgen,
+			AlternatorType alternatorType)
 		{
-			var runData = GetRunData(true);
+			var runData = GetRunData(true, alternatorType: alternatorType);
 			runData.JobName = new StackTrace().GetFrame(0).GetMethod().Name + $"_{p_es_cons}_{p_es_gen}_{p_es_smartgen}";
 			var writer = new FileOutputWriter(".");
 			var modData = new ModalDataContainer(runData, writer, null) {
@@ -998,7 +1003,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.FCWHTCc] = fc;
 				modData[ModalResultField.FCFinal] = fc;
 
-				modData[ModalResultField.P_busAux_ES_generated] = P_ES_gen;
+				modData[ModalResultField.P_busAux_ES_generated] = alternatorType == AlternatorType.None ? 0.SI<Watt>() : P_ES_gen;
 				modData[ModalResultField.P_busAux_ES_consumer_sum] = P_ES_cons;
 
 				modData[ModalResultField.P_aux_ESS_mech_ice_off] = 0.SI<Watt>();
@@ -1036,7 +1041,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
 				modData[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 
-				modData[ModalResultField.P_busAux_ES_generated] = P_ES_smartGen;
+				modData[ModalResultField.P_busAux_ES_generated] = alternatorType == AlternatorType.None ? 0.SI<Watt>() : P_ES_smartGen;
 				modData[ModalResultField.P_busAux_ES_consumer_sum] = P_ES_cons;
 
 
@@ -1078,7 +1083,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.FCWHTCc] = fc;
 				modData[ModalResultField.FCFinal] = fc;
 
-				modData[ModalResultField.P_busAux_ES_generated] = P_ES_gen;
+				modData[ModalResultField.P_busAux_ES_generated] = alternatorType == AlternatorType.None ? 0.SI<Watt>() : P_ES_gen;
 				modData[ModalResultField.P_busAux_ES_consumer_sum] = P_ES_cons;
 
 
@@ -1105,9 +1110,16 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var k_engline = 2.6254521511724e-8;
 
-			var E_es_missing_mech = (P_ES_cons * (T1 + T2 + T3) - (P_ES_gen * (T1 + T3) + P_ES_smartGen * T2)).Value() / busAuxAlternatorEff; // -171229.97701000841
-																																			  // -237850.27541296941
-																																			  // 63222.43732563284
+			var E_es_missing_mech = 0.0;
+
+			if (alternatorType != AlternatorType.None) {
+				E_es_missing_mech = (P_ES_cons * (T1 + T2 + T3) - (P_ES_gen * (T1 + T3) + P_ES_smartGen * T2)).Value() /
+									busAuxAlternatorEff; // -171229.97701000841
+														// -237850.27541296941
+														// 63222.43732563284
+			}
+
+			
 			var fcModSum = 0.195725; // 
 
 			var fcEs = E_es_missing_mech * k_engline; // -0.0044955611148612719
@@ -1136,7 +1148,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(0, f.FcESS_AuxDriving_ICEOff.Value(), 1e-12);
 			Assert.AreEqual(0, f.FcESS_AuxDriving_ICEOn.Value(), 1e-12);
 
-            Assert.AreEqual(fcEs, f.FcBusAuxEs.Value(), 1e-12);
+			Assert.AreEqual(0, f.FcESS_DCDCMissing.Value(), 1e-12);
+
+			Assert.AreEqual(fcModSum, modData.TotalFuelConsumption(ModalResultField.FCWHTCc, fuel.FuelData).Value(), 1e-6);
+			
+			Assert.AreEqual(fcEs, f.FcBusAuxEs.Value(), 1e-12);
 
             Assert.AreEqual(fcModSum, modData.TotalFuelConsumption(ModalResultField.FCWHTCc, fuel.FuelData).Value(), 1e-6);
             Assert.AreEqual(fcModSum + fcEs, f.FcBusAuxEsCorr.Value(), 1e-6);

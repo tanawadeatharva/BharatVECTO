@@ -184,7 +184,7 @@ Partial Class VehicleForm
         Me.Label17 = New System.Windows.Forms.Label()
         Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.tpADAS = New System.Windows.Forms.TabPage()
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.gbADAS = New System.Windows.Forms.GroupBox()
         Me.cbAtEcoRollReleaseLockupClutch = New System.Windows.Forms.CheckBox()
         Me.cbPcc = New System.Windows.Forms.ComboBox()
         Me.cbEcoRoll = New System.Windows.Forms.ComboBox()
@@ -192,6 +192,7 @@ Partial Class VehicleForm
         Me.cbEngineStopStart = New System.Windows.Forms.CheckBox()
         Me.lblPCC = New System.Windows.Forms.Label()
         Me.tpRoadSweeper = New System.Windows.Forms.TabPage()
+        Me.pnPTO = New System.Windows.Forms.Panel()
         Me.gbPTODrive = New System.Windows.Forms.GroupBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.tbPtoGear = New System.Windows.Forms.TextBox()
@@ -199,7 +200,6 @@ Partial Class VehicleForm
         Me.tbPtoEngineSpeed = New System.Windows.Forms.TextBox()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Label24 = New System.Windows.Forms.Label()
-        Me.pnPTO = New System.Windows.Forms.Panel()
         Me.btPTOCycleDrive = New System.Windows.Forms.Button()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.btPTOCycle = New System.Windows.Forms.Button()
@@ -243,10 +243,10 @@ Partial Class VehicleForm
         Me.gbEMTorqueLimits.SuspendLayout
         Me.bgVehicleTorqueLimits.SuspendLayout
         Me.tpADAS.SuspendLayout
-        Me.GroupBox5.SuspendLayout
+        Me.gbADAS.SuspendLayout
         Me.tpRoadSweeper.SuspendLayout
-        Me.gbPTODrive.SuspendLayout
         Me.pnPTO.SuspendLayout
+        Me.gbPTODrive.SuspendLayout
         Me.gbPTO.SuspendLayout
         Me.SuspendLayout
         '
@@ -434,8 +434,7 @@ Partial Class VehicleForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Padding = New System.Windows.Forms.Padding(0, 0, 2, 0)
-        Me.ToolStrip1.Size = New System.Drawing.Size(666, 31)
+        Me.ToolStrip1.Size = New System.Drawing.Size(666, 33)
         Me.ToolStrip1.TabIndex = 29
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -445,7 +444,7 @@ Partial Class VehicleForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtNew.Text = "ToolStripButton1"
         Me.ToolStripBtNew.ToolTipText = "New"
         '
@@ -455,7 +454,7 @@ Partial Class VehicleForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtOpen.Text = "ToolStripButton1"
         Me.ToolStripBtOpen.ToolTipText = "Open..."
         '
@@ -465,7 +464,7 @@ Partial Class VehicleForm
         Me.ToolStripBtSave.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_icon
         Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSave.Text = "ToolStripButton1"
         Me.ToolStripBtSave.ToolTipText = "Save"
         '
@@ -475,14 +474,14 @@ Partial Class VehicleForm
         Me.ToolStripBtSaveAs.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_as_icon
         Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSaveAs.Text = "ToolStripButton1"
         Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 31)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 33)
         '
         'ToolStripBtSendTo
         '
@@ -490,14 +489,14 @@ Partial Class VehicleForm
         Me.ToolStripBtSendTo.Image = Global.TUGraz.VECTO.My.Resources.Resources.export_icon
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSendTo.Text = "Send to Job Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 31)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 33)
         '
         'ToolStripButton1
         '
@@ -505,7 +504,7 @@ Partial Class VehicleForm
         Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripButton1.Text = "Help"
         '
         'GroupBox7
@@ -778,9 +777,9 @@ Partial Class VehicleForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 603)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 593)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(666, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(666, 32)
         Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 36
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -788,7 +787,7 @@ Partial Class VehicleForm
         'LbStatus
         '
         Me.LbStatus.Name = "LbStatus"
-        Me.LbStatus.Size = New System.Drawing.Size(39, 17)
+        Me.LbStatus.Size = New System.Drawing.Size(60, 25)
         Me.LbStatus.Text = "Status"
         '
         'TbHDVclass
@@ -901,18 +900,18 @@ Partial Class VehicleForm
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
         Me.CmOpenFile.ShowImageMargin = false
-        Me.CmOpenFile.Size = New System.Drawing.Size(128, 48)
+        Me.CmOpenFile.Size = New System.Drawing.Size(178, 68)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(177, 32)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(177, 32)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
         'GroupBox3
@@ -1088,7 +1087,7 @@ Partial Class VehicleForm
         Me.tpGeneral.Controls.Add(Me.GrAirRes)
         Me.tpGeneral.Location = New System.Drawing.Point(4, 22)
         Me.tpGeneral.Name = "tpGeneral"
-        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpGeneral.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.tpGeneral.Size = New System.Drawing.Size(648, 374)
         Me.tpGeneral.TabIndex = 0
         Me.tpGeneral.Text = "General"
@@ -1102,7 +1101,7 @@ Partial Class VehicleForm
         Me.tpPowertrain.Controls.Add(Me.GroupBox2)
         Me.tpPowertrain.Location = New System.Drawing.Point(4, 22)
         Me.tpPowertrain.Name = "tpPowertrain"
-        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpPowertrain.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.tpPowertrain.Size = New System.Drawing.Size(648, 374)
         Me.tpPowertrain.TabIndex = 1
         Me.tpPowertrain.Text = "Powertrain"
@@ -1179,7 +1178,7 @@ Partial Class VehicleForm
         Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.Label23.Location = New System.Drawing.Point(6, 16)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(187, 13)
+        Me.Label23.Size = New System.Drawing.Size(277, 20)
         Me.Label23.TabIndex = 0
         Me.Label23.Text = "Only applicable for NG engines!"
         '
@@ -1189,7 +1188,7 @@ Partial Class VehicleForm
         Me.tpElectricComponents.Controls.Add(Me.gpElectricMotor)
         Me.tpElectricComponents.Location = New System.Drawing.Point(4, 22)
         Me.tpElectricComponents.Name = "tpElectricComponents"
-        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.tpElectricComponents.Size = New System.Drawing.Size(648, 374)
         Me.tpElectricComponents.TabIndex = 4
         Me.tpElectricComponents.Text = "Electric Components"
@@ -1240,7 +1239,7 @@ Partial Class VehicleForm
         '
         'chReessPackStringId
         '
-        Me.chReessPackStringId.Text = "String #"
+        Me.chReessPackStringId.Text = "Stream #"
         Me.chReessPackStringId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'btnAddReessPack
@@ -1631,36 +1630,36 @@ Partial Class VehicleForm
         '
         'tpADAS
         '
-        Me.tpADAS.Controls.Add(Me.GroupBox5)
+        Me.tpADAS.Controls.Add(Me.gbADAS)
         Me.tpADAS.Location = New System.Drawing.Point(4, 22)
         Me.tpADAS.Name = "tpADAS"
-        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
         Me.tpADAS.Size = New System.Drawing.Size(648, 374)
         Me.tpADAS.TabIndex = 3
         Me.tpADAS.Text = "ADAS"
         Me.tpADAS.UseVisualStyleBackColor = true
         '
-        'GroupBox5
+        'gbADAS
         '
-        Me.GroupBox5.Controls.Add(Me.cbAtEcoRollReleaseLockupClutch)
-        Me.GroupBox5.Controls.Add(Me.cbPcc)
-        Me.GroupBox5.Controls.Add(Me.cbEcoRoll)
-        Me.GroupBox5.Controls.Add(Me.Label22)
-        Me.GroupBox5.Controls.Add(Me.cbEngineStopStart)
-        Me.GroupBox5.Controls.Add(Me.lblPCC)
-        Me.GroupBox5.Location = New System.Drawing.Point(6, 6)
-        Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(565, 136)
-        Me.GroupBox5.TabIndex = 0
-        Me.GroupBox5.TabStop = false
-        Me.GroupBox5.Text = "ADAS Options"
+        Me.gbADAS.Controls.Add(Me.cbAtEcoRollReleaseLockupClutch)
+        Me.gbADAS.Controls.Add(Me.cbPcc)
+        Me.gbADAS.Controls.Add(Me.cbEcoRoll)
+        Me.gbADAS.Controls.Add(Me.Label22)
+        Me.gbADAS.Controls.Add(Me.cbEngineStopStart)
+        Me.gbADAS.Controls.Add(Me.lblPCC)
+        Me.gbADAS.Location = New System.Drawing.Point(6, 6)
+        Me.gbADAS.Name = "gbADAS"
+        Me.gbADAS.Size = New System.Drawing.Size(565, 136)
+        Me.gbADAS.TabIndex = 0
+        Me.gbADAS.TabStop = false
+        Me.gbADAS.Text = "ADAS Options"
         '
         'cbAtEcoRollReleaseLockupClutch
         '
         Me.cbAtEcoRollReleaseLockupClutch.AutoSize = true
         Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(265, 19)
         Me.cbAtEcoRollReleaseLockupClutch.Name = "cbAtEcoRollReleaseLockupClutch"
-        Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(243, 17)
+        Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(250, 21)
         Me.cbAtEcoRollReleaseLockupClutch.TabIndex = 3
         Me.cbAtEcoRollReleaseLockupClutch.Text = "AT Gearbox: Eco-Roll Release Lockup Clutch"
         Me.cbAtEcoRollReleaseLockupClutch.UseVisualStyleBackColor = true
@@ -1695,7 +1694,7 @@ Partial Class VehicleForm
         Me.cbEngineStopStart.AutoSize = true
         Me.cbEngineStopStart.Location = New System.Drawing.Point(6, 19)
         Me.cbEngineStopStart.Name = "cbEngineStopStart"
-        Me.cbEngineStopStart.Size = New System.Drawing.Size(203, 17)
+        Me.cbEngineStopStart.Size = New System.Drawing.Size(210, 21)
         Me.cbEngineStopStart.TabIndex = 0
         Me.cbEngineStopStart.Text = "Engine Stop/Start during vehicle stop"
         Me.cbEngineStopStart.UseVisualStyleBackColor = true
@@ -1719,6 +1718,23 @@ Partial Class VehicleForm
         Me.tpRoadSweeper.TabIndex = 4
         Me.tpRoadSweeper.Text = "PTO"
         Me.tpRoadSweeper.UseVisualStyleBackColor = true
+        '
+        'pnPTO
+        '
+        Me.pnPTO.Controls.Add(Me.gbPTODrive)
+        Me.pnPTO.Controls.Add(Me.btPTOCycleDrive)
+        Me.pnPTO.Controls.Add(Me.Label28)
+        Me.pnPTO.Controls.Add(Me.tbPTODrive)
+        Me.pnPTO.Controls.Add(Me.btPTOCycle)
+        Me.pnPTO.Controls.Add(Me.Label16)
+        Me.pnPTO.Controls.Add(Me.tbPTOCycle)
+        Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
+        Me.pnPTO.Controls.Add(Me.Label7)
+        Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
+        Me.pnPTO.Location = New System.Drawing.Point(5, 73)
+        Me.pnPTO.Name = "pnPTO"
+        Me.pnPTO.Size = New System.Drawing.Size(566, 211)
+        Me.pnPTO.TabIndex = 1
         '
         'gbPTODrive
         '
@@ -1786,23 +1802,6 @@ Partial Class VehicleForm
         Me.Label24.Size = New System.Drawing.Size(97, 13)
         Me.Label24.TabIndex = 0
         Me.Label24.Text = "Min. Engine Speed"
-        '
-        'pnPTO
-        '
-        Me.pnPTO.Controls.Add(Me.gbPTODrive)
-        Me.pnPTO.Controls.Add(Me.btPTOCycleDrive)
-        Me.pnPTO.Controls.Add(Me.Label28)
-        Me.pnPTO.Controls.Add(Me.tbPTODrive)
-        Me.pnPTO.Controls.Add(Me.btPTOCycle)
-        Me.pnPTO.Controls.Add(Me.Label16)
-        Me.pnPTO.Controls.Add(Me.tbPTOCycle)
-        Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
-        Me.pnPTO.Controls.Add(Me.Label7)
-        Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
-        Me.pnPTO.Location = New System.Drawing.Point(5, 73)
-        Me.pnPTO.Name = "pnPTO"
-        Me.pnPTO.Size = New System.Drawing.Size(566, 211)
-        Me.pnPTO.TabIndex = 1
         '
         'btPTOCycleDrive
         '
@@ -1893,7 +1892,7 @@ Partial Class VehicleForm
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.lblTitle.Location = New System.Drawing.Point(121, 34)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(166, 29)
+        Me.lblTitle.Size = New System.Drawing.Size(242, 40)
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
@@ -1979,13 +1978,13 @@ Partial Class VehicleForm
         Me.bgVehicleTorqueLimits.ResumeLayout(false)
         Me.bgVehicleTorqueLimits.PerformLayout
         Me.tpADAS.ResumeLayout(false)
-        Me.GroupBox5.ResumeLayout(false)
-        Me.GroupBox5.PerformLayout
+        Me.gbADAS.ResumeLayout(false)
+        Me.gbADAS.PerformLayout
         Me.tpRoadSweeper.ResumeLayout(false)
-        Me.gbPTODrive.ResumeLayout(false)
-        Me.gbPTODrive.PerformLayout
         Me.pnPTO.ResumeLayout(false)
         Me.pnPTO.PerformLayout
+        Me.gbPTODrive.ResumeLayout(false)
+        Me.gbPTODrive.PerformLayout
         Me.gbPTO.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
@@ -2106,7 +2105,7 @@ End Sub
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label21 As Label
     Friend WithEvents tpADAS As TabPage
-    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents gbADAS As GroupBox
     Friend WithEvents cbEngineStopStart As CheckBox
     Friend WithEvents lblPCC As Label
     Friend WithEvents Label22 As Label
