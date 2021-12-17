@@ -693,11 +693,6 @@
 			<xs:element name="InteriorLightsLED" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="LorryPneumaticSystemGroup">
-		<xs:sequence>
-			<xs:element name="Technology" type="v1.0:AuxPSTechnologyType"/>
-		</xs:sequence>
-	</xs:group>
 	<xs:group name="PrimaryBusPneumaticSystemGroup">
 		<xs:sequence>
 			<xs:element name="Technology" type="v1.0:AuxPSTechnologyType"/>
@@ -889,6 +884,11 @@
 			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType"/>
 			<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
 			<xs:element name="PowerTakeOff" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EngineTorqueLimitsType">
+		<xs:sequence>
+			<xs:group ref="mrf:EngineTorqueLimitationsGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EngineOutputType">
