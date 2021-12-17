@@ -25,7 +25,7 @@ Parameters used in the APT Effshift model:
 | t_(between shifts) | 1.8 [s] |
 | Downshift delay  | 6 [s] |
 | Upshift delay    | 6 [s] |
-| Allowed gear range (skip of gears)  | Total number of mechanical gears ≤ 6:  1, else 22 |
+| Allowed gear range (skip of gears)  | Total number of mechanical gears ≤ 6:  1, else 2 |
 | CCMinAcceleration  | 0.1 [m/s²] |
 | CLMinAcceleration  | 0.1 [m/s²] |
 | UpshiftMinAcceleration |  0.1 [m/s²] |
