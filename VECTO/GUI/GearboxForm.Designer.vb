@@ -918,7 +918,7 @@ Partial Class GearboxForm
         Me.CbGStype.FormattingEnabled = true
         Me.CbGStype.Location = New System.Drawing.Point(119, 102)
         Me.CbGStype.Name = "CbGStype"
-        Me.CbGStype.Size = New System.Drawing.Size(227, 21)
+        Me.CbGStype.Size = New System.Drawing.Size(334, 21)
         Me.CbGStype.TabIndex = 1
         '
         'BtAddGear

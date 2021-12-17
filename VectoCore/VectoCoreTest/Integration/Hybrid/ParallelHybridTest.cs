@@ -1364,7 +1364,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
-			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
+			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
@@ -1387,7 +1387,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl,
-			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
+			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{ 
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
@@ -1677,11 +1677,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return motor;
 		}
 
-		private static GearboxData CreateGearboxData(GearboxType gearboxType = GearboxType.NoGeabox)
+		private static GearboxData CreateGearboxData(GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			switch (gearboxType) {
 				
-				case GearboxType.NoGeabox:
+				case GearboxType.NoGearbox:
 				case GearboxType.AMT:
 					return CreateAMTGearbox();
 				case GearboxType.ATSerial:

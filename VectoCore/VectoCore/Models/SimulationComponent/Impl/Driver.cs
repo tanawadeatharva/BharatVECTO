@@ -828,7 +828,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (DataBus.HybridControllerInfo != null) {
 						DrivingAction = DrivingAction.Brake;
 					}
-					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.GearboxInfo.GearboxType == GearboxType.APTN) {
 						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 							operatingPoint.Acceleration, response);
 						DriverAcceleration = operatingPoint.Acceleration;

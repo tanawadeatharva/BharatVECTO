@@ -330,17 +330,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gear = gearbox.Gears[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, true, VehicleCategory.Unknown, gearbox.Type);
 
-				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
-					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: shiftPolygonCalc != null
-						? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
-							gearbox.Type, (int)i, engineData?.FullLoadCurves[i + 1], gearbox.Gears,
-							engineData,
-							axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
-						: DeclarationData.Gearbox.ComputeShiftPolygon(
-							gearbox.Type, (int)i, engineData?.FullLoadCurves[i + 1], gearbox.Gears,
-							engineData,
-							axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				ShiftPolygon shiftPolygon;
+				if (gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing) {
+					shiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon);
+				} else if (shiftPolygonCalc != null) {
+					shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(gearbox.Type, (int)i,
+						engineData?.FullLoadCurves[i + 1], gearbox.Gears, engineData, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				} else {
+					shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i,
+						engineData?.FullLoadCurves[i + 1], gearbox.Gears, engineData, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				}
+
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
