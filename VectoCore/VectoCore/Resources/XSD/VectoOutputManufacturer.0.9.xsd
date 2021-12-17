@@ -604,6 +604,7 @@
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!--Auxiliaries-->
