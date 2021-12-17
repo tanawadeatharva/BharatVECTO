@@ -557,6 +557,7 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="Airdrag" type="mrf:AirdragType"/>
+						<xs:element name="ADAS" type="mrf:HEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -569,6 +570,7 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="Airdrag" type="mrf:AirdragType"/>
+						<xs:element name="ADAS" type="mrf:PEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -605,6 +607,7 @@
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
 			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!--Auxiliaries-->
@@ -725,6 +728,21 @@
 			<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
+	<xs:complexType name="ConventionalADASType">
+		<xs:sequence>
+			<xs:group ref="mrf:ConventionalADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEVADASType">
+		<xs:sequence>
+			<xs:group ref="mrf:HEVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEVADASType">
+		<xs:sequence>
+			<xs:group ref="mrf:PEVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
 	<!--ADAS-->
 	<xs:group name="ConventionalADASGroup">
 		<xs:sequence>
@@ -938,6 +956,7 @@
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="Conventional-LorryVehicleOutputTypeGroup">
@@ -1032,6 +1051,7 @@
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-LorryComponentsType">
@@ -1041,6 +1061,7 @@
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-LorryComponentsType">
@@ -1048,6 +1069,7 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-LorryComponentsType">
@@ -1057,6 +1079,7 @@
 			<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-LorryComponentsType">
@@ -1067,6 +1090,7 @@
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-LorryComponentsType">
@@ -1075,12 +1099,14 @@
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-LorryComponentsType">
@@ -1089,6 +1115,7 @@
 			<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Conventional-PrimaryBusComponentsType">
@@ -1100,6 +1127,7 @@
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBusComponentsType">
@@ -1111,6 +1139,7 @@
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-PrimaryBusComponentsType">
@@ -1122,6 +1151,7 @@
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-PrimaryBusComponentsType">
@@ -1130,12 +1160,14 @@
 			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-PrimaryBusComponentsType">
@@ -1144,6 +1176,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-PrimaryBusComponentsType">
@@ -1153,6 +1186,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-PrimaryBusComponentsType">
@@ -1160,11 +1194,13 @@
 			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axles" type="mrf:AxlesType"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-PrimaryBusComponentsType">
@@ -1172,6 +1208,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axles" type="mrf:AxlesType" minOccurs="0"/>
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TyreType">
