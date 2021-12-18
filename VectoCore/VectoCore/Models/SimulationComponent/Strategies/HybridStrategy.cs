@@ -84,8 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio >= ModelData.GearshiftParameters.RatioEarlyDownshiftFC) {
 					return null;
 				}
-
-				var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				var estimatedVelocityPostShift = !VelocityDropData.Valid ? DataBus.VehicleInfo.VehicleSpeed : VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 				if (!AllowEmergencyShift && !estimatedVelocityPostShift.IsGreater(DeclarationData.GearboxTCU.MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
 					return null;
 				}
@@ -227,7 +226,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
-			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 
 			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
@@ -996,15 +994,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual bool AllowICEOff(Second absTime)
 		{
-			//if (!ModelData.VehicleData.ADAS.EngineStopStart) {
-			//	return false;
-			//}
-			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			if (/*ModelData.VehicleData.ADAS.EngineStopStart &&*/ emPos == PowertrainPosition.HybridP1) {
-				return false;
-			}
-			return PreviousState.ICEStartTStmp == null ||
-					(PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
+			return PreviousState.ICEStartTStmp == null
+					|| (PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
 		}
 
 		protected virtual void HandleBrakeAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
@@ -1204,22 +1195,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return;
 				}
 
-				var iceOn = DataBus.EngineInfo.EngineOn;
-				// if Hybrid P1 and Engine is off, the search for braking power is not possible:
-				// Therefore, switch on engine (if reasonable), otherwise simply do NOT search for mechanicalAssistPower.
-				if (emPos == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
-					
-					var gearboxOut = firstResponse.Gearbox.OutputSpeed * firstResponse.Gearbox.OutputTorque;
-					var elMotor = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1);
-					var powerToleranceEl = 0.1 * elMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, firstResponse.Engine.EngineSpeed);
-					if (gearboxOut - firstResponse.Engine.DragPower < powerToleranceEl) {
-						DataBus.EngineCtl.CombustionEngineOn = true;
-						iceOn = true;
-					} else {
-						return;
-					}
-				}
-
 				// full recuperation is not possible - ICE would need to propel - search max possible EM torque
 				var emRecuperationTq = SearchAlgorithm.Search(
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
@@ -1237,7 +1212,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					},
 					evaluateFunction: emTq => {
 						var cfg = new HybridStrategyResponse {
-							CombustionEngineOn = iceOn,
+							CombustionEngineOn = DataBus.EngineInfo.EngineOn,
 							GearboxInNeutral = false,
 							NextGear = nextGear,
 							MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
@@ -1375,8 +1350,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var result = ResponseEmOff;
-			if (DataBus.DriverInfo.PCCState == PCCStates.UseCase1 || DataBus.DriverInfo.PCCState == PCCStates.UseCase2)
-				result.ICEOff = true;
+			if (DataBus.DriverInfo.PCCState.IsOneOf(PCCStates.UseCase1, PCCStates.UseCase2)) {
+				result.ICEOff = AllowICEOff(absTime);
+				result.Setting.CombustionEngineOn = !result.ICEOff;
+
+				if (DataBus.PowertrainInfo.ElectricMotorPositions.Contains(PowertrainPosition.HybridP1)) {
+					// special logic for HybridP1 (VECTO-1493)
+					result.Setting.GearboxInNeutral = true;
+					result.ICEOff &= ModelData.VehicleData.ADAS.EngineStopStart;
+				}
+			}
 			eval.Add(result);
 		}
 
@@ -1896,7 +1879,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							},
 							evaluateFunction: emTq => {
 								var cfg = new HybridStrategyResponse {
-									CombustionEngineOn = nextGear.IsLockedGear()? true : false,
+									CombustionEngineOn = nextGear.IsLockedGear() ? true : false,
 									GearboxInNeutral = false,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
 										{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTq) }

@@ -83,7 +83,7 @@ Public Class GearboxForm
         If (Cfg.DeclMode) Then
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type = GearboxType.ATSerial) _
+                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial)) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         Else
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
