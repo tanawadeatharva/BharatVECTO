@@ -622,6 +622,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-LorryComponentsType">
@@ -633,6 +634,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-LorryComponentsType">
@@ -642,6 +644,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-LorryComponentsType">
@@ -654,6 +657,7 @@
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-LorryComponentsType">
@@ -666,6 +670,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-LorryComponentsType">
@@ -676,6 +681,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-LorryComponentsType">
@@ -684,6 +690,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-LorryComponentsType">
@@ -694,6 +701,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Conventional-PrimaryBusComponentsType">
@@ -719,6 +727,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-PrimaryBusComponentsType">
@@ -732,6 +741,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-PrimaryBusComponentsType">
@@ -742,6 +752,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-PrimaryBusComponentsType">
@@ -750,6 +761,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-PrimaryBusComponentsType">
@@ -761,6 +773,7 @@
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-PrimaryBusComponentsType">
@@ -772,6 +785,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-PrimaryBusComponentsType">
@@ -781,6 +795,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
@@ -788,6 +803,7 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-PrimaryBusComponentsType">
@@ -797,8 +813,10 @@
 			<xs:element name="Tyres" type="mrf:TyresOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<!--ElectricMachine, IEPC, REESS-->
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
 			<xs:group ref="mrf:ElectricMachineGroup"/>
@@ -814,6 +832,26 @@
 			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="REESSSpecificationsType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="REESS" type="mrf:REESSType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="REESSType">
+		<xs:sequence>
+			<xs:group ref="mrf:REESSGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="REESSGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
+			<xs:element name="NominalVoltage"/>
+			<xs:element name="TotalStorageCapacitiy"/>
+			<xs:element name="TotalUsableCapacityInSimulation"/>
+			<xs:element name="CertificationMethod"/>
+			<xs:element name="StringID" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
 	<!--Auxiliaries-->
 	<xs:complexType name="ConventionalLorryAuxOutputType">
 		<xs:sequence>
@@ -1003,7 +1041,6 @@
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 		</xs:sequence>
 	</xs:group>
-	<!--REESS-->
 	<xs:group name="EngineTorqueLimitationsGroup">
 		<xs:sequence>
 			<xs:element name="EngineTorqueLimit" maxOccurs="unbounded">
@@ -1011,16 +1048,6 @@
 					<xs:attribute name="Gear" type="xs:int"/>
 				</xs:complexType>
 			</xs:element>
-		</xs:sequence>
-	</xs:group>
-	<xs:group name="REESSGroup">
-		<xs:sequence>
-			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="NominalVoltage"/>
-			<xs:element name="TotalStorageCapacitiy"/>
-			<xs:element name="TotalUsableCapacityInSimulation"/>
-			<xs:element name="CertificationMethod"/>
-			<xs:element name="StringID" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<!--Axles-->
