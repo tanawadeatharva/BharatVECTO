@@ -3707,7 +3707,7 @@
 			<xs:maxInclusive value="10"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="TechnologyType">
+	<xs:simpleType name="ExemptedTechnologyType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="HEV Article 9 exempted"/>
 			<xs:enumeration value="PEV Article 9 exempted"/>
