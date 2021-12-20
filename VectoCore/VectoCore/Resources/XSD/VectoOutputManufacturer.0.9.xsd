@@ -1054,7 +1054,7 @@
 			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType"/>
 			<xs:element name="SpecificRRC" type="v1.0:TyreRRCISOType"/>
 			<xs:element name="DigestValue" type="xs:token"/>
-			<xs:element name="TwinTyre" minOccurs="0"/>
+			<xs:element name="TwinTyre" type="xs:boolean" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="AxleWheelsType">
