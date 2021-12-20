@@ -52,10 +52,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			return graphWriter;
 		}
 
-		[TestCase]
-		public void TestVECTO_1484()
-		{
-			var jobName = @"TestData\Integration\ADAS-HEV\VECTO-1484\P2_Group5_s2c0_rep_Payload.vecto";
+		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1493\P1_CityBus.vecto", TestName = "VECTO-1493_P1Citybus")]
+		[TestCase(@"TestData\Integration\ADAS-HEV\VECTO-1484\P2_Group5_s2c0_rep_Payload.vecto", TestName = "VECTO-1484_P2Group5")]
+		public static void RunEngineeringJob(string jobName) {
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 			var sumContainer = new SummaryDataContainer(writer);
@@ -71,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 		}
-
+		
 
 		[
 		TestCase(0, TestName = "EcoRoll DH1.1 const"),
