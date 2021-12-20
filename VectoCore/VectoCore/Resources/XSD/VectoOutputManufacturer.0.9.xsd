@@ -1072,8 +1072,8 @@
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="AxleWheelsType">
-		<xs:sequence minOccurs="2" maxOccurs="unbounded">
-			<xs:element name="Axle" type="mrf:AxleType"/>
+		<xs:sequence>
+			<xs:element name="Axle" type="mrf:AxleType" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxlesType">
@@ -1153,6 +1153,7 @@
 			<xs:element name="RatedPower" type="v1.0:EngineRatedPower"/>
 			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
 			<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType"/>
+			<xs:element name="Capactiy" type="mrf:EngineCapacityType"/>
 			<xs:element name="FuelTypes">
 				<xs:complexType>
 					<xs:sequence>
