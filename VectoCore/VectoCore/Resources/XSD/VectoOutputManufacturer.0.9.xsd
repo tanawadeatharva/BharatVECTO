@@ -426,9 +426,9 @@
 	</xs:group>
 	<xs:group name="CompletedBusVehicleDimensionSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HeightIntegratedBody"/>
-			<xs:element name="VehicleLength"/>
-			<xs:element name="VehicleHeight"/>
+			<xs:element name="HeightIntegratedBody" type="v2.10.2:VehicleDimensionType"/>
+			<xs:element name="VehicleLength" type="v2.10.2:VehicleDimensionType"/>
+			<xs:element name="VehicleHeight" type="v2.10.2:VehicleDimensionType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="Conventional-LorryVehicleOutputType">
