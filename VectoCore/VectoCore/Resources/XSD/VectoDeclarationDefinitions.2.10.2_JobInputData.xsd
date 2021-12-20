@@ -1784,22 +1784,10 @@
 							<xs:documentation>P331 - [W]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Technology">
+					<xs:element name="Technology" type="v2.10.2:ExemptedTechnologyType">
 						<xs:annotation>
 							<xs:documentation>P332 - enum</xs:documentation>
 						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="HEV Article 9 exempted"/>
-								<xs:enumeration value="PEV Article 9 exempted"/>
-								<xs:enumeration value="HV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
-								<xs:enumeration value="H2 ICE"/>
-								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
-								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
-							</xs:restriction>
-						</xs:simpleType>
 					</xs:element>
 				</xs:sequence>
 			</xs:extension>
@@ -3717,6 +3705,18 @@
 		<xs:restriction base="xs:int">
 			<xs:minInclusive value="0"/>
 			<xs:maxInclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TechnologyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HEV Article 9 exempted"/>
+			<xs:enumeration value="PEV Article 9 exempted"/>
+			<xs:enumeration value="HV Article 9 exempted"/>
+			<xs:enumeration value="Fuel cell vehicle"/>
+			<xs:enumeration value="H2 ICE"/>
+			<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
+			<xs:enumeration value="In-motion charging Article 9 exempted"/>
+			<xs:enumeration value="Other technology Article 9 exempted"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

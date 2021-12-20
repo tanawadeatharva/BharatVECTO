@@ -283,7 +283,7 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="VehicleCategory" type="v1.0:VehicleCategoryDeclarationType"/>
-			<xs:element name="AxleConfiguration">
+			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
 				<xs:annotation>
 					<xs:documentation>1.1.5 Axle configuration</xs:documentation>
 				</xs:annotation>
@@ -305,8 +305,8 @@
 			<xs:documentation>			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="OffVehicleChargingCapability" type="v1.0:ManufacturerType"/>
-			<xs:element name="OffVehicleChargingMaxPower" type="v1.0:ManufacturerAddressType" minOccurs="0"/>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
+			<xs:element name="OffVehicleChargingMaxPower" type="xs:int" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="ManufacturerGroup">
@@ -345,6 +345,11 @@
 				<xs:annotation>
 					<xs:documentation>1.1.7a (Sub)group for CO2 standards</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
 				<xs:annotation>
@@ -397,13 +402,13 @@
 	</xs:group>
 	<xs:group name="HEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HEVArchitecture"/>
+			<xs:element name="HEVArchitecture" type="v2.10.2:ArchitectureID_HEV_Type"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="PEVArchitecture"/>
+			<xs:element name="PEVArchitecture" type="v2.10.2:ArchitectureID_PEV_Type"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 		</xs:sequence>
 	</xs:group>
@@ -580,8 +585,8 @@
 	<xs:complexType name="Exempted-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
-			<xs:element name="VehicleTechnologyExempted" type="xs:string"/>
-			<xs:element name="SumNetPower"/>
+			<xs:element name="VehicleTechnologyExempted" type="v2.10.2:ExemptedTechnologyType"/>
+			<xs:element name="SumNetPower" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
@@ -1204,7 +1209,7 @@
 					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NgTankSystem" minOccurs="0"/>
+			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-LorryVehicleOutputTypeGroup">
