@@ -1091,7 +1091,7 @@
 			</xs:sequence>
 			<xs:element name="Tyre" type="mrf:TyreType"/>
 		</xs:sequence>
-		<xs:attribute name="Count" type="xs:int"/>
+		<xs:attribute name="Count" type="xs:int" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
