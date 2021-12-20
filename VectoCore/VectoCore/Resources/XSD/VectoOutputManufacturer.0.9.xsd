@@ -712,6 +712,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:ConventionalPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -723,6 +724,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -736,6 +738,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -746,6 +749,7 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -755,6 +759,7 @@
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -765,6 +770,7 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
@@ -777,6 +783,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -786,6 +793,7 @@
 		<xs:sequence>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -794,6 +802,7 @@
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -803,6 +812,7 @@
 		<xs:sequence>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -868,7 +878,7 @@
 			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ConventionPrimaryBusAuxOutputType">
+	<xs:complexType name="ConventionalPrimaryBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
 			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
