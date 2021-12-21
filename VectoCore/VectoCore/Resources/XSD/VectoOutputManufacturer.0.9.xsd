@@ -838,12 +838,18 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="REESSSpecificationsType">
-		<xs:sequence maxOccurs="unbounded">
-			<xs:element name="StringID" type="xs:string" minOccurs="0"/>
-			<xs:element name="REESS" type="mrf:REESSType"/>
+		<xs:sequence>
+			<xs:element name="REESS" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="StringID" type="xs:string" minOccurs="0"/>
+						<xs:element name="REESSSystem" type="mrf:REESSSystemType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="REESSType">
+	<xs:complexType name="REESSSystemType">
 		<xs:sequence>
 			<xs:group ref="mrf:REESSGroup"/>
 		</xs:sequence>
