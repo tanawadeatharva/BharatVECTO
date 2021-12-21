@@ -1029,8 +1029,8 @@
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
 		<xs:sequence>
-			<xs:element name="RatedPower"/>
-			<xs:element name="MaxContinuousPower"/>
+			<xs:element name="RatedPower" type="mrf:RatedPowerType"/>
+			<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="IEPCGroup">
@@ -1038,9 +1038,9 @@
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:group ref="mrf:ElectricMachinePowerGroup"/>
 			<xs:element name="NrOfGears" type="xs:int"/>
-			<xs:element name="LowestTotalTransmissionRatio"/>
+			<xs:element name="LowestTotalTransmissionRatio" type="v1.0:Double3"/>
 			<xs:element name="DifferentialIncluded" type="xs:boolean"/>
-			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
+			<xs:element name="CertificationMethod" type="v2.10.1:IEPCCertificationMethodType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="EngineTorqueLimitationsGroup">
@@ -1313,4 +1313,7 @@
 			<xs:group ref="mrf:CompletedBus_xEVHVACGroup"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="RatedPowerType">
+		<xs:restriction base="v1.0:Double3"/>
+	</xs:simpleType>
 </xs:schema>
