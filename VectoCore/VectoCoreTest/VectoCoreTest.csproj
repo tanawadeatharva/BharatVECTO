@@ -3586,10 +3586,16 @@
     <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_EM.vem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_ESSoff.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_REESS.vreess">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload_ESSoff.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\EngineeringMode\P1_Group5_AMT\REESS_Internal_Resistance.vbatr">
