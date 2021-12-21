@@ -924,7 +924,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition)] =
 				busAux.SSMInputs is ISSMDeclarationInputs inputs ? inputs.HVACTechnology : "engineering mode";
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem)] =
-				busAux.ElectricalUserInputsConfig.AlternatorType.GetLabel().Join("/");
+				busAux.ElectricalUserInputsConfig.AlternatorType.GetLabel();
 			row[string.Format(Fields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem)] = runData.JobType == VectoSimulationJobType.BatteryElectricVehicle ? "-" :
 				busAux.PneumaticUserInputsConfig.CompressorMap.Technology;
 		}
