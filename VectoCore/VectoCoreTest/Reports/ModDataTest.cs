@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		[Category("LongRunning")]
 		[TestCase]
-		public void TestP1ESS_ICEOnICEOff()
+		public void Test_P1_PCC_ESSOn_EssOff()
 		{
 			var jobName = @"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto";
 			var fileWriter = new FileOutputWriter(jobName);
