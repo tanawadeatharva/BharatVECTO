@@ -414,8 +414,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return DoCreateAngledriveData(data, true);
 		}
 
-		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
-		{
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData) {
+			if (auxInputData.Auxiliaries is null)
+				throw new VectoException("Missing Power Demands for ICE Off Driving, ICE Off Standstill, and Base Demand");
+
 			var pwrICEOn = auxInputData.Auxiliaries.ConstantPowerDemand;
 			var pwrICEOffDriving = auxInputData.Auxiliaries.PowerDemandICEOffDriving;
 			var pwrICEOffStandstill = auxInputData.Auxiliaries.PowerDemandICEOffStandstill;
