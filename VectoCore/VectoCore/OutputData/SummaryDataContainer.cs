@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.OutputData
 				passengerCount = runData.VehicleData.PassengerCount;
 			}
 
-			row[Fields.VEHICLE_FUEL_TYPE] = modData.FuelData.Select(x => x.GetLabel().Join());
+			row[Fields.VEHICLE_FUEL_TYPE] = modData.FuelData.Select(x => x.GetLabel()).Join();
 
 			var totalTime = modData.Duration;
 			row[Fields.TIME] = (ConvertedSI)totalTime;
