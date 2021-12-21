@@ -847,11 +847,11 @@
 	<xs:group name="REESSGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="NominalVoltage"/>
-			<xs:element name="TotalStorageCapacitiy"/>
-			<xs:element name="TotalUsableCapacityInSimulation"/>
-			<xs:element name="CertificationMethod"/>
-			<xs:element name="StringID" minOccurs="0"/>
+			<xs:element name="NominalVoltage" type="xs:int"/>
+			<xs:element name="TotalStorageCapacitiy" type="xs:int"/>
+			<xs:element name="TotalUsableCapacityInSimulation" type="xs:int"/>
+			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
+			<xs:element name="StringID" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<!--Auxiliaries-->
