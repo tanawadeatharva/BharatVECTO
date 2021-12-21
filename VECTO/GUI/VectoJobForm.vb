@@ -1011,7 +1011,6 @@ Public Class VectoJobForm
         pnHybridStrategy.Enabled = False
         lblESSUtilityFactorDriving.Enabled  = false
         tbESSUtilityFactorDriving.Enabled = false
-        pnHybridStrategy.Enabled = Not Cfg.DeclMode
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
@@ -1024,10 +1023,10 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
-                pnHybridStrategy.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
                 ' empty line - do not fall-through
                 pnHybridStrategy.Enabled = True
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
