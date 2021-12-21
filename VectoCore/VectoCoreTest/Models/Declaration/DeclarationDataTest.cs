@@ -569,7 +569,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expected, string axle1,
             string axle2, string axle3, string axle4)
         {
-            // mk remark: made the test call with 4 axle params, so that the test name is clear in the test explorer.
             AssertHelper.AreRelativeEqual(expected,
                 DeclarationData.SteeringPump.Lookup(mission, hdvClass,
                     new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
