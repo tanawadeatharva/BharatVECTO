@@ -1327,7 +1327,7 @@
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
 			<xs:sequence>
-				<xs:element name="CoupledAxleNumber" type="xs:int"/>
+				<!--xs:element name="CoupledAxleNumber" type="xs:int"/-->
 				<xs:element name="CountAtPosition" type="xs:int"/>
 				<xs:element name="Position" type="v2.10.2:PowertrainPositionType"/>
 			</xs:sequence>
