@@ -994,8 +994,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual bool AllowICEOff(Second absTime)
 		{
-			return PreviousState.ICEStartTStmp == null
-					|| (PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime).IsSmaller(absTime);
+			//VECTO-1493 special case for P1: only allow turning ICE off if ESS is activated and PCC is currently active
+			var isPCC = DataBus.DriverInfo.PCCState.IsOneOf(PCCStates.UseCase1, PCCStates.UseCase2);
+			var isP1 = DataBus.PowertrainInfo.ElectricMotorPositions.Contains(PowertrainPosition.HybridP1);
+			if (isP1 && (!ModelData.VehicleData.ADAS.EngineStopStart || !isPCC))
+				return false;
+			
+			//normal case: only turn of ICE if ESS is activated and the minimal ICE on time is exceeded.
+			var MinICEonTimeExceeded = PreviousState.ICEStartTStmp is null
+				|| absTime.IsGreaterOrEqual(PreviousState.ICEStartTStmp + StrategyParameters.MinICEOnTime);
+			return ModelData.VehicleData.ADAS.EngineStopStart && MinICEonTimeExceeded;
 		}
 
 		protected virtual void HandleBrakeAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
