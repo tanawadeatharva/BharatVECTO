@@ -387,7 +387,6 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEV-LorryVehicleOutputTypeSequenceGroup">
@@ -823,7 +822,7 @@
 		</xs:sequence>
 	</xs:complexType>
 	<!--ElectricMachine, IEPC, REESS-->
-	<xs:complexType name="ElectricMachineType">
+	<xs:complexType name="ElectricMachineSystemType">
 		<xs:sequence>
 			<xs:group ref="mrf:ElectricMachineGroup"/>
 		</xs:sequence>
@@ -835,11 +834,7 @@
 	</xs:complexType>
 	<xs:complexType name="xEV-ElectricMachinesType">
 		<xs:sequence>
-			<xs:element name="CoupledAxleNumber" type="xs:int"/>
-			<xs:element name="CountAtPosition" type="xs:int"/>
-			<xs:element name="Position" type="v2.10.2:PowertrainPositionType"/>
 			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType" maxOccurs="unbounded"/>
-			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="REESSSpecificationsType">
@@ -1019,7 +1014,7 @@
 	<xs:group name="ElectricMachineGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="ElectricMachineType" type="v2.10.2:ElectricMachineType"/>
+			<xs:element name="ElectricMachineType" type="v2.10.1:ElectricMachineTypeType"/>
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 		</xs:sequence>
 	</xs:group>
@@ -1043,7 +1038,7 @@
 		<xs:sequence>
 			<xs:element name="EngineTorqueLimit" maxOccurs="unbounded">
 				<xs:complexType>
-					<xs:attribute name="Gear" type="xs:int"/>
+					<xs:attribute name="Gear" type="xs:int" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -1321,6 +1316,17 @@
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
 			<xs:element name="Ratio" type="v1.0:AngledriveRatioType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineType">
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="CoupledAxleNumber" type="xs:int"/>
+				<xs:element name="CountAtPosition" type="xs:int"/>
+				<xs:element name="Position" type="v2.10.2:PowertrainPositionType"/>
+			</xs:sequence>
+			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType"/>
+			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
