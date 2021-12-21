@@ -830,8 +830,8 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="xEV-ElectricMachinesType">
-		<xs:sequence maxOccurs="unbounded">
-			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType"/>
+		<xs:sequence>
+			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="REESSSpecificationsType">
@@ -1011,17 +1011,17 @@
 	<xs:group name="ElectricMachineGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="ElectricMachineType"/>
-			<xs:element name="Position"/>
-			<xs:element name="CoupledAxleNumber"/>
-			<xs:element name="CountAtPosition"/>
+			<xs:element name="ElectricMachineType" type="v2.10.2:ElectricMachineType"/>
+			<xs:element name="Position" type="v2.10.2:PowertrainPositionType"/>
+			<xs:element name="CoupledAxleNumber" type="xs:int"/>
+			<xs:element name="CountAtPosition" type="xs:int"/>
 			<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
-			<xs:element name="ADC">
+			<xs:element name="ADC" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 						<xs:element name="CertificationMethod" type="v2.10.1:CertificationMethodType"/>
-						<xs:element name="Ratio"/>
+						<xs:element name="Ratio" type="v1.0:AngledriveRatioType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
