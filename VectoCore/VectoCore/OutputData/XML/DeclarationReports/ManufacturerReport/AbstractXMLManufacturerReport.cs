@@ -42,6 +42,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		public virtual XDocument Report { get; protected set; }
 
+
+		public void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
 		public abstract void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
 
 		public virtual void GenerateReport()

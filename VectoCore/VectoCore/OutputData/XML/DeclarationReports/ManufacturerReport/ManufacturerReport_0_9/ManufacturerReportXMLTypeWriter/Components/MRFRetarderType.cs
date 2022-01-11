@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
+{
+    internal class MRFRetarderType : AbstractMrfXmlType
+    {
+		public MRFRetarderType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var retarderData = inputData.JobInputData.Vehicle.Components.RetarderInputData;
+			var result = new XElement(_mrf + XMLNames.Component_Retarder,
+				new XElement(_mrf + XMLNames.Component_Model,
+					inputData.JobInputData.Vehicle.Components.RetarderInputData.Model),
+				new XElement(_mrf + XMLNames.Component_CertificationNumber, retarderData.CertificationNumber),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, retarderData.DigestValue.DigestValue),
+				new XElement(_mrf + XMLNames.Component_CertificationMethod,
+					retarderData.CertificationMethod.ToXMLFormat()));
+			return result;
+		}
+
+		#endregion
+	}
+}
