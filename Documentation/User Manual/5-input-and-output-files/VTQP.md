@@ -1,6 +1,6 @@
-##Vehcle Boosing Limits (.vemp)
+##Vehicle Boosting Limits (.vtqp)
 
-This file contains the vehilce's boosting limits depending on the combustion engine's angluar speed. The file uses the [VECTO CSV format](#csv).
+This file contains the vehicle's boosting limits depending on the combustion engine's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vtqp
 - Header: **n [rpm] , T_drive [Nm]**

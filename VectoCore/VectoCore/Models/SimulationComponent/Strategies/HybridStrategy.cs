@@ -1313,7 +1313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var targetEngineSpeed = ModelData.EngineData.IdleSpeed +
-									0.7 * ModelData.EngineData.FullLoadCurves[0].NP98hSpeed;
+									0.7 * (ModelData.EngineData.FullLoadCurves[0].NP98hSpeed - ModelData.EngineData.IdleSpeed);
 			var best = candidates.MinBy(x => VectoMath.Abs(x.Value - targetEngineSpeed)).Key;
 			return best;
 		}
