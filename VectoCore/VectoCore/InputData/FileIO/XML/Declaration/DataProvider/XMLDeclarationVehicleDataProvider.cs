@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 		
 		public virtual string VehicleTypeApprovalNumber => GetString(XMLNames.Vehicle_TypeApprovalNumber);
-		public virtual ArchitectureID ArchitectureID => ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID));
+		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
 		public virtual bool OvcHev => GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;

@@ -1,10 +1,14 @@
-﻿using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
     public interface IManufacturerReportFactory
 	{
 		IXMLManufacturerReport GetConventionalLorryManufacturerReport();
+
+		IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
+			ArchitectureID archId, bool exempted);
 
 		IMrfXmlType GetConventionalLorryVehicleType();
 		IMrfXmlType GetConventionalADASType();
@@ -31,5 +35,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetAirdragType();
 		IMrfXmlType GetAxleWheelsType();
 		IMrfXmlType GetConventionalLorryAuxType();
+		IMrfXmlType GetHEV_Px_IHCP_LorryVehicleType();
 	}
 }

@@ -462,7 +462,7 @@
     <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\IXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\AbstractManufacturerReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\LorryManufacturerReport\ConventionalLorryManufacturerReport.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\LorryManufacturerReport\LorryManufacturerReports.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportComponentWriters.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\AbstractMrfXmlType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFAirdragType.cs" />
@@ -533,6 +533,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLExemptedPrimaryBusVehicleReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLMultistageBusReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLPrimaryBusVehicleReport.cs" />
+    <Compile Include="Utils\Ninject\CombineArgumentsToNameInstanceProviders.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />

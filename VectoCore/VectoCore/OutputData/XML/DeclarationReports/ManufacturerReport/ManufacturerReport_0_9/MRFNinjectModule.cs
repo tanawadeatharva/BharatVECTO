@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
+using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9
 {
@@ -16,11 +18,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
     {
 		#region Overrides of NinjectModule
 
+
+		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
+		//	ArchitectureID archId, bool exempted);
+		private CombineArgumentsToNameInstanceProvider.CombineToName nameCombinationMethod = arguments => {
+			string result = "";
+			result += (bool)arguments[3] ? "exempted" : "";
+			result += arguments[1].ToString();
+			result += (ArchitectureID)arguments[2] == ArchitectureID.UNKNOWN ? "" : arguments[2].ToString();
+			result += arguments[0].ToString();
+			return result;
+		};
+
 		public override void Load()
 		{
-			Bind<IManufacturerReportFactory>().ToFactory().InSingletonScope();
+			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod, 
+				4, 4, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryManufacturerReport());
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				VehicleCategoryHelper.Lorry, 
+				VectoSimulationJobType.ConventionalVehicle, 
+				ArchitectureID.UNKNOWN, 
+				false));
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				VehicleCategoryHelper.Lorry,
+				VectoSimulationJobType.ConventionalVehicle,
+				ArchitectureID.UNKNOWN,
+				false));
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				VehicleCategoryHelper.Lorry,
+				VectoSimulationJobType.ConventionalVehicle,
+				ArchitectureID.UNKNOWN,
+				false));
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				VehicleCategoryHelper.Lorry,
+				VectoSimulationJobType.ConventionalVehicle,
+				ArchitectureID.UNKNOWN,
+				false));
+
 
 			Bind<IMrfXmlType>().To<MRF_ConventionalLorryVehicleType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleType());

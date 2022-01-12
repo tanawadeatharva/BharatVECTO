@@ -1164,6 +1164,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum ArchitectureID
 	{
+		UNKNOWN,
 		E2,
 		E3,
 		E4,

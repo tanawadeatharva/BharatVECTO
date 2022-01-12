@@ -94,17 +94,26 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
 			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-			
-			var report = _mrfFactory.GetConventionalLorryManufacturerReport() as ConventionalLorryManufacturerReport;
-			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
 
-			//var report = new ConventionalLorryManufacturerReport();
+			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
+
+            dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+			var report = _mrfFactory.GetManufacturerReport(
+				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+				dataProvider.JobInputData.JobType,
+				dataProvider.JobInputData.Vehicle.ArchitectureID,
+				dataProvider.JobInputData.Vehicle.ExemptedVehicle) as ConventionalLorryManufacturerReport;
+			Assert.NotNull(report);
+			//var report = _mrfFactory.GetConventionalLorryManufacturerReport() as ConventionalLorryManufacturerReport;
+            report.InitializeVehicleData(dataProvider);
+            TestContext.WriteLine(report.Vehicle);    
+
+            //var report = new ConventionalLorryManufacturerReport();
 
 
-			//TestContext.WriteLine(Path.);
-			//await StartSimulation(fileName);
-		}
+            //TestContext.WriteLine(Path.);
+            //await StartSimulation(fileName);
+        }
 
 		[TestCase]
 		public void MRFFactoryTest()
