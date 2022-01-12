@@ -405,6 +405,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var nextGear = GearList.Predecessor(currentGear);
+				if (SpeedTooHighForEngine(nextGear, outAngularVelocity)) {
+					return currentGear;
+				}
 
 				while (GearList.HasPredecessor(nextGear)) {
 					// check skip gears
