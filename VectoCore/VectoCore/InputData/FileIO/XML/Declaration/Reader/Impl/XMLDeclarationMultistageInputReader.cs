@@ -486,6 +486,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			_primaryVehicle = primaryVehicle;
 		}
+		public VectoSimulationJobType VehicleType { get => _primaryVehicle.Vehicle.VehicleType; }
 
 		#region ManufacturingStage mandatory properties
 

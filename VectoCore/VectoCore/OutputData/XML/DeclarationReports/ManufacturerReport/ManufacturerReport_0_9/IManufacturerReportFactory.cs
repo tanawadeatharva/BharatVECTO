@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXMLManufacturerReport GetConventionalLorryManufacturerReport();
 
 		IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
-			ArchitectureID archId, bool exempted);
+			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 		IMrfXmlType GetConventionalLorryVehicleType();
 		IMrfXmlType GetConventionalADASType();

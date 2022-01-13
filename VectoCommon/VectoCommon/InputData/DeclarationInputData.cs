@@ -215,6 +215,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxChargingPower { get; }
 
+		VectoSimulationJobType VehicleType { get; }
+
 	}
 
 	public interface IVehicleComponentsDeclaration

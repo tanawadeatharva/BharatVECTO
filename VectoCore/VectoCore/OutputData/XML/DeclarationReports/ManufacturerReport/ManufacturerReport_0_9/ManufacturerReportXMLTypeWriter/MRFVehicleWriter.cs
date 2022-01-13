@@ -42,9 +42,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_Px_IHPC_LorryVehicleWriter : MRFVehicleType
+	public class MRF_HEV_Px_IHPC_LorryVehicleType : MRFVehicleType
 	{
-		public MRF_HEV_Px_IHPC_LorryVehicleWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRF_HEV_Px_IHPC_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMRFComponentWriter
 		#endregion
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle);//, _mrfFactory.Get)
 		}
 
 		#endregion

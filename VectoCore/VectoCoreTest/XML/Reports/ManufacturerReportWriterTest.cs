@@ -8,11 +8,14 @@ using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
@@ -98,22 +101,43 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
 
             dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
 			var report = _mrfFactory.GetManufacturerReport(
 				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
 				dataProvider.JobInputData.JobType,
 				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle) as ConventionalLorryManufacturerReport;
+				dataProvider.JobInputData.Vehicle.ExemptedVehicle, 
+				ihpc,
+				iepc) as ConventionalLorryManufacturerReport;
 			Assert.NotNull(report);
-			//var report = _mrfFactory.GetConventionalLorryManufacturerReport() as ConventionalLorryManufacturerReport;
-            report.InitializeVehicleData(dataProvider);
-            TestContext.WriteLine(report.Vehicle);    
+			report.InitializeVehicleData(dataProvider);
+            TestContext.WriteLine(report.Vehicle);
+		}
 
-            //var report = new ConventionalLorryManufacturerReport();
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml")]
+		public async Task HEV_Px_LorryMRFTest(string fileName)
+		{
+			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
 
+			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
 
-            //TestContext.WriteLine(Path.);
-            //await StartSimulation(fileName);
-        }
+			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
+			var report = _mrfFactory.GetManufacturerReport(
+				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+				dataProvider.JobInputData.JobType,
+				dataProvider.JobInputData.Vehicle.ArchitectureID,
+				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+				ihpc,
+				iepc) as HEV_Px_IHPC_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			TestContext.WriteLine(report.Vehicle);
+		}
+		
 
 		[TestCase]
 		public void MRFFactoryTest()

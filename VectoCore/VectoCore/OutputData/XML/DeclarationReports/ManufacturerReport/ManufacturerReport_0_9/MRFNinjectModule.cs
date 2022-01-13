@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -20,46 +21,77 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
-		//	ArchitectureID archId, bool exempted);
+		//	ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
+		private object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
+			bool exempted, bool iepc, bool ihpc)
+		{
+			return new[] { (object)vehicleType, jobType, archId, exempted, iepc, ihpc};
+		}
 		private CombineArgumentsToNameInstanceProvider.CombineToName nameCombinationMethod = arguments => {
+			string vehicleType = (string)arguments[0];
+			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
+			ArchitectureID archId = (ArchitectureID)arguments[2];
+			bool exempted = (bool)arguments[3];
+			bool iepc = (bool)arguments[4];
+			bool ihpc = (bool)arguments[5];
+
+
+
 			string result = "";
-			result += (bool)arguments[3] ? "exempted" : "";
-			result += arguments[1].ToString();
-			result += (ArchitectureID)arguments[2] == ArchitectureID.UNKNOWN ? "" : arguments[2].ToString();
-			result += arguments[0].ToString();
+			if (exempted) {
+				result += exempted + vehicleType;
+			} else {
+				if (vehicleType == VehicleCategoryHelper.Lorry) {
+					if (jobType == VectoSimulationJobType.ParallelHybridVehicle || ihpc) {
+						result += "HEV-Px/IHPC";
+					}else if (jobType == VectoSimulationJobType.SerialHybridVehicle) {
+						result += "HEV-" + archId;
+					}else if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
+						if (iepc) {
+							result += "PEV-IEPC";
+						} else {
+							result += "PEV" + archId;
+						}
+					}else if (jobType == VectoSimulationJobType.ConventionalVehicle) {
+						result += "Conventional";
+					}
+				}else if (vehicleType == VehicleCategoryHelper.PrimaryBus) {
+
+
+
+				}else if (vehicleType == VehicleCategoryHelper.CompletedBus) {
+					result += jobType;
+				}
+
+				result += vehicleType;
+			}
+
+
 			return result;
 		};
 
 		public override void Load()
 		{
 			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod, 
-				4, 4, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
+				6, 6, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryManufacturerReport());
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				VehicleCategoryHelper.Lorry, 
-				VectoSimulationJobType.ConventionalVehicle, 
-				ArchitectureID.UNKNOWN, 
-				false));
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				VehicleCategoryHelper.Lorry,
-				VectoSimulationJobType.ConventionalVehicle,
-				ArchitectureID.UNKNOWN,
-				false));
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				VehicleCategoryHelper.Lorry,
-				VectoSimulationJobType.ConventionalVehicle,
-				ArchitectureID.UNKNOWN,
-				false));
-			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				VehicleCategoryHelper.Lorry,
-				VectoSimulationJobType.ConventionalVehicle,
-				ArchitectureID.UNKNOWN,
-				false));
-
-
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(
+				nameCombinationMethod.Invoke(ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.ConventionalVehicle, 
+					ArchitectureID.UNKNOWN, 
+					false, 
+					false, 
+					false)));
+			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+				.Named(nameCombinationMethod.Invoke(ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.UNKNOWN, false, false, true)));
+			
 			Bind<IMrfXmlType>().To<MRF_ConventionalLorryVehicleType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_HEV_Px_IHPC_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryVehicleType());
 
 			Bind<IMrfXmlType>().To<MRFConventionalAdasType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalADASType());

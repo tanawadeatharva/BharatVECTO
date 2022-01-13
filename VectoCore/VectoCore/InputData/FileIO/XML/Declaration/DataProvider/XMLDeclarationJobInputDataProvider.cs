@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string ShiftStrategy => null;
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public virtual VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 
@@ -99,6 +99,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			base(node, inputProvider, fileName) { }
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+		#region Overrides of XMLDeclarationJobInputDataProviderV10
+
+		
+		public override VectoSimulationJobType JobType { get => Vehicle.VehicleType; }
+
+		#endregion
 	}
 	
 	// ---------------------------------------------------------------------------------------

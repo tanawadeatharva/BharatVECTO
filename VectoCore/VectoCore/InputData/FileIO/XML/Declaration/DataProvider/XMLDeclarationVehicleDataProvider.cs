@@ -250,6 +250,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
 
+		public virtual VectoSimulationJobType VehicleType { get => throw new NotImplementedException("must be overriden in derived classes"); }
+
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
 		#endregion
@@ -267,6 +269,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVehicleDataProviderV20 : XMLDeclarationVehicleDataProviderV10
 	{
+
 		/*
 		 * use default values for new parameters introduced in 2019/318 (amendment of 2017/2400
 		 */
@@ -301,6 +304,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Watt MaxNetPower2 => null;
 
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 		public class ADASDefaultValues : IAdvancedDriverAssistantSystemDeclarationInputData
 		{
 			#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
@@ -355,6 +359,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -431,6 +437,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -493,6 +501,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	public class XMLDeclarationExemptedPrimaryBusDataProviderV210 : XMLDeclarationVehicleDataProviderV20
@@ -567,6 +577,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override double RetarderRatio => 0;
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	public class XMLDeclarationMediumLorryVehicleDataProviderV210 : XMLDeclarationVehicleDataProviderV21
@@ -623,6 +635,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	
@@ -792,6 +806,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			return torqueLimits;
 		}
+
+		public virtual VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -819,6 +835,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Watt MaxNetPower1 => GetDouble("SumNetPower").SI<Watt>();
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1018,6 +1036,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1135,6 +1154,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1244,6 +1265,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: (TankSystem?)null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 
@@ -1294,6 +1317,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				: null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1321,6 +1346,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1339,6 +1366,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVPxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1357,6 +1386,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 
 	}
 
@@ -1384,6 +1415,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1410,6 +1443,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1448,6 +1483,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1478,6 +1515,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1504,6 +1543,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 
@@ -1536,6 +1577,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override CubicMeter CargoVolume => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1567,6 +1610,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1591,6 +1636,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override CubicMeter CargoVolume => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 
@@ -1620,6 +1667,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 
 
 	}
@@ -1651,6 +1700,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -1672,5 +1723,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 }
