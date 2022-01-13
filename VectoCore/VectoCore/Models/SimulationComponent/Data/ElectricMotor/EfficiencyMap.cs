@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 				return null;
 			}
 
-			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
 
