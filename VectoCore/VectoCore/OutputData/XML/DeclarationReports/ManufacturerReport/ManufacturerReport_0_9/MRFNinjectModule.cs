@@ -85,13 +85,106 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false, 
 					false)));
 			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
-				.Named(nameCombinationMethod.Invoke(ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle, ArchitectureID.UNKNOWN, false, false, true)));
-			
+				.Named(nameCombinationMethod.Invoke(ToParams(
+					VehicleCategoryHelper.Lorry, 
+					VectoSimulationJobType.ParallelHybridVehicle, 
+					ArchitectureID.UNKNOWN, 
+					false, 
+					false, 
+					true)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S2,
+					false,
+					false,
+					false)));
+
+
+			Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E4,
+					false,
+					false,
+					false)));
+
+
+
 			Bind<IMrfXmlType>().To<MRF_ConventionalLorryVehicleType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleType());
 
 			Bind<IMrfXmlType>().To<MRF_HEV_Px_IHPC_LorryVehicleType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryVehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_HEV_S2_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_VehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_HEV_S3_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_VehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_HEV_S4_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_VehicleType());
+
+
+			Bind<IMrfXmlType>().To<MRF_PEV_E2_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_VehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_PEV_E3_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_VehicleType());
+
+			Bind<IMrfXmlType>().To<MRF_PEV_E4_LorryVehicleType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_VehicleType());
+
+
 
 			Bind<IMrfXmlGroup>().To<HEV_VehicleSequenceGroup>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVVehicleSequenceGroup());
@@ -115,6 +208,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IMrfXmlType>().To<MRFHEV_Px_IHPC_LorryComponentsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_ComponentsType());
+
+			Bind<IMrfXmlType>().To<MRFHEV_S2_LorryComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_ComponentsType());
+
+			Bind<IMrfXmlType>().To<MRFHEV_S3_LorryComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_ComponentsType());
+
+			Bind<IMrfXmlType>().To<MRFHEV_S4_LorryComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_ComponentsType());
+
+			Bind<IMrfXmlType>().To<MRFHEV_IEPC_S_LorryComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_ComponentsType());
 			#endregion
 
 			Bind<IMrfXmlType>().To<MRFTransmissionType>()
@@ -134,6 +239,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IMrfXmlType>().To<MRFAxleWheelsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleWheelsType());
+
+			Bind<IMrfXmlType>().To<MRFElectricMachinesType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetElectricMachinesType());
+
+
+			Bind<IMrfXmlType>().To<MRFREESSSpecificationsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetREESSSpecificationsType());
 
 			#region Auxiliaries
 			Bind<IMrfXmlType>().To<MRFConventionalLorryAuxiliariesType>()

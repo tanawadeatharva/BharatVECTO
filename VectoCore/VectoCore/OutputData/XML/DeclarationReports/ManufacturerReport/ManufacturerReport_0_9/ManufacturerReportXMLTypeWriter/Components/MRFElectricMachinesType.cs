@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
+{
+    internal class MRFElectricMachinesType : AbstractMrfXmlType
+    {
+		public MRFElectricMachinesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var electricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries;
+			var result =  new XElement(_mrf + "ElectricMachines");
+			
+			foreach (var electricMachine in electricMachines) {
+				result.Add(new XElement(_mrf + "CountAtPosition", electricMachine.Count), 
+					new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position));
+				var electricMachineSystem = new XElement(_mrf + XMLNames.ElectricMachineSystem);
+				
+				electricMachineSystem.Add(new XElement(_mrf + XMLNames.Component_Model, electricMachine.ElectricMachine.Model),
+					new XElement(_mrf + XMLNames.Component_CertificationNumber, electricMachine.ElectricMachine.CertificationNumber),
+					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue.DigestValue),
+					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, ((IPowerRatingInputData)(electricMachine.ElectricMachine)).ElectricMachineType),
+					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod)
+					);
+				result.Add(electricMachineSystem);
+				if (electricMachine.ADC != null) {
+					var adc = electricMachine.ADC;
+					result.Add(new XElement(_mrf + XMLNames.Component_ADC, 
+						new XElement(_mrf + XMLNames.Component_Model, adc.Model),
+						new XElement(_mrf + XMLNames.Component_CertificationNumber, adc.CertificationNumber),
+						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, adc.DigestValue.DigestValue),
+						new XElement(_mrf + XMLNames.Component_CertificationMethod, adc.CertificationMethod.ToXMLFormat()),
+						new XElement(_mrf + XMLNames.AngleDrive_Ratio, adc.Ratio.ToXMLFormat(3)))
+						);
+				}
+
+			}
+
+
+
+
+			return result;
+		}
+
+		#endregion
+	}
+}

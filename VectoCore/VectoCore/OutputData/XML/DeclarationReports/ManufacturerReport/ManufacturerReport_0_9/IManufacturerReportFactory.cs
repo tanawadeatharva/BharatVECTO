@@ -11,6 +11,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 		IMrfXmlType GetConventionalLorryVehicleType();
+
+		IMrfXmlType GetHEV_S2_VehicleType();
+		IMrfXmlType GetHEV_S3_VehicleType();
+		IMrfXmlType GetHEV_S4_VehicleType();
+
+		IMrfXmlType GetHEV_IEPC_S_VehicleType();
+
+		IMrfXmlType GetPEV_E2_VehicleType();
+		IMrfXmlType GetPEV_E3_VehicleType();
+		IMrfXmlType GetPEV_E4_VehicleType();
+
+
+
+		IMrfXmlType GetHEV_S2_ComponentsType();
+		IMrfXmlType GetHEV_S3_ComponentsType();
+		IMrfXmlType GetHEV_S4_ComponentsType();
+		IMrfXmlType GetHEV_IEPC_S_ComponentsType();
+
+
 		IMrfXmlType GetConventionalADASType();
 
 		IMrfXmlGroup GetHEVVehicleSequenceGroup();
@@ -25,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetTorqueConverterType();
 		IMrfXmlType GetAngleDriveType();
 		IMrfXmlType GetTransmissionType();
-
+		IMrfXmlType GetElectricMachinesType();
 		IMrfXmlType GetAxleGearType();
 
 		IMrfXmlGroup GetGeneralVehicleOutputGroup();
@@ -35,7 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IMrfXmlGroup GetGeneralLorryVehicleOutputGroup();
 
-
+		IMrfXmlType GetREESSSpecificationsType();
 		IMrfXmlType GetAirdragType();
 		IMrfXmlType GetAxleWheelsType();
 		IMrfXmlType GetConventionalLorryAuxType();
@@ -45,5 +64,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetHEV_Px_IHCP_ComponentsType();
 		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IMrfXmlType GetHEV_LorryAuxiliariesType();
+
 	}
 }
