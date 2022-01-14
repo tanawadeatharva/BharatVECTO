@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.Lorry;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
 using TUGraz.VectoCore.Utils.Ninject;
@@ -17,7 +18,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     internal class MRFNinjectModule : AbstractNinjectModule
     {
-		#region Overrides of NinjectModule
 
 
 		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
@@ -93,17 +93,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRF_HEV_Px_IHPC_LorryVehicleType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryVehicleType());
 
+			Bind<IMrfXmlGroup>().To<HEV_VehicleSequenceGroup>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVVehicleSequenceGroup());
+			#region ADAS
 			Bind<IMrfXmlType>().To<MRFConventionalAdasType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalADASType());
+			Bind<IMrfXmlType>().To<MRFHevAdasType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVADASType());
 
+
+			#endregion ADAS
 			Bind<IMrfXmlType>().To<MRFTorqueLimitationsType>().
 				NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineTorqueLimitationsType());
 
 			Bind<IMrfXmlType>().To<MRFEngineType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineType());
 
+			#region Components
 			Bind<IMrfXmlType>().To<MRFConventionalLorryComponentsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryComponentsType());
+
+			Bind<IMrfXmlType>().To<MRFHEV_Px_IHPC_LorryComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_ComponentsType());
+			#endregion
 
 			Bind<IMrfXmlType>().To<MRFTransmissionType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetTransmissionType());
@@ -123,8 +135,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFAxleWheelsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleWheelsType());
 
+			#region Auxiliaries
 			Bind<IMrfXmlType>().To<MRFConventionalLorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryAuxType());
+
+
+
+			#region Auxiliaries
+
+			Bind<IMrfXmlType>().To<MRFHevLorryAuxiliariesType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_LorryAuxiliariesType());
+
+			Bind<IMrfXmlType>().To<MRFAxleGearType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleGearType());
+#endregion
+
 
 			#region XMLGroups
 
@@ -136,6 +161,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlGroup>().To<ConventionalLorryVehicleXmlGroup>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleOutputGroup());
 
+			Bind<IMrfXmlGroup>().To<HEV_LorryVehicleOutputTypeGroup>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_lorryVehicleOutputGroup());
+			Bind<IMrfXmlGroup>().To<HEV_LorryVehicleOutputTypeSequenceGroup>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_lorryVehicleOutputSequenceGroup());
 
 			#endregion
 		}

@@ -4,8 +4,7 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-
-	public class MRFConventionalAdasType : AbstractMrfXmlType
+	internal class MRFConventionalAdasType : AbstractMrfXmlType
     {
 		#region Overrides of AbstractMRFComponentWriter
 
@@ -25,5 +24,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 
 		public MRFConventionalAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+	}
+
+	internal class MRFHevAdasType : AbstractMrfXmlType
+	{
+		public MRFHevAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Vehicle_ADAS, 
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, inputData.JobInputData.Vehicle.ADAS.EngineStopStart),
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC, inputData.JobInputData.Vehicle.ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+				);
+		}
+
+		#endregion
 	}
 }

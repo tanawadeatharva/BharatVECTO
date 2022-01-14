@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -53,7 +54,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			return new XElement(_mrf + XMLNames.Component_Vehicle);//, _mrfFactory.Get)
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetXmlType(inputData),
+				_mrfFactory.GetHEV_Px_IHCP_ComponentsType().GetXmlType(inputData)
+				
+				
+				);
 		}
 
 		#endregion

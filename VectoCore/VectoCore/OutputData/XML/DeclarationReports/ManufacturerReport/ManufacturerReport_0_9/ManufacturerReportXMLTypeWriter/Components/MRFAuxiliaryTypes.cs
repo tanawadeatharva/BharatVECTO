@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFConventionalLorryAuxiliariesType : AbstractMrfXmlType
+	internal class MRFConventionalLorryAuxiliariesType : AbstractMrfXmlType
     {
 		public MRFConventionalLorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -38,4 +38,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class MRFHevLorryAuxiliariesType : MRFConventionalLorryAuxiliariesType
+	{
+		public MRFHevLorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			return base.GetXmlType(inputData);
+		}
+
+		#endregion
+	}
+
 }

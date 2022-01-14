@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-	public class MRFConventionalLorryComponentsType : AbstractMrfXmlType
+	internal class MRFConventionalLorryComponentsType : AbstractMrfXmlType
 	{
 		public MRFConventionalLorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -39,6 +39,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			);
 			//return new XElement(_mrf + XMLNames.Vehicle_Components, 
 			//	_mrfFactory.GetEngineType())
+		}
+
+		#endregion
+	}
+
+	internal class MRFHEV_Px_IHPC_LorryComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_Px_IHPC_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var result = new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetEngineType().GetXmlType(inputData),
+				_mrfFactory.GetTransmissionType().GetXmlType(inputData),
+				_mrfFactory.GetRetarderType().GetXmlType(inputData),
+				_mrfFactory.GetTorqueConverterType().GetXmlType(inputData),
+				_mrfFactory.GetAngleDriveType().GetXmlType(inputData),
+				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
+				_mrfFactory.GetHEV_LorryAuxiliariesType().GetXmlType(inputData)
+			);
+			return result;
 		}
 
 		#endregion

@@ -5,24 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.Lorry
 {
-    internal class HEV_LorryVehicleOutputTypeGroup : AbstractMrfXmlGroup
+    internal class HEV_VehicleSequenceGroup : AbstractMrfXmlGroup
     {
-		public HEV_LorryVehicleOutputTypeGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HEV_VehicleSequenceGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlGroup
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var result = new List<XElement>();
-			result.AddRange(_mrfFactory.GetGeneralLorryVehicleOutputGroup().GetElements(inputData));
-			result.AddRange(_mrfFactory.GetHEV_lorryVehicleOutputSequenceGroup().GetElements(inputData));
-
-
-
+			var vehicleData = inputData.JobInputData.Vehicle;
+			var result = new List<XElement>()
+			{
+				new XElement(_mrf + "HEVArchitecture", vehicleData.ArchitectureID.GetLabel()),
+				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OvcHev),
+				vehicleData.MaxChargingPower != null ? new XElement(_mrf + "OffVehicleChargingMaxPower") : null,
+			};
+			result.Add(_mrfFactory.GetHEVADASType().GetXmlType(inputData));
 			return result;
 		}
 
