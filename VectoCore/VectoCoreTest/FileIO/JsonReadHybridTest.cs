@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 2);
 			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
-			Assert.AreEqual(-147.2105, pwrMap.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-208.04255, pwrMap.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
 
 			Assert.AreEqual(-16412.2624, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);

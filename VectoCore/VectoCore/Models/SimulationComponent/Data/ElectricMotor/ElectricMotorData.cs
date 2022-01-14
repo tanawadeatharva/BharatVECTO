@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		
 		public NewtonMeter EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
 		{
-			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
 			var (a, b) = GetSection(voltage);
