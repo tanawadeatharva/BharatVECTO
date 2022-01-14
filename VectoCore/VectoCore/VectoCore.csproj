@@ -282,8 +282,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\IVectoRunDataFactoryFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryFactory.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryNinjectModule.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
@@ -438,6 +441,9 @@
     <Compile Include="Models\SimulationComponent\Impl\ATClutchInfo.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
     <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\IFollowUpSimulatorFactoryCreator.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryDeclaration.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryEngineering.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
@@ -511,8 +517,11 @@
     </Compile>
     <Compile Include="OutputData\XML\GroupWriter\GroupWriter.cs" />
     <Compile Include="OutputData\XML\GroupWriter\IGroupWriterFactory.cs" />
+    <Compile Include="OutputData\XML\IXMLReportFactory.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationNamespaces.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactory.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactoryNinjectModule.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportCompletedBus.cs" />
@@ -743,7 +752,7 @@
     <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoRun.cs" />
-    <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactory.cs" />
     <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
     <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />

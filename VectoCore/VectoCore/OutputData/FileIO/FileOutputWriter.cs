@@ -38,6 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -153,6 +154,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public virtual void WriteReport(ReportType type, XDocument data)
 		{
 			var fileName = GetReportFilename(type);
+
+			if (File.Exists(fileName)) {
+				Log.Warn($"Overwriting file ({fileName})");
+			}
 			using (var writer = new FileStream(fileName, FileMode.Create)) {
 				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
 					xmlWriter.Formatting = Formatting.Indented;
@@ -163,7 +168,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			}
 
 			var added = _writtenReports.TryAdd(type, fileName);
-			System.Diagnostics.Debug.Assert(added);
 		}
 
 		protected virtual string GetReportFilename(ReportType type)

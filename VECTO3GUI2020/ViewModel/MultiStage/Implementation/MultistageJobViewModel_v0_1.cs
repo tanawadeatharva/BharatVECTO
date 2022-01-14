@@ -20,8 +20,10 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -83,7 +85,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IMultistageDependencies multistageDependencies,
 			IXMLInputDataReader inputDataReader, 
 			IJobListViewModel jobListViewModel,
-			IAdditionalJobInfoViewModel additionalJobInfo)
+			IAdditionalJobInfoViewModel additionalJobInfo,
+			ISimulatorFactoryFactory simulatorFactoryFactory)
 		{
 			
 			_dataSource = inputData.DataSource;
@@ -92,11 +95,11 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_jobListViewModel = jobListViewModel;
 			_inputData = inputData;
 			_vmFactory = vmFactory;
+			_simFactoryFactory = simulatorFactoryFactory;
 			_consolidateManufacturingStage = _jobInputData.ConsolidateManufacturingStage;
 			_manufacturingStages = _jobInputData.ManufacturingStages;
 			_primaryVehicle = _jobInputData.PrimaryVehicle;
 			_dialogHelper = multistageDependencies.DialogHelperLazy;
-			_inputDataReader = inputDataReader;
 			_inputComplete = inputData.JobInputData.InputComplete;
 			_invalidEntries = inputData.JobInputData?.InvalidEntries?.Distinct().ToList();
 			_additionalJobInfoVm = additionalJobInfo;
@@ -219,10 +222,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
 
-				if (WriteTempVIFAndValidate(inputData, writer, dialogHelper))
-				{
+				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer);
+				//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 					FileHelper.CreateDirectory(outputFile);
-					var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 
 					var jobContainer = new JobContainer(new NullSumWriter());
 
@@ -326,8 +328,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
         private readonly Lazy<IDialogHelper> _dialogHelper;
-		private readonly IXMLInputDataReader _inputDataReader;
-		private string _vehicleInputDataFilePath = null;
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
 		private readonly IMultistageBusInputDataProvider _inputData;
@@ -335,6 +335,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private readonly bool _exempted;
 		private readonly IJobListViewModel _jobListViewModel;
 		private readonly IList<string> _invalidEntries;
+		private readonly ISimulatorFactoryFactory _simFactoryFactory;
 
 
 		public string VehicleInputDataFilePath

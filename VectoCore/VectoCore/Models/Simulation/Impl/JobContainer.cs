@@ -106,9 +106,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (followUpSimulatorFactoryFetched || !AllCompleted()) {
 						return null;
 					}
+
 					followUpSimulatorFactoryFetched = true;
 					return _simulatorFactory.FollowUpSimulatorFactory;
-				} finally {
+				}finally {
 
 				}
 			}

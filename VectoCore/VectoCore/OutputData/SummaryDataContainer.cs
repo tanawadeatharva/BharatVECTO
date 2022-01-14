@@ -406,11 +406,11 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
 			}
 
-			if (gearCount <= 0) {
-				return;
+			if (gearCount > 0) {
+				WriteGearshiftStats(modData, row, gearCount);
 			}
 
-			WriteGearshiftStats(modData, row, gearCount);
+	
 
 			//AddResultRow(row); //Add dictionary to datatable
 			AddResultDictionary(row);
