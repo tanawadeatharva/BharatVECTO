@@ -1310,7 +1310,16 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusManufacturingStepDataType", resourceCulture);
             }
         }
-        
+
+		/// <summary>
+		///   Looks up a localized string similar to BusManufacturingStepDataType.
+		/// </summary>
+		public static string ManufacturingStep_Bus_DataType {
+			get {
+				return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
+			}
+		}
+
         /// <summary>
         ///   Looks up a localized string similar to ChassisConfiguration.
         /// </summary>
@@ -2694,6 +2703,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string ManufacturingStep_StepCount {
             get {
                 return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HashPreviousStep.
+        /// </summary>
+        public static string ManufacturingStep_HashPreviousStep {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_HashPreviousStep", resourceCulture);
+            }
+        }
+		
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_stepCount_Attr {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_stepCount_Attr", resourceCulture);
             }
         }
         

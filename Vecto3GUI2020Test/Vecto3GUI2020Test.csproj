@@ -89,12 +89,12 @@
 
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="4.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.2" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -103,9 +103,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework" />
   </ItemGroup>
 

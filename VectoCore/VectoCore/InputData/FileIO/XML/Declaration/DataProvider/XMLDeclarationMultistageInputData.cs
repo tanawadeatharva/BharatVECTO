@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public DigestData HashPreviousStep =>
 			_hashPreviousStage ??
-			(_hashPreviousStage = Reader.GetDigestData(GetNode(XMLNames.HashPreviousStep)));
+			(_hashPreviousStage = Reader.GetDigestData(GetNode(XMLNames.ManufacturingStep_HashPreviousStep)));
 
 		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 
