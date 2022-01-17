@@ -59,13 +59,13 @@ namespace TUGraz.VectoCommon.Models
 			switch (category) {
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
-					return "Lorry";
+					return Lorry;
 					break;
 				case VehicleCategory.HeavyBusPrimaryVehicle:
-					return "PrimaryBus";
+					return PrimaryBus;
 					break;
 				case VehicleCategory.HeavyBusCompletedVehicle:
-					return "CompletedBus";
+					return CompletedBus;
 					break;
 				default:
 					return category.GetLabel();
