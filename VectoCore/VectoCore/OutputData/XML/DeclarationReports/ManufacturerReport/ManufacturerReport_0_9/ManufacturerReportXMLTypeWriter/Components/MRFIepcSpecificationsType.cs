@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -25,7 +26,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ToXMLFormat()),
 				new XElement(_mrf + "MaxContinuousPower",(iepcData.ContinuousTorque*iepcData.ContinuousTorqueSpeed).ToXMLFormat()),
 				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
-				new XElement(_mrf + "LowestTotalTransmissionRatio", "TODO"),
+				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
+																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio).ToXMLFormat()),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)
 			);
