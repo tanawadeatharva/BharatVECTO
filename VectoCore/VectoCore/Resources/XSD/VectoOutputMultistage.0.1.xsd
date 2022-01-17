@@ -8,7 +8,7 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" schemaLocation="VectoDeclarationDefinitions.2.10.2_JobInputData.xsd"/>
-	<xs:element name="VectoOutputMultistage" type="vif:VectoOutputMultistageType">
+	<xs:element name="VectoOutputMultistep" type="vif:VectoOutputMultistageType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
@@ -366,11 +366,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="BusManufacturingStageDataType">
+	<xs:complexType name="BusManufacturingStepDataType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractManufacturingStageDataType">
 				<xs:sequence>
-					<xs:element name="HashPreviousStage" type="v1.0:SignatureType"/>
+					<xs:element name="HashPreviousStep" type="v1.0:SignatureType"/>
 					<xs:element name="Vehicle" type="v2.10.2:AbstractCompletedBusVehicleType"/>
 					<xs:element name="ApplicationInformation" type="vif:ApplicationInformationPrimaryVehicleType"/>
 				</xs:sequence>
@@ -724,7 +724,7 @@
 	<xs:complexType name="VectoOutputMultistageType">
 		<xs:sequence>
 			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
-			<xs:element name="ManufacturingStage" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ManufacturingStep" type="vif:ManufacturingStageType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VehicleComponentsPIFType">
