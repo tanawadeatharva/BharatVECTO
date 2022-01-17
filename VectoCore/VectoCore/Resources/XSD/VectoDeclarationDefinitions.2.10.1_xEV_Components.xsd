@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.4" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -11,12 +11,12 @@
 			<xs:extension base="v1.0:AbstractAngledriveDataDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractBatteryDataType" abstract="true">
+	<xs:complexType name="AbstractBatterySystemDataType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.10.1:AbstractREESSDataType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractCapacitorDataType" abstract="true">
+	<xs:complexType name="AbstractCapacitorSystemDataType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.10.1:AbstractREESSDataType"/>
 		</xs:complexContent>
@@ -96,7 +96,7 @@
 	</xs:complexType>
 	<xs:complexType name="BatteryComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.1:AbstractBatteryDataType"/>
+			<xs:element name="Data" type="v2.10.1:AbstractBatterySystemDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -119,7 +119,7 @@
 	</xs:complexType>
 	<xs:complexType name="BatterySystemDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.1:AbstractBatteryDataType">
+			<xs:extension base="v2.10.1:AbstractBatterySystemDataType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -299,15 +299,15 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="CapacitorComponentDeclarationType">
+	<xs:complexType name="CapacitorSystemComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.1:AbstractCapacitorDataType"/>
+			<xs:element name="Data" type="v2.10.1:AbstractCapacitorSystemDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="CapacitorDataType">
+	<xs:complexType name="CapacitorSystemDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.1:AbstractCapacitorDataType">
+			<xs:extension base="v2.10.1:AbstractCapacitorSystemDataType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -682,11 +682,6 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="v2.10.1:ElectricMachineSystemPowerRatingsSequenceGroup"/>
-					<xs:element name="TestVoltageOverload" type="v2.10.1:TestVoltageOverloadType">
-						<xs:annotation>
-							<xs:documentation>P464 - [V]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P465 - bool</xs:documentation>
@@ -809,7 +804,31 @@
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
+					<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P459 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P460 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P461 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P462 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P463 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="PowerMap">
 						<xs:complexType>
 							<xs:sequence>
@@ -817,6 +836,7 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
+					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -825,6 +845,31 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.1:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
+					<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P459 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P460 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P461 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P462 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P463 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="MaxTorqueCurve">
 						<xs:complexType>
 							<xs:sequence>
@@ -1015,11 +1060,6 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="v2.10.1:IEPCPowerRatingsSequenceGroup"/>
-					<xs:element name="TestVoltageOverload" type="v2.10.1:TestVoltageOverloadType">
-						<xs:annotation>
-							<xs:documentation>P492 - [V]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="DifferentialIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P493 - bool</xs:documentation>
@@ -1161,6 +1201,31 @@
 							<xs:documentation>P500 - [V]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P487 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P488 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P489 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P490 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P491 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
 					<xs:element name="PowerMap" maxOccurs="unbounded">
 						<xs:complexType>
@@ -1184,6 +1249,31 @@
 		<xs:complexContent>
 			<xs:extension base="v2.10.1:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
+					<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P487 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P488 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P489 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P490 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P491 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="MaxTorqueCurve">
 						<xs:complexType>
 							<xs:sequence>
@@ -1668,31 +1758,6 @@
 					<xs:documentation>P458 - [kgm²]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P459 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P460 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P461 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P462 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
-				<xs:annotation>
-					<xs:documentation>P463 - [s]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="IEPCCommonParametersSequenceGroup">
@@ -1769,31 +1834,6 @@
 			<xs:element name="RotationalInertia" type="v2.10.1:RotationalInertiaType">
 				<xs:annotation>
 					<xs:documentation>P486 [ kgm2]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P487 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P488 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
-				<xs:annotation>
-					<xs:documentation>P489 - [Nm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
-				<xs:annotation>
-					<xs:documentation>P490 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
-				<xs:annotation>
-					<xs:documentation>P491 - [s]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
