@@ -553,11 +553,6 @@
 						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="v2.10.1:ElectricMachineSystemPowerRatingsSequenceGroup"/>
-					<xs:element name="TestVoltageOverload" type="v2.10.1:TestVoltageOverloadType">
-						<xs:annotation>
-							<xs:documentation>P464 - [V]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P465 - bool</xs:documentation>
@@ -611,6 +606,31 @@
 					<xs:element name="Voltage" type="v2.10.1:VoltageLevelVoltageType">
 						<xs:annotation>
 							<xs:documentation>P467 - [V]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ContinuousTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P459 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P460 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.10.1:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P461 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.10.1:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P462 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.10.1:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P463 - [s]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxTorqueCurve">
@@ -693,10 +713,15 @@
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="IHPCType" type="v2.10.1:IHPCTypeType">
+					<xs:element name="IHPCType">
 						<xs:annotation>
 							<xs:documentation>P466 - enum</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v2.10.1:IHPCTypeType">
+								<xs:enumeration value="None"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="VoltageLevel" type="v2.10.1:ElectricMachineSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
@@ -829,6 +854,7 @@
 							<xs:documentation>P463 - [s]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
 					<xs:element name="PowerMap">
 						<xs:complexType>
 							<xs:sequence>
@@ -836,7 +862,6 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
