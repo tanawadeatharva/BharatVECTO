@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
+
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
+{
+    internal class MRFIepcSpecificationsType : AbstractMrfXmlType
+    {
+		public MRFIepcSpecificationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var iepcData = inputData.JobInputData.Vehicle.Components.IEPC;
+			return new XElement(_mrf + "IEPCSpecifiactions",
+				new XElement(_mrf + XMLNames.Component_Model, iepcData.Model),
+				new XElement(_mrf + XMLNames.Component_CertificationNumber, iepcData.CertificationNumber),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, iepcData.DigestValue.DigestValue),
+				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ToXMLFormat()),
+				new XElement(_mrf + "MaxContinuousPower",(iepcData.ContinuousTorque*iepcData.ContinuousTorqueSpeed).ToXMLFormat()),
+				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
+				new XElement(_mrf + "LowestTotalTransmissionRatio", "TODO"),
+				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
+				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)
+			);
+		}
+
+		#endregion
+	}
+}

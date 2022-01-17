@@ -65,5 +65,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IMrfXmlType GetHEV_LorryAuxiliariesType();
 
+		IMrfXmlType GetIEPCSpecifications();
 	}
 }
