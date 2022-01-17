@@ -21,6 +21,7 @@ using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
+	[TestFixture]
 	public class VIFTests : ViewModelTestBase
 	{
 

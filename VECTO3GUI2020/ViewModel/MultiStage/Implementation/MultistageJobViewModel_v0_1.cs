@@ -141,11 +141,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         #region Commands
 
-
-
-      
-
-
 		private ICommand _saveVifCommand;
 
 		public ICommand SaveVIFCommand
@@ -244,7 +239,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 					Debug.WriteLine($"Written to {writer.XMLMultistageReportFileName}");
 					return writer.XMLMultistageReportFileName;
-                }
+                
 			}catch (Exception e) {
 				dialogHelper?.ShowMessageBox($"{e.GetInnerExceptionMessages()}", "Error writing VIF", MessageBoxButton.OK,
 					MessageBoxImage.Error);
@@ -252,80 +247,80 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			return null;
 		}
 
-        private bool WriteTempVIFAndValidate(XMLDeclarationVIFInputData inputData, FileOutputVIFWriter writer, IDialogHelper dialogHelper)
-        {
-			var tempWriter = new TempFileOutputWriter(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, tempWriter);
+  //      private bool WriteTempVIFAndValidate(XMLDeclarationVIFInputData inputData, FileOutputVIFWriter writer, IDialogHelper dialogHelper)
+  //      {
+		//	var tempWriter = new TempFileOutputWriter(writer);
+		//	var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, tempWriter);
 
-			var jobContainer = new JobContainer(new NullSumWriter());
+		//	var jobContainer = new JobContainer(new NullSumWriter());
 
-			jobContainer.AddRuns(factory);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
+		//	jobContainer.AddRuns(factory);
+		//	jobContainer.Execute();
+		//	jobContainer.WaitFinished();
 
-			var resultXDoc = tempWriter.GetDocument(ReportType.DeclarationReportMultistageVehicleXML);
+		//	var resultXDoc = tempWriter.GetDocument(ReportType.DeclarationReportMultistageVehicleXML);
 
 
-			using (var reader = resultXDoc.Root.CreateReader())
-			{
-				var validator = new XMLValidator(reader);
-				var valid = validator.ValidateXML(XmlDocumentType.MultistepOutputData);
-				if (!valid)
-				{
-					dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
-						MessageBoxButton.OK, MessageBoxImage.Error);
-					Debug.WriteLine("Invalid Outputfile");
-					return false;
-				}
-			}
-			using (var reader = resultXDoc.Root.CreateReader())
-            {
+		//	using (var reader = resultXDoc.Root.CreateReader())
+		//	{
+		//		var validator = new XMLValidator(reader);
+		//		var valid = validator.ValidateXML(XmlDocumentType.MultistepOutputData);
+		//		if (!valid)
+		//		{
+		//			dialogHelper?.ShowMessageBox($"Error writing VIF {validator.ValidationError}", "Error",
+		//				MessageBoxButton.OK, MessageBoxImage.Error);
+		//			Debug.WriteLine("Invalid Outputfile");
+		//			return false;
+		//		}
+		//	}
+		//	using (var reader = resultXDoc.Root.CreateReader())
+  //          {
 
-				if (inputData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final)
-				{
-					var inputDataProvider = _inputDataReader.Create(reader) as IMultistageBusInputDataProvider;
-					if (!inputDataProvider.JobInputData.InputComplete)
-					{
-						var errorCaption = "Step marked as final with incomplete/invalid input";
-						var errorStringBuilder = new StringBuilder();
-						errorStringBuilder.AppendLine("The following parameters are invalid:\n");
-						var converter = new PropertyNameToLabelTextConverter();
-						var resourceManagers = new List<ResourceManager>()
-						{
-							GUILabels.ResourceManager,
-							BusStrings.ResourceManager,
-							Strings.ResourceManager
-						};
-						foreach (var invalidEntry in inputDataProvider.JobInputData.InvalidEntries)
-						{
-							string name;
-							var conversionResult = converter.Convert(invalidEntry,
-								typeof(string),
-								resourceManagers,
-								System.Globalization.CultureInfo.CurrentCulture);
-							if (conversionResult is string convString)
-							{
-								name = convString;
-							}
-							else
-							{
-								name = invalidEntry;
-							}
-							errorStringBuilder.AppendLine(name);
-						}
-						dialogHelper?.ShowErrorMessage(errorStringBuilder.ToString(), errorCaption);
-						return false;
-					}
+		//		if (inputData.VehicleInputData.VehicleDeclarationType == VehicleDeclarationType.final)
+		//		{
+		//			var inputDataProvider = _inputDataReader.Create(reader) as IMultistageBusInputDataProvider;
+		//			if (!inputDataProvider.JobInputData.InputComplete)
+		//			{
+		//				var errorCaption = "Step marked as final with incomplete/invalid input";
+		//				var errorStringBuilder = new StringBuilder();
+		//				errorStringBuilder.AppendLine("The following parameters are invalid:\n");
+		//				var converter = new PropertyNameToLabelTextConverter();
+		//				var resourceManagers = new List<ResourceManager>()
+		//				{
+		//					GUILabels.ResourceManager,
+		//					BusStrings.ResourceManager,
+		//					Strings.ResourceManager
+		//				};
+		//				foreach (var invalidEntry in inputDataProvider.JobInputData.InvalidEntries)
+		//				{
+		//					string name;
+		//					var conversionResult = converter.Convert(invalidEntry,
+		//						typeof(string),
+		//						resourceManagers,
+		//						System.Globalization.CultureInfo.CurrentCulture);
+		//					if (conversionResult is string convString)
+		//					{
+		//						name = convString;
+		//					}
+		//					else
+		//					{
+		//						name = invalidEntry;
+		//					}
+		//					errorStringBuilder.AppendLine(name);
+		//				}
+		//				dialogHelper?.ShowErrorMessage(errorStringBuilder.ToString(), errorCaption);
+		//				return false;
+		//			}
 				
-				}
-			}
+		//		}
+		//	}
 
 			
 
 
 
-			return true;
-		}
+		//	return true;
+		//}
 
         private readonly Lazy<IDialogHelper> _dialogHelper;
 		private readonly IMultistageDependencies _multistageDependencies;

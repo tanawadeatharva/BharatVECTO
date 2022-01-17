@@ -660,7 +660,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IXMLADASReader ADASReader { get; set; }
 
 		
-		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => _adas ?? (_adas = ADASReader.ADASInputData);
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ExemptedVehicle ? null : (_adas ?? (_adas = ADASReader?.ADASInputData));
 
 
 		public virtual IList<ITorqueLimitInputData> TorqueLimits => ReadTorqueLimits();
