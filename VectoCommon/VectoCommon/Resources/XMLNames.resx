@@ -1863,4 +1863,19 @@
   <data name="DragCurve_Gear" xml:space="preserve">
     <value>gear</value>
   </data>
+  <data name="Component_ADC" xml:space="preserve">
+    <value>ADC</value>
+  </data>
+  <data name="Component_BatterySystem" xml:space="preserve">
+    <value>BatterySystem</value>
+  </data>
+  <data name="Component_CapacitorSystem" xml:space="preserve">
+    <value>CapacitorSystem</value>
+  </data>
+  <data name="Component_ElectricMachineSystem" xml:space="preserve">
+    <value>ElectricMachineSystem</value>
+  </data>
+  <data name="Component_IEPC" xml:space="preserve">
+    <value>IEPC</value>
+  </data>
 </root>

@@ -1456,6 +1456,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADC.
+        /// </summary>
+        public static string Component_ADC {
+            get {
+                return ResourceManager.GetString("Component_ADC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AirDrag.
         /// </summary>
         public static string Component_AirDrag {
@@ -1506,6 +1515,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Component_AxleWheels {
             get {
                 return ResourceManager.GetString("Component_AxleWheels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BatterySystem.
+        /// </summary>
+        public static string Component_BatterySystem {
+            get {
+                return ResourceManager.GetString("Component_BatterySystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CapacitorSystem.
+        /// </summary>
+        public static string Component_CapacitorSystem {
+            get {
+                return ResourceManager.GetString("Component_CapacitorSystem", resourceCulture);
             }
         }
         
@@ -1582,6 +1609,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ElectricMachineSystem.
+        /// </summary>
+        public static string Component_ElectricMachineSystem {
+            get {
+                return ResourceManager.GetString("Component_ElectricMachineSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Engine.
         /// </summary>
         public static string Component_Engine {
@@ -1614,6 +1650,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Component_ID_Attr {
             get {
                 return ResourceManager.GetString("Component_ID_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IEPC.
+        /// </summary>
+        public static string Component_IEPC {
+            get {
+                return ResourceManager.GetString("Component_IEPC", resourceCulture);
             }
         }
         
