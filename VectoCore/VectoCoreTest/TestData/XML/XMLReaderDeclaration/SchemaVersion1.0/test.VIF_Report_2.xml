@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vif0.1:VectoOutputMultistage 
+<vif0.1:VectoOutputMultistep 
 xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -562,9 +562,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
       </di:Reference>
     </vif0.1:Signature>
   </vif0.1:PrimaryVehicle>
-  <vif0.1:ManufacturingStage stageCount="2">
-    <vif0.1:Data xsi:type="BusManufacturingStageDataType" id="MST-ab066054c1bc431db1e3">
-      <vif0.1:HashPreviousStage>
+  <vif0.1:ManufacturingStep stageCount="2">
+    <vif0.1:Data xsi:type="BusManufacturingStepDataType" id="MST-ab066054c1bc431db1e3">
+      <vif0.1:HashPreviousStep>
         <di:Reference URI="#PIF-4121ae4751874cefa376">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -573,7 +573,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
           <di:DigestValue>YnCPep7uMh3ghMrx6ZsEMLanOijFCZpku+ZDNd6rkLw=</di:DigestValue>
         </di:Reference>
-      </vif0.1:HashPreviousStage>
+      </vif0.1:HashPreviousStep>
       <vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-a00526e499f144139792" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
         <Manufacturer>Some Manufacturer</Manufacturer>
         <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
@@ -665,5 +665,5 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
         <di:DigestValue>nOfZudPCG54oOYKKanFSCDOEQpivinYCPj2CqOTwqvE=</di:DigestValue>
       </di:Reference>
     </vif0.1:Signature>
-  </vif0.1:ManufacturingStage>
-</vif0.1:VectoOutputMultistage>
+  </vif0.1:ManufacturingStep>
+</vif0.1:VectoOutputMultistep>

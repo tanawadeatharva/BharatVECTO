@@ -58,17 +58,16 @@
 						<CertificationMethod>Measured</CertificationMethod>
 						<R85RatedPower>1</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
-						<ContinuousTorque>200.00</ContinuousTorque>
-						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-						<OverloadTorque>400.00</OverloadTorque>
-						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
-						<OverloadDuration>30.00</OverloadDuration>
-						<TestVoltageOverload>483</TestVoltageOverload>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>400</Voltage>
-							<MaxTorqueCurve>
+							<ContinuousTorque>200.00</ContinuousTorque>
+						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+						<OverloadTorque>400.00</OverloadTorque>
+						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+						<OverloadDuration>30.00</OverloadDuration>
+						<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 							</MaxTorqueCurve>
@@ -81,7 +80,12 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
-							<MaxTorqueCurve>
+							<ContinuousTorque>200.00</ContinuousTorque>
+						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+						<OverloadTorque>400.00</OverloadTorque>
+						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+						<OverloadDuration>30.00</OverloadDuration>
+						<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 							</MaxTorqueCurve>
