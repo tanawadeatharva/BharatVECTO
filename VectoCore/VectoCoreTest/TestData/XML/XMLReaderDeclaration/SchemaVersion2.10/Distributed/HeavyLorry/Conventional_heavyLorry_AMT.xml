@@ -14,9 +14,9 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
-			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
-			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
+		<PTO xsi:type="PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>

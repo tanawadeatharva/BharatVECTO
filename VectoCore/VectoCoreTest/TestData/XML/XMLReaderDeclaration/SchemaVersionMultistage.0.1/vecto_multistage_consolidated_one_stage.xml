@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
+<VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
@@ -7,7 +7,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
 xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
 			<Vehicle xsi:type="VehiclePIFType">
@@ -639,9 +639,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</di:Reference>
 		</Signature>
 	</PrimaryVehicle>
-	<ManufacturingStage stageCount="2">
-		<Data xsi:type="BusManufacturingStageDataType" id="MSTG-1">
-			<HashPreviousStage>
+	<ManufacturingStep stepCount="2">
+		<Data xsi:type="BusManufacturingStepDataType" id="MSTG-1">
+			<HashPreviousStep>
 			<di:Reference URI="#PIF-d10aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -650,7 +650,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
-			</HashPreviousStage>
+			</HashPreviousStep>
 			<vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
 				<Manufacturer>Intermediate Manufacturer 1</Manufacturer>
 				<ManufacturerAddress>Intermediate Manufacturer Address 1</ManufacturerAddress>
@@ -678,5 +678,5 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
 			</di:Reference>
 		</Signature>
-	</ManufacturingStage>
-</VectoOutputMultistage>
+	</ManufacturingStep>
+</VectoOutputMultistep>

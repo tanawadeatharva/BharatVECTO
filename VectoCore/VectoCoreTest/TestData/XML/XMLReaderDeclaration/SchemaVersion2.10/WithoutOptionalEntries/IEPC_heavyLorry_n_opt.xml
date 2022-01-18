@@ -14,9 +14,9 @@
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>Separate Angledrive</AngledriveType>
-		<PTO xsi:type="v2.0:PTOType">
-			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
-			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
+		<PTO xsi:type="PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>

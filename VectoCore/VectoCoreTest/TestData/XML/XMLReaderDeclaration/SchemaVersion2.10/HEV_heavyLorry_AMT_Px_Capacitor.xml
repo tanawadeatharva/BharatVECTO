@@ -14,9 +14,9 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
-			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
-			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
+		<PTO xsi:type="PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
@@ -108,17 +108,16 @@
 						<CertificationMethod>Measured</CertificationMethod>
 						<R85RatedPower>1</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
-						<ContinuousTorque>200.00</ContinuousTorque>
-						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-						<OverloadTorque>400.00</OverloadTorque>
-						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
-						<OverloadDuration>30.00</OverloadDuration>
-						<TestVoltageOverload>483</TestVoltageOverload>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>400</Voltage>
-							<MaxTorqueCurve>
+							<ContinuousTorque>200.00</ContinuousTorque>
+						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+						<OverloadTorque>400.00</OverloadTorque>
+						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+						<OverloadDuration>30.00</OverloadDuration>
+						<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 							</MaxTorqueCurve>
@@ -131,7 +130,12 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
-							<MaxTorqueCurve>
+							<ContinuousTorque>200.00</ContinuousTorque>
+						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+						<OverloadTorque>400.00</OverloadTorque>
+						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+						<OverloadDuration>30.00</OverloadDuration>
+						<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 							</MaxTorqueCurve>
@@ -164,7 +168,7 @@
 			</ElectricMachine>
 			<ElectricEnergyStorage>			
 				<Capacitor>
-					<v2.10.2:Data id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1"  xsi:type="CapacitorDataType">
+					<v2.10.2:Data id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1"  xsi:type="CapacitorSystemDataType">
 						<Manufacturer>Capacitor Manufacturer</Manufacturer>
 						<Model>Capacitor Model</Model>
 						<CertificationNumber>ccccccc</CertificationNumber>
