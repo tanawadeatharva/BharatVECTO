@@ -53,4 +53,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class MRFConventionalPrimaryBusAuxType : AbstractMrfXmlType
+	{
+		public MRFConventionalPrimaryBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var auxData = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			var steeringPumpData = auxData.SteeringPumpTechnology;
+
+			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + "CoolingFanTechnology",
+					inputData.JobInputData.Vehicle.Components.BusAuxiliaries.FanTechnology),
+				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				_mrfFactory.GetPrimaryBusElectricSystemType().GetXmlType(inputData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType().GetXmlType(inputData),
+				_mrfFactory.GetPrimaryBusHVACSystemType().GetXmlType(inputData)
+			);
+		}
+
+		#endregion
+	}
 }

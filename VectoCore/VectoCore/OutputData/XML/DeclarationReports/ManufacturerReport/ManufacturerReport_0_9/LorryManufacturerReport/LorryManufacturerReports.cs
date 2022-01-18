@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S2_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S2_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S3_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S3_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S4_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_ComponentsType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryComponentsType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E2_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E2_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E3_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E3_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E4_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E4_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S4_VehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion

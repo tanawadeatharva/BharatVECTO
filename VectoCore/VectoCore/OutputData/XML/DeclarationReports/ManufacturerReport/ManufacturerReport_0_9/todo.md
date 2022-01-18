@@ -5,6 +5,9 @@
 
 [ ] TODO: Update REESS specifications in XSD schema according to output. (SuperCap!)
 
-[ ] REESS Battery Nominal voltage //Calculated based on table ANNEXES_LS Page 290
-[ ] REESS Battery Total Usable Capacity in simulation
+[X] REESS Battery Nominal voltage //Calculated based on table ANNEXES_LS Page 290
+[ ] REESS Battery Total Usable Capacity in simulation (aus run daten)
 
+[ ] BusAux Electric System Max AlternatorPower, select alternator where RatedCurrent * RatedVoltage max. (aus run daten)
+
+[ ] 

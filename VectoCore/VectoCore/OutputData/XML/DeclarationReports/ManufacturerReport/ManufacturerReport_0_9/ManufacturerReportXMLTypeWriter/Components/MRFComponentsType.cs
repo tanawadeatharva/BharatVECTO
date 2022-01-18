@@ -132,10 +132,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
 				components.AirdragInputData != null ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null,
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
-
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
-
 		#endregion
 	}
 
@@ -157,6 +155,158 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetIEPCSpecifications().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
+		}
+
+		#endregion
+	}
+
+
+	internal class MRFConventional_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFConventional_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var components = inputData.JobInputData.Vehicle.Components;
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetEngineType().GetXmlType(inputData),
+				_mrfFactory.GetTransmissionType().GetXmlType(inputData),
+				components.RetarderInputData != null ? _mrfFactory.GetAxleGearType().GetXmlType(inputData) : null,
+				components.TorqueConverterInputData != null ? _mrfFactory.GetTorqueConverterType().GetXmlType(inputData) : null,
+				components.AngledriveInputData != null ? _mrfFactory.GetAngleDriveType().GetXmlType(inputData) : null,
+				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
+				_mrfFactory.GetConventionalPrimaryBusAuxType().GetXmlType(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+
+	internal class MRFHEV_Px_IHPC_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_Px_IHPC_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFHEV_S2_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_S2_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFHEV_S3_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_S3_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFHEV_S4_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_S4_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFHEV_IEPC_S_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFHEV_IEPC_S_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEV_E2_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFPEV_E2_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEV_E3_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFPEV_E3_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+
+	internal class MRFPEV_E4_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFPEV_E4_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEV_IEPC_PrimaryBusComponentsType : AbstractMrfXmlType
+	{
+		public MRFPEV_IEPC_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

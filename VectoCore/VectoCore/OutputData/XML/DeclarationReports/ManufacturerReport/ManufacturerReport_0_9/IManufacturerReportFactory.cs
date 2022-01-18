@@ -11,34 +11,68 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 		IMrfXmlType GetConventionalLorryVehicleType();
-
-		IMrfXmlType GetHEV_S2_VehicleType();
-		IMrfXmlType GetHEV_S3_VehicleType();
-		IMrfXmlType GetHEV_S4_VehicleType();
-
-		IMrfXmlType GetHEV_IEPC_S_VehicleType();
-
-		IMrfXmlType GetPEV_E2_VehicleType();
-		IMrfXmlType GetPEV_E3_VehicleType();
-		IMrfXmlType GetPEV_E4_VehicleType();
+		IMrfXmlType GetHEV_Px_IHCP_LorryVehicleType();
+		IMrfXmlType GetHEV_S2_LorryVehicleType();
+		IMrfXmlType GetHEV_S3_LorryVehicleType();
+		IMrfXmlType GetHEV_S4_LorryVehicleType();
+		IMrfXmlType GetHEV_IEPC_S_LorryVehicleType();
+		IMrfXmlType GetPEV_E2_LorryVehicleType();
+		IMrfXmlType GetPEV_E3_LorryVehicleType();
+		IMrfXmlType GetPEV_E4_LorryVehicleType();
 
 
 
-		IMrfXmlType GetHEV_S2_ComponentsType();
-		IMrfXmlType GetHEV_S3_ComponentsType();
-		IMrfXmlType GetHEV_S4_ComponentsType();
-		IMrfXmlType GetHEV_IEPC_S_ComponentsType();
 
 
-		IMrfXmlType GetConventionalADASType();
 
-		IMrfXmlGroup GetHEVVehicleSequenceGroup();
-		IMrfXmlType GetHEVADASType();
-		IMrfXmlType GetEngineTorqueLimitationsType();
+		IMrfXmlType GetConventional_PrimaryBusVehicleType();
+		IMrfXmlType GetHEV_Px_IHPC_PrimaryBusVehicleType();
+		IMrfXmlType GetHEV_S2_PrimaryBusVehicleType();
+		IMrfXmlType GetHEV_S3_PrimaryBusVehicleType();
+		IMrfXmlType GetHEV_S4_PrimaryBusVehicleType();
+		IMrfXmlType GetHEV_IEPC_S_PrimaryBusVehicleType();
+		IMrfXmlType GetPEV_E2_PrimaryBusVehicleType();
+		IMrfXmlType GetPEV_E3_PrimaryBusVehicleType();
+		IMrfXmlType GetPEV_E4_PrimaryBusVehicleType();
+		IMrfXmlType GetPEV_IEPC_PrimaryBusVehicleType();
 
 
 		IMrfXmlType GetConventionalLorryComponentsType();
+		IMrfXmlType GetHEV_Px_IHCP_LorryComponentsType();
+		IMrfXmlType GetHEV_S2_LorryComponentsType();
+		IMrfXmlType GetHEV_S3_LorryComponentsType();
+		IMrfXmlType GetHEV_S4_LorryComponentsType();
+		IMrfXmlType GetHEV_IEPC_S_LorryComponentsType();
+		IMrfXmlType GetPEV_E2_LorryComponentsType();
+		IMrfXmlType GetPEV_E3_LorryComponentsType();
+		IMrfXmlType GetPEV_E4_LorryComponentsType();
+		IMrfXmlType GetPEV_IEPC_S_LorryComponentsType();
+		IMrfXmlType GetConventional_PrimaryBusComponentsType();
+		IMrfXmlType GetHEV_Px_IHPC_PrimaryBusComponentsType();
+		IMrfXmlType GetHEV_S2_PrimaryBusComponentsType();
+		IMrfXmlType GetHEV_S3_PrimaryBusComponentsType();
+		IMrfXmlType GetHEV_S4_PrimaryBusComponentsType();
+		IMrfXmlType GetHEV_IEPC_S_PrimaryBusComponentsType();
+		IMrfXmlType GetPEV_E2_PrimaryBusComponentsType();
+		IMrfXmlType GetPEV_E3_PrimaryBusComponentsType();
+		IMrfXmlType GetPEV_E4_PrimaryBusComponentsType();
+		IMrfXmlType GetPEV_IEPC_PrimaryBusComponentsType();
 
+
+
+
+
+
+		IMrfXmlGroup GetGeneralVehicleOutputGroup();
+		IMrfXmlGroup GetGeneralLorryVehicleOutputGroup();
+		IMrfXmlGroup GetHEVVehicleSequenceGroup();
+		IMrfXmlGroup GetConventionalLorryVehicleOutputGroup();
+		IMrfXmlGroup GetHEV_lorryVehicleOutputGroup();
+		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
+		IMrfXmlGroup GetPrimaryBusGeneralVehicleOutputGroup();
+
+
+		IMrfXmlType GetEngineTorqueLimitationsType();
 		IMrfXmlType GetEngineType();
 		IMrfXmlType GetRetarderType();
 		IMrfXmlType GetTorqueConverterType();
@@ -46,25 +80,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetTransmissionType();
 		IMrfXmlType GetElectricMachinesType();
 		IMrfXmlType GetAxleGearType();
-
-		IMrfXmlGroup GetGeneralVehicleOutputGroup();
-
-		IMrfXmlGroup GetConventionalLorryVehicleOutputGroup();
-
-
-		IMrfXmlGroup GetGeneralLorryVehicleOutputGroup();
-
+		IMrfXmlType GetConventionalADASType();
+		IMrfXmlType GetHEVADASType();
+		IMrfXmlType GetIEPCSpecifications();
 		IMrfXmlType GetREESSSpecificationsType();
 		IMrfXmlType GetAirdragType();
 		IMrfXmlType GetAxleWheelsType();
+
 		IMrfXmlType GetConventionalLorryAuxType();
-		IMrfXmlType GetHEV_Px_IHCP_LorryVehicleType();
-		IMrfXmlGroup GetHEV_lorryVehicleOutputGroup();
-
-		IMrfXmlType GetHEV_Px_IHCP_ComponentsType();
-		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
+		IMrfXmlType GetConventionalPrimaryBusAuxType();
 		IMrfXmlType GetHEV_LorryAuxiliariesType();
-
-		IMrfXmlType GetIEPCSpecifications();
+		IMrfXmlType GetPrimaryBusPneumaticSystemType();
+		IMrfXmlType GetPrimaryBusElectricSystemType();
+		IMrfXmlType GetPrimaryBusHVACSystemType();
 	}
 }

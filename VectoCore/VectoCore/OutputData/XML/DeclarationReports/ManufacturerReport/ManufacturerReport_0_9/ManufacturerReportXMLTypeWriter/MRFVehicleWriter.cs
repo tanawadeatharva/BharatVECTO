@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_Px_IHCP_ComponentsType().GetXmlType(inputData)
+				_mrfFactory.GetHEV_Px_IHCP_LorryComponentsType().GetXmlType(inputData)
 				
 				
 				);
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_S2_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S2_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S3_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S3_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S4_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_IEPC_S_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_IEPC_S_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S4_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S4_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -172,9 +172,158 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_ComponentsType().GetXmlType(inputData));
+				_mrfFactory.GetHEV_S4_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
 	}
+
+
+
+
+	public class MRF_Conventional_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_Conventional_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
+				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
+				_mrfFactory.GetConventionalADASType().GetXmlType(inputData),
+				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetXmlType(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+
+	public class MRF_HEV_Px_IHPC_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_Px_IHPC_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_HEV_S2_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_S2_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_HEV_S3_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_S3_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+	public class MRF_HEV_S4_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_S4_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_HEV_IEPC_S_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_IEPC_S_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_PEV_E2_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_PEV_E2_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_PEV_E3_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_PEV_E3_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_PEV_E4_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_PEV_E4_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_PEV_IEPC_PrimaryBusVehicleType : MRFVehicleType
+	{
+		public MRF_PEV_IEPC_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
 }
