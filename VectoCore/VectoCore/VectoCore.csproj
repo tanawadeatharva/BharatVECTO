@@ -465,7 +465,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\LorryManufacturerReport\LorryManufacturerReports.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\LorryManufacturerReport\PrimaryBusManufacturerReports.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportComponentWriters.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Lorry\HEV-VehicleSequenceGroup.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Common\HEV-VehicleSequenceGroup.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Lorry\HEV_LorryVehicleOutputTypeGroup.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Lorry\HEV_LorryVehicleOutputTypeSequenceGroup.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\PrimaryBus\PrimaryBus.cs" />
@@ -493,7 +493,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\MRFVehicleWriter.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\AbstractMRFGroupWriter.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Lorry\ConventionalLorryVehicleGroup.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\GeneralVehicleOutputXmlGroup.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Common\GeneralVehicleOutputXmlGroup.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\IMRFGroupWriter.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportGroupWriter\Vehicle\Lorry\LorryGeneralVehicleOutputGroup.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\MRFNinjectModule.cs" />

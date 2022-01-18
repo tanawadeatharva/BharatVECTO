@@ -33,4 +33,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class HEVPrimaryBusVehicleOutputGroup : AbstractMrfXmlGroup
+	{
+		public HEVPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlGroup
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var result = new List<XElement>();
+			result.AddRange(_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData));
+			result.AddRange(_mrfFactory.GetHEVVehicleSequenceGroup().GetElements(inputData));
+
+			return result;
+		}
+
+		#endregion
+	}
 }

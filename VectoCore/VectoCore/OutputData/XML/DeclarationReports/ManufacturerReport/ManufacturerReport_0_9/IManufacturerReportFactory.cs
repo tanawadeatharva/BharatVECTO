@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlGroup GetHEV_lorryVehicleOutputGroup();
 		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IMrfXmlGroup GetPrimaryBusGeneralVehicleOutputGroup();
+		IMrfXmlGroup GetHEV_PrimaryBusVehicleOutputGroup();
 
 
 		IMrfXmlType GetEngineTorqueLimitationsType();
@@ -80,18 +81,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetTransmissionType();
 		IMrfXmlType GetElectricMachinesType();
 		IMrfXmlType GetAxleGearType();
+		IMrfXmlType GetAxleWheelsType();
 		IMrfXmlType GetConventionalADASType();
 		IMrfXmlType GetHEVADASType();
 		IMrfXmlType GetIEPCSpecifications();
 		IMrfXmlType GetREESSSpecificationsType();
 		IMrfXmlType GetAirdragType();
-		IMrfXmlType GetAxleWheelsType();
-
 		IMrfXmlType GetConventionalLorryAuxType();
 		IMrfXmlType GetConventionalPrimaryBusAuxType();
+
+		IMrfXmlType GetHEV_PrimaryBusAuxType();
 		IMrfXmlType GetHEV_LorryAuxiliariesType();
 		IMrfXmlType GetPrimaryBusPneumaticSystemType();
 		IMrfXmlType GetPrimaryBusElectricSystemType();
 		IMrfXmlType GetPrimaryBusHVACSystemType();
+
+
 	}
 }

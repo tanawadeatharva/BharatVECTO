@@ -35,30 +35,6 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		private IXMLInputDataReader _xmlReader;
 		private IManufacturerReportFactory _mrfFactory;
 
-		//private ISimulatorFactory CreateSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer, bool validate = true)
-		//{
-		//	return new SimulatorFactory(mode: ExecutionMode.Declaration, dataProvider: dataProvider, writer: writer,
-		//		validate: validate);
-		//}
-
-
-		//private async Task RunSimulation(ISimulatorFactory simulatorFactory)
-		//{
-		//	var jobContainer = new JobContainer(new MockSumWriter());
-		//	jobContainer.AddRuns(simulatorFactory);
-
-		//	jobContainer.Execute(true);
-		//	Assert.DoesNotThrow(() => jobContainer.WaitFinished(), "Error during Simulation");
-		//}
-
-		//private async Task StartSimulation(string jobFile, bool validate = true)
-		//{
-		//	Assert.IsTrue(File.Exists(jobFile), $"File {jobFile} not found");
-		//	IOutputDataWriter writer = new FileOutputWriter(jobFile);
-		//	IInputDataProvider dataProvider = _xmlReader.CreateDeclaration(jobFile);
-		//	var simFactory = CreateSimulatorFactory(dataProvider, writer, validate);
-		//	await RunSimulation(simFactory);
-		//}
 
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -301,7 +277,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml")]
-		//[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml")]
+		
 		public void ConventionalPrimaryBusTest(string fileName)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
@@ -324,7 +300,30 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			TestContext.WriteLine(report.Vehicle);
 		}
 
-		
+
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml")]
+		public void HEV_S2_PrimaryBusTest(string fileName)
+		{
+			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
+
+			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
+
+			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
+			var report = _mrfFactory.GetManufacturerReport(
+				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+				dataProvider.JobInputData.JobType,
+				dataProvider.JobInputData.Vehicle.ArchitectureID,
+				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+				iepc,
+				ihpc) as HEV_S2_PrimaryBus_ManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			TestContext.WriteLine(report.Vehicle);
+		}
+
 
 
 		[TestCase]

@@ -21,4 +21,63 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class HEV_Px_IHPC_PrimaryBus_ManufacturerReport : AbstractManufacturerReport
+	{
+		public HEV_Px_IHPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_Px_IHPC_PrimaryBusVehicleType().GetXmlType(inputData);
+		}
+
+		#endregion
+	}
+
+
+	internal class HEV_S2_PrimaryBus_ManufacturerReport : AbstractManufacturerReport
+	{
+		public HEV_S2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_S2_PrimaryBusVehicleType().GetXmlType(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_S3_PrimaryBus_ManufacturerReport : AbstractManufacturerReport
+	{
+		public HEV_S3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_S3_PrimaryBusVehicleType().GetXmlType(inputData);
+		}
+
+		#endregion
+	}
+
+	internal class HEV_S4_PrimaryBus_ManufacturerReport : AbstractManufacturerReport
+	{
+		public HEV_S4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetHEV_S4_PrimaryBusVehicleType().GetXmlType(inputData);
+		}
+
+		#endregion
+	}
+
+
 }

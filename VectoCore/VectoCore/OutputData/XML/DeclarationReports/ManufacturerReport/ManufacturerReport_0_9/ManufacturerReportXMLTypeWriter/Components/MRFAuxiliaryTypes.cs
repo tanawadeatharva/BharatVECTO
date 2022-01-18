@@ -76,4 +76,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class MRFHEV_PrimaryBusAuxType : MRFConventionalPrimaryBusAuxType
+	{
+		public MRFHEV_PrimaryBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+	}
 }
