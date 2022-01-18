@@ -725,21 +725,23 @@ namespace TUGraz.VectoCommon.InputData
 		IList<string> Technology { get; }
 	}
 
-	public interface IPowerRatingInputData
+    //public interface IPowerRatingInputData
+    //{
+
+    //NewtonMeter ContinuousTorque { get; }
+    //PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
+    //NewtonMeter OverloadTorque { get; }
+    //PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+    //Second OverloadTime { get; } //OverloadDuration
+                                 //}
+
+
+    public interface IElectricMotorDeclarationInputData : IComponentInputData
 	{
 		ElectricMachineType ElectricMachineType { get; }
 		Watt R85RatedPower { get; }
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
-		NewtonMeter ContinuousTorque { get; }
-		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
-		NewtonMeter OverloadTorque { get; }
-		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-		Second OverloadTime { get; } //OverloadDuration
-	}
 
-
-	public interface IElectricMotorDeclarationInputData : IComponentInputData, IPowerRatingInputData
-	{
 		Volt TestVoltageOverload { get; }
 
 		bool DcDcConverterIncluded { get; }
@@ -752,12 +754,22 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData Conditioning { get; }
 		
-		double OverloadRecoveryFactor { get; }
+		//double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
+
+		NewtonMeter ContinuousTorque { get; }
+
+		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
+
+		NewtonMeter OverloadTorque { get; }
+
+		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+
+		Second OverloadTime { get; } //OverloadDuration
 
 		TableData FullLoadCurve { get; } //MaxTorqueCurve
 
@@ -809,8 +821,12 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 
-	public interface IIEPCDeclarationInputData : IComponentInputData , IPowerRatingInputData
+	public interface IIEPCDeclarationInputData : IComponentInputData 
 	{
+		ElectricMachineType ElectricMachineType { get; }
+		Watt R85RatedPower { get; }
+		KilogramSquareMeter Inertia { get; } //RotationalInertia
+
 		Volt TestVoltageOverload { get; }
 
 		bool DifferentialIncluded { get; }

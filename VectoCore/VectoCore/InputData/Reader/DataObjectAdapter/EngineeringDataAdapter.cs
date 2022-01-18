@@ -803,10 +803,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
+					ContinuousTorque = entry.ContinuousTorque * count,
+					ContinuousTorqueSpeed = entry.ContinuousTorqueSpeed,
+					OverloadTorque = entry.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
+					OverloadTestSpeed = entry.OverloadTestSpeed ?? 0.RPMtoRad(),
+					OverloadTime = entry.OverloadTime,
 					FullLoadCurve = fullLoadCurveCombined,
-					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-					//EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count), //PowerMap
-				});
+                    // DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+                    EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+                });
 			}
 
 
@@ -817,11 +822,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				Inertia = motorData.Inertia,
-				ContinuousTorque = motorData.ContinuousTorque * count,
-				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
-				OverloadTorque = motorData.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
-				OverloadTestSpeed = motorData.OverloadTestSpeed ?? 0.RPMtoRad(),
-				OverloadTime = motorData.OverloadTime,
+				
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 				RatioADC = ratio,
 				RatioPerGear = ratioPerGear,

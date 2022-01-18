@@ -476,6 +476,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
 	{
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData

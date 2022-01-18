@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass => GetString("LegislativeClass").ParseEnum<LegislativeClass>();
+		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
 		public virtual VehicleCategory VehicleCategory
@@ -1139,11 +1139,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public abstract class XMLVehicleDataProviderHelperV201 : XMLDeclarationVehicleDataProviderV20
+	public abstract class AbstractXMLVehicleDataProviderV210 : XMLDeclarationVehicleDataProviderV20
 	{
 		public virtual string PowertrainPositionPrefix => "P";
 
-		protected XMLVehicleDataProviderHelperV201(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+		protected AbstractXMLVehicleDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 		
 
@@ -1161,7 +1161,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
-		
+
+		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
+		//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 		#endregion
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
@@ -1220,7 +1222,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
+	public class XMLDeclarationHeavyLorryDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_Conventional_HeavyLorryDeclarationType";
@@ -1251,7 +1253,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
+	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_HeavyLorryDeclarationType";
@@ -1414,7 +1416,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
+	public class XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType";

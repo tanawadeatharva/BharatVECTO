@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
 		{
 			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
-				Position = PowertrainPositionHelper.Parse(((XMLVehicleDataProviderHelperV201)_vehicle).PowertrainPositionPrefix +
+				Position = PowertrainPositionHelper.Parse(((AbstractXMLVehicleDataProviderV210)_vehicle).PowertrainPositionPrefix +
 							GetString(XMLNames.ElectricMachine_PowertrainPosition)),
 				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),

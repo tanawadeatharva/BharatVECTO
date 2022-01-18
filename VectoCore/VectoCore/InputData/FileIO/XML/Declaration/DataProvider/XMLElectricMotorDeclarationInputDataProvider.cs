@@ -15,7 +15,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public abstract class XMLCommonElectricMotorDeclarationInputData : AbstractCommonComponentType, IComponentInputData,
-		IPowerRatingInputData, IElectricMotorVoltageLevel
+		IElectricMotorVoltageLevel
 	{
 
 		protected XMLCommonElectricMotorDeclarationInputData(XmlNode node, string source) : base(node, source)

@@ -174,21 +174,28 @@ Public Class ElectricMotorForm
         tbMakeModel.Text = engine.Model
         tbInertia.Text = engine.Inertia.ToGUIFormat()
 
-        tbOverloadTq.Text = If(engine.OverloadTorque?.Value().ToGUIFormat(), "")
-        tbOvlSpeed.Text = If(engine.OverloadTestSpeed?.AsRPM.ToGUIFormat(), "")
-        tbOvlTime.Text = engine.OverloadTime.Value().ToGUIFormat()
-        tbContTq.Text = engine.ContinuousTorque.ToGUIFormat()
-        tbRatedSpeed.Text = engine.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
         tbOverloadRecoveryFactor.Text = engine.OverloadRecoveryFactor.ToGUIFormat()
 
+        Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
         Dim voltageLevelHigh As IElectricMotorVoltageLevel = engine.VoltageLevels.MaxBy(function(level) level.VoltageLevel.Value())
+
+        tbOverloadTqLo.Text = If(voltageLevelLow.OverloadTorque?.Value().ToGUIFormat(), "")
+        tbOvlSpeedLo.Text = If(voltageLevelLow.OverloadTestSpeed?.AsRPM.ToGUIFormat(), "")
+        tbOvlTimeLo.Text = voltageLevelLow.OverloadTime.Value().ToGUIFormat()
+        tbContTqLo.Text = voltageLevelLow.ContinuousTorque.ToGUIFormat()
+        tbRatedSpeedLo.Text = voltageLevelLow.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
+
+        tbOverloadTqHi.Text = If(voltageLevelHigh.OverloadTorque?.Value().ToGUIFormat(), "")
+        tbOvlSpeedHi.Text = If(voltageLevelHigh.OverloadTestSpeed?.AsRPM.ToGUIFormat(), "")
+        tbOvlTimeHi.Text = voltageLevelHigh.OverloadTime.Value().ToGUIFormat()
+        tbContTqHi.Text = voltageLevelHigh.ContinuousTorque.ToGUIFormat()
+        tbRatedSpeedHi.Text = voltageLevelHigh.ContinuousTorqueSpeed.AsRPM.ToGUIFormat()
 
         '        tbDragTorqueHi.Text = GetRelativePath(voltageLevelHigh.DragCurve.Source, basePath)
         tbMaxTorqueHi.Text = GetRelativePath(voltageLevelHigh.FullLoadCurve.Source, basePath)
         '        tbMapHi.Text = GetRelativePath(voltageLevelHigh.EfficiencyMap.Source, basePath) //PowerMap
         tbVoltageHi.Text = voltageLevelHigh.VoltageLevel.Value().ToGUIFormat()
 
-        Dim voltageLevelLow As IElectricMotorVoltageLevel = engine.VoltageLevels.MinBy(function(level) level.VoltageLevel.Value())
 
         '        tbDragTorqueLow.Text = GetRelativePath(voltageLevelLow.DragCurve.Source, basePath)
         tbMaxTorqueLow.Text = GetRelativePath(voltageLevelLow.FullLoadCurve.Source, basePath)
@@ -229,11 +236,18 @@ Public Class ElectricMotorForm
         If Trim(em.ModelName) = "" Then em.ModelName = "Undefined"
         em.MotorInertia = tbInertia.Text.ToDouble(0)
 
-        em.OvlTq = tbOverloadTq.Text.ToDouble(0)
-        em.OvlSpeed = tbOvlSpeed.Text.ToDouble(0)
-        em.PeakPowerTime = tbOvlTime.Text.ToDouble(0)
-        em.RatedSpeed = tbRatedSpeed.Text.ToDouble(0)
-        em.ContTq = tbContTq.Text.ToDouble(0)
+        em.OvlTqLo = tbOverloadTqLo.Text.ToDouble(0)
+        em.OvlSpeedLo = tbOvlSpeedLo.Text.ToDouble(0)
+        em.PeakPowerTimeLo = tbOvlTimeLo.Text.ToDouble(0)
+        em.RatedSpeedLo = tbRatedSpeedLo.Text.ToDouble(0)
+        em.ContTqLo = tbContTqLo.Text.ToDouble(0)
+
+        em.OvlTqHi = tbOverloadTqHi.Text.ToDouble(0)
+        em.OvlSpeedHi = tbOvlSpeedHi.Text.ToDouble(0)
+        em.PeakPowerTimeHi = tbOvlTimeHi.Text.ToDouble(0)
+        em.RatedSpeedHi = tbRatedSpeedHi.Text.ToDouble(0)
+        em.ContTqHi = tbContTqHi.Text.ToDouble(0)
+
         em.OverloadRecoveryFactor = tbOverloadRecoveryFactor.Text.ToDouble(0)
 
         em.PathMaxTorqueLow = tbMaxTorqueLow.Text
