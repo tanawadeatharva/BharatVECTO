@@ -976,9 +976,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_normalized.vmap" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_normalized.vmap" />
-    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistage.0.1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoComponent.2.10.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -986,6 +983,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.2_JobInputData.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistep.0.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
