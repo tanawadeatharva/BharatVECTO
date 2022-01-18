@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XAttribute(XNamespace.Xmlns + "v2.1", v21),
 					new XAttribute(XNamespace.Xmlns + "v2.3", v23),
 					new XAttribute(XNamespace.Xmlns + "v2.8", v210),
-					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd"),
+					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 					new XAttribute("xmlns", tns),
 
 					GeneratePrimaryVehicle(resultSignature))
