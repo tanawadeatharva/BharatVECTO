@@ -995,8 +995,20 @@
 				<xs:sequence>
 					<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
 						<xs:complexType>
-							<xs:attribute name="rotationalSpeed" type="v1.0:Double2" use="required"/>
-							<xs:attribute name="boostingTorque" type="v1.0:Double2" use="required"/>
+							<xs:attribute name="rotationalSpeed" use="required">
+								<xs:simpleType>
+									<xs:restriction base="v1.0:Double2">
+										<xs:minInclusive value="0.00"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="boostingTorque" use="required">
+								<xs:simpleType>
+									<xs:restriction base="v1.0:Double2">
+										<xs:minInclusive value="0.00"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
