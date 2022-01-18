@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3"  xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+<VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3"  xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
   <PrimaryVehicle xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
     <Data id="VEH-88dcf76d37a64b5eaf70" xsi:type="PrimaryVehicleDataType">
       <Vehicle xsi:type="VehiclePIFType">
@@ -571,9 +571,9 @@
       </di:Reference>
     </Signature>
   </PrimaryVehicle>
-  <ManufacturingStage stageCount="2">
-    <Data xsi:type="BusManufacturingStageDataType" id="MST-aec22451f48f47c484ac">
-      <HashPreviousStage>
+  <ManufacturingStep stepCount="2">
+    <Data xsi:type="BusManufacturingStepDataType" id="MST-aec22451f48f47c484ac">
+      <HashPreviousStep>
         <di:Reference URI="#VEH-88dcf76d37a64b5eaf70">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -582,7 +582,7 @@
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
           <di:DigestValue>4MFxDdYDnYyRrUdyIPFhEYwbyqqJl3MlYtXMaB/RQis=</di:DigestValue>
         </di:Reference>
-      </HashPreviousStage>
+      </HashPreviousStep>
       <vif:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-273285e977014470902e" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
         <Manufacturer>Some Manufacturer</Manufacturer>
         <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
@@ -673,5 +673,5 @@
         <di:DigestValue>aVAzUfhrvuQA2Q7Yb8IBOuVuRp0QVgDRI2NX5BiZZgI=</di:DigestValue>
       </di:Reference>
     </Signature>
-  </ManufacturingStage>
-</VectoOutputMultistage>
+  </ManufacturingStep>
+</VectoOutputMultistep>
