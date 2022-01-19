@@ -36,6 +36,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetPEV_E4_PrimaryBusVehicleType();
 		IMrfXmlType GetPEV_IEPC_PrimaryBusVehicleType();
 
+		IMrfXmlType GetConventional_CompletedBusVehicleType();
+		IMrfXmlType GetHEV_CompletedBusVehicleType();
+		IMrfXmlType GetPEV_CompletedBusVehicleType();
+
 
 		IMrfXmlType GetConventionalLorryComponentsType();
 		IMrfXmlType GetHEV_Px_IHCP_LorryComponentsType();
@@ -63,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-		IMrfXmlGroup GetGeneralVehicleOutputGroup();
+		IMrfVehicleGroup GetGeneralVehicleOutputGroup();
 		IMrfXmlGroup GetGeneralLorryVehicleOutputGroup();
 		IMrfXmlGroup GetHEVVehicleSequenceGroup();
 		IMrfXmlGroup GetConventionalLorryVehicleOutputGroup();
@@ -99,5 +103,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IMrfXmlType GetPEV_PrimaryBusAuxType();
 		IMrfXmlGroup GetPEV_PrimaryBusVehicleOutputGroup();
+		IMrfXmlGroup GetCompletedBusGeneralVehicleOutputGroup();
+		IMrfVehicleGroup GetCompletedBusSequenceGroup();
+		IMrfVehicleGroup GetCompletedBusDimensionSequenceGroup();
 	}
 }

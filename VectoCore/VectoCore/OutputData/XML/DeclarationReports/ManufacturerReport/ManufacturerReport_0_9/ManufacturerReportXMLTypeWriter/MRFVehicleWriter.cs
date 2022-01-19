@@ -345,7 +345,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle, _mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData));
+
 		}
 
 		#endregion

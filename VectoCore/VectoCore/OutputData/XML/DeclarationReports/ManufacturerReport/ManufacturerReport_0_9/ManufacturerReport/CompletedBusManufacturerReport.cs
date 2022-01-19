@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetXmlType(inputData);
 		}
 
 		#endregion

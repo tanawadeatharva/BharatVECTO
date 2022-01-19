@@ -12,4 +12,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		IList<XElement> GetElements(IDeclarationInputDataProvider inputData);
     }
+
+	public interface IMrfVehicleGroup
+	{
+		IList<XElement> GetElements(IVehicleDeclarationInputData vehicleData);
+	}
 }

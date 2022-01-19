@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Manufacturer, primaryBus.Manufacturer),
 				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, primaryBus.ManufacturerAddress)
 			};
-			result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(inputData));
+			result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(primaryBus));
 			result.Add(new XElement(_mrf + "ZeroEmissionHDV", primaryBus.ZeroEmissionVehicle));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, primaryBus.HybridElectricHDV));
 

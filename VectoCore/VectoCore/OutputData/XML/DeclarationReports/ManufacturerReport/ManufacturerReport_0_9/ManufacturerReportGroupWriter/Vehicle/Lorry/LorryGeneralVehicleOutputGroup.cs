@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
                 new XElement(_mrf + XMLNames.Component_Manufacturer, vehicle.Manufacturer),
                 new XElement(_mrf + XMLNames.Component_ManufacturerAddress, vehicle.ManufacturerAddress),
             });
-            elements.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(inputData));
+            elements.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(vehicle));
             elements.AddRange(new List<XElement>() {
 				// new XElement(mrf + "CO2StandardGroup", vehicle.) //CO2 Standardgroup
 				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis),

@@ -17,6 +17,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
@@ -446,23 +447,26 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
         public void Conventional_CompletedBusTest(string fileName)
         {
             Assert.IsFalse(string.IsNullOrEmpty(fileName));
-            IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
+            IMultistageBusInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName) as IMultistageBusInputDataProvider;
+			Assert.NotNull(dataProvider);
+            var arch = dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
 
-            var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
+            dataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
 
-            dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-            var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-            var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
+
+			var ihpc = false; //(dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = false;//(dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
             var report = _mrfFactory.GetManufacturerReport(
-                dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+                dataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory.GetVehicleType(),
                 dataProvider.JobInputData.JobType,
-                dataProvider.JobInputData.Vehicle.ArchitectureID,
-                dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+                dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID,
+                dataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
                 iepc,
-                ihpc) as PEV_E4_PrimaryBus_ManufacturerReport;
-            Assert.NotNull(report);
+                ihpc);
+			var castedReport = report as Conventional_CompletedBusManufacturerReport;
+            Assert.NotNull(castedReport);
             report.InitializeVehicleData(dataProvider);
-            TestContext.WriteLine(report.Vehicle);
+            TestContext.WriteLine(castedReport.Vehicle);
         }
 
 
