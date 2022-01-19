@@ -442,34 +442,34 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			TestContext.WriteLine(report.Vehicle);
 		}
 
-		//[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E4.xml")]
-		//public void Conventional_CompletedBusTest(string fileName)
-		//{
-		//	Assert.IsFalse(string.IsNullOrEmpty(fileName));
-		//	IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
+        [TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml")]
+        public void Conventional_CompletedBusTest(string fileName)
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(fileName));
+            IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
 
-		//	var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
+            var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
 
-		//	dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-		//	var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-		//	var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-		//	var report = _mrfFactory.GetManufacturerReport(
-		//		dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-		//		dataProvider.JobInputData.JobType,
-		//		dataProvider.JobInputData.Vehicle.ArchitectureID,
-		//		dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-		//		iepc,
-		//		ihpc) as PEV_E4_PrimaryBus_ManufacturerReport;
-		//	Assert.NotNull(report);
-		//	report.InitializeVehicleData(dataProvider);
-		//	TestContext.WriteLine(report.Vehicle);
-		//}
-
-
+            dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+            var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+            var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
+            var report = _mrfFactory.GetManufacturerReport(
+                dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+                dataProvider.JobInputData.JobType,
+                dataProvider.JobInputData.Vehicle.ArchitectureID,
+                dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+                iepc,
+                ihpc) as PEV_E4_PrimaryBus_ManufacturerReport;
+            Assert.NotNull(report);
+            report.InitializeVehicleData(dataProvider);
+            TestContext.WriteLine(report.Vehicle);
+        }
 
 
 
-		[TestCase]
+
+
+        [TestCase]
 		public void MRFFactoryTest()
 		{
 			Assert.IsTrue(_mrfFactory.GetConventionalLorryManufacturerReport().GetType() == typeof(ConventionalLorryManufacturerReport));
