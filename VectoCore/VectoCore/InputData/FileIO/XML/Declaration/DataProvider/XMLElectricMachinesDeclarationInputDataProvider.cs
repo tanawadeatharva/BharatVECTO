@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLADCDeclarationInputDataV2101 : AbstractCommonComponentType, IXMLADCDeclarationInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public const string XSD_TYPE = "ADCDataDeclarationType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		

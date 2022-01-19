@@ -1416,8 +1416,8 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
-  <data name="VectoOutputMultistage" xml:space="preserve">
-    <value>VectoOutputMultistage</value>
+  <data name="VectoOutputMultistep" xml:space="preserve">
+    <value>VectoOutputMultistep</value>
   </data>
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>

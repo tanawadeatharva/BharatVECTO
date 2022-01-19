@@ -461,10 +461,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "Components_Conventional_CompletedBusType";
+		public const string XSD_TYPE_CONVENTIONAL = "Components_Conventional_CompletedBusType";
+		public const string XSD_TYPE_xEV = "Components_xEV_CompletedBusType";
 
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_CONVENTIONAL);
+		public static readonly string QUALIFIED_XSD_TYPE_xEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_xEV);
 
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
@@ -1025,7 +1027,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class XMLGearboxDeclarationComponentReaderV201 : XMLComponentReaderV10
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public new const string GEARBOX_READER_TYPE = "GearboxDataDeclarationType";
 		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
 

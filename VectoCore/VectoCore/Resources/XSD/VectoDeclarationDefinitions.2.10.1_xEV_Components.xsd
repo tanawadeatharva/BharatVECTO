@@ -1673,20 +1673,6 @@
 			<xs:minExclusive value="0.00"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="TestVoltageOverloadType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="ElectricMachine">464</vectoParam:parameterId>
-					<vectoParam:parameterId component="IEPC">492</vectoParam:parameterId>
-					<vectoParam:unit>V</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="xs:int">
-			<xs:minExclusive value="0"/>
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:simpleType name="VoltageLevelVoltageType">
 		<xs:annotation>
 			<xs:appinfo>

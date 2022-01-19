@@ -14,13 +14,14 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
-			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
-			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
+		<PTO xsi:type="PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem><!-- optional -->
+		<NgTankSystem>Liquefied</NgTankSystem>
+		<!-- optional -->
 		<SleeperCab>false</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S2</ArchitectureID>
@@ -29,10 +30,12 @@
 			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
 			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xsi:type="v2.0:TorqueLimitsType"><!-- optional -->
+		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
+			<!-- optional -->
 			<v2.0:Entry gear="9" maxTorque="2000"/>
 		</TorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
+			<!-- optional -->
 			<ElectricMachine>
 				<Position>2</Position>
 				<VoltageLevel>
@@ -51,7 +54,8 @@
 				</VoltageLevel>
 			</ElectricMachine>
 		</ElectricMotorTorqueLimits>
-		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType"><!-- optional -->
+		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
+			<!-- optional -->
 			<ElectricMachine>
 				<Position>GEN</Position>
 				<VoltageLevel>
@@ -123,16 +127,15 @@
 						<CertificationMethod>Measured</CertificationMethod>
 						<R85RatedPower>1</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
-						<ContinuousTorque>200.00</ContinuousTorque>
-						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-						<OverloadTorque>400.00</OverloadTorque>
-						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
-						<OverloadDuration>30.00</OverloadDuration>
-						<TestVoltageOverload>483</TestVoltageOverload>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>400</Voltage>
+							<ContinuousTorque>200.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+							<OverloadTorque>400.00</OverloadTorque>
+							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
@@ -146,6 +149,11 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
+							<ContinuousTorque>200.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+							<OverloadTorque>400.00</OverloadTorque>
+							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
@@ -160,19 +168,20 @@
 						<DragCurve>
 							<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 							<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
-						</DragCurve>						
+						</DragCurve>
 						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
-						</Conditioning>						
+						</Conditioning>
 					</v2.10.1:Data>
 					<v2.10.1:Signature>
 						<di:Reference>
 							<di:DigestMethod Algorithm=""/>
 							<di:DigestValue/>
 						</di:Reference>
-					</v2.10.1:Signature>					
+					</v2.10.1:Signature>
 				</ElectricMachineSystem>
-				<ADC><!-- optional -->
+				<ADC>
+					<!-- optional -->
 					<v2.10.1:Data xsi:type="v2.10.1:ADCDataDeclarationType" id="adc" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
 						<Manufacturer>ADC Manufacturer</Manufacturer>
 						<Model>ADC Model</Model>
@@ -182,16 +191,16 @@
 						<Ratio>12.123</Ratio>
 						<CertificationMethod>Option 1</CertificationMethod>
 						<TorqueLossMap>
-							<Entry inputSpeed="10.00" inputTorque="40.00" torqueLoss="30.00"></Entry>
-							<Entry inputSpeed="11.00" inputTorque="41.00" torqueLoss="31.00"></Entry>
-							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"></Entry>
-							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"></Entry>
+							<Entry inputSpeed="10.00" inputTorque="40.00" torqueLoss="30.00"/>
+							<Entry inputSpeed="11.00" inputTorque="41.00" torqueLoss="31.00"/>
+							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"/>
+							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"/>
 						</TorqueLossMap>
 					</v2.10.1:Data>
 					<v2.10.1:Signature>
 						<di:Reference>
-							<di:DigestMethod Algorithm=""></di:DigestMethod>
-							<di:DigestValue></di:DigestValue>
+							<di:DigestMethod Algorithm=""/>
+							<di:DigestValue/>
 						</di:Reference>
 					</v2.10.1:Signature>
 				</ADC>
@@ -200,7 +209,7 @@
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -238,7 +247,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -286,16 +295,15 @@
 						<CertificationMethod>Measured</CertificationMethod>
 						<R85RatedPower>1</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
-						<ContinuousTorque>200.00</ContinuousTorque>
-						<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-						<OverloadTorque>400.00</OverloadTorque>
-						<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
-						<OverloadDuration>30.00</OverloadDuration>
-						<TestVoltageOverload>483</TestVoltageOverload>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>400</Voltage>
+							<ContinuousTorque>200.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+							<OverloadTorque>400.00</OverloadTorque>
+							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
@@ -309,6 +317,11 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
+							<ContinuousTorque>200.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+							<OverloadTorque>400.00</OverloadTorque>
+							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 								<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
@@ -335,7 +348,8 @@
 						</di:Reference>
 					</v2.10.1:Signature>
 				</ElectricMachineSystem>
-				<ADC><!-- optional -->
+				<ADC>
+					<!-- optional -->
 					<v2.10.1:Data xsi:type="v2.10.1:ADCDataDeclarationType" id="ad" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
 						<Manufacturer>ADC Manufacturer</Manufacturer>
 						<Model>ADC Model</Model>
@@ -345,20 +359,21 @@
 						<Ratio>12.123</Ratio>
 						<CertificationMethod>Option 1</CertificationMethod>
 						<TorqueLossMap>
-							<Entry inputSpeed="10.00" inputTorque="40.00" torqueLoss="30.00"></Entry>
-							<Entry inputSpeed="11.00" inputTorque="41.00" torqueLoss="31.00"></Entry>
-							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"></Entry>
-							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"></Entry>
+							<Entry inputSpeed="10.00" inputTorque="40.00" torqueLoss="30.00"/>
+							<Entry inputSpeed="11.00" inputTorque="41.00" torqueLoss="31.00"/>
+							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"/>
+							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"/>
 						</TorqueLossMap>
 					</v2.10.1:Data>
 					<v2.10.1:Signature>
 						<di:Reference>
-							<di:DigestMethod Algorithm=""></di:DigestMethod>
-							<di:DigestValue></di:DigestValue>
+							<di:DigestMethod Algorithm=""/>
+							<di:DigestValue/>
 						</di:Reference>
 					</v2.10.1:Signature>
 				</ADC>
-				<P2.5GearRatios><!-- only for P2.5 HEV -->
+				<P2.5GearRatios>
+					<!-- only for P2.5 HEV -->
 					<Ratio gear="1">1.000</Ratio>
 					<Ratio gear="2">2.000</Ratio>
 				</P2.5GearRatios>
@@ -412,7 +427,8 @@
 					</di:Reference>
 				</v2.0:Signature>
 			</Gearbox>
-			<TorqueConverter><!-- optional -->
+			<TorqueConverter>
+				<!-- optional -->
 				<v2.0:Data xsi:type="v1.0:TorqueConverterDataDeclarationType" id="TQ-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
 					<Manufacturer>Some Manufacturer</Manufacturer>
 					<Model>Some Model</Model>
@@ -428,12 +444,13 @@
 				</v2.0:Data>
 				<v2.0:Signature>
 					<di:Reference>
-						<di:DigestMethod Algorithm=""></di:DigestMethod>
-						<di:DigestValue></di:DigestValue>
+						<di:DigestMethod Algorithm=""/>
+						<di:DigestValue/>
 					</di:Reference>
 				</v2.0:Signature>
 			</TorqueConverter>
-			<Angledrive><!-- optional -->
+			<Angledrive>
+				<!-- optional -->
 				<v2.0:Data id="agl-vi2Oak2N" xsi:type="v2.0:AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
@@ -462,7 +479,8 @@
 					</di:Reference>
 				</v2.0:Signature>
 			</Angledrive>
-			<Retarder><!-- optional -->
+			<Retarder>
+				<!-- optional -->
 				<v2.0:Data id="RET-Shai9imi" xsi:type="v2.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
@@ -487,7 +505,7 @@
 				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -595,7 +613,8 @@
 					</HVAC>
 				</v2.10.2:Data>
 			</Auxiliaries>
-			<AirDrag><!-- optional -->
+			<AirDrag>
+				<!-- optional -->
 				<Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>

@@ -742,8 +742,6 @@ namespace TUGraz.VectoCommon.InputData
 		Watt R85RatedPower { get; }
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
 
-		Volt TestVoltageOverload { get; }
-
 		bool DcDcConverterIncluded { get; }
 
 		string IHPCType { get; }
@@ -826,8 +824,6 @@ namespace TUGraz.VectoCommon.InputData
 		ElectricMachineType ElectricMachineType { get; }
 		Watt R85RatedPower { get; }
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
-
-		Volt TestVoltageOverload { get; }
 
 		bool DifferentialIncluded { get; }
 

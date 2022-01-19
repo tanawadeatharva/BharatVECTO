@@ -290,8 +290,6 @@ Public Class ElectricMachine
     End Property
 
     
-
-    Public ReadOnly Property TestVoltageOverload As Volt Implements IElectricMotorDeclarationInputData.TestVoltageOverload
     Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
     Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 

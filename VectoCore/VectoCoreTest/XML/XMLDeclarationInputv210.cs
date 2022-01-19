@@ -190,8 +190,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestPTOData(IPTOTransmissionInputData pto)
 		{
 			Assert.IsNotNull(pto);
-			Assert.AreEqual(PTOShaftGearWheel.none, pto.PTOShaftGearWheel);
-			Assert.AreEqual(PTOOtherElement.none, pto.PTOOtherElement);
+			Assert.AreEqual("None", pto.PTOTransmissionType);
 		}
 
 		[TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml", BASE_DIR) ]
@@ -366,7 +365,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual(400.00.SI<NewtonMeter>(), eMachine.OverloadTorque);
 			//Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.OverloadTestSpeed);//TestSpeedOverloadTorque
 			//Assert.AreEqual(30.00.SI<Second>(), eMachine.OverloadTime);
-			Assert.AreEqual(483.SI<Volt>(), eMachine.TestVoltageOverload);
 			Assert.AreEqual(true, eMachine.DcDcConverterIncluded);
 			Assert.AreEqual("None", eMachine.IHPCType);
 
@@ -1326,7 +1324,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(CertificationMethod.Measured, iepcData.CertificationMethod);
 			Assert.AreEqual(1.SI<Watt>(), iepcData.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepcData.Inertia);//RotationalInertia
-			Assert.AreEqual(483.SI<Volt>(), iepcData.TestVoltageOverload);
 			Assert.AreEqual(false, iepcData.DifferentialIncluded);
 			Assert.AreEqual(false, iepcData.DesignTypeWheelMotor);
 			Assert.IsNull(iepcData.NrOfDesignTypeWheelMotorMeasured);
@@ -2048,7 +2045,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachine.ElectricMachineType);
 			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);
-			Assert.AreEqual(483.SI<Volt>(), eMachine.ElectricMachine.TestVoltageOverload);
 			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
 			Assert.AreEqual("IHPC Type 1", eMachine.ElectricMachine.IHPCType);
 
@@ -2085,7 +2081,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(CertificationMethod.StandardValues, eMachine.ElectricMachine.CertificationMethod);
 			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);//RotationalInertia
-			Assert.IsNull(eMachine.ElectricMachine.TestVoltageOverload);
 			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
 			Assert.AreEqual("None", eMachine.ElectricMachine.IHPCType);
 			

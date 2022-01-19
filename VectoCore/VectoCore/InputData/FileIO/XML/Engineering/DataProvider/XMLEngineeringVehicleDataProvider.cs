@@ -250,9 +250,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				AttributeMappings.PTOCycleMap);
 
 		public virtual TableData PTOCycleWhileDriving => null;
-		public virtual PTOShaftGearWheel? PTOShaftGearWheel => null;
-		public virtual PTOOtherElement? PTOOtherElement => null;
-
+		
 		#endregion
 
 		#region Overrides of AbstractXMLResource

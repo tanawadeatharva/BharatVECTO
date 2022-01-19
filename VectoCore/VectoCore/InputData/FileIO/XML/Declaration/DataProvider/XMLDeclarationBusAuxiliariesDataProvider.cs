@@ -245,9 +245,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "AUX_Conventional_CompletedBusType";
+		public const string XSD_TYPE_CONVENTIONAL = "AUX_Conventional_CompletedBusType";
+		public const string XSD_TYPE_xEV = "AUX_xEV_CompletedBusType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_CONVENTIONAL);
+		public static readonly string QUALIFIED_XSD_TYPE_xEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_xEV);
+
 
 		public XMLDeclarationCompletedBusAuxiliariesDataProviderV210(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)

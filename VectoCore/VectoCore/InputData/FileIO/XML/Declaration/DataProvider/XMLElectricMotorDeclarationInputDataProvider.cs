@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLElectricMotorDeclarationInputDataProviderV2101 : XMLCommonElectricMotorDeclarationInputData,
 		IXMLElectricMotorDeclarationInputData
 	{
-		public  static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public  static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public const string XSD_TYPE = "ElectricMachineSystemMeasuredDataDeclarationType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -174,9 +174,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		#region Implementation of IElectricMotorDeclarationInputData
 		
-		public virtual Volt TestVoltageOverload =>
-			GetDouble(XMLNames.ElectricMachine_TestVoltageOverload).SI<Volt>();
-
 		public virtual bool DcDcConverterIncluded => GetBool(XMLNames.ElectricMachine_DcDcConverterIncluded);
 
 		public virtual string IHPCType => GetString(XMLNames.ElectricMachine_IHPCType);
@@ -207,7 +204,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101 :
 			XMLElectricMotorDeclarationInputDataProviderV2101
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public new const string XSD_TYPE = "ElectricMachineSystemStandardValuesDataDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public XMLElectricMotorSystemStandardDeclarationInputDataProviderV2101(XmlNode componentNode, string sourceFile) 
@@ -216,7 +213,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of XMLElectricMotorDeclarationInputDataProviderV2101
 
-		public override Volt TestVoltageOverload => null;
 		public override TableData Conditioning => null;
 
 		#endregion
@@ -226,7 +222,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLElectricMotorIHPCDeclarationInputDataProviderV2101 : XMLElectricMotorDeclarationInputDataProviderV2101
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public new const string XSD_TYPE = "ElectricMachineSystemIHPCMeasuredDataDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -238,7 +234,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLElectricMotorIEPCIInputDataProviderV2101 : XMLCommonElectricMotorDeclarationInputData, IXMLIEPCInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public const string XSD_TYPE = "IEPCMeasuredDataDeclarationType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -285,9 +281,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		#region Implementation of IIEPCDeclarationInputData
-
-		public virtual Volt TestVoltageOverload =>
-			GetDouble(XMLNames.ElectricMachine_TestVoltageOverload).SI<Volt>();
 
 		public virtual bool DifferentialIncluded => GetBool(XMLNames.IEPC_DifferentialIncluded);
 
@@ -454,7 +447,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	
 	public class XMLElectricMotorIEPCIStandardInputDataProviderV2101 : XMLElectricMotorIEPCIInputDataProviderV2101
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS;
 		public new const string XSD_TYPE = "IEPCStandardValuesDataDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 

@@ -397,9 +397,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public PTOShaftGearWheel? PTOShaftGearWheel => null;
-		public PTOOtherElement? PTOOtherElement => null;
-
 		#endregion
 
 	}

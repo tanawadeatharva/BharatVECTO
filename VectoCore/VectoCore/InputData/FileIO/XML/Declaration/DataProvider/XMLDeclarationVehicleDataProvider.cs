@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new const string XSD_TYPE = "Vehicle_Exempted_PrimaryBusType";
+		public new const string XSD_TYPE = "Vehicle_Exempted_PrimaryBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -826,9 +826,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLDeclarationCompletedBusDataProviderV210 : XMLDeclarationVehicleDataProviderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public const string XSD_TYPE_Conventional = "Vehicle_Conventional_CompletedBusDeclarationType";
+		public const string XSD_TYPE_HEV = "Vehicle_HEV_CompletedBusDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_Conventional);
+		public static readonly string QUALIFIED_XSD_TYPE_HEV =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_HEV);
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 		
@@ -1164,6 +1168,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
 		//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
+
+		public override TankSystem? TankSystem => ElementExists(XMLNames.Vehicle_NgTankSystem)
+			? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>()
+			: (TankSystem?) null;
 		#endregion
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
@@ -1598,7 +1606,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV10
+	public class XMLDeclarationIEPCHeavyLorryDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_IEPC_HeavyLorryDeclarationType";
@@ -1628,7 +1636,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCMediumLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV10
+	public class XMLDeclarationIEPCMediumLorryDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 		public new const string XSD_TYPE = "Vehicle_IEPC_MediumLorryDeclarationType";

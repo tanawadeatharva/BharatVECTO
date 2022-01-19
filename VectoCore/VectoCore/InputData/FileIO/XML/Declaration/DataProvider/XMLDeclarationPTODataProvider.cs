@@ -84,9 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData PTOCycleDuringStop => null;
 
 		public TableData PTOCycleWhileDriving => null;
-		public virtual PTOShaftGearWheel? PTOShaftGearWheel => null;
-		public virtual PTOOtherElement? PTOOtherElement => null;
-
+		
 		#endregion
 	}
 
@@ -103,15 +101,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public XMLDeclarationPTODataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
+	}
 
-		#region Overrides of XMLDeclarationPTODataProviderV10
+	// ---------------------------------------------------------------------------------------
 
-		public override PTOOtherElement? PTOOtherElement =>
-			PTOOtherElementHelper.Parse(GetString(XMLNames.Vehicle_PTO_OtherElements));
+	public class XMLDeclarationPTODataProviderV210 : XMLDeclarationPTODataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public override PTOShaftGearWheel? PTOShaftGearWheel =>
-			PTOShaftGearWheelHelper.Parse(GetString(XMLNames.Vehicle_PTO_ShaftsGearWheels));
+		public new const string XSD_TYPE = "PTOType";
 
-		#endregion
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPTODataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+
 	}
 }

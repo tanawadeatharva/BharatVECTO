@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 		CustomerReport = 1 << 7,
 		MonitoringReport = 1 << 8,
 		VTPReport = 1 << 9,
-		MultistageOutputData = 1 << 10
+		MultistepOutputData = 1 << 10
 	}
 
 	
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Utils
 
         public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS = DECLARATION_NAMESPACE + ":DEV:v2.10.2";
 
-        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V2101_JOBS = DECLARATION_NAMESPACE + ":DEV:v2.10.1";
+        public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_COMPONENTS = DECLARATION_NAMESPACE + ":DEV:v2.10.1";
 
 		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
-			{XmlDocumentType.MultistageOutputData, "VectoOutputMultistage.0.1.xsd"}
+			{XmlDocumentType.MultistepOutputData, "VectoOutputMultistep.0.1.xsd"}
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";

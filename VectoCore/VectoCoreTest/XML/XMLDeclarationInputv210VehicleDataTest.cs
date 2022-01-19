@@ -75,8 +75,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		private void TestHeavyLorryParametersSequenceGroup2(IXMLDeclarationVehicleData vehicle)
 		{
 			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
-			Assert.AreEqual(PTOShaftGearWheel.none, vehicle.PTOTransmissionInputData.PTOShaftGearWheel);
-			Assert.AreEqual(PTOOtherElement.none, vehicle.PTOTransmissionInputData.PTOOtherElement);
+			Assert.AreEqual("None", vehicle.PTOTransmissionInputData.PTOTransmissionType);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(true, vehicle.VocationalVehicle);
 			Assert.IsNull(vehicle.TankSystem);

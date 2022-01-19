@@ -4588,11 +4588,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VectoOutputMultistage.
+        ///   Looks up a localized string similar to VectoOutputMultistep.
         /// </summary>
-        public static string VectoOutputMultistage {
+        public static string VectoOutputMultistep {
             get {
-                return ResourceManager.GetString("VectoOutputMultistage", resourceCulture);
+                return ResourceManager.GetString("VectoOutputMultistep", resourceCulture);
             }
         }
         

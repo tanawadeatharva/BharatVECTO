@@ -599,9 +599,6 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property PTOShaftGearWheel As PTOShaftGearWheel? Implements IPTOTransmissionInputData.PTOShaftGearWheel
-	Public ReadOnly Property PTOOtherElement As PTOOtherElement? Implements IPTOTransmissionInputData.PTOOtherElement
-
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
 		Implements IVehicleComponentsDeclaration.AirdragInputData
@@ -1061,7 +1058,6 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
 	Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
 	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
-	Public ReadOnly Property TestVoltageOverload As Volt Implements IElectricMotorDeclarationInputData.TestVoltageOverload
 	Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
 	Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
