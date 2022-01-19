@@ -265,7 +265,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_IEPC_S_PrimaryBusComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -279,7 +281,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E2_PrimaryBusComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -293,7 +297,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E3_PrimaryBusComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -307,7 +313,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E4_PrimaryBusComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -321,10 +329,58 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_IEPC_PrimaryBusComponentsType().GetXmlType(inputData));
+		}
+
+		#endregion
+	}
+
+	public class MRF_Conventional_CompletedBusVehicleType : MRFVehicleType
+	{
+		public MRF_Conventional_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
 			throw new NotImplementedException();
 		}
 
 		#endregion
 	}
+
+	public class MRF_HEV_CompletedBusVehicleType : MRFVehicleType
+	{
+		public MRF_HEV_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class MRF_PEV_CompletedBusVehicleType : MRFVehicleType
+	{
+		public MRF_PEV_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+
+
+
 
 }

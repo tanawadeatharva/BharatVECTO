@@ -98,5 +98,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 		IMrfXmlType GetPEV_PrimaryBusAuxType();
+		IMrfXmlGroup GetPEV_PrimaryBusVehicleOutputGroup();
 	}
 }
