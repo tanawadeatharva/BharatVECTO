@@ -13,13 +13,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFREESSSpecificationsType : AbstractMrfXmlType
-    {
+    internal class MRFREESSSpecificationsType : AbstractMrfXmlType, IMrfXmlType
+	{
 		public MRFREESSSpecificationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var reessElements = inputData.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements;
 

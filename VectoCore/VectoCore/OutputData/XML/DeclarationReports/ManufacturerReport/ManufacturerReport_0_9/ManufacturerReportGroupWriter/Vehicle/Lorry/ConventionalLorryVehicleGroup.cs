@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, inputData.JobInputData.Vehicle.SleeperCab),
 				(inputData.JobInputData.Vehicle.TankSystem.HasValue ? new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, inputData.JobInputData.Vehicle.TankSystem.Value.ToString()) : null),
 				//If content is null, nothing is added. When passing a collection, items in the collection can be null. A null item in the collection has no effect on the tree.
-				_mrfFactory.GetConventionalADASType().GetXmlType(inputData)});
+				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS)});
 			return result;
 		}
 

@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
@@ -86,22 +87,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetElectricMachinesType();
 		IMrfXmlType GetAxleGearType();
 		IMrfXmlType GetAxleWheelsType();
-		IMrfXmlType GetConventionalADASType();
-		IMrfXmlType GetHEVADASType();
+		IMRFAdasType GetConventionalADASType();
+		IMRFAdasType GetHEVADASType();
 		IMrfXmlType GetIEPCSpecifications();
 		IMrfXmlType GetREESSSpecificationsType();
 		IMrfXmlType GetAirdragType();
-		IMrfXmlType GetConventionalLorryAuxType();
-		IMrfXmlType GetConventionalPrimaryBusAuxType();
-
-		IMrfXmlType GetHEV_PrimaryBusAuxType();
-		IMrfXmlType GetHEV_LorryAuxiliariesType();
-		IMrfXmlType GetPrimaryBusPneumaticSystemType();
-		IMrfXmlType GetPrimaryBusElectricSystemType();
-		IMrfXmlType GetPrimaryBusHVACSystemType();
 
 
-		IMrfXmlType GetPEV_PrimaryBusAuxType();
+		IMRFLorryAuxiliariesType GetConventionalLorryAuxType();
+		IMRFLorryAuxiliariesType GetHEV_LorryAuxiliariesType();
+
+
+		IMRFBusAuxiliariesType GetConventionalPrimaryBusAuxType();
+		IMRFBusAuxiliariesType GetHEV_PrimaryBusAuxType();
+		IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType();
+		IMRFBusAuxiliariesType GetPrimaryBusElectricSystemType();
+		IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType();
+		IMRFBusAuxiliariesType GetPEV_PrimaryBusAuxType();
+
+
 		IMrfXmlGroup GetPEV_PrimaryBusVehicleOutputGroup();
 		IMrfXmlGroup GetCompletedBusGeneralVehicleOutputGroup();
 		IMrfVehicleGroup GetCompletedBusSequenceGroup();

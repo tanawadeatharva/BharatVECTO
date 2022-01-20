@@ -13,13 +13,13 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFEngineType : AbstractMrfXmlType
+    public class MRFEngineType : AbstractMrfXmlType, IMrfXmlType
     {
 		public MRFEngineType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var engineData = inputData.JobInputData.Vehicle.Components.EngineInputData;
 			var result = new XElement(_mrf + XMLNames.Component_Engine,

@@ -319,9 +319,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlGroup>().To<HEV_VehicleSequenceGroup>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVVehicleSequenceGroup());
 			#region ADAS
-			Bind<IMrfXmlType>().To<MRFConventionalAdasType>()
+			Bind<IMRFAdasType>().To<MRFConventionalAdasType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalADASType());
-			Bind<IMrfXmlType>().To<MRFHevAdasType>()
+			Bind<IMRFAdasType>().To<MRFHevAdasType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVADASType());
 
 
@@ -361,29 +361,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFIepcSpecificationsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetIEPCSpecifications());
 
-
 			Bind<IMrfXmlType>().To<MRFREESSSpecificationsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetREESSSpecificationsType());
 
 			#region Auxiliaries
-			Bind<IMrfXmlType>().To<MRFConventionalLorryAuxiliariesType>()
+			Bind<IMRFLorryAuxiliariesType>().To<MRFConventionalLorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryAuxType());
-			Bind<IMrfXmlType>().To<MRFHevLorryAuxiliariesType>()
+			Bind<IMRFLorryAuxiliariesType>().To<MRFHEV_LorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_LorryAuxiliariesType());
 			
-			Bind<IMrfXmlType>().To<MRFConventionalPrimaryBusAuxType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFConventional_PrimaryBusAuxType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalPrimaryBusAuxType());
-			Bind<IMrfXmlType>().To<MRFHEV_PrimaryBusAuxType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEV_PrimaryBusAuxType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusAuxType());
 
 
-			Bind<IMrfXmlType>().To<MRFPrimaryBusPneumaticSystemType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType());
 
-			Bind<IMrfXmlType>().To<MRFPrimaryBusElectricSystemType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType());
 
-			Bind<IMrfXmlType>().To<PrimaryBusHVACSystemType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType());
 			#region Groups
 

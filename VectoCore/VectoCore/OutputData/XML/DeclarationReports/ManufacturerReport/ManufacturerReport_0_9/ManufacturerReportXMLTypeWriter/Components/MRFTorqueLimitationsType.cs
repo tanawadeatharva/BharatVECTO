@@ -9,11 +9,11 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-    internal class MRFTorqueLimitationsType : AbstractMrfXmlType
+    internal class MRFTorqueLimitationsType : AbstractMrfXmlType, IMrfXmlType
     {
-		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var torqueLimitsElement = new XElement(_mrf + XMLNames.Vehicle_TorqueLimits);
 
@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return torqueLimitsElement;
 		}
 
-		#endregion
+
 
 		public MRFTorqueLimitationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 	}

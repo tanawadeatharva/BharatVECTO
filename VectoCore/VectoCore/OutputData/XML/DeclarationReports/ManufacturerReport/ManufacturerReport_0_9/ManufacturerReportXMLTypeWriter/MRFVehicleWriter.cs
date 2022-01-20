@@ -6,11 +6,13 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-    public abstract class MRFVehicleType : AbstractMrfXmlType
+    public abstract class MRFVehicleType : AbstractMrfXmlType, IMrfXmlType
     {
 		
 
 		public MRFVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public abstract XElement GetXmlType(IDeclarationInputDataProvider inputData);
 	}
 
 
@@ -184,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
-				_mrfFactory.GetConventionalADASType().GetXmlType(inputData),
+				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
 				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetXmlType(inputData)
 			);
 		}

@@ -10,13 +10,13 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFAxleWheelsType : AbstractMrfXmlType
-    {
+    public class MRFAxleWheelsType : AbstractMrfXmlType, IMrfXmlType
+	{
 		public MRFAxleWheelsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var result = new XElement(_mrf + XMLNames.Component_AxleWheels);
 			var axleWheelsInputdata = inputData.JobInputData.Vehicle.Components.AxleWheels;

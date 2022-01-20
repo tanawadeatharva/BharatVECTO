@@ -10,13 +10,13 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFAngleDriveType : AbstractMrfXmlType
-    {
+    internal class MRFAngleDriveType : AbstractMrfXmlType, IMrfXmlType
+	{
 		public MRFAngleDriveType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var angleDriveData = inputData.JobInputData.Vehicle.Components.AngledriveInputData;
 			return new XElement(_mrf + XMLNames.Component_Angledrive,

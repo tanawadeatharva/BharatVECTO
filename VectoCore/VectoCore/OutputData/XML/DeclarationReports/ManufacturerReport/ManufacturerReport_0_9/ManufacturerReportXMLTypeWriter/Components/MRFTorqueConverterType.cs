@@ -9,13 +9,13 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFTorqueConverterType : AbstractMrfXmlType
-    {
+    public class MRFTorqueConverterType : AbstractMrfXmlType, IMrfXmlType
+	{
 		public MRFTorqueConverterType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var torqueConverterInputData = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
 			return new XElement(_mrf + XMLNames.Component_TorqueConverter,

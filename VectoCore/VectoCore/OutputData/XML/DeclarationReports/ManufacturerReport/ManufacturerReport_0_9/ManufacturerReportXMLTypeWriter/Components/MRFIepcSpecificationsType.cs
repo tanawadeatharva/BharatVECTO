@@ -10,13 +10,13 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFIepcSpecificationsType : AbstractMrfXmlType
+    internal class MRFIepcSpecificationsType : AbstractMrfXmlType, IMrfXmlType
     {
 		public MRFIepcSpecificationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var iepcData = inputData.JobInputData.Vehicle.Components.IEPC;
 			return new XElement(_mrf + "IEPCSpecifiactions",

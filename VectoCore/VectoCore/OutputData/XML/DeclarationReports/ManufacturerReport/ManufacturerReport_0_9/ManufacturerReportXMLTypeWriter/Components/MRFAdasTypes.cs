@@ -4,21 +4,25 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-	internal class MRFConventionalAdasType : AbstractMrfXmlType
+	public interface IMRFAdasType
+	{
+		XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData adas);
+	}
+
+	internal class MRFConventionalAdasType : AbstractMrfXmlType, IMRFAdasType
     {
 		#region Overrides of AbstractMRFComponentWriter
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData inputData)
 		{
-			var adas = inputData.JobInputData.Vehicle.ADAS;
 			return new XElement(_mrf + XMLNames.Vehicle_ADAS,
-				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, inputData.EngineStopStart),
 				new XElement(_mrf + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop,
-					adas.EcoRoll == EcoRollType.WithoutEngineStop),
+					inputData.EcoRoll == EcoRollType.WithoutEngineStop),
 				new XElement(_mrf + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart,
-					adas.EcoRoll == EcoRollType.WithEngineStop),
+					inputData.EcoRoll == EcoRollType.WithEngineStop),
 				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC,
-					adas.PredictiveCruiseControl != PredictiveCruiseControlType.None));
+					inputData.PredictiveCruiseControl != PredictiveCruiseControlType.None));
 		}
 
 		#endregion
@@ -26,17 +30,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public MRFConventionalAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 	}
 
-	internal class MRFHevAdasType : AbstractMrfXmlType
+	internal class MRFHevAdasType : AbstractMrfXmlType, IMRFAdasType
 	{
 		public MRFHevAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData inputData)
 		{
 			return new XElement(_mrf + XMLNames.Vehicle_ADAS, 
-				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, inputData.JobInputData.Vehicle.ADAS.EngineStopStart),
-				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC, inputData.JobInputData.Vehicle.ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, inputData.EngineStopStart),
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC, inputData.PredictiveCruiseControl != PredictiveCruiseControlType.None)
 				);
 		}
 

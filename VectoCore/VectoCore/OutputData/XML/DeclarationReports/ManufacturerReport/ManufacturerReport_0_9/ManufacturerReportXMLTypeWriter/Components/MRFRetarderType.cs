@@ -10,13 +10,13 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFRetarderType : AbstractMrfXmlType
-    {
+    internal class MRFRetarderType : AbstractMrfXmlType, IMrfXmlType
+	{
 		public MRFRetarderType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			var retarderData = inputData.JobInputData.Vehicle.Components.RetarderInputData;
 			var result = new XElement(_mrf + XMLNames.Component_Retarder,

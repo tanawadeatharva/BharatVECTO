@@ -11,11 +11,11 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFAirdragType : AbstractMrfXmlType
-    {
+    public class MRFAirdragType : AbstractMrfXmlType, IMrfXmlType
+	{
 		#region Implementation of IMrfXmlType
 
-		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			
 			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;

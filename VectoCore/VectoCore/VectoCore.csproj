@@ -478,9 +478,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFAxleGearType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFAxleWheelsType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFElectricMachinesType.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFElectricSystemType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFEngineType.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFHVACSystemType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFIepcSpecificationsType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFPneumaticSystemType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFREESSSpecificationsType.cs" />
