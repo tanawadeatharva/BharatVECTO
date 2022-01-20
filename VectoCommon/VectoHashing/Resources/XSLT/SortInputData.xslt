@@ -17,7 +17,17 @@
       - sort entries of torque converter characteristics
       - sort torque limiation entries 
       - sort gears
+	  - sort characteristics entries
       - sort axles
+	  - sort maxtorquecurve entries
+	  - sort powermap entries
+      - sort dragcurve entries
+	  - sort conditioning entries
+	  - sort powermaps by gear attribute
+      - sort voltage entries by voltage element value
+      - sort ovc entries
+      - sort internalresistance entries
+      - sort currentlimits entries
 -->	<xsl:output omit-xml-declaration="no" indent="yes"/>
 	<xsl:template match="*">
 		<xsl:element name="{local-name()}">
@@ -105,4 +115,115 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
+	
+	
+	<xsl:template match="*[local-name()='MaxTorqueCurve']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
+				<xsl:sort data-type="number" select="@maxTorque" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+	<xsl:template match="*[local-name()='PowerMap']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
+				<xsl:sort data-type="number" select="@torque" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>	
+	<xsl:template match="*[local-name()='DragCurve']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>		
+	<xsl:template match="*[local-name()='Conditioning']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@coolantTempInlet" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>			
+	<xsl:template match="*[local-name()='VoltageLevel']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>			
+	<xsl:template match="*[local-name()='Data']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			
+			<xsl:apply-templates select="./*[not(local-name()='DragCurve') and not(local-name()='Conditioning') and not(local-name()='VoltageLevel')]"/>
+			
+			<xsl:for-each select="*[local-name()='VoltageLevel']">
+				<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>					
+						
+			<xsl:for-each select="*[local-name()='DragCurve']">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+			
+			<xsl:for-each select="*[local-name()='Conditioning']">
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>			
+		</xsl:element>
+	</xsl:template>	
+	<xsl:template match="*[local-name()='OCV']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@SoC" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+	<xsl:template match="*[local-name()='InternalResistance']">
+		<xsl:choose>
+			<xsl:when test="*">	
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*"/>
+					<xsl:for-each select="*">
+						<xsl:sort data-type="number" select="@SoC" order="ascending"/>
+						<xsl:sort data-type="number" select="@R_2" order="ascending"/>
+						<xsl:sort data-type="number" select="@R_10" order="ascending"/>
+						<xsl:sort data-type="number" select="@R_20" order="ascending"/>
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/> 
+				</xsl:element>
+			</xsl:otherwise>		
+		</xsl:choose>
+	</xsl:template>		
+	<xsl:template match="*[local-name()='CurrentLimits']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@SoC" order="ascending"/>
+				<xsl:sort data-type="number" select="@maxChargingCurrent" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>	
+	
 </xsl:transform>
