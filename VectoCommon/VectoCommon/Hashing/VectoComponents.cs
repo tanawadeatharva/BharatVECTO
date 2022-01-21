@@ -48,7 +48,7 @@ namespace TUGraz.VectoCommon.Hashing
 		VectoOutput,
 		VectoCustomerInformation,
 		VectoPrimaryVehicleInformation,
-		VectoManufacturingStage, 
+		VectoManufacturingStep, 
 		BatterySystem,
 		CapacitorSystem,
 		ElectricMachineSystem,
@@ -85,8 +85,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return "VectoCustomerInformation";
 				case VectoComponents.VectoPrimaryVehicleInformation:
 					return "PrimaryVehicle";
-				case VectoComponents.VectoManufacturingStage:
-					return "ManufacturingStage";
+				case VectoComponents.VectoManufacturingStep:
+					return "ManufacturingStep";
 				case VectoComponents.BatterySystem:
 					return XMLNames.Component_BatterySystem;
 				case VectoComponents.CapacitorSystem:
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCommon.Hashing
 					return "PIF-";
 				case VectoComponents.Vehicle:
 					return "VEH-";
-				case VectoComponents.VectoManufacturingStage:
+				case VectoComponents.VectoManufacturingStep:
 					return "MST-";
 				case VectoComponents.BatterySystem:
 					return "BAT-";
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoCustomerInformation:
 				case VectoComponents.VectoOutput:
 				case VectoComponents.VectoPrimaryVehicleInformation:
-				case VectoComponents.VectoManufacturingStage:
+				case VectoComponents.VectoManufacturingStep:
 					return true;
 				default:
 					return false;

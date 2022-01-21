@@ -1422,11 +1422,11 @@
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
-  <data name="ManufacturingStage" xml:space="preserve">
-    <value>ManufacturingStage</value>
+  <data name="ManufacturingStep" xml:space="preserve">
+    <value>ManufacturingStep</value>
   </data>
-  <data name="ManufacturingStage_StageCount" xml:space="preserve">
-    <value>stageCount</value>
+  <data name="ManufacturingStep_StepCount" xml:space="preserve">
+    <value>stepCount</value>
   </data>
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>

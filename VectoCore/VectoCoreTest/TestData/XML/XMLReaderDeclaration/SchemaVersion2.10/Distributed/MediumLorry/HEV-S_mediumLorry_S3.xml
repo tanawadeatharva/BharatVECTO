@@ -9,8 +9,8 @@
 		<LegislativeCategory>N2</LegislativeCategory>
 		<ChassisConfiguration>Van</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<CorrectedActualMass>6000</CorrectedActualMass>
-		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
+		<CorrectedActualMass>3500</CorrectedActualMass>
+		<TechnicalPermissibleMaximumLadenMass>7100</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>650</IdlingSpeed>
 		<CargoVolume>20.300</CargoVolume>
 		<!-- optional -->

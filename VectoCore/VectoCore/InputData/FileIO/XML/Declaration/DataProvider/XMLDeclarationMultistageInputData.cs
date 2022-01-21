@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			_hashPreviousStage ??
 			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
 
-		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount));
+		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.Vehicle);
 

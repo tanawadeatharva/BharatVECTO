@@ -150,6 +150,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationCompletedBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationHeavyLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationMediumLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationPrimaryBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationExemptedVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricMachinesDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationMultistageInputData.cs" />

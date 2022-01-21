@@ -477,7 +477,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestCase]
+		[TestCase, Ignore("Engineering XML not maintained")]
 		public void TestXMLPowertrainGenerationSingleFile()
 		{
 			var fileWriter = new FileOutputWriter("foo");
