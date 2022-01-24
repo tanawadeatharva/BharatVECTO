@@ -160,6 +160,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class MRFConventionalCompletedBus_HVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFConventionalCompletedBus_HVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + "HVACSystem",
+				_mrfFactory.GetCompletedBus_HVACSystemGroup().GetElements(auxData));
+		}
+
+		#endregion
+	}
+
 	internal class MRFPrimaryBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
 		public MRFPrimaryBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }

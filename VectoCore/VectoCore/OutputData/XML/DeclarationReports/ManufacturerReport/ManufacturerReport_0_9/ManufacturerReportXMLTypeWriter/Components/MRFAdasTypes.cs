@@ -46,4 +46,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class MRFPevAdasType : AbstractMrfXmlType, IMRFAdasType
+	{
+		public MRFPevAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData inputData)
+		{
+			return new XElement(_mrf + XMLNames.Vehicle_ADAS,
+				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC, inputData.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+			);
+		}
+
+		#endregion
+	}
 }

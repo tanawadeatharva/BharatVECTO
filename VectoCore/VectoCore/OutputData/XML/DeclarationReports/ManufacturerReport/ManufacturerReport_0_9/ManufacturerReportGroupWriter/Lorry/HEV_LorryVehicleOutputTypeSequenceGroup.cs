@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.Lorry
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Lorry
 {
     internal class HEV_LorryVehicleOutputTypeSequenceGroup : AbstractMrfXmlGroup
     {
@@ -21,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var result = new List<XElement>();
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, vehicleData.DualFuelVehicle));
-			result.AddRange(_mrfFactory.GetHEVVehicleSequenceGroup().GetElements(inputData));
+			result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab));
 			if (vehicleData.TankSystem.HasValue) {
 				result.Add(new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, vehicleData.TankSystem.Value.ToString()));

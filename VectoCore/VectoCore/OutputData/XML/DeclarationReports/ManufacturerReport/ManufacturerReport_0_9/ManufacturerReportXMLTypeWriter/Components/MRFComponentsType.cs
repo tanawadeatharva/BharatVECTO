@@ -158,6 +158,62 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class MRFPEV_E2_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	{
+		public MRFPEV_E2_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var components = inputData.JobInputData.Vehicle.Components;
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetTransmissionType().GetXmlType(inputData),
+				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
+				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
+				components.TorqueConverterInputData != null
+					? _mrfFactory.GetTorqueConverterType().GetXmlType(inputData)
+					: null,
+				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
+				components.AirdragInputData != null ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null,
+				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
+				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData)
+			);
+		}
+	}
+
+	internal class MRFPEV_E3_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	{
+		public MRFPEV_E3_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var components = inputData.JobInputData.Vehicle.Components;
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
+				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
+				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
+				components.AirdragInputData != null ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null,
+				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
+				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData)
+			);
+		}
+
+	}
+
+	internal class MRFPEV_E4_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	{
+		public MRFPEV_E4_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			var components = inputData.JobInputData.Vehicle.Components;
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
+				components.AirdragInputData != null ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null,
+				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
+				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData)
+			);
+		}
+	}
 
 	internal class MRFConventional_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
 	{

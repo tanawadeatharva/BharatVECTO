@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var result = new List<XElement>();
 			result.AddRange(_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData));
-			result.AddRange(_mrfFactory.GetHEVVehicleSequenceGroup().GetElements(inputData));
+			result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
 
 			return result;
 		}

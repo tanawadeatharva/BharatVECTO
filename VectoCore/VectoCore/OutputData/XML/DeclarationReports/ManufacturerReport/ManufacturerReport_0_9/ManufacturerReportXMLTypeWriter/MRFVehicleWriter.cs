@@ -139,7 +139,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var vehicleData = inputData.JobInputData.Vehicle;
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E2_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -153,7 +156,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E3_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
@@ -166,7 +171,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_E4_LorryComponentsType().GetXmlType(inputData));
 		}
 
 		#endregion
