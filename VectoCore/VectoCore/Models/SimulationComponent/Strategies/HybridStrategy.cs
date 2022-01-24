@@ -1528,7 +1528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			best = eval.Where(x => !double.IsNaN(x.Score)).OrderBy(x => x.Score).FirstOrDefault();
-			if (best != null) {
+			if (best != null && !(best.Gear != currentGear && best.IgnoreReason.EngineSpeedTooHigh())) {
 				return best;
 			}
 
