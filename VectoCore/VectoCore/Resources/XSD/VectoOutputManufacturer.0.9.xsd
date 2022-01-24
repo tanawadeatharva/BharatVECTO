@@ -661,7 +661,6 @@
 			<xs:element name="AxleGear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -681,8 +680,8 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-LorryComponentsType">
 		<xs:sequence>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
@@ -693,7 +692,6 @@
 		<xs:sequence>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -1229,10 +1227,6 @@
 	<xs:group name="Conventional-PrimaryBus-VehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:sequence>
-				<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV"/>
-			</xs:sequence>
 			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
 			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 		</xs:sequence>
@@ -1285,6 +1279,9 @@
 		<xs:group ref="mrf:PrimaryBusElectricSystemGroup"/>
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType">
+		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
+	</xs:complexType>
+	<xs:complexType name="Conventional/HEV_Px_PneumaticSystemType">
 		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
 	</xs:complexType>
 	<xs:complexType name="HVACSystemType">
