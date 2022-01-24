@@ -1598,13 +1598,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (filtered3.Length == 0) {
 					filtered3 = filtered2;
 				}
-
 				var filteredCurrentGear = filtered3.Where(x => x.Gear.Equals(currentGear)).ToArray();
 				if (filteredCurrentGear.Length > 0) {
-					best = filteredCurrentGear.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+					if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+						best = filteredCurrentGear.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+					} else {
+						best = filteredCurrentGear.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+					}
 					return best;
 				}
-				best = filtered3.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Brake) {
+					best = filtered3.MaxBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+				} else {
+					best = filtered3.MinBy(x => x.Setting.MechanicalAssistPower.Sum(e => e.Value?.Item2 ?? 0.SI<NewtonMeter>()));
+				}
 				if (best != null) {
 					return best;
 				}
