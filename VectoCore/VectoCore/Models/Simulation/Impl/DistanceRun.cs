@@ -79,9 +79,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						FinishedWithoutErrors = true;
 						Log.Info("========= REESS empty");
 						break;
-					//case ResponseEngineSpeedTooHigh _:
-					//	Log.Info("DistanceRun got ResponseEngineSpeedTooHigh. Trying again.");
-					//	break;
 					default:
 						throw new VectoException("DistanceRun got an unexpected response: {0}", response);
 				}
