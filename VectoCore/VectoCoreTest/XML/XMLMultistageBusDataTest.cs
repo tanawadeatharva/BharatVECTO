@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class XMLMultistageBusDataTest
 	{
 		protected IXMLInputDataReader _xmlInputReader;

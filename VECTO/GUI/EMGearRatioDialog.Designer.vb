@@ -67,7 +67,7 @@ Partial Class EMGearRatioDialog
         Me.OK_Button.Location = New System.Drawing.Point(3, 3)
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New System.Drawing.Size(67, 23)
-        Me.OK_Button.TabIndex = 0
+        Me.OK_Button.TabIndex = 2
         Me.OK_Button.Text = "OK"
         '
         'Cancel_Button
@@ -77,7 +77,7 @@ Partial Class EMGearRatioDialog
         Me.Cancel_Button.Location = New System.Drawing.Point(76, 3)
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
-        Me.Cancel_Button.TabIndex = 1
+        Me.Cancel_Button.TabIndex = 3
         Me.Cancel_Button.Text = "Cancel"
         '
         'Label3
@@ -94,7 +94,7 @@ Partial Class EMGearRatioDialog
         Me.tbGear.Location = New System.Drawing.Point(70, 12)
         Me.tbGear.Name = "tbGear"
         Me.tbGear.Size = New System.Drawing.Size(41, 20)
-        Me.tbGear.TabIndex = 2
+        Me.tbGear.TabIndex = 0
         Me.tbGear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
@@ -120,7 +120,7 @@ Partial Class EMGearRatioDialog
         Me.tbGearRatio.Location = New System.Drawing.Point(241, 13)
         Me.tbGearRatio.Name = "tbGearRatio"
         Me.tbGearRatio.Size = New System.Drawing.Size(84, 20)
-        Me.tbGearRatio.TabIndex = 3
+        Me.tbGearRatio.TabIndex = 1
         Me.tbGearRatio.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'EMGearRatioDialog

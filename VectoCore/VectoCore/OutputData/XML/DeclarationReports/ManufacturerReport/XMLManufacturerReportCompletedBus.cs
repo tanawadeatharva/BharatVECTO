@@ -107,8 +107,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 			if (genericResult.Status == VectoRun.Status.Canceled || genericResult.Status == VectoRun.Status.Aborted || specificResult.Status == VectoRun.Status.Canceled || specificResult.Status == VectoRun.Status.Aborted) {
 				content = new object[] {
-					new XElement(tns + XMLNames.Report_Results_Error, genericResult.Error ?? "" + Environment.NewLine +  specificResult.Error ?? ""),
-					new XElement(tns + XMLNames.Report_Results_ErrorDetails, genericResult.StackTrace ?? "" + Environment.NewLine + specificResult.StackTrace ?? ""),
+					new XElement(tns + XMLNames.Report_Results_Error, (genericResult.Error ?? "") + Environment.NewLine +  (specificResult.Error ?? "")),
+					new XElement(tns + XMLNames.Report_Results_ErrorDetails, (genericResult.StackTrace ?? "") + Environment.NewLine + (specificResult.StackTrace ?? "")),
 				};
 			}
 
@@ -259,23 +259,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
-						fcEnergy.ConvertToMegaJouleperKilometer().ToMinSignificantDigits(3, 1)),
+						fcEnergy.ConvertToMegaJoulePerKilometer().ToMinSignificantDigits(3, 1)),
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/t-km"),
-						(fcEnergy.ConvertToMegaJouleperKilometer() / specificResult.Payload.ConvertToTon())
+						(fcEnergy.ConvertToMegaJoulePerKilometer() / specificResult.Payload.ConvertToTon())
 						.ToMinSignificantDigits(3, 1)),
 					specificResult.CargoVolume > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/m³-km"),
-							(fcEnergy.ConvertToMegaJouleperKilometer() / specificResult.CargoVolume.Value()).ToMinSignificantDigits(3, 1))
+							(fcEnergy.ConvertToMegaJoulePerKilometer() / specificResult.CargoVolume.Value()).ToMinSignificantDigits(3, 1))
 						: null,
 					specificResult.PassengerCount.HasValue && specificResult.PassengerCount.Value > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/p-km"),
-							(fcEnergy.ConvertToMegaJouleperKilometer() / specificResult.PassengerCount.Value).ToMinSignificantDigits(3, 1))
+							(fcEnergy.ConvertToMegaJoulePerKilometer() / specificResult.PassengerCount.Value).ToMinSignificantDigits(3, 1))
 						: null
 				);
 				if (fuelData.FuelDensity != null) {

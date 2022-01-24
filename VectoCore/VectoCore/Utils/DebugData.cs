@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 		public override string ToString()
 		{
 #if DEBUG
-			return string.Join("\n", Data);
+			return Data.Join("\n");
 #else
 				return "-";
 			#endif

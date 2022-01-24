@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public bool VocationalVehicle => false;
 
-		public bool SleeperCab => false;
+		public bool? SleeperCab => false;
 
 		public virtual bool? AirdragModifiedMultistep => null;
 

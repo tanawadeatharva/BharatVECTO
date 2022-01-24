@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -34,9 +35,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static List<SSMTechnology> Create(DataTable data, string fileName)
 		{
 			if (!HeaderIsValid(data.Columns)) {
-				throw new VectoException("invalid header for techlist file. expected: {0} got: {1}",
-					string.Join(", ", headerCols), string.Join(", ",  data.Columns)
-					);
+				throw new VectoException("invalid header for techlist file. Expected: {0}, Got: {1}",
+					headerCols.Join(),
+					data.Columns.Cast<DataColumn>().Join());
 			}
 
 			var retVal = new List<SSMTechnology>();

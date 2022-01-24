@@ -708,6 +708,13 @@ Public Class Gearbox
         Return Nothing
     End Get
     End Property
+
+    Public ReadOnly Property PEV_DownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftSpeedFactor
+        get
+            return nothing
+        End Get
+    End Property
+
     Public ReadOnly Property PEV_DeRatingDownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DeRatingDownshiftSpeedFactor
     get
         return Nothing
@@ -828,7 +835,7 @@ Public Class MockEngineeringVehicle
     Public Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
     Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
     Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-    Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+    Public Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
     Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
     Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 
@@ -930,7 +937,6 @@ Public Class MockJobInputData
     Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
     Public Property JobName As String Implements IDeclarationJobInputData.JobName
-    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
 End Class
 
 Public Class MockDriverInputData

@@ -23,6 +23,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class CompletedBusSanityCheckTests
 	{
 		private IXMLInputDataReader _xmlInputReader;

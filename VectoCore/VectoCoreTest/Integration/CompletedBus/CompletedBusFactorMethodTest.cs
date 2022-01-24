@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Ninject;
-using Ninject.Planning.Bindings.Resolvers;
 using NLog.LayoutRenderers;
 using NUnit.Framework;
-using TUGraz.VECTO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -32,7 +27,6 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -40,7 +34,8 @@ using Formatting = Newtonsoft.Json.Formatting;
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
 
-	[TestFixture()]
+	[TestFixture]
+	//[Parallelizable(ParallelScope.All)] --> job file executed more than 20 runs in parallel, which produces out-of-memory if run parallel
 	public class CompletedBusFactorMethodTest
 	{
 		const string JobFile_Group41 = @"TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto";
@@ -385,7 +380,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(6, genericGearbox.Gears.Count);
 			Assert.AreEqual(genericGearbox.Gears.Count, specificGearbox.Gears.Count);
 
-			AssertGearShiftParameters(relatedRun);
 			AssertGears(genericGearbox.Gears.Values.ToList());
 			AssertGears(specificGearbox.Gears.Values.ToList());
 			AssertGearsLossmap(
@@ -419,12 +413,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			}
 		}
 
-		private void AssertGearShiftParameters(RelatedRun relatedRun)
-		{
-			Assert.AreEqual(relatedRun.VectoRunDataGenericBody.ShiftStrategy, relatedRun.VectoRunDataSpezificBody.ShiftStrategy);
-		}
-
-
+		
 		#endregion
 
 		#region Torque Converter Asserts
@@ -1147,8 +1136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 7, TestName = "RunBusSimulation Grp 39/40 P39DD HU/RL"),
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 9, TestName = "RunBusSimulation Grp 39/40 P39DD U/RL"),
 		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 19, TestName = "RunBusSimulation Grp 39/40 P40DD CO/RL"), // fails! is intended/known
-		
-			TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),
+		TestCase(@"TestData\Integration\Buses\primary_heavyBus group P39_40_nonSmart_ESS.xml", 18, TestName = "RunBusSimulation Grp 39/40 P40DD CO/LL"),  // fails! is intended/known
 
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ConvAux_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ConvAux SmartPS"),
 		//TestCase(@"E:\QUAM\tmp\ESS_Tests\primary_heavyBus group 42_ESS_SmartPS.xml", 10, TestName = "RunBusSimulation ESS P33DD SU/LL ES Aux SmartPS"),
@@ -1296,7 +1284,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			public bool SavedInDeclarationMode => true;
 			public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 			public string JobName { get; }
-			public string ShiftStrategy => "";
 			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 			#endregion

@@ -18,6 +18,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class SimulationPreprocessingTest
 	{
 		private StandardKernel _kernel;
@@ -136,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Console.WriteLine("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleMass);
 			foreach (var entry in segments.Segments) {
-				Console.WriteLine("x_start: {0}, x_vLow: {1}, x_end: {2}", entry.StartDistance, entry.DistanceMinSpeed, entry.EndDistance);
+				Console.WriteLine("x_start: {0}, x_vLow: {1}, x_end: {2}", entry.StartDistance, entry.DistanceAtLowestSpeed, entry.EndDistance);
 			}
 			Console.WriteLine();
 
@@ -145,8 +146,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			foreach (var entry in segments.Segments) {
 				Console.WriteLine("{0},0", entry.StartDistance.Value());
 				Console.WriteLine("{0},-5", entry.StartDistance.Value());
-				Console.WriteLine("{0},-5", entry.DistanceMinSpeed.Value());
-				Console.WriteLine("{0},5", entry.DistanceMinSpeed.Value());
+				Console.WriteLine("{0},-5", entry.DistanceAtLowestSpeed.Value());
+				Console.WriteLine("{0},5", entry.DistanceAtLowestSpeed.Value());
 				Console.WriteLine("{0},5", entry.EndDistance.Value());
 				Console.WriteLine("{0},0", entry.EndDistance.Value());
 			}

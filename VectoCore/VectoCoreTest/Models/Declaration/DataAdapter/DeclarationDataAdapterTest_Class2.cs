@@ -31,7 +31,6 @@
 
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Declaration;
 using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter

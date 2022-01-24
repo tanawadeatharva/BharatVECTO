@@ -38,7 +38,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 
 namespace TUGraz.VectoCommon.InputData
@@ -50,8 +49,6 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData Vehicle { get; }
 
 		string JobName { get; }
-
-		string ShiftStrategy { get; }
 
 		VectoSimulationJobType JobType { get; }
 	}
@@ -144,7 +141,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool VocationalVehicle { get; }
 
-		bool SleeperCab { get; }
+		bool? SleeperCab { get; }
 
 		bool? AirdragModifiedMultistep { get; }
 
@@ -310,7 +307,7 @@ namespace TUGraz.VectoCommon.InputData
 		public static EcoRollType Get(bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop)
 		{
 			if (ecoRollWithEngineStop && ecoRollWithoutEngineStop) {
-				throw new VectoException("invalid combination or EcoRoll");
+				throw new VectoException("invalid combination for EcoRoll");
 			}
 
 			if (ecoRollWithoutEngineStop) {
@@ -716,6 +713,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IList<IElectricMotorVoltageLevel> VoltageLevels { get; }
 
+		TableData DragCurve { get; }
+
 		KilogramSquareMeter Inertia { get; }
 
 		Second OverloadTime { get; }
@@ -736,8 +735,6 @@ namespace TUGraz.VectoCommon.InputData
 		Volt VoltageLevel { get; }
 
 		TableData FullLoadCurve { get; }
-
-		TableData DragCurve { get; }
 
 		TableData EfficiencyMap { get; }
 	}

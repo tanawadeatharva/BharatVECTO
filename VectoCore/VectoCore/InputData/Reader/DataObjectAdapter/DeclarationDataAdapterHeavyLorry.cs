@@ -292,9 +292,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			if (gear.Gear - 1 >= numGears / 2) {
 				// only upper half of gears can limit if max-torque <= 0.95 of engine max torque
-				if (limits.ContainsKey(gear.Gear) &&
-					limits[gear.Gear].MaxTorque <= DeclarationData.Engine.TorqueLimitVehicleFactor * maxEngineTorque) {
-					return limits[gear.Gear].MaxTorque;
+				if (limits.TryGetValue(gear.Gear, out var limit) && limit.MaxTorque <= DeclarationData.Engine.TorqueLimitVehicleFactor * maxEngineTorque) {
+					return limit.MaxTorque;
 				}
 			}
 

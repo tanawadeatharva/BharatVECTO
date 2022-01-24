@@ -51,7 +51,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ICycleData> Cycles { get; }
 
-		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
 	}
 
@@ -105,9 +104,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
 
-		Meter Height { get; }
+        Meter Height { get; }
 
-		TableData ElectricMotorTorqueLimits { get; }
+        TableData ElectricMotorTorqueLimits { get; }
 
 		TableData MaxPropulsionTorque { get; }
 
@@ -344,6 +343,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double? PEV_TargetSpeedBrakeNorm { get; }
 
+		double? PEV_DownshiftSpeedFactor { get; }
 		double? PEV_DeRatingDownshiftSpeedFactor { get; }
 		double? PEV_DownshiftMinSpeedFactor { get; }
 	}

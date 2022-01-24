@@ -60,13 +60,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			Source = source;
 			Technology = technology;
 			Entries = entries;
-			var powerDividedByFlowRateSum = 0.0.SI<JoulePerNormLiter>();
-			foreach (var entry in Entries) {
-				powerDividedByFlowRateSum += (entry.PowerCompressorOn - entry.PowerCompressorOff) /
-											entry.FlowRate;
-			}
+			var tmp = Entries.Where(x => !x.FlowRate.IsEqual(0)).ToList();
+			if (tmp.Count == 0) {
+				_averagePowerDemandPerCompressorUnitFlowRateLitresperSec = 0.SI<JoulePerNormLiter>();
+			} else {
+				var powerDividedByFlowRateSum = 0.0.SI<JoulePerNormLiter>();
+				powerDividedByFlowRateSum = tmp.Aggregate(powerDividedByFlowRateSum, (current, entry) => current + (entry.PowerCompressorOn - entry.PowerCompressorOff) / entry.FlowRate);
 
-			_averagePowerDemandPerCompressorUnitFlowRateLitresperSec = (powerDividedByFlowRateSum / Entries.Count);
+				_averagePowerDemandPerCompressorUnitFlowRateLitresperSec =
+					powerDividedByFlowRateSum / Entries.Count(x => !x.FlowRate.IsEqual(0));
+			}
 		}
 
 		public string Technology { get; }

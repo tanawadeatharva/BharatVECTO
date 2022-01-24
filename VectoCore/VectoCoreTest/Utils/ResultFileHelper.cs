@@ -107,10 +107,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				CollectionAssert.AreEqual(expectedCols, actualCols,
-					string.Format("Moddata {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
-						string.Join(", ", expectedCols),
-						string.Join(", ", expectedCols.Except(actualCols)),
-						string.Join(", ", actualCols.Except(expectedCols)), result.actualFile));
+					"Moddata {0}: Columns differ:\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
+					result.actualFile,
+					expectedCols.Join(),
+					expectedCols.Except(actualCols).Join(),
+					actualCols.Except(expectedCols).Join());
 
 				for (var i = 0; testRowcount && i < expected.Rows.Count; i++) {
 					var expectedRow = expected.Rows[i];
@@ -138,11 +139,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
 			CollectionAssert.AreEqual(expectedCols, actualCols,
-				string.Format("SUM FILE {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
-					string.Join(", ", expectedCols),
-					string.Join(", ", expectedCols.Except(actualCols)),
-					string.Join(", ", actualCols.Except(expectedCols)),
-					actualFile));
+				"SUM FILE {0}: Columns differ:\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
+				actualFile,
+				expectedCols.Join(),
+				expectedCols.Except(actualCols).Join(),
+				actualCols.Except(expectedCols).Join());
 
 			for (var i = 0; i < expected.Rows.Count; i++) {
 				var expectedRow = expected.Rows[i];

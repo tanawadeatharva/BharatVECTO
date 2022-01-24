@@ -209,6 +209,8 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 EPTP/
 201*-VECTO-*.zip
 Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vmod
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 .vs/
 **/dev/*.vmod
 **/dev/*.vsum

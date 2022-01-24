@@ -29,7 +29,7 @@ Public Class BusAuxiliariesEngParametersForm
 
     Private _contextMenuFiles As String()
 
-
+    Public Property JobType As VectoSimulationJobType
 
 
     'Before closing Editor: Check if file was changed and ask to save.
@@ -55,6 +55,28 @@ Public Class BusAuxiliariesEngParametersForm
 
         _changed = False
 
+        bgPneumaticSystem.Enabled = True
+        gbHVAC.Enabled = True
+        cbES_HEVREESS.Enabled = True
+        pnAlternatorEfficiency.Enabled = True
+        pnMaxAlternatorPower.Enabled = True
+        pnSmartElectricParams.Enabled = True
+        pnAlternatorTechnology.Enabled = True
+        pnCurrentDemand.Enabled = True
+
+        select case JobType
+            case VectoSimulationJobType.BatteryElectricVehicle:
+                bgPneumaticSystem.Enabled = False
+                gbHVAC.Enabled = False
+                cbES_HEVREESS.Checked = True
+                cbES_HEVREESS.Enabled = False
+                pnAlternatorEfficiency.Enabled = False
+                pnMaxAlternatorPower.Enabled = False
+                pnSmartElectricParams.Enabled = False
+                pnAlternatorTechnology.Enabled = false
+                pnCurrentDemand.Enabled = False
+                
+        end select
 
         NewBusAux()
     End Sub
@@ -171,30 +193,33 @@ Public Class BusAuxiliariesEngParametersForm
         Dim basePath As String = Path.GetDirectoryName(file)
 
 
-        tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
         tbCurrentDemand.Text = inputData.ElectricSystem.CurrentDemand.ToGUIFormat()
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
-        cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
-        tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
-        tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
-        tbBatEfficiency.Text = inputData.ElectricSystem.ElectricStorageEfficiency.ToGuiFormat()
-
-        tbCompressorMap.Text = GetRelativePath(inputData.PneumaticSystem.CompressorMap.Source, basePath)
-        tbAverageAirDemand.Text = inputData.PneumaticSystem.AverageAirConsumed.ToGUIFormat()
-        tbCompressorRatio.Text = inputData.PneumaticSystem.GearRatio.ToGUIFormat()
-        cbSmartCompressor.Checked = inputData.PneumaticSystem.SmartAirCompression
-
-        tbHvacElectricPowerDemand.Text = inputData.HVACData.ElectricalPowerDemand.ToGUIFormat()
-        tbHvacMechPowerDemand.Text = inputData.HVACData.MechanicalPowerDemand.ToGUIFormat()
-        tbHvacAuxHeaterPwr.Text = inputData.HVACData.AuxHeaterPower.ToGUIFormat()
-        tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1e6).ToGUIFormat()
-
-        pnSmartElectricParams.Enabled = inputData.ElectricSystem.AlternatorType = AlternatorType.Smart
-
         tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
-        cbES_HEVREESS.Checked = inputData.ElectricSystem.ESSupplyFromHEVREESS
-        pnDCDCEff.Enabled = cbES_HEVREESS.Checked
+        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+            tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
+            cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
+            tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
+            tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
+            tbBatEfficiency.Text = inputData.ElectricSystem.ElectricStorageEfficiency.ToGuiFormat()
+
+            tbCompressorMap.Text = GetRelativePath(inputData.PneumaticSystem.CompressorMap.Source, basePath)
+            tbAverageAirDemand.Text = inputData.PneumaticSystem.AverageAirConsumed.ToGUIFormat()
+            tbCompressorRatio.Text = inputData.PneumaticSystem.GearRatio.ToGUIFormat()
+            cbSmartCompressor.Checked = inputData.PneumaticSystem.SmartAirCompression
+
+            tbHvacElectricPowerDemand.Text = inputData.HVACData.ElectricalPowerDemand.ToGUIFormat()
+            tbHvacMechPowerDemand.Text = inputData.HVACData.MechanicalPowerDemand.ToGUIFormat()
+            tbHvacAuxHeaterPwr.Text = inputData.HVACData.AuxHeaterPower.ToGUIFormat()
+            tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1e6).ToGUIFormat()
+
+            pnSmartElectricParams.Enabled = inputData.ElectricSystem.AlternatorType = AlternatorType.Smart
+
+            cbES_HEVREESS.Checked = inputData.ElectricSystem.ESSupplyFromHEVREESS
+            pnDCDCEff.Enabled = cbES_HEVREESS.Checked
+        End If
+        
 
         DeclInit()
 
@@ -247,6 +272,8 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.AuxHeaterPower = tbHvacAuxHeaterPwr.Text.ToDouble(0)
         busAuxParams.AverageHeatingDemand = tbHvacHeatingDemand.Text.ToDouble(0)
 
+        busAuxParams.JobType = JobType
+
         If Not busAuxParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
@@ -260,7 +287,7 @@ Public Class BusAuxiliariesEngParametersForm
             End If
         End If
 
-        HCUFileBrowser.UpdateHistory(file)
+        BusAuxFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
 

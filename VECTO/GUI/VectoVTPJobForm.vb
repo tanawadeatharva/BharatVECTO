@@ -35,12 +35,6 @@ Public Class VectoVTPJobForm
     Public VectoFile As String
     Private _changed As Boolean = False
 
-    Private _pgDriver As TabPage
-
-    Private _pgDriverOn As Boolean = True
-
-    Private _auxDialog As VehicleAuxiliariesDialog
-
     Dim _xmlInputReader as IXMLInputDataReader
 
     Enum AuxViewColumns
@@ -55,9 +49,6 @@ Public Class VectoVTPJobForm
 
         Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
         _xmlInputReader = kernel.Get(Of IXMLInputDataReader)
-
-        _auxDialog = New VehicleAuxiliariesDialog
-
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = - 2
 
@@ -655,6 +646,19 @@ Public Class VectoVTPJobForm
         s.MarkerSize = 3
         s.Color = Color.Red
         s.Name = "Map"
+        If (engine.EngineModes.First().Fuels.Count > 1) then
+            Dim fcMap2 As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels(1).FuelConsumptionMap)
+
+            Dim s2 As Series = New Series
+            s2.Points.DataBindXY(fcMap2.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                                 fcMap2.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+            s2.ChartType = SeriesChartType.Point
+            s2.MarkerSize = 3
+            s2.Color = Color.Green
+            s2.Name = "Map 2"
+            chart.Series.Add(s2)
+        End If
+
         chart.Series.Add(s)
 
         Dim engineCharacteristics As String =

@@ -1032,8 +1032,8 @@ lbFound:
                 runsFactory.ActualModalData = cbActVmod.Checked
                 runsFactory.SerializeVectoRunData = cbSaveVectoRunData.Checked
 
-                For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-                    fileWriters.Add(runId, fileWriter)
+                For Each run as integer In jobContainer.AddRuns(runsFactory)
+                    fileWriters.Add(run, fileWriter)
                 Next
 
                 ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
@@ -2120,7 +2120,7 @@ lbFound:
         'End Try
     End Sub
 
-    Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseClick
+    Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles  LvGEN.MouseDown
         If e.Button = MouseButtons.Right Then
             _conMenTarget = LvGEN
             _conMenTarJob = True

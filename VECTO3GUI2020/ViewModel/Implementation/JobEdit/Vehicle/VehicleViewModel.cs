@@ -232,7 +232,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
-		public virtual bool SleeperCab
+		public virtual bool? SleeperCab
 		{
 			get => throw new NotImplementedException();
 			set => throw new NotImplementedException();

@@ -154,7 +154,7 @@ Public Class Engine
 			writer.SaveEngine(Me, _filePath, Cfg.DeclMode)
 
 		Catch ex As Exception
-			MsgBox("Faled to write Engine file: " + ex.Message)
+			MsgBox("Failed to write Engine file: " + ex.Message)
 			Return False
 		End Try
 		Return True
@@ -228,7 +228,8 @@ Public Class Engine
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Dim dummyVehicle As IVehicleEngineeringInputData = New DummyVehicle() With {
-						.IVehicleComponentsEngineering_EngineInputData = engine
+						.IVehicleComponentsEngineering_EngineInputData = engine,
+						.TankSystem = TankSystem.Compressed
 						}
 				engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
 			End If
@@ -632,7 +633,7 @@ Public Class DummyVehicle
 	Public Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
 	Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
 	Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-	Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+	Public Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
 	Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
 	Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 	Public Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS

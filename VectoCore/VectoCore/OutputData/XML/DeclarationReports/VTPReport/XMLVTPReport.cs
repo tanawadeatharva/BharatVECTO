@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLVTPReport(IReportWriter writer) : base(writer)
 		{
 			//di = "http://www.w3.org/2000/09/xmldsig#";
-			
+
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			GeneralPart = new XElement(tns + "General");
 			DataIntegrityPart = new XElement(tns + "DataIntegrityCheck");
@@ -269,7 +269,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + "WorkPosVT", new XAttribute(XMLNames.Report_Results_Unit_Attr, "kWh"),
 					vtpResult.VTPWorkPWheelPos.ConvertToKiloWattHour().ToXMLFormat(3)),
-				vtpFcMeasured.Select(x => 
+				vtpFcMeasured.Select(x =>
 				new XElement(
 					tns + "FuelConsumption",
 					new XAttribute("fuelType", x.Key.ToXMLFormat()),
@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XDocument GenerateReport()
 		{
-			
+
 			var retVal = new XDocument();
 			retVal.Add(
 				new XProcessingInstruction(
@@ -687,14 +687,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
 			foreach (var auxId in auxList) {
-				if (!auxData.ContainsKey(auxId.Key())) {
-					continue;
-				}
-				foreach (var entry in auxData[auxId.Key()].Technology) {
-					retVal.Add(new XElement(tns + GetTagName(auxId), entry));
+				if (auxData.TryGetValue(auxId.Key(), out var auxValue)) {
+					foreach (var entry in auxValue.Technology) {
+						retVal.Add(new XElement(tns + GetTagName(auxId), entry));
+					}
 				}
 			}
-
 			return retVal;
 		}
 

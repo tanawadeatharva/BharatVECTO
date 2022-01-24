@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -24,22 +25,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			PCCDriverData = driverDataPCC;
 		}
 
-		#region Implementation of ISimulationPreprocessor
-
 		public void RunPreprocessing()
 		{
 			var slopes = new Dictionary<MeterPerSecond, Radian>();
-			new PCCEcoRollEngineStopPreprocessor(
-					Container, slopes, PCCDriverData.MinSpeed,
-					VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)))
-				.RunPreprocessing();
+			var maxOverspeed = VectoMath.Max(Container.RunData.DriverData.OverSpeed.OverSpeed, Container.RunData.DriverData.PCC.OverspeedUseCase3);
+			var maxSpeed = VectoMath.Min(Container.VehicleInfo.MaxVehicleSpeed, Container.RunData.Cycle.Entries.Max(x => x.VehicleTargetSpeed)+maxOverspeed);
+			
+			var preProcessor = new PCCEcoRollEngineStopPreprocessor(Container, slopes, PCCDriverData.MinSpeed, maxSpeed);
+			preProcessor.RunPreprocessing();
+
+			DebugWriteLine($"Slopes:\n{slopes.Select(p => $"{p.Key.AsKmph:F}\t{p.Value.ToInclinationPercent():P}").Join("\n")}");
 
 			var runData = Container.RunData;
-			var engineDrag = runData.EngineData.FullLoadCurves[0].FullLoadEntries
-									.Average(x => (x.EngineSpeed * x.TorqueDrag).Value()).SI<Watt>();
 
+			var combustionEngineDrag = runData.EngineData?.FullLoadCurves[0].FullLoadEntries.Average(x =>
+											x.EngineSpeed.Value() * x.TorqueDrag.Value()).SI<Watt>()
+										?? 0.SI<Watt>();
+
+			var engineDrag = combustionEngineDrag;
 			var slopeEngineDrag = 0.0;
-			if (runData.GearboxData.Type.AutomaticTransmission()) {
+			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission()) {
 				if ((runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) ||
 					runData.VehicleData.ADAS.EcoRoll == EcoRollType.None) {
 					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleMass).Value();
@@ -50,77 +55,74 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			//runData.VehicleData.ADAS.EcoRoll != EcoRollType.None
-			//	? 0
-			//	: (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
-
 			PCCSegment pccSegment = null;
-			var targetspeedChanged = 0.SI<Meter>();
-			foreach (var tuple in Container.RunData.Cycle.Entries.Pairwise(Tuple.Create)) {
-				if (!tuple.Item1.Highway) {
+			var targetSpeedChanged = 0.SI<Meter>();
+
+			foreach (var (start, end) in Container.RunData.Cycle.Entries.Pairwise()) {
+				// pcc is only applicable on highway sections
+				if (!start.Highway) {
 					pccSegment = null;
 					continue;
 				}
 
-				if (!tuple.Item1.VehicleTargetSpeed.IsGreaterOrEqual(PCCDriverData.PCCEnableSpeed)) {
-					// only consider pcc segments where the target speed is at least the pcc-enable speed
-					targetspeedChanged = tuple.Item2.Distance;
+				// only consider pcc segments where the target speed is at least the pcc-enable speed
+				if (start.VehicleTargetSpeed.IsSmaller(PCCDriverData.PCCEnableSpeed)) {
+					targetSpeedChanged = end.Distance;
 					pccSegment = null;
 					continue;
 				}
 
-				if (tuple.Item1.Distance.IsEqual(tuple.Item2.Distance)) {
-					// can't calculate avg slope if difference between two entries is 0
+				// can't calculate avg slope if difference between two entries is 0
+				if (start.Distance.IsEqual(end.Distance)) {
 					continue;
 				}
 
-				if (!tuple.Item1.VehicleTargetSpeed.IsEqual(tuple.Item2.VehicleTargetSpeed)) {
-					// target speed must not change within PCC segment
-					targetspeedChanged = tuple.Item2.Distance;
+				// target speed must not change within cycle pairs
+				if (!start.VehicleTargetSpeed.IsEqual(end.VehicleTargetSpeed)) {
+					targetSpeedChanged = end.Distance;
 					pccSegment = null;
 					continue;
 				}
 
-				if (pccSegment != null && !tuple.Item1.VehicleTargetSpeed.IsEqual(pccSegment.TargetSpeed)) {
-					// target speed must not change within PCC segment
+				// target speed must not change within PCC segment
+				if (pccSegment != null && !pccSegment.TargetSpeed.IsEqual(start.VehicleTargetSpeed)) {
 					pccSegment = null;
 					continue;
 				}
-
-				var minSlope = (slopes.Interpolate(x => x.Key.Value(), y => y.Value.Value(), tuple.Item1.VehicleTargetSpeed.Value())
-								+ slopeEngineDrag / tuple.Item1.VehicleTargetSpeed.Value()).SI<Radian>();
 
 				var slope = VectoMath.InclinationToAngle(
-					(tuple.Item2.Altitude - tuple.Item1.Altitude) / (tuple.Item2.Distance - tuple.Item1.Distance));
+					(end.Altitude - start.Altitude) / (end.Distance - start.Distance));
 
-				if (pccSegment == null && slope < minSlope) {
-					pccSegment = new PCCSegment() {
-						DistanceMinSpeed = tuple.Item1.Distance,
-						StartDistance =
-							tuple.Item1.Distance - VectoMath.Min(
-								tuple.Item1.Distance - targetspeedChanged - 1.SI<Meter>(),
-								PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
-						TargetSpeed = tuple.Item1.VehicleTargetSpeed,
-						Altitude = tuple.Item1.Altitude,
-						EnergyMinSpeed = (runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * tuple.Item1.Altitude)
-										.Cast<Joule>() +
-										runData.VehicleData.TotalVehicleMass * (tuple.Item1.VehicleTargetSpeed - PCCDriverData.UnderSpeed) *
-										(tuple.Item1.VehicleTargetSpeed - PCCDriverData.UnderSpeed) / 2,
+				var minSlope = (slopes.Interpolate(x => x.Key.Value(), y => y.Value.Value(), start.VehicleTargetSpeed.Value())
+								+ slopeEngineDrag / start.VehicleTargetSpeed.Value()).SI<Radian>();
+				//DebugWriteLine($"MinSlope:{minSlope.ToInclinationPercent():P}");
+				var potentialEnergy = runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * start.Altitude;
+
+				if (pccSegment is null && slope < minSlope) {
+					var lowestSpeed = start.VehicleTargetSpeed - PCCDriverData.UnderSpeed;
+					var lowestKineticEnergy = runData.VehicleData.TotalVehicleMass * lowestSpeed * lowestSpeed / 2;
+					pccSegment = new PCCSegment {
+						DistanceAtLowestSpeed = start.Distance,
+						StartDistance = start.Distance - VectoMath.Min(
+								start.Distance - targetSpeedChanged - 1.SI<Meter>(),
+								PCCDriverData.PreviewDistanceUseCase1),
+						TargetSpeed = start.VehicleTargetSpeed,
+						Altitude = start.Altitude,
+						EnergyAtLowestSpeed = potentialEnergy + lowestKineticEnergy,
 					};
 				}
 
 				if (pccSegment != null && slope > minSlope) {
-					pccSegment.EndDistance = tuple.Item1.Distance;
-					pccSegment.EnergyEnd =
-						(runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * tuple.Item1.Altitude).Cast<Joule>() +
-						runData.VehicleData.TotalVehicleMass * tuple.Item1.VehicleTargetSpeed *
-						tuple.Item1.VehicleTargetSpeed / 2;
+					pccSegment.EndDistance = start.Distance;
+					var currentKineticEnergy = runData.VehicleData.TotalVehicleMass
+						* start.VehicleTargetSpeed * start.VehicleTargetSpeed / 2;
+					pccSegment.EnergyAtEnd = potentialEnergy + currentKineticEnergy;
 					PCCSegments.Segments.Add(pccSegment);
 					pccSegment = null;
 				}
 			}
 		}
-
-		#endregion
+		[Conditional("DEBUG")]
+		private static void DebugWriteLine(object value) => Console.WriteLine(value);
 	}
 }

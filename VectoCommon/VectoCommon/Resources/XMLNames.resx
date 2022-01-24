@@ -1599,4 +1599,7 @@
   <data name="ManufacturingStep_Bus_DataType" xml:space="preserve">
     <value>BusManufacturingStepDataType</value>
   </data>
+<data name="Report_CO2StandardsGroup" xml:space="preserve">
+	<value>CO2StandardsGroup</value>
+</data>
 </root>

@@ -82,12 +82,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		protected SquareMeter DeltaCdxA(double beta)
 		{
-			var idx = FindIndex(beta);
-			return VectoMath.Interpolate(AirDragEntries[idx - 1].Beta, AirDragEntries[idx].Beta, AirDragEntries[idx - 1].DeltaCdA,
-				AirDragEntries[idx].DeltaCdA, beta);
+			var (first, second) = FindIndex(beta);
+            return VectoMath.Interpolate(first.Beta, second.Beta, first.DeltaCdA,
+                second.DeltaCdA, beta);
 		}
 
-		protected int FindIndex(double beta)
+		protected (CrossWindCorrectionCurveReader.AirDragBetaEntry, CrossWindCorrectionCurveReader.AirDragBetaEntry) FindIndex(double beta)
 		{
 			if (beta < AirDragEntries.First().Beta) {
 				throw new VectoSimulationException("Beta / CdxA Lookup table does not cover beta={0}", beta);
@@ -96,8 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				throw new VectoSimulationException("Beta / CdxA Lookup table does not cover beta={0}", beta);
 			}
 
-			AirDragEntries.GetSection(x => x.Beta < beta, out var index);
-			return index + 1;
+			return AirDragEntries.GetSection(x => x.Beta < beta);
+			
 		}
 	}
 }

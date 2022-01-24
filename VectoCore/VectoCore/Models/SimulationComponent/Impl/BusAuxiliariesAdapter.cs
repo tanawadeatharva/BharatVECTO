@@ -118,6 +118,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DCDCConverter?.Initialize();
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, angularSpeed) +
 										(AdditionalAux?.PowerDemandESSEngineOn(0.SI<Second>(), 1.SI<Second>(), angularSpeed) ?? 0.SI<Watt>());
+			if (angularSpeed.IsEqual(0)) {
+				return 0.SI<NewtonMeter>();
+			}
+
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
@@ -338,6 +342,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && !DataBus.IsTestPowertrain && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && CurrentState.ExcessiveDragPower.IsEqual(0)) {
 				CurrentState.ExcessiveDragPower = drivetrainPower -
 												(DataBus.EngineInfo.EngineDragPower(avgAngularSpeed) - preExistingAuxPower) - DataBus.Brakes.BrakePower;
+			}
+
+			if (!dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && torquePowerTrain.IsGreater(0) &&
+				DataBus.GearboxInfo.Gear.TorqueConverterLocked.HasValue &&
+				!DataBus.GearboxInfo.Gear.TorqueConverterLocked.Value) {
+				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
 			}
 			if (!dryRun && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
 				CurrentState.ExcessiveDragPower = 0.SI<Watt>();

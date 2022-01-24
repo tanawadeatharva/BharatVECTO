@@ -1,16 +1,11 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
@@ -20,7 +15,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
-	[TestFixture()]
+	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class DeclarationAdapterCreateVocationalVehicleTest
 	{

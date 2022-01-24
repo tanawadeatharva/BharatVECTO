@@ -126,6 +126,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -192,6 +195,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataMultistageV01InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV20InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV21InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV221InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
@@ -287,7 +291,11 @@
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
     <Compile Include="InputData\Reader\VectoRunDataFactoryFactory.cs" />
     <Compile Include="InputData\Reader\VectoRunDataFactoryNinjectModule.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\APTNGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\APTNShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DummyAxleGearInfo.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PEVGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
@@ -1015,9 +1023,21 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd">
+		<SubType>Designer</SubType>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.2_JobInputData.xsd">
+		<SubType>Designer</SubType>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

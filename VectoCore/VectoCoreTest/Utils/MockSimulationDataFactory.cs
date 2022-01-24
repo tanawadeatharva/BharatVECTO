@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -43,8 +44,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
-using TUGraz.VECTO;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -76,8 +76,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 					vehicleInput, engineInput.EngineModes.First(),
 					mission); //(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(
-					new MockVehicleInputData() {
-						Components = new MockComponents() {
+					new MockVehicleTestInputData() {
+						Components = new MockComponentsTest() {
 							GearboxInputData = gearboxInput,
 							TorqueConverterInputData = (ITorqueConverterDeclarationInputData)gearboxInput
 						}
@@ -199,5 +199,81 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var inputData = JSONInputDataFactory.ReadREESSData(file, false);
 			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {REESSPack = inputData}, initialSoC);
 		}
+	}
+
+	public class MockComponentsTest : IVehicleComponentsDeclaration
+	{
+		public IAirdragDeclarationInputData AirdragInputData { get; }
+		public IGearboxDeclarationInputData GearboxInputData { get; set; }
+		public ITorqueConverterDeclarationInputData TorqueConverterInputData { get; set; }
+		public IAxleGearInputData AxleGearInputData { get; }
+		public IAngledriveInputData AngledriveInputData { get; }
+		public IEngineDeclarationInputData EngineInputData { get; }
+		public IAuxiliariesDeclarationInputData AuxiliaryInputData { get; }
+		public IRetarderInputData RetarderInputData { get; }
+		public IPTOTransmissionInputData PTOTransmissionInputData { get; }
+		public IAxlesDeclarationInputData AxleWheels { get; }
+		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
+		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
+		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
+	}
+
+	public class MockVehicleTestInputData : IVehicleDeclarationInputData
+	{
+		private DateTime _date;
+		public DataSource DataSource { get; }
+		public bool SavedInDeclarationMode { get; }
+		public string Manufacturer { get; }
+		public string Model { get; }
+
+		DateTime IComponentInputData.Date => _date;
+
+		public string AppVersion { get; }
+		public string Date { get; }
+		public CertificationMethod CertificationMethod { get; }
+		public string CertificationNumber { get; }
+		public DigestData DigestValue { get; }
+		public string Identifier { get; }
+		public bool ExemptedVehicle { get; }
+		public string VIN { get; }
+		LegislativeClass? IVehicleDeclarationInputData.LegislativeClass => LegislativeClass;
+
+		public LegislativeClass LegislativeClass { get; }
+		public VehicleCategory VehicleCategory { get; }
+		public AxleConfiguration AxleConfiguration { get; }
+		public Kilogram CurbMassChassis { get; }
+		public Kilogram GrossVehicleMassRating { get; }
+		public IList<ITorqueLimitInputData> TorqueLimits { get; }
+		public string ManufacturerAddress { get; }
+		public PerSecond EngineIdleSpeed { get; }
+		public bool VocationalVehicle { get; }
+		public bool? SleeperCab { get; }
+		public bool? AirdragModifiedMultistep { get; }
+		public TankSystem? TankSystem { get; }
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+		public bool ZeroEmissionVehicle { get; }
+		public bool HybridElectricHDV { get; }
+		public bool DualFuelVehicle { get; }
+		public Watt MaxNetPower1 { get; }
+		public Watt MaxNetPower2 { get; }
+		public string ExemptedTechnology { get; }
+		public RegistrationClass? RegisteredClass { get; }
+		public int? NumberPassengerSeatsUpperDeck { get; }
+		public int? NumberPassengerSeatsLowerDeck { get; }
+		public int? NumberPassengersStandingLowerDeck { get; }
+		public int? NumberPassengersStandingUpperDeck { get; }
+		public CubicMeter CargoVolume { get; }
+		public VehicleCode? VehicleCode { get; }
+		public bool? LowEntry { get; }
+		public bool Articulated { get; }
+		public Meter Height { get; }
+		public Meter Length { get; }
+		public Meter Width { get; }
+		public Meter EntranceHeight { get; }
+		public ConsumerTechnology? DoorDriveTechnology { get; }
+		public VehicleDeclarationType VehicleDeclarationType { get; }
+		public string VehicleTypeApprovalNumber { get; }
+		public IVehicleComponentsDeclaration Components { get; set; }
+		public XmlNode XMLSource { get; }
 	}
 }

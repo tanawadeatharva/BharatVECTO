@@ -27,7 +27,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return ReadMap(File.OpenRead(filePath), Path.GetFullPath(filePath));
 		}
 
-		
 		public static IAlternatorMap ReadMap(Stream stream, string source = null)
 		{
 			//var returnValue = false;
@@ -77,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (g.Any(x => x.Count() < 2)) {
 				throw new ArgumentException(
 					"Insufficient rows in csv to build a usable map for alternator {0}",
-					string.Join(", ", g.Where(x => x.Count() < 2).Select(x => x.Key)));
+					g.Where(x => x.Count() < 2).Select(x => x.Key).Join());
 			}
 			return new CombinedAlternator(map, source);
 		}

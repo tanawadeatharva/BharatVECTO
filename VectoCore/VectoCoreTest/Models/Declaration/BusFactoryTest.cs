@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class BusFactoryTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
@@ -80,7 +81,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var jobFile =
 				@"TestData\Integration\Buses\SingleBus.vecto";
-			var runIdx = 4;
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = Path.GetExtension(jobFile) == ".xml"
 				? xmlInputReader.CreateDeclaration(jobFile)

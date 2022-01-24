@@ -39,9 +39,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException(
-					"Invalid Header for environmental conditions. Got: {0}, expected: {1}",
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(x => x.ColumnName)), 
-					string.Join(", ", Header));
+					"Invalid Header for environmental conditions. Expected: {0}, Got: {1}",
+					Header.Join(),
+					data.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Join());
 			}
 
 			foreach (DataRow row in data.Rows) {

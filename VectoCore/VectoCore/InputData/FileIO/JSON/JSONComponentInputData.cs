@@ -175,8 +175,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string JobName => "";
 
-		public string ShiftStrategy => "";
-
 		public string Identifier => Vehicle.Identifier;
 
 		public bool ExemptedVehicle => false;
@@ -316,7 +314,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool VocationalVehicle => DeclarationData.Vehicle.VocationalVehicleDefault;
 
-		public bool SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
+		public bool? SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
 
 		public bool? AirdragModifiedMultistep { get; }
 

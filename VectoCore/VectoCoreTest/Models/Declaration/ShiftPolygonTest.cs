@@ -670,6 +670,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	}
 
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftPolygonComparison
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
@@ -841,7 +842,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
 			var results = shiftPolygon.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, GearboxType.MT, false);
-			Assert.IsFalse(results.Any(), string.Join("\n", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), results.Select(r => r.ErrorMessage).Join("\n"));
 		}
 
 		[
@@ -859,10 +860,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		]
 		public void IsLeftOf_Test(bool result, double speed, double torque)
 		{
-			var segment = Tuple.Create(
-				new ShiftPolygon.ShiftPolygonEntry(550.SI<NewtonMeter>(), 685.RPMtoRad()),
-				new ShiftPolygon.ShiftPolygonEntry(1200.SI<NewtonMeter>(), 1080.RPMtoRad())
-				);
+			var segment = (new ShiftPolygon.ShiftPolygonEntry(550.SI<NewtonMeter>(), 685.RPMtoRad()), 
+					new ShiftPolygon.ShiftPolygonEntry(1200.SI<NewtonMeter>(), 1080.RPMtoRad()));
 
 			Assert.AreEqual(result, ShiftPolygon.IsLeftOf(speed.RPMtoRad(), torque.SI<NewtonMeter>(), segment));
 		}
@@ -926,9 +925,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto"),
-		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto")]
-		public void ComputePEVShiftLines(string pevE2Job)
+		[TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG.vecto", null),
+		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", null),
+		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", 0.9),
+		TestCase(@"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto", 1.1),
+		]
+		public void ComputePEVShiftLines(string pevE2Job, double? factorDownshiftSpeed)
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(pevE2Job) as IEngineeringInputDataProvider;
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
@@ -951,20 +953,33 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 			fullLoadCurves[(uint)(0)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData};
 			var shiftPolygons = new List<ShiftPolygon>();
-			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i, emData.EfficiencyData.VoltageLevels.First().FullLoadCurve, 1.0, gearboxData.Gears,
-					axlegearRatio, r_dyn));
-				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData};
+
+			var runData = new VectoRunData() {
+				GearshiftParameters = new ShiftStrategyParameters()
+			};
+			if (factorDownshiftSpeed.HasValue) {
+				runData.GearshiftParameters.PEV_DownshiftSpeedFactor = factorDownshiftSpeed.Value;
 			}
-			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + "_shiftlines.png");
+			var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = runData });
+			
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				shiftPolygons.Add(shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, gearboxData.Gears,
+					null, axlegearRatio, r_dyn, emData));
+				//shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
+				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
+			}
+
+			var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines{suffix}.png");
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(pevE2Job), fullLoadCurves, shiftPolygons,
 				imageFile,
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / r_dyn * axlegearRatio * gearboxData.Gears.Last().Ratio);
 		}
 
-		[TestCase()]
-		public void ComputePEVShiftLinesDeRated()
+		[TestCase(null),
+		TestCase(0.9)]
+		public void ComputePEVShiftLinesDeRated(double? factorDownshiftSpeed)
 		{
 			var pevE2Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_cont30kW.vecto";
 
@@ -1005,20 +1020,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 			fullLoadCurves[(uint)(0)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			
-			
 			var shiftPolygons = new List<ShiftPolygon>();
-			
-			var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters()}});
+			var runData = new VectoRunData() { GearshiftParameters = new ShiftStrategyParameters() };
+			if (factorDownshiftSpeed.HasValue) {
+				runData.GearshiftParameters.PEV_DeRatedDownshiftSpeedFactor = factorDownshiftSpeed.Value;
+			}
+			var shiftStrategy = new PEVAMTShiftStrategy(new VehicleContainer(ExecutionMode.Engineering) { RunData = runData});
 			var deRatedShiftLines = shiftStrategy.CalculateDeratedShiftLines(emData, gearboxData.Gears,
 				r_dyn, axlegearRatio, gearboxData.Type);
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-
 				shiftPolygons.Add(deRatedShiftLines[(uint)(i + 1)]);
-
-				
 				fullLoadCurves[(uint)(i + 1)] = new EngineFullLoadCurve(fullLoadCurve, null) { EngineData = engineData };
 			}
-			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + "_shiftlines_DeRated.png");
+			var suffix = factorDownshiftSpeed.HasValue ? $"_{factorDownshiftSpeed.Value}" : "";
+			var imageFile = Path.Combine(Path.GetDirectoryName(pevE2Job), Path.GetFileNameWithoutExtension(pevE2Job) + $"_shiftlines_DeRated{suffix}.png");
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(pevE2Job), fullLoadCurves, shiftPolygons,
 				imageFile,

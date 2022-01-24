@@ -77,7 +77,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				//if (!CreateFollowUpSimulatorFactory)
 				//	return null;
 
-
 				if (_followUpSimulatorFactoryCreator != null) {
 					return _followUpSimulatorFactoryCreator.GetNextFactory();
 				} else {
@@ -238,7 +237,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			var validationErrors = run.Validate(_mode, jobType, emPosition, gearboxtype, isEms);
 			if (validationErrors.Any()) {
 				throw new VectoException("Validation of Run-Data Failed: " +
-										string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
+										$"{validationErrors.Select(r => r.ErrorMessage + r.MemberNames.Join("; ")).Join("\n")}");
 			}
 		}
 

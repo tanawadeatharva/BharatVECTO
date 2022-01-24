@@ -107,8 +107,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected override IList<IEngineFuelEngineeringInputData> ReadFuels()
 		{
 			var retVal = new List<IEngineFuelEngineeringInputData>();
-			TableData fuelMap = null;
 			foreach (var jsonFuel in Body["Fuels"]) {
+				TableData fuelMap;
 				try {
 					fuelMap = ReadTableData(jsonFuel.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
 				} catch (Exception) {
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private IWHRData ReadWHRData(JToken correctionFactors)
 		{
-			TableData whrMap = null;
+			TableData whrMap;
 			try {
 				whrMap = ReadTableData(Body["Fuels"][0].GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
 			} catch (Exception) {

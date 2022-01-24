@@ -2779,6 +2779,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CO2StandardsGroup.
+        /// </summary>
+        public static string Report_CO2StandardsGroup {
+            get {
+                return ResourceManager.GetString("Report_CO2StandardsGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CertificationMethod.
         /// </summary>
         public static string Report_Component_CertificationMethod {

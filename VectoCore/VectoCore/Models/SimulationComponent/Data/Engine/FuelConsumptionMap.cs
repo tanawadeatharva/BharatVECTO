@@ -60,8 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var result = new FuelConsumptionResult();
 			
 			var value = _fuelMap.Interpolate(torque, angularVelocity);
-			if (value.HasValue) {
-			    result.Value = value.Value.SI(Unit.SI.Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>();
+			if (!value.IsNaN()) {
+			    result.Value = value.SI(Unit.SI.Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>();
 				return result;
 			}
 

@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 {
 	public class XMLCustomerReportCompletedBus : XMLCustomerReport
 	{
-		private int _resultCount = 0;
+		private int _resultCount;
 		protected TankSystem? _tankSystem;
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleRecordFile { get; set; }
@@ -110,8 +110,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			if (genericResult.Status == VectoRun.Status.Canceled || genericResult.Status == VectoRun.Status.Aborted || specificResult.Status == VectoRun.Status.Canceled || specificResult.Status == VectoRun.Status.Aborted) {
 				content = new object[] {
-					new XElement(tns + XMLNames.Report_Results_Error, genericResult.Error ?? "" + Environment.NewLine +  specificResult.Error ?? ""),
-					new XElement(tns + XMLNames.Report_Results_ErrorDetails, genericResult.StackTrace ?? "" + Environment.NewLine + specificResult.StackTrace ?? ""),
+					new XElement(tns + XMLNames.Report_Results_Error, (genericResult.Error ?? "") + Environment.NewLine +  (specificResult.Error ?? "")),
+					new XElement(tns + XMLNames.Report_Results_ErrorDetails, (genericResult.StackTrace ?? "") + Environment.NewLine + (specificResult.StackTrace ?? "")),
 				};
 			}
 
