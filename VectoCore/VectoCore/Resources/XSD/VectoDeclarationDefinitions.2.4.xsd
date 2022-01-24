@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.4" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3_DEV.xsd"/>
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" schemaLocation="VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
@@ -98,7 +97,7 @@
 	</xs:complexType>
 	<xs:complexType name="ADAS_Conventional_Type">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_ADAS_ConventionalType">
+			<xs:extension base="v2.4:Abstract_ADAS_ConventionalType">
 				<xs:sequence>
 					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType">
 						<xs:annotation>
@@ -137,7 +136,7 @@
 	</xs:complexType>
 	<xs:complexType name="ADAS_HEV_Type">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_ADAS_HEVType">
+			<xs:extension base="v2.4:Abstract_ADAS_HEVType">
 				<xs:sequence>
 					<xs:element name="EngineStopStart" type="v2.1:EngineStopStartType">
 						<xs:annotation>
@@ -155,7 +154,7 @@
 	</xs:complexType>
 	<xs:complexType name="ADAS_IEPC_Type">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_ADAS_IEPCType">
+			<xs:extension base="v2.4:Abstract_ADAS_IEPCType">
 				<xs:sequence>
 					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
 						<xs:annotation>
@@ -168,7 +167,7 @@
 	</xs:complexType>
 	<xs:complexType name="ADAS_PEV_Type">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_ADAS_PEVType">
+			<xs:extension base="v2.4:Abstract_ADAS_PEVType">
 				<xs:sequence>
 					<xs:element name="PredictiveCruiseControl" type="v2.1:PredictiveCruiseControlType">
 						<xs:annotation>
@@ -186,7 +185,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_Conventional_CompletedBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_Conventional_CompletedBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_Conventional_Lorry_Type">
@@ -196,61 +195,61 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_Conventional_PrimaryBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_Conventional_PrimaryBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_Conventional_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_HEV-P_Lorry_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-P_LorryDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_HEV-P_LorryDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_HEV-P_PrimaryBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_HEV-S_Lorry_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_LorryDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_HEV-S_LorryDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_HEV-S_PrimaryBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_IEPC_Lorry_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_LorryDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_IEPC_LorryDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_IEPC_PrimaryBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_PEV_Lorry_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_PEV_LorryDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Component_PEV_PrimaryBus_Type">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
+			<xs:element name="Data" type="v2.4:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUX_Conventional_CompletedBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_Conventional_CompletedBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_Conventional_CompletedBusDeclarationType">
 				<xs:sequence minOccurs="0">
 					<xs:element name="ElectricSystem" minOccurs="0">
 						<xs:complexType>
-							<xs:group ref="v2.10.2:BusAuxElectricSystemLightsGroup"/>
+							<xs:group ref="v2.4:BusAuxElectricSystemLightsGroup"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="HVAC" minOccurs="0">
 						<xs:complexType>
-							<xs:group ref="v2.10.2:BusAuxHVACConventionalSequenceGroup" minOccurs="0"/>
+							<xs:group ref="v2.4:BusAuxHVACConventionalSequenceGroup" minOccurs="0"/>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
@@ -264,7 +263,7 @@
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P181 - [-]</xs:documentation>
 									</xs:annotation>
@@ -281,7 +280,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+											<xs:extension base="v2.4:AuxSPTechnologyLorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -300,7 +299,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183 - [-]</xs:documentation>
 									</xs:annotation>
@@ -311,7 +310,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184 - [-]</xs:documentation>
 									</xs:annotation>
@@ -322,7 +321,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185</xs:documentation>
 									</xs:annotation>
@@ -336,12 +335,12 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_Conventional_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_Conventional_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_Conventional_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
@@ -358,7 +357,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+											<xs:extension base="v2.4:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -377,20 +376,20 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnology_Conventional_Type">
+								<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnology_Conventional_Type">
 									<xs:annotation>
 										<xs:documentation>P294 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:group ref="v2.10.2:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
+								<xs:group ref="v2.4:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_Conventional_SequenceGroup"/>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_Conventional_SequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -416,12 +415,12 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-P_LorryDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_HEV-P_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_HEV-P_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
@@ -438,7 +437,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyLorryType">
+											<xs:extension base="v2.4:AuxSPTechnologyLorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -457,7 +456,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
@@ -468,7 +467,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
@@ -479,7 +478,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
@@ -493,12 +492,12 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-P_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
@@ -515,7 +514,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+											<xs:extension base="v2.4:AuxSPTechnologyPrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -534,12 +533,12 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnology_HEV_Type">
+								<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnology_HEV_Type">
 									<xs:annotation>
 										<xs:documentation>P294 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:group ref="v2.10.2:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
+								<xs:group ref="v2.4:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
 								<xs:element name="SupplyFromHEVPossible" type="xs:boolean">
 									<xs:annotation>
 										<xs:documentation>P303 - bool</xs:documentation>
@@ -551,8 +550,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -578,12 +577,12 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-S_LorryDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_HEV-S_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_HEV-S_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
@@ -600,7 +599,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnology_HEV-S_LorryType">
+											<xs:extension base="v2.4:AuxSPTechnology_HEV-S_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -619,7 +618,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
@@ -630,7 +629,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxPSTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
@@ -641,7 +640,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
@@ -655,12 +654,12 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-S_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_HEV-S_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_HEV-S_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxFanTechnologyPrimaryBusType">
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyPrimaryBusType">
 									<xs:annotation>
 										<xs:documentation>P181 - enum</xs:documentation>
 									</xs:annotation>
@@ -677,7 +676,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnology_HEV-S_PrimaryBusType">
+											<xs:extension base="v2.4:AuxSPTechnology_HEV-S_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -696,7 +695,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnology_HEV-S_Type">
+								<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnology_HEV-S_Type">
 									<xs:annotation>
 										<xs:documentation>P294 - enum</xs:documentation>
 									</xs:annotation>
@@ -712,8 +711,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -739,7 +738,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_IEPC_LorryDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_IEPC_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_IEPC_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="SteeringPump">
 						<xs:complexType>
@@ -750,7 +749,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxPSTechnology_PEV_LorryType">
+											<xs:extension base="v2.4:AuxPSTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -769,7 +768,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
@@ -780,7 +779,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
+								<xs:element name="Technology" type="v2.4:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
 										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
@@ -791,7 +790,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
@@ -805,7 +804,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_IEPC_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_IEPC_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_IEPC_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="SteeringPump">
 						<xs:complexType>
@@ -816,7 +815,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_PrimaryBusType">
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -835,8 +834,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -857,7 +856,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_PEV_LorryDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_PEV_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_PEV_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="SteeringPump">
 						<xs:complexType>
@@ -868,7 +867,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_LorryType">
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -887,7 +886,7 @@
 					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxESTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxESTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P183 - enum</xs:documentation>
 									</xs:annotation>
@@ -898,7 +897,7 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxPSTechnology_PEV_LorryType">
+								<xs:element name="Technology" type="v2.4:AuxPSTechnology_PEV_LorryType">
 									<xs:annotation>
 										<xs:documentation>P184 - enum</xs:documentation>
 									</xs:annotation>
@@ -909,7 +908,7 @@
 					<xs:element name="HVAC">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Technology" type="v2.10.2:AuxHVACTechnologyLorryType">
+								<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
 									<xs:annotation>
 										<xs:documentation>P185 - enum</xs:documentation>
 									</xs:annotation>
@@ -923,7 +922,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_PEV_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_PEV_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_PEV_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="SteeringPump">
 						<xs:complexType>
@@ -934,7 +933,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.10.2:AuxSPTechnology_PEV_PrimaryBusType">
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_PrimaryBusType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
@@ -953,8 +952,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
-								<xs:group ref="v2.10.2:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
+								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -975,18 +974,18 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_xEV_CompletedBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_AUX_xEV_CompletedBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_AUX_xEV_CompletedBusDeclarationType">
 				<xs:sequence minOccurs="0">
 					<xs:element name="ElectricSystem" minOccurs="0">
 						<xs:complexType>
-							<xs:group ref="v2.10.2:BusAuxElectricSystemLightsGroup"/>
+							<xs:group ref="v2.4:BusAuxElectricSystemLightsGroup"/>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="HVAC" minOccurs="0">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.10.2:BusAuxHVACConventionalSequenceGroup" minOccurs="0"/>
-								<xs:group ref="v2.10.2:BusAuxHVACxEVSequenceGroup" minOccurs="0"/>
+								<xs:group ref="v2.4:BusAuxHVACConventionalSequenceGroup" minOccurs="0"/>
+								<xs:group ref="v2.4:BusAuxHVACxEVSequenceGroup" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -996,7 +995,7 @@
 	</xs:complexType>
 	<xs:complexType name="BoostingLimitationsType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractBoostingLimitationsDeclarationType">
+			<xs:extension base="v2.4:AbstractBoostingLimitationsDeclarationType">
 				<xs:sequence>
 					<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
 						<xs:complexType>
@@ -1022,17 +1021,17 @@
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_CompletedBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_Conventional_CompletedBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_CompletedBus_Type" minOccurs="0"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_Conventional_CompletedBus_Type" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_Conventional_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
@@ -1041,7 +1040,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_Conventional_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1049,7 +1048,7 @@
 	</xs:complexType>
 	<xs:complexType name="Components_Conventional_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_Conventional_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_Conventional_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
@@ -1058,20 +1057,20 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_Conventional_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_Conventional_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-IEPC-S_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-IEPC-S_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-IEPC-S_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-IEPC-S_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1079,31 +1078,31 @@
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-IEPC-S_PrimaryBus">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-IEPC-S_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-IEPC-S_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-Px_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Px_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Px_LorryDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-P_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-P_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1111,34 +1110,34 @@
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-Px_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Px_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Px_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-P_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-P_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S2_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1146,29 +1145,29 @@
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S2_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S3_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1176,25 +1175,25 @@
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S3_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S4_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1202,26 +1201,26 @@
 	</xs:complexType>
 	<xs:complexType name="Components_HEV-S4_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Components_HEV-Sx_GenSetSequenceGroup"/>
+					<xs:group ref="v2.4:Components_HEV-Sx_GenSetSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_HEV-S_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_HEV-S_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_IEPC_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_IEPC_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_IEPC_LorryDeclarationType">
 				<xs:sequence>
-					<xs:element name="IEPC" type="v2.10.1:IEPCComponentDeclarationType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="IEPC" type="v2.3:IEPCComponentDeclarationType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_IEPC_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_IEPC_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1229,31 +1228,31 @@
 	</xs:complexType>
 	<xs:complexType name="Components_IEPC_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_IEPC_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_IEPC_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:element name="IEPC" type="v2.10.1:IEPCComponentDeclarationType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="IEPC" type="v2.3:IEPCComponentDeclarationType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_IEPC_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_IEPC_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E2_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_LorryDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1261,31 +1260,31 @@
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E2_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E3_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_LorryDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1293,27 +1292,27 @@
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E3_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E4_LorryType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_LorryDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_LorryDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_Lorry_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1321,26 +1320,26 @@
 	</xs:complexType>
 	<xs:complexType name="Components_PEV-E4_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_PEV_PrimaryBusDeclarationType">
+			<xs:extension base="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
-					<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
+					<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="v2.10.2:AUX_Component_PEV_PrimaryBus_Type"/>
+					<xs:element name="Auxiliaries" type="v2.4:AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Components_xEV_CompletedBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:Abstract_Components_xEV_CompletedBusType">
+			<xs:extension base="v2.4:Abstract_Components_xEV_CompletedBusType">
 				<xs:sequence>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Auxiliaries" minOccurs="0">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Data" type="v2.10.2:Abstract_AUX_xEV_CompletedBusDeclarationType"/>
+								<xs:element name="Data" type="v2.4:Abstract_AUX_xEV_CompletedBusDeclarationType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1350,13 +1349,13 @@
 	</xs:complexType>
 	<xs:complexType name="ElectricEnergyStorageType">
 		<xs:choice>
-			<xs:element name="Capacitor" type="v2.10.2:REESSCapacitorType"/>
-			<xs:element name="Battery" type="v2.10.2:REESSBatteryType" maxOccurs="unbounded"/>
+			<xs:element name="Capacitor" type="v2.4:REESSCapacitorType"/>
+			<xs:element name="Battery" type="v2.4:REESSBatteryType" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineGENType">
 		<xs:sequence>
-			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionGENType">
+			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionGENType">
 				<xs:annotation>
 					<xs:documentation>P403 - enum</xs:documentation>
 				</xs:annotation>
@@ -1371,18 +1370,18 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="ElectricMachineSystem" type="v2.10.1:ElectricMachineSystemComponentDeclarationType"/>
-			<xs:element name="ADC" type="v2.10.1:ADCComponentDeclarationType" minOccurs="0"/>
+			<xs:element name="ElectricMachineSystem" type="v2.3:ElectricMachineSystemComponentDeclarationType"/>
+			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineTorqueLimitsType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType">
+			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Position" type="v2.10.2:PowertrainPositionType"/>
+								<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
 								<xs:element name="VoltageLevel" minOccurs="2" maxOccurs="unbounded">
 									<xs:complexType>
 										<xs:sequence>
@@ -1393,7 +1392,7 @@
 													</xs:restriction>
 												</xs:simpleType>
 											</xs:element>
-											<xs:element name="MaxTorqueCurve" type="v2.10.1:ElectricMachineSystemMaxTorqueCurveType"/>
+											<xs:element name="MaxTorqueCurve" type="v2.3:ElectricMachineSystemMaxTorqueCurveType"/>
 										</xs:sequence>
 									</xs:complexType>
 								</xs:element>
@@ -1406,7 +1405,7 @@
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
-			<xs:element name="PowertrainPosition" type="v2.10.2:PowertrainPositionDriveType">
+			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionDriveType">
 				<xs:annotation>
 					<xs:documentation>P403 - enum</xs:documentation>
 				</xs:annotation>
@@ -1421,8 +1420,8 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="ElectricMachineSystem" type="v2.10.1:ElectricMachineSystemComponentDeclarationType"/>
-			<xs:element name="ADC" type="v2.10.1:ADCComponentDeclarationType" minOccurs="0"/>
+			<xs:element name="ElectricMachineSystem" type="v2.3:ElectricMachineSystemComponentDeclarationType"/>
+			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 			<xs:element name="P2.5GearRatios" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P407 - [-]</xs:documentation>
@@ -1445,9 +1444,9 @@
 	</xs:complexType>
 	<xs:complexType name="PTOType">
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractPTODataType">
+			<xs:extension base="v2.4:AbstractPTODataType">
 				<xs:sequence>
-					<xs:element name="PTOShaftsGearWheels" type="v2.10.2:PTOShaftsGearWheelsType">
+					<xs:element name="PTOShaftsGearWheels" type="v2.4:PTOShaftsGearWheelsType">
 						<xs:annotation>
 							<xs:documentation>P247 - enum</xs:documentation>
 						</xs:annotation>
@@ -1476,7 +1475,7 @@
 			<xs:element name="REESS">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Data" type="v2.10.1:AbstractBatterySystemDataType"/>
+						<xs:element name="Data" type="v2.3:AbstractBatterySystemDataType"/>
 						<xs:element name="Signature" type="v2.0:SignatureType"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -1509,7 +1508,7 @@
 	</xs:complexType>
 	<xs:complexType name="REESSCapacitorType">
 		<xs:sequence>
-			<xs:element name="Data" type="v2.10.1:AbstractCapacitorSystemDataType"/>
+			<xs:element name="Data" type="v2.3:AbstractCapacitorSystemDataType"/>
 			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1518,17 +1517,17 @@
 			<xs:documentation>Vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractCompletedBusVehicleType">
+			<xs:extension base="v2.4:AbstractCompletedBusVehicleType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBusParametersSequenceGroup"/>
 					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P275 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
-					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -1538,24 +1537,24 @@
 							<xs:documentation>P286 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
-					<xs:element name="DoorDriveTechnology" type="v2.10.2:DoorDriveTechnologyType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
+					<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleDeclarationType" type="v2.10.2:DeclarationType">
+					<xs:element name="VehicleDeclarationType" type="v2.4:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_CompletedBusDeclarationType" minOccurs="0"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_Conventional_CompletedBusDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1564,16 +1563,16 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_Conventional_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1582,16 +1581,16 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_LorryDeclarationType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_Conventional_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1600,13 +1599,13 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -1617,9 +1616,9 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_ConventionalType"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_Conventional_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_Conventional_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1629,15 +1628,15 @@
 			<xs:documentation>Exempted vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractCompletedBusVehicleType">
+			<xs:extension base="v2.4:AbstractCompletedBusVehicleType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
 					<xs:element name="Model" type="v1.0:ModelType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P236 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
+					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
@@ -1652,13 +1651,13 @@
 							<xs:documentation>P041 - [kg]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ClassBus" type="v2.10.2:RegisteredClassType" minOccurs="0">
+					<xs:element name="ClassBus" type="v2.4:RegisteredClassType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P282 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
-					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -1668,7 +1667,7 @@
 							<xs:documentation>P286 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="HeightIntegratedBody" type="v2.10.2:VehicleDimensionType" minOccurs="0">
+					<xs:element name="HeightIntegratedBody" type="v2.4:VehicleDimensionType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P287 - [mm]</xs:documentation>
 						</xs:annotation>
@@ -1681,18 +1680,18 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
-					<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryHeavyLorryDeclarationType">
+					<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
+					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.10.2:AxleConfigurationHeavyLorryDeclarationType">
+					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>
@@ -1747,18 +1746,18 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
-					<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryHeavyLorryDeclarationType">
+					<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
+					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.10.2:AxleConfigurationHeavyLorryDeclarationType">
+					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationHeavyLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>
@@ -1808,7 +1807,7 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P269 - bool</xs:documentation>
@@ -1845,17 +1844,17 @@
 			<xs:documentation>Vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractCompletedBusVehicleType">
+			<xs:extension base="v2.4:AbstractCompletedBusVehicleType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBusParametersSequenceGroup"/>
 					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P275 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
-					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -1865,24 +1864,24 @@
 							<xs:documentation>P286 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
-					<xs:element name="DoorDriveTechnology" type="v2.10.2:DoorDriveTechnologyType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
+					<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleDeclarationType" type="v2.10.2:DeclarationType">
+					<xs:element name="VehicleDeclarationType" type="v2.4:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1891,24 +1890,24 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-IEPC-S_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1917,24 +1916,24 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-IEPC-S_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1943,13 +1942,13 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -1960,17 +1959,17 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-IEPC-S_Type">
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-IEPC-S_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1979,24 +1978,24 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Px_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Px_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2005,24 +2004,24 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Px_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Px_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2031,13 +2030,13 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -2048,17 +2047,17 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Px_Type">
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Px_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.10.2:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Px_PrimaryBusDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Px_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2067,23 +2066,23 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Sx_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2092,23 +2091,23 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Sx_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2117,13 +2116,13 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
 						<xs:annotation>
 							<xs:documentation>P198 - [1/min]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -2134,16 +2133,16 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_HEV-Sx_Type">
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Sx_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_HEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2153,12 +2152,12 @@
 			<xs:documentation>Vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractCompletedBusVehicleType">
+			<xs:extension base="v2.4:AbstractCompletedBusVehicleType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
-					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -2168,24 +2167,24 @@
 							<xs:documentation>P286 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
-					<xs:element name="DoorDriveTechnology" type="v2.10.2:DoorDriveTechnologyType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
+					<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleDeclarationType" type="v2.10.2:DeclarationType">
+					<xs:element name="VehicleDeclarationType" type="v2.4:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2194,16 +2193,16 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_LorryDeclarationType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2212,16 +2211,16 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_LorryDeclarationType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2230,8 +2229,8 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -2242,14 +2241,14 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_IEPC_Type">
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_IEPC_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_IEPCType"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_IEPC_PrimaryBusDeclarationType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2259,12 +2258,12 @@
 			<xs:documentation>Vehicle stage input parts</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="v2.10.2:AbstractCompletedBusVehicleType">
+			<xs:extension base="v2.4:AbstractCompletedBusVehicleType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBusParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
-					<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_GeneralParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_CompletedBus_PassengerCountSequenceGroup" minOccurs="0"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P285 - enum</xs:documentation>
 						</xs:annotation>
@@ -2274,24 +2273,24 @@
 							<xs:documentation>P286 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
-					<xs:element name="DoorDriveTechnology" type="v2.10.2:DoorDriveTechnologyType" minOccurs="0">
+					<xs:group ref="v2.4:Vehicle_CompletedBus_DimensionsSequenceGroup" minOccurs="0"/>
+					<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P291 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleDeclarationType" type="v2.10.2:DeclarationType">
+					<xs:element name="VehicleDeclarationType" type="v2.4:DeclarationType">
 						<xs:annotation>
 							<xs:documentation>P293 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+					<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_xEV_CompletedBusType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2300,18 +2299,18 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+					<xs:group ref="v2.4:Vehicle_HeavyLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_HeavyLorryPEVParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_PEV_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2320,18 +2319,18 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryParametersSequenceGroup_1"/>
-					<xs:group ref="v2.10.2:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+					<xs:group ref="v2.4:Vehicle_MediumLorryParametersSequenceGroup_1"/>
+					<xs:group ref="v2.4:Vehicle_MediumLorryPEVParametersSequenceGroup_2"/>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_PEV_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_LorryDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2340,8 +2339,8 @@
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
-					<xs:group ref="v2.10.2:Vehicle_PrimaryBusParametersSequenceGroup"/>
-					<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -2352,16 +2351,16 @@
 							<xs:documentation>P269 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ArchitectureID" type="v2.10.2:ArchitectureID_PEV_Type">
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_PEV_Type">
 						<xs:annotation>
 							<xs:documentation>P400 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:group ref="v2.10.2:Vehicle_xEV-Parameters_SequenceGroup"/>
-					<xs:element name="ADAS" type="v2.10.2:Abstract_ADAS_PEVType"/>
+					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.10.2:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.10.2:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2386,10 +2385,10 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AlternatorTechnologyType">
-		<xs:union memberTypes="v2.10.2:AlternatorTechnology_Conventional_Type v2.10.2:AlternatorTechnology_HEV_Type v2.10.2:AlternatorTechnology_HEV-S_Type"/>
+		<xs:union memberTypes="v2.4:AlternatorTechnology_Conventional_Type v2.4:AlternatorTechnology_HEV_Type v2.4:AlternatorTechnology_HEV-S_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="ArchitectureID_HEV_Type">
-		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV-Px_Type v2.10.2:ArchitectureID_HEV-Sx_Type v2.10.2:ArchitectureID_HEV-IEPC-S_Type"/>
+		<xs:union memberTypes="v2.4:ArchitectureID_HEV-Px_Type v2.4:ArchitectureID_HEV-Sx_Type v2.4:ArchitectureID_HEV-IEPC-S_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="ArchitectureID_HEV-IEPC-S_Type">
 		<xs:restriction base="xs:string">
@@ -2425,7 +2424,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ArchitectureIDType">
-		<xs:union memberTypes="v2.10.2:ArchitectureID_HEV_Type v2.10.2:ArchitectureID_IEPC_Type v2.10.2:ArchitectureID_PEV_Type"/>
+		<xs:union memberTypes="v2.4:ArchitectureID_HEV_Type v2.4:ArchitectureID_IEPC_Type v2.4:ArchitectureID_PEV_Type"/>
 	</xs:simpleType>
 	<xs:simpleType name="AuxESTechnologyLorryType">
 		<xs:restriction base="xs:string">
@@ -2473,7 +2472,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxPSTechnology_PEV_LorryType">
-		<xs:restriction base="v2.10.2:AuxPSTechnologyLorryType">
+		<xs:restriction base="v2.4:AuxPSTechnologyLorryType">
 			<xs:enumeration value="Small + elec. driven"/>
 			<xs:enumeration value="Small + ESS + elec. driven "/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
@@ -2529,25 +2528,25 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnology_HEV-S_LorryType">
-		<xs:restriction base="v2.10.2:AuxSPTechnologyLorryType">
+		<xs:restriction base="v2.4:AuxSPTechnologyLorryType">
 			<xs:enumeration value="Electric driven pump"/>
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnology_HEV-S_PrimaryBusType">
-		<xs:restriction base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+		<xs:restriction base="v2.4:AuxSPTechnologyPrimaryBusType">
 			<xs:enumeration value="Electric driven pump"/>
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnology_PEV_LorryType">
-		<xs:restriction base="v2.10.2:AuxSPTechnologyLorryType">
+		<xs:restriction base="v2.4:AuxSPTechnologyLorryType">
 			<xs:enumeration value="Electric driven pump"/>
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnology_PEV_PrimaryBusType">
-		<xs:restriction base="v2.10.2:AuxSPTechnologyPrimaryBusType">
+		<xs:restriction base="v2.4:AuxSPTechnologyPrimaryBusType">
 			<xs:enumeration value="Electric driven pump"/>
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
@@ -2628,7 +2627,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ChassisConfiguration">
-		<xs:union memberTypes="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType v2.10.2:ChassisConfigurationMediumLorryDeclarationType v2.10.2:ChassisConfigurationPrimaryBusDeclarationType"/>
+		<xs:union memberTypes="v2.4:ChassisConfigurationHeavyLorryDeclarationType v2.4:ChassisConfigurationMediumLorryDeclarationType v2.4:ChassisConfigurationPrimaryBusDeclarationType"/>
 	</xs:simpleType>
 	<xs:simpleType name="ChassisConfigurationHeavyLorryDeclarationType">
 		<xs:annotation>
@@ -2817,7 +2816,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PowertrainPositionType">
-		<xs:union memberTypes="v2.10.2:PowertrainPositionDriveType v2.10.2:PowertrainPositionGENType"/>
+		<xs:union memberTypes="v2.4:PowertrainPositionDriveType v2.4:PowertrainPositionGENType"/>
 	</xs:simpleType>
 	<xs:simpleType name="PTOShaftsGearWheelsType">
 		<xs:annotation>
@@ -3042,7 +3041,7 @@
 	</xs:group>
 	<xs:group name="BusAuxHVACConventionalSequenceGroup">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:BusAuxHVACHeatPumpSequenceGroup" minOccurs="0"/>
+			<xs:group ref="v2.4:BusAuxHVACHeatPumpSequenceGroup" minOccurs="0"/>
 			<xs:element name="AuxiliaryHeaterPower" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P322 - [W]</xs:documentation>
@@ -3086,12 +3085,12 @@
 			<xs:element name="HeatPumpTypeDriverCompartment">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
+						<xs:element name="Cooling" type="v2.4:HeatPumpTypeDriverCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P318 - enum</xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="Heating" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
+						<xs:element name="Heating" type="v2.4:HeatPumpTypeDriverCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P319 - enum</xs:documentation>
 							</xs:annotation>
@@ -3102,12 +3101,12 @@
 			<xs:element name="HeatPumpTypePassengerCompartment">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
+						<xs:element name="Cooling" type="v2.4:HeatPumpTypePassengerCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P320 - enum</xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="Heating" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
+						<xs:element name="Heating" type="v2.4:HeatPumpTypePassengerCompartmentType">
 							<xs:annotation>
 								<xs:documentation>P321 - enum</xs:documentation>
 							</xs:annotation>
@@ -3163,7 +3162,7 @@
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_Conventional_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
 				<xs:annotation>
 					<xs:documentation>P309 - enum</xs:documentation>
 				</xs:annotation>
@@ -3179,7 +3178,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
 				<xs:annotation>
 					<xs:documentation>P311 - enum</xs:documentation>
 				</xs:annotation>
@@ -3203,7 +3202,7 @@
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
 				<xs:annotation>
 					<xs:documentation>P309 - enum</xs:documentation>
 				</xs:annotation>
@@ -3219,7 +3218,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
 				<xs:annotation>
 					<xs:documentation>P311 - enum</xs:documentation>
 				</xs:annotation>
@@ -3243,7 +3242,7 @@
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGen_HEV-S_SequenceGroup">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
 				<xs:annotation>
 					<xs:documentation>P309 - enum</xs:documentation>
 				</xs:annotation>
@@ -3259,7 +3258,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
 				<xs:annotation>
 					<xs:documentation>P311 - enum</xs:documentation>
 				</xs:annotation>
@@ -3306,7 +3305,7 @@
 	</xs:group>
 	<xs:group name="BusAuxPneumaticSystemGroup_HEV-S">
 		<xs:sequence>
-			<xs:element name="SizeOfAirSupply" type="v2.10.2:PneumaticSystemTechnologyType">
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
 				<xs:annotation>
 					<xs:documentation>P309 - enum</xs:documentation>
 				</xs:annotation>
@@ -3322,7 +3321,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Clutch" type="v2.10.2:PneumaticSystemClutchTypeType">
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
 				<xs:annotation>
 					<xs:documentation>P311 - enum</xs:documentation>
 				</xs:annotation>
@@ -3363,17 +3362,17 @@
 	<xs:group name="Components_HEV-IEPC-S_GenSetSequenceGroup">
 		<xs:sequence>
 			<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
-			<xs:element name="ElectricMachineGEN" type="v2.10.2:ElectricMachineGENType"/>
-			<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
-			<xs:element name="IEPC" type="v2.10.1:IEPCComponentDeclarationType"/>
+			<xs:element name="ElectricMachineGEN" type="v2.4:ElectricMachineGENType"/>
+			<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
+			<xs:element name="IEPC" type="v2.3:IEPCComponentDeclarationType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Components_HEV-Sx_GenSetSequenceGroup">
 		<xs:sequence>
 			<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
-			<xs:element name="ElectricMachineGEN" type="v2.10.2:ElectricMachineGENType"/>
-			<xs:element name="ElectricEnergyStorage" type="v2.10.2:ElectricEnergyStorageType"/>
-			<xs:element name="ElectricMachine" type="v2.10.2:ElectricMachineType"/>
+			<xs:element name="ElectricMachineGEN" type="v2.4:ElectricMachineGENType"/>
+			<xs:element name="ElectricEnergyStorage" type="v2.4:ElectricEnergyStorageType"/>
+			<xs:element name="ElectricMachine" type="v2.4:ElectricMachineType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_ChassisLorryParametersSequenceGroup">
@@ -3392,17 +3391,17 @@
 	</xs:group>
 	<xs:group name="Vehicle_ChassisPrimaryBusParametersSequenceGroup">
 		<xs:sequence>
-			<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryPrimaryBusDeclarationType">
+			<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryPrimaryBusDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationPrimaryBusDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AxleConfiguration" type="v2.10.2:AxleConfigurationPrimaryBusLorryDeclarationType">
+			<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P037 - enum</xs:documentation>
 				</xs:annotation>
@@ -3421,22 +3420,22 @@
 	</xs:group>
 	<xs:group name="Vehicle_CompletedBus_DimensionsSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HeightIntegratedBody" type="v2.10.2:VehicleDimensionType">
+			<xs:element name="HeightIntegratedBody" type="v2.4:VehicleDimensionType">
 				<xs:annotation>
 					<xs:documentation>P287 - [mm]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleLength" type="v2.10.2:VehicleDimensionType">
+			<xs:element name="VehicleLength" type="v2.4:VehicleDimensionType">
 				<xs:annotation>
 					<xs:documentation>P288 - [mm]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleWidth" type="v2.10.2:VehicleDimensionType">
+			<xs:element name="VehicleWidth" type="v2.4:VehicleDimensionType">
 				<xs:annotation>
 					<xs:documentation>P289 - [mm]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="EntranceHeight" type="v2.10.2:VehicleDimensionType">
+			<xs:element name="EntranceHeight" type="v2.4:VehicleDimensionType">
 				<xs:annotation>
 					<xs:documentation>P290 - [mm]</xs:documentation>
 				</xs:annotation>
@@ -3469,22 +3468,22 @@
 	</xs:group>
 	<xs:group name="Vehicle_CompletedBus_PassengerCountSequenceGroup">
 		<xs:sequence>
-			<xs:element name="NumberPassengerSeatsLowerDeck" type="v2.10.2:PassengerCountType">
+			<xs:element name="NumberPassengerSeatsLowerDeck" type="v2.4:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P283 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengersStandingLowerDeck" type="v2.10.2:PassengerCountType">
+			<xs:element name="NumberPassengersStandingLowerDeck" type="v2.4:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P354 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengerSeatsUpperDeck" type="v2.10.2:PassengerCountType">
+			<xs:element name="NumberPassengerSeatsUpperDeck" type="v2.4:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P284 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="NumberPassengersStandingUpperDeck" type="v2.10.2:PassengerCountType">
+			<xs:element name="NumberPassengersStandingUpperDeck" type="v2.4:PassengerCountType">
 				<xs:annotation>
 					<xs:documentation>P355 - [-]</xs:documentation>
 				</xs:annotation>
@@ -3498,7 +3497,7 @@
 					<xs:documentation>P236 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
+			<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryPrimaryBusDeclarationType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
@@ -3524,7 +3523,7 @@
 					</xs:appinfo>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ClassBus" type="v2.10.2:RegisteredClassType" minOccurs="0">
+			<xs:element name="ClassBus" type="v2.4:RegisteredClassType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P282 - enum</xs:documentation>
 				</xs:annotation>
@@ -3562,34 +3561,34 @@
 	</xs:group>
 	<xs:group name="Vehicle_HeavyLorryParametersSequenceGroup_1">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
-			<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryHeavyLorryDeclarationType">
+			<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
+			<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryHeavyLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationHeavyLorryDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationHeavyLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AxleConfiguration" type="v2.10.2:AxleConfigurationHeavyLorryDeclarationType">
+			<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationHeavyLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P037 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:group ref="v2.10.2:Vehicle_ChassisLorryParametersSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_ChassisLorryParametersSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_HeavyLorryParametersSequenceGroup_2">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 				<xs:annotation>
 					<xs:documentation>P180 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="PTO" type="v2.10.2:AbstractPTODataType"/>
+			<xs:element name="PTO" type="v2.4:AbstractPTODataType"/>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>P269 - bool</xs:documentation>
@@ -3610,7 +3609,7 @@
 					<xs:documentation>P276 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P352 - [-]</xs:documentation>
 				</xs:annotation>
@@ -3619,13 +3618,13 @@
 	</xs:group>
 	<xs:group name="Vehicle_HeavyLorryPEVParametersSequenceGroup_2">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 				<xs:annotation>
 					<xs:documentation>P180 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="PTO" type="v2.10.2:AbstractPTODataType"/>
+			<xs:element name="PTO" type="v2.4:AbstractPTODataType"/>
 			<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>P269 - bool</xs:documentation>
@@ -3641,7 +3640,7 @@
 					<xs:documentation>P276 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P352 - [-]</xs:documentation>
 				</xs:annotation>
@@ -3650,23 +3649,23 @@
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_1">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
-			<xs:element name="LegislativeCategory" type="v2.10.2:LegislativeCategoryMediumLorryDeclarationType">
+			<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
+			<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryMediumLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P251 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ChassisConfiguration" type="v2.10.2:ChassisConfigurationMediumLorryDeclarationType">
+			<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationMediumLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P036 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AxleConfiguration" type="v2.10.2:AxleConfigurationMediumLorryDeclarationType">
+			<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationMediumLorryDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P037 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:group ref="v2.10.2:Vehicle_ChassisLorryParametersSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_ChassisLorryParametersSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_MediumLorryParametersSequenceGroup_2">
@@ -3681,7 +3680,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 				<xs:annotation>
 					<xs:documentation>P180 - enum</xs:documentation>
@@ -3697,7 +3696,7 @@
 					<xs:documentation>P275 - enum</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P352 - [-]</xs:documentation>
 				</xs:annotation>
@@ -3716,7 +3715,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:group ref="v2.10.2:Vehicle_RetarderSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_RetarderSequenceGroup"/>
 			<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 				<xs:annotation>
 					<xs:documentation>P180 - enum</xs:documentation>
@@ -3727,7 +3726,7 @@
 					<xs:documentation>P269 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P352 - [-]</xs:documentation>
 				</xs:annotation>
@@ -3736,8 +3735,8 @@
 	</xs:group>
 	<xs:group name="Vehicle_PrimaryBusParametersSequenceGroup">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:Vehicle_GeneralParametersSequenceGroup"/>
-			<xs:group ref="v2.10.2:Vehicle_ChassisPrimaryBusParametersSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
+			<xs:group ref="v2.4:Vehicle_ChassisPrimaryBusParametersSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_RetarderSequenceGroup">
