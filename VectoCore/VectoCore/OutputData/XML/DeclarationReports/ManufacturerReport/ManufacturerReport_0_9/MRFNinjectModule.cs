@@ -317,6 +317,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusComponentsType());
 			Bind<IMrfXmlType>().To<MRFHEV_IEPC_S_PrimaryBusComponentsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
+			Bind<IMrfXmlType>().To<MRFPEV_E2_PrimaryBusComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_PrimaryBusComponentsType());
+			Bind<IMrfXmlType>().To<MRFPEV_E3_PrimaryBusComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_PrimaryBusComponentsType());
+			Bind<IMrfXmlType>().To<MRFPEV_E4_PrimaryBusComponentsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusComponentsType());
 
 			#endregion
 
@@ -379,20 +385,37 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMRFLorryAuxiliariesType>().To<MRFHEV_LorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_LorryAuxiliariesType());
 			
-			Bind<IMRFBusAuxiliariesType>().To<MRFConventional_PrimaryBusAuxType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalPrimaryBusAuxType());
-			Bind<IMRFBusAuxiliariesType>().To<MRFHEV_PrimaryBusAuxType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusAuxType());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_Conventional>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_Conventional());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_P>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_P());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_S>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_S());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_PEV>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_PEV());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_HEV_S>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_HEV_S());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_PEV_IEPC>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_PEV_IEPC());
 
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_Conventional_HEV>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType_Conventional_HEV());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType());
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_PEV>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType_PEV());
+			
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_Conventional_HEV>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType_Conventional_HEV());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_PEV>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType_PEV());
 
 			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusAuxType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusAuxType());
@@ -421,6 +444,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			Bind<IMrfXmlGroup>().To<HEVPrimaryBusVehicleOutputGroup>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusVehicleOutputGroup());
+
+			Bind<IMrfXmlGroup>().To<PEVPrimaryBusVehicleOutputGroup>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_PrimaryBusVehicleOutputGroup());
 
 			Bind<IMrfXmlGroup>().To<HEV_LorryVehicleOutputTypeGroup>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_lorryVehicleOutputGroup());

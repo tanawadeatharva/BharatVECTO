@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.TorqueConverterInputData != null ? _mrfFactory.GetTorqueConverterType().GetXmlType(inputData) : null,
 				components.AngledriveInputData != null ? _mrfFactory.GetAngleDriveType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetConventionalPrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
+				_mrfFactory.GetPrimaryBusAuxType_Conventional().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
 			);
 		}
 
@@ -272,7 +272,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					: null,
 				components.AngledriveInputData != null ? _mrfFactory.GetAngleDriveType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -314,7 +314,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				_mrfFactory.GetEngineType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetHEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_HEV_P().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetIEPCSpecifications().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.TorqueConverterInputData != null ? _mrfFactory.GetTorqueConverterType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetPEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_PEV().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetPEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_PEV().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var components = inputData.JobInputData.Vehicle.Components;
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetPEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_PEV().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}
@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
 				components.AxleGearInputData != null ? _mrfFactory.GetAxleGearType().GetXmlType(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				_mrfFactory.GetPEV_PrimaryBusAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
+				_mrfFactory.GetPrimaryBusAuxType_PEV().GetXmlType(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
 				_mrfFactory.GetIEPCSpecifications().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));
 		}

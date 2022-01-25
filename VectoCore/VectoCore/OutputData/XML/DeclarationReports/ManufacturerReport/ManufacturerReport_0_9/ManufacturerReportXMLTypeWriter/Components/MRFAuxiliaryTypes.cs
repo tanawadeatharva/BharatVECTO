@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -12,10 +11,7 @@ using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-	public interface IMRFLorryAuxiliariesType
-	{
-		XElement GetXmlType(IAuxiliariesDeclarationInputData auxData);
-	}
+
 
 	public interface IMRFBusAuxiliariesType
 	{
@@ -23,39 +19,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	}
 
 
-	internal class MRFConventionalLorryAuxiliariesType : AbstractMrfXmlType, IMRFLorryAuxiliariesType
-    {
-		public MRFConventionalLorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Implementation of MRFLorryAuxiliariesType
 
-		public XElement GetXmlType(IAuxiliariesDeclarationInputData auxData)
-		{
-			var fanData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.Fan);
-			var steeringPumpData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.SteeringPump);
-			var electricSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.ElectricSystem);
-			var pneumaticSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.PneumaticSystem);
-
-			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + "CoolingFanTechnology",
-					string.Join("\n", fanData.Technology)),
-				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData.Technology)),
-				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))));
-		}
-	}
-
-	#endregion
-
-	internal class MRFHEV_LorryAuxiliariesType : MRFConventionalLorryAuxiliariesType
+	internal class MRFPrimaryBusAuxType_Conventional : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFHEV_LorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-	}
-
-	internal class MRFConventional_PrimaryBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
-	{
-		public MRFConventional_PrimaryBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFPrimaryBusAuxType_Conventional(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 
 		#region Implementation of MRFBusAuxiliariesType
@@ -68,25 +36,89 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
-				_mrfFactory.GetPrimaryBusElectricSystemType().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusPneumaticSystemType().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusHVACSystemType().GetXmlType(auxData)
+
+
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
 			);
 		}
 
 		#endregion
 	}
 
-	internal class MRFHEV_PrimaryBusAuxType : MRFConventional_PrimaryBusAuxType
+	internal class MRFPrimaryBusAuxType_HEV_P : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFHEV_PrimaryBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFPrimaryBusAuxType_HEV_P(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			var steeringPumpData = auxData.SteeringPumpTechnology;
+
+			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + "CoolingFanTechnology",
+					auxData.FanTechnology),
+				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
+			);
+		}
+
+		#endregion
+	}
+	internal class MRFPrimaryBusAuxType_HEV_S : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusAuxType_HEV_S(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			var steeringPumpData = auxData.SteeringPumpTechnology;
+
+			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + "CoolingFanTechnology",
+					auxData.FanTechnology),
+				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
+
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_HEV_S().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
+			);
+		}
+
+		#endregion
+	}
+
+	internal class MRFPrimaryBusAuxType_PEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusAuxType_PEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			var steeringPumpData = auxData.SteeringPumpTechnology;
+
+			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
+				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)
+			);
+		}
+
+		#endregion
 	}
 
 
 
-	public class MRFPrimaryBusHVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	public class MRFPrimaryBusHVACSystemType_Conventional_HEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFPrimaryBusHVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFPrimaryBusHVACSystemType_Conventional_HEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
@@ -96,6 +128,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + "HVACSystem",
 				new XElement(_mrf + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat),
 				new XElement(_mrf + XMLNames.Bus_EngineWasteGasHeatExchanger, hvac.EngineWasteGasHeatExchanger));
+		}
+
+		#endregion
+	}
+
+	public class MRFPrimaryBusHVACSystemType_PEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusHVACSystemType_PEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			var hvac = auxData.HVACAux;
+			return new XElement(_mrf + "HVACSystem",
+				new XElement(_mrf + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat));
 		}
 
 		#endregion
@@ -175,9 +223,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPrimaryBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusElectricSystemType_Conventional_HEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFPrimaryBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFPrimaryBusElectricSystemType_Conventional_HEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 
 		#region Implementation of IMRFBusAuxiliariesType
@@ -194,20 +242,76 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPrimaryBusPneumaticSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusElectricSystemType_PEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFPrimaryBusPneumaticSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFPrimaryBusElectricSystemType_PEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
+				auxData.ElectricSupply.ElectricStorage != null ? "TODO" : null);
+		}
+
+		#endregion
+	}
+
+
+	internal class MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorSize),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem, auxData.PneumaticSupply.SmartAirCompression),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartAirCompression),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
+				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
+			);
+		}
+
+		#endregion
+	}
+
+	internal class MRFPrimaryBusPneumaticSystemType_HEV_S : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusPneumaticSystemType_HEV_S(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
+				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
+			);
+		}
+
+		#endregion
+	}
+
+	internal class MRFPrimaryBusPneumaticSystemType_PEV_IEPC : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPrimaryBusPneumaticSystemType_PEV_IEPC(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
 				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
 			);

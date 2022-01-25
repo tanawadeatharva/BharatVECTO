@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle
@@ -51,4 +52,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class PEVPrimaryBusVehicleOutputGroup : AbstractMrfXmlGroup
+	{
+		public PEVPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlGroup
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var result = new List<XElement>();
+			result.AddRange(_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData));
+			result.Add(new XElement(_mrf + "ZeroEmissionHDV", inputData.JobInputData.Vehicle.ZeroEmissionVehicle));
+			result.Add(new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, inputData.JobInputData.Vehicle.HybridElectricHDV));
+			result.AddRange(_mrfFactory.GetPEV_VehicleSequenceGroup().GetElements(inputData));
+
+			return result;
+		}
+
+		#endregion
+	}
+
 }
