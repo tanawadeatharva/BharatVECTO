@@ -613,7 +613,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
@@ -628,7 +628,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -715,7 +715,7 @@
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalPrimaryBusAuxOutputType"/>
 		</xs:sequence>
@@ -726,7 +726,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
@@ -741,7 +741,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
@@ -1185,7 +1185,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
