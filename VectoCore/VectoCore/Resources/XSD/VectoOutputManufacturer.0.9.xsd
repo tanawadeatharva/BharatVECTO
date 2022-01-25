@@ -1157,7 +1157,7 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean"/>
-			<xs:element name="WastHeatRecoverySystemType" type="xs:string" maxOccurs="unbounded"/>
+			<xs:element name="WastHeatRecoverySystemType" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="ComponentCommonOutputGroup">
