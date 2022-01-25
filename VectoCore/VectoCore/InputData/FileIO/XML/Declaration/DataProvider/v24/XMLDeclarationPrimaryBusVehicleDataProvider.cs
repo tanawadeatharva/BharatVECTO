@@ -8,13 +8,13 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 {
 
-	public abstract class AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210 : AbstractXMLVehicleDataProviderV210
+	public abstract class AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24 : AbstractXMLVehicleDataProviderV24
 	{
 
-		public AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210(
+		public AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationConventionalPrimaryBusVehicleDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationConventionalPrimaryBusVehicleDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationConventionalPrimaryBusVehicleDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationConventionalPrimaryBusVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 
 		#region Overrides of AbstractXMLResource
 
@@ -87,56 +87,56 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPxPrimaryBusDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationHevPxPrimaryBusDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_HEV-Px_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
+		#region Overrides of XMLDeclarationHevPxMediumLorryDataProviderV24
 
 		public override string PowertrainPositionPrefix => "P";
 
 		#endregion
 
-		public XMLDeclarationHEVPxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVSxPrimaryBusDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationHevSxPrimaryBusDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_HEV-Sx_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
+		#region Overrides of XMLDeclarationHevPxMediumLorryDataProviderV24
 
 		public override string PowertrainPositionPrefix => "E";
 
 		#endregion
 
-		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationHevSxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPEVPrimaryBusDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationPevPrimaryBusDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_PEV_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		#region Overrides of XMLDeclarationPEVMediumLorryExDataProviderV210
+		#region Overrides of XMLDeclarationPevMediumLorryExDataProviderV24
 
 		public override string PowertrainPositionPrefix => "E";
 
 		#endregion
 
-		public XMLDeclarationPEVPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationPevPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
@@ -149,13 +149,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCPrimaryBusDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationIepcPrimaryBusDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_IEPC_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationIEPCPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationIepcPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
 
@@ -170,19 +170,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV210
+	public class XMLDeclarationHeviepcsPrimaryBusDataProviderV24 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		#region Overrides of XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
+		#region Overrides of XMLDeclarationHeviepcsHeavyLorryDataProviderV24
 
 		public override string PowertrainPositionPrefix => "E";
 
 		#endregion
 
-		public XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationHeviepcsPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10

@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationAirdragDataProviderV210 : XMLDeclarationAirdragDataProviderV10
+	public class XMLDeclarationAirdragDataProviderV24 : XMLDeclarationAirdragDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLDeclarationAirdragDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+		public XMLDeclarationAirdragDataProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;

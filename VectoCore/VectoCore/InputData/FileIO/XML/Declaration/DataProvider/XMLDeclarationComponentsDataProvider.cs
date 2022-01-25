@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationComponentsDataProviderV210_Lorry : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationComponentsDataProviderV24_Lorry : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationComponentsDataProviderV210_Lorry(
+		public XMLDeclarationComponentsDataProviderV24_Lorry(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile)
 		{ }
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	public class XMLDeclarationPrimaryBusComponentsDataProviderV24 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
-		public XMLDeclarationPrimaryBusComponentsDataProviderV210(
+		public XMLDeclarationPrimaryBusComponentsDataProviderV24(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile)
 		{ }
@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationCompletedBusComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10,
+	public class XMLDeclarationCompletedBusComponentsDataProviderV24 : XMLDeclarationComponentsDataProviderV10,
 		IXMLVehicleComponentsDeclaration
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -262,7 +262,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IBusAuxiliariesDeclarationData _busAuxiliaries;
 
 
-		public XMLDeclarationCompletedBusComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationCompletedBusComponentsDataProviderV24(IXMLDeclarationVehicleData vehicle,
 				XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -321,14 +321,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVPxLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHEVPxLorryComponentsDataProviderV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-Px_LorryType";
 		
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHEVPxLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationHEVPxLorryComponentsDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -347,13 +347,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------	
 
-	public class XMLDeclarationHEVS2LorryComponentsDataProviderV210 : XMLDeclarationHEVPxLorryComponentsDataProviderV210
+	public class XMLDeclarationHevs2LorryComponentsDataProviderV24 : XMLDeclarationHEVPxLorryComponentsDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-S2_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHEVS2LorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationHevs2LorryComponentsDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -365,7 +365,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	
 	// ---------------------------------------------------------------------------------------	
 
-	public class XMLDeclarationHEVSXLorryComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHEVSXLorryComponentsDataProviderV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_HEV_S3_TYPE = "Components_HEV-S3_LorryType";
@@ -374,7 +374,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
 		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
 
-		public XMLDeclarationHEVSXLorryComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationHEVSXLorryComponentsDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-Px_PrimaryBusType";
@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
 
-		public XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -424,18 +424,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV210
+	public class XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV24 : XMLDeclarationPrimaryBusHEVPxComponentsDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-S2_PrimaryBusType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		public XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210 : XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV210
+	public class XMLDeclarationPrimaryBusHEVSxComponentDataProviderV24 : XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_HEV_S3_TYPE = "Components_HEV-S3_PrimaryBusType";
@@ -443,19 +443,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_HEV_S3_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S3_TYPE);
 		public static readonly string QUALIFIED_HEV_S4_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S4_TYPE);
 
-		public XMLDeclarationPrimaryBusHEVSxComponentDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationPrimaryBusHEVSxComponentDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHeavyLorryHEVIEPCSComponentDataV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-IEPC-S_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLDeclarationHeavyLorryHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationHeavyLorryHEVIEPCSComponentDataV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 		
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -474,7 +474,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationPrimaryBusHEVIEPCSComponentDataV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_HEV-IEPC-S_PrimaryBus";
@@ -482,7 +482,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
 
-		public XMLDeclarationPrimaryBusHEVIEPCSComponentDataV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationPrimaryBusHEVIEPCSComponentDataV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -503,13 +503,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHeavyLorryPEVE2ComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationHeavyLorryPEVE2ComponentDataV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_PEV-E2_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHeavyLorryPEVE2ComponentDataV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationHeavyLorryPEVE2ComponentDataV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 
 
@@ -529,20 +529,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHeavyLorryPEVExComponentDataV210 : XMLDeclarationHeavyLorryPEVE2ComponentDataV210
+	public class XMLDeclarationHeavyLorryPevExComponentDataV24 : XMLDeclarationHeavyLorryPEVE2ComponentDataV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_PEV-E3_LorryType";
 		public const string XSD_PEV_E4_TYPE = "Components_PEV-E4_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public static readonly string QUALIFIED_XSD_PEV_E4_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E4_TYPE);
-		public XMLDeclarationHeavyLorryPEVExComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+		public XMLDeclarationHeavyLorryPevExComponentDataV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
 			: base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusPEVE2ComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationPrimaryBusPEVE2ComponentDataV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_PEV-E2_PrimaryBusType";
@@ -550,7 +550,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		private IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
 
-		public XMLDeclarationPrimaryBusPEVE2ComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+		public XMLDeclarationPrimaryBusPEVE2ComponentDataV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
 			: base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -573,7 +573,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPrimaryBusPEVExComponentDataV210 : XMLDeclarationPrimaryBusPEVE2ComponentDataV210
+	public class XMLDeclarationPrimaryBusPevExComponentDataV24 : XMLDeclarationPrimaryBusPEVE2ComponentDataV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_PEV-E3_PrimaryBusType";
@@ -582,19 +582,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public static readonly string QUALIFIED_XSD_PEV_E4_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E4_TYPE);
 
-		public XMLDeclarationPrimaryBusPEVExComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+		public XMLDeclarationPrimaryBusPevExComponentDataV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCHeavyLorryComponentDataV210 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclarationIEPCHeavyLorryComponentDataV24 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_IEPC_LorryType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLDeclarationIEPCHeavyLorryComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+		public XMLDeclarationIEPCHeavyLorryComponentDataV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
 			: base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10
@@ -613,13 +613,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCPrimaryBusComponentDataV210 : XMLDeclarationPrimaryBusComponentsDataProviderV210
+	public class XMLDeclarationIEPCPrimaryBusComponentDataV24 : XMLDeclarationPrimaryBusComponentsDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Components_IEPC_PrimaryBusType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationIEPCPrimaryBusComponentDataV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+		public XMLDeclarationIEPCPrimaryBusComponentDataV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationComponentsDataProviderV10

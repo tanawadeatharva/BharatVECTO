@@ -9,16 +9,16 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 {
 	
-	public abstract class AbstractXMLDeclarationCompletedBusDataProviderV210 : AbstractXMLVehicleDataProviderV210
+	public abstract class AbstractXMLDeclarationCompletedBusDataProviderV24 : AbstractXMLVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
-		public AbstractXMLDeclarationCompletedBusDataProviderV210(
+		public AbstractXMLDeclarationCompletedBusDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationConventionalCompletedBusDataProviderV210 : AbstractXMLDeclarationCompletedBusDataProviderV210
+	public class XMLDeclarationConventionalCompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
         public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
@@ -201,43 +201,43 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationConventionalCompletedBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationConventionalCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationHEVCompletedBusDataProviderV210 : AbstractXMLDeclarationCompletedBusDataProviderV210
+	public class XMLDeclarationHevCompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
 		public new const string XSD_TYPE = "Vehicle_HEV_CompletedBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHEVCompletedBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPEVompletedBusDataProviderV210 : AbstractXMLDeclarationCompletedBusDataProviderV210
+	public class XMLDeclarationPeVompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
 		public new const string XSD_TYPE = "Vehicle_PEV_CompletedBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationPEVompletedBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPeVompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationIEPCCompletedBusDataProviderV210 : AbstractXMLDeclarationCompletedBusDataProviderV210
+	public class XMLDeclarationIepcCompletedBusDataProviderV24 : AbstractXMLDeclarationCompletedBusDataProviderV24
 	{
 		public new const string XSD_TYPE = "Vehicle_IEPC_CompletedBusDeclarationType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationIEPCCompletedBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 	}
 
 }

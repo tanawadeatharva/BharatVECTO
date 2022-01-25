@@ -150,11 +150,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationCompletedBusVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationHeavyLorryVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationMediumLorryVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationPrimaryBusVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v210\XMLDeclarationExemptedVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationCompletedBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationHeavyLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationMediumLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationPrimaryBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationExemptedVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricMachinesDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationMultistageInputData.cs" />
@@ -210,7 +210,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV210InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV24InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />

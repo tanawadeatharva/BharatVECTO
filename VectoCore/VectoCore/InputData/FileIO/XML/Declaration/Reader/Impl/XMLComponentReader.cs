@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLComponentReaderV210_Lorry : XMLComponentReaderV10
+	public class XMLComponentReaderV24_Lorry : XMLComponentReaderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -384,7 +384,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public static readonly string AUXILIARIES_READER_PEV_E2_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AUX_PEV_E2_READER_TYPE);
 
 
-		public XMLComponentReaderV210_Lorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+		public XMLComponentReaderV24_Lorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
 			vehicle, componentsNode)
 		{ }
 	}
@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLComponentReaderV210_PrimaryBus : XMLComponentReaderV20
+	public class XMLComponentReaderV24_PrimaryBus : XMLComponentReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
 
-		public XMLComponentReaderV210_PrimaryBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+		public XMLComponentReaderV24_PrimaryBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
 			vehicle, componentsNode)
 		{ }
 
@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLComponentReaderV210_CompletedBus : XMLComponentReaderV20
+	public class XMLComponentReaderV24_CompletedBus : XMLComponentReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
 
-		public XMLComponentReaderV210_CompletedBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+		public XMLComponentReaderV24_CompletedBus(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode)
 		{
 
@@ -487,7 +487,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLComponentReaderV210_HEV_PxHeavyLorry : XMLComponentReaderV20
+	public class XMLComponentReaderV24_HEV_PxHeavyLorry : XMLComponentReaderV20
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -498,7 +498,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public static readonly string QUALIFIED_XSD_HEV_Px_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_Px_TYPE);
 
-		public XMLComponentReaderV210_HEV_PxHeavyLorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+		public XMLComponentReaderV24_HEV_PxHeavyLorry(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
 			: base(vehicle, componentsNode) { }
 
 		
@@ -508,7 +508,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLElectricMachineSystemReaderV210 : AbstractComponentReader, IXMLElectricMachineSystemReader
+	public class XMLElectricMachineSystemReaderV24 : AbstractComponentReader, IXMLElectricMachineSystemReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "ElectricMachineType";
@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLElectricMachineSystemReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+		public XMLElectricMachineSystemReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode)
 		{
 
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLREESSReaderV210 : AbstractComponentReader, IXMLREESSReader
+	public class XMLREESSReaderV24 : AbstractComponentReader, IXMLREESSReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
@@ -566,7 +566,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		[Inject] public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLREESSReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+		public XMLREESSReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode) { }
 
 		#region Implementation of IXMLREESSReader

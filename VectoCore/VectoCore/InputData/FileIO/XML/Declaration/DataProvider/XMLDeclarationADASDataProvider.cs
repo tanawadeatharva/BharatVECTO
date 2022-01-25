@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationADASDataProviderV210 : XMLDeclarationADASDataProviderV21
+	public class XMLDeclarationADASDataProviderV24 : XMLDeclarationADASDataProviderV21
 	{
 		/*
 		 * new field added in version 2.3
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_PEV_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_PEV);
 		public static readonly string QUALIFIED_XSD_IEPC_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_IEPC);
 
-		public XMLDeclarationADASDataProviderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+		public XMLDeclarationADASDataProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationADASDataProviderV10

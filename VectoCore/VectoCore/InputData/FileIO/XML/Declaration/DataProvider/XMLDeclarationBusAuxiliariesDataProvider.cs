@@ -15,7 +15,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV210 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
+	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV24 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
 		IElectricSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_PEV_E2_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E2_TYPE);
 		public static readonly string QUALIFIED_XSD_IEPC_PRIMARY_BUS_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_IEPC_PRIMARY_BUS_TYPE);
 
-		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV210(
+		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV24(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationData
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV210
+	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV24
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	}
 
 
-	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV210 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV210, IElectricConsumersDeclarationData
+	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV24 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV24, IElectricConsumersDeclarationData
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE_xEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_xEV);
 
 
-		public XMLDeclarationCompletedBusAuxiliariesDataProviderV210(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationCompletedBusAuxiliariesDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) {}
 

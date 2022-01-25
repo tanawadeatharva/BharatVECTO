@@ -11,7 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestFixture]
-	public class XMLDeclarationInputv210VehicleDataTest
+	public class XMLDeclarationInputv24VehicleDataTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;

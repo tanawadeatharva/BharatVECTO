@@ -32,8 +32,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace v21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
-		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
-		protected XNamespace v210 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2";
+		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
+		protected XNamespace v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
 		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 		
 		protected XElement VehiclePart;
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
 					new XAttribute(XNamespace.Xmlns + "v2.1", v21),
 					new XAttribute(XNamespace.Xmlns + "v2.3", v23),
-					new XAttribute(XNamespace.Xmlns + "v2.8", v210),
+					new XAttribute(XNamespace.Xmlns + "v2.8", v24),
 					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 					new XAttribute("xmlns", tns),
 

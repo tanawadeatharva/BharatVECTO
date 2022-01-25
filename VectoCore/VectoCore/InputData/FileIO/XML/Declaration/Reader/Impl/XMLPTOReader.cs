@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLPTOReaderV210 : XMLPTOReaderV20
+	public class XMLPTOReaderV24 : XMLPTOReaderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLPTOReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+		public XMLPTOReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
 			vehicle, componentNode)
 		{ }
 	}

@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLADASReaderV210 : XMLADASReaderV21
+	public class XMLADASReaderV24 : XMLADASReaderV21
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public static readonly string QUALIFIED_XSD_TYPE_IEPC = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_IEPC);
 
-		public XMLADASReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
+		public XMLADASReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
 			vehicle, vehicleNode)
 		{ }
 
