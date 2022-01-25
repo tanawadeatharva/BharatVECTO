@@ -126,7 +126,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class PEV_E4_PrimaryBus_ManufacturerReport : AbstractManufacturerReport
 	{
-		public PEV_E4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public PEV_E4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(
+			MRFReportFactory)
+		{
+
+		}
 
 		#region Overrides of AbstractManufacturerReport
 

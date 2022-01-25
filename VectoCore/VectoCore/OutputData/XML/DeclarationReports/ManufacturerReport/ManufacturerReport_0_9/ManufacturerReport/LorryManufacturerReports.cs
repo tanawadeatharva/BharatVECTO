@@ -12,9 +12,9 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport
 {
     internal class ConventionalLorryManufacturerReport : AbstractManufacturerReport
-    {
-
-
+	{
+		private XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
+		private string _mrfPrefix = "mrf";
 		public ConventionalLorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory)
 		{
 			
@@ -25,8 +25,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventionalLorryVehicleType().GetXmlType(inputData);
+
+			//TODO: REMOVE
+			Report = new XDocument(new XElement(XName.Get("VectoOutput",
+					"urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
+					new XAttribute(xsi + "type", $"{_mrfPrefix}:ConventionalLorryManufacturerOutputDataType"),
+					new XAttribute(XNamespace.Xmlns + _mrfPrefix, _mrf),
+					Vehicle, 
+					new XElement("Results")));
 		}
 
+		
 		#endregion
 
 	}

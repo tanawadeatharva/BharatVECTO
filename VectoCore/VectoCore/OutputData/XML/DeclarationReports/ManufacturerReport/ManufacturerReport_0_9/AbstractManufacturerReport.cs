@@ -15,11 +15,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
     internal abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
         protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-		//protected XNamespace mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
+		
 		
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
 
-		protected readonly XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
 
 
 		public XElement Vehicle { get; protected set; }
@@ -42,7 +41,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			throw new NotImplementedException();
 		}
 
-		public XDocument Report { get; }
+		public XDocument Report { get; protected set; }
 		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
 			throw new NotImplementedException();

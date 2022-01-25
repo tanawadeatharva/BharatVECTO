@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -54,22 +57,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			_mrfFactory = _kernel.Get<IManufacturerReportFactory>();
 		}
 
+		public bool Validate(XDocument document)
+		{
+			XmlSchemaSet schemas = new XmlSchemaSet();
+			var path = Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd");
+			TestContext.WriteLine(path);
+			XmlReader reader = new XmlTextReader(path) {
+				XmlResolver = new XmlUrlResolver()
+			};
+			schemas.Add("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9", reader);
+			document.Validate(schemas, (sender, args) => { TestContext.WriteLine(args.Message);});
+
+
+			return false;
+		}
 
 
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\IEPC_heavyLorry.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_AMT_E2.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_APT-N_E2.xml")]
-	//	[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml")]
-	//	[TestCase(@"TestData\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml")]
 		public async Task ConventionalLorryMRFTest(string fileName)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
@@ -88,8 +93,15 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				iepc,
 				ihpc) as ConventionalLorryManufacturerReport;
 			Assert.NotNull(report);
+			
 			report.InitializeVehicleData(dataProvider);
-            TestContext.WriteLine(report.Vehicle);
+
+			Validate(report.Report);
+			TestContext.WriteLine(report.Report);
+			//TestContext.WriteLine(report.Vehicle);
+
+			Assert.IsTrue(Validate(report.Report));
+		
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml")]
