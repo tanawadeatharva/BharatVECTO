@@ -1484,6 +1484,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 
+			if ((!prohibitGearshift || AllowEmergencyShift) && (best.IgnoreReason.EngineSpeedAboveUpshift() || best.IgnoreReason.EngineSpeedTooHigh())) {
+				best = DoSelectBestOption(eval, absTime, dt, outTorque, outAngularVelocity, dryRun, currentGear);
+				if (best.IgnoreReason.EngineSpeedAboveUpshift()) {
+					//try upshift
+					var newEval = new List<HybridResultEntry>();
+					EvaluateConfigsForGear(
+						absTime, dt, outTorque, outAngularVelocity, GearList.Successor(best.Gear),
+						AllowICEOff(absTime), newEval,
+						best.Setting.MechanicalAssistPower.First().Key, dryRun);
+					if (newEval.Count > 0) {
+						best = DoSelectBestOption(newEval, absTime, dt, outTorque, outAngularVelocity, dryRun,
+							currentGear);
+					}
+				}
+			}
+
 			best.SimulationInterval = dt;
 			best.ProhibitGearshift = prohibitGearshift;
 			return best;
