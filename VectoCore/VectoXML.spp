@@ -418,6 +418,31 @@
 				</Folder>
 			</Folder>
 		</Folder>
+		<Folder FolderName="SampleVehilces">
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-input_sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted_input_full-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted_input_only_certain_entries01-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted_input_only_certain_entries02-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted_input_only_mandatory_entries.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-new_parameters-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_AT.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_certificationOptions.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_exempted.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL_updated.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_LNG.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_noAirdrag.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_torqueLimits.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-stage_input_full-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-stage_input_only_certain_entries01-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-stage_input_only_certain_entries02-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-stage_input_only_mandatory_entries.xml" HomeFolder="Yes"/>
+		</Folder>
 	</Folder>
 	<Folder FolderName="XML Files Generic Vehicles">
 		<Folder FolderName="SingleBus">

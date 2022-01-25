@@ -2450,7 +2450,6 @@
 	<xs:simpleType name="AuxFanTechnologyPrimaryBusType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
-			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
 			<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 stages"/>
 			<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 stages"/>
@@ -2553,7 +2552,6 @@
 	</xs:simpleType>
 	<xs:simpleType name="AuxSPTechnologyLorryType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
 			<xs:enumeration value="Fixed displacement"/>
 			<xs:enumeration value="Fixed displacement with elec. control"/>
 			<xs:enumeration value="Dual displacement"/>
