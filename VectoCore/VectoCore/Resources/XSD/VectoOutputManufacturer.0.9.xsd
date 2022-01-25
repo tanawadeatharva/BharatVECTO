@@ -1148,7 +1148,7 @@
 			<xs:element name="RatedPower" type="v1.0:EngineRatedPower"/>
 			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
 			<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType"/>
-			<xs:element name="Capactiy" type="mrf:EngineCapacityType"/>
+			<xs:element name="Capacity" type="mrf:EngineCapacityType"/>
 			<xs:element name="FuelTypes">
 				<xs:complexType>
 					<xs:sequence>
