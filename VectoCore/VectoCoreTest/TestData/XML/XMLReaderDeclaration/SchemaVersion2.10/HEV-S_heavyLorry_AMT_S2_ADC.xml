@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_HEV-Sx_HeavyLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -27,8 +27,8 @@
 		<ArchitectureID>S2</ArchitectureID>
 		<OvcHev>false</OvcHev>
 		<ADAS xsi:type="ADAS_HEV_Type">
-			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
-			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
+			<EngineStopStart>true</EngineStopStart>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
 			<!-- optional -->
@@ -41,15 +41,15 @@
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
 					<Voltage>500</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
@@ -61,15 +61,15 @@
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
 					<Voltage>500</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
@@ -117,7 +117,7 @@
 				<PowertrainPosition>GEN</PowertrainPosition>
 				<Count>1</Count>
 				<ElectricMachineSystem>
-					<v2.10.1:Data xsi:type="v2.10.1:ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>a</Manufacturer>
 						<Model>a</Model>
 						<CertificationNumber>token</CertificationNumber>
@@ -172,17 +172,17 @@
 						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
 						</Conditioning>
-					</v2.10.1:Data>
-					<v2.10.1:Signature>
+					</v2.3:Data>
+					<v2.3:Signature>
 						<di:Reference>
 							<di:DigestMethod Algorithm=""/>
 							<di:DigestValue/>
 						</di:Reference>
-					</v2.10.1:Signature>
+					</v2.3:Signature>
 				</ElectricMachineSystem>
 				<ADC>
 					<!-- optional -->
-					<v2.10.1:Data xsi:type="v2.10.1:ADCDataDeclarationType" id="adc" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.3:Data xsi:type="ADCDataDeclarationType" id="adc" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>ADC Manufacturer</Manufacturer>
 						<Model>ADC Model</Model>
 						<CertificationNumber>adcadc</CertificationNumber>
@@ -196,20 +196,20 @@
 							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"/>
 							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"/>
 						</TorqueLossMap>
-					</v2.10.1:Data>
-					<v2.10.1:Signature>
+					</v2.3:Data>
+					<v2.3:Signature>
 						<di:Reference>
 							<di:DigestMethod Algorithm=""/>
 							<di:DigestValue/>
 						</di:Reference>
-					</v2.10.1:Signature>
+					</v2.3:Signature>
 				</ADC>
 			</ElectricMachineGEN>
 			<ElectricEnergyStorage>
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -233,7 +233,7 @@
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
+						</v2.4:Data>
 						<Signature>
 							<di:Reference>
 								<di:DigestMethod Algorithm=""/>
@@ -247,7 +247,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -271,7 +271,7 @@
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
+						</v2.4:Data>
 						<Signature>
 							<di:Reference>
 								<di:DigestMethod Algorithm=""/>
@@ -285,7 +285,7 @@
 				<PowertrainPosition>2</PowertrainPosition>
 				<Count>1</Count>
 				<ElectricMachineSystem>
-					<v2.10.1:Data xsi:type="v2.10.1:ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>a</Manufacturer>
 						<Model>a</Model>
 						<CertificationNumber>token</CertificationNumber>
@@ -340,17 +340,17 @@
 						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
 						</Conditioning>
-					</v2.10.1:Data>
-					<v2.10.1:Signature>
+					</v2.3:Data>
+					<v2.3:Signature>
 						<di:Reference>
 							<di:DigestMethod Algorithm=""/>
 							<di:DigestValue/>
 						</di:Reference>
-					</v2.10.1:Signature>
+					</v2.3:Signature>
 				</ElectricMachineSystem>
 				<ADC>
 					<!-- optional -->
-					<v2.10.1:Data xsi:type="v2.10.1:ADCDataDeclarationType" id="ad" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.3:Data xsi:type="ADCDataDeclarationType" id="ad" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>ADC Manufacturer</Manufacturer>
 						<Model>ADC Model</Model>
 						<CertificationNumber>adcadc</CertificationNumber>
@@ -364,13 +364,13 @@
 							<Entry inputSpeed="12.00" inputTorque="41.00" torqueLoss="32.00"/>
 							<Entry inputSpeed="13.00" inputTorque="42.00" torqueLoss="33.00"/>
 						</TorqueLossMap>
-					</v2.10.1:Data>
-					<v2.10.1:Signature>
+					</v2.3:Data>
+					<v2.3:Signature>
 						<di:Reference>
 							<di:DigestMethod Algorithm=""/>
 							<di:DigestValue/>
 						</di:Reference>
-					</v2.10.1:Signature>
+					</v2.3:Signature>
 				</ADC>
 				<P2.5GearRatios>
 					<!-- only for P2.5 HEV -->
@@ -595,7 +595,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<v2.10.2:Data xsi:type="AUX_HEV-S_LorryDataType">
+				<Data xsi:type="AUX_HEV-S_LorryDataType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
 					</Fan>
@@ -611,7 +611,7 @@
 					<HVAC>
 						<Technology>Default</Technology>
 					</HVAC>
-				</v2.10.2:Data>
+				</v2.4:Data>
 			</Auxiliaries>
 			<AirDrag>
 				<!-- optional -->

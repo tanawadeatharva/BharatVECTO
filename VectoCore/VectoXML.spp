@@ -116,7 +116,6 @@
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_IEPC-S.xml" HomeFolder="Yes"/>
-				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_IEPC-S_IEPC_Std.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S3.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml" HomeFolder="Yes"/>
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV_primaryBus_AMT_Px.xml" HomeFolder="Yes"/>
@@ -281,7 +280,6 @@
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSample_WHR.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSampleDualModeDualFuel.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_tyre-sample.xml" HomeFolder="Yes"/>
-			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vecto_vehicle-fullElectricSP.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel_WHR.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml" HomeFolder="Yes"/>
@@ -506,7 +504,6 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.8.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistep.0.1.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoOutputPrimaryBus.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.2.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.xsd" HomeFolder="Yes"/>

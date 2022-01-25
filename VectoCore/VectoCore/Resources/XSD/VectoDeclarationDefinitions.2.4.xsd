@@ -3512,7 +3512,7 @@
 					<xs:documentation>P041 - [kg]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirdragModifiedMultistage" type="xs:boolean" minOccurs="0">
+			<xs:element name="AirdragModifiedMultistep" type="xs:boolean" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>P334 - bool</xs:documentation>
 					<xs:appinfo>

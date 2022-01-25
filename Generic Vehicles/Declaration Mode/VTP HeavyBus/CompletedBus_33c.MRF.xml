@@ -68,7 +68,7 @@
             <CertificationMethod>Standard values</CertificationMethod>
             <CdxA>6.30</CdxA>
           </AirDrag>
-          <mrf0.8:Auxiliaries xsi:type="AUX_Conventional_CompletedBusType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+          <mrf0.8:Auxiliaries xsi:type="AUX_Conventional_CompletedBusType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
             <ElectricSystem>
               <LEDLights>
 				  <Interiorlights>true</Interiorlights>

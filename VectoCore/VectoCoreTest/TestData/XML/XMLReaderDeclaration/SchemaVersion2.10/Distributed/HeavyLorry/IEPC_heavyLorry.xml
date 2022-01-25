@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 	<v2.0:Vehicle xsi:type="Vehicle_IEPC_HeavyLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -28,7 +28,7 @@
 		</ADAS>
 		<Components xsi:type="Components_IEPC_LorryType">
 			<IEPC>
-				<v2.10.1:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="IEPCMeasuredDataDeclarationType" id="IEPC-asdf">
+				<v2.3:Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="IEPCMeasuredDataDeclarationType" id="IEPC-asdf">
 					<Manufacturer>a</Manufacturer>
 					<Model>a</Model>
 					<CertificationNumber>token</CertificationNumber>
@@ -40,7 +40,7 @@
 					<RotationalInertia>0.10</RotationalInertia>
 					<DifferentialIncluded>false</DifferentialIncluded>
 					<DesignTypeWheelMotor>true</DesignTypeWheelMotor>
-					<Gears xsi:type="v2.10.1:IEPCGearsDeclarationType">
+					<Gears xsi:type="v2.3:IEPCGearsDeclarationType">
 						<Gear number="1">
 							<Ratio>3.000</Ratio>
 						</Gear>
@@ -108,19 +108,19 @@
 					<Conditioning>
 						<Entry coolantTempInlet="30" coolingPower="5000"/>
 					</Conditioning>
-				</v2.10.1:Data>
-				<v2.10.1:Signature>
+				</v2.3:Data>
+				<v2.3:Signature>
 					<di:Reference>
 						<di:DigestMethod Algorithm=""/>
 						<di:DigestValue/>
 					</di:Reference>
-				</v2.10.1:Signature>
+				</v2.3:Signature>
 			</IEPC>
 			<ElectricEnergyStorage>
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -144,7 +144,7 @@
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
+						</v2.4:Data>
 						<Signature>
 							<di:Reference>
 								<di:DigestMethod Algorithm=""/>
@@ -158,7 +158,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -182,7 +182,7 @@
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
+						</v2.4:Data>
 						<Signature>
 							<di:Reference>
 								<di:DigestMethod Algorithm=""/>

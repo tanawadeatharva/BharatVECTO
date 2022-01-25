@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.10.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.10" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
-	<tns:ElectricMachineSystem xsi:type="v2.10.1:ElectricMachineSystemComponentDeclarationType">
-		<Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xsi:type="ElectricMachineSystemStandardValuesDataDeclarationType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:di="http://www.w3.org/2000/09/xmldsig#" schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationComponent v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationComponent.xsd">
+	<tns:ElectricMachineSystem xsi:type="v2.3:ElectricMachineSystemComponentDeclarationType">
+		<Data xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="ElectricMachineSystemStandardValuesDataDeclarationType" id="EM-asdf" xmlns:v2.9="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.9">
 			<Manufacturer>a</Manufacturer>
 			<Model>a</Model>
 			<CertificationNumber>token</CertificationNumber>
@@ -35,7 +35,7 @@
 				<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
 			</DragCurve>
 		</Data>
-		<v2.10.1:Signature>
+		<v2.3:Signature>
 			<di:Reference URI="#EM-asdf">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -44,6 +44,6 @@
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 				<di:DigestValue>ZDzYMLXTbvq6O8mR3OE8ii2v4SHgJ6nieqw6XXINaF0=</di:DigestValue>
 			</di:Reference>
-		</v2.10.1:Signature>
+		</v2.3:Signature>
 	</tns:ElectricMachineSystem>
 </tns:VectoInputDeclaration>
