@@ -225,7 +225,7 @@
 					<xs:element name="Components">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Airdrag" type="mrf:AirdragType"/>
+								<xs:element name="AirDrag" type="mrf:AirdragType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -567,7 +567,7 @@
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Airdrag" type="mrf:AirdragType"/>
+						<xs:element name="AirDrag" type="mrf:AirdragType"/>
 						<xs:element name="ADAS" type="mrf:HEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -580,7 +580,7 @@
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Airdrag" type="mrf:AirdragType"/>
+						<xs:element name="AirDrag" type="mrf:AirdragType"/>
 						<xs:element name="ADAS" type="mrf:PEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -614,7 +614,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
@@ -629,7 +629,7 @@
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -639,7 +639,7 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -649,7 +649,7 @@
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -660,7 +660,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
@@ -674,7 +674,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -684,7 +684,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -692,7 +692,7 @@
 	<xs:complexType name="PEV-E4-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
@@ -703,7 +703,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -1187,7 +1187,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
 		</xs:sequence>
