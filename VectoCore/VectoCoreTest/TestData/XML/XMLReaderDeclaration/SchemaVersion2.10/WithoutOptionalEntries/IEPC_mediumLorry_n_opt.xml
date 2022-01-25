@@ -11,6 +11,7 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>6000</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>12000</TechnicalPermissibleMaximumLadenMass>
+		<CargoVolume>20.000</CargoVolume>
 		<RetarderType>Losses included in Gearbox</RetarderType>
 		<RetarderRatio>2.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>

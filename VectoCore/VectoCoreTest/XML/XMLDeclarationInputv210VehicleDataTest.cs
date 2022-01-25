@@ -96,7 +96,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestMediumLorryParameterSequenceGroup2(IXMLDeclarationVehicleData vehicle)
 		{
-			Assert.IsNull(vehicle.CargoVolume);
+			if (vehicle.VehicleCategory == VehicleCategory.Van) {
+				Assert.AreEqual(20, vehicle.CargoVolume.Value());
+			} else {
+				Assert.IsNull(vehicle.CargoVolume);
+			}
+
 			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.IsNull(vehicle.TankSystem);

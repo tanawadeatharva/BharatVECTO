@@ -611,7 +611,7 @@
 					<HVAC>
 						<Technology>Default</Technology>
 					</HVAC>
-				</v2.4:Data>
+				</Data>
 			</Auxiliaries>
 			<AirDrag>
 				<!-- optional -->

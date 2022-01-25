@@ -1621,7 +1621,12 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
-				Assert.IsNull(vehicle.CargoVolume);
+				if (vehicle.VehicleCategory == VehicleCategory.Van) {
+					Assert.AreEqual(20, vehicle.CargoVolume.Value());
+				} else {
+					Assert.IsNull(vehicle.CargoVolume);
+				}
+
 				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
@@ -1931,7 +1936,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AxleGearInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
-				Assert.IsNull(vehicle.CargoVolume);
+				Assert.AreEqual(20, vehicle.CargoVolume.Value());
 			}
 			else
 			{

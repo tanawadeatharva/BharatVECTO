@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		IElectricSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
-		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public const string XSD_TYPE = "AUX_Conventional_PrimaryBusType";
 		public const string XSD_HEV_P_TYPE = "AUX_HEV-P_PrimaryBusType";
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV210 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV210, IElectricConsumersDeclarationData
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public const string XSD_TYPE_CONVENTIONAL = "AUX_Conventional_CompletedBusType";
 		public const string XSD_TYPE_xEV = "AUX_xEV_CompletedBusType";

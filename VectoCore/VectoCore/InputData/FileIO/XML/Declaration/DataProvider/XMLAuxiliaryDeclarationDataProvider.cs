@@ -93,26 +93,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			auxNode, vehicle) { }
 	}
 
-	// =============================
-
-	public class XMLAuxiliaryDeclarationDataProviderV23 : XMLAuxiliaryDeclarationDataProviderV10
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
-
-		public new const string XSD_TYPE = "AuxiliariesComponentDeclarationType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLAuxiliaryDeclarationDataProviderV23(XmlNode auxNode, IXMLDeclarationVehicleData vehicle) : base(
-			auxNode, vehicle)
-		{ }
-	}
-
+	
 	// =============================
 
 	public class XMLAuxiliaryDeclarationDataProviderV210_Lorry : XMLAuxiliaryDeclarationDataProviderV20
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public new const string XSD_TYPE = "AUX_Component_Conventional_Lorry_Type";
 		public const string XSD_HEV_P_TYPE = "AUX_Component_HEV-P_Lorry_Type";

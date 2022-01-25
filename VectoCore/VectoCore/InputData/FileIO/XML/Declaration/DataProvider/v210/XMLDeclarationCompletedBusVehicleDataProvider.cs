@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 	
 	public abstract class AbstractXMLDeclarationCompletedBusDataProviderV210 : AbstractXMLVehicleDataProviderV210
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		
 		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v210
 
 	public class XMLDeclarationConventionalCompletedBusDataProviderV210 : AbstractXMLDeclarationCompletedBusDataProviderV210
 	{
-        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
         public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
 
 
