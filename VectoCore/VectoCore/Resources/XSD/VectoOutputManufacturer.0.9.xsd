@@ -715,7 +715,7 @@
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="AngleDrive" type="mrf:AngledriveType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:ConventionalPrimaryBusAuxOutputType"/>
+			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBusComponentsType">
@@ -885,12 +885,12 @@
 			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ConventionalPrimaryBusAuxOutputType">
+	<xs:complexType name="Conventional_HEV_Px_PrimaryBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
 			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_Conventional_HEV_Px"/>
 			<xs:element name="HVACSystem" type="mrf:HVACSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -899,7 +899,7 @@
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
 			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
 			<xs:element name="HVACSystem">
 				<xs:complexType>
 					<xs:group ref="mrf:PrimaryBusHVACGroup"/>
@@ -911,7 +911,7 @@
 		<xs:sequence>
 			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ConventionalCompletedBusAuxOutputType">
@@ -952,7 +952,6 @@
 		<xs:sequence>
 			<xs:element name="Technology" type="v1.0:AuxPSTechnologyType"/>
 			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
-			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
 			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
 			<xs:element name="AirSuspensionControl" type="v2.10.2:AirsuspensionControlType"/>
 			<xs:element name="ReagentDosing" type="xs:boolean"/>
@@ -1154,8 +1153,8 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean"/>
 			<xs:element name="WastHeatRecoverySystemType" type="xs:string" maxOccurs="unbounded"/>
+			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="ComponentCommonOutputGroup">
@@ -1278,10 +1277,10 @@
 	<xs:complexType name="PrimaryBusElectricSystemType">
 		<xs:group ref="mrf:PrimaryBusElectricSystemGroup"/>
 	</xs:complexType>
-	<xs:complexType name="PneumaticSystemType">
+	<xs:complexType name="PneumaticSystemType_xEV">
 		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
 	</xs:complexType>
-	<xs:complexType name="Conventional/HEV_Px_PneumaticSystemType">
+	<xs:complexType name="PneumaticSystemType_Conventional_HEV_Px">
 		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
 	</xs:complexType>
 	<xs:complexType name="HVACSystemType">
