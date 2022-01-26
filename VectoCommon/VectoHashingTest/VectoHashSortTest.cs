@@ -22,6 +22,12 @@ namespace VectoHashingTest
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
+		[TestCase(@"Testdata\XML\Sort\Axlegear.xml")]
+		public void TestHash(string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			var hash = loadedFile.ComputeHash(VectoComponents.Axlegear);
+		}
 
 		[TestCase("ttvMnXYdQrEAu47QEO2AKyfzOdPSlcdsR/MrmH/mX+k=", @"Testdata\XML\Sort\Engine.xml"),
 		TestCase("ttvMnXYdQrEAu47QEO2AKyfzOdPSlcdsR/MrmH/mX+k=", @"Testdata\XML\Sort\Engine_unsorted.xml")]
@@ -30,7 +36,25 @@ namespace VectoHashingTest
 			var loadedFile = VectoHash.Load(filePath);
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Engine));
 		}
+
+
+		[TestCase("hRzWfx3/El/LwEtP86Utm3dgBAF6CagrpEREsca7+/0=", @"Testdata\XML\Sort\Gearbox_APT-N_unsorted.xml"),
+		TestCase("XZCluPiG05mOAj5rTjTllCWbhCTEYVxCbE940ck3XsA=", @"Testdata\XML\Sort\Gearbox_IHPC_unsorted.xml"),
+		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD.xml"),
+		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD_unsorted.xml")]
+		public void TestGearboxComponentHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Gearbox));
+		}
 		
+		[TestCase("og41nROicUT1OoesUTZ9/uoroCUbqlTo7nKmCRYQap4=", @"Testdata\XML\Sort\Axlegear.xml"),
+		TestCase("og41nROicUT1OoesUTZ9/uoroCUbqlTo7nKmCRYQap4=", @"Testdata\XML\Sort\Axlegear_unsorted.xml")]
+		public void TestAxlegearComponentHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Axlegear));
+		}
 		
 		[TestCase("NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=", @"Testdata\XML\Sort\ADC_unsorted.xml")]
 		public void TestADCHashSort(string expectedHash, string filePath)
@@ -62,16 +86,6 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.ElectricMachineSystem));
 		}
 
-
-		[TestCase("hRzWfx3/El/LwEtP86Utm3dgBAF6CagrpEREsca7+/0=", @"Testdata\XML\Sort\Gearbox_APT-N_unsorted.xml"),
-		TestCase("XZCluPiG05mOAj5rTjTllCWbhCTEYVxCbE940ck3XsA=", @"Testdata\XML\Sort\Gearbox_IHPC_unsorted.xml"),
-		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD.xml"),
-		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD_unsorted.xml")]
-		public void TestGearboxComponentHashSort(string expectedHash, string filePath)
-		{
-			var loadedFile = VectoHash.Load(filePath);
-			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Gearbox));
-		}
 
 		[TestCase("3L/fYxKTdIwzADHQMnUBPxcNwZNEHM+sKEC2M32UnEA=", @"Testdata\XML\Sort\IEPC_1_unsorted.xml"),
 		TestCase("BTHs/Hh2SgycIwU5OSuTgU/2SptMvmRFvPXr2X1Y7XQ=", @"Testdata\XML\Sort\IEPC_StdValues_unsorted.xml")]
