@@ -866,8 +866,8 @@
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyLorryType"/>
 			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
-			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
+			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEVLorryAuxOutputType">
