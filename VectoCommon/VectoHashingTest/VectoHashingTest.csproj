@@ -105,6 +105,12 @@
     <Content Include="Testdata\XML\Sort\ElectricMachineSystem_StdValues_unsorted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Testdata\XML\Sort\Engine.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Engine_unsorted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Testdata\XML\Sort\Gearbox_APT-N_unsorted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

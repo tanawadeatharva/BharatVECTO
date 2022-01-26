@@ -22,6 +22,15 @@ namespace VectoHashingTest
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
+
+		[TestCase("ttvMnXYdQrEAu47QEO2AKyfzOdPSlcdsR/MrmH/mX+k=", @"Testdata\XML\Sort\Engine.xml"),
+		TestCase("ttvMnXYdQrEAu47QEO2AKyfzOdPSlcdsR/MrmH/mX+k=", @"Testdata\XML\Sort\Engine_unsorted.xml")]
+		public void TestEngineHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Engine));
+		}
+		
 		
 		[TestCase("NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=", @"Testdata\XML\Sort\ADC_unsorted.xml")]
 		public void TestADCHashSort(string expectedHash, string filePath)
