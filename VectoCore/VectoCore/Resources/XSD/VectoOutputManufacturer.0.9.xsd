@@ -1038,13 +1038,7 @@
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="EngineTorqueLimitationsGroup">
-		<xs:sequence>
-			<xs:element name="EngineTorqueLimit" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:attribute name="Gear" type="xs:int" use="required"/>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
+		<xs:sequence/>
 	</xs:group>
 	<!--Axles-->
 	<xs:complexType name="AxleGearType">
@@ -1136,7 +1130,15 @@
 	</xs:complexType>
 	<xs:complexType name="EngineTorqueLimitsType">
 		<xs:sequence>
-			<xs:group ref="mrf:EngineTorqueLimitationsGroup"/>
+			<xs:element name="EngineTorqueLimit" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="Gear" type="xs:int" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EngineOutputType">
