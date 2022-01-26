@@ -74,7 +74,16 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.TorqueConverter));
 		}
 
-		
+
+		[TestCase("FGaItzPcx1qGytVlroFp+PU9rzsaQWRWnxmIspkqCRM=", @"Testdata\XML\Sort\Angledrive.xml"),
+		TestCase("FGaItzPcx1qGytVlroFp+PU9rzsaQWRWnxmIspkqCRM=", @"Testdata\XML\Sort\Angledrive_unsorted.xml")]
+		public void TestAngledriveComponentHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Angledrive));
+		}
+
+
 		[TestCase("NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=", @"Testdata\XML\Sort\ADC_unsorted.xml")]
 		public void TestADCHashSort(string expectedHash, string filePath)
 		{
