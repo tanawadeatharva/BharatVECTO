@@ -30,6 +30,7 @@
 */
 
 using System;
+using Microsoft.Win32.SafeHandles;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -50,6 +51,28 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class VehicleCategoryHelper
 	{
+		public static string PrimaryBus = "PrimaryBus";
+		public static string Lorry = "Lorry";
+		public static string CompletedBus = "CompletedBus";
+		public static string GetVehicleType(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					return Lorry;
+					break;
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					return PrimaryBus;
+					break;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return CompletedBus;
+					break;
+				default:
+					return category.GetLabel();
+			}
+		}
+
+
 		public static string GetLabel(this VehicleCategory category)
 		{
 			switch (category) {

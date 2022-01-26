@@ -486,6 +486,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			_primaryVehicle = primaryVehicle;
 		}
+		public VectoSimulationJobType VehicleType { get => _primaryVehicle.Vehicle.VehicleType; }
 
 		#region ManufacturingStage mandatory properties
 
@@ -580,7 +581,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get { return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle); }
 		}
-		public VehicleCategory VehicleCategory { get; }
+		public VehicleCategory VehicleCategory { get => VehicleDeclarationType == VehicleDeclarationType.final ? VehicleCategory.HeavyBusCompletedVehicle : VehicleCategory.HeavyBusInterimVehicle; }
 		public AxleConfiguration AxleConfiguration { get; }
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }
 

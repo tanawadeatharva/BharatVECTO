@@ -215,6 +215,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxChargingPower { get; }
 
+		VectoSimulationJobType VehicleType { get; }
+
 	}
 
 	public interface IVehicleComponentsDeclaration
@@ -1164,6 +1166,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum ArchitectureID
 	{
+		UNKNOWN,
 		E2,
 		E3,
 		E4,
