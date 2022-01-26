@@ -24,7 +24,7 @@
       - sort dragcurve entries
 	  - sort conditioning entries
 	  - sort powermaps by gear attribute
-      - sort voltage entries by voltage element value
+      - sort voltagelevel entries by voltage element value
       - sort ovc entries
       - sort internalresistance entries
       - sort currentlimits entries
@@ -116,7 +116,7 @@
 		</xsl:element>
 	</xsl:template>
 	
-	
+
 	<xsl:template match="*[local-name()='MaxTorqueCurve']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
@@ -224,6 +224,6 @@
 				<xsl:apply-templates select="."/>
 			</xsl:for-each>
 		</xsl:element>
-	</xsl:template>	
+	</xsl:template>
 	
 </xsl:transform>

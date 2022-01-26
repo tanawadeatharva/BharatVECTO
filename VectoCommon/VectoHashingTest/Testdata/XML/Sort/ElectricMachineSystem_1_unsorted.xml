@@ -54,6 +54,7 @@
 				<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 			</DragCurve>
 			<Conditioning>
+				<Entry coolantTempInlet="60" coolingPower="6000"/>
 				<Entry coolantTempInlet="30" coolingPower="5000"/>
 			</Conditioning>
 		</Data>
@@ -64,7 +65,7 @@
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>TilK8FUXim9VK3Jy2qTIdogjpWvSF0cj/Ny1fyuoajk=</di:DigestValue>
+				<di:DigestValue>wLFLpJxFZ6mDXeqdlZCGVOLCoXTCf7XTL0q9ZKkmt7o=</di:DigestValue>
 			</di:Reference>
 		</v2.10.1:Signature>
 	</tns:ElectricMachineSystem>

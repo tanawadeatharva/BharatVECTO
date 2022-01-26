@@ -44,8 +44,8 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.CapacitorSystem));
 		}
 		
-		[TestCase("vvxJmw6PIWC5lHtnDAYVoxy6sF97g24Ti/QDlUq09tc=", @"Testdata\XML\Sort\ElectricMachineSystem-IHPC_1_unsorted.xml"),
-		TestCase("TilK8FUXim9VK3Jy2qTIdogjpWvSF0cj/Ny1fyuoajk=", @"Testdata\XML\Sort\ElectricMachineSystem_1_unsorted.xml"),
+		[TestCase("X5dgavua/V/jzBQeJ6SxZXsXm3i1jruL48LedzZ5IxU=", @"Testdata\XML\Sort\ElectricMachineSystem-IHPC_1_unsorted.xml"),
+		TestCase("wLFLpJxFZ6mDXeqdlZCGVOLCoXTCf7XTL0q9ZKkmt7o=", @"Testdata\XML\Sort\ElectricMachineSystem_1_unsorted.xml"),
 		TestCase("CunnDxsiE9kciX+v9oeEGADZpEc88NtfMtmrHyJkCQ0=", @"Testdata\XML\Sort\ElectricMachineSystem_StdValues_unsorted.xml")]
 		public void TestElectricMachineHashSort(string expectedHash, string filePath)
 		{
@@ -55,7 +55,9 @@ namespace VectoHashingTest
 
 
 		[TestCase("hRzWfx3/El/LwEtP86Utm3dgBAF6CagrpEREsca7+/0=", @"Testdata\XML\Sort\Gearbox_APT-N_unsorted.xml"),
-		TestCase("XZCluPiG05mOAj5rTjTllCWbhCTEYVxCbE940ck3XsA=", @"Testdata\XML\Sort\Gearbox_IHPC_unsorted.xml")]
+		TestCase("XZCluPiG05mOAj5rTjTllCWbhCTEYVxCbE940ck3XsA=", @"Testdata\XML\Sort\Gearbox_IHPC_unsorted.xml"),
+		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD.xml"),
+		TestCase("LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=", @"Testdata\XML\Sort\Gearbox_FWD_unsorted.xml")]
 		public void TestGearboxComponentHashSort(string expectedHash, string filePath)
 		{
 			var loadedFile = VectoHash.Load(filePath);
