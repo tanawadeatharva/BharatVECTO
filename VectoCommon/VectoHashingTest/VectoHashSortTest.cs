@@ -65,6 +65,15 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Retarder));
 		}
 
+
+		[TestCase("o5/ZtRQ8nAui3rhM6adKiHVU9jRync6f1cDlBcnyOg4=", @"Testdata\XML\Sort\TorqueConverter.xml"),
+		TestCase("o5/ZtRQ8nAui3rhM6adKiHVU9jRync6f1cDlBcnyOg4=", @"Testdata\XML\Sort\TorqueConverter_unsorted.xml")]
+		public void TestTorqueConverterComponentHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.TorqueConverter));
+		}
+
 		
 		[TestCase("NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=", @"Testdata\XML\Sort\ADC_unsorted.xml")]
 		public void TestADCHashSort(string expectedHash, string filePath)
