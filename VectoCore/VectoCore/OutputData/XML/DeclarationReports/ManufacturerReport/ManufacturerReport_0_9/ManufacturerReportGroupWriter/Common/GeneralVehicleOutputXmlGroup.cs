@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Vehicle_VIN, vehicleData.VIN),
 				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, vehicleData.VehicleCategory.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.TPMLM, vehicleData.GrossVehicleMassRating.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.TPMLM, vehicleData.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(_mrf + XMLNames.Report_Vehicle_VehicleGroup, vehicleData.LegislativeClass.ToXMLFormat()),
 			};
 		}

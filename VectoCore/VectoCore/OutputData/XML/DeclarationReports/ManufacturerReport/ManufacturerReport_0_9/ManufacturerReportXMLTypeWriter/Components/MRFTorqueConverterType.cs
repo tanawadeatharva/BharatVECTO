@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
@@ -24,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					torqueConverterInputData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, torqueConverterInputData.DigestValue.DigestValue),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod,
-					torqueConverterInputData.CertificationMethod));
+					torqueConverterInputData.CertificationMethod.ToXMLFormat()));
 		}
 
 		#endregion

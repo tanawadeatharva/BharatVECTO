@@ -32,6 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				(addTorqueConverterData ? _mrfFactory.GetTorqueConverterType().GetXmlType(inputData) : null),
 				(addAngleDriveData ? _mrfFactory.GetAngleDriveType().GetXmlType(inputData) : null),
 				(addAirdragdata ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null),
+				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
 				_mrfFactory.GetConventionalLorryAuxType().GetXmlType(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData)
 			);
@@ -57,6 +58,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetTorqueConverterType().GetXmlType(inputData),
 				_mrfFactory.GetAngleDriveType().GetXmlType(inputData),
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
+				_mrfFactory.GetAirdragType().GetXmlType(inputData),
+				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
 				_mrfFactory.GetHEV_LorryAuxiliariesType().GetXmlType(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData)
 			);
 			return result;
@@ -83,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					: null,
 				_mrfFactory.GetAxleGearType().GetXmlType(inputData),
 				_mrfFactory.GetAxleWheelsType().GetXmlType(inputData),
-				components.AngledriveInputData != null ? _mrfFactory.GetRetarderType().GetXmlType(inputData) : null,
+				components.AngledriveInputData != null ? _mrfFactory.GetAngleDriveType().GetXmlType(inputData) : null,
 				components.AirdragInputData != null ? _mrfFactory.GetAirdragType().GetXmlType(inputData) : null,
 				_mrfFactory.GetElectricMachinesType().GetXmlType(inputData),
 				_mrfFactory.GetREESSSpecificationsType().GetXmlType(inputData));

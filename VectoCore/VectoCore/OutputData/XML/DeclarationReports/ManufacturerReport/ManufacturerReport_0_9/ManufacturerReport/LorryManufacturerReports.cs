@@ -11,10 +11,26 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport
 {
-    internal class ConventionalLorryManufacturerReport : AbstractManufacturerReport
+	internal abstract class LorryManufacturerReportBase : AbstractManufacturerReport
 	{
-		private XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
-		private string _mrfPrefix = "mrf";
+		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
+		protected string _mrfPrefix = "mrf";
+		public LorryManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		protected void GenerateReport(string outputDataType)
+		{
+			Report = new XDocument(new XElement(_mrf + "VectoOutput",
+				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
+				new XAttribute(xsi + "type", $"{_mrfPrefix}:{outputDataType}"),
+				new XAttribute(XNamespace.Xmlns + _mrfPrefix, _mrf),
+				Vehicle,
+				new XElement(_mrf + "Results")));
+		}
+	}
+
+	internal class ConventionalLorryManufacturerReport : LorryManufacturerReportBase
+	{
+
 		public ConventionalLorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory)
 		{
 			
@@ -26,14 +42,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			Vehicle = _mRFReportFactory.GetConventionalLorryVehicleType().GetXmlType(inputData);
 
-			//TODO: REMOVE
-			Report = new XDocument(new XElement(XName.Get("VectoOutput",
-					"urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
-					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-					new XAttribute(xsi + "type", $"{_mrfPrefix}:ConventionalLorryManufacturerOutputDataType"),
-					new XAttribute(XNamespace.Xmlns + _mrfPrefix, _mrf),
-					Vehicle, 
-					new XElement("Results")));
+			GenerateReport("ConventionalLorryManufacturerOutputDataType");
 		}
 
 		
@@ -41,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	}
 
-	internal class HEV_Px_IHPC_LorryManufacturerReport : AbstractManufacturerReport
+	internal class HEV_Px_IHPC_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public HEV_Px_IHPC_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -50,12 +59,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_Px_IHCP_LorryVehicleType().GetXmlType(inputData);
+
+			//TODO: REMOVE
+			GenerateReport("HEV-Px_IHPCLorryManufacturerOutputDataType");
 		}
+
+
 
 		#endregion
 	}
 
-	internal class HEV_S2_LorryManufacturerReport : AbstractManufacturerReport
+	internal class HEV_S2_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public HEV_S2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -64,12 +78,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_S2_LorryVehicleType().GetXmlType(inputData);
+			GenerateReport("HEV-S2_LorryManufacturerOutputDataType");
 		}
 
 		#endregion
 	}
 
-	internal class HEV_S3_LorryManufacturerReport : AbstractManufacturerReport
+	internal class HEV_S3_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public HEV_S3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -78,12 +93,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_S3_LorryVehicleType().GetXmlType(inputData);
+			GenerateReport("HEV-S3_LorryManufacturerOutputDataType");
 		}
 
 		#endregion
 	}
 
-	internal class HEV_S4_LorryManufacturerReport : AbstractManufacturerReport
+	internal class HEV_S4_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public HEV_S4_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -92,12 +108,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetXmlType(inputData);
+			GenerateReport("HEV-S4_LorryManufacturerOutputDataType");
 		}
 
 		#endregion
 	}
 
-	internal class HEV_IEPC_S_LorryManufacturerReport : AbstractManufacturerReport
+	internal class HEV_IEPC_S_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public HEV_IEPC_S_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -106,12 +123,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryComponentsType().GetXmlType(inputData);
+			GenerateReport("HEV-IEPC-S_LorryManufacturerOutputDataType");
 		}
 
 		#endregion
 	}
 
-	internal class PEV_E2_LorryManufacturerReport : AbstractManufacturerReport
+	internal class PEV_E2_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_E2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -120,12 +138,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetPEV_E2_LorryVehicleType().GetXmlType(inputData);
+
 		}
 
 		#endregion
 	}
 
-	internal class PEV_E3_LorryManufacturerReport : AbstractManufacturerReport
+	internal class PEV_E3_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_E3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -139,7 +158,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class PEV_E4_LorryManufacturerReport : AbstractManufacturerReport
+	internal class PEV_E4_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_E4_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
@@ -153,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class PEV_IEPC_LorryManufacturerReport : AbstractManufacturerReport
+	internal class PEV_IEPC_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_IEPC_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 

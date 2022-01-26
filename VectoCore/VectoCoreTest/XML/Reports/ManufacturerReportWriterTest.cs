@@ -60,16 +60,22 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		public bool Validate(XDocument document)
 		{
 			XmlSchemaSet schemas = new XmlSchemaSet();
+			var error = false;
 			var path = Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd");
 			TestContext.WriteLine(path);
 			XmlReader reader = new XmlTextReader(path) {
 				XmlResolver = new XmlUrlResolver()
 			};
 			schemas.Add("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9", reader);
-			document.Validate(schemas, (sender, args) => { TestContext.WriteLine(args.Message);});
+			document.Validate(schemas, (sender, args) => {
+				error = true;
+				
+				TestContext.WriteLine(sender.ToString());
+				TestContext.WriteLine(args.Message);
+			});
+			TestContext.WriteLine(document);
 
-
-			return false;
+			return !error;
 		}
 
 
@@ -124,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_Px_IHPC_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml")]
@@ -147,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S2_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml")]
@@ -170,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S3_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml")]
@@ -193,7 +199,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S4_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml")]
@@ -217,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var concreteReport = report as HEV_IEPC_S_LorryManufacturerReport;
 			Assert.NotNull(concreteReport);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(concreteReport.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_AMT_E2.xml")]
@@ -240,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E2_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml")]
@@ -263,7 +269,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E3_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E4.xml")]
@@ -286,7 +292,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E4_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml")]
@@ -310,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as Conventional_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 
@@ -334,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 
@@ -358,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml")]
@@ -381,7 +387,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as HEV_S4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_AMT_E2.xml")]
@@ -404,7 +410,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 
@@ -428,7 +434,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
 
@@ -452,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				ihpc) as PEV_E4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			TestContext.WriteLine(report.Vehicle);
+			Assert.IsTrue(Validate(report.Report));
 		}
 
         [TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml")]
@@ -478,37 +484,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var castedReport = report as Conventional_CompletedBusManufacturerReport;
             Assert.NotNull(castedReport);
             report.InitializeVehicleData(dataProvider);
-            TestContext.WriteLine(castedReport.Vehicle);
-        }
-
-
-
-
-
-        [TestCase]
-		public void MRFFactoryTest()
-		{
-			Assert.IsTrue(_mrfFactory.GetConventionalLorryManufacturerReport().GetType() == typeof(ConventionalLorryManufacturerReport));
+			Assert.IsTrue(Validate(report.Report));
 		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml")]
-		public async Task ConventionalPrimaryBusMRFTest(string fileName)
-		{
-			//await StartSimulation(fileName);
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\ExemptedVehicles\exempted_completedBus_input_full.xml")]
-		public async Task ExemptedHeavyLorryMRFTest(string fileName)
-		{
-			//await StartSimulation(fileName);
-		}
-		[TearDown]
-		public void TearDown()
-		{
-
-		}
-
-    }
-
-
+	}
 }

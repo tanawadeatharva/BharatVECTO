@@ -26,8 +26,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Model, engineData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, engineData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, engineData.DigestValue.DigestValue),
-				new XElement(_mrf+XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.Engine_IdlingSpeed, inputData.JobInputData.Vehicle.EngineIdleSpeed.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Engine_IdlingSpeed, inputData.JobInputData.Vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Engine_RatedSpeed, inputData.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
 				new XElement(_mrf + "Capacity", SIBase<Liter>.Create(engineData.Displacement.ConvertToCubicDeziMeter()).ToXMLFormat())
 			);
 			var fuels = new HashSet<FuelType>();
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				foreach (var fuel in engineMode.Fuels) {
 					fuels.Add(fuel.FuelType);
 				}
-			} //TODO: get fuels out of enginedata
+			}
 
 			var sortedFuels = fuels.ToList();
 			sortedFuels.Sort((fuelType1, fuelType2) => fuelType1.CompareTo(fuelType2));

@@ -24,8 +24,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "CoolingFanTechnology",
 					string.Join("\n", fanData.Technology)),
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData.Technology)),
-				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))));
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))),
+				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))));
 		}
 	}
 

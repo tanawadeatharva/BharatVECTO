@@ -17,9 +17,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Vehicle_ADAS,
 				new XElement(_mrf + XMLNames.Vehicle_ADAS_EngineStopStart, inputData.EngineStopStart),
-				new XElement(_mrf + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop,
+				new XElement(_mrf + "EcoRollWithoutEngineStopStart",
 					inputData.EcoRoll == EcoRollType.WithoutEngineStop),
-				new XElement(_mrf + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart,
+				new XElement(_mrf + "EcoRollWithEngineStopStart",
 					inputData.EcoRoll == EcoRollType.WithEngineStop),
 				new XElement(_mrf + XMLNames.Vehicle_ADAS_PCC,
 					inputData.PredictiveCruiseControl != PredictiveCruiseControlType.None));

@@ -15,13 +15,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			var torqueLimitsElement = new XElement(_mrf + XMLNames.Vehicle_TorqueLimits);
+			var torqueLimitsElement = new XElement(_mrf + "EngineTorqueLimitations");
 
 			var maxEngineTorque = inputData.JobInputData.Vehicle.Components.EngineInputData.MaxTorqueDeclared;
 			foreach (var torqueLimitInputData in inputData.JobInputData.Vehicle.TorqueLimits) {
 				
-				torqueLimitsElement.Add(new XElement(_mrf + "EngineTorqueLimit", new XAttribute("Gear", torqueLimitInputData.Gear), torqueLimitInputData.MaxTorque/maxEngineTorque));
-
+				torqueLimitsElement.Add(new XElement(_mrf + "EngineTorqueLimit", new XAttribute("Gear", torqueLimitInputData.Gear), ((torqueLimitInputData.MaxTorque/maxEngineTorque)*100).ToXMLFormat(0)));
 			}
 
 			return torqueLimitsElement;
