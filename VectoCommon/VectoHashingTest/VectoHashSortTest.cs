@@ -55,6 +55,16 @@ namespace VectoHashingTest
 			var loadedFile = VectoHash.Load(filePath);
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Axlegear));
 		}
+
+
+		[TestCase("uMH8HJlAtm/SNaj8QOhuX/cBNXTHAZ1la3oEXI42bls=", @"Testdata\XML\Sort\Retarder.xml"),
+		TestCase("uMH8HJlAtm/SNaj8QOhuX/cBNXTHAZ1la3oEXI42bls=", @"Testdata\XML\Sort\Retarder_unsorted.xml")]
+		public void TestRetarderComponentHashSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.Retarder));
+		}
+
 		
 		[TestCase("NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=", @"Testdata\XML\Sort\ADC_unsorted.xml")]
 		public void TestADCHashSort(string expectedHash, string filePath)
