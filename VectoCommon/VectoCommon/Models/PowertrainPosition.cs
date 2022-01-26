@@ -86,5 +86,34 @@ namespace TUGraz.VectoCommon.InputData {
 					return false;
 			}
 		}
+
+		public static string ToXmlFormat(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridPositionNotSet:
+					throw new ArgumentException("Hybrid position not set");
+				case PowertrainPosition.HybridP0: 
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP2_5:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.BatteryElectricE3:
+				case PowertrainPosition.BatteryElectricE2:
+					return GetPositionWithoutPrefix(pos.ToString());
+				case PowertrainPosition.GEN:
+					return "GEN";
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+			}
+		}
+
+		private static string GetPositionWithoutPrefix(string position)
+		{
+			return position.Replace(BatteryElectriPrefix, "").Replace("E", "").Replace(HybridPrefix, "").Replace("P", "")
+				.Replace("_", ".");
+		}
+
 	}
 }
