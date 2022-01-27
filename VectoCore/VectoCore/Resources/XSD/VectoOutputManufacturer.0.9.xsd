@@ -893,7 +893,7 @@
 	<xs:complexType name="ConventionalLorryAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyLorryType"/>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyLorryType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
 			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
@@ -901,14 +901,14 @@
 	<xs:complexType name="HEVLorryAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyLorryType"/>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyLorryType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
 			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEVLorryAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyLorryType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_1"/>
 			<xs:element name="ElectricSystem" type="mrf:LorryElectricSystemType"/>
 		</xs:sequence>
@@ -916,7 +916,7 @@
 	<xs:complexType name="Conventional_HEV_Px_PrimaryBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_Conventional_HEV_Px"/>
 			<xs:element name="HVACSystem" type="mrf:HVACSystemType"/>
@@ -925,7 +925,7 @@
 	<xs:complexType name="HEVPrimaryBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
 			<xs:element name="HVACSystem">
@@ -937,7 +937,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEVPrimaryBusAuxOutputType">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology" type="v1.0:AuxSPTechnologyType"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
 			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
 			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
 		</xs:sequence>
