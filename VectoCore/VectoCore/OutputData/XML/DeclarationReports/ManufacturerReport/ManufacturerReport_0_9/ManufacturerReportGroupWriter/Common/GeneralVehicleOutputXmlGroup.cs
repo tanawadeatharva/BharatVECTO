@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Castle.Components.DictionaryAdapter.Xml;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -34,6 +35,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new List<XElement>() {
 				new XElement(_mrf + XMLNames.Component_Model, vehicleData.Model),
 				new XElement(_mrf + XMLNames.Vehicle_VIN, vehicleData.VIN),
+				vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty() 
+					? null 
+					: new XElement(_mrf + XMLNames.Vehicle_TypeApprovalNumber, vehicleData.VehicleTypeApprovalNumber),
 				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, vehicleData.VehicleCategory.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.TPMLM, vehicleData.GrossVehicleMassRating.ToXMLFormat(0)),
