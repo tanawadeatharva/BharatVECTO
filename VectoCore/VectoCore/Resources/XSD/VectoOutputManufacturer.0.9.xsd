@@ -835,36 +835,40 @@
 			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AbstractREESSType"/>
+	<xs:complexType name="AbstractREESSType" abstract="true"/>
 	<xs:complexType name="REESSSpecificationsType">
 		<xs:sequence>
-			<xs:element name="REESS" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:sequence maxOccurs="unbounded">
-							<xs:element name="Battery" type="mrf:BatteryType"/>
-						</xs:sequence>
-						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="SuperCap" type="mrf:CapacitorType"/>
-						</xs:sequence>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
+			<xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element name="Battery" type="mrf:BatteryType"/>
+				</xs:sequence>
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="SuperCap" type="mrf:CapacitorType"/>
+				</xs:sequence>
+			</xs:sequence>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CapacitorType">
-		<xs:sequence>
-			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="Capacitance" type="v2.10.1:CapacitanceType"/>
-			<xs:element name="MinVoltage" type="v2.10.1:CapacitorVoltageType"/>
-			<xs:element name="MaxVoltage" type="v2.10.1:CapacitorVoltageType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractREESSType">
+				<xs:sequence>
+					<xs:group ref="mrf:ComponentCommonOutputGroup"/>
+					<xs:element name="Capacitance" type="v2.10.1:CapacitanceType"/>
+					<xs:element name="MinVoltage" type="v2.10.1:CapacitorVoltageType"/>
+					<xs:element name="MaxVoltage" type="v2.10.1:CapacitorVoltageType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="BatteryType">
-		<xs:sequence>
-			<xs:group ref="mrf:REESSGroup"/>
-		</xs:sequence>
-		<xs:attribute name="stringId" use="required"/>
+		<xs:complexContent>
+			<xs:extension base="mrf:AbstractREESSType">
+				<xs:sequence>
+					<xs:group ref="mrf:REESSGroup"/>
+				</xs:sequence>
+				<xs:attribute name="stringId" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:group name="REESSGroup">
 		<xs:sequence>
