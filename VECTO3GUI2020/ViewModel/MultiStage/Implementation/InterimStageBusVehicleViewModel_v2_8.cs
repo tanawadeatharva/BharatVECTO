@@ -19,6 +19,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.Models.Declaration;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
@@ -84,8 +85,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	public class InterimStageBusVehicleViewModel_v2_8 : ViewModelBase, IMultistageVehicleViewModel,
 		IVehicleComponentsDeclaration, IAdvancedDriverAssistantSystemDeclarationInputData, IDataErrorInfo
 	{
-		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationCompletedBusDataProviderV210);
-		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedCompletedBusDataProviderV210);
+		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationConventionalCompletedBusDataProviderV24);
+		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedCompletedBusDataProviderV24);
 		public static string VERSION = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
@@ -810,6 +811,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public TableData BoostingLimitations { get; }
+
 		private string _vehicleTypeApprovalNumber;
 
 		public string VehicleTypeApprovalNumber
@@ -817,6 +821,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			get => _vehicleTypeApprovalNumber;
 			set => SetProperty(ref _vehicleTypeApprovalNumber, value);
 		}
+
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		#endregion
 
@@ -862,6 +870,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public IElectricStorageSystemDeclarationInputData ElectricStorage => throw new NotImplementedException();
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => throw new NotImplementedException();
+		public IIEPCDeclarationInputData IEPC { get; }
 
 		#endregion
 

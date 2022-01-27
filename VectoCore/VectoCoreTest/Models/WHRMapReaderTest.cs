@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[TestCase()]
+		[TestCase(), Ignore("Engineering XML not maintained")]
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);

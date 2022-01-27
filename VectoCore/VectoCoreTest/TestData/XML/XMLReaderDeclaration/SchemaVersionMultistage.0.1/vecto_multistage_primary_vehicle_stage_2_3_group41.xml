@@ -5,8 +5,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
-xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
+xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
@@ -584,7 +584,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStep>
-			<vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+			<vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 				<Manufacturer>Intermediate Manufacturer 1</Manufacturer>
 				<ManufacturerAddress>Intermediate Manufacturer Address 1</ManufacturerAddress>
 				<VIN>VEH-1234567890</VIN>
@@ -619,7 +619,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStep>
-			<vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-2-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+			<vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-2-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 				<Manufacturer>Intermediate Manufacturer 2</Manufacturer>
 				<ManufacturerAddress></ManufacturerAddress>
 				<VIN>VEH-2234567890</VIN>

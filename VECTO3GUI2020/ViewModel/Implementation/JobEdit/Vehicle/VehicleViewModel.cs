@@ -354,8 +354,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		ConsumerTechnology? IVehicleDeclarationInputData.DoorDriveTechnology { get; }
 
 		public VehicleDeclarationType VehicleDeclarationType => throw new NotImplementedException();
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public TableData BoostingLimitations { get; }
 
 		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public virtual ConsumerTechnology DoorDriveTechnology
 		{

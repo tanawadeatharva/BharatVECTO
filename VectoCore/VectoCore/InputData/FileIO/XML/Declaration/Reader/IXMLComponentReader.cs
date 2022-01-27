@@ -37,7 +37,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 	public interface IXMLComponentReader
 	{
 		IVehicleComponentsDeclaration ComponentInputData { get; }
-
 		IAirdragDeclarationInputData AirdragInputData { get; }
 		IGearboxDeclarationInputData GearboxInputData { get; }
 		IAxleGearInputData AxleGearInputData { get; }
@@ -46,10 +45,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAuxiliariesDeclarationInputData AuxiliaryData { get; }
 		IRetarderInputData RetarderInputData { get; }
 		IAxlesDeclarationInputData AxlesDeclarationInputData { get; }
-
 		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-
 		IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get; }
+		IElectricMachinesDeclarationInputData ElectricMachines { get; }
+		IElectricStorageSystemDeclarationInputData ElectricStorageSystem { get; }
+		IIEPCDeclarationInputData IEPCInputData { get; }
 	}
 
 	public interface IXMLAxlesReader
@@ -72,4 +72,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode);
 
 	}
+
+	public interface IXMLElectricMachineSystemReader
+	{
+		IElectricMotorDeclarationInputData CreateElectricMachineSystem(XmlNode electricMachineSystem);
+		IADCDeclarationInputData ADCInputData { get; }
+	}
+
+	public interface IXMLREESSReader
+	{
+		IREESSPackInputData CreateREESSInputData(XmlNode storageNode, REESSType reessType);
+	}
+
+
 }

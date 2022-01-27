@@ -115,11 +115,6 @@
         <componentviews:AuxiliariesView_v2_0/>
     </DataTemplate>
 
-    <DataTemplate x:Shared="False"  DataType="{x:Type componentimpl:AuxiliariesViewModel_v2_3}">
-        <componentviews:AuxiliariesView_v2_0/>
-    </DataTemplate>
-
-
     <DataTemplate x:Shared="False"  DataType="{x:Type componentimpl:AxleViewModel_v1_0}">
         <componentviews:AxleView_v2_0/>
     </DataTemplate>
@@ -188,10 +183,6 @@
         <componentviews:ADASView_v2_3/>
     </DataTemplate>
 
-    <DataTemplate x:Shared="False"  DataType="{x:Type componentimpl:ADASViewModel_v2_3}">
-        <componentviews:ADASView_v2_3/>
-    </DataTemplate>
-
     <DataTemplate x:Shared="False"  DataType="{x:Type  componentimpl:EngineModeViewModelSingleFuel}">
         <componentviews:EngineModeViewSingleFuel/>
     </DataTemplate>
@@ -201,7 +192,7 @@
     </DataTemplate>
     <!--#endregion-->
     
-    <DataTemplate x:Shared="False" DataType="{x:Type componentimpl:AirDragViewModel_v2_8}">
+    <DataTemplate x:Shared="False" DataType="{x:Type componentimpl:AirDragViewModel_v2_4}">
         <multistageviews:AirDragView_v2_8></multistageviews:AirDragView_v2_8>
     </DataTemplate>
 

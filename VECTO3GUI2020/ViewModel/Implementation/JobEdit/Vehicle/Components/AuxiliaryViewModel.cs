@@ -93,7 +93,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 	public class AuxiliaryViewModel_v2_3 : AuxiliaryViewModel_v2_0
 	{
-		public static new readonly string VERSION = typeof(XMLAuxiliaryDeclarationDataProviderV23).FullName;
+		public static new readonly string VERSION = typeof(XMLAuxiliaryDeclarationDataProviderV24_Lorry).FullName;
 		public AuxiliaryViewModel_v2_3(IXMLAuxiliaryDeclarationInputData inputData, IAuxiliaryModelFactory auxiliaryModelFactory) : base(inputData, auxiliaryModelFactory)
 		{
 

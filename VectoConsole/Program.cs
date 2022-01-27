@@ -107,6 +107,7 @@ Examples:
 
 		private static int Main(string[] args)
 		{
+			
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			try {
 				// on -h display help and terminate.

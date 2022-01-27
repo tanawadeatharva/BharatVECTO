@@ -504,6 +504,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
 
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
 
@@ -610,6 +612,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		#endregion
 
@@ -941,6 +946,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => null;
+		public IIEPCDeclarationInputData IEPC => null;
 
 		private T GetComponentPropertyValue<T>(string propertyName)
 		{

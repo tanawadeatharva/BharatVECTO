@@ -820,8 +820,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
                 for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
-						MinSOC = b.MinSOC,
-						MaxSOC = b.MaxSOC,
+						MinSOC = b.MinSOC.Value,
+						MaxSOC = b.MaxSOC.Value,
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
@@ -863,7 +863,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
-			IElectricMachinesEngineeringInputData electricMachines, TableData torqueLimits)
+			IElectricMachinesEngineeringInputData electricMachines, Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -880,26 +880,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return electricMachines.Entries
 				.Select(x => Tuple.Create(x.Position,
 					CreateElectricMachine(x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
-						x.MechanicalTransmissionLossMap, torqueLimits))).ToList();
+						x.MechanicalTransmissionLossMap, torqueLimits.First(t =>t.Key == x.Position).Value))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, TableData torqueLimits)
+			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, List<Tuple<Volt, TableData>> torqueLimits)
 		{
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
 			foreach (var entry in motorData.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 				var fullLoadCurve = ElectricFullLoadCurveReader.Create(entry.FullLoadCurve, count);
-				var maxTorqueCurve = torqueLimits == null ? null : ElectricFullLoadCurveReader.Create(torqueLimits, count);
+				var maxTorqueCurve = torqueLimits == null
+					? null
+					: ElectricFullLoadCurveReader.Create(
+						torqueLimits.Where(x => x.Item1.IsEqual(entry.VoltageLevel)).FirstOrDefault()?.Item2, count);
 
 				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
 
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
+					ContinuousTorque = entry.ContinuousTorque * count,
+					ContinuousTorqueSpeed = entry.ContinuousTorqueSpeed,
+					OverloadTorque = entry.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
+					OverloadTestSpeed = entry.OverloadTestSpeed ?? 0.RPMtoRad(),
+					OverloadTime = entry.OverloadTime,
 					FullLoadCurve = fullLoadCurveCombined,
-					//DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-					EfficiencyMap = ElectricMotorMapReader.Create(entry.EfficiencyMap, count),
-				});
+                    // DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+                    EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+                });
 			}
 
 
@@ -910,12 +918,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
-				Inertia = motorData.Inertia * count,
-				ContinuousTorque = motorData.ContinuousTorque * count,
-				ContinuousTorqueSpeed = motorData.ContinuousTorqueSpeed,
-				OverloadTorque = (motorData.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
-				OverloadTestSpeed = motorData.OverloadTestSpeed ?? 0.RPMtoRad(),
-				OverloadTime = motorData.OverloadTime,
+				Inertia = motorData.Inertia,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 				RatioADC = ratio,
 				RatioPerGear = ratioPerGear,

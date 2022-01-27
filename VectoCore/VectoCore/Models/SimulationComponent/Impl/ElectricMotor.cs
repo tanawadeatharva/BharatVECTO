@@ -53,18 +53,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 
-			ContinuousTorque = ModelData.ContinuousTorque;
+			var vLevel = ModelData.EfficiencyData.VoltageLevels.First();
+			ContinuousTorque = vLevel.ContinuousTorque;
 			var voltage = ModelData.EfficiencyData.VoltageLevels.First().Voltage;
 			var contElPwr =
-				ModelData.EfficiencyData.LookupElectricPower(voltage, ModelData.ContinuousTorqueSpeed, -ContinuousTorque).ElectricalPower ??
-				ModelData.EfficiencyData.LookupElectricPower(voltage, ModelData.ContinuousTorqueSpeed, ModelData.EfficiencyData.FullLoadDriveTorque(voltage, ModelData.ContinuousTorqueSpeed), true).ElectricalPower;
-			ContinuousPowerLoss = -contElPwr - ContinuousTorque * ModelData.ContinuousTorqueSpeed; // loss needs to be positive
+				ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.ContinuousTorqueSpeed, -ContinuousTorque).ElectricalPower ??
+				ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.ContinuousTorqueSpeed, ModelData.EfficiencyData.FullLoadDriveTorque(voltage, vLevel.ContinuousTorqueSpeed), true).ElectricalPower;
+			ContinuousPowerLoss = -contElPwr - ContinuousTorque * vLevel.ContinuousTorqueSpeed; // loss needs to be positive
 			
-			var peakElPwr = ModelData.EfficiencyData.LookupElectricPower(voltage, ModelData.OverloadTestSpeed, -ModelData.OverloadTorque, true)
+			var peakElPwr = ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.OverloadTestSpeed, -vLevel.OverloadTorque, true)
 				.ElectricalPower;
-			var peakPwrLoss = -peakElPwr - ModelData.OverloadTorque * ModelData.OverloadTestSpeed; // losses need to be positive
+			var peakPwrLoss = -peakElPwr - vLevel.OverloadTorque * vLevel.OverloadTestSpeed; // losses need to be positive
 
-			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * ModelData.OverloadTime;
+			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * vLevel.OverloadTime;
 			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
 				Log.Error("Overload buffer for thermal de-rating is zero or negative! Please check electric motor data!");
 			}

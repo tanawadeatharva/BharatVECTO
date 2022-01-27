@@ -5,8 +5,8 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
-xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
+xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
@@ -26,12 +26,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<RetarderRatio>1.000</RetarderRatio>
 				<AngledriveType>None</AngledriveType>
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-				<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
-					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
-					<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
-					<v2.3:PredictiveCruiseControl>1,2,3</v2.3:PredictiveCruiseControl>
-					<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
+				<ADAS xsi:type="v2.1:AdvancedDriverAssistantSystemsType">
+					<v2.1:EngineStopStart>true</v2.1:EngineStopStart>
+					<v2.1:EcoRollWithoutEngineStop>false</v2.1:EcoRollWithoutEngineStop>
+					<v2.1:EcoRollWithEngineStop>true</v2.1:EcoRollWithEngineStop>
+					<v2.1:PredictiveCruiseControl>1,2,3</v2.1:PredictiveCruiseControl>
+					<!--<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>-->
 				</ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
 					<tcl:Entry gear="6" maxTorque="1800"/>
@@ -651,12 +651,12 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStep>
-			<Vehicle xsi:type="v2.10.2:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle">
-				<v2.10.2:Manufacturer>Intermediate Manufacturer 1</v2.10.2:Manufacturer>
-				<v2.10.2:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.10.2:ManufacturerAddress>
-				<v2.10.2:VIN>VEH-1234567890</v2.10.2:VIN>
-				<v2.10.2:Date>2018-02-15T11:00:00Z</v2.10.2:Date>
-				<v2.10.2:VehicleDeclarationType>interim</v2.10.2:VehicleDeclarationType>
+			<Vehicle xsi:type="v2.4:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-1-Vehicle">
+				<v2.4:Manufacturer>Intermediate Manufacturer 1</v2.4:Manufacturer>
+				<v2.4:ManufacturerAddress>Intermediate Manufacturer Address 1</v2.4:ManufacturerAddress>
+				<v2.4:VIN>VEH-1234567890</v2.4:VIN>
+				<v2.4:Date>2018-02-15T11:00:00Z</v2.4:Date>
+				<v2.4:VehicleDeclarationType>interim</v2.4:VehicleDeclarationType>
 			</Vehicle>
 			<ApplicationInformation>
 				<SimulationToolVersion>!!NOT FOR CERTIFICATION!!</SimulationToolVersion>
@@ -686,7 +686,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<di:DigestValue>BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=</di:DigestValue>
 			</di:Reference>
 			</HashPreviousStep>
-			<vif0.1:Vehicle xsi:type="v2.10.2:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-2-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+			<vif0.1:Vehicle xsi:type="v2.4:Vehicle_Conventional_CompletedBusDeclarationType" id="MSTG-2-Vehicle" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
 				<Manufacturer>Intermediate Manufacturer 2</Manufacturer>
 				<ManufacturerAddress>Intermediate Manufacturer Address 2</ManufacturerAddress>
 				<VIN>VEH-2234567890</VIN>

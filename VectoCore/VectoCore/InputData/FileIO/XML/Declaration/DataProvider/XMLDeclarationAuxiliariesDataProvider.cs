@@ -106,36 +106,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			vehicle, componentNode, sourceFile) { }
 	}
 
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationAuxiliariesDataProviderV23 : XMLDeclarationAuxiliariesDataProviderV10
-	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
-
-		public new const string XSD_TYPE = "AuxiliariesDataDeclarationType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationAuxiliariesDataProviderV23(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile)
-		{ }
-	}
-
+	
 	// ---------------------------------------------------------------------------------------
 
 	
-	public class XMLDeclarationAuxiliariesDataProviderV210_Lorry: XMLDeclarationAuxiliariesDataProviderV20
+	public class XMLDeclarationAuxiliariesDataProviderV24_Lorry: XMLDeclarationAuxiliariesDataProviderV20
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
         public new const string XSD_TYPE = "AUX_Conventional_LorryDataType";
+		public const string  XSD_HEV_P_TYPE = "AUX_HEV-P_LorryDataType";
+		public const string XSD_HEV_S_TYPE = "AUX_HEV-S_LorryDataType";
+		public const string XSD_PEV_TYPE = "AUX_PEV_LorryDataType";
+		public const string XSD_IEPC_TYPE = "AUX_IEPC_LorryDataType";
 
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationAuxiliariesDataProviderV210_Lorry(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile)
-		{ }
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_HEV_P_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_P_TYPE);
+		public static readonly string QUALIFIED_XSD_HEV_S_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S_TYPE);
+		public static readonly string QUALIFIED_XSD_PEV_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_TYPE);
+		public static readonly string QUALIFIED_XSD_IEPC_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_IEPC_TYPE);
+		
+		public XMLDeclarationAuxiliariesDataProviderV24_Lorry(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 }

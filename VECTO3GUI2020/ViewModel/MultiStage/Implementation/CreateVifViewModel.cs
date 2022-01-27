@@ -18,6 +18,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Multistage;
@@ -337,7 +338,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			{
 				var inputData = _inputDataReader.Create(fileName) as IDeclarationInputDataProvider;
 				vehicleInputData = inputData.JobInputData.Vehicle;
-				valid = (inputData != null) && (vehicleInputData is XMLDeclarationCompletedBusDataProviderV210) || (vehicleInputData is XMLDeclarationExemptedCompletedBusDataProviderV210);
+				valid = (inputData != null) && (vehicleInputData is XMLDeclarationConventionalCompletedBusDataProviderV24) || (vehicleInputData is XMLDeclarationExemptedCompletedBusDataProviderV24);
 			}
 			catch (Exception e)
 			{

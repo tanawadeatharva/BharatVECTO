@@ -354,6 +354,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 			}
 		}
+
 		#endregion
 
 	}

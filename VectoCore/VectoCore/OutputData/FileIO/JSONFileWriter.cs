@@ -35,7 +35,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private const int ElectricMotorFormatVersion = 4;
+	private const int ElectricMotorFormatVersion = 5;
 
 	private const int REESSFormatVersion = 1;
 
@@ -80,15 +80,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("SavedInDeclMode", declMode);
 
 		body.Add("Model", electricMachine.Model);
-		//body.Add("FullLoadCurve", GetRelativePath(electricMachine.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-		//body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
-		//body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
-		body.Add("Inertia", electricMachine.Inertia.Value());
-		body.Add("ContinuousTorque", electricMachine.ContinuousTorque.Value());
-		body.Add("ContinuousTorqueSpeed", electricMachine.ContinuousTorqueSpeed.AsRPM);
-		body.Add("OverloadTorque", electricMachine.OverloadTorque.Value());
-		body.Add("OverloadTorqueSpeed", electricMachine.OverloadTestSpeed.AsRPM);
-		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
+        body.Add("Inertia", electricMachine.Inertia.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
 		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 
@@ -96,11 +88,20 @@ public class JSONFileWriter : IOutputFileWriter
 		foreach (var entry in electricMachine.VoltageLevels) {
 			var vlevel = new Dictionary<string, object>();
 			vlevel.Add("Voltage", entry.VoltageLevel.Value());
+			vlevel.Add("ContinuousTorque", entry.ContinuousTorque.Value());
+			vlevel.Add("ContinuousTorqueSpeed", entry.ContinuousTorqueSpeed.AsRPM);
+			vlevel.Add("OverloadTorque", entry.OverloadTorque.Value());
+			vlevel.Add("OverloadTorqueSpeed", entry.OverloadTestSpeed.AsRPM);
+			vlevel.Add("OverloadTime", entry.OverloadTime.Value());
 			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-			//vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
-			vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
-			vlevels.Add(vlevel);
+			var powerMaps = new Dictionary<int, object>();
+			foreach (var pMap in entry.PowerMap) {
+				powerMaps.Add(pMap.Gear, GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
+			}
+            vlevel.Add("EfficiencyMap", powerMaps); //PowerMap
+            vlevels.Add(vlevel);
         }
+		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 
 		body.Add("VoltageLevels", vlevels);
 		WriteFile(header, body, filename);
@@ -512,11 +513,13 @@ public class JSONFileWriter : IOutputFileWriter
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
 		//body.Add(JsonKeys.HEV_Vehicle_MaxDrivetrainPower, vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value);
-		if (vehicle.ElectricMotorTorqueLimits != null) {
-			body.Add("EMTorqueLimits", GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath));
-		}
-		if (vehicle.MaxPropulsionTorque != null) {
-			body.Add("MaxPropulsionTorque", GetRelativePath(vehicle.MaxPropulsionTorque.Source, basePath));
+
+		//ToDo ElectricMotorTorqueLimits changed
+		// if (vehicle.ElectricMotorTorqueLimits != null) {
+		// 	body.Add("EMTorqueLimits", GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath));
+		// }
+		if (vehicle.BoostingLimitations != null) {
+			body.Add("MaxPropulsionTorque", GetRelativePath(vehicle.BoostingLimitations.Source, basePath));
 		}
 
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);

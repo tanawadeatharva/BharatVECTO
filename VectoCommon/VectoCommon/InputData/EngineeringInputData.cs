@@ -30,8 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -106,10 +104,7 @@ namespace TUGraz.VectoCommon.InputData
 
         Meter Height { get; }
 
-        TableData ElectricMotorTorqueLimits { get; }
-
-		TableData MaxPropulsionTorque { get; }
-
+		
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
@@ -210,7 +205,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData PTOCycleWhileDriving { get; }
 
 	}
-
+	
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>
@@ -478,6 +473,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
 	{
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData
@@ -629,5 +625,5 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt ElectricPowerDemand { get; }
 	}
-
+	
 }

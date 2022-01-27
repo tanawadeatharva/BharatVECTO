@@ -216,6 +216,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
+		public IIEPCDeclarationInputData IEPC { get; }
 	}
 
 	public class MockVehicleTestInputData : IVehicleDeclarationInputData
@@ -272,7 +273,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public TableData BoostingLimitations { get; }
 		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 		public IVehicleComponentsDeclaration Components { get; set; }
 		public XmlNode XMLSource { get; }
 	}
