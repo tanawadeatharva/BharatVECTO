@@ -25,8 +25,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var result =  new XElement(_mrf + "ElectricMachines");
 			
 			foreach (var electricMachine in electricMachines) {
-				result.Add(new XElement(_mrf + "CountAtPosition", electricMachine.Count), 
-					new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position));
+				var electricMachineElement = new XElement(_mrf + XMLNames.Component_ElectricMachine, new XElement(_mrf + "CountAtPosition", electricMachine.Count),
+						new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position.ToXmlFormat()));
+				result.Add(electricMachineElement);
 				var electricMachineSystem = new XElement(_mrf + XMLNames.ElectricMachineSystem);
 				
 				electricMachineSystem.Add(new XElement(_mrf + XMLNames.Component_Model, electricMachine.ElectricMachine.Model),
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, ((IPowerRatingInputData)(electricMachine.ElectricMachine)).ElectricMachineType),
 					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod)
 					);
-				result.Add(electricMachineSystem);
+				electricMachineElement.Add(electricMachineSystem);
 				if (electricMachine.ADC != null) {
 					var adc = electricMachine.ADC;
 					result.Add(new XElement(_mrf + XMLNames.Component_ADC, 

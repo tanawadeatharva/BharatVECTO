@@ -104,6 +104,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMRFLorryAuxiliariesType GetConventionalLorryAuxType();
 		IMRFLorryAuxiliariesType GetHEV_LorryAuxiliariesType();
 
+		IMRFLorryAuxiliariesType GetPEV_LorryAuxiliariesType();
+
 
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_Conventional();
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_P();

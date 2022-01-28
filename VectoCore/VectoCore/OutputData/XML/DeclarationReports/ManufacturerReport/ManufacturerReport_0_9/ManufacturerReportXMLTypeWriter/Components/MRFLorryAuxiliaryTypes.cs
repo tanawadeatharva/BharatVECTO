@@ -35,4 +35,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public MRFHEV_LorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 	}
+
+	internal class MRFPEV_LorryAuxiliariesType : AbstractMrfXmlType, IMRFLorryAuxiliariesType
+	{
+		public MRFPEV_LorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFLorryAuxiliariesType
+
+		public XElement GetXmlType(IAuxiliariesDeclarationInputData auxData)
+		{
+			
+			var steeringPumpData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.SteeringPump);
+			var electricSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.ElectricSystem);
+			var pneumaticSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.PneumaticSystem);
+
+			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData.Technology)),
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, string.Join("\n", pneumaticSystemData.Technology))),
+				new XElement(_mrf + XMLNames.BusAux_ElectricSystem, new XElement(_mrf + "LEDHeadLights", electricSystemData.Technology.Contains("Standard technology - LED headlights, all"))));
+		}
+
+		#endregion
+	}
 }

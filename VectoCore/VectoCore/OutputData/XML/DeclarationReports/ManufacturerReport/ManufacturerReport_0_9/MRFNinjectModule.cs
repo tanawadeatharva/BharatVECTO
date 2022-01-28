@@ -384,13 +384,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryAuxType());
 			Bind<IMRFLorryAuxiliariesType>().To<MRFHEV_LorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_LorryAuxiliariesType());
+			Bind<IMRFLorryAuxiliariesType>().To<MRFPEV_LorryAuxiliariesType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_LorryAuxiliariesType());
 			
 			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_Conventional>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_Conventional());
-
 			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_P>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_P());
-
 			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_S>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_S());
 			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_PEV>()
