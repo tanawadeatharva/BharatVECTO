@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,12 +30,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position.ToXmlFormat()));
 				result.Add(electricMachineElement);
 				var electricMachineSystem = new XElement(_mrf + XMLNames.ElectricMachineSystem);
-				
+
 				electricMachineSystem.Add(new XElement(_mrf + XMLNames.Component_Model, electricMachine.ElectricMachine.Model),
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, electricMachine.ElectricMachine.CertificationNumber),
 					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue.DigestValue),
-					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, ((IPowerRatingInputData)(electricMachine.ElectricMachine)).ElectricMachineType),
-					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod)
+					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
+					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
+					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)),
+					new XElement(_mrf + "MaxContinuousPower", (electricMachine.ElectricMachine.ContinuousTorque * electricMachine.ElectricMachine.ContinuousTorqueSpeed).ToXMLFormat(3))
 					);
 				electricMachineElement.Add(electricMachineSystem);
 				if (electricMachine.ADC != null) {
@@ -47,12 +50,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.AngleDrive_Ratio, adc.Ratio.ToXMLFormat(3)))
 						);
 				}
-
+				
 			}
 
+			var boostingLimitations = inputData.JobInputData.Vehicle.BoostingLimitations;
+			if (boostingLimitations != null) {
+				var boostingLimitationsXElement = new XElement(_mrf + XMLNames.Vehicle_BoostingLimitation);
+				foreach (DataRow row in boostingLimitations.Rows)
+				{
+					boostingLimitationsXElement.Add(new XElement(_mrf + XMLNames.BoostingLimitation_Entry),
+						new XAttribute(_mrf + XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
+						new XAttribute(_mrf + XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed]));
+				}
+			
 
-
-
+				result.Add(boostingLimitationsXElement);
+			}
 			return result;
 		}
 
