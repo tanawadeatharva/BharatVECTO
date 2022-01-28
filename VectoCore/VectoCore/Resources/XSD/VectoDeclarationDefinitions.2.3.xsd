@@ -2179,6 +2179,11 @@
 			<xs:enumeration value="215/60 R17C"/>
 			<xs:enumeration value="235/60 R17C"/>
 			<xs:enumeration value="425/55 R19.5"/>
+			<xs:enumeration value="425/55 R19.5"/>
+			<xs:enumeration value="205/80 R 15"/>
+			<xs:enumeration value="205/70 R 15"/>
+			<xs:enumeration value="205/70 R17C"/>
+			<xs:enumeration value="285/55 R16C"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VoltageLevelVoltageType">
