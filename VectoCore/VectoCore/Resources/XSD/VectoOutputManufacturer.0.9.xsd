@@ -833,6 +833,7 @@
 	<xs:complexType name="ElectricMachineSystemType">
 		<xs:sequence>
 			<xs:group ref="mrf:ElectricMachineGroup"/>
+			<xs:group ref="mrf:ElectricMachinePowerGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="xEV-IEPC-Type">
@@ -1051,7 +1052,7 @@
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
 		<xs:sequence>
-			<xs:element name="RatedPower" type="mrf:RatedPowerType"/>
+			<xs:element name="RatedPower" type="v2.10.1:R85RatedPowerType"/>
 			<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType"/>
 		</xs:sequence>
 	</xs:group>
