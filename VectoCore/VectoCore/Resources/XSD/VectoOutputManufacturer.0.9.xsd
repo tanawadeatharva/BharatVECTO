@@ -675,12 +675,12 @@
 	<xs:complexType name="PEV-E2-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
 		</xs:sequence>
@@ -691,7 +691,7 @@
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
-			<xs:element name="AxleGear" type="mrf:AxleGearType"/>
+			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
 		</xs:sequence>
@@ -1323,7 +1323,7 @@
 	</xs:complexType>
 	<xs:complexType name="PneumaticSystemType_1">
 		<xs:sequence>
-			<xs:element name="Technology" type="v1.0:AuxPSTechnologyType"/>
+			<xs:element name="Technology" type="v2.10.2:AuxPSTechnologyLorryType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CompletedBusElectricSystemType">
