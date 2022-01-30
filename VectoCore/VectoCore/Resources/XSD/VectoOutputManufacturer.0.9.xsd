@@ -284,7 +284,7 @@
 			</xs:element>
 			<xs:element name="VehicleTypeApprovalNumber" type="v2.10.2:VehicleTypeApprovalNumberType" minOccurs="0">
 			</xs:element>
-			<xs:element name="VehicleCategory" type="v1.0:VehicleCategoryDeclarationType"/>
+			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType"/>
 			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
 				<xs:annotation>
 					<xs:documentation>1.1.5 Axle configuration</xs:documentation>
@@ -295,7 +295,7 @@
 					<xs:documentation>1.1.6. Technical Permissible Maximum Laden Mass [t]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleGroup" type="v1.0:LegislativeClassDeclarationType">
+			<xs:element name="VehicleGroup" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>1.1.7.Vehicle group (Annex 1)</xs:documentation>
 				</xs:annotation>
@@ -1343,6 +1343,9 @@
 	</xs:complexType>
 	<xs:simpleType name="RatedPowerType">
 		<xs:restriction base="v1.0:Double3"/>
+	</xs:simpleType>
+	<xs:simpleType name="LegislativeCategoryType">
+    	<xs:union memberTypes="v2.10.2:LegislativeCategoryHeavyLorryDeclarationType v2.10.2:LegislativeCategoryMediumLorryDeclarationType v2.10.2:LegislativeCategoryPrimaryBusDeclarationType"/>
 	</xs:simpleType>
 	<xs:complexType name="ADCType">
 		<xs:sequence>
