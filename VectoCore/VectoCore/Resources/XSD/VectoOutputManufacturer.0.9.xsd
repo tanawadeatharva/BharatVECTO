@@ -814,7 +814,6 @@
 		<xs:sequence>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
@@ -1324,7 +1323,7 @@
 	<xs:complexType name="PneumaticSystemType_PrimaryBus_PEV_IEPC">
 		<xs:sequence>
 			<xs:element name="Technology" type="xs:string"/>
-			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+			<!-- <xs:element name="CompressorRatio" type="v1.0:Double3"/> -->
 			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
 			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
 			<xs:element name="ReagentDosing" type="xs:boolean"/>
