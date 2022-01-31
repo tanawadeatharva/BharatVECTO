@@ -122,7 +122,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -142,7 +142,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -152,7 +152,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -162,7 +162,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -172,7 +172,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -182,7 +182,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -192,7 +192,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -202,7 +202,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -212,7 +212,7 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-PrimaryBus-VehicleOutputType"/>
-					<xs:element name="Result"/>
+					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -918,8 +918,8 @@
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
 			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_Conventional_HEV_Px"/>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_Conventional_HEV_P"/>
 			<xs:element name="HVACSystem" type="mrf:HVACSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -927,8 +927,8 @@
 		<xs:sequence>
 			<xs:element name="CoolingFanTechnology" type="v2.10.2:AuxFanTechnologyPrimaryBusType"/>
 			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_Conventional_HEV"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_HEV_S"/>
 			<xs:element name="HVACSystem">
 				<xs:complexType>
 					<xs:group ref="mrf:PrimaryBusHVACGroup"/>
@@ -939,8 +939,8 @@
 	<xs:complexType name="PEVPrimaryBusAuxOutputType">
 		<xs:sequence>
 			<xs:element name="SteeringPumpTechnology" type="v2.10.2:AuxSPTechnologyPrimaryBusType"/>
-			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType"/>
-			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_xEV"/>
+			<xs:element name="ElectricSystem" type="mrf:PrimaryBusElectricSystemType_PEV"/>
+			<xs:element name="PneumaticSystem" type="mrf:PneumaticSystemType_PrimaryBus_PEV_IEPC"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ConventionalCompletedBusAuxOutputType">
@@ -961,13 +961,6 @@
 			<xs:element name="HVACSystem" type="mrf:xEV_CompletedBusHVACSystemType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:group name="PrimaryBusElectricSystemGroup">
-		<xs:sequence>
-			<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnologyType"/>
-			<xs:element name="MaxAlternatorPower" type="mrf:PowerType" minOccurs="0"/>
-			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0"/>
-		</xs:sequence>
-	</xs:group>
 	<xs:group name="CompletedBusElectricSystemGroup">
 		<xs:sequence>
 			<xs:element name="DayRunningLightsLED" type="xs:boolean"/>
@@ -975,15 +968,6 @@
 			<xs:element name="PositionLightsLED" type="xs:boolean"/>
 			<xs:element name="BrakeLightsLED" type="xs:boolean"/>
 			<xs:element name="InteriorLightsLED" type="xs:boolean"/>
-		</xs:sequence>
-	</xs:group>
-	<xs:group name="PrimaryBusPneumaticSystemGroup">
-		<xs:sequence>
-			<xs:element name="Technology" type="v1.0:AuxPSTechnologyType"/>
-			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
-			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-			<xs:element name="AirSuspensionControl" type="v2.10.2:AirsuspensionControlType"/>
-			<xs:element name="ReagentDosing" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBus_xEVHVACGroup">
@@ -1003,7 +987,7 @@
 	</xs:group>
 	<xs:group name="PrimaryBusHVACGroup">
 		<xs:sequence>
-			<xs:element name="AdjustableCoolantTheromostat" type="xs:boolean"/>
+			<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
 			<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
@@ -1132,7 +1116,6 @@
 				<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
 				<xs:element name="HybridElectricHDV"/>
 			</xs:sequence>
-			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="TorqueConverterType">
@@ -1264,6 +1247,7 @@
 	<xs:group name="HEV-PrimaryBus-VehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
 			<xs:group ref="mrf:HEVVehicleSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
@@ -1305,14 +1289,46 @@
 			<xs:group ref="mrf:TyreGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PrimaryBusElectricSystemType">
-		<xs:group ref="mrf:PrimaryBusElectricSystemGroup"/>
+	<xs:complexType name="PrimaryBusElectricSystemType_Conventional_HEV">
+		<xs:sequence>
+			<xs:element name="AlternatorTechnology" type="v2.10.2:AlternatorTechnologyType"/>
+			<xs:element name="MaxAlternatorPower" type="mrf:PowerType" minOccurs="0"/>
+			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0"/>
+		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PneumaticSystemType_xEV">
-		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
+	<xs:complexType name="PrimaryBusElectricSystemType_PEV">
+		<xs:sequence>
+			<xs:element name="ElectricStorageCapacity" type="mrf:StorageCapacityType" minOccurs="0"/>
+		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PneumaticSystemType_Conventional_HEV_Px">
-		<xs:group ref="mrf:PrimaryBusPneumaticSystemGroup"/>
+	<xs:complexType name="PneumaticSystemType_PrimaryBus_Conventional_HEV_P">
+		<xs:sequence>
+			<xs:element name="Technology" type="xs:string"/>
+			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
+			<xs:element name="ReagentDosing" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PneumaticSystemType_PrimaryBus_HEV_S">
+		<xs:sequence>
+			<xs:element name="Technology" type="xs:string"/>
+			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
+			<xs:element name="ReagentDosing" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PneumaticSystemType_PrimaryBus_PEV_IEPC">
+		<xs:sequence>
+			<xs:element name="Technology" type="xs:string"/>
+			<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
+			<xs:element name="ReagentDosing" type="xs:boolean"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HVACSystemType">
 		<xs:group ref="mrf:PrimaryBusHVACGroup"/>
@@ -1341,6 +1357,12 @@
 			<xs:group ref="mrf:CompletedBus_xEVHVACGroup"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="AirsuspensionControlType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="mechanic"/>
+			<xs:enumeration value="electric"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="RatedPowerType">
 		<xs:restriction base="v1.0:Double3"/>
 	</xs:simpleType>
