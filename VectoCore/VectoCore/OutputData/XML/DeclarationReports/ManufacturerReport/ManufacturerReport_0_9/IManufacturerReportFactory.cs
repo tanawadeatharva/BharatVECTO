@@ -63,6 +63,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfXmlType GetPEV_E3_PrimaryBusComponentsType();
 		IMrfXmlType GetPEV_E4_PrimaryBusComponentsType();
 		IMrfXmlType GetPEV_IEPC_PrimaryBusComponentsType();
+		IMrfXmlType GetConventional_CompletedBusComponentsType();
+		IMrfXmlType GetHEV_CompletedBusComponentsType();
+		IMrfXmlType GetPEV_CompletedBusComponentsType();
 
 
 
@@ -98,7 +101,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMRFAdasType GetPEVADASType();
 		IMrfXmlType GetIEPCSpecifications();
 		IMrfXmlType GetREESSSpecificationsType();
-		IMrfXmlType GetAirdragType();
+		IMrfAirdragType GetAirdragType();
 
 
 		IMRFLorryAuxiliariesType GetConventionalLorryAuxType();
@@ -131,7 +134,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfVehicleGroup GetCompletedBusSequenceGroup();
 		IMrfVehicleGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
-
 
 
 	}

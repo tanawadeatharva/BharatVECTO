@@ -159,23 +159,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			var input = inputData as IMultistageBusInputDataProvider;
-			var auxData = input.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
-			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
-					new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
-					new XElement(_mrf + "HeadLightsLED", auxData.ElectricConsumers.HeadlightsLED),
-					new XElement(_mrf + "PositionLightsLED", auxData.ElectricConsumers.PositionlightsLED),
-					new XElement(_mrf + "BrakeLightsLED", auxData.ElectricConsumers.BrakelightsLED),
-					new XElement(_mrf + "InteriorLightsLED", auxData.ElectricConsumers.InteriorLightsLED))
-			);
-
-
-
-
-
-
-			return result;
+			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -184,7 +168,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
 		{
-			throw new NotImplementedException();
+			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
+					new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
+					new XElement(_mrf + "HeadLightsLED", auxData.ElectricConsumers.HeadlightsLED),
+					new XElement(_mrf + "PositionLightsLED", auxData.ElectricConsumers.PositionlightsLED),
+					new XElement(_mrf + "BrakeLightsLED", auxData.ElectricConsumers.BrakelightsLED),
+					new XElement(_mrf + "InteriorLightsLED", auxData.ElectricConsumers.InteriorLightsLED)),
+				_mrfFactory.GetConventionalCompletedBus_HVACSystemType().GetXmlType(auxData)
+			);
+			return result;
 		}
 
 		#endregion

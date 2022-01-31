@@ -126,6 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
 			throw new NotImplementedException();
+			//return new XElement()
 		}
 
 		#endregion
@@ -354,7 +355,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetXmlType(IDeclarationInputDataProvider inputData)
 		{
-			return new XElement(_mrf + XMLNames.Component_Vehicle, _mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData));
+			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle, 
+				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetConventionalADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetConventional_CompletedBusComponentsType().GetXmlType(inputData)
+				);
 
 		}
 

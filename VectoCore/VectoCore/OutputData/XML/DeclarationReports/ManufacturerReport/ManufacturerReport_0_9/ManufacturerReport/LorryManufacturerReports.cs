@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
-namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
 {
 	internal abstract class LorryManufacturerReportBase : AbstractManufacturerReport
 	{
@@ -182,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryVehicleType().GetXmlType(inputData);
 			GenerateReport("PEV-IEPC_LorryManufacturerOutputDataType");
 		}
 

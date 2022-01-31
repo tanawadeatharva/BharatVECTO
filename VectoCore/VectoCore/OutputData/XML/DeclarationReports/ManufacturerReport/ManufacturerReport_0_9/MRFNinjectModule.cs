@@ -7,7 +7,6 @@ using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.LorryManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.CompletedBus;
@@ -324,6 +323,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFPEV_E4_PrimaryBusComponentsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusComponentsType());
 
+
+			Bind<IMrfXmlType>().To<MRFConventional_CompletedBusComponentsType>()
+				.NamedLikeFactoryMethod(
+					(IManufacturerReportFactory f) => f.GetConventional_CompletedBusComponentsType());
+			Bind<IMrfXmlType>().To<MRFHEV_CompletedBusComponentsType>()
+				.NamedLikeFactoryMethod(
+					(IManufacturerReportFactory f) => f.GetHEV_CompletedBusComponentsType());
+			Bind<IMrfXmlType>().To<MRFPEV_CompletedBusComponentsType>()
+				.NamedLikeFactoryMethod(
+					(IManufacturerReportFactory f) => f.GetPEV_CompletedBusComponentsType());
+
+
 			#endregion
 
 
@@ -361,7 +372,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFAngleDriveType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAngleDriveType());
 
-			Bind<IMrfXmlType>().To<MRFAirdragType>()
+			Bind<IMrfAirdragType>().To<MRFAirdragType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAirdragType());
 
 			Bind<IMrfXmlType>().To<MRFAxleWheelsType>()
@@ -426,8 +437,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMRFBusAuxiliariesType>().To<MRFCompletedBusElectricSystemType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusElectricSystemType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusAuxType>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusAuxType());
 			#region Groups
 
 			Bind<IMrfVehicleGroup>().To<GeneralVehicleOutputXmlGroup>()

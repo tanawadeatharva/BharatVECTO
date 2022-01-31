@@ -11,26 +11,33 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFAirdragType : AbstractMrfXmlType, IMrfXmlType
+	public interface IMrfAirdragType
 	{
-		#region Implementation of IMrfXmlType
+		XElement GetXmlType(IAirdragDeclarationInputData inputData);
 
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+
+	}
+	public class MRFAirdragType : AbstractMrfXmlType, IMrfAirdragType
+	{
+
+		public MRFAirdragType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMrfAirdragType
+
+		public XElement GetXmlType(IAirdragDeclarationInputData inputData)
 		{
-			
-			var airdragData = inputData.JobInputData.Vehicle.Components.AirdragInputData;
 			return new XElement(_mrf + XMLNames.Component_AirDrag,
-				new XElement(_mrf + XMLNames.Component_Model, airdragData.Model),
-				new XElement(_mrf + XMLNames.Component_CertificationMethod, airdragData.CertificationMethod),
-				airdragData.CertificationNumber.IsNullOrEmpty()
+				new XElement(_mrf + XMLNames.Component_Model, inputData.Model),
+				new XElement(_mrf + XMLNames.Component_CertificationMethod, inputData.CertificationMethod),
+				inputData.CertificationNumber.IsNullOrEmpty()
 					? null
-					: new XElement(_mrf + XMLNames.Component_CertificationNumber, airdragData.CertificationNumber),
-				new XElement(_mrf + "CdxA", airdragData.AirDragArea.ToXMLFormat(2)),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, airdragData.DigestValue.DigestValue));
+					: new XElement(_mrf + XMLNames.Component_CertificationNumber, inputData.CertificationNumber),
+				new XElement(_mrf + "CdxA", inputData.AirDragArea.ToXMLFormat(2)),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, inputData.DigestValue.DigestValue));
 		}
 
 		#endregion
-
-		public MRFAirdragType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 	}
+
+
 }
