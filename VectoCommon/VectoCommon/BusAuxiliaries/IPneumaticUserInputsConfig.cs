@@ -56,7 +56,12 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		public static string GetLabel(this ConsumerTechnology? technology)
 		{
-			switch (technology) {
+			return technology?.GetLabel();
+		}
+		public static string GetLabel(this ConsumerTechnology technology)
+		{
+			switch (technology)
+			{
 				case ConsumerTechnology.Electrically:
 					return "Electric";
 				case ConsumerTechnology.Mechanically:
@@ -68,6 +73,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				default:
 					return ConsumerTechnology.Unknown.ToString();
 			}
+		}
+
+		public static string ToXMLFormat(this ConsumerTechnology technology)
+		{
+			return technology.GetLabel().ToLowerInvariant();
 		}
 
 		public static string ToXMLFormat(this ConsumerTechnology? technology)
