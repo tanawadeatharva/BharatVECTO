@@ -108,8 +108,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
 				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetXmlType(auxData)
+				//_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)
 			);
 		}
 
@@ -260,8 +260,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
 		{
+			var electricStorageCapacity =
+				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
-				auxData.ElectricSupply.ElectricStorage != null ? "TODO" : null);
+				auxData.ElectricSupply.ElectricStorage == null || electricStorageCapacity == null ? null :  new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat()));
 		}
 
 		#endregion
