@@ -222,13 +222,6 @@
 			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
-					<xs:element name="Components">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AirDrag" type="mrf:AirdragType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="Results"/>
 				</xs:sequence>
 			</xs:extension>
@@ -422,9 +415,9 @@
 			<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
 			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 			<xs:element name="ClassBus" type="v2.10.2:RegisteredClassType"/>
-			<xs:element name="NrOfPassengersUpperDeck" type="xs:int"/>
-			<xs:element name="NrOfPassengerLowerDeck" type="xs:int"/>
-			<xs:element name="BodyWorkCode" type="v2.10.2:VehicleCodeType"/>
+			<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
+			<xs:element name="NumberPassengersLowerDeck" type="xs:int"/>
+			<xs:element name="BodyworkCode" type="v2.10.2:VehicleCodeType"/>
 			<xs:element name="LowEntry" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
@@ -432,7 +425,7 @@
 		<xs:sequence>
 			<xs:element name="HeightIntegratedBody" type="v2.10.2:VehicleDimensionType"/>
 			<xs:element name="VehicleLength" type="v2.10.2:VehicleDimensionType"/>
-			<xs:element name="VehicleHeight" type="v2.10.2:VehicleDimensionType"/>
+			<xs:element name="VehicleWidth" type="v2.10.2:VehicleDimensionType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="Conventional-LorryVehicleOutputType">
@@ -561,16 +554,25 @@
 	<xs:complexType name="Conventional-CompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-CompletedBusVehicleOutputTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="Components">
+				<xs:complexType>
+						<xs:sequence>
+							<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+							<xs:element name="Auxiliaries" type="mrf:ConventionalCompletedBusAuxOutputType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-CompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-CompletedBusVehicleOutputTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="AirDrag" type="mrf:AirdragType"/>
-						<xs:element name="ADAS" type="mrf:HEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -579,11 +581,11 @@
 	<xs:complexType name="PEV-CompletedBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:PEV-CompletedBusVehicleOutputTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="AirDrag" type="mrf:AirdragType"/>
-						<xs:element name="ADAS" type="mrf:PEVADASType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -978,10 +980,10 @@
 	</xs:group>
 	<xs:group name="CompletedBus_HVACSystemGroup">
 		<xs:sequence>
-			<xs:group ref="v2.10.2:BusAuxHVACHeatPumpSequenceGroup"/>
-			<xs:element name="DoubleGlasing" type="xs:boolean"/>
+			<xs:group ref="mrf:BusAuxHVACHeatPumpSequenceGroup"/>
+			<xs:element name="DoubleGlazing" type="xs:boolean"/>
 			<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
-			<xs:element name="SeperateAirdistributionDucts" type="xs:boolean"/>
+			<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PrimaryBusHVACGroup">
@@ -1266,6 +1268,7 @@
 			<xs:group ref="mrf:CompletedBusVehicleDimensionSequenceGroup"/>
 			<xs:element name="DoorDriveTechnology" type="v2.10.2:DoorDriveTechnologyType"/>
 			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
+
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-CompletedBusVehicleOutputTypeGroup">
@@ -1386,4 +1389,45 @@
 			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:group name="BusAuxHVACHeatPumpSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SystemConfiguration" type="v2.10.2:SystemConfigurationType">
+				<xs:annotation>
+					<xs:documentation>P317 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="HeatPumpTypeDriverCompartment">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P318 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Heating" type="v2.10.2:HeatPumpTypeDriverCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P319 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HeatPumpTypePassengerCompartment">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Cooling" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P320 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Heating" type="v2.10.2:HeatPumpTypePassengerCompartmentType">
+							<xs:annotation>
+								<xs:documentation>P321 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 </xs:schema>
