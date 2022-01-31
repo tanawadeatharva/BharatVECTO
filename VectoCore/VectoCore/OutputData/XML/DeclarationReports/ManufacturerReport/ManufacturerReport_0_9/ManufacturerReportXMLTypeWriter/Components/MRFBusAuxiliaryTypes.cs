@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -232,11 +234,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
 		{
+			var maxAlternatorPower = auxData.ElectricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
+				.Max();
+			var electricStorageCapacity =
+				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem_AlternatorTechnology,
 					auxData.ElectricSupply.AlternatorTechnology.ToXMLFormat()),
-				auxData.ElectricSupply.AlternatorTechnology != AlternatorType.None ? "TODO" : null,
-				auxData.ElectricSupply.ElectricStorage != null ? "TODO" : null);
+				(auxData.ElectricSupply.AlternatorTechnology == AlternatorType.None || maxAlternatorPower == null)
+					? null
+					: new XElement(_mrf + "MaxAlternatorPower", maxAlternatorPower.ToXMLFormat(0)),
+
+			auxData.ElectricSupply.ElectricStorage == null || electricStorageCapacity == null ? null : new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat()));
 		}
 
 		#endregion
@@ -273,8 +282,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem, auxData.PneumaticSupply.SmartAirCompression),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
-				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
+				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing == ConsumerTechnology.Pneumatically)
 			);
 		}
 
@@ -293,8 +302,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
-				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
+				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing == ConsumerTechnology.Pneumatically)
 			);
 		}
 
@@ -312,8 +321,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
 				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl),
-				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing)
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
+				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing == ConsumerTechnology.Pneumatically)
 			);
 		}
 

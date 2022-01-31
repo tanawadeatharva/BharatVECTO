@@ -38,10 +38,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty() 
 					? null 
 					: new XElement(_mrf + XMLNames.Vehicle_TypeApprovalNumber, vehicleData.VehicleTypeApprovalNumber),
-				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, vehicleData.VehicleCategory.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.TPMLM, vehicleData.GrossVehicleMassRating.ToXMLFormat(0)),
-				new XElement(_mrf + XMLNames.Report_Vehicle_VehicleGroup, vehicleData.LegislativeClass.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Report_Vehicle_VehicleGroup, vehicleData.VehicleCategory.ToXMLFormat()),
 			};
 		}
 

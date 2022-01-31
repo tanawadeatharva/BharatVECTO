@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFElectricMachinesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetElectricMachinesType());
 
-			Bind<IMrfXmlType>().To<MRFIepcSpecificationsType>()
+			Bind<IMrfXmlType>().To<MRFIEPCSpecificationsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetIEPCSpecifications());
 
 			Bind<IMrfXmlType>().To<MRFREESSSpecificationsType>()

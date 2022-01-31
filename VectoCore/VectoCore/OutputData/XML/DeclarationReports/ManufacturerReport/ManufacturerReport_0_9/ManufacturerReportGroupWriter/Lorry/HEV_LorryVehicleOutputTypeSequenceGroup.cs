@@ -16,7 +16,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var result = new List<XElement>();
-			result.Add(new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, vehicleData.DualFuelVehicle));
 			result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab));
 			if (vehicleData.TankSystem.HasValue) {

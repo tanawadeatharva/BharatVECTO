@@ -21,9 +21,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var result = new List<XElement>()
 			{
+				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, vehicleData.DualFuelVehicle),
 				new XElement(_mrf + "HEVArchitecture", vehicleData.ArchitectureID.GetLabel()),
 				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OvcHev),
-				vehicleData.MaxChargingPower != null ? new XElement(_mrf + "OffVehicleChargingMaxPower") : null,
+				vehicleData.OvcHev ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ToXMLFormat(0)) : null,
 			};
 			result.Add(_mrfFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			return result;

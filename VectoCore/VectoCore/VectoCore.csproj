@@ -483,7 +483,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFAxleWheelsType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFElectricMachinesType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFEngineType.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFIepcSpecificationsType.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFIEPCSpecificationsType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFPneumaticSystemType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFREESSSpecificationsType.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\ManufacturerReportXMLTypeWriter\Components\MRFRetarderType.cs" />
