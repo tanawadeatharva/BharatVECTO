@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
 					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
 					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)),
-					new XElement(_mrf + "MaxContinuousPower", (electricMachine.ElectricMachine.ContinuousTorque * electricMachine.ElectricMachine.ContinuousTorqueSpeed).ToXMLFormat(3))
+					new XElement(_mrf + "MaxContinuousPower", (electricMachine.ElectricMachine.ContinuousTorque * electricMachine.ElectricMachine.ContinuousTorqueSpeed).ToXMLFormat(0))
 					);
 				electricMachineElement.Add(electricMachineSystem);
 				if (electricMachine.ADC != null) {

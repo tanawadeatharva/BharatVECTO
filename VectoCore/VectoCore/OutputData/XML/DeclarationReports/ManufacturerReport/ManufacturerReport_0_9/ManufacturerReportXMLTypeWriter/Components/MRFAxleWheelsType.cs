@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var axleCount = 0;
 			foreach (var axleDeclaration in axleWheelsInputdata.AxlesDeclaration) {
 				var axle = new XElement(_mrf + XMLNames.AxleWheels_Axles_Axle,
-					new XAttribute("Count", ++axleCount));
+					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, ++axleCount));
 
 				if (axleCount != 1) {
 					axle.Add(new XElement(_mrf + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axleDeclaration.TwinTyres));
