@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	public interface IMRFBusAuxiliariesType
 	{
-		XElement GetXmlType(IBusAuxiliariesDeclarationData auxData);
+		XElement GetElement(IBusAuxiliariesDeclarationData auxData);
 	}
 
 
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of MRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var steeringPumpData = auxData.SteeringPumpTechnology;
 
@@ -40,9 +40,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
 
 
-				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetElement(auxData)
 			);
 		}
 
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var steeringPumpData = auxData.SteeringPumpTechnology;
 
@@ -63,9 +63,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
-				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetElement(auxData)
 			);
 		}
 
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var steeringPumpData = auxData.SteeringPumpTechnology;
 
@@ -85,10 +85,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "CoolingFanTechnology",
 					auxData.FanTechnology),
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
-				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetXmlType(auxData),
+				_mrfFactory.GetPrimaryBusElectricSystemType_Conventional_HEV().GetElement(auxData),
 
-				_mrfFactory.GetPrimaryBusPneumaticSystemType_HEV_S().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetXmlType(auxData)
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_HEV_S().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusHVACSystemType_Conventional_HEV().GetElement(auxData)
 			);
 		}
 
@@ -101,14 +101,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var steeringPumpData = auxData.SteeringPumpTechnology;
 
 			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + "SteeringPumpTechnology", string.Join("\n", steeringPumpData)),
-				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetXmlType(auxData),
-				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetXmlType(auxData)
+				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetElement(auxData),
+				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetElement(auxData)
 				//_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)
 			);
 		}
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var hvac = auxData.HVACAux;
 			return new XElement(_mrf + "HVACSystem",
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var hvac = auxData.HVACAux;
 			return new XElement(_mrf + "HVACSystem",
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + "PositionLightsLED", auxData.ElectricConsumers.PositionlightsLED),
 					new XElement(_mrf + "BrakeLightsLED", auxData.ElectricConsumers.BrakelightsLED),
 					new XElement(_mrf + "InteriorLightsLED", auxData.ElectricConsumers.InteriorLightsLED)),
-				_mrfFactory.GetConventionalCompletedBus_HVACSystemType().GetXmlType(auxData)
+				_mrfFactory.GetConventionalCompletedBus_HVACSystemType().GetElement(auxData)
 			);
 			return result;
 		}
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + "HVACSystem",
 				_mrfFactory.GetCompletedBus_HVACSystemGroup().GetElements(auxData));
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var maxAlternatorPower = auxData.ElectricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
 				.Max();
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var electricStorageCapacity =
 				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
@@ -269,7 +269,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
 				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
 				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetXmlType(IBusAuxiliariesDeclarationData auxData)
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
 				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
