@@ -751,10 +751,10 @@
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType"/>
 		</xs:sequence>
@@ -762,101 +762,101 @@
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType"/>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S3-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-PrimaryBusComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-PrimaryBusComponentsType">
 		<xs:sequence>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E3-PrimaryBusComponentsType">
 		<xs:sequence>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
-			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
-		<xs:sequence>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
+		<xs:sequence>			
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-PrimaryBusComponentsType">
 		<xs:sequence>
+			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType"/>
-			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!--ElectricMachine, IEPC, REESS-->
