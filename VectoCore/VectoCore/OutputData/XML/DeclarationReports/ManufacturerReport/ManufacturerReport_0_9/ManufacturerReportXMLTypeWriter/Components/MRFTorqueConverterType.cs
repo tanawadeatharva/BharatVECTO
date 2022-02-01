@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractMrfXmlType
 
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var torqueConverterInputData = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
 			return new XElement(_mrf + XMLNames.Component_TorqueConverter,

@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
 			GenerateReport("ConventionalCompletedBusManufacturerOutputDataType");
 
 		}
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
 			GenerateReport("HEVCompletedBusManufacturerOutputDataType");
 		}
 
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
 			GenerateReport("PEVCompletedBusManufacturerOutputDataType");
 		}
 

@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractMrfXmlType
 
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var electricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries;
 			var result =  new XElement(_mrf + "ElectricMachines");
@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				var boostingLimitationsXElement = new XElement(_mrf + XMLNames.Vehicle_BoostingLimitation);
 				foreach (DataRow row in boostingLimitations.Rows)
 				{
-					boostingLimitationsXElement.Add(new XElement(_mrf + XMLNames.BoostingLimitation_Entry),
-						new XAttribute(_mrf + XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
-						new XAttribute(_mrf + XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed]));
+					boostingLimitationsXElement.Add(new XElement(_mrf + XMLNames.BoostingLimitation_Entry,
+						new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
+						new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed])));
 				}
 			
 

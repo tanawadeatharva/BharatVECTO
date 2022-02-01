@@ -5,7 +5,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     public interface IMrfXmlType
 	{
-		XElement GetXmlType(IDeclarationInputDataProvider inputData);
+		XElement GetElement(IDeclarationInputDataProvider inputData);
 		
 	}
 }

@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventionalLorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetConventionalLorryVehicleType().GetElement(inputData);
 
 			GenerateReport("ConventionalLorryManufacturerOutputDataType");
 		}
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_Px_IHCP_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_Px_IHCP_LorryVehicleType().GetElement(inputData);
 
 			//TODO: REMOVE
 			GenerateReport("HEV-Px_IHPCLorryManufacturerOutputDataType");
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S2_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S2_LorryVehicleType().GetElement(inputData);
 			GenerateReport("HEV-S2_LorryManufacturerOutputDataType");
 		}
 
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S3_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S3_LorryVehicleType().GetElement(inputData);
 			GenerateReport("HEV-S3_LorryManufacturerOutputDataType");
 		}
 
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_S4_LorryVehicleType().GetElement(inputData);
 			GenerateReport("HEV-S4_LorryManufacturerOutputDataType");
 		}
 
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryComponentsType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryComponentsType().GetElement(inputData);
 			GenerateReport("HEV-IEPC-S_LorryManufacturerOutputDataType");
 		}
 
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E2_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E2_LorryVehicleType().GetElement(inputData);
 			GenerateReport("PEV-E2_LorryManufacturerOutputDataType");
 		}
 
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E3_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E3_LorryVehicleType().GetElement(inputData);
 			GenerateReport("PEV-E3_LorryManufacturerOutputDataType");
 		}
 
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetPEV_E4_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetPEV_E4_LorryVehicleType().GetElement(inputData);
 			GenerateReport("PEV-E4_LorryManufacturerOutputDataType");
 		}
 
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryVehicleType().GetXmlType(inputData);
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_LorryVehicleType().GetElement(inputData);
 			GenerateReport("PEV-IEPC_LorryManufacturerOutputDataType");
 		}
 
