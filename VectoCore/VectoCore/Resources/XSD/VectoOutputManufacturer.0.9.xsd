@@ -400,6 +400,7 @@
 			<xs:element name="HEVArchitecture" type="v2.10.2:ArchitectureID_HEV_Type"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVVehicleSequenceGroup">
@@ -407,8 +408,19 @@
 			<xs:element name="PEVArchitecture" type="v2.10.2:ArchitectureID_PEV_Type"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
+	<xs:complexType name="BoostingLimitationsType">
+		<xs:sequence>
+			<xs:element name="Entry" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="boostingTorque" use="required" type="v1.0:Double2"/>
+					<xs:attribute name="rotationalSpeed" use="required" type="v1.0:Double2"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:group name="CompletedBusSequenceGroup">
 		<xs:sequence>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
@@ -1390,6 +1402,7 @@
 			</xs:sequence>
 			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType"/>
 			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
+
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="BusAuxHVACHeatPumpSequenceGroup">
