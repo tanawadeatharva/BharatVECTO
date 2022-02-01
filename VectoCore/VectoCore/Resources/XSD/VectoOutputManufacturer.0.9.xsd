@@ -1383,7 +1383,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="RatedPowerType">
-		<xs:restriction base="v1.0:Double3"/>
+		<xs:restriction base="xs:int"/>
 	</xs:simpleType>
 	<xs:simpleType name="LegislativeCategoryType">
     	<xs:union memberTypes="v2.10.2:LegislativeCategoryHeavyLorryDeclarationType v2.10.2:LegislativeCategoryMediumLorryDeclarationType v2.10.2:LegislativeCategoryPrimaryBusDeclarationType"/>
