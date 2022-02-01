@@ -151,15 +151,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new JSONElectricStorageSystemEngineeringInputData(entries);
 		}
 
+		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
+		//	throw new NotImplementedException();
 		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
-			throw new NotImplementedException();
-		/*public override TableData ElectricMotorTorqueLimits =>
 			Body["EMTorqueLimits"] == null
 				? null
-				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
-					"ElectricMotorTorqueLimits");*/
+				: new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>() {
+					{
+						GetElectricMachines().Entries.First().Position,
+						new List<Tuple<Volt, TableData>>() {
+							Tuple.Create((Volt)null, ReadTableData(
+								Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
+								"ElectricMotorTorqueLimits"))
+						}
+					}
+				};
 
-		public override TableData BoostingLimitations =>
+        public override TableData BoostingLimitations =>
 			Body["MaxPropulsionTorque"] == null
 				? null
 				: ReadTableData(Path.Combine(BasePath, Body.GetEx<string>("MaxPropulsionTorque")),

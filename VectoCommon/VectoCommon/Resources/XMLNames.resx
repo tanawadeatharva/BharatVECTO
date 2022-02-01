@@ -1596,7 +1596,7 @@
   <data name="BusManufacturingStepDataType" xml:space="preserve">
     <value>BusManufacturingStepDataType</value>
   </data>
-  <data name="HashPreviousStep" xml:space="preserve">
+  <data name="ManufacturingStep_HashPreviousStep" xml:space="preserve">
     <value>HashPreviousStep</value>
   </data>
   <data name="ManufacturingStep_stepCount_Attr" xml:space="preserve">
@@ -1605,8 +1605,8 @@
   <data name="ManufacturingStep_Bus_DataType" xml:space="preserve">
     <value>BusManufacturingStepDataType</value>
   </data>
-<data name="Report_CO2StandardsGroup" xml:space="preserve">
-	<value>CO2StandardsGroup</value>
+  <data name="Report_CO2StandardsGroup" xml:space="preserve">
+    <value>CO2StandardsGroup</value>
   </data>
   <data name="ElectricMachine_Count" xml:space="preserve">
     <value>Count</value>

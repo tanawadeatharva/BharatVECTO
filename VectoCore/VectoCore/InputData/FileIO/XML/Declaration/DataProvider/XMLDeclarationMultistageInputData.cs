@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private readonly XmlNode _signatureXmlNode;
 		private IVehicleDeclarationInputData _vehicle;
 		private IApplicationInformation _applicationInformation;
-		private DigestData _hashPreviousStage;
+		private DigestData _hashPreviousStep;
 		private DigestData _signature;
 
 
@@ -198,8 +198,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
 		public DigestData HashPreviousStep =>
-			_hashPreviousStage ??
-			(_hashPreviousStage = Reader.GetDigestData(GetNode(XMLNames.ManufacturingStep_HashPreviousStep)));
+			_hashPreviousStep ??
+			(_hashPreviousStep = Reader.GetDigestData(GetNode(XMLNames.ManufacturingStep_HashPreviousStep)));
 
 		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 

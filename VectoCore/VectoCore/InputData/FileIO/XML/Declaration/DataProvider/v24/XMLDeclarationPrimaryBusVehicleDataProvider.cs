@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits =>
 			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
 
+		public override bool VocationalVehicle => false;
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
 
 		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);

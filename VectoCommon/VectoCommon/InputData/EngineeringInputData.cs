@@ -54,7 +54,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum VectoSimulationJobType
 	{
-		ConventionalVehicle,
+		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
 		BatteryElectricVehicle,

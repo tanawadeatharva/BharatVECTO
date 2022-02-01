@@ -634,11 +634,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2, limits.First().Value.Count);
 			Assert.AreEqual(PowertrainPosition.HybridP2, limits.First().Key);
 			
-			Assert.AreEqual(100, limits.First().Value[0].Item1);
+			Assert.AreEqual(100, limits.First().Value[0].Item1.Value());
 			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[0].Item2.Rows[0]);
 			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[0].Item2.Rows[1]);
 
-			Assert.AreEqual(500, limits.First().Value[1].Item1);
+			Assert.AreEqual(500, limits.First().Value[1].Item1.Value());
 			TestMaxTorqueCurveEntry("0.00", "200.00", "-200.00", limits.First().Value[1].Item2.Rows[0]);
 			TestMaxTorqueCurveEntry("1000.00", "300.00", "-300.00", limits.First().Value[1].Item2.Rows[1]);
 		}

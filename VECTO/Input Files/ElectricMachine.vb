@@ -7,6 +7,7 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
@@ -265,7 +266,7 @@ Public Class ElectricMachine
                     .OverloadTorque=OvlTqLo.SI(of NewtonMeter),
                     .OverloadTestSpeed=OvlSpeedLo.RPMtoRad(),
                     .OverloadTime = PeakPowerTimeLo.SI(Of Second),
-                    .EfficiencyMap = EfficiencyMapLow,
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveLow},
                 New ElectricMotorVoltageLevel() With {
                     .VoltageLevel = VoltageLevelHigh.SI(Of Volt),
@@ -274,7 +275,7 @@ Public Class ElectricMachine
                     .OverloadTorque=OvlTqHi.SI(of NewtonMeter),
                     .OverloadTestSpeed=OvlSpeedHi.RPMtoRad(),
                     .OverloadTime = PeakPowerTimeHi.SI(Of Second),
-                    .EfficiencyMap = EfficiencyMapHi,
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveHi}
                 }
         End Get

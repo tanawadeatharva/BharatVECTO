@@ -1409,25 +1409,24 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusHVACHeatPumpHeating", resourceCulture);
             }
         }
-
-		/// <summary>
-		///   Looks up a localized string similar to Capacitance.
-		/// </summary>
-		public static string Capacitor_Capacitance {
-			get {
-				return ResourceManager.GetString("Capacitor_Capacitance", resourceCulture);
-			}
-		}
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
-        public static string ManufacturingStep_Bus_DataType {
-			get {
-				return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
-			}
-		}
-
+        public static string BusManufacturingStepDataType {
+            get {
+                return ResourceManager.GetString("BusManufacturingStepDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capacitance.
+        /// </summary>
+        public static string Capacitor_Capacitance {
+            get {
+                return ResourceManager.GetString("Capacitor_Capacitance", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to InternalResistance.
@@ -3275,11 +3274,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to stepCount.
+        ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
-        public static string ManufacturingStep_StepCount {
+        public static string ManufacturingStep_Bus_DataType {
             get {
-                return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
             }
         }
         
@@ -3291,16 +3290,16 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_HashPreviousStep", resourceCulture);
             }
         }
-
-		/// <summary>
-		///   Looks up a localized string similar to MaxTorqueCurve.
-		/// </summary>
-		public static string MaxTorqueCurve {
-			get {
-				return ResourceManager.GetString("MaxTorqueCurve", resourceCulture);
-			}
-		}
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_StepCount {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to stepCount.
         /// </summary>
@@ -3309,16 +3308,25 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_stepCount_Attr", resourceCulture);
             }
         }
-
-		/// <summary>
-		///   Looks up a localized string similar to Entry.
-		/// </summary>
-		public static string MaxTorqueCurve_Entry {
-			get {
-				return ResourceManager.GetString("MaxTorqueCurve_Entry", resourceCulture);
-			}
-		}
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxTorqueCurve.
+        /// </summary>
+        public static string MaxTorqueCurve {
+            get {
+                return ResourceManager.GetString("MaxTorqueCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string MaxTorqueCurve_Entry {
+            get {
+                return ResourceManager.GetString("MaxTorqueCurve_Entry", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to maxTorque.
         /// </summary>
@@ -5397,16 +5405,16 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VehicleTypeApprovalNumber", resourceCulture);
             }
         }
-
-		/// <summary>
-		///   Looks up a localized string similar to Voltage.
-		/// </summary>
-		public static string VoltageLevel_Voltage {
-			get {
-				return ResourceManager.GetString("VoltageLevel_Voltage", resourceCulture);
-			}
-		}
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voltage.
+        /// </summary>
+        public static string VoltageLevel_Voltage {
+            get {
+                return ResourceManager.GetString("VoltageLevel_Voltage", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLimit.
         /// </summary>

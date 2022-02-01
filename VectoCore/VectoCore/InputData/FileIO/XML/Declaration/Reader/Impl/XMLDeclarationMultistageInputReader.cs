@@ -740,7 +740,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					& InputComplete(Width, nameof(Width))
 					& InputComplete(EntranceHeight, nameof(EntranceHeight))
 					& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology))
-					& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
+					//& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					& (InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataCompleteFullCheck(jobType))
 					& (InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataCompleteFullCheck(jobType));
 			}
@@ -762,7 +762,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
 					&& InputComplete(EntranceHeight, nameof(EntranceHeight))  
 					&& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology)) 
-					&& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
+					//&& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataComplete(jobType)
 					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataComplete(jobType);
 		}

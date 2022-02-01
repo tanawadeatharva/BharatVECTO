@@ -7,6 +7,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
@@ -26,13 +27,13 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<RetarderRatio>1.000</RetarderRatio>
 				<AngledriveType>None</AngledriveType>
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-				<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
-					<v2.3:EngineStopStart>true</v2.3:EngineStopStart>
-					<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
-					<v2.3:EcoRollWithEngineStop>true</v2.3:EcoRollWithEngineStop>
-					<v2.3:PredictiveCruiseControl>1,2,3</v2.3:PredictiveCruiseControl>
-					<v2.3:APTEcoRollReleaseLockupClutch>false</v2.3:APTEcoRollReleaseLockupClutch>
-				</ADAS>
+				<vif:ADAS xsi:type="ADAS_Conventional_Type" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+					<EngineStopStart>true</EngineStopStart>
+					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+					<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+					<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
+					<APTEcoRollReleaseLockupClutch>false</APTEcoRollReleaseLockupClutch>
+				</vif:ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
 					<tcl:Entry gear="6" maxTorque="1800"/>
 					<tcl:Entry gear="1" maxTorque="2500"/>

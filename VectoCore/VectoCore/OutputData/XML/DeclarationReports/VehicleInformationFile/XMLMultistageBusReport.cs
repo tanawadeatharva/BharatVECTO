@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					? new XElement(v24 + XMLNames.CorrectedActualMass, _vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				_vehicleInputData.GrossVehicleMassRating != null
 					? new XElement(v24 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+				_vehicleInputData.AirdragModifiedMultistep != null ?
+					new XElement(v24 + XMLNames.Bus_AirdragModifiedMultistep, _vehicleInputData.AirdragModifiedMultistep) : null,
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v24 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberPassengerSeatsLowerDeck != null
@@ -222,7 +224,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(tns + XMLNames.Report_DataWrap,
 					new XAttribute(xsi + XMLNames.Attr_Type, "BusManufacturingStepDataType"),
 					new XAttribute(XMLNames.Component_ID_Attr, multistageId),
-					GetHashPreviousStageElement(),
+					GetHashPreviousStepElement(),
 					GetVehicleElement(vehicleId),
 					GetApplicationInformation()));
 
@@ -239,7 +241,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return _manufacturingStageInputData.Last().StepCount + 1;
 		}
 
-		private XElement GetHashPreviousStageElement()
+		private XElement GetHashPreviousStepElement()
 		{
 			DigestData digitData;
 			if (_manufacturingStageInputData == null || _manufacturingStageInputData.Count == 0) {
@@ -248,7 +250,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				digitData = _manufacturingStageInputData.Last().Signature;
 			}
 
-			return new XElement(tns + "HashPreviousStage",
+			return new XElement(tns + "HashPreviousStep",
 				   digitData.ToXML(di));
 		}
 
@@ -273,10 +275,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vehicleInputData.GrossVehicleMassRating != null
 					? new XElement(v24 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				GetAirdragModifiedMultistageEntry(),
-				_vehicleInputData.TankSystem != null 
-					? new XElement(v24 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.RegisteredClass != null
 					? new XElement(v24 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
+				_vehicleInputData.TankSystem != null 
+					? new XElement(v24 + XMLNames.Vehicle_NgTankSystem, _vehicleInputData.TankSystem.ToString()) : null,
 				_vehicleInputData.NumberPassengerSeatsLowerDeck != null 
 					? new XElement(v24 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
 				_vehicleInputData.NumberPassengersStandingLowerDeck != null

@@ -614,7 +614,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				<VehicleDeclarationType>final</VehicleDeclarationType>
     <VehicleTypeApprovalNumber>1234567890</VehicleTypeApprovalNumber>
 		<Components xsi:type="Components_Conventional_CompletedBusType">
-			<v2.10:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+			<v2.4:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType">
 							<Manufacturer>Generic Manufacturer</Manufacturer>
 							<Model>Generic Model</Model>
