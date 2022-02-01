@@ -125,23 +125,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
 			var inputData = xmlInputReader.CreateDeclaration(filename);
-			
+
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 			factory.WriteModalResults = true;
 			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
-
-			List<IVectoRun> runs;
-			Assert.That(() => runs = factory.SimulationRuns().ToList(),
-				Throws.TypeOf<VectoException>()
-					.And.Message.EqualTo("Node MaxNetPower1 not found in input data"));
-			Assert.Inconclusive("Exempted Vehicle");
-			
-			//Assert.AreEqual(numRuns, runs.Count);
-			//foreach (var run in runs) {
-			//	jobContainer.AddRun(run);
-			//}
-			//jobContainer.AddRuns(factory);
+			jobContainer.AddRuns(factory);
+			Assert.That(jobContainer.Runs.Count, Is.EqualTo(numRuns));
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();

@@ -495,9 +495,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			jobContainer.Execute();
 
-			Assert.Inconclusive("Engineering Mode XML");
+			//Assert.Inconclusive("Engineering Mode XML");
 
-			//Assert.AreEqual(6, jobContainer.Runs.Count);
+			Assert.AreEqual(6, jobContainer.Runs.Count);
 		}
 
 		[TestCase]
@@ -765,8 +765,6 @@ namespace TUGraz.VectoCore.Tests.XML
 				.And.Message.EqualTo("Missing Power Demands for ICE Off Driving, ICE Off Standstill, and Base Demand"));
 
 			jobContainer.Execute();
-
-			Assert.Inconclusive("Engineering Mode XML");
 		}
 
 		[TestCase]

@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -116,6 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase(Class9Decl, ExecutionMode.Declaration, 0),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 0),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1),
+		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
 		]
 		public void TestSimulationPreprocessingPccSegments(string jobFile, ExecutionMode mode, int i)
 		{
@@ -164,6 +166,32 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		}
 
+		[
+		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 12),
+		]
+		public void TestSimulationPreprocessingPccSegmentsVehicleStop(string jobFile, ExecutionMode mode, int i)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			//foreach (var i in new[] { 0, 1, 4, 5 }) {
+
+			var segments = SimulationRunPreprocessingPCCSegments(jobContainer.Runs[i].Run);
+
+			var segment = segments.Segments[19];
+			Console.WriteLine($"{segment.StartDistance} {segment.EndDistance}");
+			Assert.IsTrue(segment.StartDistance.IsGreater(66695));
+		}
 
 
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)

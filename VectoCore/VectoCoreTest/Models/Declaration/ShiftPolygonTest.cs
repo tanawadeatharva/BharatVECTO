@@ -869,9 +869,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
         [TestCase(@"E:\QUAM\Workspace\VECTO-Bugreports\BugReportTests\Bugreport Jobs\20190307_VECTO-904_Extrapolation\OM-18173493.xml")]
         //[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_Hybrid\Generic Vehicles\Declaration Mode\Group5_Tractor_4x2\Class5_Tractor_DECL.xml")]
-		[Ignore("Confidential data")]
         public void ComputeShiftPolygonXML(string xmlJob)
 		{
+			if (!File.Exists(xmlJob)) {
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+			}
 			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
 			var dao = new DeclarationDataAdapterHeavyLorry();
 
