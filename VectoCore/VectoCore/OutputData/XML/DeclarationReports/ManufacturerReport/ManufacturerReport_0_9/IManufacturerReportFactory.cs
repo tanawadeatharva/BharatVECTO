@@ -134,8 +134,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMrfVehicleGroup GetCompletedBusSequenceGroup();
 		IMrfVehicleGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
-
-
+		IMrfVehicleType GetBoostingLimitationsType();
 	}
 
 

@@ -52,20 +52,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				}
 				
 			}
-
-			var boostingLimitations = inputData.JobInputData.Vehicle.BoostingLimitations;
-			if (boostingLimitations != null) {
-				var boostingLimitationsXElement = new XElement(_mrf + XMLNames.Vehicle_BoostingLimitation);
-				foreach (DataRow row in boostingLimitations.Rows)
-				{
-					boostingLimitationsXElement.Add(new XElement(_mrf + XMLNames.BoostingLimitation_Entry,
-						new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
-						new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed])));
-				}
-			
-
-				result.Add(boostingLimitationsXElement);
-			}
 			return result;
 		}
 

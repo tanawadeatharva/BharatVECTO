@@ -27,6 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				vehicleData.OvcHev ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ToXMLFormat(0)) : null,
 			};
 			result.Add(_mrfFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+			result.Add(_mrfFactory.GetBoostingLimitationsType().GetElement(inputData.JobInputData.Vehicle));
 			return result;
 		}
 

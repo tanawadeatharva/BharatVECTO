@@ -390,6 +390,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMrfXmlType>().To<MRFREESSSpecificationsType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetREESSSpecificationsType());
 
+			Bind<IMrfVehicleType>().To<MRFBoostingLimitationsType>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetBoostingLimitationsType());
+
 			#region Auxiliaries
 			Bind<IMRFLorryAuxiliariesType>().To<MRFConventionalLorryAuxiliariesType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryAuxType());
