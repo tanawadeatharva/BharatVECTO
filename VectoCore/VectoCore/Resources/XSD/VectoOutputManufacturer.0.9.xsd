@@ -1120,7 +1120,7 @@
 			<xs:element name="TwinTyres" type="xs:boolean" minOccurs="0"/>
 			<xs:element name="Tyre" type="mrf:TyreType"/>
 		</xs:sequence>
-		<xs:attribute name="Count" type="xs:int" use="required"/>
+		<xs:attribute name="axleNumber" type="xs:int" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
