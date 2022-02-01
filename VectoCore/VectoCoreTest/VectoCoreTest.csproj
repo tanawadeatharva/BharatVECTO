@@ -3280,6 +3280,9 @@
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_PCC123EcoSS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Coach_short_HW.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\CrestCoast1.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
