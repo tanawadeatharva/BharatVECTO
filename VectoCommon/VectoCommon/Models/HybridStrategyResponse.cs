@@ -33,7 +33,7 @@ namespace TUGraz.VectoCommon.Models {
 		public bool ProhibitGearshift { get; set; }
 	}
 
-	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
+	[DebuggerDisplay("{U,nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]
 	public class HybridResultEntry
 	{
 		public Second SimulationInterval;

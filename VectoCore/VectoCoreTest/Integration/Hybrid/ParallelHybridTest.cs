@@ -567,6 +567,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5TestJob_BatterySystem2, 7, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Suburban"),
 			TestCase(Group5TestJob_BatterySystem2, 8, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Urban"),
 			TestCase(Group5TestJob_BatterySystem2, 9, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle UrbanDelivery"),
+			TestCase(Group5TestJob_BatterySystem2, 10, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Interurban Short"),
 
 		]
 		public void P2HybridGroup5DriveCycle_BatterySystem(string jobFile, int cycleIdx)

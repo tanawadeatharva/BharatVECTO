@@ -340,19 +340,15 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[TestCase()]
+		[TestCase, Ignore("Engineering XML not maintained")]
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
 			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider);
 
-			VectoRunData[] runs;
-			Assert.That(() => runs = dao.NextRun().ToArray(),
-			Throws.TypeOf<VectoException>()
-					.And.Message.EqualTo("Node IdlingSpeed not found in input data"));
-			//Assert.AreEqual(1, runs.Length);
-			//Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
-			Assert.Inconclusive("Engineering Mode XML");
+			var runs = dao.NextRun().ToArray();
+			Assert.AreEqual(1, runs.Length);
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 	}
 }
