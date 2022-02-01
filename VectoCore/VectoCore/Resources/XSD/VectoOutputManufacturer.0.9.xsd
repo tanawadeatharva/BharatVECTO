@@ -627,13 +627,13 @@
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-LorryComponentsType">
