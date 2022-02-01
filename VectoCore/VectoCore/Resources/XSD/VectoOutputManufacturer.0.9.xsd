@@ -671,13 +671,13 @@
 	<xs:complexType name="HEV-S3-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S4-LorryComponentsType">
