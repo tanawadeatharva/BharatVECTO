@@ -624,6 +624,21 @@
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="HEV-Px_IHPC-LorryComponentsType">
+		<xs:sequence>
+			<xs:element name="Engine" type="mrf:EngineOutputType"/>
+			<xs:element name="Transmission" type="mrf:TransmissionType"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
+			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
+			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
+			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
+			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="HEV-S2-LorryComponentsType">
 		<xs:sequence>
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
@@ -1191,19 +1206,7 @@
 	<xs:simpleType name="StorageCapacityType">
 		<xs:restriction base="xs:double"/>
 	</xs:simpleType>
-	<xs:complexType name="HEV-Px_IHPC-LorryComponentsType">
-		<xs:sequence>
-			<xs:element name="Engine" type="mrf:EngineOutputType"/>
-			<xs:element name="Transmission" type="mrf:TransmissionType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType"/>
-			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
-			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
-			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-		</xs:sequence>
-	</xs:complexType>
+
 	<xs:group name="Conventional-LorryVehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
