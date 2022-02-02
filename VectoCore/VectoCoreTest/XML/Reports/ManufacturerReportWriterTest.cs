@@ -26,18 +26,98 @@ using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
 {
-    [TestFixture]
-    public class ManufacturerReportWriterTest
+	[TestFixture]
+	public class MRF_CIF_WriterTestBase
 	{
-		private string basePath = @"C:\Users\Harry\source\vecto\mrf_report_0_9";
+		protected string outputBasePath = @"C:\Users\Harry\source\vecto\mrf_report_0_9";
+		protected ISimulatorFactory _simulatorFactory;
+		protected IOutputDataWriter _outputWriter;
+		protected StandardKernel _kernel;
+		protected IXMLInputDataReader _xmlReader;
+		protected IManufacturerReportFactory _mrfFactory;
 
-		private ISimulatorFactory _simulatorFactory;
+		protected const string ConventionalHeavyLorry =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml";
+		protected const string HEV_Px_HeavyLorry =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
+		protected const string HEV_S2_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
+		protected const string HEV_S3_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml";
+		protected const string HEV_S4_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml";
+		protected const string HEV_IEPC_S_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
+		protected const string PEV_E2_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
+		protected const string PEV_E3_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml";
+		protected const string PEV_E4_HeavyLorry = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E4.xml";
 
-		private IOutputDataWriter _outputWriter;
-		private StandardKernel _kernel;
-		private IXMLInputDataReader _xmlReader;
-		private IManufacturerReportFactory _mrfFactory;
+		protected const string Conventional_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
+		protected const string HEV_S2_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
+		protected const string HEV_S3_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S3.xml";
+		protected const string HEV_S4_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml";
+		protected const string PEV_E2_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_AMT_E2.xml";
+		protected const string PEV_E3_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E3.xml";
+		protected const string PEV_E4_PrimaryBus = 
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E4.xml";
 
+
+		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml";
+
+		protected bool ValidateAndPrint(XDocument document)
+		{
+			XmlSchemaSet schemas = new XmlSchemaSet();
+			var error = false;
+			var path = Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd");
+			TestContext.WriteLine(path);
+			XmlReader reader = new XmlTextReader(path)
+			{
+				XmlResolver = new XmlUrlResolver()
+			};
+			schemas.Add("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9", reader);
+			document.Validate(schemas, (sender, args) => {
+				error = true;
+
+				TestContext.WriteLine(sender.ToString());
+				TestContext.WriteLine(args.Message);
+			});
+			TestContext.WriteLine(document);
+
+			return !error;
+		}
+
+		protected bool WriteToDisk(string basePath, string fileName, XDocument xDocument)
+		{
+			TestContext.WriteLine($"{basePath},{fileName}");
+			if (!fileName.EndsWith(".xml"))
+			{
+				fileName = fileName + ".xml";
+			}
+			var destPath = Path.Combine(basePath, fileName);
+			using (var writer = new XmlTextWriter(destPath, Encoding.UTF8) { Formatting = Formatting.Indented })
+			{
+				try
+				{
+					xDocument.WriteTo(writer);
+				}
+				catch (Exception ex)
+				{
+					TestContext.WriteLine(ex.Message);
+					return false;
+				}
+			}
+
+			return true;
+		}
 
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -55,186 +135,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			_xmlReader = _kernel.Get<IXMLInputDataReader>();
 			_mrfFactory = _kernel.Get<IManufacturerReportFactory>();
 		}
+	}
 
-		public bool ValidateAndPrint(XDocument document)
-		{
-			XmlSchemaSet schemas = new XmlSchemaSet();
-			var error = false;
-			var path = Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd");
-			TestContext.WriteLine(path);
-			XmlReader reader = new XmlTextReader(path) {
-				XmlResolver = new XmlUrlResolver()
-			};
-			schemas.Add("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9", reader);
-			document.Validate(schemas, (sender, args) => {
-				error = true;
-				
-				TestContext.WriteLine(sender.ToString());
-				TestContext.WriteLine(args.Message);
-			});
-			TestContext.WriteLine(document);
-
-			return !error;
-		}
-
-		private bool WriteToDisk(string basePath, string fileName, XDocument xDocument)
-		{
-			TestContext.WriteLine($"{basePath},{fileName}");
-			if (!fileName.EndsWith(".xml")) {
-				fileName = fileName + ".xml";
-			}
-			var destPath = Path.Combine(basePath, fileName);
-			using (var writer = new XmlTextWriter(destPath, Encoding.UTF8){Formatting = Formatting.Indented}) {
-				try {
-					xDocument.WriteTo(writer);
-				} catch (Exception ex) {
-					TestContext.WriteLine(ex.Message);
-					return false;
-				}
-			}
-
-			return true;
-		}
+	[TestFixture]
+    public class ManufacturerReportWriterTest : MRF_CIF_WriterTestBase
+	{
 
 
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml")]
-		public async Task ConventionalLorryMRFTest(string fileName)
+		private IXMLManufacturerReport GetReport(string fileName,
+			out IDeclarationInputDataProvider dataProvider)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
+			dataProvider = _xmlReader.CreateDeclaration(fileName);
 
 			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
 
-            dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle, 
-				iepc,
-				ihpc) as ConventionalLorryManufacturerReport;
-			Assert.NotNull(report);
-			
-			report.InitializeVehicleData(dataProvider);
-
-			ValidateAndPrint(report.Report);
-			TestContext.WriteLine(report.Report);
-			//TestContext.WriteLine(report.Vehicle);
-
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml")]
-		public async Task HEV_Px_LorryMRFTest(string fileName)
-		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_Px_IHPC_LorryManufacturerReport;
-			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml")]
-		public async Task HEV_S2_LorryMRFTest(string fileName)
-		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S2_LorryManufacturerReport;
-			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml")]
-		public async Task HEV_S3_LorryMRFTest(string fileName)
-		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S3_LorryManufacturerReport;
-			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml")]
-		public async Task HEV_S4_LorryMRFTest(string fileName)
-		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S4_LorryManufacturerReport;
-			Assert.NotNull(report);
-			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		}
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml")]
-		public async Task HEV_IEPC_S_LorryMRFTest(string fileName)
-		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(); // HEV/PEV - Sx/Px
+			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric =>
+				electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
 			var report = _mrfFactory.GetManufacturerReport(
 				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
@@ -243,283 +161,190 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
-			var concreteReport = report as HEV_IEPC_S_LorryManufacturerReport;
-			Assert.NotNull(concreteReport);
-			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			return report;
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_AMT_E2.xml")]
+
+		
+		[TestCase(ConventionalHeavyLorry)]
+		public async Task ConventionalLorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as ConventionalLorryManufacturerReport;
+
+			report.InitializeVehicleData(dataProvider);
+
+			ValidateAndPrint(report.Report);
+			TestContext.WriteLine(report.Report);
+			//TestContext.WriteLine(report.Vehicle);
+
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		
+		}
+
+		[TestCase(HEV_Px_HeavyLorry)]
+		public async Task HEV_Px_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as HEV_Px_IHPC_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(HEV_S2_HeavyLorry)]
+		public async Task HEV_S2_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as HEV_S2_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(HEV_S3_HeavyLorry)]
+		public async Task HEV_S3_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as HEV_S3_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(HEV_S4_HeavyLorry)]
+		public async Task HEV_S4_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as HEV_S4_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(HEV_IEPC_S_HeavyLorry)]
+		public async Task HEV_IEPC_S_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as HEV_IEPC_S_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(PEV_E2_HeavyLorry)]
 		public async Task PEV_E2_LorryMRFTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E2_LorryManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E2_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml")]
+		[TestCase(PEV_E3_HeavyLorry)]
 		public async Task PEV_E3_LorryMRFTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
 
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E3_LorryManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E3_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\PEV_heavyLorry_E4.xml")]
+		[TestCase(PEV_E4_HeavyLorry)]
 		public async Task PEV_E4_LorryMRFTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E4_LorryManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E4_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml")]
-		
+
+		[TestCase(Conventional_PrimaryBus)]
 		public void ConventionalPrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as Conventional_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as Conventional_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml")]
+		[TestCase(HEV_S2_PrimaryBus)]
 		public void HEV_S2_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S2_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as HEV_S2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S3.xml")]
+		[TestCase(HEV_S3_PrimaryBus)]
 		public void HEV_S3_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S3_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as HEV_S3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml")]
+		[TestCase(HEV_S4_PrimaryBus)]
 		public void HEV_S4_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as HEV_S4_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as HEV_S4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_AMT_E2.xml")]
+		[TestCase(PEV_E2_PrimaryBus)]
 		public void PEV_E2_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E2_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
 
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E3.xml")]
+		[TestCase(PEV_E3_PrimaryBus)]
 		public void PEV_E3_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E3_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-
-		[TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\PrimaryBus\PEV_primaryBus_E4.xml")]
+		[TestCase(PEV_E4_PrimaryBus)]
 		public void PEV_E4_PrimaryBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
-			IDeclarationInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
-
-			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
-			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
-				dataProvider.JobInputData.JobType,
-				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
-				iepc,
-				ihpc) as PEV_E4_PrimaryBus_ManufacturerReport;
+			var report = GetReport(fileName, out var dataProvider) as PEV_E4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-        [TestCase(@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml")]
+        [TestCase(Conventional_CompletedBus)]
         public void Conventional_CompletedBusTest(string fileName)
         {
-            Assert.IsFalse(string.IsNullOrEmpty(fileName));
-            IMultistageBusInputDataProvider dataProvider = _xmlReader.CreateDeclaration(fileName) as IMultistageBusInputDataProvider;
-			Assert.NotNull(dataProvider);
-            var arch = dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
-
-            dataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-
-
-			var ihpc = false; //(dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = false;//(dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
-            var report = _mrfFactory.GetManufacturerReport(
-                dataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory.GetVehicleType(),
-                dataProvider.JobInputData.JobType,
-                dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID,
-                dataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
-                iepc,
-                ihpc);
-			var castedReport = report as Conventional_CompletedBusManufacturerReport;
-            Assert.NotNull(castedReport);
+			var report = GetReport(fileName, out var dataProvider) as Conventional_CompletedBusManufacturerReport;
+			Assert.NotNull(report);
             report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(basePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 		[TestCase("")]
 		public void HEV_CompletedBusTest(string fileName)
