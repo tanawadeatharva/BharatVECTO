@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			return new XElement(tns + XMLNames.Tag_Vehicle,
 				new XAttribute("xmlns", v24),
-				new XAttribute(xsi + XMLNames.Attr_Type, "Vehicle_Exempted_CompletedBusType"),
+				new XAttribute(xsi + XMLNames.Attr_Type, "Vehicle_Exempted_CompletedBusDeclarationType"),
 				new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
 				new XElement(v24 + XMLNames.Component_Manufacturer, _vehicleInputData.Manufacturer),
 				new XElement(v24 + XMLNames.Component_ManufacturerAddress, _vehicleInputData.ManufacturerAddress),
@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat()),
 				adasData.ATEcoRollReleaseLockupClutch != null
-					? new XElement(v24 + XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, adasData.ATEcoRollReleaseLockupClutch)
+					? new XElement(v24 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, adasData.ATEcoRollReleaseLockupClutch)
 					: null
 			);
 		}

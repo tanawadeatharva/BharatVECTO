@@ -581,6 +581,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public AlternatorType AlternatorTechnology => throw new NotImplementedException();
 		public IList<IAlternatorDeclarationInputData> Alternators => throw new NotImplementedException();
+		public bool ESSupplyFromHEVREESS { get; }
 		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage => throw new NotImplementedException();
 
 		public bool SmartElectrics => throw new NotImplementedException();

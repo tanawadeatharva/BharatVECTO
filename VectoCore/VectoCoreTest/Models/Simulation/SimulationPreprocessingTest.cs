@@ -175,13 +175,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
-
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
+		
 			jobContainer.AddRuns(runsFactory);
 
 			//foreach (var i in new[] { 0, 1, 4, 5 }) {

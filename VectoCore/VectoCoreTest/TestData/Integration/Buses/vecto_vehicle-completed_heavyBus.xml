@@ -19,6 +19,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
 		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<NumberPassengerSeatsLowerDeck>50</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
 		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>

@@ -475,6 +475,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public bool ESSupplyFromHEVREESS { get; }
+
 		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
 		{
 			get {

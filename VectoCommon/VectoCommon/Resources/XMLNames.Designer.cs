@@ -601,15 +601,6 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
-        /// </summary>
-        public static string Bus_ADAS_APTEcoRollReleaseLockupClutch {
-            get {
-                return ResourceManager.GetString("Bus_ADAS_APTEcoRollReleaseLockupClutch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to AdBlueDosing.
         /// </summary>
         public static string Bus_AdBlueDosing {

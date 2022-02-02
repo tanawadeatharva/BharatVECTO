@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DateTime.Parse("2018-02-15T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.AreEqual(null, vehicle.LegislativeClass);
 			Assert.AreEqual(null, vehicle.CurbMassChassis);//CorrectedActualMass
-			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);//TechnicalPermissibleMaximumLadenMass
+			Assert.AreEqual(4000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(null, vehicle.AirdragModifiedMultistep);
 			Assert.AreEqual(null, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(null, vehicle.RegisteredClass);//ClassBus
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicle.DoorDriveTechnology);
 			Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
 
-			Assert.AreEqual(null, vehicle.ADAS);
+			Assert.NotNull(vehicle.ADAS);
 
 			Assert.AreEqual(null, vehicle.Components);
 
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicle.Date);
 			Assert.AreEqual(null, vehicle.LegislativeClass);
 			Assert.AreEqual(15000, vehicle.CurbMassChassis.Value());//CorrectedActualMass
-			Assert.AreEqual(null, vehicle.GrossVehicleMassRating);//TechnicalPermissibleMaximumLadenMass
+			Assert.AreEqual(4000, vehicle.GrossVehicleMassRating.Value());//TechnicalPermissibleMaximumLadenMass
 			Assert.AreEqual(null, vehicle.AirdragModifiedMultistep);
 			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);//NgTankSystem
 			Assert.AreEqual(null, vehicle.RegisteredClass);//ClassBus

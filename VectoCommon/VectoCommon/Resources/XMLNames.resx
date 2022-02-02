@@ -1386,9 +1386,6 @@
   <data name="Vehicle_LegislativeCategory" xml:space="preserve">
     <value>LegislativeCategory</value>
   </data>
-  <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>APTEcoRollReleaseLockupClutch</value>
-  </data>
   <data name="Bus_AirdragModifiedMultistep" xml:space="preserve">
     <value>AirdragModifiedMultistep</value>
   </data>

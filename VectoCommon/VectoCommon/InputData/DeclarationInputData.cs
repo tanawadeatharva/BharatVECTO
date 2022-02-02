@@ -954,6 +954,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 
+		bool ESSupplyFromHEVREESS { get; }
+
 		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 

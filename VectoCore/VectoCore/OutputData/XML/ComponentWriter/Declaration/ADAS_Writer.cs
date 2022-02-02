@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.ComponentWriter
 			elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRollWithEngineStop()));
 			elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_ADAS_PCC,adas.PredictiveCruiseControl.ToXMLFormat()));
 			if (adas.ATEcoRollReleaseLockupClutch != null) {
-				elements.Add(new XElement(_writerNamespace + XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, adas.ATEcoRollReleaseLockupClutch));
+				elements.Add(new XElement(_writerNamespace + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, adas.ATEcoRollReleaseLockupClutch));
 			}
 
 			return elements.ToArray();

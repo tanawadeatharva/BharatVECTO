@@ -796,7 +796,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.AreEqual(0, vehicle.TorqueLimits.Count);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 			else
