@@ -58,10 +58,31 @@
 			<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="Conventional_CompletedBusOutputType"/>
-	<xs:complexType name="HEV_CompletedBusOutputType"/>
-	<xs:complexType name="PEV_CompletedBusOutputType"/>
-	<xs:complexType name="Exempted_LorryOutputType"/>
+	<xs:complexType name="Conventional_CompletedBusOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="Conventional_CompletedBusVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_CompletedBusOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_CompletedBusVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_CompletedBusOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="PEV_CompletedBusVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted_CompletedBusOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="Conventional_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
@@ -109,6 +130,48 @@
 	<xs:complexType name="PEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted_LorryVehicleType">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:element name="VehicleGroupCO2"/>
+			<xs:element name="Manufacturer"/>
+			<xs:element name="ManufacturerAddress"/>
+			<xs:element name="Model"/>
+			<xs:element name="CorrectedActualMass"/>
+			<xs:element name="SleeperCab"/>
+			<xs:element name="ZeroEmissionHDV"/>
+			<xs:element name="HybridElectricHDV"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Exempted_CompletedBusVehicleType">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Manufacturer"/>
+										<xs:element name="ManufacturerAddress"/>
+									</xs:sequence>
+									<xs:attribute name="Count" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass"/>
+				<xs:element name="ZeroEmissionHDV"/>
+				<xs:element name="HybridElectricHDV"/>
+				<xs:element name="ClassBus"/>
+				<xs:element name="TotalNumberOfPassengers"/>
+			</xs:sequence>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="GeneralVehicleSequenceGroup">
