@@ -249,13 +249,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 				.Named(XMLAuxiliaryDeclarationDataProviderV24_Lorry.QUALIFIED_XSD_IEPC_TYPE);
 
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
-				.To<XMLDeclarationADASDataProviderV24>().Named(XMLDeclarationADASDataProviderV24.QUALIFIED_XSD_TYPE);
+				.To<XMLDeclarationADASDataConventionalProviderV24>().Named(XMLDeclarationADASDataConventionalProviderV24.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
-				.To<XMLDeclarationADASDataProviderV24>().Named(XMLDeclarationADASDataProviderV24.QUALIFIED_XSD_HEV_TYPE);
+				.To<XMLDeclarationADASDataHEVProviderV24>().Named(XMLDeclarationADASDataHEVProviderV24.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
-				.To<XMLDeclarationADASDataProviderV24>().Named(XMLDeclarationADASDataProviderV24.QUALIFIED_XSD_PEV_TYPE);
+				.To<XMLDeclarationADASDataPEVProviderV24>().Named(XMLDeclarationADASDataPEVProviderV24.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
-				.To<XMLDeclarationADASDataProviderV24>().Named(XMLDeclarationADASDataProviderV24.QUALIFIED_XSD_IEPC_TYPE);
+				.To<XMLDeclarationADASDataIEPCProviderV24>().Named(XMLDeclarationADASDataIEPCProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLPTOTransmissionInputData>()
 				.To<XMLDeclarationPTODataProviderV24>().Named(XMLDeclarationPTODataProviderV24.QUALIFIED_XSD_TYPE);
@@ -276,20 +276,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusComponentsDataProviderV24>()
 				.Named(XMLDeclarationPrimaryBusComponentsDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV24>()
-				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV24.QUALIFIED_XSD_TYPE);
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV24>()
-				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV24.QUALIFIED_XSD_HEV_P_TYPE);
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV24>()
-				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV24.QUALIFIED_XSD_HEV_S_TYPE);
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24.QUALIFIED_XSD_TYPE);
 			
-			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV24>()
-				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV24.QUALIFIED_XSD_PEV_E2_TYPE);
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesDataProviderV24>()
-				.Named(XMLDeclarationPrimaryBusAuxiliariesDataProviderV24.QUALIFIED_XSD_IEPC_PRIMARY_BUS_TYPE);
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24>()
+				.Named(XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalMediumLorryVehicleDataProviderV24>()
 				.Named(XMLDeclarationConventionalMediumLorryVehicleDataProviderV24.QUALIFIED_XSD_TYPE);

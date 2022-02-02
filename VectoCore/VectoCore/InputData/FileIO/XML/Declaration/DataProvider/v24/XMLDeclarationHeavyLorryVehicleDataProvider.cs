@@ -32,11 +32,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
 		public override TankSystem? TankSystem =>
 			ElementExists(XMLNames.Vehicle_NgTankSystem)
 				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
@@ -75,10 +70,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
 
 		public override TableData BoostingLimitations
 			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)

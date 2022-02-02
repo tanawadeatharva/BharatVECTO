@@ -16,8 +16,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
-
 		public AbstractXMLDeclarationCompletedBusDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
@@ -150,16 +148,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components, required: false) as XmlElement);
 			}
 		}
-
-
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
-			get {
-				if (ADASNode == null)
-					return null;
-				return _adas ?? (_adas = ADASReader.ADASInputData);
-			}
-		}
-
 
 
 		public override IVehicleComponentsDeclaration Components {

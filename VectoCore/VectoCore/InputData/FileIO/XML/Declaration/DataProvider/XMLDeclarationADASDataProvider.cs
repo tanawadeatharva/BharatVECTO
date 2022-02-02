@@ -100,7 +100,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationADASDataProviderV24 : XMLDeclarationADASDataProviderV21
+	public class XMLDeclarationADASDataConventionalProviderV24 : XMLDeclarationADASDataProviderV21
+	{
+		/*
+		 * new field added in version 2.4
+		 */
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+
+		public new const string XSD_TYPE = "ADAS_Conventional_Type";
+		
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		public XMLDeclarationADASDataConventionalProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationADASDataProviderV10
+
+		public override bool? ATEcoRollReleaseLockupClutch =>
+			ElementExists(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch)
+				? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch))
+				: (bool?)null;
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationADASDataHEVProviderV24 : XMLDeclarationADASDataProviderV21
 	{
 		/*
 		 * new field added in version 2.3
@@ -108,38 +137,79 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public new const string XSD_TYPE = "ADAS_Conventional_Type";
-		public const string XSD_TYPE_HEV = "ADAS_HEV_Type";
-		public const string XSD_TYPE_PEV = "ADAS_PEV_Type";
-		public const string XSD_TYPE_IEPC = "ADAS_IEPC_Type";
+		public new const string XSD_TYPE = "ADAS_HEV_Type";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		public static readonly string QUALIFIED_XSD_HEV_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_HEV);
-		public static readonly string QUALIFIED_XSD_PEV_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_PEV);
-		public static readonly string QUALIFIED_XSD_IEPC_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_IEPC);
-
-		public XMLDeclarationADASDataProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+		
+		public XMLDeclarationADASDataHEVProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
 
 		#region Overrides of XMLDeclarationADASDataProviderV10
 
-		public override bool? ATEcoRollReleaseLockupClutch {
-			get {
-				var node = GetNode(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, required: false);
-				var busNode = GetNode(XMLNames.Bus_ADAS_APTEcoRollReleaseLockupClutch, required: false);
-				if (node == null && busNode == null) {
-					return null;
-				}
+		public override bool? ATEcoRollReleaseLockupClutch => null;
 
-				var innerText = node == null ? busNode.InnerText : node.InnerText;
-				return XmlConvert.ToBoolean(innerText);
-			}
-		}
+		public override EcoRollType EcoRoll => EcoRollType.WithEngineStop;
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationADASDataPEVProviderV24 : XMLDeclarationADASDataProviderV21
+	{
+		
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+
+		public new const string XSD_TYPE = "ADAS_PEV_Type";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationADASDataPEVProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationADASDataProviderV10
+
+		public override bool? ATEcoRollReleaseLockupClutch => null;
+
+		public override EcoRollType EcoRoll => EcoRollType.None;
+
+		public override bool EngineStopStart => false;
 
 		#endregion
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationADASDataIEPCProviderV24 : XMLDeclarationADASDataProviderV21
+	{
+		
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+
+		public new const string XSD_TYPE = "ADAS_IEPC_Type";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationADASDataIEPCProviderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationADASDataProviderV10
+
+		public override bool? ATEcoRollReleaseLockupClutch => null;
+
+		public override EcoRollType EcoRoll => EcoRollType.None;
+
+		public override bool EngineStopStart => false;
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 
 	public static class ADASDataProviderExtensions
 	{

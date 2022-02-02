@@ -655,6 +655,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public virtual string PowertrainPositionPrefix => "P";
 
+		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+
 		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 		
@@ -685,6 +687,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
 
 		public override bool? SleeperCab => GetBool(XMLNames.Vehicle_SleeperCab);
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
+			get {
+				if (ADASNode == null)
+					return null;
+				return _adas ?? (_adas = ADASReader.ADASInputData);
+			}
+		}
 
 		#endregion
 

@@ -25,8 +25,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool? SleeperCab => false;
 
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
-
+		public override CubicMeter CargoVolume => null;
 		public override XmlElement PTONode => null;
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
@@ -43,8 +42,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override Meter EntranceHeight => null;
 
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
+		public override TankSystem? TankSystem => VectoCommon.InputData.TankSystem.Compressed;
 
 		public override bool VocationalVehicle => false;
 
@@ -99,6 +97,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override string PowertrainPositionPrefix => "P";
 
+		public override TableData BoostingLimitations
+			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
+				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
+					new Dictionary<string, string> {
+						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
+						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
+					})
+				: null;
+
 		#endregion
 
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
@@ -122,6 +129,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationHevSxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
+		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -143,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override CubicMeter CargoVolume => null;
+		
 
 		#endregion
 	}
@@ -163,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override CubicMeter CargoVolume => null;
+		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
@@ -189,9 +197,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override XmlElement PTONode => null;
 
 		#endregion
 	}
