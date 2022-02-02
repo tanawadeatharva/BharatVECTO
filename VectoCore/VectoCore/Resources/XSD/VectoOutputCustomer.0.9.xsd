@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" xmlns:cif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" schemaLocation="VectoOutputManufacturer.0.9.xsd"/>
+	<xs:element name="VectoOutput">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AbstractVectoCustomerOutputType"/>
+	<xs:complexType name="ConventionalLorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_Px_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_S2_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_S3_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_S4_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_IEPC_S_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_E2_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="cif:RatedPowerType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_E3_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_E4_LorryOutputType"/>
+	<xs:complexType name="PEV_IEPC_LorryOutputType"/>
+	<xs:complexType name="Conventional_CompletedBusOutputType"/>
+	<xs:complexType name="HEV_CompletedBusOutputType"/>
+	<xs:complexType name="PEV_CompletedBusOutputType"/>
+	<xs:complexType name="Exempted_LorryOutputType"/>
+	<xs:complexType name="Conventional_LorryVehicleType">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
+			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_Px_IHPC_LorryVehicleType">
+		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="HEV_S2_LorryVehicleType">
+		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="HEV_S3_LorryVehicleType">
+		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="HEV_S4_LorryVehicleType">
+		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="HEV_IEPC_S_LorryVehicleType">
+		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="PEV_E2_LorryVehicleType">
+		<xs:sequence>
+			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="GeneralVehicleSequenceGroup">
+		<xs:sequence>
+			<xs:element name="VehicleIdentifiationNumber"/>
+			<xs:element name="VehicleCategory"/>
+			<xs:element name="AxleConfiguration"/>
+			<xs:element name="TechnicalPermissibleMaximumLadenMass"/>
+			<xs:element name="VehicleGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="LorryGeneralVehicleSequenceGroup">
+		<xs:sequence>
+			<xs:element name="Manufacturer"/>
+			<xs:element name="ManufacturerAddress"/>
+			<xs:element name="Model"/>
+			<xs:element name="VehicleTypeApprovalNumber"/>
+			<xs:element name="CorrectedActualMass"/>
+			<xs:element name="VocationalVehicle"/>
+			<xs:element name="SleeperCab"/>
+			<xs:element name="ZeroEmissionHDV"/>
+			<xs:element name="HybridElectricHDV"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Conventional_LorryVehicleSequenceGroup">
+		<xs:sequence>
+			<xs:element name="WasteHeatRecovery"/>
+			<xs:element name="DualFuelVehicle"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEV_LorryVehicleTypeSequenceGroup">
+		<xs:sequence>
+			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
+			<xs:element name="HEVArchitecture"/>
+			<xs:element name="OffVehicleChargingCapability"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEV_LorryVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
+			<xs:group ref="HEV_LorryVehicleTypeSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="HEVArchitecture"/>
+				<xs:element name="OffVehicleChargingCapability"/>
+				<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>
