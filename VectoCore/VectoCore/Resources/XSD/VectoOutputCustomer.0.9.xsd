@@ -94,6 +94,7 @@
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_Px_IHPC_LorryVehicleType">
@@ -107,6 +108,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_S2_LorryVehicleType">
@@ -120,6 +122,7 @@
 			<xs:element name="ADAS" type="out:HEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_S3_LorryVehicleType">
@@ -132,6 +135,7 @@
 			<xs:element name="ADAS" type="out:HEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_S4_LorryVehicleType">
@@ -142,6 +146,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_IEPC_S_LorryVehicleType">
@@ -154,6 +159,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_E2_LorryVehicleType">
@@ -166,6 +172,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_E3_LorryVehicleType">
@@ -177,6 +184,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_E4_LorryVehicleType">
@@ -188,6 +196,7 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_IEPC_LorryVehicleType">
@@ -199,21 +208,28 @@
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Conventional_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+			<xs:element name="ADAS" type="out:ConventionalADASType"/>
+			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryVehicleType">
@@ -390,6 +406,24 @@
 		<xs:sequence>
 			<xs:element name="TotalStorageCapacity"/>
 			<xs:element name="UsableStorageCapacity"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="LorryAuxGroup">
+		<xs:sequence>
+			<xs:element name="SteeringPumpTechnology"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="CompletedBusAuxGroup">
+		<xs:sequence>
+			<xs:element name="HVACSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemConfiguration"/>
+						<xs:element name="AuxiliaryHeaterPower"/>
+						<xs:element name="DoubleGlazing"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 </xs:schema>
