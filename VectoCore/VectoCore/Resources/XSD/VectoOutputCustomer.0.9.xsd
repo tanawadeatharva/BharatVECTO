@@ -40,16 +40,24 @@
 	</xs:complexType>
 	<xs:complexType name="PEV_E2_LorryOutputType">
 		<xs:sequence>
-			<xs:element name="Vehicle" type="cif:RatedPowerType"/>
+			<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_E3_LorryOutputType">
 		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+			<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PEV_E4_LorryOutputType"/>
-	<xs:complexType name="PEV_IEPC_LorryOutputType"/>
+	<xs:complexType name="PEV_E4_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_IEPC_LorryOutputType">
+		<xs:sequence>
+			<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="Conventional_CompletedBusOutputType"/>
 	<xs:complexType name="HEV_CompletedBusOutputType"/>
 	<xs:complexType name="PEV_CompletedBusOutputType"/>
@@ -77,8 +85,30 @@
 		<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 	</xs:complexType>
 	<xs:complexType name="PEV_E2_LorryVehicleType">
+		<xs:group ref="PEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="PEV_E3_LorryVehicleType">
+		<xs:group ref="PEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="PEV_E4_LorryVehicleType">
+		<xs:group ref="PEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="PEV_IEPC_LorryVehicleType">
+		<xs:group ref="PEV_LorryVehicleTypeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="Conventional_CompletedBusVehicleType">
 		<xs:sequence>
-			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV_CompletedBusVehicleType">
+		<xs:sequence>
+			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEV_CompletedBusVehicleType">
+		<xs:sequence>
+			<xs:group ref="CompletedBusVehicleTypeGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="GeneralVehicleSequenceGroup">
@@ -92,6 +122,7 @@
 	</xs:group>
 	<xs:group name="LorryGeneralVehicleSequenceGroup">
 		<xs:sequence>
+			<xs:element name="VehicleGroupCO2"/>
 			<xs:element name="Manufacturer"/>
 			<xs:element name="ManufacturerAddress"/>
 			<xs:element name="Model"/>
@@ -109,10 +140,17 @@
 			<xs:element name="DualFuelVehicle"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="HEV_LorryVehicleTypeSequenceGroup">
+	<xs:group name="HEV_VehicleSequenceGroup">
 		<xs:sequence>
 			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
 			<xs:element name="HEVArchitecture"/>
+			<xs:element name="OffVehicleChargingCapability"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEV_VehicleSequenceGroup">
+		<xs:sequence>
+			<xs:element name="PEVArchitecture"/>
 			<xs:element name="OffVehicleChargingCapability"/>
 			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
 		</xs:sequence>
@@ -121,11 +159,48 @@
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
-			<xs:group ref="HEV_LorryVehicleTypeSequenceGroup"/>
+			<xs:group ref="HEV_VehicleSequenceGroup"/>
 			<xs:sequence>
 				<xs:element name="HEVArchitecture"/>
 				<xs:element name="OffVehicleChargingCapability"/>
 				<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEV_LorryVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
+			<xs:group ref="PEV_VehicleSequenceGroup"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="CompletedBusVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Manufacturer"/>
+										<xs:element name="ManufacturerAddress"/>
+									</xs:sequence>
+									<xs:attribute name="Count" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass"/>
+				<xs:element name="ZeroEmissionHDV"/>
+				<xs:element name="HybridElectricHDV"/>
+				<xs:element name="ClassBus"/>
+				<xs:element name="TotalNumberOfPassengers"/>
+				<xs:element name="VehicleTypeApprovalNumber"/>
 			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
