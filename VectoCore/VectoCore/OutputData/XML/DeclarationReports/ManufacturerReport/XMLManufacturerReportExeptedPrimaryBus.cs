@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				new XElement(vns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(vns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(vns + "LegislativeCategory", modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(vns + XMLNames.Bus_ChassisConfiguration, "Bus"),
+				new XElement(vns + XMLNames.ChassisConfiguration, "Bus"),
 				new XElement(vns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(vns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(

@@ -545,10 +545,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		private void TestManufacturingStag01(IManufacturingStageInputData manufacturingStage)
 		{
-			Assert.AreEqual(2, manufacturingStage.StageCount);
+			Assert.AreEqual(2, manufacturingStage.StepCount);
 
 			TestDigestData("#PIF-d10aff76c5d149948046", "nI+57QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				manufacturingStage.HashPreviousStage);
+				manufacturingStage.HashPreviousStep);
 
 			TestVehicleDataStage01(manufacturingStage.Vehicle);
 
@@ -576,7 +576,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(null, vehicleData.LegislativeClass);			
 			Assert.AreEqual(null, vehicleData.CurbMassChassis);
 			Assert.AreEqual(null, vehicleData.GrossVehicleMassRating);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(null, vehicleData.TankSystem);
 			Assert.AreEqual(null, vehicleData.RegisteredClass);
 			Assert.AreEqual(null, vehicleData.NumberPassengerSeatsLowerDeck);
@@ -600,10 +600,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestManufacturingStag02(IManufacturingStageInputData manufacturingStage)
 		{
-			Assert.AreEqual(3, manufacturingStage.StageCount);
+			Assert.AreEqual(3, manufacturingStage.StepCount);
 
 			TestDigestData("#RESULT-6f30c7fe665a47938f6b", "BMpFCKh1bu/YPwYj37kJK1uCrv++BTLf2OUZcOt43Os=",
-				manufacturingStage.HashPreviousStage);
+				manufacturingStage.HashPreviousStep);
 
 			TestVehicleDataStage02(manufacturingStage.Vehicle);
 		}
@@ -615,7 +615,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Intermediate Manufacturer Address 2", vehicleData.ManufacturerAddress);
 			Assert.AreEqual("VEH-2234567890", vehicleData.VIN);
 			Assert.AreEqual(DateTime.Parse("2021-02-13T07:20:08.0187663Z").ToUniversalTime(), vehicleData.Date);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(VehicleDeclarationType.final, vehicleData.VehicleDeclarationType);
 
 			Assert.AreEqual(true, vehicleData.ADAS.EngineStopStart);
@@ -631,18 +631,18 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvacAux = vehicleData.Components.BusAuxiliaries.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration1, hvacAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.cooling, hvacAux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			//Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
 			Assert.AreEqual(50.SI<Watt>(), hvacAux.AuxHeaterPower);
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(true, hvacAux.AdjustableAuxiliaryHeater);
 			Assert.AreEqual(false, hvacAux.SeparateAirDistributionDucts);
-			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
-			Assert.AreEqual(false, hvacAux.AirElectricHeater);
-			Assert.AreEqual(true, hvacAux.OtherHeatingTechnology);
+			//Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			//Assert.AreEqual(false, hvacAux.AirElectricHeater);
+			//Assert.AreEqual(true, hvacAux.OtherHeatingTechnology);
 		}
 
 		#endregion
@@ -682,10 +682,10 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, manufacturingStages.Count);
 			
 			var stageData = manufacturingStages[0];
-			Assert.AreEqual(2, stageData.StageCount);
+			Assert.AreEqual(2, stageData.StepCount);
 
 			TestDigestData("#PIF-d11aff76c5d149948046", "nI+67QQtWA2rFqJTZ41t0XrXcJbcGmc7j4E66iGJyT0=",
-				stageData.HashPreviousStage);
+				stageData.HashPreviousStep);
 
 			TestVehicleDataVIF02(stageData.Vehicle);
 
@@ -706,7 +706,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(LegislativeClass.M3, vehicleData.LegislativeClass);
 			Assert.AreEqual(25000.SI<Kilogram>(), vehicleData.CurbMassChassis);
 			Assert.AreEqual(30000.SI<Kilogram>(), vehicleData.GrossVehicleMassRating);
-			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistage);
+			Assert.AreEqual(null, vehicleData.AirdragModifiedMultistep);
 			Assert.AreEqual(TankSystem.Liquefied, vehicleData.TankSystem);
 			Assert.AreEqual(RegistrationClass.B, vehicleData.RegisteredClass);
 			Assert.AreEqual(24, vehicleData.NumberPassengerSeatsLowerDeck);
@@ -747,18 +747,18 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var hvacAux = busAux.HVACAux;
 			Assert.AreEqual(BusHVACSystemConfiguration.Configuration0, hvacAux.SystemConfiguration);
-			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeDriverCompartment);
-			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpModeDriverCompartment);
-			Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
-			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpPassengerCompartments[0].Item1);
-			Assert.AreEqual(HeatPumpMode.heating, hvacAux.HeatPumpPassengerCompartments[0].Item2);
+			Assert.AreEqual(HeatPumpType.non_R_744_3_stage, hvacAux.HeatPumpTypeHeatingDriverCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingDriverCompartment);
+			//Assert.AreEqual(1, hvacAux.HeatPumpPassengerCompartments.Count);
+			Assert.AreEqual(HeatPumpType.non_R_744_2_stage, hvacAux.HeatPumpTypeHeatingPassengerCompartment);
+			Assert.AreEqual(HeatPumpType.none, hvacAux.HeatPumpTypeCoolingPassengerCompartment);
 			Assert.AreEqual(40.SI<Watt>(), hvacAux.AuxHeaterPower);
 			Assert.AreEqual(false, hvacAux.DoubleGlazing);
 			Assert.AreEqual(false, hvacAux.AdjustableAuxiliaryHeater);
 			Assert.AreEqual(true, hvacAux.SeparateAirDistributionDucts);
-			Assert.AreEqual(false, hvacAux.WaterElectricHeater);
-			Assert.AreEqual(true, hvacAux.AirElectricHeater);
-			Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
+			//Assert.AreEqual(false, hvacAux.WaterElectricHeater);
+			//Assert.AreEqual(true, hvacAux.AirElectricHeater);
+			//Assert.AreEqual(false, hvacAux.OtherHeatingTechnology);
 		}
 
 		private void TestAirdragVIF02(IAirdragDeclarationInputData airdragData)

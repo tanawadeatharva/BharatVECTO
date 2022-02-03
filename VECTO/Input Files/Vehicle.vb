@@ -458,22 +458,24 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
-	get
-		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
-			return Nothing
-		End If
-		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
-	End Get
-    End Property
-    Public ReadOnly Property MaxPropulsionTorque As TableData Implements IVehicleEngineeringInputData.MaxPropulsionTorque
-	get
-	    If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath))
-	        return Nothing
-	    End If
-	    Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
-	End Get
-    End Property
+	'    Public ReadOnly Property ElectricMotorTorqueLimits As TableData Implements IVehicleEngineeringInputData.ElectricMotorTorqueLimits
+	'	get
+	'		If (String.IsNullOrWhiteSpace(EmTorqueLimitsFile.FullPath))
+	'			return Nothing
+	'		End If
+	'		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
+	'	End Get
+	'    End Property
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+
+	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
+		Get
+			If (String.IsNullOrWhiteSpace(PropulsionTorqueFile.FullPath)) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(PropulsionTorqueFile.FullPath)
+		End Get
+	End Property
 
 	Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
 	Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
@@ -587,15 +589,15 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property PTOCycleWhileDriving As TableData _
-        Implements IPTOTransmissionInputData.PTOCycleWhileDriving
-        Get
-            If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
-                Return Nothing
-            End If
-            Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
-        End Get
-    End Property
+	Public ReadOnly Property PTOCycleWhileDriving As TableData _
+		Implements IPTOTransmissionInputData.PTOCycleWhileDriving
+		Get
+			If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
+		End Get
+	End Property
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
@@ -774,6 +776,8 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+
 	Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
 
 	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
@@ -788,7 +792,7 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+	Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
 
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 		Get
@@ -899,6 +903,10 @@ end Property
 	End Property
 
 	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
+	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
+	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
+	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+	Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 
 	Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
 		Get
@@ -980,9 +988,13 @@ Public Class ElectricStorageWrapper
 	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
-	Public ReadOnly Property MinSOC As Double Implements IBatteryPackDeclarationInputData.MinSOC
-	Public ReadOnly Property MaxSOC As Double Implements IBatteryPackDeclarationInputData.MaxSOC
+	Public ReadOnly Property MinSOC As Double? Implements IBatteryPackDeclarationInputData.MinSOC
+	Public ReadOnly Property MaxSOC As Double? Implements IBatteryPackDeclarationInputData.MaxSOC
+	Public ReadOnly Property BatteryType As BatteryType Implements IBatteryPackDeclarationInputData.BatteryType
 	Public ReadOnly Property Capacity As AmpereSecond Implements IBatteryPackDeclarationInputData.Capacity
+	Public ReadOnly Property ConnectorsSubsystemsIncluded As Boolean Implements IBatteryPackDeclarationInputData.ConnectorsSubsystemsIncluded
+	Public ReadOnly Property JunctionboxIncluded As Boolean Implements IBatteryPackDeclarationInputData.JunctionboxIncluded
+	Public ReadOnly Property TestingTemperature As Kelvin Implements IBatteryPackDeclarationInputData.TestingTemperature
 	Public ReadOnly Property InternalResistanceCurve As TableData Implements IBatteryPackDeclarationInputData.InternalResistanceCurve
 	Public ReadOnly Property VoltageCurve As TableData Implements IBatteryPackDeclarationInputData.VoltageCurve
 	Public ReadOnly Property MaxCurrentMap As TableData Implements IBatteryPackDeclarationInputData.MaxCurrentMap
@@ -1043,12 +1055,12 @@ Public Class ElectricMachineWrapper
 	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
-    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
-	Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
-	Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
-    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
-    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
-	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
-    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
+	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+	Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+	Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
+	Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
+	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
+	Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
+    Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
 End Class

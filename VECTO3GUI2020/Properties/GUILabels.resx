@@ -123,13 +123,73 @@
   <data name="NewPrimaryAndInterimJob" xml:space="preserve">
     <value>New Primary Job with Interim Input</value>
   </data>
+  <data name="NewPrimaryAndInterimJobToolTip" xml:space="preserve">
+    <value>Special Case 1: Provide primary input XML and some parameters of completed vehicle (interim XML) to create a VECTO job.</value>
+  </data>
   <data name="NewInterimOrCompletedJob" xml:space="preserve">
     <value>New Interim/Completed Job</value>
+  </data>
+  <data name="NewInterimOrCompletedJobToolTip" xml:space="preserve">
+    <value>General case: Provide VIF and completed model parameters to create a VECTO job.</value>
   </data>
   <data name="NewCompleteJob" xml:space="preserve">
     <value>New Complete Job</value>
   </data>
+  <data name="NewCompleteJobToolTip" xml:space="preserve">
+    <value>Special Case 2: Provide primary input XML and all parameters of completed vehicle to create a VECTO job.</value>
+  </data>
+  <data name="CreateInterimCompletedInput" xml:space="preserve">
+    <value>Create Interim/Completed Input</value>
+  </data>
   <data name="no manufacturing stages" xml:space="preserve">
     <value>No Manufacturing Steps</value>
+  </data>
+  <data name="IsAirdragEntriesValid" xml:space="preserve">
+    <value>Invalid Airdrag Entries</value>
+  </data>
+  <data name="IsTankSystemValid" xml:space="preserve">
+    <value>Invalid Tank System</value>
+  </data>
+  <data name="_consolidateAirdragData" xml:space="preserve">
+    <value>Airdrag Data</value>
+  </data>
+  <data name="_consolidateBusAuxiliariesData" xml:space="preserve">
+    <value>Bus Auxiliaries Data</value>
+  </data>
+  <data name="_consolidatedADAS" xml:space="preserve">
+    <value>ADAS</value>
+  </data>
+  <data name="_consolidatedComponents" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="_consolidatedHVACBusAuxiliariesData" xml:space="preserve">
+    <value>HVAC Data</value>
+  </data>
+  <data name="_consolidateElectricConsumerData" xml:space="preserve">
+    <value>Electric Consumer Data</value>
+  </data>
+  <data name="Components_Conventional_CompletedBusType" xml:space="preserve">
+    <value>Components_Conventional_CompletedBusType</value>
+  </data>
+  <data name="CreateInterimCompletedInputToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CreateExemptedInterimCompletedInput" xml:space="preserve">
+    <value>Create Exempted Interim/Completed Input</value>
+  </data>
+  <data name="CreateExemptedInterimCompletedInputToolTip" xml:space="preserve">
+    <value>Create Exempted Interim/Completed Input</value>
+  </data>
+  <data name="ManufacturingSteps" xml:space="preserve">
+    <value>Manufacturing Step</value>
+  </data>
+  <data name="New_Multistep_File" xml:space="preserve">
+    <value>New Multistep File</value>
+  </data>
+  <data name="Edit_Multistep_Job" xml:space="preserve">
+    <value>Edit Multistep Job</value>
+  </data>
+  <data name="Edit_step_input" xml:space="preserve">
+    <value>Edit step input</value>
   </data>
 </root>

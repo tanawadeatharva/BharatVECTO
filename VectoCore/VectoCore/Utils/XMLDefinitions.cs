@@ -47,7 +47,20 @@ namespace TUGraz.VectoCore.Utils
 		CustomerReport = 1 << 7,
 		MonitoringReport = 1 << 8,
 		VTPReport = 1 << 9,
-		MultistageOutputData = 1 << 10
+		MultistepOutputData = 1 << 10
+	}
+
+	public static class XmlDocumentTypeExtensions
+	{
+		public static string GetName(this XmlDocumentType docType)
+		{
+			switch (docType) {
+				case XmlDocumentType.MultistepOutputData:
+					return "Multistep output data";
+				default:
+					return docType.ToString();
+			}
+		}
 	}
 
 
@@ -55,7 +68,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		//public const string SchemaBaseURL = "file:///E:/QUAM/Workspace/VECTO_quam/VectoCore/VectoCore/Resources/XSD/";
 		public const string SCHEMA_BASE_LOCATION = "https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
-
+		
 		public const string DEV = ":DEV";
 
 		public const string ENGINEERING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions";
@@ -84,12 +97,10 @@ namespace TUGraz.VectoCore.Utils
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V22 = DECLARATION_NAMESPACE + ":v2.2";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V221 = DECLARATION_NAMESPACE + ":v2.2.1";
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V23 = DECLARATION_NAMESPACE + ":v2.3";
 
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V23 = DECLARATION_NAMESPACE + ":DEV:v2.3";
 
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V26 = DECLARATION_NAMESPACE + ":DEV:v2.6";
-
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V28 = DECLARATION_NAMESPACE + ":DEV:v2.8";
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V24 = DECLARATION_NAMESPACE + ":v2.4";
 
 		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 
@@ -101,21 +112,11 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation";
 
-		public const string DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01 =
-			DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE + ":HeavyBus:v0.1";
-
 		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE =
 			"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile";
 
 		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 =
 			DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
-
-
-		public const string DECLARATION_MANUFACTURER_REPORT_V05 = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.5";
-
-		public const string DECLARATION_CUSTOMER_REPORT_V05 = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.5";
-
-		public const string DECLARATION_VTP_REPORT_V01 = "urn:tugraz:ivt:VectoAPI:VTPReport:v0.1";
 
 
 		public const string XML_SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance";
@@ -134,7 +135,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
-			{XmlDocumentType.MultistageOutputData, "VectoOutputMultistage.0.1.xsd"}
+			{XmlDocumentType.MultistepOutputData, "VectoOutputMultistep.0.1.xsd"}
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";

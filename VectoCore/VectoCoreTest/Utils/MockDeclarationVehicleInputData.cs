@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool? SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 		public bool ZeroEmissionVehicle { get; }
@@ -63,8 +63,16 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public TableData BoostingLimitations { get; }
+
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
+		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		#endregion
 
@@ -83,6 +91,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; set; }
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; set; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; set; }
+		public IIEPCDeclarationInputData IEPC { get; set; }
 
 		#endregion
 	}
@@ -111,12 +120,13 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool Articulated { get; }
 		public Meter Height { get; }
 		public TableData ElectricMotorTorqueLimits { get; }
-		public TableData MaxPropulsionTorque { get; }
+		public TableData BoostingLimitations { get; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+
 		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
@@ -131,6 +141,10 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 
 		public XmlNode XMLSource { get; }
+		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public IVehicleComponentsEngineering Components => this;
 		public string Identifier { get; }
@@ -146,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool? SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
@@ -179,6 +193,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IElectricStorageSystemEngineeringInputData ElectricStorage { get; set; }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 
-		#endregion
-	}
+        Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+
+        #endregion
+    }
 }

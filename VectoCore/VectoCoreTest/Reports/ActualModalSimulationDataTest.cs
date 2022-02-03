@@ -34,6 +34,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 			factory.WriteModalResults = true;
 			factory.ActualModalData = true;
 

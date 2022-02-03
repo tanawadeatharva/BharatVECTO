@@ -28,6 +28,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -932,13 +933,12 @@ namespace VECTO3GUI.ViewModel.Impl
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = new SimulatorFactory(mode, input, fileWriter) {
-						WriteModalResults = WriteModData,
-						ModalResults1Hz = WriteModData1Hz,
-						Validate = ValidateData,
-						ActualModalData = WriteActualModData,
-						SerializeVectoRunData = WriteModelData
-					};
+					var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
+					runsFactory.WriteModalResults = WriteModData;
+					runsFactory.ModalResults1Hz = WriteModData1Hz;
+					runsFactory.Validate = ValidateData;
+					runsFactory.ActualModalData = WriteActualModData;
+					runsFactory.SerializeVectoRunData = WriteModelData;
 					foreach (var runId in jobContainer.AddRuns(runsFactory)) {
 						fileWriters.Add(runId, fileWriter);
 					}

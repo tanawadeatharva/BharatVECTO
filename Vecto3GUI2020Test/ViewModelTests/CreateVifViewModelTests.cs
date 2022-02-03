@@ -15,16 +15,16 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	{
 		private ICreateVifViewModel _createVifViewModel;
 
-		private const string testdata_2_6 = "XML\\XMLReaderDeclaration\\SchemaVersion2.6_Buses\\";
-		private const string testdata_2_8 = "XML\\XMLReaderDeclaration\\SchemaVersion2.8\\";
+		private const string testdata_2_10 = "XML\\XMLReaderDeclaration\\SchemaVersion2.10\\";
+		//private const string testdata_2_10 = "XML\\XMLReaderDeclaration\\SchemaVersion2.10\\";
 
 		private const string vecto_vehicle_primary_heavyBusSample =
-			testdata_2_6 + "vecto_vehicle-primary_heavyBus-sample.xml";
+			testdata_2_10 + "vecto_vehicle-primary_heavyBus-sample.xml";
 
 		private const string vecto_vehicle_exempted_input_only_certain_entries =
 			"vecto_vehicle-exempted_input_only_certain_entries01-sample.xml";
 
-		private const string vecto_vehicle_primary_heavyBusExempted = testdata_2_6 + "exempted_primary_heavyBus.xml";
+		private const string vecto_vehicle_primary_heavyBusExempted = testdata_2_10 + "exempted_primary_heavyBus.xml";
 
 		[SetUp]
 		public void SetUpCreateVif()
@@ -56,12 +56,6 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.IsNull(_createVifViewModel.StageInputPath);
 		}
 
-		[Ignore("incomplete")]
-		[Test]
-		public void LoadExemptedCompletedAndNonExemptedPrimary()
-		{
-
-		}
 
 		[Test]
 		public void SaveFile()
@@ -179,8 +173,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			LoadValidNonExemptedFiles();
 			var primaryPath = _createVifViewModel.PrimaryInputPath;
 			var stagePath = _createVifViewModel.StageInputPath;
+			
 
-			var savedToPath = _createVifViewModel.SaveJob("non_exempted.json");
+			var savedToPath = _createVifViewModel.SaveJob(GetFullPath("non_exempted.vecto"));
 			WriteLine($"Saved to: {savedToPath}");
 
 			Assert.AreEqual(primaryPath, _createVifViewModel.PrimaryInputPath);

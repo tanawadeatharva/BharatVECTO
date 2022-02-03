@@ -16,6 +16,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -253,11 +254,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer)
-			{
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -447,10 +446,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -669,11 +667,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer)
-			{
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);

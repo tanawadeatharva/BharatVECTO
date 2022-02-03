@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -25,10 +26,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_dao.SingleBusInputData = singleBusInputData;
 		}
 
-		#region Implementation of IVectoRunDataFactory
-
-		#region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
-
+		
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
 		{
 			//if (vehicle.VehicleCategory != VehicleCategory.HeavyBusCompletedVehicle) {
@@ -56,7 +54,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return segment;
 		}
 
-		#endregion
 
 		protected override IDeclarationDataAdapter DataAdapter => _dao;
 
@@ -105,7 +102,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, _singleBusInputData.CompletedVehicle, simulationRunData);
 			return simulationRunData;
 		}
+
+		protected override void InitializeReport()
+		{
+			VectoRunData powertrainConfig;
+			List<List<FuelData.Entry>> fuels;
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			if (vehicle.ExemptedVehicle) {
+				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+				fuels = new List<List<FuelData.Entry>>();
+			} else {
+				powertrainConfig = _segment.Missions.Select(
+						mission => CreateVectoRunData(
+							vehicle, 0, mission, mission.Loadings.First()))
+					.FirstOrDefault(x => x != null);
+				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, _singleBusInputData.CompletedVehicle.TankSystem)).ToList())
+					.ToList();
+			}
+			Report.InitializeReport(powertrainConfig, fuels);
+		}
 	}
 
-	#endregion
+	
 }

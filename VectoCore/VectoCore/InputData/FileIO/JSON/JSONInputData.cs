@@ -1107,21 +1107,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-		private string _primaryVehicleInputDataPath;
-		private IVehicleDeclarationInputData _primaryVehicleInputData;
-		public IVehicleDeclarationInputData PrimaryVehicle =>
-			_primaryVehicleInputData ?? (_primaryVehicleInputData =
-				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
-
-		private string _stageInputDataPath;
+		private readonly string _primaryVehicleInputDataPath;
+		private readonly string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
+		private IDeclarationInputDataProvider _primaryVehicle;
 
-		public IVehicleDeclarationInputData StageInputData => 
-			_stageInputData ?? (_stageInputData =
-				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+		public string PrimaryVehicleInputDataPath => _primaryVehicleInputDataPath;
+		public string StageInputDataPath => _stageInputDataPath;
+		public IDeclarationInputDataProvider PrimaryVehicle => 
+			_primaryVehicle ?? (_primaryVehicle =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
+
+        public IVehicleDeclarationInputData StageInputData => 
+			_stageInputDataPath != null 
+			?
+            _stageInputData ?? (_stageInputData =
+                _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
+			:
+			null;
+
+
 
 		private bool? _completed;
 
@@ -1140,7 +1148,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
-			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
+			_primaryVehicleInputDataPath = PathHelper.GetAbsolutePath(filename, _primaryVehicleInputDataPath);
+			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStep);
+			_stageInputDataPath = PathHelper.GetAbsolutePath(filename, _stageInputDataPath);
 			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
 
 		}

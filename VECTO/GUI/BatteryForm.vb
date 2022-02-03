@@ -189,8 +189,8 @@ Public Class BatteryForm
             Dim battery As IBatteryPackEngineeringInputData = ctype(reess, IBatteryPackEngineeringInputData)
             tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
 
-            tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
-            tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
+            tbSoCMin.Text = (battery.MinSOC.Value * 100).ToGUIFormat()
+            tbSoCMax.Text = (battery.MaxSOC.Value * 100).ToGUIFormat()
 
             tbMaxCurrentMap.Text = GetRelativePath(battery.MaxCurrentMap.Source, basePath)
             tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)

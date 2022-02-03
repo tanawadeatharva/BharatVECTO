@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
-			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
+			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ?? new Dictionary<int, ITorqueLimitInputData>();
 			var numGears = gearbox.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
+		protected static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
 		{
 			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				throw new VectoException("Missing WHR Data");
@@ -342,14 +342,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-				!adas.ATEcoRollReleaseLockupClutch.HasValue) {
-				throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-			}
+			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
+			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
+			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+			//}
 
 			retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
-					? adas.ATEcoRollReleaseLockupClutch.Value
+					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;
 
 			if (!SupportedGearboxTypes.Contains(gearbox.Type)) {
@@ -560,7 +560,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		private void WarnDeclarationMode(string inputData)
+		protected void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}

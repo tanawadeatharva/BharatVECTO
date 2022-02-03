@@ -12,7 +12,7 @@
         <DockPanel>
             <customControls:FilePicker 
                 DockPanel.Dock="Top" 
-                Command="{Binding LoadVehicleDataCommand}" 
+                Command="{Binding ManufacturingStageViewModel.LoadVehicleDataCommand}" 
                 Text="{Binding VehicleInputDataFilePath, TargetNullValue=Select Vehicle Input Data . . .}"/>
             <Label DockPanel.Dock="Top" HorizontalAlignment="Center"  Visibility="{Binding Exempted, Converter={StaticResource BooleanToVisibilityConverter}}">Exempted Vehicle</Label>
             <Border BorderThickness="1" BorderBrush="{DynamicResource ButtonHighlightColor}" Height="40" DockPanel.Dock="Bottom">
@@ -21,28 +21,20 @@
                         Width="100"
                         Command="{Binding CloseWindowCommand}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                        Style="{DynamicResource MultiStageButtonStyle1}"
-                        Margin="4"
-                        Padding="4">Close</Button>
+                        Style="{DynamicResource MultiStageButtonStyle1}">Close</Button>
                     <Button DockPanel.Dock="Right"
                             Width="100"
                             Command="{Binding SaveVIFCommand}"
-                            Style="{DynamicResource MultiStageButtonStyle1}"
-                            Margin="4"
-                            Padding="4">Save as new VIF</Button>
+                            Style="{DynamicResource MultiStageButtonStyle1}">Save as new VIF</Button>
                     <Button 
                         DockPanel.Dock="Right" 
-                        Width="100"  
+                        Width="100"
                         Style="{DynamicResource MultiStageButtonStyle1}" 
-                        Margin="4" 
-                        Padding="4" 
                         Command="{Binding ManufacturingStageViewModel.SaveInputDataCommand}">Save Input</Button>
                     <Button 
                         DockPanel.Dock="Right" 
-                        Width="100"  
+                        Width="100"
                         Style="{DynamicResource MultiStageButtonStyle1}" 
-                        Margin="4" 
-                        Padding="4" 
                         Command="{Binding ManufacturingStageViewModel.SaveInputDataAsCommand}">Save Input As ... </Button>
                 </DockPanel>
             </Border>

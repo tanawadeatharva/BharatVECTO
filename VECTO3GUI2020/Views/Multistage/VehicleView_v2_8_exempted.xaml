@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" BorderThickness="2px" Margin="4px" BorderBrush="{StaticResource ButtonHighlightColor}">
     <UserControl.Resources>
         <Style TargetType="ContentControl">
             <Setter Property="ContentTemplateSelector" Value="{DynamicResource MultistageParameterTemplateSelector}"/>
@@ -28,25 +28,35 @@
                     <ContentControl Content="{Binding ParameterViewModels[CurbMassChassis]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[GrossVehicleMassRating]}"/>
                     <ContentControl Content="{Binding ParameterViewModels[RegisteredClass]}"/>
+
+
+
+                    <Label Style="{DynamicResource LabelStyle1}" Margin="0">Number of Passengers</Label>
+                    <Border BorderThickness="2px" BorderBrush="{StaticResource ButtonHighlightColor}">
+                        <StackPanel>
+
+
+                            <ContentControl 
+                                Content="{Binding ParameterViewModels[NumberPassengerSeatsLowerDeck]}"/>
+
+                            <ContentControl 
+                                Content="{Binding ParameterViewModels[NumberPassengersStandingLowerDeck]}"/>
+
+                            <ContentControl 
+                                Content="{Binding ParameterViewModels[NumberPassengerSeatsUpperDeck]}"/>
+
+                            <ContentControl 
+                                Content="{Binding ParameterViewModels[NumberPassengersStandingUpperDeck]}"/>
+                        </StackPanel>
+
+                    </Border>
+
                     <ContentControl 
                         Content="{Binding ParameterViewModels[VehicleCode]}"/>
                     <ContentControl 
                         Content="{Binding ParameterViewModels[LowEntry]}"/>
                     <ContentControl 
                         Content="{Binding ParameterViewModels[HeightInMm]}"/>
-
-                    <Label Style="{DynamicResource LabelStyle1}">Number of Passengers</Label>
-
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengerSeatsLowerDeck]}"/>
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengersStandingLowerDeck]}"/>
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengerSeatsUpperDeck]}"/>
-                    <ContentControl 
-                        Content="{Binding ParameterViewModels[NumberPassengersStandingUpperDeck]}"/>
-
-
 
                 </StackPanel>
                 </DockPanel>

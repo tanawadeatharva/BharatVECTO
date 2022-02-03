@@ -46,6 +46,13 @@ namespace VECTO3GUI2020.Helper
 			return GetValuesAsObservableCollection<T, TInput>(true, items);
 		}
 
+		public static ObservableCollection<T> GetValuesAsObservableCollection<T, TInput>()
+			where TInput : System.Enum
+			where T : System.Enum
+
+		{
+			return new ObservableCollection<T>(Enum.GetValues(typeof(TInput)).Cast<TInput>().ToList().Cast<T>());
+		}
 
 
 

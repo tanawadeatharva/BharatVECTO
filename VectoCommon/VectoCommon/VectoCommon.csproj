@@ -149,6 +149,7 @@
     <Compile Include="Utils\VectoMath.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="InputData\BusInputData.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Version.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

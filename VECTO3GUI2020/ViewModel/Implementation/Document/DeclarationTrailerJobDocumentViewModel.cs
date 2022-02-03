@@ -13,9 +13,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
         private string _name = "";
         public string DocumentName { get => _name; }
 
-        public XmlDocumentType DocumentType { get; }
+        public XmlDocumentType? DocumentType { get; }
 
-		public DataSource DataSource => throw new System.NotImplementedException();
+		public string DocumentTypeName => DocumentType?.GetName();
+
+        public DataSource DataSource => throw new System.NotImplementedException();
 
 		public string SourceFile { get; }
 

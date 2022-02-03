@@ -1,4 +1,5 @@
-﻿using Ninject.Extensions.Factory;
+﻿
+using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
@@ -37,7 +38,7 @@ namespace VECTO3GUI2020.Ninject.Vehicle
 
             Bind<IComponentViewModel>().To<AirDragViewModel_v1_0>().Named(AirDragViewModel_v1_0.VERSION);
             Bind<IComponentViewModel>().To<AirDragViewModel_v2_0>().Named(AirDragViewModel_v2_0.VERSION);
-            Bind<IComponentViewModel>().To<AirDragViewModel_v2_8>().Named(AirDragViewModel_v2_8.VERSION);
+            Bind<IComponentViewModel>().To<AirDragViewModel_v2_4>().Named(AirDragViewModel_v2_4.VERSION);
 
             Bind<IComponentViewModel>().To<AxleWheelsViewModel_v1_0>().Named(AxleWheelsViewModel_v1_0.VERSION);
             Bind<IComponentViewModel>().To<AxleWheelsViewModel_v2_0>().Named(AxleWheelsViewModel_v2_0.VERSION);
@@ -77,8 +78,8 @@ namespace VECTO3GUI2020.Ninject.Vehicle
 
             Bind<IAdasViewModel>().To<ADASViewModel_v1_0>().Named(ADASViewModel_v1_0.VERSION);
             Bind<IAdasViewModel>().To<ADASViewModel_v2_1>().Named(ADASViewModel_v2_1.VERSION);
-            Bind<IAdasViewModel>().To<ADASViewModel_v2_3>().Named(ADASViewModel_v2_3.VERSION);
-            Bind<IAdasViewModel>().To<ADASViewModel_v2_3>(); //Default ADAS ViewModel if no matching binding is available;
+            //Bind<IAdasViewModel>().To<ADASViewModel_v2>().Named(ADASViewModel_v2_3.VERSION);
+            Bind<IAdasViewModel>().To<ADASViewModel_v2_1>(); //Default ADAS ViewModel if no matching binding is available;
 
             Bind<IEngineModeViewModel>().To<EngineModeViewModelSingleFuel>()
                 .Named(EngineModeViewModelSingleFuel.VERSION);

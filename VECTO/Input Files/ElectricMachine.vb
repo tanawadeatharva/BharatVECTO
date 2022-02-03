@@ -7,6 +7,7 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
@@ -17,11 +18,12 @@ Public Class ElectricMachine
 
     public VoltageLevelLow As Double
     Private ReadOnly _fullLoadCurvePathLow As SubPath
-    Private ReadOnly _dragCurvePath As SubPath
+    Private ReadOnly _dragCurvePathLow As SubPath
     Private ReadOnly _efficiencyMapLow As SubPath
 
     public VoltageLevelHigh as Double
     Private ReadOnly _fullLoadCurvePathHi As SubPath
+    Private ReadOnly _dragCurvePathHi As SubPath
     Private ReadOnly _efficiencyMapHi As SubPath
 
     ''' <summary>
@@ -38,11 +40,17 @@ Public Class ElectricMachine
 
     Public ModelName As String
     Public MotorInertia As Double
-    Public PeakPowerTime As Double
-    Public ContTq As Double
-    Public RatedSpeed As Double
-    Public OvlTq As Double
-    Public OvlSpeed As Double
+    Public PeakPowerTimeLo As Double
+    Public ContTqLo As Double
+    Public RatedSpeedLo As Double
+    Public OvlTqLo As Double
+    Public OvlSpeedLo As Double
+
+    Public PeakPowerTimeHi As Double
+    Public ContTqHi As Double
+    Public RatedSpeedHi As Double
+    Public OvlTqHi As Double
+    Public OvlSpeedHi As Double
 
     ''' <summary>
     ''' New instance. Initialise
@@ -53,11 +61,12 @@ Public Class ElectricMachine
         _filePath = ""
 
         _fullLoadCurvePathLow = New SubPath
-        _dragCurvePath = New SubPath()
+        _dragCurvePathLow = New SubPath()
         _efficiencyMapLow = New SubPath()
 
         _fullLoadCurvePathHi = New SubPath
-       _efficiencyMapHi = New SubPath()
+        _dragCurvePathHi = New SubPath()
+        _efficiencyMapHi = New SubPath()
 
         SetDefault()
     End Sub
@@ -90,7 +99,7 @@ Public Class ElectricMachine
             writer.SaveElectricMotor(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Failed to write Engine file: " + ex.Message)
+            MsgBox("Faled to write Engine file: " + ex.Message)
             Return False
         End Try
         Return True
@@ -211,17 +220,17 @@ Public Class ElectricMachine
             Return VectoCSVFile.Read(_fullLoadCurvePathLow.FullPath)
         End Get
     End Property
-    'protected ReadOnly Property DragCurvLow As TableData 
-    '    Get
-    '        If Not File.Exists(_dragCurvePathLow.FullPath) Then _
-    '            Throw New VectoException("Drag Curve is missing or invalid")
-    '        Return VectoCSVFile.Read(_dragCurvePathLow.FullPath)
-    '    End Get
-    'End Property
+    protected ReadOnly Property DragCurvLow As TableData 
+        Get
+            If Not File.Exists(_dragCurvePathLow.FullPath) Then _
+                Throw New VectoException("Drag Curve is missing or invalid")
+            Return VectoCSVFile.Read(_dragCurvePathLow.FullPath)
+        End Get
+    End Property
     protected ReadOnly Property EfficiencyMapLow As TableData
         Get
             If Not File.Exists(_efficiencyMapLow.FullPath) Then _
-                Throw New VectoException("EfficiencyMap is missing or invalid")
+                Throw New VectoException("Drag Curve is missing or invalid")
             Return VectoCSVFile.Read(_efficiencyMapLow.FullPath)
         End Get
     End Property
@@ -232,43 +241,48 @@ Public Class ElectricMachine
             Return VectoCSVFile.Read(_fullLoadCurvePathHi.FullPath)
         End Get
                     End Property
-    'protected ReadOnly Property DragCurvHi As TableData 
-    '    Get
-    '        If Not File.Exists(_dragCurvePathHi.FullPath) Then _
-    '            Throw New VectoException("Drag Curve is missing or invalid")
-    '        Return VectoCSVFile.Read(_dragCurvePathHi.FullPath)
-    '    End Get
-    'End Property
+    protected ReadOnly Property DragCurvHi As TableData 
+        Get
+            If Not File.Exists(_dragCurvePathHi.FullPath) Then _
+                Throw New VectoException("Drag Curve is missing or invalid")
+            Return VectoCSVFile.Read(_dragCurvePathHi.FullPath)
+        End Get
+    End Property
     protected ReadOnly Property EfficiencyMapHi As TableData
         Get
             If Not File.Exists(_efficiencyMapHi.FullPath) Then _
-                Throw New VectoException("EfficiencyMap is missing or invalid")
+                Throw New VectoException("Drag Curve is missing or invalid")
             Return VectoCSVFile.Read(_efficiencyMapHi.FullPath)
         End Get
     End Property
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
-    get
-            Return New List(Of IElectricMotorVoltageLevel) From{
+    Get
+            Return New List(Of IElectricMotorVoltageLevel) From {
                 New ElectricMotorVoltageLevel() With {
-                    .VoltageLevel = VoltageLevelLow.SI(of Volt),
-                    .EfficiencyMap = EfficiencyMapLow,
+                    .VoltageLevel = VoltageLevelLow.SI(Of Volt),
+                    .ContinuousTorque=ContTqlo.si(of NewtonMeter),
+                    .ContinuousTorqueSpeed=RatedSpeedLo.RPMtoRad(),
+                    .OverloadTorque=OvlTqLo.SI(of NewtonMeter),
+                    .OverloadTestSpeed=OvlSpeedLo.RPMtoRad(),
+                    .OverloadTime = PeakPowerTimeLo.SI(Of Second),
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveLow},
-                New ElectricMotorVoltageLevel()  With {
-                    .VoltageLevel = VoltageLevelHigh.SI(of Volt),
-                    .EfficiencyMap = EfficiencyMapHi,
+                New ElectricMotorVoltageLevel() With {
+                    .VoltageLevel = VoltageLevelHigh.SI(Of Volt),
+                    .ContinuousTorque=ContTqHi.si(of NewtonMeter),
+                    .ContinuousTorqueSpeed=RatedSpeedHi.RPMtoRad(),
+                    .OverloadTorque=OvlTqHi.SI(of NewtonMeter),
+                    .OverloadTestSpeed=OvlSpeedHi.RPMtoRad(),
+                    .OverloadTime = PeakPowerTimeHi.SI(Of Second),
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveHi}
                 }
-    End Get
+        End Get
     End Property
 
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
-    Get
-            If Not File.Exists(_dragCurvePath.FullPath) Then _
-                Throw New VectoException("Drag Curve is missing or invalid")
-            Return VectoCSVFile.Read(_dragCurvePath.FullPath)
-        End Get
-    end Property
+    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+    Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
         Get
@@ -276,37 +290,44 @@ Public Class ElectricMachine
         End Get
     End Property
 
-    Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
-    get
-            Return PeakPowerTime.SI(of Second)
-    End Get
-    End Property
+    
+    Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
+    Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 
-    Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
-    get
-            Return RatedSpeed.RPMtoRad()
-    End Get
-    End Property
+    
 
-    Public Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+    Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
+    Public Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
 
-    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
-    get
-        Return ContTq.si(of NewtonMeter)
-    End Get
-    End Property
+    'Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
+    '    Get
+    '        Return PeakPowerTime.SI(Of Second)
+    '    End Get
+    'End Property
+    'Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
+    '    get
+    '        Return RatedSpeed.RPMtoRad()
+    '    End Get
+    'End Property
+    'Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
+    'get
+    '    Return ContTq.si(of NewtonMeter)
+    'End Get
+    'End Property
 
-    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
-    get
-        Return OvlTq.SI(of NewtonMeter)
-    End Get
-    End Property
+    'Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
+    'get
+    '    Return OvlTq.SI(of NewtonMeter)
+    'End Get
+    'End Property
 
-    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
-    get
-        Return OvlSpeed.RPMtoRad()
-    End Get
-    End Property
+    'Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
+    '    Get
+    '        Return OvlSpeed.RPMtoRad()
+    '    End Get
+    'End Property
+
+    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 
     Public Property PathMaxTorqueLow(Optional ByVal original As Boolean = False) As String
         Get
@@ -321,16 +342,16 @@ Public Class ElectricMachine
         End Set
     End Property
 
-    Public Property PathDrag(Optional ByVal original As Boolean = False) As String
+    Public Property PathDragLow(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
-                Return _dragCurvePath.OriginalPath
+                Return _dragCurvePathLow.OriginalPath
             Else
-                Return _dragCurvePath.FullPath
+                Return _dragCurvePathLow.FullPath
             End If
         End Get
         Set(ByVal value As String)
-            _dragCurvePath.Init(_myPath, value)
+            _dragCurvePathLow.Init(_myPath, value)
         End Set
     End Property
 
@@ -360,6 +381,18 @@ Public Class ElectricMachine
         End Set
     End Property
 
+    Public Property PathDragHi(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _dragCurvePathHi.OriginalPath
+            Else
+                Return _dragCurvePathHi.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _dragCurvePathHi.Init(_myPath, value)
+        End Set
+    End Property
 
     Public Property PathMapHi(Optional ByVal original As Boolean = False) As String
         Get

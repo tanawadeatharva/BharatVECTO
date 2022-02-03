@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -100,12 +101,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
+			//ActualModalData = true,
+			factory.Validate = false;
+			factory.SumData = sumContainer;
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -140,13 +140,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
 				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
-
+			factory.Validate = false;
+			factory.SumData = sumContainer;
+			
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -181,12 +180,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
 				//ActualModalData = true,
-				Validate = false,
-				SumData = sumContainer
-			};
+			factory.Validate = false;
+			factory.SumData = sumContainer;
+		
 
 			var runs = factory.SimulationRuns().ToArray();
 			var run = runs[cycleIdx];
@@ -232,11 +231,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				? _xmlInputReader.CreateDeclaration(relativeJobPath)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			//ActualModalData = true,
+			factory.Validate = false;
+
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
 			jobContainer.AddRuns(factory);
@@ -258,11 +257,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 				? _xmlInputReader.CreateDeclaration(relativeJobPath)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			//ActualModalData = true,
+			factory.Validate = false;
+			
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
 
@@ -1413,7 +1412,10 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 			var sumContainer = new SummaryDataContainer(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) { WriteModalResults = true, Validate = false, SumData = sumContainer };
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.Validate = false;
+			factory.SumData = sumContainer;
 
 			var run = factory.SimulationRuns().First(r => r.CycleName == cycleName);
 			var mod = (run.GetContainer().ModalData as ModalDataContainer).Data;

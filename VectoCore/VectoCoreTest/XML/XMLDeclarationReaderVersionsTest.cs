@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
@@ -119,7 +120,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		[TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry-Van.xml", TestName = "Medium Lorry Van"),
 		TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorry.xml", TestName = "Medium Lorry"),
-		TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml", TestName = "Medium Lorry FWD"),
+		//TestCase(@"TestData\Integration\MediumLorries\vecto_vehicle-medium_lorryFWD.xml", TestName = "Medium Lorry FWD"), // FWD no longer supported / required
         ]
 		public void CreateRunDataMediumLorry(string jobFile)
 		{
@@ -128,11 +129,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -161,12 +160,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			//var sumWriter = new SummaryDataContainer(fileWriter);
 			//var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = false,
-				ActualModalData = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = false;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
 
 			var runs = runsFactory.SimulationRuns().ToArray();
 			Assert.IsTrue(runs.Length > 0);
