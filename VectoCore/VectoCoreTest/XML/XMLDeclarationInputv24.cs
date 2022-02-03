@@ -34,9 +34,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\";
-		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\";
-		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\WithoutOptionalEntries";
+		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
+		private const string ADDITONAL_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\";
+		private const string Optional_TESTS_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\WithoutOptionalEntries";
 
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
