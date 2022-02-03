@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLCompleteBusReaderTest
 	{
 		private const string CompleteBusExample =
-			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.10/vecto_vehicle-completed_heavyBus-sample.xml";
+			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/vecto_vehicle-completed_heavyBus-sample.xml";
 
 
 
