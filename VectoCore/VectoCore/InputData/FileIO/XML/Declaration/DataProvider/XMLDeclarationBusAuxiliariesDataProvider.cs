@@ -15,19 +15,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV26 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
+	public abstract class AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
 		IElectricSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
-		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public const string XSD_TYPE = "PrimaryVehicleAuxiliaryDataDeclarationType";
-
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
-		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV26(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+		public AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24(
+			 XmlNode componentNode) : base(componentNode) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
@@ -84,6 +79,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					.Cast<IAlternatorDeclarationInputData>().ToList();
 			}
 		}
+
+		public virtual bool ESSupplyFromHEVREESS => ElementExists("SupplyFromHEVPossible")
+			? XmlConvert.ToBoolean(GetString("SupplyFromHEVPossible"))
+			: false;
 
 		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
 		{
@@ -183,11 +182,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
 		public virtual BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfiguration.Unknown;
-
-		public virtual HeatPumpType? HeatPumpTypeDriverCompartment => null;
-		public virtual HeatPumpMode? HeatPumpModeDriverCompartment => null;
-
-		public virtual IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments => null;
+		public virtual HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
+		public virtual HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => null;
 
 		public virtual Watt AuxHeaterPower => 0.SI<Watt>();
 
@@ -218,99 +216,156 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV26
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_Conventional_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		public XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override bool ESSupplyFromHEVREESS => false;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_HEV-P_PrimaryBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public const string XSD_TYPE = "AUX_HEV-S_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override bool SmartElectrics => false;
+
+		public override bool SmartAirCompression => false;
+
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_PEV_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override string FanTechnology => null;
+		
+		public override bool ESSupplyFromHEVREESS => true;
+
+		public override bool SmartElectrics => false;
+		public override bool SmartAirCompression => false;
+
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+		public override double Ratio => double.NaN;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public const string XSD_TYPE = "AUX_IEPC_PrimaryBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override string FanTechnology => null;
+		public override bool ESSupplyFromHEVREESS => true;
+		public override bool SmartElectrics => false;
+		public override bool SmartAirCompression => false;
+
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+		public override double Ratio => double.NaN;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "AuxiliaryDataPIFType";
+		public const string XSD_TYPE = "AuxiliaryDataPIFType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
-			: base(vehicle, componentNode, sourceFile) { }
+			: base(componentNode) { }
 
 
 		public override XmlNode XMLSource => BaseNode;
 	}
 
-	public class XMLDeclarationCompleteBusAuxiliariesDataProviderV26 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV26, IElectricConsumersDeclarationData
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24, IElectricConsumersDeclarationData
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public new const string XSD_TYPE = "CompletedVehicleAuxiliaryDataDeclarationType";
+		public const string XSD_TYPE_CONVENTIONAL = "AUX_Conventional_CompletedBusType";
+		public const string XSD_TYPE_xEV = "AUX_xEV_CompletedBusType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationCompleteBusAuxiliariesDataProviderV26(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
-
-		#region Implementation of IBusAuxiliariesDeclarationData
+		public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_CONVENTIONAL);
+		public static readonly string QUALIFIED_XSD_TYPE_xEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_xEV);
 
 
-
-		public override IList<string> SteeringPumpTechnology => null;
-
-
-		public override IElectricConsumersDeclarationData ElectricConsumers => this;
-
-		public override IPneumaticSupplyDeclarationData PneumaticSupply => null;
-
-		//public override IPneumaticConsumersDeclarationData PneumaticConsumers { get { return null; } }
-
-		public override BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration));
-
-		public override Watt AuxHeaterPower => GetDouble(XMLNames.Bus_AuxiliaryHeaterPower).SI<Watt>();
-
-		public override bool? DoubleGlazing => GetBool(XMLNames.Bus_DoubleGlazing);
-
-		public override bool HeatPump => GetBool(XMLNames.Bus_HeatPump);
-
-		public override bool? AdjustableCoolantThermostat
-		{
-			get { return GetBool(new[] { "HVAC", XMLNames.Bus_AdjustableCoolantThermostat }); }
-		}
-
-		public override bool? AdjustableAuxiliaryHeater => GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater);
-
-		public override bool EngineWasteGasHeatExchanger => false;
-
-		public override bool? SeparateAirDistributionDucts => GetBool(XMLNames.Bus_SeparateAirDistributionDucts);
-
-		#endregion
-
-		#region Implementation of IElectricConsumersDeclarationData
-
-		public virtual bool? InteriorLightsLED { get { return GetBool(new[] { "LEDLights", XMLNames.Bus_Interiorlights }); } }
-
-		public virtual bool? DayrunninglightsLED { get { return GetBool(new[] { "LEDLights", XMLNames.Bus_Dayrunninglights }); } }
-
-		public virtual bool? PositionlightsLED { get { return GetBool(new[] { "LEDLights", XMLNames.Bus_Positionlights }); } }
-
-		public virtual bool? HeadlightsLED { get { return GetBool(new[] { "LEDLights", XMLNames.Bus_Headlights }); } }
-
-		public virtual bool? BrakelightsLED { get { return GetBool(new[] { "LEDLights", XMLNames.Bus_Brakelights }); } }
-
-		#endregion
-	}
-
-	public class XMLDeclarationCompleteBusAuxiliariesDataProviderV28 : XMLDeclarationCompleteBusAuxiliariesDataProviderV26
-	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V28;
-
-		public new const string XSD_TYPE = "CompletedVehicleAuxiliaryDataDeclarationType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationCompleteBusAuxiliariesDataProviderV28(IXMLDeclarationVehicleData vehicle,
+		public XMLDeclarationCompletedBusAuxiliariesDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)
-			: base(vehicle, componentNode, sourceFile) {}
+			: base(componentNode) {}
 
 		private bool IsBusHVACTagEmpty()
 		{
-			return SystemConfiguration == null && HeatPumpTypeDriverCompartment == null && HeatPumpModeDriverCompartment == null &&
-					HeatPumpPassengerCompartments?.Any() != true && AuxHeaterPower == null && DoubleGlazing == null && 
-					AdjustableAuxiliaryHeater == null && SeparateAirDistributionDucts == null && WaterElectricHeater == null &&
-					AirElectricHeater == null && OtherHeatingTechnology == null ;
+			return SystemConfiguration == null && 
+					HeatPumpTypeCoolingPassengerCompartment == null && 
+					HeatPumpTypeHeatingPassengerCompartment == null &&
+					HeatPumpTypeCoolingDriverCompartment == null && 
+					HeatPumpTypeHeatingDriverCompartment == null && 
+					AuxHeaterPower == null && 
+					DoubleGlazing == null && 
+					AdjustableAuxiliaryHeater == null && 
+					SeparateAirDistributionDucts == null && 
+					WaterElectricHeater == null &&
+					AirElectricHeater == null && 
+					OtherHeatingTechnology == null ;
 		}
 
 		public override XmlNode XMLSource => BaseNode;
@@ -322,49 +377,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Bus_SystemConfiguration) 
 				? BusHVACSystemConfigurationHelper.Parse(GetString(XMLNames.Bus_SystemConfiguration)) : null;
 
-		public override HeatPumpType? HeatPumpTypeDriverCompartment =>
+		public override HeatPumpType? HeatPumpTypeCoolingDriverCompartment =>
 			ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
-				? HeatPumpTypeHelper.Parse(GetString(XMLNames.Bus_HeatPumpTypeDriver)) : (HeatPumpType?)null;
+				? HeatPumpTypeHelper.Parse(GetString(new [] {XMLNames.Bus_HeatPumpTypeDriver, "Cooling"})) : (HeatPumpType?)null;
 
-		public override HeatPumpMode? HeatPumpModeDriverCompartment
-		{
-			get
-			{
-				if (HeatPumpTypeDriverCompartment == HeatPumpType.none && !ElementExists(XMLNames.Bus_HeatPumpModeDriver)) 
-					return HeatPumpMode.N_A;
-				
-				return ElementExists(XMLNames.Bus_HeatPumpModeDriver)
-					? (HeatPumpMode?)HeatPumpModeHelper.Parse(GetString(XMLNames.Bus_HeatPumpModeDriver)) : null;
-			}
-		}
-
-
-
-		public override IList<Tuple<HeatPumpType, HeatPumpMode>> HeatPumpPassengerCompartments =>
-			ElementExists(XMLNames.Bus_HeatPumpTypePassenger) 
-			&& ElementExists(XMLNames.Bus_HeatPumpModePassenger) 
-				? GetHeatPumpPassengerCompartments() : null;
-
-		private IList<Tuple<HeatPumpType, HeatPumpMode>> GetHeatPumpPassengerCompartments()
-		{
-			var pumpTypeNodes = GetNodes(XMLNames.Bus_HeatPumpTypePassenger);
-			var pumpModeNodes = GetNodes(XMLNames.Bus_HeatPumpModePassenger);
-			
-			if (pumpTypeNodes == null || pumpModeNodes == null)
-				return null;
-			if (pumpTypeNodes.Count != pumpModeNodes.Count )
-				return null;
-
-			var heatPumps = new List<Tuple<HeatPumpType, HeatPumpMode>>();
-
-			for (int i = 0; i < pumpTypeNodes.Count; i++) {
-				var pumpType = HeatPumpTypeHelper.Parse(pumpTypeNodes[i]?.InnerText);
-				var pumpMode = HeatPumpModeHelper.Parse(pumpModeNodes[i]?.InnerText);
-				heatPumps.Add(new Tuple<HeatPumpType, HeatPumpMode>(pumpType, pumpMode));
-			}
-			
-			return heatPumps.Any() != true ? null : heatPumps;
-		}
+		public override HeatPumpType? HeatPumpTypeHeatingDriverCompartment => ElementExists(XMLNames.Bus_HeatPumpTypeDriver)
+			? HeatPumpTypeHelper.Parse(GetString(new[] { XMLNames.Bus_HeatPumpTypeDriver, "Heating" })) : (HeatPumpType?)null;
+		public override HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => ElementExists(XMLNames.Bus_HeatPumpTypePassenger)
+			? HeatPumpTypeHelper.Parse(GetString(new[] { XMLNames.Bus_HeatPumpTypePassenger, "Cooling" })) : (HeatPumpType?)null;
+		public override HeatPumpType? HeatPumpTypeHeatingPassengerCompartment => ElementExists(XMLNames.Bus_HeatPumpTypePassenger)
+			? HeatPumpTypeHelper.Parse(GetString(new[] { XMLNames.Bus_HeatPumpTypePassenger, "Heating" })) : (HeatPumpType?)null;
 
 		public override Watt AuxHeaterPower =>
 			ElementExists(XMLNames.Bus_AuxiliaryHeaterPower)
@@ -404,7 +426,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IElectricConsumersDeclarationData ElectricConsumers => IsElectricConsumersTagEmpty() ? null : this;
 
-		public override bool? InteriorLightsLED
+		public virtual bool? InteriorLightsLED
 		{
 			get
 			{
@@ -414,7 +436,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override bool? DayrunninglightsLED
+		public virtual bool? DayrunninglightsLED
 		{
 			get
 			{
@@ -424,7 +446,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override bool? PositionlightsLED
+		public virtual bool? PositionlightsLED
 		{
 			get
 			{
@@ -434,7 +456,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override bool? HeadlightsLED
+		public virtual bool? HeadlightsLED
 		{
 			get
 			{
@@ -444,7 +466,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public override bool? BrakelightsLED
+		public virtual bool? BrakelightsLED
 		{
 			get
 			{

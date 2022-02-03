@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.TextFormatting;
@@ -27,6 +28,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		public AdditionalJobInfoViewModelBase()
 		{
+			Title = "Job Info";
 			SizeToContent = SizeToContent.WidthAndHeight;
 			MinHeight = 200;
 			MinWidth = 300;
@@ -40,9 +42,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 		private IMultiStageJobViewModel _parent;
 		private string _errorInfo;
 
+		public ObservableCollection<string> InvalidEntries { get; set; } = new ObservableCollection<string>();
+
+		public bool InvalidEntriesPresent => InvalidEntries.Count > 0;
+
+		public string ErrorInfo
+		{
+			get => _errorInfo;
+			set => SetProperty(ref _errorInfo, value);
+		}
+
+
 		public AdditionalJobInfoViewModelMultiStage()
 		{
-			Title = "Multistage Job Info";
+			Title = "Multistep Job Info";
+			InvalidEntries.CollectionChanged += (sender, args) => OnPropertyChanged(nameof(InvalidEntriesPresent));
 		}
 
 		#region Overrides of AdditionalJobInfoViewModelBase
@@ -68,7 +82,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 			
 			if (_parent.InvalidEntries != null && _parent.InvalidEntries.Count != 0) {
-				ErrorInfo = "This Job cannot be Simulated! The following inputs are missing or invalid";
+				ErrorInfo = null;
 				foreach (var parentInvalidEntry in _parent.InvalidEntries)
 				{
 					InvalidEntries.Add(parentInvalidEntry);
@@ -76,13 +90,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			}
 		}
 
-		public ObservableCollection<string> InvalidEntries { get; set; } = new ObservableCollection<string>();
-
-		public string ErrorInfo
-		{
-			get => _errorInfo;
-			set => SetProperty(ref _errorInfo, value);
-		}
 
 		#endregion
 	}
@@ -99,20 +106,34 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			_parent = parent as CreateVifViewModel;
             (_parent as INotifyPropertyChanged).PropertyChanged += AdditionalJobInfoViewModelNewVif_PropertyChanged;
 			Debug.Assert(_parent != null);
+			UpdateInvalidEntries();
 		}
 
         private void AdditionalJobInfoViewModelNewVif_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
 			if (e.PropertyName == nameof(_parent.CanBeSimulated)) {
-
-
-
+				UpdateInvalidEntries();
 			}
 		}
 
+		private void UpdateInvalidEntries()
+		{
+			InvalidEntries.Clear();
+			if (_parent.UnsavedChanges) {
+				InvalidEntries.Add("This job has unsaved changes");
+			}
+
+			if (_parent.PrimaryInputPath == null) {
+				InvalidEntries.Add("No Primary input path specified");
+			}
+
+			if (_parent.StageInputPath == null) {
+				InvalidEntries.Add($"No {(_parent.Completed ? "Completed" : "Interim")} input path specified");
+			}
 
 
-        #endregion
+		}
+		#endregion
     }
 
 	public class AdditionalJobInfoViewModelStageInput : AdditionalJobInfoViewModelBase

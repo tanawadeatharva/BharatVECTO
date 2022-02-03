@@ -102,26 +102,4 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		}
 	}
 
-
-    public class ADASViewModel_v2_3 : ADASViewModel_v2_1
-    {
-        public static new readonly string VERSION = typeof(XMLDeclarationADASDataProviderV23).ToString();
-
-
-		public override void SetProperties()
-		{
-			base.SetProperties();
-			_atEcoRollReleaseLockupClutch = _inputData.ATEcoRollReleaseLockupClutch ?? false;
-        }
-
-		public override bool? ATEcoRollReleaseLockupClutch { get => _atEcoRollReleaseLockupClutch; set => 
-                SetProperty(ref _atEcoRollReleaseLockupClutch, value); }
-
-
-
-        public ADASViewModel_v2_3(IAdvancedDriverAssistantSystemDeclarationInputData inputData) : base(inputData)
-        {
-
-		}
-    }
 }

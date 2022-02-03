@@ -360,26 +360,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(double))]HybridStrategySolution,
 
-		//[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartIdleAlternatorsEfficiency [%]")] AA_SmartIdleAlternatorsEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartTractionCurrent_Amps [A]")] AA_SmartTractionCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartTractionAlternatorEfficiency [%]")] AA_SmartTractionAlternatorEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartOverrunCurrent_Amps [A]")] AA_SmartOverrunCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartOverrunAlternatorEfficiency [%]")] AA_SmartOverrunAlternatorEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_CompressorFlowRate_LitrePerSec [Ni L/s]")] AA_CompressorFlowRate_LitrePerSec,
 		[ModalResultField(typeof(int), caption: "BusAux_Overrun [bool]")] BusAux_OverrunFlag,
-		//[ModalResultField(typeof(int), caption: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
-		//[ModalResultField(typeof(int), caption: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]", outputFactor: 1000)] AA_TotalCycleFC_Grams,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
-
+		
 		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
 		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr,
 		[ModalResultField(typeof(SI), "P_WHR_mech [kW]", outputFactor: 1e-3)] P_WHR_mech_map,

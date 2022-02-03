@@ -602,23 +602,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private IElectricMotor GetElectricMachine(PowertrainPosition pos,
-			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
-			IElectricSystem es, IHybridController ctl)
-		{
-			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData == null) {
-				return null;
-			}
+        private IElectricMotor GetElectricMachine(PowertrainPosition pos,
+            IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
+            IElectricSystem es, IHybridController ctl)
+        {
+            var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+            if (motorData == null) {
+                return null;
+            }
 
-			container.ModData?.AddElectricMotor(pos);
-			ctl.AddElectricMotor(pos, motorData.Item2);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
-			motor.Connect(es);
-			return motor;
-		}
+            container.ModData?.AddElectricMotor(pos);
+            ctl.AddElectricMotor(pos, motorData.Item2);
+            var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
+            motor.Connect(es);
+            return motor;
+        }
 
-		private static IElectricMotor GetElectricMachine(PowertrainPosition pos,
+        private static IElectricMotor GetElectricMachine(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
 			IElectricSystem es, IElectricMotorControl ctl)
 		{

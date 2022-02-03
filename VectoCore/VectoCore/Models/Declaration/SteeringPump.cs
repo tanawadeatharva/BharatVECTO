@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -156,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		[DebuggerDisplay("UnloadedFriction = {UnloadedFriction,nq}, Banking = {Banking,nq}, Steering = {Steering,nq}")]
 		private struct SteeringPumpValues<T>
 		{
 			public T UnloadedFriction;

@@ -349,9 +349,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		#region Implementation of IBatteryPackDeclarationInputData
 
-		public double MinSOC => 0.2;
-		public double MaxSOC => 0.8;
+		public double? MinSOC => 0.2;
+		public double? MaxSOC => 0.8;
+		public BatteryType BatteryType { get; }
 		public AmpereSecond Capacity { get; }
+		public bool ConnectorsSubsystemsIncluded { get; }
+		public bool JunctionboxIncluded { get; }
+		public Kelvin TestingTemperature => null;
 
 		public TableData InternalResistanceCurve => VectoCSVFile.ReadStream(
 			InputDataHelper.InputDataAsStream("SoC, Ri",

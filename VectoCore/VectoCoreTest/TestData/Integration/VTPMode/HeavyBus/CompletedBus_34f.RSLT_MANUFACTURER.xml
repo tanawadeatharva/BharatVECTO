@@ -1,6 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css"?>
-<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputManufacturer.xsd">
+<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8"
+xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8"
+ xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+ xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" 
+ xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput v:\VectoCore\VectoCore\Resources\XSD/VectoOutputManufacturer.xsd">
   <mrf:Data xsi:type="VectoOutputDataType" id="RESULT-b2d5a208fb6d49b09083">
     <Vehicle xsi:type="VehicleCompletedBusType">
       <PrimaryVehicle>
@@ -71,30 +77,32 @@
             <DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</DigestValue>
             <CdxA>5.20</CdxA>
           </AirDrag>
-          <Auxiliaries xmlns:aux="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xsi:type="aux:CompletedVehicleAuxiliaryDataDeclarationType">
-            <aux:ElectricSystem>
-              <aux:AlternatorTechnology>default</aux:AlternatorTechnology>
-              <aux:LEDLights>
-                <aux:Dayrunninglights>true</aux:Dayrunninglights>
-                <aux:Headlights>true</aux:Headlights>
-                <aux:Positionlights>true</aux:Positionlights>
-                <aux:Brakelights>true</aux:Brakelights>
-                <aux:Interiorlights>true</aux:Interiorlights>
-              </aux:LEDLights>
-            </aux:ElectricSystem>
-            <aux:HVAC>
-              <aux:SystemConfiguration>6</aux:SystemConfiguration>
-              <aux:CompressorType>
-                <aux:DriverAC>2-stage</aux:DriverAC>
-                <aux:PassengerAC>2-stage</aux:PassengerAC>
-              </aux:CompressorType>
-              <aux:AuxiliaryHeaterPower>30000</aux:AuxiliaryHeaterPower>
-              <aux:DoubleGlazing>true</aux:DoubleGlazing>
-              <aux:HeatPump>false</aux:HeatPump>
-              <aux:AdjustableAuxiliaryHeater>true</aux:AdjustableAuxiliaryHeater>
-              <aux:SeparateAirDistributionDucts>true</aux:SeparateAirDistributionDucts>
-            </aux:HVAC>
-          </Auxiliaries>
+          <mrf0.8:Auxiliaries xsi:type="AUX_Conventional_CompletedBusType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" >
+            <ElectricSystem>
+              <LEDLights>
+                <Interiorlights>true</Interiorlights>
+                <Dayrunninglights>true</Dayrunninglights>
+                <Positionlights>true</Positionlights>
+                <Brakelights>true</Brakelights>
+                <Headlights>true</Headlights>
+              </LEDLights>
+            </ElectricSystem>
+            <HVAC>
+              <SystemConfiguration>6</SystemConfiguration>
+              <HeatPumpTypeDriverCompartment>
+				<Cooling>non R-744 2-stage</Cooling>
+				<Heating>none</Heating>
+			</HeatPumpTypeDriverCompartment>
+			<HeatPumpTypePassengerCompartment>
+				<Cooling>non R-744 2-stage</Cooling>
+				<Heating>none</Heating>
+			</HeatPumpTypePassengerCompartment>
+              <AuxiliaryHeaterPower>30000</AuxiliaryHeaterPower>
+              <DoubleGlazing>true</DoubleGlazing>
+              <AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+              <SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
+            </HVAC>
+          </mrf0.8:Auxiliaries>
         </Components>
         <InputDataSignature>
           <di:Reference>
@@ -137,8 +145,8 @@
           <AverageGearboxEfficiency unit="%">96.34</AverageGearboxEfficiency>
           <AverageAxlegearEfficiency unit="%">95.23</AverageAxlegearEfficiency>
         </VehiclePerformance>
-        <FuelConsumptionFactor>0.9840</FuelConsumptionFactor>
-        <Fuel type="Diesel CI">
+<!--        <FuelConsumptionFactor>0.9840</FuelConsumptionFactor> -->
+		  <Fuel type="Diesel CI">
           <FuelConsumption unit="g/km">409.4</FuelConsumption>
           <FuelConsumption unit="g/t-km">80.1</FuelConsumption>
           <FuelConsumption unit="g/p-km">5.69</FuelConsumption>
@@ -184,7 +192,7 @@
           <AverageGearboxEfficiency unit="%">96.46</AverageGearboxEfficiency>
           <AverageAxlegearEfficiency unit="%">94.82</AverageAxlegearEfficiency>
         </VehiclePerformance>
-        <FuelConsumptionFactor>1.046</FuelConsumptionFactor>
+<!--        <FuelConsumptionFactor>1.046</FuelConsumptionFactor>-->
         <Fuel type="Diesel CI">
           <FuelConsumption unit="g/km">369.4</FuelConsumption>
           <FuelConsumption unit="g/t-km">214.4</FuelConsumption>
@@ -231,7 +239,7 @@
           <AverageGearboxEfficiency unit="%">97.45</AverageGearboxEfficiency>
           <AverageAxlegearEfficiency unit="%">91.58</AverageAxlegearEfficiency>
         </VehiclePerformance>
-        <FuelConsumptionFactor>1.025</FuelConsumptionFactor>
+<!--        <FuelConsumptionFactor>1.025</FuelConsumptionFactor>-->
         <Fuel type="Diesel CI">
           <FuelConsumption unit="g/km">276.0</FuelConsumption>
           <FuelConsumption unit="g/t-km">150.2</FuelConsumption>
@@ -278,7 +286,7 @@
           <AverageGearboxEfficiency unit="%">97.36</AverageGearboxEfficiency>
           <AverageAxlegearEfficiency unit="%">92.16</AverageAxlegearEfficiency>
         </VehiclePerformance>
-        <FuelConsumptionFactor>1.023</FuelConsumptionFactor>
+<!--        <FuelConsumptionFactor>1.023</FuelConsumptionFactor>-->
         <Fuel type="Diesel CI">
           <FuelConsumption unit="g/km">292.7</FuelConsumption>
           <FuelConsumption unit="g/t-km">63.7</FuelConsumption>

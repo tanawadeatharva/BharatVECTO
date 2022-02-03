@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 						new XElement(tns + XMLNames.Bus_UpperDeck, modelData.VehicleData.InputData.NumberPassengerSeatsUpperDeck)
 					),
 					new XElement(tns +XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
-					new XElement(tns + XMLNames.Bus_HeighIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
+					new XElement(tns + XMLNames.Bus_HeightIntegratedBody, modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.Bus_VehicleLength, modelData.VehicleData.InputData.Length.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, modelData.VehicleData.InputData.DoorDriveTechnology.ToXMLFormat()),

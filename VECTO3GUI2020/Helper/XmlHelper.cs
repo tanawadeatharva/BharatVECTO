@@ -64,7 +64,7 @@ namespace VECTO3GUI2020.Helper
 		}
 
 		public static XDocument CreateWrapperDocument(this XElement xElement, XNamespace defaultNamespace,
-			XmlDocumentType docType = XmlDocumentType.DeclarationJobData)
+			XmlDocumentType docType = XmlDocumentType.DeclarationJobData, string schemaVersion = "2.0")
 		{
 			var prefixMap = new Dictionary<string, XNamespace>();
 
@@ -74,7 +74,7 @@ namespace VECTO3GUI2020.Helper
 			Debug.WriteLine(rootElement.ToString());
 
 			rootElement.Add(new XAttribute("xmlns", defaultNamespace));
-			rootElement.Add(new XAttribute("schemaVersion", XMLHelper.GetVersionFromNamespaceUri(defaultNamespace)));
+			rootElement.Add(new XAttribute("schemaVersion", schemaVersion));
 
 			xDocument.Add(rootElement);
 

@@ -14,6 +14,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -275,10 +276,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -567,6 +567,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5TestJob_BatterySystem2, 7, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Suburban"),
 			TestCase(Group5TestJob_BatterySystem2, 8, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Urban"),
 			TestCase(Group5TestJob_BatterySystem2, 9, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle UrbanDelivery"),
+			TestCase(Group5TestJob_BatterySystem2, 10, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Interurban Short"),
 
 		]
 		public void P2HybridGroup5DriveCycle_BatterySystem(string jobFile, int cycleIdx)
@@ -822,10 +823,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 			
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);

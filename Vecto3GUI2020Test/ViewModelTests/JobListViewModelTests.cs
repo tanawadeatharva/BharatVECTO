@@ -14,10 +14,14 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	[TestFixture]
 	public class JobListViewModelTests : ViewModelTestBase
 	{
-		private const string finalVIF = "final.VIF_Report_4.xml";
+		private const string finalVIF = "vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 
-		private const string _newVifJob = "newVifCompletedStage.json";
 		private JobListViewModel _jobListViewModel;
+
+		private const string _newVifCompletedConventional = "newVifCompletedConventional.vecto";
+		private const string _newVifExempted = "newVifExempted.vecto";
+		private const string _newVifInterimDiesel = "newVifInterimDiesel.vecto";
+		private const string _newVifExemptedIncomplete = "newVifExemptedIncomplete.vecto";
 
 		[SetUp]
 		public void SetupViewModelTests()
@@ -53,16 +57,24 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			TestContext.WriteLine($"ExecutionTime {watch.Elapsed.TotalSeconds}s");
 		}
 
+		[TestCase(_newVifCompletedConventional, TestName = "VIFConventionalCompleted")]
+		[TestCase(_newVifInterimDiesel, TestName="VIFConventionalInterim")]
+		[TestCase(_newVifExempted, TestName = "VIFExempted")]
+		[TestCase(_newVifExemptedIncomplete, TestName = "VIFExemptedInterim")]
 		[TestCase(VIFTests.exempted_primary_vif, TestName="Exempted")]
 		public async Task AddJobAsyncTest(string fileName)
 		{
 			var path = GetTestDataPath(fileName);
 			Assert.AreEqual(0, _jobListViewModel.Jobs.Count);
+			await DoAddJobAsync(path);
+		}
 
-			await _jobListViewModel.AddJobAsync(path);
+
+		private async Task DoAddJobAsync(string filepath) {
+			await _jobListViewModel.AddJobAsync(filepath);
 			Assert.AreEqual(1, _jobListViewModel.Jobs.Count);
 
-			Assert.AreEqual(path, _jobListViewModel.Jobs[0].DataSource.SourceFile);
+			Assert.AreEqual(filepath, _jobListViewModel.Jobs[0].DataSource.SourceFile);
 		}
 
 		[TestCase(true, TestName = "Exempted")]
@@ -93,6 +105,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			//select vif for simulation
 			Assert.AreNotEqual(0, _jobListViewModel.Jobs.Count);
+
+			Assert.IsTrue(_jobListViewModel.Jobs[0].CanBeSimulated);
 			_jobListViewModel.Jobs[0].Selected = true;
 
 
@@ -122,11 +136,5 @@ namespace Vecto3GUI2020Test.ViewModelTests
             Assert.NotNull(stageInputDocumentViewModel);
 		}
 
-		[Test]
-		public async Task LoadNewVifJob()
-		{
-			var documentViewModel = await _jobListViewModel.AddJobAsync(GetTestDataPath(_newVifJob));
-			Assert.NotNull(documentViewModel);
-		}
     }
 }

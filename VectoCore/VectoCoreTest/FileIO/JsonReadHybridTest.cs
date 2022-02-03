@@ -8,6 +8,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -66,7 +67,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
@@ -98,7 +100,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-401.07, fldMapLow.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMapLow.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwrLow = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwrLow = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;
+			// var pwrLow = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwrLow.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwrLow.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwrLow.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
@@ -122,7 +125,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-476.284, fldMapHi.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(486.284, fldMapHi.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwrHi = inputProvider.VoltageLevels.Last().EfficiencyMap;
+			var pwrHi = inputProvider.VoltageLevels.Last().PowerMap.First().PowerMap;
+			// var pwrHi = inputProvider.VoltageLevels.Last().EfficiencyMap;
 			Assert.AreEqual("0", pwrHi.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwrHi.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("8.86041", pwrHi.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
@@ -193,7 +197,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-802.14, fldMap.FullLoadDriveTorque(50.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(802.14, fldMap.FullGenerationTorque(50.RPMtoRad()).Value(), 1e-3);
 
-            var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
@@ -246,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
 
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 
 			var sumContainer = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumContainer);
@@ -273,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto");
 
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 
 			var sumContainer = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumContainer);

@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData
 		private Second _duration;
 		private Meter _distance;
 
-		private readonly ModalResultField[] _electricMotorColumns = new[] {
+		private readonly ModalResultField[] _electricMotorColumns = {
 			ModalResultField.EM_ratio_,
 			ModalResultField.P_EM_out_,
 			ModalResultField.P_EM_mech_,
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.OutputData
 			ModalResultField.EM_Off_,
 		};
 
-		private readonly ModalResultField[] _batterySignals = new[] {
+		private readonly ModalResultField[] _batterySignals = {
 			ModalResultField.U0_reess,
 			ModalResultField.U_reess_terminal,
 			ModalResultField.I_reess,

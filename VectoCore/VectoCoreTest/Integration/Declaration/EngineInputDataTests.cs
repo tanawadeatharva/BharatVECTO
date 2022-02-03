@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			}
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
 			var first = factory.SimulationRuns().ToArray().First();
 
 			var modData = ((ModalDataContainer)first.GetContainer().ModalData).Data;

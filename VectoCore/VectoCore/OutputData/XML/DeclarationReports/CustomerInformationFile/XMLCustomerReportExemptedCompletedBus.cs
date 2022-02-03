@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					modelData.VehicleData.InputData.NumberPassengerSeatsUpperDeck
 				),
 				new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
-				new XElement(tns + XMLNames.Bus_HeighIntegratedBody,
+				new XElement(tns + XMLNames.Bus_HeightIntegratedBody,
 					modelData.VehicleData.InputData.Height.ToXMLFormat(3))
 			);
 			VehiclePart.Add(

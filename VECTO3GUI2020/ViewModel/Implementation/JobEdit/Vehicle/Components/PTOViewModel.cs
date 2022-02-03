@@ -40,8 +40,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		}
 
 		
-
-    
 		#region implementation of IPTOTransmissionInputData
 
 		protected string _ptoTransmissionType;

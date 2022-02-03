@@ -38,7 +38,7 @@ namespace VECTO3GUI2020
 
 
 		private Meter _meter;
-		private HeatPumpMode? _heatpumpMode;
+		//private HeatPumpMode? _heatpumpMode;
 		private string _testString;
 
 		public Meter Meter
@@ -47,30 +47,30 @@ namespace VECTO3GUI2020
 			set => SetProperty(ref _meter, value);
 		}
 
-		public HeatPumpMode? HeatPumpMode
-		{
-			get => _heatpumpMode;
-			set => SetProperty(ref _heatpumpMode, value);
-		}
+		//public HeatPumpMode? HeatPumpMode
+		//{
+		//	get => _heatpumpMode;
+		//	set => SetProperty(ref _heatpumpMode, value);
+		//}
 
-		private IList<HeatPumpMode> allowedValues = new List<HeatPumpMode>(){
-			TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.cooling,
-			TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.heating_and_cooling
-		};
+		//private IList<HeatPumpMode> allowedValues = new List<HeatPumpMode>(){
+		//	TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.cooling,
+		//	TUGraz.VectoCommon.BusAuxiliaries.HeatPumpMode.heating_and_cooling
+		//};
 
-		private HeatPumpMode? _heatpumpMode2;
+		//private HeatPumpMode? _heatpumpMode2;
 		private bool _enabled;
 		public bool enabled { get => _enabled; set => SetProperty(ref _enabled, value); }
-		public HeatPumpMode? HeatPumpMode2
-		{
-			get => _heatpumpMode2;
-			set => SetProperty(ref _heatpumpMode2, value);
-		}
+		//public HeatPumpMode? HeatPumpMode2
+		//{
+		//	get => _heatpumpMode2;
+		//	set => SetProperty(ref _heatpumpMode2, value);
+		//}
 
-		public ObservableCollection<Enum> HeatPumpModeListItems
-		{
-			get => new ObservableCollection<Enum>(allowedValues.Cast<Enum>());
-		}
+		//public ObservableCollection<Enum> HeatPumpModeListItems
+		//{
+		//	get => new ObservableCollection<Enum>(allowedValues.Cast<Enum>());
+		//}
 
 		public String TestString
 		{
