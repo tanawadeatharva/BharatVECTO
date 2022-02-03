@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" schemaLocation="VectoOutputManufacturer.0.9.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:element name="VectoOutput">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
@@ -88,7 +89,7 @@
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
 			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
-			<xs:element name="ADAS" type="out:ConventionalADASType"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
@@ -100,7 +101,7 @@
 	<xs:complexType name="HEV_Px_IHPC_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
@@ -119,7 +120,7 @@
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
@@ -132,7 +133,7 @@
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
@@ -141,7 +142,7 @@
 	<xs:complexType name="HEV_S4_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
@@ -152,7 +153,7 @@
 	<xs:complexType name="HEV_IEPC_S_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
@@ -165,7 +166,7 @@
 	<xs:complexType name="PEV_E2_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
@@ -178,7 +179,7 @@
 	<xs:complexType name="PEV_E3_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -190,7 +191,7 @@
 	<xs:complexType name="PEV_E4_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -202,7 +203,7 @@
 	<xs:complexType name="PEV_IEPC_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -214,21 +215,21 @@
 	<xs:complexType name="Conventional_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:ConventionalADASType"/>
+			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:HEVADASType"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="out:PEVADASType"/>
+			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -279,7 +280,11 @@
 			<xs:element name="VehicleIdentifiationNumber"/>
 			<xs:element name="VehicleCategory"/>
 			<xs:element name="AxleConfiguration"/>
-			<xs:element name="TechnicalPermissibleMaximumLadenMass"/>
+			<xs:element name="TechnicalPermissibleMaximumLadenMass">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="VehicleGroup"/>
 		</xs:sequence>
 	</xs:group>
@@ -290,25 +295,33 @@
 			<xs:element name="ManufacturerAddress"/>
 			<xs:element name="Model"/>
 			<xs:element name="VehicleTypeApprovalNumber"/>
-			<xs:element name="CorrectedActualMass"/>
+			<xs:element name="CorrectedActualMass">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="VocationalVehicle"/>
 			<xs:element name="SleeperCab"/>
-			<xs:element name="ZeroEmissionHDV"/>
-			<xs:element name="HybridElectricHDV"/>
+			<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
+			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Conventional_LorryVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="WasteHeatRecovery"/>
-			<xs:element name="DualFuelVehicle"/>
+			<xs:element name="WasteHeatRecovery" type="xs:boolean"/>
+			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV_VehicleSequenceGroup">
 		<xs:sequence>
 			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
 			<xs:element name="HEVArchitecture"/>
-			<xs:element name="OffVehicleChargingCapability"/>
-			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEV_VehicleSequenceGroup">
@@ -323,11 +336,6 @@
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
 			<xs:group ref="HEV_VehicleSequenceGroup"/>
-			<xs:sequence>
-				<xs:element name="HEVArchitecture"/>
-				<xs:element name="OffVehicleChargingCapability"/>
-				<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
-			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEV_LorryVehicleTypeGroup">
@@ -369,8 +377,16 @@
 	</xs:group>
 	<xs:group name="EngineGroup">
 		<xs:sequence>
-			<xs:element name="EngineRatedPower"/>
-			<xs:element name="EngineCapacity"/>
+			<xs:element name="EngineRatedPower">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="EngineCapacity">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:VolumeUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="FuelType"/>
 		</xs:sequence>
 	</xs:group>
@@ -398,14 +414,30 @@
 	</xs:group>
 	<xs:group name="ElectricMachineGroup">
 		<xs:sequence>
-			<xs:element name="TotalRatedPropulsionPower"/>
-			<xs:element name="MaxContinousPropulsionPower"/>
+			<xs:element name="TotalRatedPropulsionPower">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="MaxContinousPropulsionPower">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="REESSGroup">
 		<xs:sequence>
-			<xs:element name="TotalStorageCapacity"/>
-			<xs:element name="UsableStorageCapacity"/>
+			<xs:element name="TotalStorageCapacity">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="UsableStorageCapacity">
+				<xs:complexType>
+					<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="LorryAuxGroup">
