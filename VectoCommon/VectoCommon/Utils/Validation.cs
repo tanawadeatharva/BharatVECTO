@@ -135,7 +135,7 @@ namespace TUGraz.VectoCommon.Utils
 					//if (m is FieldInfo field) {
 					attributes =
 						attributes.Concat(
-							field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
+							field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>))).Distinct();
 				}
 			}
             
