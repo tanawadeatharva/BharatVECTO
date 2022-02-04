@@ -76,12 +76,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission,
-			VehicleClass hdvClass, Meter vehicleLength)
+			VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles)
 		{
 			if (auxInputData != null) {
 				throw new VectoException("Only BusAuxiliaries can be provided as input!");
 			}
 
+			if (numSteeredAxles.HasValue && busAuxData.SteeringPumpTechnology.Count != numSteeredAxles.Value) {
+				throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {busAuxData.SteeringPumpTechnology.Count})");
+			}
 			var retVal = new List<VectoRunData.AuxData>();
 
 			retVal.Add(

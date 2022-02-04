@@ -119,27 +119,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				JobInputData.Vehicle.Components.AuxiliaryInputData,
 				JobInputData.Vehicle.Components.BusAuxiliaries,
 				missionType,
-				Segment.VehicleClass, JobInputData.Vehicle.Length);
+				Segment.VehicleClass, JobInputData.Vehicle.Length,
+				JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered));
 		}
 
 		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
 		{
+			var numSteered = vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered);
 			var auxRD = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered)
 							.ToList();
 			foreach (var entry in auxRD) {
 				entry.MissionType = MissionType.RegionalDelivery;
 			}
 
 			var auxLH = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length, numSteered)
 							.ToList();
 			foreach (var entry in auxLH) {
 				entry.MissionType = MissionType.LongHaul;
 			}
 
 			var auxUD = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length, numSteered)
 							.ToList();
 			foreach (var entry in auxUD) {
 				entry.MissionType = MissionType.UrbanDelivery;

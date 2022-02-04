@@ -215,9 +215,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx) {
+		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx) 
+		{
 			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
-			
+			var numSteeredAxles = PrimaryVehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered);
+
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus, 
@@ -229,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
 				Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
-					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length),
+					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length, numSteeredAxles),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverData,
@@ -267,7 +269,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData = _angledriveData,
 				Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
-					mission.BusParameter.VehicleLength),
+					mission.BusParameter.VehicleLength, PrimaryVehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverData,
