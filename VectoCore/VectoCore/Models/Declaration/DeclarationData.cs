@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static PerSecond MinEngineSpeedPostUpshift = 0.RPMtoRad();
 
-			public static Second ATLookAheadTime = Gearbox.PowershiftShiftTime;
+			public static Second ATLookAheadTime = 1.5.SI<Second>(); //Gearbox.PowershiftShiftTime;
 
 			public static double[] LoadStageThresholdsUp = { 19.7, 36.34, 53.01, 69.68, 86.35 };
 			public static double[] LoadStageThresoldsDown = { 13.7, 30.34, 47.01, 63.68, 80.35 };

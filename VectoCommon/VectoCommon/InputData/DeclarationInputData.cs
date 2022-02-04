@@ -457,6 +457,8 @@ namespace TUGraz.VectoCommon.InputData
 		ITyreDeclarationInputData Tyre { get; }
 
 		DataSource DataSource { get; }
+		
+		bool Steered { get; }
 	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData

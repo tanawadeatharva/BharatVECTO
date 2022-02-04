@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -163,7 +164,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
-					_segment.VehicleClass, vehicle.Length),
+					_segment.VehicleClass, vehicle.Length,
+					vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,
