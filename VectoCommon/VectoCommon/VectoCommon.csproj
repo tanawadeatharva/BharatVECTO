@@ -3,6 +3,7 @@
     <AssemblyName>VectoCommon</AssemblyName>
     <Product>VectoCommon</Product>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
+    <TargetFrameworks>net45;net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
