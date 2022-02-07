@@ -4,12 +4,11 @@
     <AssemblyName>VectoCommon</AssemblyName>
     <Product>VectoCommon</Product>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
-    <ProjectGuid>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</ProjectGuid>
-
     <TargetFramework>net45</TargetFramework>
-    <VersionSuffix Condition="'$(Configuration)'=='DEPLOY'"></VersionSuffix>
-    <VersionSuffix Condition="'$(Configuration)'=='RELEASE'">RC</VersionSuffix>
-    <VersionSuffix Condition="'$(Configuration)'=='DEBUG'">DEV</VersionSuffix>
+    <Configurations>Debug;Release;Deploy</Configurations>
+    <VersionSuffix Condition="'$(Configuration)'=='Deploy'"></VersionSuffix>
+    <VersionSuffix Condition="'$(Configuration)'=='Release'">RC</VersionSuffix>
+    <VersionSuffix Condition="'$(Configuration)'=='Debug'">DEV</VersionSuffix>
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -30,6 +29,14 @@
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|AnyCPU'">
+    <DefineConstants />
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
