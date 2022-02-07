@@ -1,31 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>0.7.7.$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <AssemblyName>VectoCommon</AssemblyName>
     <Product>VectoCommon</Product>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
-    <TargetFramework>net45</TargetFramework>
-    <Authors>Graz University of Technology</Authors>
-    <Company>European Union</Company>
-    <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
-    <VersionSuffix Condition="'$(Configuration)'=='Debug'">DEV</VersionSuffix>
-    <VersionSuffix Condition="'$(Configuration)'!='Debug'" />
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants />
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,5 +26,4 @@
       <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>
