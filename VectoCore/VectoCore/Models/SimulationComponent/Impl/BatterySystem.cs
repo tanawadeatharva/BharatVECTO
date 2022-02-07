@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IList<IRESSResponse> Request(Second absTime, Second dt, Watt powerDemand, Second tPulse, bool dryRun)
 			{
 				var current = 0.SI<Ampere>();
-				if (!powerDemand.IsEqual(0)) {
+				if (!powerDemand.IsEqual(0, 1e-3)) {
 					var solutions = VectoMath.QuadraticEquationSolver(InternalResistance(tPulse).Value(), OpenCircuitVoltage.Value(),
 						-powerDemand.Value());
 					current = SelectSolution(solutions, powerDemand.Value(), dt);
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public double MinSoC => _minSoc ?? (_minSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
-		public double MaxSoC => _maxSoc ?? (_maxSoc = Batteries.Values.Sum(x => x.CapacityMinSoc) / TotalCapacity);
+		public double MaxSoC => _maxSoc ?? (_maxSoc = Batteries.Values.Sum(x => x.CapacityMaxSoc) / TotalCapacity);
 		public AmpereSecond Capacity => TotalCapacity;
 
 		public Volt NominalVoltage => Batteries.Values.Select(x => x.NominalVoltage).Average();
@@ -283,7 +283,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (limitBB.Count > 0) {
-					Log.Debug($"BB ${string.Join(", ", limitBB.Keys)} are at max - recalculating power distribution");
+					Log.Debug($"BB ${limitBB.Keys.Join()} are at max - recalculating power distribution");
 				}
 			} while (!(distributedPower + (limitBB.Sum(x => x.Value) ?? 0.SI<Watt>())) .IsEqual(powerDemand, 1e-3.SI<Watt>()));
 

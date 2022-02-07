@@ -30,11 +30,15 @@
 */
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -43,13 +47,46 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 {
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
-		private readonly string _jobFile;
+		protected readonly string _jobFile;
+
+		public string JobFile => _jobFile;
+
+		protected ConcurrentDictionary<ReportType, string> _writtenReports = new ConcurrentDictionary<ReportType, string>();
+		public virtual IDictionary<ReportType, string> GetWrittenFiles()
+		{
+			return _writtenReports;
+		}
+
+		private volatile bool _sumFileWritten = false;
+		public bool SumFileWritten => _sumFileWritten;
+
+		public const string REPORT_ENDING_PREFIX = "VIF_Report_";
+
+		private int? _numberOfManufacturingStages = null;
+
+		public int NumberOfManufacturingStages
+		{
+			set => _numberOfManufacturingStages = value;
+		}
+
+		public XDocument MultistageXmlReport => XDocument.Load(XMLMultistageReportFileName);
+
+		public string XMLMultistageReportFileName
+		{
+			get
+			{
+				return Path.ChangeExtension(
+					RemoveExistingVIFEndingPrefix(_jobFile),
+					$"{REPORT_ENDING_PREFIX}{(_numberOfManufacturingStages ?? 0) + 2}.xml");
+			}
+		}
 
 		public string BasePath => Path.GetDirectoryName(_jobFile);
 
 		public string PDFReportName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport);
 
-		public string XMLFullReportName => Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml");
+		public virtual string XMLFullReportName => Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml");
+
 
 		public string XMLCustomerReportName => Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml");
 
@@ -61,6 +98,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string SumFileName => Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile);
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -70,12 +108,32 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			_jobFile = jobFile;
 		}
 
-		public void WriteSumData(DataTable data)
+		protected FileOutputWriter(string jobFile, int numberOfManufacturingStages) : this(jobFile)
 		{
-			VectoCSVFile.Write(SumFileName, data, true, true);
+			_numberOfManufacturingStages = numberOfManufacturingStages;
 		}
 
-		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
+
+
+		protected string RemoveExistingVIFEndingPrefix(string jobFile)
+		{
+			var vifReportIndex = jobFile.IndexOf(REPORT_ENDING_PREFIX, StringComparison.Ordinal);
+			if (vifReportIndex == -1)
+				return jobFile;
+
+			if (!jobFile.Contains(REPORT_ENDING_PREFIX))
+				return jobFile;
+
+			return $"{jobFile.Substring(0, vifReportIndex - 1)}.xml";
+		}
+
+		public virtual void WriteSumData(DataTable data)
+		{
+			VectoCSVFile.Write(SumFileName, data, true, true);
+			_sumFileWritten = true;
+		}
+
+		public virtual string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
 			string modFileName;
 			if (!string.IsNullOrWhiteSpace(cycleName) || !string.IsNullOrWhiteSpace(runSuffix)) {
@@ -87,12 +145,32 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return Path.Combine(BasePath, string.Concat(modFileName.Split(Path.GetInvalidFileNameChars())));
 		}
 
-		public void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
+		public virtual void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
-			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData, true);
+			var modDataFileName = GetModDataFileName(runName, cycleName, runSuffix);
+			VectoCSVFile.Write(modDataFileName, modData, true);
 		}
 
 		public virtual void WriteReport(ReportType type, XDocument data)
+		{
+			var fileName = GetReportFilename(type);
+
+			if (File.Exists(fileName)) {
+				Log.Warn($"Overwriting file ({fileName})");
+			}
+			using (var writer = new FileStream(fileName, FileMode.Create)) {
+				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
+					xmlWriter.Formatting = Formatting.Indented;
+					data.WriteTo(xmlWriter);
+					xmlWriter.Flush();
+					xmlWriter.Close();
+				}
+			}
+
+			var added = _writtenReports.TryAdd(type, fileName);
+		}
+
+		protected virtual string GetReportFilename(ReportType type)
 		{
 			string fileName = null;
 			switch (type) {
@@ -111,20 +189,16 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				case ReportType.DeclarationVTPReportXML:
 					fileName = XMLVTPReportName;
 					break;
+				case ReportType.DeclarationReportMultistageVehicleXML:
+					fileName = XMLMultistageReportFileName;
+					break;
 				default:
 					throw new ArgumentOutOfRangeException("ReportType");
 			}
-			using (var writer = new FileStream(fileName, FileMode.Create)) {
-				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
-					xmlWriter.Formatting = Formatting.Indented;
-					data.WriteTo(xmlWriter);
-					xmlWriter.Flush();
-					xmlWriter.Close();
-				}
-			}
+
+			return fileName;
 		}
 
-		
 
 		public virtual void WriteReport(ReportType type, Stream data)
 		{

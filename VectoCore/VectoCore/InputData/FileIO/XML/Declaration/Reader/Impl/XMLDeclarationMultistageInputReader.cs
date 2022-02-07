@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InputData = inputData;
 		}
 
-		public IDeclarationMultistageJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistage, JobCreator));
+		public IDeclarationMultistageJobInputData JobData => _jobData ?? (_jobData = CreateComponent(XMLNames.VectoOutputMultistep, JobCreator));
 
 		protected virtual IDeclarationMultistageJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -129,10 +129,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				if (ManufacturingStages.IsNullOrEmpty())
-					return null;
+                //if (ManufacturingStages.IsNullOrEmpty())
+                //    return null;
 
-				return _consolidateManufacturingStages ??
+                return _consolidateManufacturingStages ??
 						(_consolidateManufacturingStages = GetConsolidateManufacturingStage());
 			}
 		}
@@ -171,13 +171,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private ConsolidateManufacturingStages GetConsolidateManufacturingStage()
 		{
-			return new ConsolidateManufacturingStages(PrimaryVehicle, ManufacturingStages.Reverse());
+			return new ConsolidateManufacturingStages(PrimaryVehicle, ManufacturingStages?.Reverse());
 		}
 
 
 		private void SetManufacturingStageNodes()
 		{
-			_manufacturingNodeStages = BaseNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.ManufacturingStage));
+			_manufacturingNodeStages = BaseNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.ManufacturingStep));
 		}
 	}
 
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "ManufacturingStageType";
+		public const string XSD_TYPE = "ManufacturingStepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -309,8 +309,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected readonly IEnumerable<IManufacturingStageInputData> _manufacturingStages;
 		private string _invalidEntry;
 		protected IList<string> _invalidEntries = new List<string>();
-		protected bool _fullChecked = false;
-		protected bool _checked = false;
+		protected bool _fullChecked;
+		protected bool _checked;
 		protected bool _isComplete = true;
 
 		protected string InvalidEntry
@@ -326,11 +326,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				_isComplete = false;
 			} 
 		}
-
-		
-		
-
-
 
 
 		public ConsolidatedDataBase(IEnumerable<IManufacturingStageInputData> manufacturingStages)
@@ -420,6 +415,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			InvalidEntry  = variableName; 
 			return false;
 		}
+
+		protected bool InputComplete<T>(T value, string variableName, bool mandatory)
+		{
+			if (mandatory) {
+				return InputComplete(value, variableName);
+			} else {
+				return true;
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -435,15 +439,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_primaryVehicle = primaryVehicle;
 		}
 
-		public DigestData HashPreviousStage => _manufacturingStages.First().HashPreviousStage;
+		public DigestData HashPreviousStep => _manufacturingStages?.First().HashPreviousStep;
 
-		public int StageCount => _manufacturingStages.First().StageCount;
+		public int StepCount => _manufacturingStages?.First().StepCount ?? 0;
 
 		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 
-		public IApplicationInformation ApplicationInformation => _manufacturingStages.First().ApplicationInformation;
+		public IApplicationInformation ApplicationInformation => _manufacturingStages?.First().ApplicationInformation;
 
-		public DigestData Signature => _manufacturingStages.First().Signature;
+		public DigestData Signature => _manufacturingStages?.First().Signature;
 
 
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
@@ -490,16 +494,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region ManufacturingStage mandatory properties
 
-		public string Manufacturer => _manufacturingStages.First().Vehicle.Manufacturer;
+		public string Manufacturer => _manufacturingStages?.First().Vehicle.Manufacturer;
 
-		public string ManufacturerAddress => _manufacturingStages.First().Vehicle.ManufacturerAddress;
+		public string ManufacturerAddress => _manufacturingStages?.First().Vehicle.ManufacturerAddress;
 
-		public DateTime Date => _manufacturingStages.First().Vehicle.Date;
+		public DateTime Date => _manufacturingStages?.First().Vehicle.Date ?? DateTime.MinValue;
 
-		public string VIN => _manufacturingStages.First().Vehicle.VIN;
+		public string VIN => _manufacturingStages?.First().Vehicle.VIN;
 
-		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages.First().Vehicle.VehicleDeclarationType;
-		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
+
+
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
 		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
@@ -512,9 +518,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public Kilogram CurbMassChassis => GetVehiclePropertyValue<Kilogram>(nameof(CurbMassChassis));
 
-		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating));
+		public Kilogram GrossVehicleMassRating => GetVehiclePropertyValue<Kilogram>(nameof(GrossVehicleMassRating)) ?? _primaryVehicle.Vehicle.GrossVehicleMassRating;
 
-		public bool? AirdragModifiedMultistage => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistage));
+		public bool? AirdragModifiedMultistep => GetVehiclePropertyValue<bool?>(nameof(AirdragModifiedMultistep));
 
 		public TankSystem? TankSystem => GetVehiclePropertyValue<TankSystem?>(nameof(TankSystem));
 
@@ -531,6 +537,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public VehicleCode? VehicleCode => GetVehiclePropertyValue<VehicleCode?>(nameof(VehicleCode));
 
+		public string VehicleTypeApprovalNumber => GetVehiclePropertyValue<string>(nameof(VehicleTypeApprovalNumber));
 		public bool? LowEntry => GetVehiclePropertyValue<bool?>(nameof(LowEntry));
 
 		public Meter Height => GetVehiclePropertyValue<Meter>(nameof(Height));
@@ -547,11 +554,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{
-			if (GetVehiclePropertyValue<IAdvancedDriverAssistantSystemDeclarationInputData>(nameof(ADAS)) == null)
-				return null;
-
 			return _consolidatedADAS
-					?? (_consolidatedADAS = new ConsolidatedADASData(_manufacturingStages));
+					?? (_consolidatedADAS = new ConsolidatedADASData(
+						manufacturingStages: _manufacturingStages, 
+						primaryVehicleData: _primaryVehicle.Vehicle,
+						usePrimaryData: GetVehiclePropertyValue<IAdvancedDriverAssistantSystemDeclarationInputData>(nameof(ADAS)) == null));
 		}
 
 
@@ -579,7 +586,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string Identifier { get; }
 		public bool ExemptedVehicle
 		{
-			get { return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle); }
+			get
+			{
+				return _primaryVehicle.Vehicle.ExemptedVehicle;
+				//if (_primaryVehicle.Vehicle.ExemptedVehicle) {
+				//	return true;
+				//}
+				////return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle);
+			}
 		}
 		public VehicleCategory VehicleCategory { get => VehicleDeclarationType == VehicleDeclarationType.final ? VehicleCategory.HeavyBusCompletedVehicle : VehicleCategory.HeavyBusInterimVehicle; }
 		public AxleConfiguration AxleConfiguration { get; }
@@ -587,7 +601,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
+		public bool? SleeperCab { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
@@ -599,7 +613,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
-		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
@@ -608,10 +621,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private T GetVehiclePropertyValue<T>(string propertyName)
 		{
-			foreach (var manufacturingStage in _manufacturingStages) {
-				var value = GetPropertyValue<T>(manufacturingStage.Vehicle, propertyName);
-				if (value != null)
-					return value;
+			if (_manufacturingStages != null) {
+				foreach (var manufacturingStage in _manufacturingStages)
+				{
+					var value = GetPropertyValue<T>(manufacturingStage.Vehicle, propertyName);
+					if (value != null)
+						return value;
+				}
 			}
 			return default;
 		}
@@ -646,8 +662,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var checkAirdragModified = false;
 			var validAirdragEntries = true;
-
-			var t = _manufacturingStages.ToList(); 
+			if (_manufacturingStages == null) {
+				return default(bool);
+			}
 
 			var stages = _manufacturingStages.Reverse().ToList();
 			foreach (var manufacturingStage in stages) {
@@ -656,7 +673,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					continue;
 				}
 
-				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistage == null) {
+				if (checkAirdragModified && manufacturingStage.Vehicle?.AirdragModifiedMultistep == null) {
 					validAirdragEntries = false;
 					break;
 				}
@@ -724,6 +741,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					& InputComplete(Width, nameof(Width))
 					& InputComplete(EntranceHeight, nameof(EntranceHeight))
 					& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology))
+					//& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					& (InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataCompleteFullCheck(jobType))
 					& (InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataCompleteFullCheck(jobType));
 			}
@@ -745,6 +763,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					&& InputComplete(Length, nameof(Length)) && InputComplete(Width, nameof(Width)) 
 					&& InputComplete(EntranceHeight, nameof(EntranceHeight))  
 					&& InputComplete(DoorDriveTechnology, nameof(DoorDriveTechnology)) 
+					//&& InputComplete(VehicleTypeApprovalNumber, nameof(VehicleTypeApprovalNumber))
 					&& InputComplete(_consolidatedADAS, nameof(_consolidatedADAS)) && _consolidatedADAS.IsInputDataComplete(jobType)
 					&& InputComplete(_consolidatedComponents, nameof(_consolidatedComponents)) && _consolidatedComponents.IsInputDataComplete(jobType);
 		}
@@ -784,8 +803,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class ConsolidatedADASData : ConsolidatedDataBase, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
-		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
-			: base(manufacturingStages) { }
+		private readonly bool _usePrimaryData;
+		private readonly IAdvancedDriverAssistantSystemDeclarationInputData _primaryAdas;
+		private readonly IVehicleDeclarationInputData _primaryVehicleData;
+
+		public ConsolidatedADASData(IEnumerable<IManufacturingStageInputData> manufacturingStages,
+			IVehicleDeclarationInputData primaryVehicleData, bool usePrimaryData)
+			: base(manufacturingStages)
+		{
+			_usePrimaryData = usePrimaryData;
+			_primaryVehicleData = primaryVehicleData;
+			_primaryAdas = primaryVehicleData.ADAS;
+		}
 
 		public bool EngineStopStart => GetADASPropertyValue<bool>(nameof(EngineStopStart));
 
@@ -800,6 +829,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private T GetADASPropertyValue<T>(string propertyName)
 		{
+			if (_usePrimaryData) {
+				return GetPropertyValue<T>(_primaryAdas, propertyName);
+			}
+
 			foreach (var manufacturingStage in _manufacturingStages) {
 				var adas = manufacturingStage.Vehicle.ADAS;
 				if (adas == null)
@@ -814,7 +847,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override bool IsInputDataCompleteTemplate(VectoSimulationJobType jobType, bool fullCheck)
 		{
-			return InputComplete(ATEcoRollReleaseLockupClutch, nameof(ATEcoRollReleaseLockupClutch));
+            if (fullCheck)
+            {
+                //use Binary AND to execute all Statements and gather information about missing parameters.
+                return InputComplete(EngineStopStart, nameof(EngineStopStart))
+                        & InputComplete(EcoRoll, nameof(EcoRoll))
+                        & InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl))
+						& InputComplete(IsATPEcoRollComplete(), "APTEcoRollReleaseLockupClutch");
+            }
+            return InputComplete(EngineStopStart, nameof(EngineStopStart))
+                    && InputComplete(EcoRoll, nameof(EcoRoll))
+                    && InputComplete(PredictiveCruiseControl, nameof(PredictiveCruiseControl))
+					&& InputComplete(IsATPEcoRollComplete(), "APTEcoRollReleaseLockupClutch");
+		}
+
+		private bool IsATPEcoRollComplete()
+		{
+			if (PrimaryGearboxIsAT()) {
+				return ATEcoRollReleaseLockupClutch != null;
+			} else {
+				return false;
+			}
+		}
+
+		private bool PrimaryGearboxIsAT()
+		{
+			switch (_primaryVehicleData.Components.GearboxInputData.Type) {
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
+					return true;
+				default: 
+					return false;
+			}
 		}
 
 		public override string GetInvalidEntry()
@@ -908,7 +972,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			if (fullCheck) {
 				//use Binary AND to execute all Statements and gather information about missing parameters.
 				return InputComplete(_consolidateBusAuxiliariesData, nameof(_consolidateBusAuxiliariesData))
-						& _consolidateBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType);
+						& (_consolidateBusAuxiliariesData != null && _consolidateBusAuxiliariesData.IsInputDataCompleteFullCheck(jobType));
 			}
 			return InputComplete(_consolidateBusAuxiliariesData, nameof(_consolidateBusAuxiliariesData)) 
 					&& _consolidateBusAuxiliariesData.IsInputDataComplete(jobType);
@@ -930,6 +994,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected override IList<string> GetInvalidEntriesTemplate(VectoSimulationJobType jobType)
 		{
+			if (_consolidateBusAuxiliariesData == null) {
+				return new List<string>();
+			}
 			return _invalidEntries.Concat(_consolidateBusAuxiliariesData.GetInvalidEntries(jobType)).ToList();
 		}
 	}
@@ -1179,6 +1246,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	// ---------------------------------------------------------------------------------------
 	public class ConsolidatedHVACBusAuxiliariesData : ConsolidatedDataBase, IHVACBusAuxiliariesDeclarationData
 	{
+
 		public ConsolidatedHVACBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
 
@@ -1210,8 +1278,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public bool EngineWasteGasHeatExchanger { get; }
 
-
-		
 
 
 		private T GetHVACBusAuxPropertyValue<T>(string propertyName)

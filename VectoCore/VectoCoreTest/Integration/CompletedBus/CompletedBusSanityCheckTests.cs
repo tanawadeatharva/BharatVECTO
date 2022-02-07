@@ -15,6 +15,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
@@ -22,6 +23,7 @@ using TUGraz.VectoCore.Tests.Utils;
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class CompletedBusSanityCheckTests
 	{
 		private IXMLInputDataReader _xmlInputReader;
@@ -64,11 +66,9 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = _xmlInputReader.CreateDeclaration(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null),  writer)
-			{
-				WriteModalResults = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null),  writer);
+			factory.WriteModalResults = true;
+			factory.Validate = false;
 
 			AssertHelper.Exception<VectoException>(() => {
 				var runs = factory.DataReader.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
@@ -114,13 +114,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
             //var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = new MockCompletedBusInputData(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null), writer)
-            {
-                WriteModalResults = true,
-                Validate = false
-            };
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null), writer);
+			factory.WriteModalResults = true;
+			factory.Validate = false;
 
-            //AssertHelper.Exception<VectoException>(() => {
+			//AssertHelper.Exception<VectoException>(() => {
                 var runs = factory.DataReader.NextRun().ToList();
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
@@ -147,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writer = new FileOutputVIFWriter(filename, 0);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 			var jobContainer = new JobContainer(new MockSumWriter());
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();

@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -195,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -224,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

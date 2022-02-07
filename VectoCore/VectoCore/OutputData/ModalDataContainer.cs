@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData
 		private Second _duration;
 		private Meter _distance;
 
-		private readonly ModalResultField[] _electricMotorColumns = new[] {
+		private readonly ModalResultField[] _electricMotorColumns = {
 			ModalResultField.EM_ratio_,
 			ModalResultField.P_EM_out_,
 			ModalResultField.P_EM_mech_,
@@ -79,21 +80,21 @@ namespace TUGraz.VectoCore.OutputData
 
 			ModalResultField.P_EM_loss_,
 
-			ModalResultField.n_EM_electricMotor_, 
-			ModalResultField.T_EM_electricMotor_, 
+			ModalResultField.n_EM_electricMotor_,
+			ModalResultField.T_EM_electricMotor_,
 			ModalResultField.T_EM_electricMotor_map_,
-			
-			ModalResultField.T_EM_electricMotor_drive_max_, 
+
+			ModalResultField.T_EM_electricMotor_drive_max_,
 			ModalResultField.T_EM_electricMotor_gen_max_,
-			
+
 			ModalResultField.P_EM_electricMotor_drive_max_,
-			ModalResultField.P_EM_electricMotor_gen_max_, 
-			
+			ModalResultField.P_EM_electricMotor_gen_max_,
+
 			ModalResultField.ElectricMotor_OvlBuffer_,
 			ModalResultField.EM_Off_,
 		};
 
-		private readonly ModalResultField[] _batterySignals = new[] {
+		private readonly ModalResultField[] _batterySignals = {
 			ModalResultField.U0_reess,
 			ModalResultField.U_reess_terminal,
 			ModalResultField.I_reess,
@@ -110,7 +111,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
-			/*ModalResultField.FCICEStopStart,*/  ModalResultField.FCFinal
+			/*ModalResultField.FCICEStopStart,*/ ModalResultField.FCFinal
 		};
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
@@ -124,30 +125,32 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected VectoRunData _runData;
 		private ICorrectedModalData _correctedModalData;
-		
+
 		public IModalDataPostProcessor PostProcessingCorrection { set; protected get; }
 
 
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer,
+			Action<ModalDataContainer> addReportResult, params IModalDataFilter[] filter)
 		{
 			_runData = runData;
 			_writer = writer;
-			
+
 			_filters = filter ?? new IModalDataFilter[0];
 			_addReportResult = addReportResult ?? (x => { });
 
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			Data = new ModalResults(false);
-            CurrentRow = Data.NewRow();
-			
+			CurrentRow = Data.NewRow();
+
 			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+				PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
 				return;
 			}
 
 			PostProcessingCorrection = new ModalDataPostprocessingCorrection();
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
-            var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
+			var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
 			foreach (var fuel in fuels) {
 				var entry = fuel.FuelData;
 				if (FuelColumns.ContainsKey(entry)) {
@@ -213,47 +216,47 @@ namespace TUGraz.VectoCore.OutputData
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{
-			if (_engLine.ContainsKey(fuel.FuelType)) {
-				return _engLine[fuel.FuelType];
+			if (_engLine.TryGetValue(fuel.FuelType, out var value)) {
+				return value;
 			}
 
-			VectoMath.LeastSquaresFitting(
+			var (k, _) = VectoMath.LeastSquaresFitting(
 				GetValues(
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
 							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCWHTCc)).Value())
-						: null).Where(x => x != null && x.Y > 0),
-				out var k, out var d, out var r);
+						: null).Where(x => x != null && x.Y > 0).ToArray());
 			if (double.IsInfinity(k) || double.IsNaN(k)) {
 				LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate engine correction line - k: {0}", k);
 				k = 0;
 			}
-            _engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+
+			_engLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 
 			return _engLine[fuel.FuelType];
 		}
 
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
 		{
-			if (_vehLine.ContainsKey(fuel.FuelType)) {
-				return _vehLine[fuel.FuelType];
+			if (_vehLine.TryGetValue(fuel.FuelType, out var value)) {
+				return value;
 			}
 
 			if (Data.AsEnumerable().Any(r => r.Field<SI>(ModalResultField.P_wheel_in.GetName()) != null)) {
-				VectoMath.LeastSquaresFitting(
-					GetValues(
-							row => row.Field<bool>(ModalResultField.ICEOn.GetName())
+				var (k, _) = VectoMath.LeastSquaresFitting(
+					GetValues(row => row.Field<bool>(ModalResultField.ICEOn.GetName())
 								? new Point(
 									row.Field<SI>(ModalResultField.P_wheel_in.GetName()).Value(),
 									row.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 								: null)
-						.Where(x => x != null && x.X > 0 && x.Y > 0), out var k, out var d, out var r);
+						.Where(x => x != null && x.X > 0 && x.Y > 0).ToArray());
 				if (double.IsInfinity(k) || double.IsNaN(k)) {
 					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Warn("could not calculate vehicle correction line - k: {0}", k);
 					k = 0;
 				}
-                _vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+
+				_vehLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
 				return _vehLine[fuel.FuelType];
 			}
 
@@ -264,59 +267,49 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{
-			if (!ElectricMotors.Contains(emPos)) {
+			if (!ElectricMotors.Contains(emPos))
 				return null;
+			else {
+				var eEmDrive = Data.AsEnumerable().Select(r => {
+					var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+					return new {
+						EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
+								dt
+					};
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsSmaller(0)).Sum(x => x.E_EM) ?? 0.SI<WattSecond>();
+				return -_eEmDrive.GetOrAdd(emPos, _ => eEmDrive);
 			}
-
-			if (!_eEmDrive.ContainsKey(emPos)) {
-				_eEmDrive[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x < 0);
-			}
-
-			return -_eEmDrive[emPos];
 		}
 
-		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos)
-		{
-			if (!ElectricMotors.Contains(emPos)) {
-				return null;
-			}
-
-			if (!_eEmDriveMot.ContainsKey(emPos)) {
-				_eEmDriveMot[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x < 0);
-			}
-
-			return -_eEmDriveMot[emPos];
-		}
+		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos) =>
+			!ElectricMotors.Contains(emPos)
+				? null
+				: -_eEmDriveMot.GetOrAdd(emPos, _ => TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x < 0));
 
 		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
 		{
-			if (!ElectricMotors.Contains(emPos)) {
+			if (!ElectricMotors.Contains(emPos))
 				return null;
+			else {
+				var eEmRecup = Data.AsEnumerable().Select(r => {
+					var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
+					return new {
+						EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+						E_EM = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName())) *
+								dt
+					};
+				}).Where(x => x.EM_off.IsEqual(0) && x.E_EM.IsGreater(0)).Sum(x => x.E_EM) ?? 0.SI<WattSecond>();
+				return _eEmRecuperate.GetOrAdd(emPos, _ => eEmRecup);
 			}
-
-			if (!_eEmRecuperate.ContainsKey(emPos)) {
-				_eEmRecuperate[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_mech_.GetCaption(), emPos.GetName()), x => x > 0);
-			}
-
-			return _eEmRecuperate[emPos];
-        }
-
-		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos)
-		{
-			if (!ElectricMotors.Contains(emPos)) {
-				return null;
-			}
-
-			if (!_eEmRecuperateMot.ContainsKey(emPos)) {
-				_eEmRecuperateMot[emPos] = TimeIntegral<WattSecond>(
-					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x > 0);
-			}
-
-			return _eEmRecuperateMot[emPos];
 		}
+
+		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos) =>
+			!ElectricMotors.Contains(emPos)
+				? null
+				: _eEmRecuperateMot.GetOrAdd(emPos, _ => TimeIntegral<WattSecond>(
+					string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(), emPos.GetName()), x => x > 0));
 
 
 		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
@@ -325,7 +318,7 @@ namespace TUGraz.VectoCore.OutputData
 				return double.NaN;
 			}
 
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -352,9 +345,10 @@ namespace TUGraz.VectoCore.OutputData
 				return double.NaN;
 			}
 
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
 						emPos.GetName())),
 					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_em_mech_.GetCaption(),
@@ -365,7 +359,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0))) {
+			foreach (var entry in selected.Where(x => x.P_em.IsSmaller(0) && !x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
@@ -379,36 +373,35 @@ namespace TUGraz.VectoCore.OutputData
 			if (!ElectricMotors.Contains(emPos)) {
 				return double.NaN;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
-				return new
-				{
-					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+				return new {
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), 
 						emPos.GetName())),
-					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(), 
 						emPos.GetName())) * dt,
-					E_el = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					E_el = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), 
 						emPos.GetName())) * dt,
 				};
 			});
 			var eMech = 0.SI<WattSecond>();
 			var eEl = 0.SI<WattSecond>();
-			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0)))
-			{
+			foreach (var entry in selected.Where(x => x.P_em.IsGreater(0) && x.EM_off.IsEqual(0))) {
 				eMech += entry.E_mech;
 				eEl += entry.E_el;
 			}
 
 			var eff = eEl.Value() / eMech.Value();
 			return eff;
-        }
+		}
 
 		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos)
 		{
 			if (!ElectricMotors.Contains(emPos)) {
 				return double.NaN;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
 					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
@@ -435,22 +428,22 @@ namespace TUGraz.VectoCore.OutputData
 			if (!ElectricMotors.Contains(emPos)) {
 				return null;
 			}
-			var selected = Data.AsEnumerable().Cast<DataRow>().Select(r => {
+			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
-				return new
-				{
-					P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
-						emPos.GetName())),
-					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotorLoss_.GetCaption(),
+				return new {
+					EM_off = r.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), emPos.GetName())),
+					//P_em = r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(),
+					//	emPos.GetName())),
+					E_mech = r.Field<Watt>(string.Format(ModalResultField.P_EM_mech_.GetCaption(),
 						emPos.GetName())) * dt,
 				};
 			});
-			return selected.Where(x => x.P_em.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
+			return selected.Where(x => !x.EM_off.IsEqual(0)).Sum(x => x.E_mech) ?? 0.SI<WattSecond>();
 		}
 
 		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_loss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -459,7 +452,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond ElectricMotorMotLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_electricMotorLoss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -468,7 +461,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
 		{
-			return Data.AsEnumerable().Cast<DataRow>().Sum(r => {
+			return Data.AsEnumerable().Sum(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return r.Field<Watt>(string.Format(ModalResultField.P_EM_TransmissionLoss_.GetCaption(),
 					emPos.GetName())) * dt;
@@ -480,17 +473,17 @@ namespace TUGraz.VectoCore.OutputData
 			var integral = GetValues(x => x.Field<PerSecond>(string.Format(ModalResultField.n_EM_electricMotor_.GetCaption(), emPos.GetName())).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
 			return (integral / Duration.Value()).SI<PerSecond>();
-        }
+		}
 
 		public double REESSStartSoC()
 		{
-			return (Data.AsEnumerable().Cast<DataRow>().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
+			return (Data.AsEnumerable().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
 		}
 
 		public double REESSEndSoC()
 		{
-			return (Data.AsEnumerable().Cast<DataRow>().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
-        }
+			return (Data.AsEnumerable().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
+		}
 
 		public WattSecond REESSLoss()
 		{
@@ -551,7 +544,7 @@ namespace TUGraz.VectoCore.OutputData
 		public void AddElectricMotor(PowertrainPosition pos)
 		{
 			ElectricMotors.Add(pos);
-			foreach (var entry in _electricMotorColumns)  {
+			foreach (var entry in _electricMotorColumns) {
 				var col = Data.Columns.Add(string.Format(entry.GetAttribute().Caption, pos.GetName()), typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					entry.GetAttribute().Decimals;
@@ -627,7 +620,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
 			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
-//#if TRACE
+			//#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
 			//dataColumns.Add(ModalResultField.altitude);
@@ -636,7 +629,7 @@ namespace TUGraz.VectoCore.OutputData
 				strCols = strCols.Concat(BatteryColumns[batKey].Keys.Where(x => _batterySignals.Contains(x))
 					.Select(x => $"{x.GetName()}_{batKey}"));
 			}
-//#endif
+			//#endif
 			var fileSuffix = RunSuffix;
 			if (WriteModalResults) {
 				var filteredData = Data;
@@ -802,35 +795,30 @@ namespace TUGraz.VectoCore.OutputData
 			return dataColumns;
 		}
 
-		public IEnumerable<T> GetValues<T>(DataColumn col)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
-		}
+		public IEnumerable<T> GetValues<T>(DataColumn col) => GetValues(x => x.Field<T>(col));
 
-		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
-		{
-			return from DataRow row in Data.Rows select selectorFunc(row);
-		}
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) =>
+			Data.Rows.Cast<DataRow>().Select(selectorFunc);
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
-
-			return TimeIntegral<T>(field.GetName(), filter);
-		}
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> =>
+			TimeIntegral<T>(field.GetName(), filter);
 
 		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
-			if (filter == null && _timeIntegrals.ContainsKey(field)) {
-				return (T)_timeIntegrals[field];
+
+			if (filter == null && _timeIntegrals.TryGetValue(field, out var val)) {
+				return (T)val;
 			}
+
+			var dt = Data.Columns[ModalResultField.simulationInterval.GetName()];
 			var result = 0.0;
-			var idx = Data.Columns.IndexOf(field);
-			for (var i = 0; i < Data.Rows.Count; i++) {
-				var value = Data.Rows[i][idx];
+			var idx = Data.Columns[field];
+			foreach (DataRow row in Data.Rows) {
+				var value = row[idx];
 				if (value != null && value != DBNull.Value) {
 					var siValue = (SI)value;
 					if (filter == null || filter(siValue)) {
-						result += siValue.Value() * ((Second)Data.Rows[i][ModalResultField.simulationInterval.GetName()]).Value();
+						result += siValue.Value() * ((Second)row[dt]).Value();
 					}
 				}
 			}
@@ -855,32 +843,28 @@ namespace TUGraz.VectoCore.OutputData
 
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
-			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
-				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
+			try {
+				return FuelColumns[fuelData][mrf].ColumnName;
+			} catch (KeyNotFoundException e) {
+				throw new VectoException($"unknown fuel {fuelData.GetLabel()} for key {mrf.GetName()}", e);
 			}
-
-			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
-			get
-			{
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key))
-				{
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+			get {
+				try {
+					return CurrentRow[FuelColumns[fuel][key]];
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
-
-				return CurrentRow[FuelColumns[fuel][key]];
 			}
-			set
-			{
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key))
-				{
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+			set {
+				try {
+					CurrentRow[FuelColumns[fuel][key]] = value;
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
-
-				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
 		}
 
@@ -890,7 +874,8 @@ namespace TUGraz.VectoCore.OutputData
 			set => CurrentRow[string.Format(key.GetCaption(), pos.GetName())] = value;
 		}
 
-		public object this[ModalResultField key, int? idx] {
+		public object this[ModalResultField key, int? idx]
+		{
 			get {
 				if (!_batterySignals.Contains(key)) {
 					throw new VectoException("ModalResult with index is only supported for REESS fields");
@@ -898,28 +883,23 @@ namespace TUGraz.VectoCore.OutputData
 
 				return idx.HasValue ? CurrentRow[$"{key.GetCaption()}_{idx.Value}"] : CurrentRow[key.GetName()];
 			}
-			set
-			{
+			set {
 				if (idx == null) {
 					CurrentRow[key.GetName()] = value;
 				} else {
 					if (!_batterySignals.Contains(key)) {
 						throw new VectoException("ModalResult with index is only supported for REESS fields");
 					}
-					if (!BatteryColumns.ContainsKey(idx.Value)) {
-						BatteryColumns[idx.Value] = new Dictionary<ModalResultField, DataColumn>();
-					}
+					var entry = BatteryColumns.GetOrAdd(idx.Value, _ => new Dictionary<ModalResultField, DataColumn>());
+					var col = entry.GetOrAdd(key, _ => {
+						var c = Data.Columns.Add($"{key.GetName()}_{idx.Value}", typeof(SI));
+						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
+						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = key.GetAttribute().OutputFactor;
+						c.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = key.GetAttribute().ShowUnit;
+						return c;
+					});
 
-					var entry = BatteryColumns[idx.Value];
-					if (!entry.ContainsKey(key)) {
-						var col = Data.Columns.Add($"{key.GetName()}_{idx.Value}", typeof(SI));
-						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = key.GetAttribute().Decimals;
-						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = key.GetAttribute().OutputFactor;
-						col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = key.GetAttribute().ShowUnit;
-						entry[key] = col;
-					}
-
-					CurrentRow[entry[key]] = value;
+					CurrentRow[col] = value;
 				}
 			}
 		}

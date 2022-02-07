@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -117,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors.ContainsKey(pos) ? ElectricMotors[pos] : null;
+			return ElectricMotors.GetValueOrDefault(pos);
 		}
 
 
@@ -153,7 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
 				commitPriority = 2;
-				HasCombustionEngine = true;
+				HasCombustionEngine = !(component is DummyEngineInfo); // true;
 			}
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;
@@ -249,7 +250,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual bool HasGearbox { get; private set; }
 
-
+		[Required, ValidateObject]
 		public virtual VectoRunData RunData { get; set; }
 		public virtual ExecutionMode ExecutionMode { get; }
 

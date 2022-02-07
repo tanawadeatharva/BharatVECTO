@@ -265,8 +265,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 		protected virtual XElement CreateADAS(VehicleData.ADASData adasData)
 		{
-			var ns = XMLADASReaderV23.NAMESPACE_URI;
-			var type = XMLADASReaderV23.XSD_TYPE;
+			var ns = XMLADASReaderV21.NAMESPACE_URI;
+			var type = XMLADASReaderV21.XSD_TYPE;
 
 			const string adasPrefix = "adas";
 			return new XElement(
@@ -276,8 +276,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 					new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
-					new XElement(ns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat()),
-					new XElement(ns + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, adasData.InputData.ATEcoRollReleaseLockupClutch ?? false)
+					new XElement(ns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat())
+					//new XElement(ns + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, adasData.InputData.ATEcoRollReleaseLockupClutch ?? false)
 			);
 		}
 

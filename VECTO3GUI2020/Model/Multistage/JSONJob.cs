@@ -70,7 +70,7 @@ namespace VECTO3GUI2020.Model.Multistage
 
 	public class JSONJobBody : ObservableObject
 	{
-		private string _interimStage;
+		private string _interimStep;
 		private string _primaryVehicle;
 		private bool _completed;
 
@@ -80,10 +80,10 @@ namespace VECTO3GUI2020.Model.Multistage
 			set { SetProperty(ref _primaryVehicle, value); }
 		}
 
-		public string InterimStage
+		public string InterimStep
 		{
-			get { return _interimStage; }
-			set { SetProperty(ref _interimStage, value); }
+			get { return _interimStep; }
+			set { SetProperty(ref _interimStep, value); }
 		}
 
 		public bool Completed

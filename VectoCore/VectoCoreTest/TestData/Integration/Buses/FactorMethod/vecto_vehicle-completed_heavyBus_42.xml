@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.8" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2"
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2"
+xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
 	<v2.0:Vehicle id="VEH-1234567890" xsi:type="Vehicle_Conventional_CompletedBusDeclarationType">
@@ -17,7 +17,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<LegislativeCategory>M3</LegislativeCategory>
 		<CorrectedActualMass>8300</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<AirdragModifiedMultistage>false</AirdragModifiedMultistage>		
+		<AirdragModifiedMultistep>false</AirdragModifiedMultistep>		
 		<ClassBus>I+II</ClassBus>		
 		<NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
@@ -31,6 +31,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<EntranceHeight>120</EntranceHeight>
 		<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
+		<VehicleTypeApprovalNumber>1234567890</VehicleTypeApprovalNumber>
 		<Components xsi:type="Components_Conventional_CompletedBusType">
 			<AirDrag>
 				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">

@@ -156,7 +156,7 @@ Public Class SuperCap
             writer.SaveSuperCap(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Faled to write Battery file: " + ex.Message)
+            MsgBox("Failed to write Battery file: " + ex.Message)
             Return False
         End Try
         Return True

@@ -5,6 +5,7 @@ using Ninject;
 using System.Diagnostics;
 using System.Windows.Input;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using System.Reflection;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.Util;
@@ -47,29 +48,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			CurrentViewModel = _viewModels[key];
 		}
 
-		public bool JobsSelected
-		{
-			get
-			{
-				return CurrentViewModel == _jobListVm;
-			}
-		}
+		public bool JobsSelected => CurrentViewModel == _jobListVm;
 
-		public bool SettingsSelected
-		{
-			get
-			{ 
-				return CurrentViewModel == _settingsViewModel;
-			}
-		}
+		public bool SettingsSelected => CurrentViewModel == _settingsViewModel;
 
-		public bool AboutSelected
-		{
-			get
-			{
-				return CurrentViewModel == _aboutViewModel;
-			}
-		}
+		public bool AboutSelected => CurrentViewModel == _aboutViewModel;
 
 		public IMainViewModel CurrentViewModel
         {
@@ -96,6 +79,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			get => _jobListVm;
 			set => SetProperty(ref _jobListVm, value);
 		}
+
+		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+
 		#endregion
 
 		#region Commands

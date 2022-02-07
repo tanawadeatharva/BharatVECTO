@@ -38,8 +38,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? SleeperCab { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 		public bool ZeroEmissionVehicle { get; }
@@ -63,8 +63,10 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
+
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
+
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
@@ -97,9 +99,6 @@ namespace TUGraz.VectoCore.Tests.Utils {
 
 	public class MockEngineeringVehicleInputData : IVehicleEngineeringInputData, IVehicleComponentsEngineering
 	{
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
-		private IVehicleComponentsDeclaration _components;
-
 		#region Implementation of IComponentInputData
 
 		public DataSource DataSource { get; }
@@ -128,6 +127,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+
 		public Watt MaxNetPower2 { get; }
 		public string ExemptedTechnology { get; }
 		public RegistrationClass? RegisteredClass { get; set; }
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public VehicleCode? VehicleCode { get; set; }
 		public bool? LowEntry { get; }
 
-		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => _components;
+		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
@@ -160,11 +160,11 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? SleeperCab { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 
-		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => _adas;
+		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
 
 		public double InitialSOC { get; }
 		public VectoSimulationJobType VehicleType { get; }
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IElectricStorageSystemEngineeringInputData ElectricStorage { get; set; }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 
-        Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+        Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 
         #endregion
     }

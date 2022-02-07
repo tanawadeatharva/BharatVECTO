@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationTyreDataProviderV23 : XMLDeclarationTyreDataProviderV10
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		//public new const string XSD_TYPE = "TyreComponentDeclarationType";
 

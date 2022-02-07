@@ -557,7 +557,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 132.6714, "Electric", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.87, "Electric", null, null, null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
                 null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, "Fixed displacement", "Fixed displacement",
@@ -569,7 +569,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expected, string axle1,
             string axle2, string axle3, string axle4)
         {
-            // mk remark: made the test call with 4 axle params, so that the test name is clear in the test explorer.
             AssertHelper.AreRelativeEqual(expected,
                 DeclarationData.SteeringPump.Lookup(mission, hdvClass,
                     new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
@@ -2022,11 +2021,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             Assert.AreEqual(missionType, m.MissionType);
             Assert.AreEqual(cosswindCorrection, m.CrossWindCorrectionParameters);
             CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
-                "Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
-                string.Join(",", m.AxleWeightDistribution));
+                "Axle distribution not equal.\nexpected: {0}\nactual: {1}", axleWeightDistribution.Join(),
+                m.AxleWeightDistribution.Join());
             CollectionAssert.AreEqual(trailerAxleWeightDistribution, m.Trailer.Select(t => t.TrailerAxleWeightShare),
-                "Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", trailerAxleWeightDistribution),
-                string.Join(",", m.Trailer.Select(t => t.TrailerAxleWeightShare)));
+                "Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", trailerAxleWeightDistribution.Join(),
+                m.Trailer.Select(t => t.TrailerAxleWeightShare).Join());
             Assert.AreEqual(bodyCurbWeight.SI<Kilogram>(), m.BodyCurbWeight);
             CollectionAssert.AreEqual(trailerCurbWeight, m.Trailer.Select(t => t.TrailerCurbWeight.Value()));
             CollectionAssert.AreEqual(trailerType, m.Trailer.Select(t => t.TrailerType));

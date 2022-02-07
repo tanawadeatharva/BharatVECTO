@@ -36,6 +36,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 				case "VectoInputEngineering": return XmlDocumentType.EngineeringJobData;
 				case "VectoComponentEngineering": return XmlDocumentType.EngineeringComponentData;
 				//case "VectoOutputPrimaryVehicle": return XmlDocumentType.PrimaryVehicleBusOutputData;
-				case "VectoOutputMultistage": return XmlDocumentType.MultistageOutputData;
+				case "VectoOutputMultistep": return XmlDocumentType.MultistepOutputData;
 			}
 
 			return null;
@@ -73,7 +74,8 @@ namespace TUGraz.VectoCore.Utils
 		public static string GetVersionFromNamespaceUri(XNamespace namespaceUri)
 		{
 			const string versionPrefix = "v";
-			return namespaceUri.NamespaceName.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty);
+			return namespaceUri.NamespaceName.Split(':').Last(x => x.StartsWith(versionPrefix))
+				.Replace(versionPrefix, string.Empty);
 		}
 
 		public static object[] ValueAsUnit(Kilogram mass, string unit, uint? decimals = 0)
@@ -180,6 +182,11 @@ namespace TUGraz.VectoCore.Utils
 			return prefix + fuelData.FuelType.ToXMLFormat();
 		}
 
+		public static string ToXmlFormat(this DateTime dateTime)
+		{
+			return XmlConvert.ToString(dateTime, XmlDateTimeSerializationMode.Utc);
+		}
+
 		public static string QueryLocalName(string nodeName)
 		{
 			return $".//*[local-name()='{nodeName}']";
@@ -187,7 +194,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static string QueryLocalName(params string[] nodePath)
 		{
-			return "./" + string.Join("/", nodePath.Where(x => x != null).Select(x => $"/*[local-name()='{x}']").ToArray());
+			return "./" + string.Join("/",
+				nodePath.Where(x => x != null).Select(x => $"/*[local-name()='{x}']").ToArray());
 		}
 
 
@@ -200,6 +208,7 @@ namespace TUGraz.VectoCore.Utils
 					table.Columns.Add(mapping.Key);
 				}
 			}
+
 			foreach (var entry in entries) {
 				var row = table.NewRow();
 				foreach (var mapping in attributeMapping) {
@@ -214,7 +223,8 @@ namespace TUGraz.VectoCore.Utils
 			return table;
 		}
 
-		public static TableData ReadEntriesOrResource(XmlNode baseNode, string basePath, string baseElement, string entryElement, Dictionary<string, string> mapping)
+		public static TableData ReadEntriesOrResource(XmlNode baseNode, string basePath, string baseElement,
+			string entryElement, Dictionary<string, string> mapping)
 		{
 			var entries = baseNode.SelectNodes(
 				QueryLocalName(baseElement, entryElement));
@@ -248,7 +258,7 @@ namespace TUGraz.VectoCore.Utils
 				return VectoCSVFile.Read(fullFilename);
 			}
 
-			return null;// new TableData(Path.Combine(basePath ?? "", filename), DataSourceType.Missing);
+			return null; // new TableData(Path.Combine(basePath ?? "", filename), DataSourceType.Missing);
 		}
 
 		private static string ExtCSVResourceQuery =>
@@ -269,7 +279,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static string GetXsdType(XmlSchemaType schemaInfoSchemaType)
 		{
-			return string.Join(":", schemaInfoSchemaType.QualifiedName.Namespace, schemaInfoSchemaType.QualifiedName.Name);
+			return string.Join(":", schemaInfoSchemaType.QualifiedName.Namespace,
+				schemaInfoSchemaType.QualifiedName.Name);
 		}
 
 		public static double GetVersion(XmlNode node)
@@ -281,16 +292,43 @@ namespace TUGraz.VectoCore.Utils
 			if (versionPart.Split('.').Length > 2) {
 				versionPart = string.Join(".", versionPart.Split('.').Take(2));
 			}
+
 			return versionPart.ToDouble();
 		}
 
 		public static XElement CreateDummySig(XNamespace di)
 		{
 			return new XElement(di + XMLNames.DI_Signature_Reference,
-								new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
-											new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
-								new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
+				new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
+					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
+				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
 			);
+		}
+
+		public static bool IsAnyNull(this IComponentInputData inputData, params object[] checkForNull)
+		{
+			foreach (var o in checkForNull) {
+				if (o == null) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		public static void AddIfContentNotNull(this XElement xElement, XElement xElementToAdd)
+		{
+			if (!xElementToAdd.Value.IsNullOrEmpty()){
+				xElement.Add(xElementToAdd);
+			}
+		}
+
+		public static void AddIfContentNotNull(this XElement xElement, params XElement[] xElementsToAdd)
+		{
+			foreach (var element in xElementsToAdd) {
+				xElement.AddIfContentNotNull(element);
+			}
 		}
 	}
 }

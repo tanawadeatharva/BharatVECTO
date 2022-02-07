@@ -298,8 +298,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#region Implementation of IElectricMotorVoltageLevel
 
 		public Volt VoltageLevel { get; internal set; }
+		public NewtonMeter ContinuousTorque { get; internal set; }
+		public PerSecond ContinuousTorqueSpeed { get; internal set; }
+		public NewtonMeter OverloadTorque { get; internal set; }
+		public PerSecond OverloadTestSpeed { get; internal set; }
+		public Second OverloadTime { get; internal set; }
 		public TableData FullLoadCurve { get; internal set; }
-		public TableData EfficiencyMap { get; internal set; }
+		//public TableData EfficiencyMap { get; internal set; }
 		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css"?>
-<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputManufacturer.xsd">
+<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput https://citnet.tech.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD//DEV/VectoOutputManufacturer.xsd">
   <mrf:Data xsi:type="VectoOutputDataType" id="RESULT-05da3904a69f4a3a810c">
     <Vehicle xsi:type="VehicleTruckType">
       <Model>Generic Model</Model>

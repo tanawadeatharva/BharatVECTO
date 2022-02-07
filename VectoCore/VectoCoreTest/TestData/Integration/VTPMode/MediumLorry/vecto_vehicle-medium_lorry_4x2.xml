@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
@@ -27,11 +27,11 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>a</VehicleTypeApprovalNumber>
-		<ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType">
-			<v2.3:EngineStopStart>false</v2.3:EngineStopStart>
-			<v2.3:EcoRollWithoutEngineStop>false</v2.3:EcoRollWithoutEngineStop>
-			<v2.3:EcoRollWithEngineStop>false</v2.3:EcoRollWithEngineStop>
-			<v2.3:PredictiveCruiseControl>none</v2.3:PredictiveCruiseControl>
+		<ADAS xsi:type="ADAS_Conventional_Type">
+			<EngineStopStart>false</EngineStopStart>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
 		<Components xsi:type="Components_Conventional_LorryType">
 			<Engine>

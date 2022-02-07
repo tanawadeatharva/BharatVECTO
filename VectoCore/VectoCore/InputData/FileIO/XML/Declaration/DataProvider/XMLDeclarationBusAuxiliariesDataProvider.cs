@@ -15,26 +15,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV210 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
+	public abstract class AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
 		IElectricSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
-		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public const string XSD_TYPE = "AUX_Conventional_PrimaryBusType";
-		public const string XSD_HEV_P_TYPE = "AUX_HEV-P_PrimaryBusType";
-		public const string XSD_HEV_S_TYPE = "AUX_HEV-S_PrimaryBusType";
-		public const string XSD_PEV_E2_TYPE = "AUX_PEV_PrimaryBusType";
-		public const string XSD_IEPC_PRIMARY_BUS_TYPE = "AUX_IEPC_PrimaryBusType";
-
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		public static readonly string QUALIFIED_XSD_HEV_P_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_P_TYPE);
-		public static readonly string QUALIFIED_XSD_HEV_S_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_HEV_S_TYPE);
-		public static readonly string QUALIFIED_XSD_PEV_E2_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_E2_TYPE);
-		public static readonly string QUALIFIED_XSD_IEPC_PRIMARY_BUS_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_IEPC_PRIMARY_BUS_TYPE);
-
-		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV210(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+		public AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24(
+			 XmlNode componentNode) : base(componentNode) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
@@ -92,6 +80,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public virtual bool ESSupplyFromHEVREESS => ElementExists("SupplyFromHEVPossible")
+			? XmlConvert.ToBoolean(GetString("SupplyFromHEVPossible"))
+			: false;
+
 		public IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage
 		{
 			get
@@ -110,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 							var technology = GetNode("CapacitorTechnology", x).InnerText;
 							return new BusAuxCapacitorInputData(technology, voltage, ratedCapacity);
 						}).Cast<IBusAuxElectricStorageDeclarationInputData>())
-					.Cast<IBusAuxElectricStorageDeclarationInputData>().ToList();
+					.ToList();
 			}
 		}
 
@@ -190,7 +182,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
 		public virtual BusHVACSystemConfiguration? SystemConfiguration => BusHVACSystemConfiguration.Unknown;
-
 		public virtual HeatPumpType? HeatPumpTypeCoolingDriverCompartment => null;
 		public virtual HeatPumpType? HeatPumpTypeHeatingDriverCompartment => null;
 		public virtual HeatPumpType? HeatPumpTypeCoolingPassengerCompartment => null;
@@ -225,40 +216,156 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV210
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_Conventional_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		public XMLDeclarationPrimaryBusAuxiliariesConventionalDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override bool ESSupplyFromHEVREESS => false;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_HEV-P_PrimaryBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesHEVPDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public const string XSD_TYPE = "AUX_HEV-S_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override bool SmartElectrics => false;
+
+		public override bool SmartAirCompression => false;
+
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		
+		public const string XSD_TYPE = "AUX_PEV_PrimaryBusType";
+		
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override string FanTechnology => null;
+		
+		public override bool ESSupplyFromHEVREESS => true;
+
+		public override bool SmartElectrics => false;
+		public override bool SmartAirCompression => false;
+
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+		public override double Ratio => double.NaN;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public const string XSD_TYPE = "AUX_IEPC_PrimaryBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryBusAuxiliariesIEPCDataProviderV24(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
+
+		public override string FanTechnology => null;
+		public override bool ESSupplyFromHEVREESS => true;
+		public override bool SmartElectrics => false;
+		public override bool SmartAirCompression => false;
+
+		public override string CompressorSize => null;
+
+		public override string Clutch => null;
+
+		public override double Ratio => double.NaN;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV01 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "AuxiliaryDataPIFType";
+		public const string XSD_TYPE = "AuxiliaryDataPIFType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
-			: base(vehicle, componentNode, sourceFile) { }
+			: base(componentNode) { }
 
 
 		public override XmlNode XMLSource => BaseNode;
 	}
 
+	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV210 : XMLDeclarationPrimaryBusAuxiliariesDataProviderV210, IElectricConsumersDeclarationData
+
+	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24, IElectricConsumersDeclarationData
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public new const string XSD_TYPE = "AUX_Conventional_CompletedBusType";
+		public const string XSD_TYPE_CONVENTIONAL = "AUX_Conventional_CompletedBusType";
+		public const string XSD_TYPE_xEV = "AUX_xEV_CompletedBusType";
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_CONVENTIONAL);
+		public static readonly string QUALIFIED_XSD_TYPE_xEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_xEV);
 
-		public XMLDeclarationCompletedBusAuxiliariesDataProviderV210(IXMLDeclarationVehicleData vehicle,
+
+		public XMLDeclarationCompletedBusAuxiliariesDataProviderV24(IXMLDeclarationVehicleData vehicle,
 			XmlNode componentNode, string sourceFile)
-			: base(vehicle, componentNode, sourceFile) {}
+			: base(componentNode) {}
 
 		private bool IsBusHVACTagEmpty()
 		{
-			return SystemConfiguration == null && HeatPumpTypeCoolingDriverCompartment == null && HeatPumpTypeHeatingDriverCompartment == null &&
-					HeatPumpTypeCoolingPassengerCompartment == null && HeatPumpTypeHeatingPassengerCompartment == null && AuxHeaterPower == null && DoubleGlazing == null && 
-					AdjustableAuxiliaryHeater == null && SeparateAirDistributionDucts == null && WaterElectricHeater == null &&
-					AirElectricHeater == null && OtherHeatingTechnology == null ;
+			return SystemConfiguration == null && 
+					HeatPumpTypeCoolingPassengerCompartment == null && 
+					HeatPumpTypeHeatingPassengerCompartment == null &&
+					HeatPumpTypeCoolingDriverCompartment == null && 
+					HeatPumpTypeHeatingDriverCompartment == null && 
+					AuxHeaterPower == null && 
+					DoubleGlazing == null && 
+					AdjustableAuxiliaryHeater == null && 
+					SeparateAirDistributionDucts == null && 
+					WaterElectricHeater == null &&
+					AirElectricHeater == null && 
+					OtherHeatingTechnology == null ;
 		}
 
 		public override XmlNode XMLSource => BaseNode;

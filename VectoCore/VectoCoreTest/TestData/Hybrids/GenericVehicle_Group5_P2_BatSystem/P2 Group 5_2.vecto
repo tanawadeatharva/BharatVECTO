@@ -58,7 +58,8 @@
       "RegionalDelivery",
       "Suburban",
       "Urban",
-      "UrbanDelivery"
+      "UrbanDelivery",
+      "Interurban_Short.vdri"
     ]
   }
 }

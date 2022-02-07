@@ -209,6 +209,8 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 EPTP/
 201*-VECTO-*.zip
 Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vmod
+Documentation/VehiclesReleaseComparisonDeclarationMode/**/*.vsum
 .vs/
 **/dev/*.vmod
 **/dev/*.vsum
@@ -220,4 +222,4 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/
 /VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/finalGroup41.VIF_Report_4.xml
 /VectoCore/VectoCoreTest/TestData/XML/XMLReaderDeclaration/output
 /Vecto3GUI2020Test/TestData/output
-/VectoCore/VectoCore/OutputData/XML/DeclarationReports/ManufacturerReport/ManufacturerReport_0_9/todo.md
+/VectoCommon/VectoCommon/InputData/BusInputData.cd

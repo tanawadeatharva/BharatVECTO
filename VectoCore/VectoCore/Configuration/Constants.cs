@@ -252,6 +252,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const string DriverAccelerationCurve = ".vacc";
 
 			public const string HybridStrategyParameters = ".vhctl";
+
+			public const string Json = ".json";
 		}
 
 		public static class SimulationSettings

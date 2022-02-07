@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -111,15 +112,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 					if (string.IsNullOrWhiteSpace(row.Field<string>(missionType.ToString()))){
 						continue;
 					}
-					
+
+					// TODO: MQ 2021-11-30: REMOVE IN PRODUCTION
+					Stream cycle;
+					var cycleFile = Path.Combine("DeclarationMissions",
+						missionType.ToString().Replace("EMS", "") + ".vdri");
+					if (File.Exists(cycleFile)) {
+						cycle = File.OpenRead(cycleFile);
+					} else {
+						cycle = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix +
+															".MissionCycles." +
+															missionType.ToString().Replace("EMS", "") +
+															Constants.FileExtensions.CycleFile);
+					}
+
 					var mission = new Mission {
 						MissionType = missionType,
 						CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection"),
-						CycleFile =
-							RessourceHelper.ReadStream(
-								DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-								missionType.ToString().Replace("EMS", "") +
-								Constants.FileExtensions.CycleFile),
+						CycleFile = cycle,
+						//CycleFile =
+						//	RessourceHelper.ReadStream(
+						//		DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+						//		missionType.ToString().Replace("EMS", "") +
+						//		Constants.FileExtensions.CycleFile),
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						BodyCurbWeight = 0.SI<Kilogram>(),
 						Trailer = new List<MissionTrailer>(),

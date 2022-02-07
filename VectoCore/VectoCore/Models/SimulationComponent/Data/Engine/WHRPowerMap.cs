@@ -36,8 +36,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			var result = new WHRPowerResult();
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
 			var value = WHRMap.Interpolate(torque, engineSpeed);
-			if (value.HasValue) {
-				result.GeneratedPower = value.Value.SI<Watt>();
+			if (!value.IsNaN()) {
+				result.GeneratedPower = value.SI<Watt>();
 				return result;
 			}
 

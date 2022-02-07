@@ -7,6 +7,7 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
@@ -39,11 +40,17 @@ Public Class ElectricMachine
 
     Public ModelName As String
     Public MotorInertia As Double
-    Public PeakPowerTime As Double
-    Public ContTq As Double
-    Public RatedSpeed As Double
-    Public OvlTq As Double
-    Public OvlSpeed As Double
+    Public PeakPowerTimeLo As Double
+    Public ContTqLo As Double
+    Public RatedSpeedLo As Double
+    Public OvlTqLo As Double
+    Public OvlSpeedLo As Double
+
+    Public PeakPowerTimeHi As Double
+    Public ContTqHi As Double
+    Public RatedSpeedHi As Double
+    Public OvlTqHi As Double
+    Public OvlSpeedHi As Double
 
     ''' <summary>
     ''' New instance. Initialise
@@ -254,11 +261,21 @@ Public Class ElectricMachine
             Return New List(Of IElectricMotorVoltageLevel) From {
                 New ElectricMotorVoltageLevel() With {
                     .VoltageLevel = VoltageLevelLow.SI(Of Volt),
-                    .EfficiencyMap = EfficiencyMapLow,
+                    .ContinuousTorque=ContTqlo.si(of NewtonMeter),
+                    .ContinuousTorqueSpeed=RatedSpeedLo.RPMtoRad(),
+                    .OverloadTorque=OvlTqLo.SI(of NewtonMeter),
+                    .OverloadTestSpeed=OvlSpeedLo.RPMtoRad(),
+                    .OverloadTime = PeakPowerTimeLo.SI(Of Second),
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveLow},
                 New ElectricMotorVoltageLevel() With {
                     .VoltageLevel = VoltageLevelHigh.SI(Of Volt),
-                    .EfficiencyMap = EfficiencyMapHi,
+                    .ContinuousTorque=ContTqHi.si(of NewtonMeter),
+                    .ContinuousTorqueSpeed=RatedSpeedHi.RPMtoRad(),
+                    .OverloadTorque=OvlTqHi.SI(of NewtonMeter),
+                    .OverloadTestSpeed=OvlSpeedHi.RPMtoRad(),
+                    .OverloadTime = PeakPowerTimeHi.SI(Of Second),
+                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
                     .FullLoadCurve = FullLoadCurveHi}
                 }
         End Get
@@ -273,42 +290,42 @@ Public Class ElectricMachine
         End Get
     End Property
 
-    Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
-        Get
-            Return PeakPowerTime.SI(Of Second)
-        End Get
-    End Property
-
-    Public ReadOnly Property TestVoltageOverload As Volt Implements IElectricMotorDeclarationInputData.TestVoltageOverload
+    
     Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
     Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
 
-    Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
-    get
-            Return RatedSpeed.RPMtoRad()
-    End Get
-    End Property
+    
 
     Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
-    Public Property OverloadRecoveryFactor As Double Implements IElectricMotorDeclarationInputData.OverloadRecoveryFactor
+    Public Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
 
-    Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
-    get
-        Return ContTq.si(of NewtonMeter)
-    End Get
-    End Property
+    'Public ReadOnly Property OverloadTime As Second Implements IElectricMotorDeclarationInputData.OverloadTime
+    '    Get
+    '        Return PeakPowerTime.SI(Of Second)
+    '    End Get
+    'End Property
+    'Public ReadOnly Property ContinuousTorqueSpeed As PerSecond Implements IElectricMotorDeclarationInputData.ContinuousTorqueSpeed
+    '    get
+    '        Return RatedSpeed.RPMtoRad()
+    '    End Get
+    'End Property
+    'Public ReadOnly Property ContinuousTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.ContinuousTorque
+    'get
+    '    Return ContTq.si(of NewtonMeter)
+    'End Get
+    'End Property
 
-    Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
-    get
-        Return OvlTq.SI(of NewtonMeter)
-    End Get
-    End Property
+    'Public ReadOnly Property OverloadTorque As NewtonMeter Implements IElectricMotorDeclarationInputData.OverloadTorque
+    'get
+    '    Return OvlTq.SI(of NewtonMeter)
+    'End Get
+    'End Property
 
-    Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
-        Get
-            Return OvlSpeed.RPMtoRad()
-        End Get
-    End Property
+    'Public ReadOnly Property OverloadTestSpeed As PerSecond Implements IElectricMotorDeclarationInputData.OverloadTestSpeed
+    '    Get
+    '        Return OvlSpeed.RPMtoRad()
+    '    End Get
+    'End Property
 
     Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
 

@@ -10,8 +10,8 @@
 | NG PI        | compressed   |                       | 2.69                                | 45100                   | 48000                  | H-Gas            |
 | NG PI        | liquefied    |                       | 2.77                                | 45100                   | 49100                  | EU mix 2016/2030 |
 
-Specifications are based on a recent analysis (2018) performed by CONCAWE/EUCAR and shall reflect typical fuel on the European market. The data is scheduled to be published in March 2019 in the context of the study:
-Well-To-Wheels Analysis Of Future Automotive Fuels And Powertrains in the European Context – Heavy Duty vehicles
+Specifications are based on an analysis (2018) performed by CONCAWE/EUCAR and shall reflect typical fuel on the European market. The data was in the context of the study:
+Well-To-Wheels Analysis Of Future Automotive Fuels And Powertrains in the European Context – Heavy Duty vehicles ([doi:10.2760/100379](http://dx.doi.org/10.2760/100379))
 
 ###VECTO Input for CNG/LNG Vehicles
 

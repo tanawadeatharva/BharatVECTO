@@ -31,14 +31,13 @@
 
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
-using TUGraz.VectoCore.OutputData.XML.Engineering;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Factory;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.OutputData.XML.Factory;
 using TUGraz.VectoCore.OutputData.XML.NinjectModules;
 using TUGraz.VectoCore.Utils.Ninject;
 
-namespace TUGraz.VectoCore.OutputData.XML
+namespace TUGraz.VectoCore.OutputData.XML.Engineering
 {
 	public class XMLEngineeringWriterInjectModule : NinjectModule
 	{

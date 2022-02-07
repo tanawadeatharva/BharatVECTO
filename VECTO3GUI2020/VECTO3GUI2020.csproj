@@ -52,6 +52,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
@@ -83,13 +86,10 @@
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+    <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject.Extensions.ChildKernel, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.3.0\lib\net45\Ninject.Extensions.ChildKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Extensions.Factory, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+    <Reference Include="Ninject.Extensions.Factory">
       <HintPath>..\packages\Ninject.Extensions.Factory.3.3.3\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -836,6 +836,7 @@
       <Link>DependencyValidation1.layerdiagram</Link>
       <Visible>False</Visible>
     </AdditionalFiles>
+    <None Include="app.manifest" />
     <None Include="Documentation\InputData.cd" />
     <None Include="Properties\Application.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -868,27 +869,18 @@
     <Resource Include="Resources\Icons\Icon2.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Icons\folderpicker.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
+      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VectoCommon\VectoHashing\VectoHashing.csproj">
-      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
-      <Name>VectoHashing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VectoCore\VectoCoreTest\VectoCoreTest.csproj">
-      <Project>{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}</Project>
-      <Name>VectoCoreTest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
-      <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
       <Name>VectoCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\folderpicker.ico" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Trash_16x.ico" />
   </ItemGroup>

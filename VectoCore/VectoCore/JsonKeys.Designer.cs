@@ -493,11 +493,11 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to InterimStage.
+        ///   Looks up a localized string similar to InterimStep.
         /// </summary>
-        internal static string InterimStage {
+        internal static string InterimStep {
             get {
-                return ResourceManager.GetString("InterimStage", resourceCulture);
+                return ResourceManager.GetString("InterimStep", resourceCulture);
             }
         }
         

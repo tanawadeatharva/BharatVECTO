@@ -1,17 +1,13 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
@@ -19,7 +15,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
-	[TestFixture()]
+	[TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class DeclarationAdapterCreateVocationalVehicleTest
 	{
@@ -65,10 +61,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var sumData = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumData);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport);
+			runsFactory.WriteModalResults = false;
+			runsFactory.Validate = false;
 			jobContainer.AddRuns(runsFactory);
 
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered

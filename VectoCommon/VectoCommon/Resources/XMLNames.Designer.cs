@@ -601,15 +601,6 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
-        /// </summary>
-        public static string Bus_ADAS_APTEcoRollReleaseLockupClutch {
-            get {
-                return ResourceManager.GetString("Bus_ADAS_APTEcoRollReleaseLockupClutch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to AdBlueDosing.
         /// </summary>
         public static string Bus_AdBlueDosing {
@@ -637,11 +628,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AirdragModifiedMultistage.
+        ///   Looks up a localized string similar to AirdragModifiedMultistep.
         /// </summary>
-        public static string Bus_AirdragModifiedMultistage {
+        public static string Bus_AirdragModifiedMultistep {
             get {
-                return ResourceManager.GetString("Bus_AirdragModifiedMultistage", resourceCulture);
+                return ResourceManager.GetString("Bus_AirdragModifiedMultistep", resourceCulture);
             }
         }
         
@@ -790,6 +781,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HeatPumpModeDriverCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpModeDriver {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpModeDriver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HeatPumpModePassengerCompartment.
+        /// </summary>
+        public static string Bus_HeatPumpModePassenger {
+            get {
+                return ResourceManager.GetString("Bus_HeatPumpModePassenger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HeatPumpTypeDriverCompartment.
         /// </summary>
         public static string Bus_HeatPumpTypeDriver {
@@ -810,9 +819,9 @@ namespace TUGraz.VectoCommon.Resources {
         /// <summary>
         ///   Looks up a localized string similar to HeightIntegratedBody.
         /// </summary>
-        public static string Bus_HeighIntegratedBody {
+        public static string Bus_HeightIntegratedBody {
             get {
-                return ResourceManager.GetString("Bus_HeighIntegratedBody", resourceCulture);
+                return ResourceManager.GetString("Bus_HeightIntegratedBody", resourceCulture);
             }
         }
         
@@ -1389,6 +1398,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string BusHVACHeatPumpHeating {
             get {
                 return ResourceManager.GetString("BusHVACHeatPumpHeating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BusManufacturingStepDataType.
+        /// </summary>
+        public static string BusManufacturingStepDataType {
+            get {
+                return ResourceManager.GetString("BusManufacturingStepDataType", resourceCulture);
             }
         }
         
@@ -2833,6 +2851,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SumNetPower.
+        /// </summary>
+        public static string Exempted_SumNetPower {
+            get {
+                return ResourceManager.GetString("Exempted_SumNetPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technology.
+        /// </summary>
+        public static string Exempted_Technology {
+            get {
+                return ResourceManager.GetString("Exempted_Technology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource.
         /// </summary>
         public static string ExternalResource {
@@ -3220,20 +3256,47 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ManufacturingStage.
+        ///   Looks up a localized string similar to ManufacturingStep.
         /// </summary>
-        public static string ManufacturingStage {
+        public static string ManufacturingStep {
             get {
-                return ResourceManager.GetString("ManufacturingStage", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to stageCount.
+        ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
-        public static string ManufacturingStage_StageCount {
+        public static string ManufacturingStep_Bus_DataType {
             get {
-                return ResourceManager.GetString("ManufacturingStage_StageCount", resourceCulture);
+                return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HashPreviousStep.
+        /// </summary>
+        public static string ManufacturingStep_HashPreviousStep {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_HashPreviousStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_StepCount {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stepCount.
+        /// </summary>
+        public static string ManufacturingStep_stepCount_Attr {
+            get {
+                return ResourceManager.GetString("ManufacturingStep_stepCount_Attr", resourceCulture);
             }
         }
         
@@ -3558,6 +3621,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_AveragePayload {
             get {
                 return ResourceManager.GetString("Report_AveragePayload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CO2StandardsGroup.
+        /// </summary>
+        public static string Report_CO2StandardsGroup {
+            get {
+                return ResourceManager.GetString("Report_CO2StandardsGroup", resourceCulture);
             }
         }
         
@@ -4588,11 +4660,11 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to VectoOutputMultistage.
+        ///   Looks up a localized string similar to VectoOutputMultistep.
         /// </summary>
-        public static string VectoOutputMultistage {
+        public static string VectoOutputMultistep {
             get {
-                return ResourceManager.GetString("VectoOutputMultistage", resourceCulture);
+                return ResourceManager.GetString("VectoOutputMultistep", resourceCulture);
             }
         }
         
@@ -5313,6 +5385,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string VehicleAttr_VehicleDeclarationType {
             get {
                 return ResourceManager.GetString("VehicleAttr_VehicleDeclarationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VehicleTypeApprovalNumber.
+        /// </summary>
+        public static string VehicleTypeApprovalNumber {
+            get {
+                return ResourceManager.GetString("VehicleTypeApprovalNumber", resourceCulture);
             }
         }
         

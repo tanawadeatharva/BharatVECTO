@@ -369,11 +369,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
-			if (DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.TCLocked) {
+			if (DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime)) {
 				return ModelData.FullLoadCurves[0].N95hSpeed;
 			}
 
-			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
+			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear)?.MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)

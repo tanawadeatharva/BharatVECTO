@@ -6,6 +6,7 @@ using Castle.Core.Smtp;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
+using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces;
@@ -42,9 +43,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				? InterimStageBusVehicleViewModel_v2_8.VERSION_EXEMPTED
 				: InterimStageBusVehicleViewModel_v2_8.VERSION) as IMultistageVehicleViewModel;
 
-			Title = "Edit Stage Input - New File";
+			Title = $"{GUILabels.Edit_step_input} - New file";
 
-			_documentName = $"New {(exemptedVehicle ? "Exempted " : "")}Stage Input {++_newDocumentCounter}";
+			_documentName = $"New {(exemptedVehicle ? "exempted " : "")}step input {++_newDocumentCounter}";
 			Init();
 		}
 
@@ -56,8 +57,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			(_vehicleViewModel as InterimStageBusVehicleViewModel_v2_8).ShowConsolidatedData = false;
 
 			_dataSource = inputData.DataSource;
+			VehicleInputDataFilePath = _dataSource.SourceFile;
 
-			Title = $"Edit Stage Input - {Path.GetFileName(_dataSource.SourceFile)}";
+			Title = $"{GUILabels.Edit_step_input} - {Path.GetFileName(_dataSource.SourceFile)}";
 			Init();
 		}
 
@@ -69,6 +71,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		protected override void LoadStageInputDataFollowUp(IDeclarationInputDataProvider loadedInputData)
 		{
 			DataSource = loadedInputData.DataSource;
+			VehicleInputDataFilePath = DataSource.SourceFile;
 			UpdateTitle();			
 			DocumentName = loadedInputData.JobInputData.JobName;
 		}
@@ -77,9 +80,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		private void UpdateTitle()
 		{
-			Title = "Edit Stage Input - " + ((_dataSource?.SourceFile != null)
+			Title = GUILabels.Edit_step_input + " - " + ((_dataSource?.SourceFile != null)
 				? Path.GetFileName(_dataSource.SourceFile)
-				: "New File");
+				: "New file");
 		}
 
 		private void Init()
@@ -101,7 +104,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _documentName, value);
 		}
 
-		public XmlDocumentType DocumentType => _documentType;
+		public XmlDocumentType? DocumentType => _documentType;
+
+		public string DocumentTypeName => "Step input";
 
 		public DataSource DataSource
 		{

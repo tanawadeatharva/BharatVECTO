@@ -16,7 +16,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 			Assert.AreEqual(JsonKeys.JsonBody, nameof(JSONJob.Body));
             Assert.AreEqual(JsonKeys.PrimaryVehicle, nameof(JSONJob.Body.PrimaryVehicle));
-            Assert.AreEqual(JsonKeys.InterimStage, nameof(JSONJob.Body.InterimStage));
+            Assert.AreEqual(JsonKeys.InterimStep, nameof(JSONJob.Body.InterimStep));
 			Assert.AreEqual(JsonKeys.Completed, nameof(JSONJob.Body.Completed));
 		}
 	}

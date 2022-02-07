@@ -1,10 +1,5 @@
-﻿using Ninject.Extensions.Factory;
-using Ninject.Modules;
-using VECTO3GUI2020.Ninject.Util;
-using VECTO3GUI2020.Util;
+﻿using Ninject.Modules;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Trailer;
-using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 
 namespace VECTO3GUI2020.Ninject

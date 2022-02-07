@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[Test]
+		[TestCase]
 		public void TestGetSection()
 		{
 			var entries = new List<Entry>();

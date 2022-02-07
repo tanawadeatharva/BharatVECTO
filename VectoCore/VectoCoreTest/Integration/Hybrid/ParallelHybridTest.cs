@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -12,10 +11,10 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -23,7 +22,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.OutputData.ModFilter;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
@@ -130,8 +128,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P1_constant_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
@@ -176,8 +172,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P1_acc_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
 			var job = CreateEngineeringRun(
@@ -213,8 +207,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				@"   0, {0}, {1},    0
 				   200,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P1_stop_{vmax}-{initialSoC}_{slope}_{gbxType.ToXMLFormat()}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP1;
@@ -278,23 +270,15 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(TestJobCityBusP1_APTP, 8, TestName = "P1 CityBus Hybrid APT-P, DriveCycle Urban"),
 			TestCase(TestJobCityBusP1_APTP, 9, TestName = "P1 CityBus Hybrid APT-P, DriveCycle UrbanDelivery"),
 
-			TestCase(TestJobP1, 0, TestName = "P1 Bus Hybrid Roeck - Urban"),
-			TestCase(TestJobP1, 1, TestName = "P1 Bus Hybrid Roeck - Coach"),
-			TestCase(TestJobP1, 2, TestName = "P1 Bus Hybrid Roeck - HeavyUrban"),
-			TestCase(TestJobP1, 3, TestName = "P1 Bus Hybrid Roeck - Interurban"),
-			TestCase(TestJobP1, 4, TestName = "P1 Bus Hybrid Roeck - Suburban"),
-			TestCase(TestJobP1, 5, TestName = "P1 Bus Hybrid Roeck - Suburban + stop"),
-
 		]
 		public void P1APTHybridDriveCycle(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -334,8 +318,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
@@ -368,8 +350,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				@"   0,   0, {1},    3
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_maxPwr-{maxPwrkW}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
@@ -418,8 +398,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P2_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
@@ -461,8 +439,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = string.Format("SimpleParallelHybrid-P2_cycle_{0}-{1}_{2}_{3}_maxPwr-{3}.vmod", declarationMission, initialSoC, payload, pAuxEl, maxPwrkW);
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
@@ -516,8 +492,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P2_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
@@ -593,6 +567,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5TestJob_BatterySystem2, 7, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Suburban"),
 			TestCase(Group5TestJob_BatterySystem2, 8, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Urban"),
 			TestCase(Group5TestJob_BatterySystem2, 9, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle UrbanDelivery"),
+			TestCase(Group5TestJob_BatterySystem2, 10, TestName = "P2 Hybrid Group 5 BatterySystem 2 DriveCycle Interurban Short"),
 
 		]
 		public void P2HybridGroup5DriveCycle_BatterySystem(string jobFile, int cycleIdx)
@@ -848,10 +823,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 			
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -924,8 +898,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   200,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P2_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
@@ -977,8 +949,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P3_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
@@ -1015,12 +985,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P3_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 1.0, true);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -1049,12 +1017,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   200,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P3_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
-			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+			var job = CreateEngineeringRun(cycle, modFilename, initialSoC, pos, 1.0, true);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -1091,8 +1056,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P3_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP3;
@@ -1224,8 +1187,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				  7000, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P4_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
@@ -1263,8 +1224,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				   700, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			const bool largeMotor = true;
-
 			var modFilename = $"SimpleParallelHybrid-P4_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
 			var job = CreateEngineeringRun(
@@ -1295,8 +1254,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				@"   0, {0}, {1},    0
 				   200,   0, {1},    3", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P4_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
@@ -1337,8 +1294,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				declarationMission +
 				Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
-
-			const bool largeMotor = true;
 
 			var modFilename = $"SimpleParallelHybrid-P4_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP4;
@@ -1409,7 +1364,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
-			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
+			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
@@ -1432,7 +1387,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl,
-			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGeabox)
+			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{ 
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
@@ -1722,11 +1677,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return motor;
 		}
 
-		private static GearboxData CreateGearboxData(GearboxType gearboxType = GearboxType.NoGeabox)
+		private static GearboxData CreateGearboxData(GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			switch (gearboxType) {
 				
-				case GearboxType.NoGeabox:
+				case GearboxType.NoGearbox:
 				case GearboxType.AMT:
 					return CreateAMTGearbox();
 				case GearboxType.ATSerial:

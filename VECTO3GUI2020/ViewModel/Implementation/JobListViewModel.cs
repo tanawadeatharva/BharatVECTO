@@ -9,9 +9,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using Microsoft.Toolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using NLog;
@@ -20,12 +22,15 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -103,6 +108,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
             IDialogHelper dialogHelper,
             IWindowHelper windowHelper,
 			IMultiStageViewModelFactory multiStageViewModelFactory,
+			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IOutputViewModel outputViewModel) : this()
         {
             _documentViewModelFactory = documentViewModelFactory;
@@ -111,6 +117,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			_inputDataReader = inputDataReader;
 			_multiStageViewModelFactory = multiStageViewModelFactory;
 			_outputViewModel = outputViewModel;
+			_simFactoryFactory = simulatorFactoryFactory;
 
 			_outputMessage = new Progress<MessageEntry>((message) => {
 				_outputViewModel.AddMessage(message);
@@ -205,7 +212,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		public async Task<IDocumentViewModel> AddJobExecuteAsync()
 		{
-			var fileName = _dialogHelper.OpenXMLFileDialog();
+			var fileName = _dialogHelper.OpenXMLAndVectoFileDialog();
 			if (fileName != null)
 			{
 				return await AddJobAsync(fileName);
@@ -251,9 +258,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			var extension = Path.GetExtension(fileName);
 			switch (extension) {
-				case ".xml":
+				case Constants.FileExtensions.VectoXMLDeclarationFile:
 					return LoadXMLFile(fileName);
-				case ".json":
+				case Constants.FileExtensions.VectoJobFile:
 					return LoadJsonFile(fileName);
 				default: 
 					throw new VectoException($"{extension} not supported!");
@@ -279,7 +286,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			xElement.Load(fileName);
 
 			var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
-			if (documentType == XmlDocumentType.MultistageOutputData)
+			if (documentType == XmlDocumentType.MultistepOutputData)
 			{
 				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
@@ -354,12 +361,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			}
 			SimulationRunning = true;
 			try {
-				await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
-					outputMessages: _outputMessage,
-					progress: _progress,
-					status: _status,
-					jobToSimulate: jobToSimulate));
-			} catch (Exception ex) {
+                await Task.Run(() => RunSimulationAsync(_cancellationTokenSource.Token,
+                    outputMessages: _outputMessage,
+                    progress: _progress,
+                    status: _status,
+                    jobToSimulate: jobToSimulate));
+                //await Task.Factory.StartNew(() => RunSimulationAsync(_cancellationTokenSource.Token,
+                //	outputMessages: _outputMessage,
+                //	progress: _progress,
+                //	status: _status,
+                //	jobToSimulate: jobToSimulate),
+                //		TaskCreationOptions.LongRunning).Unwrap();
+
+            }
+			catch (Exception ex) {
 				_outputViewModel.AddMessage(new MessageEntry() {
 					Type = MessageType.ErrorMessage,
 					Message = ex.Message
@@ -378,6 +393,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			IProgress<string> status, 
 			IDocumentViewModel jobToSimulate = null)
 		{
+			if (Thread.CurrentThread.Name == null) {
+				Thread.CurrentThread.Name = "JobListThread";
+			};
+
+
             progress.Report(0);
 			status.Report("starting...");
 			
@@ -394,7 +414,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							Time = DateTime.Now,
 							Type = MessageType.InfoMessage,
 						});
-						status.Report("No jobs selected");
+						status.Report("No Jobs selected");
 						return;
 					}
 				}
@@ -402,10 +422,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				jobs = new IDocumentViewModel[] {
 					jobToSimulate
 				};
+				
 			}
 
-
-			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(Jobs.First(x => x.Selected).DataSource.SourceFile));
+			var sumFileWriter = new FileOutputWriter(GetOutputDirectory(jobs.First().DataSource.SourceFile));
 			var sumContainer = new SummaryDataContainer(sumFileWriter);
 			var jobContainer = new JobContainer(sumContainer);
 			var mode = ExecutionMode.Declaration;
@@ -447,10 +467,20 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					switch (extension) {
 						case Constants.FileExtensions.VectoJobFile:
 							input = JSONInputDataFactory.ReadJsonJob(fullFileName);
-							var tmp = input as IDeclarationInputDataProvider;
-							mode = tmp?.JobInputData.SavedInDeclarationMode ?? false
-								? ExecutionMode.Declaration
-								: ExecutionMode.Engineering;
+							switch (input) {
+								case IDeclarationInputDataProvider declInput:
+									mode = declInput.JobInputData.SavedInDeclarationMode
+										? ExecutionMode.Declaration
+										: ExecutionMode.Engineering;
+									break;
+								case IMultistagePrimaryAndStageInputDataProvider primaryAndStage:
+									mode = ExecutionMode.Declaration;
+									break;
+								default:
+									input = null;
+
+									break;
+							}
 							break;
 						case ".xml":
 							var xdoc = XDocument.Load(fullFileName);
@@ -466,7 +496,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								}
 
 								mode = ExecutionMode.Declaration;
-							} else if (XMLNames.VectoOutputMultistage.Equals(rootNode,
+							} else if (XMLNames.VectoOutputMultistep.Equals(rootNode,
 								StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
 									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);
@@ -492,15 +522,13 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = new SimulatorFactory(mode, input, fileWriter)
-					{
-						WriteModalResults = Settings.Default.WriteModalResults,
-						ModalResults1Hz = Settings.Default.ModalResults1Hz,
-						Validate = Settings.Default.Validate,
-						ActualModalData = Settings.Default.ActualModalData,
-						SerializeVectoRunData = Settings.Default.SerializeVectoRunData,
-						
-					};
+					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter);
+					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
+					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
+					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
+					runsFactory.Validate = Settings.Default.Validate;
+					runsFactory.ActualModalData = Settings.Default.ActualModalData;
+					runsFactory.SerializeVectoRunData = Settings.Default.SerializeVectoRunData;
 
 					var stopwatch = new Stopwatch();
 					stopwatch.Start();
@@ -570,6 +598,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 			var start = Stopwatch.StartNew();
 			jobContainer.Execute(true);
+			
 			while (!jobContainer.AllCompleted)
 			{
 				if (ct.IsCancellationRequested)
@@ -588,23 +617,26 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 					return;
 				}
-
+				Debug.WriteLine(Thread.CurrentThread.Name);
 				var jobProgress = jobContainer.GetProgress();
 				var sumProgress = jobProgress.Sum(x => x.Value.Progress);
 				var duration = start.Elapsed.TotalSeconds;
-				jobProgress.Select(x => x.Value.Progress);
+				//jobProgress.Select(x => x.Value.Progress);
 
-
-
+				
+				
 				progress.Report(Convert.ToInt32(sumProgress * 100 / jobProgress.Count));
 				status.Report(string.Format(
 					"Duration: {0:F1}s, Current Progress: {1:P} ({2})", duration, sumProgress / jobProgress.Count,
 					string.Join(", ", jobProgress.Select(x => string.Format("{0,4:P}", x.Value.Progress)))));
-                var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
+                
+				var justFinished = jobProgress.Where(x => x.Value.Done & !finishedRuns.Contains(x.Key))
 					.ToDictionary(x => x.Key, x => x.Value);
 				PrintRuns(justFinished, fileWriters, outputMessages);
 				finishedRuns.AddRange(justFinished.Select(x => x.Key));
-				await Task.Delay(100);
+
+				var delayMs = 100;
+				Task.Delay(delayMs, ct).Wait(delayMs);
 			}
 			start.Stop();
 
@@ -637,31 +669,40 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					);
 				}
 			}
-			foreach (var jobEntry in jobs)
-			{
-				var w = new FileOutputWriter(GetOutputDirectory(jobEntry.DataSource.SourceFile));
-				foreach (var entry in new Dictionary<string, string>() { { w.XMLFullReportName, "XML ManufacturereReport" }, { w.XMLCustomerReportName, "XML Customer Report" }, { w.XMLVTPReportName, "VTP Report" }, { w.XMLPrimaryVehicleReportName, "Primary Vehicle Information File" } })
-				{
-					if (File.Exists(entry.Key))
-					{
+
+			var outputWriters = jobContainer.GetOutputDataWriters();
+			var sortedOutputWriters = outputWriters.OrderBy(ow => ow.JobFile);
+			foreach (var outputDataWriter in sortedOutputWriters) {
+				var writtenFiles = outputDataWriter.GetWrittenFiles();
+				if (writtenFiles.IsNullOrEmpty()) {
+					continue;
+				}
+				var jobFileName = outputDataWriter.JobFile;
+				foreach (var entry in new Dictionary<ReportType, string> {
+					{ ReportType.DeclarationReportPrimaryVehicleXML, "Primary Vehicle Information File" },
+					{ ReportType.DeclarationReportManufacturerXML, "XML Manufacturer Report" },
+					{ ReportType.DeclarationReportCustomerXML, "XML Customer Report" },
+					{ ReportType.DeclarationVTPReportXML, "VTP Report" },
+					{ ReportType.DeclarationReportMultistageVehicleXML, "VIF File" },
+				}) {
+					if (writtenFiles.ContainsKey(entry.Key)) {
 						outputMessages.Report(
 							new MessageEntry()
 							{
 								Type = MessageType.StatusMessage,
-								Message = string.Format(
-									"{2} for '{0}' written to {1}", Path.GetFileName(jobEntry.DataSource.SourceFile), entry.Key, entry.Value),
-								Link = entry.Key
-							});
+								Message = $"{entry.Value} for \n '{jobFileName}' \nwritten to \n '{writtenFiles[entry.Key]}'", 
+								Link = writtenFiles[entry.Key],
+							}
+						);
 					}
 				}
 			}
-
-			if (File.Exists(sumFileWriter.SumFileName))
+			if (sumFileWriter.SumFileWritten)
 			{
 				outputMessages.Report(new MessageEntry()
 				{
 					Type = MessageType.StatusMessage,
-					Message = string.Format("Sum file written to {0}", sumFileWriter.SumFileName),
+					Message = $"Sum file written to {sumFileWriter.SumFileName}",
 					Link = sumFileWriter.SumFileName,
 				});
 			}
@@ -672,24 +713,29 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				Message = string.Format("Simulation finished in {0:F1}s", start.Elapsed.TotalSeconds)
 			});
 
-			status.Report($"Simulation finished in {start.Elapsed.TotalSeconds} s");
+			status.Report($"Simulation finished in {start.Elapsed.TotalSeconds,0:F1} s");
 
 		}
 		private void PrintRuns(Dictionary<int, JobContainer.ProgressEntry> progress, Dictionary<int, FileOutputWriter> fileWriters, IProgress<MessageEntry> outputMessages)
 		{ 
 			foreach (var p in progress) {
-				var modFilename = fileWriters[p.Key]
-					.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+				var modFilename = "Add modFileName";
+				if (fileWriters.ContainsKey(p.Key)) {
+					modFilename = fileWriters[p.Key]
+						.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
+					
+				}
 				var runName = string.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix);
 
-                if (p.Value.Error != null)
+				if (p.Value.Error != null)
                 {
                     outputMessages.Report(new MessageEntry()
                     {
                         Type = MessageType.StatusMessage,
                         Message = string.Format("Finished Run {0} with ERROR: {1}", runName,
                             p.Value.Error.Message),
-                        Link = modFilename
+                        //Link = modFilename
+                        //Link = modFilename
 						//Link = "<CSV>" + modFilename
 					});
                 }
@@ -752,6 +798,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private ICommand _openAdditionalJobInformationCommand;
 		private IRelayCommand _openSourceFileCommand;
 		private IRelayCommand _showSourceFileInExplorerCommand;
+		private readonly ISimulatorFactoryFactory _simFactoryFactory;
 
 
 		public ICommand OpenSourceFileCommand
@@ -794,11 +841,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			{
 				return _cancelSimulationCommand ?? (_cancelSimulationCommand = new RelayCommand(() => {
 						_outputViewModel.AddMessage(new MessageEntry() {
-							Message="Canceling Simulation",
+							Message="Canceling Simulation - this operation can take some time",
 							Type=MessageType.InfoMessage,
 						});
 						_simulationLoggingEnabled = false;
 						_cancellationTokenSource.Cancel();
+						_status.Report("");
 						
 						
 					},

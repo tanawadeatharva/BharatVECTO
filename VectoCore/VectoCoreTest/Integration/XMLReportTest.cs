@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
@@ -87,10 +88,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(writer.SumFileName);
 			}
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+				xmlReport, validate: false);
+			runsFactory.WriteModalResults = false;
+			//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+			//	WriteModalResults = false,
+			//	Validate = false,
+			//};
 			jobContainer.AddRuns(runsFactory);
 
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
@@ -138,11 +142,14 @@ namespace TUGraz.VectoCore.Tests.Integration
             var sumData = new SummaryDataContainer(writer);
             var jobContainer = new JobContainer(sumData);
 
-            var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport)
-            {
-                WriteModalResults = false,
-                Validate = false,
-            };
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+				xmlReport, validate: false);
+			runsFactory.WriteModalResults = false;
+			//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport)
+   //         {
+   //             WriteModalResults = false,
+   //             Validate = false,
+   //         };
             jobContainer.AddRuns(runsFactory);
 
             // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
@@ -170,10 +177,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(writer.SumFileName);
 			}
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+				xmlReport, validate: false);
+			runsFactory.WriteModalResults = false;
+			//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+			//	WriteModalResults = false,
+			//	Validate = false,
+			//};
 			jobContainer.AddRuns(runsFactory);
 
 			jobContainer.Execute();
@@ -256,11 +266,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 					var jobContainer = new JobContainer(sumData);
 
 					var dataProvider = xmlInputReader.CreateDeclaration(modified);
-					
-					var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-						WriteModalResults = false,
-						Validate = false,
-					};
+
+					var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+						xmlReport, validate: false);
+					runsFactory.WriteModalResults = false;
+					//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+					//	WriteModalResults = false,
+					//	Validate = false,
+					//};
 					jobContainer.AddRuns(runsFactory);
 
 					xmlReport.DoWriteReport();
@@ -291,10 +304,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(writer.SumFileName);
 			}
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+				xmlReport, validate: false);
+			runsFactory.WriteModalResults = false;
+			//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+			//	WriteModalResults = false,
+			//	Validate = false,
+			//};
 			jobContainer.AddRuns(runsFactory);
 
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
@@ -326,7 +342,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase]
 		public void TestXMLPrimaryVehicleReportTest()
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.10/vecto_vehicle-primary_heavyBus-sample.xml";
+			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
@@ -337,10 +353,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(writer.SumFileName);
 			}
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer,
+				xmlReport, validate: false);
+			runsFactory.WriteModalResults = false;
+			//var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+			//	WriteModalResults = false,
+			//	Validate = false,
+			//};
 			jobContainer.AddRuns(runsFactory);
 
 			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered

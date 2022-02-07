@@ -82,7 +82,8 @@ namespace TUGraz.VectoCore.Utils
 			
 			_doc.Validate(ValidationCallBack);
 
-			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || _doc.DocumentElement?.SchemaInfo == null ||
+			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || 
+				_doc.DocumentElement?.SchemaInfo == null ||
 				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
 				ValidationCallBack(null, null);
 				_valid = false;
@@ -99,7 +100,7 @@ namespace TUGraz.VectoCore.Utils
 			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
 
-		public string ValidationError => _validationErrors.Any() ? string.Join(Environment.NewLine, _validationErrors) : null;
+		public string ValidationError => _validationErrors.Any() ? _validationErrors.Join(Environment.NewLine) : null;
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
 		{

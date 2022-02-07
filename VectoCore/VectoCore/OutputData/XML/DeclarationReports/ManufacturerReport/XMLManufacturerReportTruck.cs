@@ -115,15 +115,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			};
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
 			foreach (var auxId in auxList) {
-				if (!auxData.ContainsKey(auxId.Key())) {
-					continue;
-				}
-
-				foreach (var entry in auxData[auxId.Key()].Technology) {
-					retVal.Add(new XElement(tns + GetTagName(auxId), entry));
+				if (auxData.TryGetValue(auxId.Key(), out var auxValue)) {
+					foreach (var entry in auxValue.Technology) {
+						retVal.Add(new XElement(tns + GetTagName(auxId), entry));
+					}
 				}
 			}
-
 			return retVal;
 		}
 

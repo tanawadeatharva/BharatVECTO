@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
+		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
 		public virtual VehicleCategory VehicleCategory
@@ -160,29 +160,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _ptoData ?? (_ptoData = PTOReader.PTOInputData);
 
-		public virtual RetarderType RetarderType
-		{
-			get {
-				var value = GetString(XMLNames.Vehicle_RetarderType); //.ParseEnum<RetarderType>(); 
-				switch (value) {
-					case "None": return RetarderType.None;
-					case "Losses included in Gearbox": return RetarderType.LossesIncludedInTransmission;
-					case "Engine Retarder": return RetarderType.EngineRetarder;
-					case "Transmission Input Retarder": return RetarderType.TransmissionInputRetarder;
-					case "Transmission Output Retarder": return RetarderType.TransmissionOutputRetarder;
-				}
-
-				throw new ArgumentOutOfRangeException("RetarderType", value);
-			}
-		}
-
+		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
+		
 		public virtual AngledriveType AngledriveType => GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>();
 
 		public virtual bool VocationalVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle));
 
-		public virtual bool SleeperCab => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab));
+		public virtual bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab)
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab))
+			: (bool?)null;
 
-		public virtual bool? AirdragModifiedMultistage { get; }
+		public virtual bool? AirdragModifiedMultistep { get; }
 
 		public virtual TankSystem? TankSystem =>
 			ElementExists(XMLNames.Vehicle_NgTankSystem)
@@ -239,13 +227,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public virtual Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		public virtual TableData BoostingLimitations => null;
+
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 		
-		public virtual string VehicleTypeApprovalNumber => ElementExists(XMLNames.Vehicle_TypeApprovalNumber) ? GetString(XMLNames.Vehicle_TypeApprovalNumber) : null;
-		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
+		public virtual string VehicleTypeApprovalNumber => ElementExists(XMLNames.VehicleTypeApprovalNumber) ? GetString(XMLNames.Vehicle_TypeApprovalNumber) : null;
+		public virtual ArchitectureID ArchitectureID => ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID));
 		public virtual bool OvcHev => GetBool(XMLNames.Vehicle_OvcHev);
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
@@ -288,7 +277,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab => true;
+		public override bool? SleeperCab => true;
 
 		public override TankSystem? TankSystem => VectoCommon.InputData.TankSystem.Compressed;
 
@@ -400,7 +389,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override bool VocationalVehicle => false;
 
-		public override bool SleeperCab => false;
+		public override bool? SleeperCab => null;
 
 		public override TankSystem? TankSystem => null;
 
@@ -441,205 +430,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationExemptedVehicleDataProviderV221 : XMLDeclarationExemptedVehicleDataProviderV22
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V221;
+
+		public new const string XSD_TYPE = "ExemptedVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationExemptedVehicleDataProviderV221(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
+			sourceFile)
+		{
+		}
+
+		public override bool? SleeperCab => ElementExists(XMLNames.Vehicle_SleeperCab) ? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)) : (bool?)null;
+
+		public override AxleConfiguration AxleConfiguration =>
+			ElementExists(XMLNames.Vehicle_AxleConfiguration)
+				? AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration))
+				: AxleConfiguration.AxleConfig_Undefined;
+	}
+
 	// ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationPrimaryBusVehicleDataProviderV210 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-
-		public new const string XSD_TYPE = "Vehicle_Conventional_PrimaryBusDeclarationType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationPrimaryBusVehicleDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
-		{
-			SourceType = DataSourceType.XMLEmbedded;
-			
-		}
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override bool SleeperCab => false;
-
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
-
-		public override XmlElement PTONode => null;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-
-		public override LegislativeClass? LegislativeClass => VectoCommon.Models.LegislativeClass.M3;
-
-		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
-
-		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
-
-		public override Kilogram CurbMassChassis => null;
-
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
-
-		public override Meter EntranceHeight => null;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV20
-
-		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
-
-		#endregion
-
-		#endregion
-
-		#region Overrides of AbstractXMLResource
-
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-
-		protected override DataSourceType SourceType { get; }
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
-	}
-
-	public class XMLDeclarationExemptedPrimaryBusDataProviderV210 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-
-		public new const string XSD_TYPE = "Vehicle_Exempted_PrimaryBusType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationExemptedPrimaryBusDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
-		{
-			SourceType = DataSourceType.XMLEmbedded;
-
-		}
-
-		#region Overrides of AbstractXMLResource
-
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-
-		protected override DataSourceType SourceType { get; }
-
-		#endregion
-
-		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
-
-		public override bool ExemptedVehicle => true;
-
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
-
-		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
-
-
-		public override IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
-
-		public override PerSecond EngineIdleSpeed => null;
-
-		public override bool VocationalVehicle => false;
-
-		public override bool SleeperCab => false;
-
-		public override TankSystem? TankSystem => null;
-
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => null;
-
-		public override bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
-
-		public override bool HybridElectricHDV => false;
-
-		public override bool DualFuelVehicle => false;
-
-		public override Watt MaxNetPower1 => GetDouble("SumNetPower").SI<Watt>();
-
-		public override Watt MaxNetPower2 => null;
-
-		public override string ExemptedTechnology => GetString("Technology");
-
-		public override IVehicleComponentsDeclaration Components => null;
-
-		public override XmlElement ComponentNode => null;
-
-		public override XmlElement PTONode => null;
-
-		public override XmlElement ADASNode => null;
-
-		public override AngledriveType AngledriveType => AngledriveType.None;
-
-		public override RetarderType RetarderType => RetarderType.None;
-
-		public override double RetarderRatio => 0;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
-	}
-
-	public class XMLDeclarationMediumLorryVehicleDataProviderV210 : XMLDeclarationVehicleDataProviderV21
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-
-		public new const string XSD_TYPE = "Vehicle_Conventional_MediumLorryDeclarationType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationMediumLorryVehicleDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
-		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
-		
-		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
-
-		public override bool SleeperCab => false;
-
-		public override bool VocationalVehicle => false;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-
-		public override XmlElement PTONode => null;
-
-		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
-
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>();
-
-		public override CubicMeter CargoVolume
-		{
-			get
-			{
-				if (VehicleCategory == VehicleCategory.Van && !ElementExists(XMLNames.Vehicle_CargoVolume)) {
-					throw new VectoException("Medium lorries with type Van require the input parameter cargo volume!");
-				}
-				return ElementExists(XMLNames.Vehicle_CargoVolume) ? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>()
-					: null;
-			}
-		}
-
-		#endregion
-
-		#region Overrides of AbstractXMLResource
-
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-
-		protected override DataSourceType SourceType { get; }
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
-	}
-
-	
 	public class XMLDeclarationMultistagePrimaryVehicleBusDataProviderV01 : AbstractCommonComponentType, IXMLDeclarationVehicleData
 	{
 
@@ -688,7 +507,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual PerSecond EngineIdleSpeed => GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad();
 
 		
-		public virtual RetarderType RetarderType => GetString(XMLNames.Vehicle_RetarderType).ParseEnum<RetarderType>();
+		public virtual RetarderType RetarderType => RetarderTypeHelper.Parse(GetString(XMLNames.Vehicle_RetarderType));
 
 		public virtual double RetarderRatio => GetDouble(XMLNames.Vehicle_RetarderRatio);
 
@@ -704,7 +523,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IXMLADASReader ADASReader { get; set; }
 
 		
-		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => _adas ?? (_adas = ADASReader.ADASInputData);
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ExemptedVehicle ? null : (_adas ?? (_adas = ADASReader?.ADASInputData));
 
 
 		public virtual IList<ITorqueLimitInputData> TorqueLimits => ReadTorqueLimits();
@@ -729,12 +548,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
+
+		public virtual string VehicleTypeApprovalNumber { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
-		public virtual string VehicleTypeApprovalNumber => null;
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
@@ -752,8 +572,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public CubicMeter CargoVolume => 0.SI<CubicMeter>();
 		public Kilogram CurbMassChassis { get; }
 		public bool VocationalVehicle { get; }
-		public bool SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? SleeperCab { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 
 		public bool HybridElectricHDV { get; }
@@ -839,332 +659,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationCompletedBusDataProviderV210 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
-		
-		public XMLDeclarationCompletedBusDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		public override string Model
-		{
-			get
-			{
-				if (BaseNode.LocalName == XMLNames.Component_Vehicle) {
-					return BaseNode.SelectSingleNode($"./*[local-name()='{XMLNames.Component_Model}']")?.InnerText;
-				}
-				return ElementExists(new [] { XMLNames.Component_Vehicle, XMLNames.Component_Model})
-					? GetString(new[] { XMLNames.Component_Vehicle, XMLNames.Component_Model }) : null;
-			}
-		}
-
-		public override LegislativeClass? LegislativeClass =>
-			ElementExists(XMLNames.Vehicle_LegislativeCategory)
-				? GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>()
-				:  (LegislativeClass?)null;
-
-		public override Kilogram CurbMassChassis =>
-			ElementExists(XMLNames.CorrectedActualMass)
-				? GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>()
-				: null;
-
-		public override Kilogram GrossVehicleMassRating =>
-			ElementExists(XMLNames.Vehicle_TPMLM)
-				? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
-				: null;
-
-		public override bool? AirdragModifiedMultistage =>
-			ElementExists(XMLNames.Bus_AirdragModifiedMultistage)
-				? GetBool(XMLNames.Bus_AirdragModifiedMultistage)
-				: (bool?)null;
-
-		public override RegistrationClass? RegisteredClass =>
-			ElementExists(XMLNames.Vehicle_RegisteredClass)
-				? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
-				: null;
-
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
-
-
-		public override int? NumberPassengerSeatsLowerDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsLowerDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsLowerDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-		public override int? NumberPassengerSeatsUpperDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsUpperDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsUpperDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-		public override int? NumberPassengersStandingLowerDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingLowerDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersStandingLowerDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-		public override int? NumberPassengersStandingUpperDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingUpperDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersStandingUpperDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-
-
-		public override VehicleCode? VehicleCode =>
-			ElementExists(XMLNames.Vehicle_BodyworkCode)
-				? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
-				: (VehicleCode?)null;
-
-		public override bool? LowEntry =>
-			ElementExists(XMLNames.Bus_LowEntry) 
-				? GetBool(XMLNames.Bus_LowEntry)
-				: (bool?)null;
-
-		public override Meter Height =>
-			ElementExists(XMLNames.Bus_HeighIntegratedBody)
-				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-				: null;
-
-		public override Meter Length =>
-			ElementExists(XMLNames.Bus_VehicleLength)
-				? GetDouble(XMLNames.Bus_VehicleLength).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-				: null;
-
-		public override Meter Width =>
-			ElementExists(XMLNames.Bus_VehicleWidth)
-				? GetDouble(XMLNames.Bus_VehicleWidth).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-				: null;
-
-		public override Meter EntranceHeight =>
-			ElementExists(XMLNames.Bus_EntranceHeight)
-				? GetDouble(XMLNames.Bus_EntranceHeight).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-				: null;
-
-		public override ConsumerTechnology? DoorDriveTechnology =>
-			ElementExists(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)
-				? ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology))
-				: (ConsumerTechnology?)null;
-
-		public override VehicleDeclarationType VehicleDeclarationType => VehicleDeclarationTypeHelper.Parse(GetString(XMLNames.Bus_VehicleDeclarationType));
-
-
-		public override XmlElement ADASNode => _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement);
-
-
-		public override XmlElement ComponentNode
-		{
-			get
-			{
-				if (ExemptedVehicle)
-					return null;
-
-				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components, required:false) as XmlElement);
-			}
-		}
-
-
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
-		{
-			get
-			{
-				if (ADASNode == null)
-					return null;
-				return _adas ?? (_adas = ADASReader.ADASInputData);
-			}
-		}
-
-		
-
-		public override IVehicleComponentsDeclaration Components
-		{
-			get 
-			{ 
-				if (ComponentNode == null)
-					return null;
-				
-				if(_components == null)
-					_components = ComponentReader.ComponentInputData;
-
-				if (_components.BusAuxiliaries == null && _components.AirdragInputData == null)
-					return null;
-
-				return _components;
-			}
-		}
-		
-		public override XmlElement PTONode => null;
-
-
-		#region Overrides of AbstractXMLResource
-
-		protected override DataSourceType SourceType => DataSourceType.XMLFile;
-
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-
 		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedCompletedBusDataProviderV210 : XMLDeclarationVehicleDataProviderV20
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_Exempted_CompletedBusType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
-		public XMLDeclarationExemptedCompletedBusDataProviderV210(IXMLDeclarationJobInputData jobData,
-			XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) {}
 
-
-		public override string Model =>
-			ElementExists(XMLNames.Component_Model)
-				? GetString(XMLNames.Component_Model) : null;
-
-		public override LegislativeClass? LegislativeClass =>
-			ElementExists(XMLNames.Vehicle_LegislativeCategory)
-				? GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>()
-				: (LegislativeClass?)null;
-
-		public override Kilogram CurbMassChassis =>
-			ElementExists(XMLNames.CorrectedActualMass)
-				? GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>()
-				: null;
-
-		public override Kilogram GrossVehicleMassRating =>
-			ElementExists(XMLNames.Vehicle_TPMLM)
-				? GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>()
-				: null;
-
-		public override RegistrationClass? RegisteredClass =>
-			ElementExists(XMLNames.Vehicle_RegisteredClass)
-				? RegistrationClassHelper.Parse(GetString(XMLNames.Vehicle_RegisteredClass)).First()
-				: null;
-
-		public override int? NumberPassengerSeatsLowerDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsLowerDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsLowerDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-		public override int? NumberPassengerSeatsUpperDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengerSeatsUpperDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengerSeatsUpperDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-
-		public override int? NumberPassengersStandingLowerDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingLowerDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersStandingLowerDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-		public override int? NumberPassengersStandingUpperDeck
-		{
-			get
-			{
-				if (!ElementExists(XMLNames.Bus_NumberPassengersStandingUpperDeck))
-					return null;
-				var node = GetNode(XMLNames.Bus_NumberPassengersStandingUpperDeck);
-				return XmlConvert.ToInt32(node.InnerText);
-			}
-		}
-
-
-		public override VehicleCode? VehicleCode =>
-			ElementExists(XMLNames.Vehicle_BodyworkCode)
-				? GetString(XMLNames.Vehicle_BodyworkCode).ParseEnum<VehicleCode>()
-				: (VehicleCode?)null;
-
-		public override bool? LowEntry =>
-			ElementExists(XMLNames.Bus_LowEntry)
-				? GetBool(XMLNames.Bus_LowEntry)
-				: (bool?)null;
-
-		public override Meter Height =>
-			ElementExists(XMLNames.Bus_HeighIntegratedBody)
-				? GetDouble(XMLNames.Bus_HeighIntegratedBody).SI(Unit.SI.Milli.Meter).Cast<Meter>()
-				: null;
-
-		public override XmlElement PTONode => null;
-
-		public override XmlElement ComponentNode => null;
-
-		public override IVehicleComponentsDeclaration Components => null;
-		
-
-		public override bool ExemptedVehicle => true;
-
-		#region Overrides of AbstractXMLResource
-
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-
-		protected override DataSourceType SourceType => DataSourceType.XMLFile;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public abstract class XMLVehicleDataProviderHelperV201 : XMLDeclarationVehicleDataProviderV20
+	public abstract class AbstractXMLVehicleDataProviderV24 : XMLDeclarationVehicleDataProviderV20
 	{
 		public virtual string PowertrainPositionPrefix => "P";
 
-		protected XMLVehicleDataProviderHelperV201(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
+		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+
+		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
 			: base(jobData, xmlNode, sourceFile) { }
 		
 
@@ -1182,22 +689,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
-		
+
+		public override LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory).ParseEnum<LegislativeClass>();
+		//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
+
+		public override TankSystem? TankSystem => ElementExists(XMLNames.Vehicle_NgTankSystem)
+			? GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>()
+			: (TankSystem?) null;
 		#endregion
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
 
-		public override bool SleeperCab => GetBool(XMLNames.Vehicle_SleeperCab);
+		public override bool? SleeperCab => GetBool(XMLNames.Vehicle_SleeperCab);
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS {
+			get {
+				if (ADASNode == null)
+					return null;
+				return _adas ?? (_adas = ADASReader.ADASInputData);
+			}
+		}
 
 		#endregion
 
-		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits
+		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
 		
-		private Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ReadElectricMotorTorqueLimits()
+		private Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
 		{
 			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
-			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<int, TableData>>>();
+			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>();
 
 			foreach (XmlNode torqueLimitNode in torqueLimitNodes)
 			{
@@ -1211,7 +732,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 						PowertrainPositionHelper.Parse(PowertrainPositionPrefix + GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
 
 					if (!motorTorqueLimits.ContainsKey(powertrainPosition))
-						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<int, TableData>>());
+						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<Volt, TableData>>());
 
 					var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, electricMachineNode);
 					foreach (XmlNode voltageLevelNode in voltageLevelNodes)
@@ -1225,9 +746,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return motorTorqueLimits.IsNullOrEmpty() ? null : motorTorqueLimits;
 		}
 
-		private Tuple<int, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
+		private Tuple<Volt, TableData> ReadVoltageLevelNode(XmlNode voltageLevelNode)
 		{
-			var voltage = Convert.ToInt32(GetString(XMLNames.VoltageLevel_Voltage, voltageLevelNode));
+			var voltage = GetString(XMLNames.VoltageLevel_Voltage, voltageLevelNode).ToDouble().SI<Volt>();
 			var entries = voltageLevelNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.MaxTorqueCurve, XMLNames.MaxTorqueCurve_Entry));
 			var mapping = new Dictionary<string, string> {
 							{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed},
@@ -1235,495 +756,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 							{ XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque}
 						};
 			var maxTorqueCurve = XMLHelper.ReadTableData(mapping, entries);
-			return new Tuple<int, TableData>(voltage, maxTorqueCurve);
+			return new Tuple<Volt, TableData>(voltage, maxTorqueCurve);
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_Conventional_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLDeclarationHeavyLorryDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS => ADASReader.ADASInputData;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
-	}
-
-
-
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVPxHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Px_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of VehicleDataProviderHelper
-
-		public override string PowertrainPositionPrefix => "P";
-
-		#endregion
-		
-		public XMLDeclarationHEVPxHeavyLorryDataProviderV210(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV20
-
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
-
-		#endregion
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IList<ITorqueLimitInputData> TorqueLimits =>
-			ElementExists(XMLNames.Vehicle_TorqueLimits) ? base.TorqueLimits : null;
-
-		
-		public override TableData BoostingLimitations 
-			=> ElementExists(XMLNames.Vehicle_BoostingLimitation)
-				? ReadTableData(XMLNames.Vehicle_BoostingLimitation, XMLNames.BoostingLimitation_Entry,
-					new Dictionary<string, string> {
-						{XMLNames.BoostingLimitation_RotationalSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
-						{XMLNames.BoostingLimitation_BoostingTorque, XMLNames.BoostingLimitation_BoostingTorque}
-					})
-				: null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVPxMediumLorryDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Px_MediumLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
-		public XMLDeclarationHEVPxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "P";
-
-		#endregion
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-		public override XmlElement PTONode => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVPxPrimaryBusDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Px_PrimaryBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "P";
-
-		#endregion
-
-		public XMLDeclarationHEVPxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVSxPrimaryBusDataProviderV210 : XMLDeclarationHEVPxMediumLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Sx_PrimaryBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVPxMediumLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E"; 
-
-		#endregion
-
-		public XMLDeclarationHEVSxPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-
-	}
 
 	// ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationHEVSxHeavyLorryDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Sx_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationHEVSxHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-		
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override TableData BoostingLimitations => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVSxMediumLorryDataProviderV210 : XMLDeclarationHEVSxHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-Sx_MediumLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVSxHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationHEVSxMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-		public override XmlElement PTONode => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210 : XMLVehicleDataProviderHelperV201
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of VehicleDataProviderHelper
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV20
-
-		public override TankSystem? TankSystem =>
-			ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<TankSystem>(GetString(XMLNames.Vehicle_NgTankSystem))
-				: (TankSystem?)null;
-
-		#endregion
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume => null;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-
-		public override Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
-		public override TableData BoostingLimitations => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationHEVIEPCSMediumLorryDataProviderV210 : XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_MediumLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationHEVIEPCSMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume =>
-			ElementExists(XMLNames.Vehicle_CargoVolume)
-				? GetDouble(XMLNames.Vehicle_CargoVolume).SI<CubicMeter>() : null;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-
-		public override XmlElement PTONode => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
 	
-	public class XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210 : XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_HEV-IEPC-S_PrimaryBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVIEPCSHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationHEVIEPCSPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-
-		public override XmlElement PTONode => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
-	}
-
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationPEVHeavyLorryE2DataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_PEV_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationPEVHeavyLorryE2DataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override TableData BoostingLimitations => null;
-		
-		#endregion
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationPEVMediumLorryExDataProviderV210 : XMLDeclarationHEVPxHeavyLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_PEV_MediumLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationPEVMediumLorryExDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-		
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-		public override XmlElement PTONode => null;
-
-		#endregion
-
-		#region Overrides of XMLDeclarationHEVPxHeavyLorryDataProviderV210
-
-		public override TableData BoostingLimitations => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-	
-	public class XMLDeclarationPEVPrimaryBusDataProviderV210 : XMLDeclarationPEVMediumLorryExDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_PEV_PrimaryBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		#region Overrides of XMLDeclarationPEVMediumLorryExDataProviderV210
-
-		public override string PowertrainPositionPrefix => "E";
-
-		#endregion
-
-		public XMLDeclarationPEVPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume => null;
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-	}
-
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationIEPCHeavyLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV10
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_IEPC_HeavyLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
-		public XMLDeclarationIEPCHeavyLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume => null;
-
-		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-
-		public override VehicleCategory VehicleCategory =>
-			VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
-
-		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
-
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-
-
-	}
-
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLDeclarationIEPCMediumLorryDataProviderV210 : XMLDeclarationVehicleDataProviderV10
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_IEPC_MediumLorryDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
-		public XMLDeclarationIEPCMediumLorryDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) 
-			: base(jobData, xmlNode, sourceFile) { }
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-		
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
-		public override XmlElement PTONode => null;
-		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-
-		public override VehicleCategory VehicleCategory =>
-			VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
-
-		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
-
-		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-	}
-
-	// ---------------------------------------------------------------------------------------
-	
-	public class XMLDeclarationIEPCPrimaryBusDataProviderV210 : XMLDeclarationIEPCMediumLorryDataProviderV210
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
-		public new const string XSD_TYPE = "Vehicle_IEPC_PrimaryBusDeclarationType";
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-		
-		public XMLDeclarationIEPCPrimaryBusDataProviderV210(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
-
-
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
-
-		public override CubicMeter CargoVolume => null;
-
-		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
-
-		#endregion
-
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
-	}
 }

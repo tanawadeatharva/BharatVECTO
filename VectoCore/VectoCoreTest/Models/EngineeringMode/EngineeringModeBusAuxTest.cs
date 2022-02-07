@@ -27,6 +27,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
@@ -43,6 +44,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class EngineeringModeBusAuxTest
 	{
 		protected IXMLInputDataReader xmlInputReader;
@@ -72,8 +74,8 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		const string JobFile_C3b = @"TestData\Hybrids\BusAuxEngineeringMode\InterurbanBus_ENG_BusAux_C3b.vecto";
 
 
-		private const string JobRoeck_BusAux_B =
-			@"J:\TE-Em\Emissionsmodelle\VECTO\Arbeitsordner\AAUX\Check bus aux electrical system configurations\System type B\Citybus_P0-APT-S-175kW-6.8l_B\Citybus_P0_B.vecto";
+		//private const string JobRoeck_BusAux_B =
+		//	@"J:\TE-Em\Emissionsmodelle\VECTO\Arbeitsordner\AAUX\Check bus aux electrical system configurations\System type B\Citybus_P0-APT-S-175kW-6.8l_B\Citybus_P0_B.vecto";
 		[
 		TestCase(JobFile, 0, TestName = "InterurbanBus ENG BusAux NonSmart Interurban"),
 		TestCase(JobFile, 1, TestName = "InterurbanBus ENG BusAux NonSmart Coach"),
@@ -113,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 		TestCase(JobFile_C1, 0, TestName = "InterurbanBus ENG BusAux C1 Interurban"),
 
-		TestCase(JobRoeck_BusAux_B, 0, "dev", TestName = "Roeck Citybus P0 Type B"),
+		//TestCase(JobRoeck_BusAux_B, 0, "dev", TestName = "Roeck Citybus P0 Type B"),
 		]
 		public void InterurbanBus_BusAuxTest(string jobFile, int runIdx, string outPath = null)
 		{
@@ -128,12 +130,10 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var sumContainer = new SummaryDataContainer(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-                SumData = sumContainer,
-                //ActualModalData = true,
-                Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.SumData = sumContainer; //ActualModalData = true,
+			factory.Validate = false;
 
 			var jobContainer = new JobContainer(sumContainer);
 

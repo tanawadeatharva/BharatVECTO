@@ -18,7 +18,7 @@ namespace VECTO3GUI2020.Helper
 			}
 
 
-			return propertyName + "*";
+			return propertyName;
 		}
 	}
 }

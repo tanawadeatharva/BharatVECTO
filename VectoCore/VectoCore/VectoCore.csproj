@@ -126,6 +126,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -150,6 +153,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationCompletedBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationHeavyLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationMediumLorryVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationPrimaryBusVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\v24\XMLDeclarationExemptedVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricMachinesDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationMultistageInputData.cs" />
@@ -202,10 +210,11 @@
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataMultistageV01InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV20InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV21InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV221InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV210InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV24InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
@@ -292,9 +301,16 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\IVectoRunDataFactoryFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryFactory.cs" />
+    <Compile Include="InputData\Reader\VectoRunDataFactoryNinjectModule.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\APTNGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\APTNShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DummyAxleGearInfo.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PEVGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
@@ -448,6 +464,9 @@
     <Compile Include="Models\SimulationComponent\Impl\ATClutchInfo.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
     <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\IFollowUpSimulatorFactoryCreator.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryDeclaration.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactoryEngineering.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
@@ -455,7 +474,13 @@
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\FileOutputVIFWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\FileIO\TempFileOutputWriter.cs" />
     <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\ComponentWriter.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\ComponentWriterNinjectModule.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\Declaration\ADAS_Writer.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\Declaration\Components_Conventional.cs" />
+    <Compile Include="OutputData\XML\ComponentWriter\IComponentWriterFactory.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFNinjectModule.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CustomerInformationFile\LorryCustomerInformationFile.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\ICustomerInformationFileFactory.cs" />
@@ -543,7 +568,27 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportCompletedBus.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\IGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusDimensionsWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusParametersWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusGeneralParametersWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\CompletedBus\CompletedBusPassengerCountWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxElectricSystemSupplyGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxElectricSystemLightsGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxHVACConventionalGroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\Declaration\Vehicle\Components\Auxiliaries\BusAuxHVACHeatPumpWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\GroupNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GroupNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OutputData\XML\GroupWriter\GroupWriter.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\IGroupWriterFactory.cs" />
+    <Compile Include="OutputData\XML\IXMLReportFactory.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationNamespaces.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactory.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReportFactoryNinjectModule.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportCompletedBus.cs" />
@@ -554,6 +599,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLMultistageBusReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLPrimaryBusVehicleReport.cs" />
     <Compile Include="Utils\Ninject\CombineArgumentsToNameInstanceProviders.cs" />
+    <Compile Include="OutputData\XML\GroupWriter\XMLGroupWriterNinjectModule.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
@@ -625,6 +671,8 @@
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
+    <Compile Include="Utils\Ninject\UseFirstTwoArgumentsAsInstanceProvider.cs" />
+    <Compile Include="Utils\PathHelper.cs" />
     <Compile Include="Utils\SchmittTrigger.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
@@ -772,7 +820,7 @@
     <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoRun.cs" />
-    <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory\SimulatorFactory.cs" />
     <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
     <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />
@@ -790,6 +838,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VectoVersionCore.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utils\XAttributeEqualityComparer.cs" />
     <Compile Include="Utils\XMLDefinitions.cs" />
     <Compile Include="Utils\XMLHelper.cs" />
     <Compile Include="Utils\XmlResourceResolver.cs" />
@@ -804,10 +853,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="OutputData\FileIO\FileWriter.cd" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OutputData\XML\GroupWriter\GroupNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupNames.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
@@ -979,8 +1034,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\Fan-Tech-Medium.csv" />
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd">
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Buses\ElectricConsumers.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMTechList.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMDefaults.ahsm" />
@@ -998,9 +1051,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
-    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoVTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1021,16 +1071,25 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_normalized.vmap" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_normalized.vmap" />
-    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistage.0.1.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistep.0.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoComponent.2.10.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoComponent.2.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3.xsd">
+		<SubType>Designer</SubType>
+	</EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.2_JobInputData.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

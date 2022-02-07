@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			//retVal["BC_lowVentilation"] = ssmInputs.BoundaryConditions.LowVentilation.ConvertToPerHour().Value;
 			retVal["BC_SpecificVentilationPower"] = ssmInputs.BoundaryConditions.SpecificVentilationPower.ConvertToWattHourPerCubicMeter().Value;
 			retVal["BC_AuxHeaterEfficiency"] = ssmInputs.BoundaryConditions.AuxHeaterEfficiency;
-			retVal["BC_GCVDieselOrHeatingOil"] = ssmInputs.BoundaryConditions.GCVDieselOrHeatingOil.ConvertToKiloWattHourPerKilogramm().Value;
+			retVal["BC_GCVDieselOrHeatingOil"] = ssmInputs.BoundaryConditions.GCVDieselOrHeatingOil.ConvertToKiloWattHourPerKilogram().Value;
 			retVal["BC_MaxTemperatureDeltaForLowFloorBusses"] = ssmInputs.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses.AsDegCelsius;
 			retVal["BC_MaxPossibleBenefitFromTechnologyList"] = ssmInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList;
 			retVal["BC_UValue"] = ssmInputs.BoundaryConditions.UValue.Value();

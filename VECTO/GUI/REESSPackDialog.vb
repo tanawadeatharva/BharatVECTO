@@ -83,9 +83,9 @@ Public Class REESSPackDialog
             End If
         End If
 
-        If Not BatteryForm.Visible Then
+        if Not BatteryForm.Visible Then
             BatteryForm.Show()
-        Else
+        Else 
             If BatteryForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
             BatteryForm.BringToFront()
         End If

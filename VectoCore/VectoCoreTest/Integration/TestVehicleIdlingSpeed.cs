@@ -43,6 +43,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, new FileOutputWriter("Idle900"));
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, new FileOutputWriter("Idle900"));
 			//factory.WriteModalResults = true;
 
 			var jobContainer = new JobContainer(null);

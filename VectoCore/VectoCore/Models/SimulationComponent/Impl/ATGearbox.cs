@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected internal set => throw new System.NotImplementedException();
 		}
 
-		public override GearshiftPosition NextGear => _strategy.NextGear;
+		public override GearshiftPosition NextGear => _strategy?.NextGear ?? _gear;
 
 		#region Overrides of AbstractGearbox<ATGearboxState>
 
@@ -331,11 +331,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: 0.SI<NewtonMeter>();
 			inTorque += inertiaTorqueLossOut / effectiveRatio;
 			var powershiftLoss = 0.SI<NewtonMeter>();
-			var aliquotEnergyLoss = 0.SI<WattSecond>();
 			if (_powershiftLossEnergy != null) {
 				var remainingShiftLossLime = ModelData.PowershiftShiftTime - (absTime - LastShift);
 				if (remainingShiftLossLime.IsGreater(0)) {
-					aliquotEnergyLoss = _powershiftLossEnergy * VectoMath.Min(1.0, VectoMath.Min(dt, remainingShiftLossLime) / ModelData.PowershiftShiftTime);
+					var aliquotEnergyLoss = _powershiftLossEnergy * VectoMath.Min(1.0, VectoMath.Min(dt, remainingShiftLossLime) / ModelData.PowershiftShiftTime);
 					var avgEngineSpeed = (DataBus.EngineInfo.EngineSpeed + outAngularVelocity * effectiveRatio) / 2;
 					powershiftLoss = aliquotEnergyLoss / dt / avgEngineSpeed;
 					inTorque += powershiftLoss;
@@ -483,8 +482,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				};
 			}
-
-			
 
 			CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * effectiveRatio, outTorque,
 				outAngularVelocity);

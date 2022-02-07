@@ -71,8 +71,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public IReadOnlyCollection<Point> Entries
 		{
-			get
-			{
+			get {
 				var retVal = new Point[_points.Count];
 				var i = 0;
 				foreach (var pt in _points) {
@@ -164,7 +163,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 			if (duplicates.Any()) {
 				throw new VectoException("{0}: Input Data for Delaunay map contains duplicates! \n{1}", _mapName,
-					string.Join("\n", duplicates.Select(pt => $"{pt.Key.X} / {pt.Key.Y}")));
+					duplicates.Select(pt => $"{pt.Key.X} / {pt.Key.Y}").Join("\n"));
 			}
 		}
 
@@ -221,15 +220,16 @@ namespace TUGraz.VectoCore.Utils
 				var frame = new StackFrame(2);
 				var method = frame.GetMethod();
 				System.Diagnostics.Debug.Assert(method.DeclaringType != null, "method.DeclaringType != null");
-				var type = string.Join("", method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()));
-				var methodName = string.Join("", method.Name.Split(Path.GetInvalidFileNameChars()));
+				var type = method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()).Join("");
+				var methodName = method.Name.Split(Path.GetInvalidFileNameChars()).Join("");
 				Directory.CreateDirectory("delaunay");
 				chart.SaveImage($"delaunay\\{type}_{methodName}_{superTriangle.GetHashCode()}_{i}.png",
 					ChartImageFormat.Png);
 			}
 		}
 
-		public double? Interpolate(SI x, SI y)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public double Interpolate(SI x, SI y)
 		{
 			return Interpolate(x.Value(), y.Value());
 		}
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns>a value if interpolation is successfull, 
 		///          null if interpolation has failed.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public double? Interpolate(double x, double y)
+		public double Interpolate(double x, double y)
 		{
 			if (_triangles == null) {
 				throw new VectoException("Interpolation not possible. Call DelaunayMap.Triangulate first.");
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			if (i == _triangles.Length) {
-				return null;
+				return double.NaN;
 			}
 
 			var tr = _triangles[i];

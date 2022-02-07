@@ -35,8 +35,10 @@ using System.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -78,12 +80,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = false,
-				ActualModalData = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = false;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -96,13 +97,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			var validator1 = new XMLValidator(XmlReader.Create(customerRecord), validationErrorAction: (s,e) => {
 				validationMsg1.Add(e?.ValidationEventArgs?.Message ?? "no schema found?");
 			});
-			Assert.IsTrue(validator1.ValidateXML(XmlDocumentType.CustomerReport), string.Join("\n", validationMsg1));
+			Assert.IsTrue(validator1.ValidateXML(XmlDocumentType.CustomerReport), validationMsg1.Join("\n"));
 
 			var validationMsg2 = new List<string> {manufacturerRecord};
 			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord), validationErrorAction: (s,e) => {
 				validationMsg2.Add(e?.ValidationEventArgs?.Message ?? "no schema found");
 			});
-			Assert.IsTrue(validator2.ValidateXML(XmlDocumentType.ManufacturerReport), string.Join("\n", validationMsg2));
+			Assert.IsTrue(validator2.ValidateXML(XmlDocumentType.ManufacturerReport), validationMsg2.Join("\n"));
 		}
 	}
 }

@@ -31,10 +31,14 @@
 
 using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
+using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
+using TUGraz.VectoCore.OutputData.XML.Engineering;
+using TUGraz.VectoCore.OutputData.XML.GroupWriter;
 
 namespace TUGraz.VectoCore
 {
@@ -59,6 +63,15 @@ namespace TUGraz.VectoCore
 
 			LoadModule<XMLEngineeringWriterInjectModule>();
 
+			LoadModule<SimulatorFactoryNinjectModule>();
+
+			LoadModule<XMLDeclarationReportFactoryNinjectModule>();
+
+			LoadModule<VectoRunDataFactoryNinjectModule>();
+
+			LoadModule<GroupWriterNinjectModule>();
+
+			LoadModule<ComponentWriterNinjectModule>();
 			LoadModule<SimulationFactoryNinjectModule>();
 
 			LoadModule<MRFNinjectModule>();

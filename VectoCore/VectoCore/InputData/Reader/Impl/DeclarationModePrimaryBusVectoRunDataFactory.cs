@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -18,7 +19,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
 		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
-			base(dataProvider, report) { }
+			base(dataProvider, report)
+		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
 
@@ -87,10 +89,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				return new VectoRunData() {
+				return new VectoRunData {
 					Exempted = true,
 					Report = Report,
-					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
+					Mission = new Mission { MissionType = MissionType.ExemptedMission },
 					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
 						null,
 						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
@@ -102,15 +104,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engine = vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),
@@ -124,7 +120,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-					vehicle.Length ?? mission.BusParameter.VehicleLength),
+					vehicle.Length ?? mission.BusParameter.VehicleLength,
+					vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,
@@ -137,7 +134,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
 				GearshiftParameters = _gearshiftData,
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

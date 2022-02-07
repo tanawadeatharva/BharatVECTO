@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public Ampere AverageCurrentDemandWithoutBaseLoad(bool engineOff, bool vehicleStopped)
 		{
 			if (!engineOff) {
-				return ElectricalConsumers?.Where(x => !x.Value.BaseVehicle).Select(x => x.Value.Current).Sum().Cast<Ampere>() ??
+				return ElectricalConsumers?.Where(x => !x.Value.BaseVehicle).Select(x => x.Value.Current).Sum() ??
 						0.SI<Ampere>();
 			}
 			
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public Ampere AverageCurrentDemandInclBaseLoad (bool engineOff, bool vehicleStopped)
 		{
 			if (!engineOff) {
-				return ElectricalConsumers?.Select(x => x.Value.Current).Sum().Cast<Ampere>() ?? 0.SI<Ampere>();
+				return ElectricalConsumers?.Select(x => x.Value.Current).Sum() ?? 0.SI<Ampere>();
 			}
 
 			if (vehicleStopped) {

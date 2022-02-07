@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TUGraz.VectoCommon.BusAuxiliaries;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -15,7 +13,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl {
+namespace TUGraz.VectoCore.Models.Simulation.Impl
+{
 	internal class DeclarationModeSingleBusVectoRunDataFactory : DeclarationModePrimaryBusVectoRunDataFactory
 	{
 		protected new DeclarationDataAdapterSingleBus _dao = new DeclarationDataAdapterSingleBus();
@@ -27,10 +26,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			_dao.SingleBusInputData = singleBusInputData;
 		}
 
-		#region Implementation of IVectoRunDataFactory
-
-		#region Overrides of DeclarationModePrimaryBusVectoRunDataFactory
-
+		
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
 		{
 			//if (vehicle.VehicleCategory != VehicleCategory.HeavyBusCompletedVehicle) {
@@ -58,7 +54,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			return segment;
 		}
 
-		#endregion
 
 		protected override IDeclarationDataAdapter DataAdapter => _dao;
 
@@ -73,15 +68,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var engine = vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),
@@ -92,7 +81,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
 				Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
-													vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.BusParameter.VehicleLength),
+													vehicle.Components.BusAuxiliaries, mission.MissionType, 
+													_segment.VehicleClass, vehicle.Length ?? mission.BusParameter.VehicleLength,
+													vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,
@@ -113,7 +104,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, _singleBusInputData.CompletedVehicle, simulationRunData);
 			return simulationRunData;
 		}
+
+		protected override void InitializeReport()
+		{
+			VectoRunData powertrainConfig;
+			List<List<FuelData.Entry>> fuels;
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			if (vehicle.ExemptedVehicle) {
+				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+				fuels = new List<List<FuelData.Entry>>();
+			} else {
+				powertrainConfig = _segment.Missions.Select(
+						mission => CreateVectoRunData(
+							vehicle, 0, mission, mission.Loadings.First()))
+					.FirstOrDefault(x => x != null);
+				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, _singleBusInputData.CompletedVehicle.TankSystem)).ToList())
+					.ToList();
+			}
+			Report.InitializeReport(powertrainConfig, fuels);
+		}
 	}
 
-	#endregion
+	
 }

@@ -327,18 +327,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VectoSimulationJobType JobType => Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 
 		public virtual string JobName => _jobname;
-
-		public string ShiftStrategy
-		{
-			get {
-				if (Body["ShiftStrategy"] == null) {
-					return "";
-				}
-
-				return Body.GetEx<string>("ShiftStrategy");
-			}
-		}
-
+		
 		#endregion
 
 		#region DriverInputData
@@ -505,7 +494,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries => AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList();
+		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries => AuxData();
 
 		protected virtual IList<IAuxiliaryDeclarationInputData> AuxData()
 		{
@@ -640,8 +629,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
 		IVTPDeclarationInputDataProvider, IManufacturerReport
 	{
-		private IDictionary<VectoComponents, IList<string>> _componentDigests = null;
-		private DigestData _jobDigest = null;
+		private IDictionary<VectoComponents, IList<string>> _componentDigests;
+		private DigestData _jobDigest;
 		private IXMLInputDataReader _inputReader;
 		private IResultsInputData _manufacturerResults;
 		private Meter _vehicleLenght;
@@ -794,14 +783,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					}
 
 					for (var i = 0; i < component.Count; i++) {
-						if (!_componentDigests.ContainsKey(component.Entry)) {
-							_componentDigests[component.Entry] = new List<string>();
-						}
-						_componentDigests[component.Entry].Add(
+						_componentDigests.GetOrAdd(component.Entry, _ => new List<string>()).Add(
 							XMLManufacturerReportReader.GetComponentDataDigestValue(xmlDoc, component.Entry, i));
 					}
 				}
-			} catch (Exception) { }
+			} catch (Exception) {
+				// todo mk2021-08-26 really suppress all errors?
+			}
 
 			try {
 				_jobDigest = new DigestData(xmlDoc.SelectSingleNode("//*[local-name()='InputDataSignature']"));
@@ -818,14 +806,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class ManufacturerResults : IResultsInputData
 	{
-		private XmlNode ResultNode;
-
-		public ManufacturerResults(XmlNode resultsNode)
+		public ManufacturerResults(XmlNode resultNode)
 		{
-			ResultNode = resultsNode;
-			Status = ResultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
+			Status = resultNode.SelectSingleNode("./*[local-name() = 'Status']").InnerText;
 			Results = new List<IResult>();
-			foreach (XmlNode node in ResultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
+			foreach (XmlNode node in resultNode.SelectNodes("./*[local-name() = 'Result' and @status='success']")) {
 				var entry = new Result {
 					ResultStatus = node.Attributes.GetNamedItem("status").InnerText,
 					Mission = node.SelectSingleNode("./*[local-name()='Mission']").InnerText.ParseEnum<MissionType>(),
@@ -1022,8 +1007,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 		public string JobName { get; }
-		public string ShiftStrategy => "";
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
@@ -1080,8 +1064,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle { get; }
 		public string JobName { get; }
-		public string ShiftStrategy => "";
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
@@ -1124,21 +1107,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-		private string _primaryVehicleInputDataPath;
-		private IVehicleDeclarationInputData _primaryVehicleInputData;
-		public IVehicleDeclarationInputData PrimaryVehicle =>
-			_primaryVehicleInputData ?? (_primaryVehicleInputData =
-				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
-
-		private string _stageInputDataPath;
+		private readonly string _primaryVehicleInputDataPath;
+		private readonly string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
+		private IDeclarationInputDataProvider _primaryVehicle;
 
-		public IVehicleDeclarationInputData StageInputData => 
-			_stageInputData ?? (_stageInputData =
-				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+		public string PrimaryVehicleInputDataPath => _primaryVehicleInputDataPath;
+		public string StageInputDataPath => _stageInputDataPath;
+		public IDeclarationInputDataProvider PrimaryVehicle => 
+			_primaryVehicle ?? (_primaryVehicle =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
+
+        public IVehicleDeclarationInputData StageInputData => 
+			_stageInputDataPath != null 
+			?
+            _stageInputData ?? (_stageInputData =
+                _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
+			:
+			null;
+
+
 
 		private bool? _completed;
 
@@ -1157,7 +1148,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
-			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
+			_primaryVehicleInputDataPath = PathHelper.GetAbsolutePath(filename, _primaryVehicleInputDataPath);
+			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStep);
+			_stageInputDataPath = PathHelper.GetAbsolutePath(filename, _stageInputDataPath);
 			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
 
 		}

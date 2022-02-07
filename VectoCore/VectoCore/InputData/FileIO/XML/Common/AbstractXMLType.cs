@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 			var node = GetNode(nodePath, required: fallbackValue == null);
 
 			if (node == null && fallbackValue == null) {
-				throw new VectoException("Node {0} not found in input data", string.Join("/", nodePath));
+				throw new VectoException("Node {0} not found in input data", nodePath.Join("/"));
 			}
 
 			return node?.InnerText.ToDouble() ?? fallbackValue.Value;

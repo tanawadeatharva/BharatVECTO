@@ -156,13 +156,25 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
+		/// Determines whether the specified tolerance is positive within tolerance.
+		/// </summary>
+		/// <param name="self">The self.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsNegative(this double self, double tolerance = Tolerance)
+		{
+			return self <= tolerance;
+		}
+
+		/// <summary>
 		/// Checks if a value is between min and max (min &lt;= value &lt;= max)
 		/// </summary>
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsBetween(this double self, double min, double max)
 		{
-			return min <= self && self <= max;
+			return Math.Min(min, max) <= self && self <= Math.Max(min, max);
 		}
 
 		/// <summary>
@@ -172,7 +184,7 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsBetween(this double self, SI min, SI max)
 		{
-			return min <= self && self <= max;
+			return VectoMath.Min(min, max) <= self && self <= VectoMath.Max(min, max);
 		}
 
 		/// <summary>
@@ -242,9 +254,9 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Scalar>.Create(value);
 		}
 
-	    public static SI SI(this double value, UnitInstance si)
-	    {
-	        return new SI(si, value);
+		public static SI SI(this double value, UnitInstance si)
+		{
+			return new SI(si, value);
 		}
 
 		/// <summary>
@@ -279,17 +291,17 @@ namespace TUGraz.VectoCommon.Utils
 			return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
 		}
 
-        public static string ToXMLFormat(this ConvertedSI self, uint? decimals = null)
-        {
-            decimals = decimals ?? 2;
-            return ((double)self).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
-        }
+		public static string ToXMLFormat(this ConvertedSI self, uint? decimals = null)
+		{
+			decimals = decimals ?? 2;
+			return ((double)self).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+		}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToMinSignificantDigits(this ConvertedSI self, uint? significant = null, uint? decimals = null)
-        {
-            return ToMinSignificantDigits((double)self, significant, decimals);
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string ToMinSignificantDigits(this ConvertedSI self, uint? significant = null, uint? decimals = null)
+		{
+			return ToMinSignificantDigits((double)self, significant, decimals);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
@@ -304,6 +316,9 @@ namespace TUGraz.VectoCommon.Utils
 
 			return self.ToString("F" + Math.Max(significant.Value - scale, decimals.Value), CultureInfo.InvariantCulture);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsNaN(this double self) => double.IsNaN(self);
 	}
 
 	public static class FloatExtensionMethods

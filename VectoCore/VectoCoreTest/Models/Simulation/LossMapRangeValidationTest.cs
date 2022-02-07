@@ -44,6 +44,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -262,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void CreateJobWithLossMapEfficiency_Engineering()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, null);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 			jobContainer.AddRuns(runsFactory);
 		}
@@ -277,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var fileWriter = new FileOutputWriter(jobFileName);
 
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFileName);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
 			var jobContainer = new JobContainer(new MockSumWriter());
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -295,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void CreateJobWith_Axle_LossMapEfficiency_Declaration()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 
 			AssertHelper.Exception<InvalidFileFormatException>(() => jobContainer.AddRuns(runsFactory));
@@ -308,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void CreateJobWith_Gear_LossMapEfficiency_Declaration()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with GearEfficiency.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 
 			AssertHelper.Exception<InvalidFileFormatException>(() => jobContainer.AddRuns(runsFactory));

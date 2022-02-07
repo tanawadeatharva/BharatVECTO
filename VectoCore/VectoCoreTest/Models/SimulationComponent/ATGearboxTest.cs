@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -51,7 +52,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VECTO;
+
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
