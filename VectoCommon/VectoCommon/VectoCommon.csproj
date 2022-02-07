@@ -5,13 +5,11 @@
     <Product>VectoCommon</Product>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <TargetFramework>net45</TargetFramework>
-    <Configurations>Debug;Release;Deploy</Configurations>
-    <VersionSuffix Condition="'$(Configuration)'=='Deploy'"></VersionSuffix>
-    <VersionSuffix Condition="'$(Configuration)'=='Release'">RC</VersionSuffix>
-    <VersionSuffix Condition="'$(Configuration)'=='Debug'">DEV</VersionSuffix>
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
+    <VersionSuffix Condition="'$(Configuration)'=='Debug'">DEV</VersionSuffix>
+    <VersionSuffix Condition="'$(Configuration)'!='Debug'" />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,14 +27,6 @@
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|AnyCPU'">
-    <DefineConstants />
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
