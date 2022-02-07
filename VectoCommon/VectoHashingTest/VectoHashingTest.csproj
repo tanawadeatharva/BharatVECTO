@@ -87,70 +87,100 @@
     <Content Include="Testdata\XML\simple_document.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\ADC_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\ADC.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Angledrive.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\BatterySystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Angledrive_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\ElectricMachineSystem-IHPC_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Axlegear.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\ElectricMachineSystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Axlegear_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\ElectricMachineSystem_StdValues.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\BatterySystem_1_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Gearbox_APT-N.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\CapacitorSystem_1.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Gearbox_IHPC.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\ElectricMachineSystem-IHPC_1_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\IEPC_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\ElectricMachineSystem_1_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\IEPC_StdValues.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\ElectricMachineSystem_StdValues_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\ADC.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Engine.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Angledrive.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Engine_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Angledrive.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Gearbox_APT-N_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Axlegear.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Gearbox_FWD.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Axlegear.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Gearbox_FWD_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\BatterySystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Gearbox_IHPC_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\CapacitorSystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\IEPC_1_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\CapacitorSystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\IEPC_StdValues_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\ElectricMachineSystem-IHPC_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Retarder.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\ElectricMachineSystem_1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\Retarder_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\ElectricMachineSystem_StdValues.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\TorqueConverter.xml">
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Engine.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Testdata\XML\Sort\TorqueConverter_unsorted.xml">
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Engine.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Gearbox_APT-N.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Gearbox_FWD.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Gearbox_FWD.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Gearbox_IHPC.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\IEPC_1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\IEPC_StdValues.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Sorted\Retarder.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\Retarder.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Sorted\TorqueConverter.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Testdata\XML\Sort\Component\Unsorted\TorqueConverter.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Testdata\XML\ToHash\multiple_components.xml">
@@ -262,7 +292,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Testdata\XML\Sort\Job\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
