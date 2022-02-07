@@ -33,6 +33,7 @@ using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 
 namespace TUGraz.VectoCore
@@ -61,6 +62,8 @@ namespace TUGraz.VectoCore
 			LoadModule<SimulationFactoryNinjectModule>();
 
 			LoadModule<MRFNinjectModule>();
+
+			LoadModule<CIFNinjectModule>();
 		}
 
 		#endregion

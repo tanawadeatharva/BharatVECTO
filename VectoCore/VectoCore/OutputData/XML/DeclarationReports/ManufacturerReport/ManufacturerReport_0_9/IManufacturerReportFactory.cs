@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.CompletedBus;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
@@ -9,7 +10,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		IXMLManufacturerReport GetConventionalLorryManufacturerReport();
 
-		IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
+		IXMLManufacturerReport GetManufacturerReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 		IMrfXmlType GetConventionalLorryVehicleType();

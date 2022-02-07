@@ -26,13 +26,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
 		//	ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
-		private object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
+		protected static object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
 			bool exempted, bool iepc, bool ihpc)
 		{
 			return new[] { (object)vehicleType, jobType, archId, exempted, iepc, ihpc};
 		}
-		private CombineArgumentsToNameInstanceProvider.CombineToName nameCombinationMethod = arguments => {
-			string vehicleType = (string)arguments[0];
+		protected static CombineArgumentsToNameInstanceProvider.CombineToName nameCombinationMethod = arguments => {
+
+			//may be called with first argument of type string (when defining the bindings) or VehicleCategory when using the factory
+			string vehicleType = arguments[0] as string;
+			if (arguments[0] is VehicleCategory vehicleCategory) {
+				vehicleType = vehicleCategory.GetVehicleType();
+			}
+			
+			
+			
 			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
 			ArchitectureID archId = (ArchitectureID)arguments[2];
 			bool exempted = (bool)arguments[3];

@@ -456,6 +456,9 @@
     <Compile Include="OutputData\FileIO\FileOutputVIFWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
     <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFNinjectModule.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CustomerInformationFile\LorryCustomerInformationFile.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\ICustomerInformationFileFactory.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\AbstractXMLManufacturerReport.cs" />
