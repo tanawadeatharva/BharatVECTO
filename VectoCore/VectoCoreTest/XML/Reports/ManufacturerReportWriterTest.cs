@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
@@ -35,6 +36,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected StandardKernel _kernel;
 		protected IXMLInputDataReader _xmlReader;
 		protected IManufacturerReportFactory _mrfFactory;
+		protected ICustomerInformationFileFactory _cifFactory;
 
 		protected const string ConventionalHeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml";
@@ -142,6 +144,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			//_outputWriter = new FileOutputWriter()
 			_xmlReader = _kernel.Get<IXMLInputDataReader>();
 			_mrfFactory = _kernel.Get<IManufacturerReportFactory>();
+			_cifFactory = _kernel.Get<ICustomerInformationFileFactory>();
 		}
 	}
 
@@ -155,18 +158,40 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
 			dataProvider = _xmlReader.CreateDeclaration(fileName);
-
-			var arch = dataProvider.JobInputData.Vehicle.ArchitectureID;
+			
 
 			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(); // HEV/PEV - Sx/Px
 			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric =>
 				electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
 			var report = _mrfFactory.GetManufacturerReport(
-				dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(),
+				dataProvider.JobInputData.Vehicle.VehicleCategory,
 				dataProvider.JobInputData.JobType,
 				dataProvider.JobInputData.Vehicle.ArchitectureID,
 				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+				iepc,
+				ihpc);
+			return report;
+		}
+
+		private IXMLManufacturerReport GetCompletedBusReport(string fileName,
+			out IMultistageBusInputDataProvider dataProvider)
+		{
+			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+			dataProvider = _xmlReader.CreateDeclaration(fileName) as IMultistageBusInputDataProvider;
+			Assert.NotNull(dataProvider);
+			var arch = dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
+
+			dataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
+
+
+			var ihpc = (dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
+			var report = _mrfFactory.GetManufacturerReport(
+				dataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
+				dataProvider.JobInputData.JobType,
+				dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID,
+				dataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
 			return report;
@@ -383,7 +408,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		[TestCase(Conventional_CompletedBus)]
         public void Conventional_CompletedBusTest(string fileName)
         {
-			var report = GetReport(fileName, out var dataProvider) as Conventional_CompletedBusManufacturerReport;
+			var report = GetCompletedBusReport(fileName, out var dataProvider) as Conventional_CompletedBusManufacturerReport;
 			Assert.NotNull(report);
             report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));
