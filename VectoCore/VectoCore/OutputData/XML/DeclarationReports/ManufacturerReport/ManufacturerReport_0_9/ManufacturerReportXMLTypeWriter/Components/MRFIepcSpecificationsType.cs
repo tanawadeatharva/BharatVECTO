@@ -10,9 +10,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFIEPCSpecificationsType : AbstractMrfXmlType, IMrfXmlType
+    internal class MrfiepcSpecificationsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
     {
-		public MRFIEPCSpecificationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfiepcSpecificationsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

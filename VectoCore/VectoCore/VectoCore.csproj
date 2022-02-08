@@ -481,6 +481,7 @@
     <Compile Include="OutputData\XML\ComponentWriter\Declaration\ADAS_Writer.cs" />
     <Compile Include="OutputData\XML\ComponentWriter\Declaration\Components_Conventional.cs" />
     <Compile Include="OutputData\XML\ComponentWriter\IComponentWriterFactory.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\AbstractCustomerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFNinjectModule.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CustomerInformationFile\LorryCustomerInformationFile.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\ICustomerInformationFileFactory.cs" />
@@ -1078,8 +1079,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3.xsd">
-		<SubType>Designer</SubType>
-	</EmbeddedResource>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>

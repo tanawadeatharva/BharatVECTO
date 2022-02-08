@@ -36,10 +36,18 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			return report;
 		}
 
+
+		[TestCase(ConventionalHeavyLorry)]
+		public void ConventionalLorryCIFTest(string fileName)
+		{
+			var report = GetCustomerReport(fileName, out var dataProvider) as 
+
+		}
+
+
+
+
+
+
 	}
-
-
-
-
-
 }
