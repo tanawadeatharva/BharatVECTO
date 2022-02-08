@@ -46,4 +46,11 @@
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|AnyCPU'">
+    <DefineConstants />
+    <DebugType>none</DebugType>
+    <WarningLevel>5</WarningLevel>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
 </Project>
