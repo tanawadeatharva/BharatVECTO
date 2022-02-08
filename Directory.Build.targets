@@ -61,7 +61,7 @@
 	<Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 		<ItemGroup>
 			<VectoCoreAssembly Include="$(OutputPath)VectoCore.dll" />
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\vectocmd.exe*"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\$(TargetFramework)\vectocmd.exe*"/>
 
 			<GenericVehicles Include="$(SolutionDir)Generic Vehicles\**\*.*" Exclude="$(SolutionDir)**\*.vmod;$(SolutionDir)**\*.vsum;$(SolutionDir)**\*RSLT_*.xml;$(SolutionDir)**\*.pdf"/>
 			<MissionProfiles Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
@@ -83,14 +83,13 @@
 			<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
 			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\HashingTool.exe"/>
-			<HashingTool Include="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\VectoHashing.XML"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\hashingcmd.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\$(TargetFramework)\HashingTool.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\$(TargetFramework)\hashingcmd.exe"/>
 
 			<VectoConfigurationSample Include="$(SolutionDir)VECTO\install.ini"/>
 
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\VECTOMultistage.exe*"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\*.dll"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\$(TargetFramework)\VECTOMultistage.exe*"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\$(TargetFramework)\*.dll"/>
 		</ItemGroup>
 
 		<Message Text="@(VectoCommandLine)"/>
