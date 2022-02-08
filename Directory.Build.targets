@@ -1,0 +1,5 @@
+<Project>
+    <!--<Target Name="VersionMessage" AfterTargets="build">
+        <Message Text="$(AssemblyName) -> $(Version)" importance="high"/>
+    </Target>-->
+</Project>

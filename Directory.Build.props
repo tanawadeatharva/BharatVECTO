@@ -1,19 +1,22 @@
 <Project>
   <PropertyGroup>
-    <!-- For a Release Candidate: Uncomment the following line: -->
+    <!-- For a Release Candidate uncomment the following line: -->
     <!--<DefineConstants>$(DefineConstants),RELEASE_CANDIDATE</DefineConstants>-->
 
-    <!-- For a Release: Uncomment the following line: -->
+    <!-- For a Release uncomment the following line: -->
     <!--<DefineConstants>$(DefineConstants),CERTIFICATION_RELEASE</DefineConstants>-->
+
+    <!-- Global VECTO Version -->
+    <MainProductVersion>0.7.7</MainProductVersion>
   </PropertyGroup>
 
-  <!-- The following settings define the default values for ALL projects -->
+  <!-- The following settings are used as default values for ALL projects -->
   <PropertyGroup>
-    <VersionPrefix>0.7.7.$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
+    <TargetFramework>net45</TargetFramework>
+    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
-    <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,10 +31,11 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
+    <!--<DefineConstants>DEBUG;TRACE</DefineConstants>-->
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningLevel>4</WarningLevel>
-    <DebugType>full</DebugType>
+    <WarningLevel>5</WarningLevel>
+    <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
@@ -39,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants />
     <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 </Project>
