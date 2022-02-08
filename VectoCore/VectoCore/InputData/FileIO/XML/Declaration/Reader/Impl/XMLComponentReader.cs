@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			(_electricStorageSystemInputData  = GetElectricEnergyStorageEntries());
 
 		public virtual IIEPCDeclarationInputData IEPCInputData => _iepcDeclarationInputData ?? 
-														(_iepcDeclarationInputData = CreateComponent( XMLNames.IEPC_Component, IEPCCreator));
+														(_iepcDeclarationInputData = GetComponentNode(XMLNames.IEPC_Component) != null ? CreateComponent( XMLNames.IEPC_Component, IEPCCreator) : null);
 
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
