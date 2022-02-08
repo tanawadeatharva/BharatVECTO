@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -659,9 +660,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
-		#endregion
-	}
-
 	// ---------------------------------------------------------------------------------------
 
 
@@ -714,7 +712,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
-		
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV20
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => throw new NotImplementedException();
+		}
+
+		#endregion
+
 		private Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
 		{
 			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);

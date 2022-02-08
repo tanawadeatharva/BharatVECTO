@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore
 			LoadModule<GroupWriterNinjectModule>();
 
 			LoadModule<ComponentWriterNinjectModule>();
-			LoadModule<SimulationFactoryNinjectModule>();
+			LoadModule<SimulatorFactoryNinjectModule>();
 
 			LoadModule<MRFNinjectModule>();
 

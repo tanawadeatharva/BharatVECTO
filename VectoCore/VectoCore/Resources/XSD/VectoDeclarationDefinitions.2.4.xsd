@@ -1818,10 +1818,22 @@
 							<xs:documentation>P331 - [W]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Technology" type="v2.10.2:ExemptedTechnologyType">
+					<xs:element name="Technology">
 						<xs:annotation>
 							<xs:documentation>P332 - enum</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="HEV Article 9 exempted"/>
+								<xs:enumeration value="PEV Article 9 exempted"/>
+								<xs:enumeration value="HV Article 9 exempted"/>
+								<xs:enumeration value="Fuel cell vehicle"/>
+								<xs:enumeration value="H2 ICE"/>
+								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
+								<xs:enumeration value="In-motion charging Article 9 exempted"/>
+								<xs:enumeration value="Other technology Article 9 exempted"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 				</xs:sequence>
 			</xs:extension>
@@ -3057,10 +3069,16 @@
 	</xs:group>
 	<xs:group name="BusAuxHVACHeatPumpSequenceGroup">
 		<xs:sequence>
-			<xs:element name="SystemConfiguration" type="v2.10.2:SystemConfigurationType">
+			<xs:element name="SystemConfiguration">
 				<xs:annotation>
 					<xs:documentation>P317 - [-]</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="HeatPumpTypeDriverCompartment">
 				<xs:complexType>
@@ -3122,10 +3140,16 @@
 					<xs:documentation>P312 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="AirsuspensionControl" type="v2.10.2:AirsuspensionControlType">
+			<xs:element name="AirsuspensionControl">
 				<xs:annotation>
 					<xs:documentation>P315 - enum</xs:documentation>
 				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
 				<xs:annotation>

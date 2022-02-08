@@ -1535,7 +1535,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1545,7 +1545,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1555,7 +1555,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1565,7 +1565,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1575,7 +1575,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1589,7 +1589,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1599,7 +1599,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1609,7 +1609,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1619,7 +1619,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -1629,7 +1629,7 @@
 				</xs:annotation>
 				<xs:simpleType>
 					<xs:restriction base="v1.0:Double4">
-						<xs:minExclusive value="0.0"/>
+						<xs:minExclusive value="0.0000"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>

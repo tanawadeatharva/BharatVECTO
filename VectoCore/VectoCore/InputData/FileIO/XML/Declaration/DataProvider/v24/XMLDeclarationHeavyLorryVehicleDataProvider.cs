@@ -30,6 +30,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
+
+		#endregion
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override TankSystem? TankSystem =>
@@ -67,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 				: (TankSystem?)null;
 
 		#endregion
-
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -106,6 +112,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -137,6 +145,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override CubicMeter CargoVolume => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -157,12 +167,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		
-		
+
+
 
 		#endregion
 
-
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -201,6 +211,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 	}
 
 	// ---------------------------------------------------------------------------------------

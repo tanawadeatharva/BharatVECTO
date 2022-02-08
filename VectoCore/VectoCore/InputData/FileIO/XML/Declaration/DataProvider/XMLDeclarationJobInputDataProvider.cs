@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string JobName => Vehicle.Identifier;
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public virtual VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 

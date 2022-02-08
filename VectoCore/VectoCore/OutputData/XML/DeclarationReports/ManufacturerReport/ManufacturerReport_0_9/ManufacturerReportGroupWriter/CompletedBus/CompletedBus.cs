@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.Add(manufacturers);
 			foreach (var manufacturingStageInputData in multiStageInputData.JobInputData.ManufacturingStages) {
 				manufacturers.Add(new XElement(_mrf + "Step",
-					new XAttribute("Count", manufacturingStageInputData.StageCount), 
+					new XAttribute("Count", manufacturingStageInputData.StepCount), 
 					new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturingStageInputData.Vehicle.Manufacturer),
 					new XElement(_mrf + XMLNames.Component_ManufacturerAddress, manufacturingStageInputData.Vehicle.ManufacturerAddress)));
 			}
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public IList<XElement> GetElements(IVehicleDeclarationInputData vehicleData)
 		{
 			var result = new List<XElement>() {
-				new XElement(_mrf + XMLNames.Bus_HeighIntegratedBody, vehicleData.Height.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Bus_HeightIntegratedBody, vehicleData.Height.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(_mrf + XMLNames.Bus_VehicleLength, vehicleData.Length.ConvertToMilliMeter().ToXMLFormat(0)),
 				new XElement(_mrf + XMLNames.Bus_VehicleWidth, vehicleData.Width.ConvertToMilliMeter().ToXMLFormat(0))
 			};

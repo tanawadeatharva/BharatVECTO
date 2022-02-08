@@ -78,7 +78,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S3_LorryManufacturerReport : LorryManufacturerReportBase
 	{
-		public HEV_S3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+		public HEV_S3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory)
+		{
+
+		}
 
 		#region Overrides of AbstractManufacturerReport
 
