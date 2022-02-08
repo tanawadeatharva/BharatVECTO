@@ -83,6 +83,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -110,6 +116,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -130,6 +143,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			: base(jobData, xmlNode, sourceFile) { }
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -151,7 +170,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		
+
+
+		#endregion
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 
 		#endregion
 	}
@@ -174,6 +199,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
+
+		#endregion
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.BatteryElectricVehicle; }
 
 		#endregion
 	}
@@ -199,6 +230,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
+
+		#endregion
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 
 		#endregion
 	}
