@@ -301,4 +301,21 @@
     <EmbeddedResource Include="Resources\Declaration\Report\Undef.png" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Compile Update="JSONKeys.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>JSONKeys.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Update="JSONKeys.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
