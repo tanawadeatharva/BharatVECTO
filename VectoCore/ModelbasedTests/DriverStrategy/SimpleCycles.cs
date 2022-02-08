@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 #if TRACE
 			graphWriter.Enable();
 #else
-			GraphWriter.Disable();
+			graphWriter.Disable();
 #endif
 			graphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
