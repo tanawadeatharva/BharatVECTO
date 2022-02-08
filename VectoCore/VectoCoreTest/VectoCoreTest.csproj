@@ -7597,6 +7597,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_two_stages.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_only.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

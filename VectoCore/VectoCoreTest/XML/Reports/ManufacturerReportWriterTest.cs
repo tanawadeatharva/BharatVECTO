@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			@"";
 
 
-		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml";
+		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 
 
 
