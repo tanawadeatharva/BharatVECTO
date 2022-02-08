@@ -784,11 +784,7 @@
     <Compile Include="OutputData\FileIO\ShiftPolygonExport.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\DelaunayMap.cs" />
-    <Compile Include="Utils\VectoVersionCore.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VectoVersionCore.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Utils\VectoVersionCore.cs" />
     <Compile Include="Utils\XAttributeEqualityComparer.cs" />
     <Compile Include="Utils\XMLDefinitions.cs" />
     <Compile Include="Utils\XMLHelper.cs" />
@@ -796,14 +792,8 @@
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
     <Compile Include="Ninject\VectoNinjectModule.cs" />
-    <Compile Include="VersionNumber1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VersionNumber.t4</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="OutputData\FileIO\FileWriter.cd" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
@@ -1043,14 +1033,6 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Utils\VectoVersionCore.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
-    </None>
-    <None Include="VersionNumber.t4">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VersionNumber1.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
