@@ -2,9 +2,32 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Appium.WebDriver" Version="4.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VECTO3GUI2020\VECTO3GUI2020.csproj" />
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HelperTests\" />
+    <Folder Include="Testdata\bugreports\" />
+    <Folder Include="TestData\output\" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AidragComponent.xml" Link="Testdata\AidragComponent.xml">
@@ -55,28 +78,6 @@
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_primary_vehicle_stage_2_mandatory.xml" Link="Testdata\vecto_multistage_primary_vehicle_stage_2_mandatory.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Appium.WebDriver" Version="4.3.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\VECTO3GUI2020\VECTO3GUI2020.csproj" />
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="inputdata\final.VIF_Report_4.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -107,15 +108,6 @@
     <None Update="TestData\vecto_vehicle-completed_heavyBus_31b.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HelperTests\" />
-    <Folder Include="Testdata\bugreports\" />
-    <Folder Include="TestData\output\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" Link="TestData\newVifCompletedConventional.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
