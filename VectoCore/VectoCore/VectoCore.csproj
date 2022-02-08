@@ -715,11 +715,6 @@
     <Compile Include="OutputData\IDataWriter.cs" />
     <Compile Include="OutputData\ModalDataContainer.cs" />
     <Compile Include="OutputData\SummaryDataContainer.cs" />
-    <Compile Include="Properties\Version.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Version.tt</DependentUpon>
-    </Compile>
     <Compile Include="JsonKeys.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -795,7 +790,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="OutputData\FileIO\FileWriter.cd" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
@@ -832,10 +826,6 @@
     <EmbeddedResource Include="Resources\Declaration\Report\cyclePageTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title2CyclesTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title3CyclesTemplate.pdf" />
-    <None Include="Properties\Version.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Version.cs</LastGenOutput>
-    </None>
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vdrop.csv" />
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
     <EmbeddedResource Include="Resources\Declaration\Body_Trailers_Weights.csv" />
