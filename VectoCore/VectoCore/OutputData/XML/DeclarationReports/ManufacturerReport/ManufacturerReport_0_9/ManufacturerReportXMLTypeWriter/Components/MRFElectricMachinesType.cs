@@ -25,9 +25,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var electricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries;
 			var result =  new XElement(_mrf + "ElectricMachines");
 			
-			foreach (var electricMachine in electricMachines) {
-				var electricMachineElement = new XElement(_mrf + XMLNames.Component_ElectricMachine, new XElement(_mrf + "CountAtPosition", electricMachine.Count),
-						new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position.ToXmlFormat()));
+			foreach (var electricMachine in electricMachines.OrderBy((entry => entry.Position))) {
+				var electricMachineElement = new XElement(_mrf + XMLNames.Component_ElectricMachine,
+						new XElement(_mrf + XMLNames.ElectricMachine_Position, electricMachine.Position.ToXmlFormat()), new XElement(_mrf + "CountAtPosition", electricMachine.Count));
 				result.Add(electricMachineElement);
 				var electricMachineSystem = new XElement(_mrf + XMLNames.ElectricMachineSystem);
 
@@ -35,9 +35,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, electricMachine.ElectricMachine.CertificationNumber),
 					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue.DigestValue),
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
-					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod));
-					//new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)),
-					//new XElement(_mrf + "MaxContinuousPower", (electricMachine.ElectricMachine.ContinuousTorque * electricMachine.ElectricMachine.ContinuousTorqueSpeed).ToXMLFormat(0));
+					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
+					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)));
+
+				var voltageLevels = new XElement(_mrf + "VoltageLevels");
+				electricMachineSystem.Add(voltageLevels);
+
+				foreach (var electricMotorVoltageLevel in electricMachine.ElectricMachine.VoltageLevels)
+				{
+					var voltageLevel = new XElement(_mrf + XMLNames.ElectricMachine_VoltageLevel,
+						new XAttribute(XMLNames.VoltageLevel_Voltage, electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+						new XElement(_mrf + "MaxContinousPower",
+							(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+							.ToXMLFormat(0)));
+
+
+					voltageLevels.Add(voltageLevel);
+				}
+
 				electricMachineElement.Add(electricMachineSystem);
 				if (electricMachine.ADC != null) {
 					var adc = electricMachine.ADC;

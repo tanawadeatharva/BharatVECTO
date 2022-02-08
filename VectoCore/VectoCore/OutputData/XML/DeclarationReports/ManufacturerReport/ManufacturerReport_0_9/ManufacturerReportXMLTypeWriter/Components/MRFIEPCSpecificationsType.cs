@@ -19,18 +19,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var iepcData = inputData.JobInputData.Vehicle.Components.IEPC;
-			return new XElement(_mrf + "IEPCSpecifications",
+			
+
+			var iepcXElement = new XElement(_mrf + "IEPCSpecifications",
 				new XElement(_mrf + XMLNames.Component_Model, iepcData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, iepcData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, iepcData.DigestValue.DigestValue),
-				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ToXMLFormat()));
 				//new XElement(_mrf + "MaxContinuousPower",(iepcData.ContinuousTorque*iepcData.ContinuousTorqueSpeed).ToXMLFormat()),
+
+			var voltageLevels = new XElement(_mrf + "VoltageLevels");
+			iepcXElement.Add(voltageLevels);
+
+			foreach (var electricMotorVoltageLevel in iepcData.VoltageLevels) {
+				var voltageLevel = new XElement(_mrf + XMLNames.ElectricMachine_VoltageLevel,
+					new XAttribute(XMLNames.VoltageLevel_Voltage, electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+					new XElement(_mrf + "MaxContinousPower",
+						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+						.ToXMLFormat(0)));
+
+
+				voltageLevels.Add(voltageLevel);
+			}
+				
+			iepcXElement.Add(
 				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
 				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
 																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio).ToXMLFormat()),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)
 			);
+
+
+			return iepcXElement;
 		}
 
 		#endregion
