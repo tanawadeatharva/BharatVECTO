@@ -11,9 +11,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class DummyGearboxInfo : VectoSimulationComponent, IGearboxInfo
 	{
-		public DummyGearboxInfo(VehicleContainer container) : base(container)
+		public DummyGearboxInfo(VehicleContainer container, GearshiftPosition gear = null) : base(container)
 		{
-
+			Gear = gear ?? new GearshiftPosition(1);
 		}
 
 		#region Overrides of VectoSimulationComponent
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearboxType GearboxType => GearboxType.AMT;
 
-		public GearshiftPosition Gear => new GearshiftPosition(1);
+		public GearshiftPosition Gear { get; }
 
 		public bool TCLocked => true;
 
@@ -49,7 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearData GetGearData(uint gear)
 		{
-			throw new NotImplementedException();
+			return new GearData() {
+				MaxSpeed = null,
+			};
 		}
 
 		public GearshiftPosition NextGear => throw new NotImplementedException();

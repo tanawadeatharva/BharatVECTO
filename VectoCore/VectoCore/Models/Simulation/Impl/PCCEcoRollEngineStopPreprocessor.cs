@@ -142,7 +142,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						return (r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed).Value();
-					}
+					},
+					searcher: this
 				);
 			} catch (VectoSearchAbortedException) {
 				return gradient;

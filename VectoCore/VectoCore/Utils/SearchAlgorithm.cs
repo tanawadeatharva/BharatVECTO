@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -72,10 +72,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -89,7 +89,8 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount, bool forceLineSearch) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
+			bool forceLineSearch, object searcher) where T : SIBase<T>
 		{
 			T result;
 			try {

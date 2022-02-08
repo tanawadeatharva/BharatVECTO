@@ -718,7 +718,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						if (angularSpeed < _engine.ModelData.IdleSpeed) {
@@ -732,7 +733,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed2);
 						angularSpeed2 = angularSpeed2.LimitTo(_engine.ModelData.IdleSpeed, engineMaxSpeed);
@@ -787,7 +789,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);

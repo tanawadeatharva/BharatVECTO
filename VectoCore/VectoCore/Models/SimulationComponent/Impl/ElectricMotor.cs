@@ -22,14 +22,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort
 	{
 
-		protected IElectricSystem ElectricPower;
+		protected internal IElectricSystem ElectricPower;
 		internal IElectricMotorControl Control { get; }
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
-		protected internal bool DeRatingActive;
 		
+		public bool DeRatingActive { get; protected internal set; }
+
 		public Joule OverloadBuffer { get; }
 		public NewtonMeter ContinuousTorque { get; }
 
@@ -446,7 +447,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque)
+		protected internal NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque)
 		{
 			var dtTorque = ModelData.TransmissionLossMap.GetOutTorque(emSpeed, emTorque);
 
@@ -460,7 +461,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					criterion: r => {
 						var i = r as NewtonMeter;
 						return (i - emTorque).Value() * 1e3;
-					});
+					},
+					searcher: this);
 			}
 
 			return dtTorque;
@@ -566,6 +568,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ElectricPower = powersupply;
 		}
 
+		protected internal PerSecond ConvertEmSpeedToDrivetrain(PerSecond emSpeed)
+		{
+			return emSpeed / ModelData.RatioADC;
+		}
 	}
 
 	public class ElectricMotorState // : SimpleComponentState

@@ -11,7 +11,25 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies 
+{
+
+	public class TestGenset
+	{
+
+		public SimplePowertrainContainer Container;
+		public StopStartCombustionEngine CombustionEngine;
+		public ElectricMotor ElectricMotor;
+		public GensetMotorController ElectricMotorCtl;
+
+		public TestGenset(SimplePowertrainContainer container, IDataBus realContainer)
+		{
+			Container = container;
+			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.Generator).Value as ElectricMotor;
+			ElectricMotorCtl = ElectricMotor.Control as GensetMotorController;
+		}
+	}
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;
@@ -26,6 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotor;
+		public GensetChargerAdapter Charger;
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
 		public TorqueConverter TorqueConverter;
 		public DCDCConverter DCDCConverter;
@@ -43,16 +62,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
+			Charger = (ElectricMotor?.ElectricPower as ElectricSystem)?.Charger as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
 					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as ElectricMotor;
 				}
 			}
-			if (Gearbox == null) {
-			}
-
-			if (Gearbox.GearboxType.AutomaticTransmission()) {
+			
+			if (Gearbox != null && Gearbox.GearboxType.AutomaticTransmission()) {
 				TorqueConverter = Container.TorqueConverterInfo as TorqueConverter;
 				if (TorqueConverter == null) {
 					throw new VectoException("Torque converter missing for automatic transmission: {0}", Container.TorqueConverterInfo?.GetType().FullName);

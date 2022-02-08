@@ -677,6 +677,115 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddAuxiliaries(container, data);
 		}
 
+		public void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
+		{
+			var es = new ElectricSystem(container);
+			if (data.BatteryData != null) {
+				var battery = new BatterySystem(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
+
+			//var battery = new Battery(container, data.BatteryData);
+			//battery.Initialize(data.BatteryData.InitialSoC);
+			//es.Connect(battery);
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+			es.Connect(new GensetChargerAdapter(null));
+
+			var ctl = new SimpleHybridController(container, es);
+
+			var pos = data.ElectricMachinesData.Select(x => x.Item1).First(x => x != PowertrainPosition.Generator);
+
+			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			var powertrain = vehicle
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
+					data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(new Brakes(container));
+
+			switch (pos) {
+				case PowertrainPosition.HybridPositionNotSet:
+					throw new VectoException("invalid powertrain position");
+				case PowertrainPosition.BatteryElectricE2:
+					var gearbox = data.GearboxData.Type.AutomaticTransmission()
+						? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
+						: new Gearbox(container, ctl.ShiftStrategy);
+					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null
+							? new Angledrive(container, data.AngledriveData)
+							: null)
+						.AddComponent((IGearbox)gearbox, data.Retarder, container)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
+							container,
+							es, ctl));
+					ctl.Gearbox = gearbox;
+
+					break;
+				case PowertrainPosition.BatteryElectricE3:
+					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData,
+							container,
+							es, ctl));
+					new DummyGearboxInfo(container);
+					//new MockEngineInfo(container);
+					new ATClutchInfo(container);
+					break;
+				case PowertrainPosition.BatteryElectricE4:
+					powertrain = powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData,
+							container,
+							es, ctl));
+					new DummyGearboxInfo(container);
+					//new MockEngineInfo(container);
+					new ATClutchInfo(container);
+					break;
+				case PowertrainPosition.HybridP0:
+				case PowertrainPosition.HybridP1:
+				case PowertrainPosition.HybridP2_5:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
+
+					throw new VectoException("testcase does not support parallel powertrain configurations");
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+			}
+
+		}
+
+		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
+		{
+			var es = new ElectricSystem(container);
+			if (data.BatteryData != null) {
+				var battery = new BatterySystem(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
+
+			//var ctl = new SimpleHybridController(container, es);
+			var ctl = new GensetMotorController(container, es);
+
+			var genSet = GetElectricMachine(PowertrainPosition.Generator, data.ElectricMachinesData, container, es, ctl)
+				.AddComponent(new StopStartCombustionEngine(container, data.EngineData));
+
+			new ATClutchInfo(container);
+			new DummyGearboxInfo(container, new GearshiftPosition(0));
+		}
+
 		public void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
@@ -714,7 +823,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
 
-			var ctl = new SimpleHybridController(container, es, clutch);
+			var ctl = new SimpleHybridController(container, es);
 
 			ctl.Gearbox = gbx;
 			ctl.Engine = engine;
@@ -1139,6 +1248,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			return (-outTorque).LimitTo(maxDriveTorque ?? 0.SI<NewtonMeter>(), maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
 		}
+	}
+
+	public class GensetMotorController : IElectricMotorControl
+	{
+		public GensetMotorController(IVehicleContainer container, ElectricSystem es)
+		{
+
+		}
+
+		#region Implementation of IElectricMotorControl
+
+		public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
+			PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
+			PowertrainPosition position, bool dryRun)
+		{
+			return EMTorque;
+		}
+
+		public NewtonMeter EMTorque { get; set; }
+
+		#endregion
 	}
 
 	public class DummyElectricMotorControl : IElectricMotorControl

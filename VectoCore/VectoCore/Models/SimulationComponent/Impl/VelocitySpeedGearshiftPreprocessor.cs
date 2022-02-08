@@ -176,7 +176,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
 						return r != null && (vehicle.VehicleSpeed + r.Driver.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
-					}
+					},
+					searcher: this
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
 				if (!(step is ResponseSuccess)) {

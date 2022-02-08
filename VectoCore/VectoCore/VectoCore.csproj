@@ -310,6 +310,7 @@
     <Compile Include="Models\SimulationComponent\Impl\APTNShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DummyAxleGearInfo.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\GensetChargerAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PEVGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
@@ -439,7 +440,10 @@
     <Compile Include="Models\SimulationComponent\IElectricMotorControl.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PEVAMTShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\SerialHybridController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftLineSet.cs" />
+    <Compile Include="Models\SimulationComponent\Strategies\GensetPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Strategies\SerialHybridStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IDCDCConverter.cs" />
     <Compile Include="Models\Simulation\DataBus\IHybridControllerInfo.cs" />
     <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
@@ -1033,8 +1037,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3.xsd">
-		<SubType>Designer</SubType>
-	</EmbeddedResource>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -18,6 +18,7 @@ namespace TUGraz.VectoCommon.InputData {
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
+		Generator
 	}
 
 	public static class PowertrainPositionHelper

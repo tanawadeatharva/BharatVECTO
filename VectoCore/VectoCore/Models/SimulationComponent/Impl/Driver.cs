@@ -590,7 +590,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					criterion: tOp => {
 						var t = (Tuple<Tuple<TorqueConverterOperatingPoint, NewtonMeter>, NewtonMeter, NewtonMeter>)tOp;
 						return GetTCDelta(t.Item1, t.Item2, t.Item3).Value();
-					});
+					},
+					searcher: this);
 			} catch (Exception e) {
 				Log.Error(e, "Failed to find engine speed for valid torque converter operating point! absTime: {0}", absTime);
 
@@ -671,7 +672,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var r = (ResponseDryRun)resp;
 
 					return (tcOp.Item1.OutTorque - r.TorqueConverter.TorqueConverterTorqueDemand).Value();
-				}
+				},
+				searcher: this
 			);
 			return acceleration;
 		}
@@ -1082,7 +1084,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 						return DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
 					},
-					forceLineSearch: DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked);
+					forceLineSearch: DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked,
+					searcher: this);
 
 				return operatingPoint;
 			} catch (VectoSearchFailedException vse) {
@@ -1117,7 +1120,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									: response.Gearbox.PowerRequest;
 								return Math.Min(delta.Value(), 0);
 							},
-							forceLineSearch: true);
+							forceLineSearch: true,
+							searcher: this);
 						return operatingPoint;
 					} catch (Exception e2) {
 						Log.Error("Failed to find operating point for braking power (attempt 2)! absTime: {0}  {1}", absTime, e2);
@@ -1207,7 +1211,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								return true;
 							}
 							return r != null && !actionRoll && !allowDistanceDecrease && !ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
-						});
+						},
+					searcher: this);
 					return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 			} catch (VectoException ve) {
 				switch (ve) {
@@ -1279,7 +1284,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										return r != null && !allowDistanceDecrease &&
 												!ds.IsEqual(r.Driver.OperatingPoint.SimulationDistance);
 									},
-									forceLineSearch: true);
+									forceLineSearch: true,
+									searcher: this);
 								return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 							} catch (VectoException ve2) {
 								Log.Error(ve2);

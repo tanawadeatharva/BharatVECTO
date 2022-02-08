@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual void SetMaxVehicleSpeed()
 		{
-			if (DataBus.PowertrainInfo.HasCombustionEngine) {
+			if (DataBus.PowertrainInfo.VehicleArchitecutre != VectoSimulationJobType.SerialHybridVehicle && DataBus.PowertrainInfo.HasCombustionEngine) {
 				if (DataBus.GearboxInfo == null || DataBus.AxlegearInfo == null) {
 					throw new VectoException("Powertrain with combustion engine requires gearbox and axlegear!");
 					//return;
@@ -101,7 +101,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			
 			if (DataBus.PowertrainInfo.HasElectricMotor) {
-				var positions = DataBus.PowertrainInfo.ElectricMotorPositions;
+				var positions = DataBus.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.Generator).ToArray();
+				;
 				if (positions.Length > 1) {
 					throw new VectoException("Multiple electrical machines are currently not supported");
 				}

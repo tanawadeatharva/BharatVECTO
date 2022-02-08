@@ -246,6 +246,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PowertrainPosition[] ElectricMotorPositions => ElectricMotors.Keys.ToArray();
 
+		public VectoSimulationJobType VehicleArchitecutre => RunData.JobType;
+
 		public virtual bool HasCombustionEngine { get; private set; }
 
 		public virtual bool HasGearbox { get; private set; }

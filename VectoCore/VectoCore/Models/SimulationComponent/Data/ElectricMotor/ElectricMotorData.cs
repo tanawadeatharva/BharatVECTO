@@ -68,7 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				interval: 10.SI<NewtonMeter>(),
 				getYValue: x => (Watt)x - electricPower,
 				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
-				criterion: x => ((Watt)x - electricPower).Value()
+				criterion: x => ((Watt)x - electricPower).Value(),
+				searcher: this
 			);
 
 			return searchResult;
