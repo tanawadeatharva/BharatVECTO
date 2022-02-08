@@ -1,9 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>VectoCommon</AssemblyName>
-    <Product>VectoCommon</Product>
+    <ProjectGuid>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</ProjectGuid>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
-    <TargetFrameworks>net45;net48</TargetFrameworks>
+    <AssemblyName>VectoCommon</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Product>$(AssemblyName)</Product>
   </PropertyGroup>
 
   <ItemGroup>
