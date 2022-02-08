@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using Ninject;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -79,7 +80,10 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			@"";
 
 
-		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\conventional_completed_bus.VIF_Report_3.xml";
+		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\CompletedBus\Conventional_completedBus_1.xml";
+		protected const string HEV_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\CompletedBus\HEV_completedBus_1.xml";
+		protected const string PEV_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\CompletedBus\PEV_completedBus_1.xml";
+		protected const string IEPC_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\CompletedBus\IEPC_completedBus_1.xml";
 
 
 
@@ -414,17 +418,37 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(ValidateAndPrint(report.Report));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
-		[TestCase("")]
+		[TestCase(HEV_CompletedBus)]
 		public void HEV_CompletedBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+			var report = GetCompletedBusReport(fileName, out var dataProvider) as HEV_CompletedBusManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 
 		}
-		[TestCase("")]
+		[TestCase(PEV_CompletedBus)]
 		public void PEV_CompletedBusTest(string fileName)
 		{
-			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+			var report = GetCompletedBusReport(fileName, out var dataProvider) as PEV_CompletedBusManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
+
+		[TestCase(IEPC_CompletedBus)]
+		public void IEPC_CompletedBusTest(string fileName)
+		{
+			Assert.Fail();
+			////var report = GetCompletedBusReport(fileName, out var dataProvider) as COmpl;
+			//Assert.NotNull(report);
+			//report.InitializeVehicleData(dataProvider);
+			//Assert.IsTrue(ValidateAndPrint(report.Report));
+			//Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
 
 	}
 }
