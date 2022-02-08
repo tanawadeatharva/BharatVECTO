@@ -38,17 +38,27 @@
     <PackageReference Include="ValueInjecter" Version="3.2.0" />
   </ItemGroup>
 
-
-
+  <ItemGroup>
+    <InternalsVisibleTo Include="VectoAPI" />
+    <InternalsVisibleTo Include="VectoEngineeringAPI" />
+    <InternalsVisibleTo Include="VectoXML" />
+    <InternalsVisibleTo Include="XMLTest" />
+    <InternalsVisibleTo Include="VECTO" />
+    <InternalsVisibleTo Include="VectoCoreTest" />
+    <InternalsVisibleTo Include="VectoAPITest" />
+    <InternalsVisibleTo Include="VectoXML" />
+    <InternalsVisibleTo Include="XMLTest" />
+    <InternalsVisibleTo Include="VECTO_GIT" />
+    <InternalsVisibleTo Include="VectoAuxiliariesTests" />
+    <InternalsVisibleTo Include="VECTO3" />
+    <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="Vecto3GUI2020Test" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
   </ItemGroup>
-
-
-
-
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
