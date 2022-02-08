@@ -12,9 +12,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFTransmissionType : AbstractMrfXmlType, IMrfXmlType
+    public class TransmissionTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFTransmissionType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public TransmissionTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

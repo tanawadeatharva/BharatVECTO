@@ -13,60 +13,60 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXMLManufacturerReport GetManufacturerReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
-		IMrfXmlType GetConventionalLorryVehicleType();
-		IMrfXmlType GetHEV_Px_IHCP_LorryVehicleType();
-		IMrfXmlType GetHEV_S2_LorryVehicleType();
-		IMrfXmlType GetHEV_S3_LorryVehicleType();
-		IMrfXmlType GetHEV_S4_LorryVehicleType();
-		IMrfXmlType GetHEV_IEPC_S_LorryVehicleType();
-		IMrfXmlType GetPEV_E2_LorryVehicleType();
-		IMrfXmlType GetPEV_E3_LorryVehicleType();
-		IMrfXmlType GetPEV_E4_LorryVehicleType();
+		IXmlTypeWriter GetConventionalLorryVehicleType();
+		IXmlTypeWriter GetHEV_Px_IHCP_LorryVehicleType();
+		IXmlTypeWriter GetHEV_S2_LorryVehicleType();
+		IXmlTypeWriter GetHEV_S3_LorryVehicleType();
+		IXmlTypeWriter GetHEV_S4_LorryVehicleType();
+		IXmlTypeWriter GetHEV_IEPC_S_LorryVehicleType();
+		IXmlTypeWriter GetPEV_E2_LorryVehicleType();
+		IXmlTypeWriter GetPEV_E3_LorryVehicleType();
+		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
 
 
 
 
 
 
-		IMrfXmlType GetConventional_PrimaryBusVehicleType();
-		IMrfXmlType GetHEV_Px_IHPC_PrimaryBusVehicleType();
-		IMrfXmlType GetHEV_S2_PrimaryBusVehicleType();
-		IMrfXmlType GetHEV_S3_PrimaryBusVehicleType();
-		IMrfXmlType GetHEV_S4_PrimaryBusVehicleType();
-		IMrfXmlType GetHEV_IEPC_S_PrimaryBusVehicleType();
-		IMrfXmlType GetPEV_E2_PrimaryBusVehicleType();
-		IMrfXmlType GetPEV_E3_PrimaryBusVehicleType();
-		IMrfXmlType GetPEV_E4_PrimaryBusVehicleType();
-		IMrfXmlType GetPEV_IEPC_PrimaryBusVehicleType();
+		IXmlTypeWriter GetConventional_PrimaryBusVehicleType();
+		IXmlTypeWriter GetHEV_Px_IHPC_PrimaryBusVehicleType();
+		IXmlTypeWriter GetHEV_S2_PrimaryBusVehicleType();
+		IXmlTypeWriter GetHEV_S3_PrimaryBusVehicleType();
+		IXmlTypeWriter GetHEV_S4_PrimaryBusVehicleType();
+		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusVehicleType();
+		IXmlTypeWriter GetPEV_E2_PrimaryBusVehicleType();
+		IXmlTypeWriter GetPEV_E3_PrimaryBusVehicleType();
+		IXmlTypeWriter GetPEV_E4_PrimaryBusVehicleType();
+		IXmlTypeWriter GetPEV_IEPC_PrimaryBusVehicleType();
 
-		IMrfXmlType GetConventional_CompletedBusVehicleType();
-		IMrfXmlType GetHEV_CompletedBusVehicleType();
-		IMrfXmlType GetPEV_CompletedBusVehicleType();
+		IXmlTypeWriter GetConventional_CompletedBusVehicleType();
+		IXmlTypeWriter GetHEV_CompletedBusVehicleType();
+		IXmlTypeWriter GetPEV_CompletedBusVehicleType();
 
 
-		IMrfXmlType GetConventionalLorryComponentsType();
-		IMrfXmlType GetHEV_Px_IHCP_LorryComponentsType();
-		IMrfXmlType GetHEV_S2_LorryComponentsType();
-		IMrfXmlType GetHEV_S3_LorryComponentsType();
-		IMrfXmlType GetHEV_S4_LorryComponentsType();
-		IMrfXmlType GetHEV_IEPC_S_LorryComponentsType();
-		IMrfXmlType GetPEV_E2_LorryComponentsType();
-		IMrfXmlType GetPEV_E3_LorryComponentsType();
-		IMrfXmlType GetPEV_E4_LorryComponentsType();
-		IMrfXmlType GetPEV_IEPC_S_LorryComponentsType();
-		IMrfXmlType GetConventional_PrimaryBusComponentsType();
-		IMrfXmlType GetHEV_Px_IHPC_PrimaryBusComponentsType();
-		IMrfXmlType GetHEV_S2_PrimaryBusComponentsType();
-		IMrfXmlType GetHEV_S3_PrimaryBusComponentsType();
-		IMrfXmlType GetHEV_S4_PrimaryBusComponentsType();
-		IMrfXmlType GetHEV_IEPC_S_PrimaryBusComponentsType();
-		IMrfXmlType GetPEV_E2_PrimaryBusComponentsType();
-		IMrfXmlType GetPEV_E3_PrimaryBusComponentsType();
-		IMrfXmlType GetPEV_E4_PrimaryBusComponentsType();
-		IMrfXmlType GetPEV_IEPC_PrimaryBusComponentsType();
-		IMrfXmlType GetConventional_CompletedBusComponentsType();
-		IMrfXmlType GetHEV_CompletedBusComponentsType();
-		IMrfXmlType GetPEV_CompletedBusComponentsType();
+		IXmlTypeWriter GetConventionalLorryComponentsType();
+		IXmlTypeWriter GetHEV_Px_IHCP_LorryComponentsType();
+		IXmlTypeWriter GetHEV_S2_LorryComponentsType();
+		IXmlTypeWriter GetHEV_S3_LorryComponentsType();
+		IXmlTypeWriter GetHEV_S4_LorryComponentsType();
+		IXmlTypeWriter GetHEV_IEPC_S_LorryComponentsType();
+		IXmlTypeWriter GetPEV_E2_LorryComponentsType();
+		IXmlTypeWriter GetPEV_E3_LorryComponentsType();
+		IXmlTypeWriter GetPEV_E4_LorryComponentsType();
+		IXmlTypeWriter GetPEV_IEPC_S_LorryComponentsType();
+		IXmlTypeWriter GetConventional_PrimaryBusComponentsType();
+		IXmlTypeWriter GetHEV_Px_IHPC_PrimaryBusComponentsType();
+		IXmlTypeWriter GetHEV_S2_PrimaryBusComponentsType();
+		IXmlTypeWriter GetHEV_S3_PrimaryBusComponentsType();
+		IXmlTypeWriter GetHEV_S4_PrimaryBusComponentsType();
+		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusComponentsType();
+		IXmlTypeWriter GetPEV_E2_PrimaryBusComponentsType();
+		IXmlTypeWriter GetPEV_E3_PrimaryBusComponentsType();
+		IXmlTypeWriter GetPEV_E4_PrimaryBusComponentsType();
+		IXmlTypeWriter GetPEV_IEPC_PrimaryBusComponentsType();
+		IXmlTypeWriter GetConventional_CompletedBusComponentsType();
+		IXmlTypeWriter GetHEV_CompletedBusComponentsType();
+		IXmlTypeWriter GetPEV_CompletedBusComponentsType();
 
 
 
@@ -88,20 +88,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-		IMrfXmlType GetEngineTorqueLimitationsType();
-		IMrfXmlType GetEngineType();
-		IMrfXmlType GetRetarderType();
-		IMrfXmlType GetTorqueConverterType();
-		IMrfXmlType GetAngleDriveType();
-		IMrfXmlType GetTransmissionType();
-		IMrfXmlType GetElectricMachinesType();
-		IMrfXmlType GetAxleGearType();
-		IMrfXmlType GetAxleWheelsType();
+		IXmlTypeWriter GetEngineTorqueLimitationsType();
+		IXmlTypeWriter GetEngineType();
+		IXmlTypeWriter GetRetarderType();
+		IXmlTypeWriter GetTorqueConverterType();
+		IXmlTypeWriter GetAngleDriveType();
+		IXmlTypeWriter GetTransmissionType();
+		IXmlTypeWriter GetElectricMachinesType();
+		IXmlTypeWriter GetAxleGearType();
+		IXmlTypeWriter GetAxleWheelsType();
 		IMRFAdasType GetConventionalADASType();
 		IMRFAdasType GetHEVADASType();
 		IMRFAdasType GetPEVADASType();
-		IMrfXmlType GetIEPCSpecifications();
-		IMrfXmlType GetREESSSpecificationsType();
+		IXmlTypeWriter GetIEPCSpecifications();
+		IXmlTypeWriter GetREESSSpecificationsType();
 		IMrfAirdragType GetAirdragType();
 
 

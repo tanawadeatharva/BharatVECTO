@@ -9,7 +9,7 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-    internal class MRFTorqueLimitationsType : AbstractMrfXmlType, IMrfXmlType
+    internal class TorqueLimitationsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
     {
 
 
@@ -28,6 +28,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-		public MRFTorqueLimitationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public TorqueLimitationsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 	}
 }

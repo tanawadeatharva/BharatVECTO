@@ -11,9 +11,9 @@ using TUGraz.VectoCommon.Resources;
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
 	#region Lorry
-	internal class MRFConventionalLorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class ConventionalLorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFConventionalLorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalLorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of MRFComponentType
 
@@ -43,9 +43,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_Px_IHPC_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevPxIhpcLorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_Px_IHPC_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevPxIhpcLorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -70,9 +70,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S2_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS2LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S2_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS2LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -102,9 +102,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S3_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS3LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S3_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS3LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -125,9 +125,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S4_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS4LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S4_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS4LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -146,9 +146,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_IEPC_S_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevIepcSLorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_IEPC_S_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevIepcSLorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -170,9 +170,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPEV_E2_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE2LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E2_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE2LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -197,9 +197,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 	}
 
-	internal class MRFPEV_E3_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE3LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E3_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE3LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -221,9 +221,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	}
 
-	internal class MRFPEV_E4_LorryComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE4LorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E4_LorryComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE4LorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -245,9 +245,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 	#region PrimaryBus
-	internal class MRFConventional_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class ConventionalPrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFConventional_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalPrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -272,9 +272,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	}
 
 
-	internal class MRFHEV_Px_IHPC_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevPxIhpcPrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_Px_IHPC_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevPxIhpcPrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -298,9 +298,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S2_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS2PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S2_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS2PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -335,9 +335,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S3_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS3PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S3_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS3PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -362,9 +362,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_S4_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevS4PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_S4_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevS4PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -385,9 +385,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_IEPC_S_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevIepcSPrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_IEPC_S_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevIepcSPrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -409,9 +409,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPEV_E2_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE2PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E2_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE2PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -434,9 +434,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPEV_E3_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE3PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E3_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE3PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -457,9 +457,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	}
 
 
-	internal class MRFPEV_E4_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevE4PrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_E4_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevE4PrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -477,9 +477,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPEV_IEPC_PrimaryBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevIepcPrimaryBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_IEPC_PrimaryBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevIepcPrimaryBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -500,9 +500,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	#endregion
 	#region CompletedBus
-	internal class MRFConventional_CompletedBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class ConventionalCompletedBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFConventional_CompletedBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalCompletedBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMrfXmlType
 
@@ -522,9 +522,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFHEV_CompletedBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfhevCompletedBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFHEV_CompletedBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfhevCompletedBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMrfXmlType
 
@@ -536,9 +536,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPEV_CompletedBusComponentsType : AbstractMrfXmlType, IMrfXmlType
+	internal class MrfpevCompletedBusComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFPEV_CompletedBusComponentsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfpevCompletedBusComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMrfXmlType
 

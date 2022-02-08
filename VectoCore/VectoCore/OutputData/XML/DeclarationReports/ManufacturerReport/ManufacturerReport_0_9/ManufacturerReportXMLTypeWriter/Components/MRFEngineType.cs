@@ -13,9 +13,9 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFEngineType : AbstractMrfXmlType, IMrfXmlType
+    public class EngineTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
     {
-		public MRFEngineType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public EngineTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

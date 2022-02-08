@@ -6,19 +6,19 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
-    public abstract class MRFVehicleType : AbstractMrfXmlType, IMrfXmlType
+    public abstract class VehicleTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
     {
 		
 
-		public MRFVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public VehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		public abstract XElement GetElement(IDeclarationInputDataProvider inputData);
 	}
 
 
-	public class MRF_ConventionalLorryVehicleType : MRFVehicleType
+	public class ConventionalLorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_ConventionalLorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMRFComponentWriter
 
@@ -45,9 +45,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_Px_IHPC_LorryVehicleType : MRFVehicleType
+	public class HevPxIhpcLorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_Px_IHPC_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevPxIhpcLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMRFComponentWriter
 		#endregion
@@ -68,9 +68,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_S2_LorryVehicleType : MRFVehicleType
+	public class HevS2LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S2_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS2LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -85,9 +85,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_S3_LorryVehicleType : MRFVehicleType
+	public class HevS3LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S3_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS3LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -101,9 +101,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_S4_LorryVehicleType : MRFVehicleType
+	public class HevS4LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S4_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS4LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -117,9 +117,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_IEPC_S_LorryVehicleType : MRFVehicleType
+	public class HevIepcSLorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_IEPC_S_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevIepcSLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -132,9 +132,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_E2_LorryVehicleType : MRFVehicleType
+	public class PevE2LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E2_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE2LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -149,9 +149,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_E3_LorryVehicleType : MRFVehicleType
+	public class PevE3LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E3_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE3LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -164,9 +164,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
-	public class MRF_PEV_E4_LorryVehicleType : MRFVehicleType
+	public class PevE4LorryVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E4_LorryVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE4LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -183,9 +183,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-	public class MRF_Conventional_PrimaryBusVehicleType : MRFVehicleType
+	public class ConventionalPrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_Conventional_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -203,9 +203,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	}
 
 
-	public class MRF_HEV_Px_IHPC_PrimaryBusVehicleType : MRFVehicleType
+	public class HevPxIhpcPrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_Px_IHPC_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevPxIhpcPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -220,9 +220,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_S2_PrimaryBusVehicleType : MRFVehicleType
+	public class HevS2PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S2_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS2PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -236,9 +236,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_S3_PrimaryBusVehicleType : MRFVehicleType
+	public class HevS3PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S3_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS3PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -251,9 +251,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
-	public class MRF_HEV_S4_PrimaryBusVehicleType : MRFVehicleType
+	public class HevS4PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_S4_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevS4PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -267,9 +267,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_IEPC_S_PrimaryBusVehicleType : MRFVehicleType
+	public class HevIepcSPrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_IEPC_S_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevIepcSPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -283,9 +283,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_E2_PrimaryBusVehicleType : MRFVehicleType
+	public class PevE2PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E2_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE2PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -299,9 +299,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_E3_PrimaryBusVehicleType : MRFVehicleType
+	public class PevE3PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E3_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE3PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -315,9 +315,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_E4_PrimaryBusVehicleType : MRFVehicleType
+	public class PevE4PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_E4_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevE4PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -331,9 +331,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_IEPC_PrimaryBusVehicleType : MRFVehicleType
+	public class PevIepcPrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_IEPC_PrimaryBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevIepcPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -347,9 +347,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_Conventional_CompletedBusVehicleType : MRFVehicleType
+	public class ConventionalCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_Conventional_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public ConventionalCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -370,9 +370,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_HEV_CompletedBusVehicleType : MRFVehicleType
+	public class HevCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_HEV_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public HevCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -384,9 +384,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRF_PEV_CompletedBusVehicleType : MRFVehicleType
+	public class PevCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
-		public MRF_PEV_CompletedBusVehicleType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public PevCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

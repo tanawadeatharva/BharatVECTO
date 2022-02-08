@@ -14,9 +14,9 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFREESSSpecificationsType : AbstractMrfXmlType, IMrfXmlType
+    internal class MrfreessSpecificationsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFREESSSpecificationsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MrfreessSpecificationsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue.DigestValue),
 						new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
 						new XElement(_mrf + "TotalStorageCapacity", battery.Capacity.AsAmpHour.ToXMLFormat(0)),
-						new XElement(_mrf + "TotalUsableCapacityInSimulation", "1234"),
+						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().AsAmpHour),
 						new XElement(_mrf + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat())
 						)
 					);

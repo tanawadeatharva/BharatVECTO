@@ -10,9 +10,9 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFRetarderType : AbstractMrfXmlType, IMrfXmlType
+    internal class RetarderTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFRetarderType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public RetarderTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

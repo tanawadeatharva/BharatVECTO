@@ -11,9 +11,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFAxleGearType : AbstractMrfXmlType, IMrfXmlType
+    internal class AxleGearTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFAxleGearType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public AxleGearTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

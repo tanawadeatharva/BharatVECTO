@@ -246,99 +246,99 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false)));
 			#region Vehicle
 
-			Bind<IMrfXmlType>().To<MRF_ConventionalLorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<ConventionalLorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_Px_IHPC_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevPxIhpcLorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S2_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS2LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S3_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS3LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S4_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS4LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E2_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE2LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E3_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE3LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_LorryVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E4_LorryVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE4LorryVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_LorryVehicleType());
 
-			Bind<IMrfXmlType>().To<MRF_Conventional_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_Px_IHPC_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevPxIhpcPrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHPC_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S2_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS2PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S3_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS3PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_S4_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevS4PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_IEPC_S_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevIepcSPrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E2_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE2PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E3_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE3PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_E4_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevE4PrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_IEPC_PrimaryBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevIepcPrimaryBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_PrimaryBusVehicleType());
 
-			Bind<IMrfXmlType>().To<MRF_Conventional_CompletedBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_CompletedBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_HEV_CompletedBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<HevCompletedBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_CompletedBusVehicleType());
-			Bind<IMrfXmlType>().To<MRF_PEV_CompletedBusVehicleType>()
+			Bind<IXmlTypeWriter>().To<PevCompletedBusVehicleTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_CompletedBusVehicleType());
 			#endregion
 			#region Components
-			Bind<IMrfXmlType>().To<MRFConventionalLorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<ConventionalLorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_Px_IHPC_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevPxIhpcLorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S2_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS2LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S3_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS3LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S4_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS4LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_IEPC_S_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevIepcSLorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_E2_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE2LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_LorryComponentsType());
 
-			Bind<IMrfXmlType>().To<MRFPEV_E3_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE3LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_LorryComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_E4_LorryComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE4LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_LorryComponentsType());
 
-			Bind<IMrfXmlType>().To<MRFConventional_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_IEPC_S_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevIepcSPrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S2_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS2PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S3_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS3PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_S4_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevS4PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_IEPC_S_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevIepcSPrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_E2_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE2PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_E3_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE3PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_PrimaryBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_E4_PrimaryBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevE4PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusComponentsType());
 
 
-			Bind<IMrfXmlType>().To<MRFConventional_CompletedBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod(
 					(IManufacturerReportFactory f) => f.GetConventional_CompletedBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFHEV_CompletedBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfhevCompletedBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod(
 					(IManufacturerReportFactory f) => f.GetHEV_CompletedBusComponentsType());
-			Bind<IMrfXmlType>().To<MRFPEV_CompletedBusComponentsType>()
+			Bind<IXmlTypeWriter>().To<MrfpevCompletedBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod(
 					(IManufacturerReportFactory f) => f.GetPEV_CompletedBusComponentsType());
 
@@ -360,42 +360,42 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVADASType());
 
 			#endregion ADAS
-			Bind<IMrfXmlType>().To<MRFTorqueLimitationsType>().
+			Bind<IXmlTypeWriter>().To<TorqueLimitationsTypeWriter>().
 				NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineTorqueLimitationsType());
 
-			Bind<IMrfXmlType>().To<MRFEngineType>()
+			Bind<IXmlTypeWriter>().To<EngineTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineType());
 
 
 
-			Bind<IMrfXmlType>().To<MRFTransmissionType>()
+			Bind<IXmlTypeWriter>().To<TransmissionTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetTransmissionType());
 
-			Bind<IMrfXmlType>().To<MRFRetarderType>()
+			Bind<IXmlTypeWriter>().To<RetarderTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetRetarderType());
 
-			Bind<IMrfXmlType>().To<MRFTorqueConverterType>()
+			Bind<IXmlTypeWriter>().To<TorqueConverterTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetTorqueConverterType());
 
-			Bind<IMrfXmlType>().To<MRFAngleDriveType>()
+			Bind<IXmlTypeWriter>().To<AngleDriveTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAngleDriveType());
 
 			Bind<IMrfAirdragType>().To<MRFAirdragType>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAirdragType());
 
-			Bind<IMrfXmlType>().To<MRFAxleWheelsType>()
+			Bind<IXmlTypeWriter>().To<AxleWheelsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleWheelsType());
 
-			Bind<IMrfXmlType>().To<MRFAxleGearType>()
+			Bind<IXmlTypeWriter>().To<AxleGearTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleGearType());
 
-			Bind<IMrfXmlType>().To<MRFElectricMachinesType>()
+			Bind<IXmlTypeWriter>().To<ElectricMachinesTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetElectricMachinesType());
 
-			Bind<IMrfXmlType>().To<MRFIEPCSpecificationsType>()
+			Bind<IXmlTypeWriter>().To<MrfiepcSpecificationsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetIEPCSpecifications());
 
-			Bind<IMrfXmlType>().To<MRFREESSSpecificationsType>()
+			Bind<IXmlTypeWriter>().To<MrfreessSpecificationsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetREESSSpecificationsType());
 
 			Bind<IMrfVehicleType>().To<MRFBoostingLimitationsType>()

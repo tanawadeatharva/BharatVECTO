@@ -10,9 +10,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFAxleWheelsType : AbstractMrfXmlType, IMrfXmlType
+    public class AxleWheelsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFAxleWheelsType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public AxleWheelsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

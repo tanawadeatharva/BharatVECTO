@@ -20,14 +20,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
 
 
-
-		public XElement Vehicle { get; protected set; }
-
+		protected XElement Vehicle { get; set; }
 
 
-
-
-		public AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory)
+		protected AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory)
 		{
 			_mRFReportFactory = MRFReportFactory;
 		}

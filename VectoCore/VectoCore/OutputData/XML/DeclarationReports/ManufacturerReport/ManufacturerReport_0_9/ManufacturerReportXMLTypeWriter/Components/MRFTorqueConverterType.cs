@@ -10,9 +10,9 @@ using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class MRFTorqueConverterType : AbstractMrfXmlType, IMrfXmlType
+    public class TorqueConverterTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFTorqueConverterType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public TorqueConverterTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 

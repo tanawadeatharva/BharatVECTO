@@ -11,9 +11,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    internal class MRFAngleDriveType : AbstractMrfXmlType, IMrfXmlType
+    internal class AngleDriveTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
 	{
-		public MRFAngleDriveType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public AngleDriveTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlType
 
