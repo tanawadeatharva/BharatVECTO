@@ -2,14 +2,11 @@
   <PropertyGroup>
     <!-- Version Information (only needed if it differs from Global VECTO Version)-->
     <MainProductVersion>1.2.9</MainProductVersion>
+    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
+
     <ProjectGuid>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</ProjectGuid>
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Product>$(AssemblyName)</Product>
-    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
