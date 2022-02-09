@@ -17,6 +17,7 @@
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,9 +33,6 @@
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <DefineConstants>DEBUG</DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>false</DefineTrace>
     <WarningLevel>5</WarningLevel>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -42,22 +40,16 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants />
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>false</DefineTrace>
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Deploy'">
-    <DefineConstants />
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>false</DefineTrace>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 </Project>
