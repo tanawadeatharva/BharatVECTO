@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DeclarationCycleZip</RootNamespace>
     <AssemblyName>DeclarationCycleZip</AssemblyName>
+    <DefineConstants />
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
 

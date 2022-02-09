@@ -7,6 +7,7 @@
     <ProjectGuid>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</ProjectGuid>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

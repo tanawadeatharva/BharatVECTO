@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GraphDrawer</RootNamespace>
     <AssemblyName>GraphDrawer</AssemblyName>
+    <DefineConstants />
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
 

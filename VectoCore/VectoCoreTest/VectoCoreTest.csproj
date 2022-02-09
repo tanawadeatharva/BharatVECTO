@@ -3,6 +3,7 @@
     <ProjectGuid>{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}</ProjectGuid>
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
+    <DefineConstants />
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
 

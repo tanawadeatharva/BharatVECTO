@@ -7,6 +7,7 @@
     <ProjectGuid>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</ProjectGuid>
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

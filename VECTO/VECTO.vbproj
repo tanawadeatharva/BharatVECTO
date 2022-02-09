@@ -2,21 +2,40 @@
   <PropertyGroup>
     <ProjectGuid>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>TUGraz.VECTO.My.MyApplication</StartupObject>
+    <StartupObject>Sub Main</StartupObject>
     <TargetFramework>net45</TargetFramework>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <AssemblyName>VECTO</AssemblyName>
+    <DefineConstants />
     <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
     <OptionStrict>On</OptionStrict>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
     <Configurations>Debug;Release;Deploy</Configurations>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>false</DefineTrace>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>false</DefineTrace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="Ninject" Version="3.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Windows.Forms.DataVisualization"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -30,353 +49,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
-    
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Windows.Forms.DataVisualization">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.DataVisualization.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="My Project\Application.Designer.vb">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
+    <Compile Update="My Project\Resources.Designer.vb">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="My Project\Settings.Designer.vb">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="My Project\Resources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
-    <Compile Update="ApplicationEvents.vb" />
-    <Compile Update="BusAuxiliaries\UI\frmAuxiliaryConfig.Designer.vb">
-      <DependentUpon>frmAuxiliaryConfig.vb</DependentUpon>
-    </Compile>
-    <Compile Update="BusAuxiliaries\UI\frmAuxiliaryConfig.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="BusAuxiliaries\UI\frmCombinedAlternators.Designer.vb">
-      <DependentUpon>frmCombinedAlternators.vb</DependentUpon>
-    </Compile>
-    <Compile Update="BusAuxiliaries\UI\frmCombinedAlternators.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="BusAuxiliaries\UI\frmHVACTool.Designer.vb">
-      <DependentUpon>frmHVACTool.vb</DependentUpon>
-    </Compile>
-    <Compile Update="BusAuxiliaries\UI\frmHVACTool.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="BusAuxiliaries\Util\DeleteCell.vb" />
-    <Compile Update="BusAuxiliaries\Util\DeleteColumn.vb" />
-    <Compile Update="BusAuxiliaries\Util\SIConvert.vb" />
-    <Compile Update="GUI\BusAuxiliariesEngParametersForm.Designer.vb">
-      <DependentUpon>BusAuxiliariesEngParametersForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\BusAuxiliariesEngParametersForm.vb" />
-    <Compile Update="GUI\REESSPackDialog.Designer.vb">
-      <DependentUpon>REESSPackDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\REESSPackDialog.vb" />
-    <Compile Update="GUI\HybridStrategyParamsForm.Designer.vb">
-      <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\HybridStrategyParamsForm.vb" />
-    <Compile Update="GUI\BatteryForm.Designer.vb">
-      <DependentUpon>BatteryForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\BatteryForm.vb" />
-    <Compile Update="GUI\ElectricMotorForm.Designer.vb">
-      <DependentUpon>ElectricMotorForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\ElectricMotorForm.vb" />
-    <Compile Update="GUI\VectoVTPJobForm.Designer.vb">
-      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VectoVTPJobForm.vb" />
-    <Compile Update="GUI\EMGearRatioDialog.Designer.vb">
-      <DependentUpon>EMGearRatioDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\EMGearRatioDialog.vb" />
-    <Compile Update="Input Files\Battery.vb" />
-    <Compile Update="Input Files\BrowserUtils.vb" />
-    <Compile Update="GUI\VehicleTorqueLimitsDialog.Designer.vb">
-      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VehicleTorqueLimitsDialog.vb" />
-    <Compile Update="GUI\XMLExportJobDialog.Designer.vb">
-      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\XMLExportJobDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\XMLImportJobDialog.Designer.vb">
-      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\XMLImportJobDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\GraphForm.Designer.vb">
-      <DependentUpon>GraphForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\GraphForm.vb" />
-    <Compile Update="GUI\GraphEditChannelDialog.Designer.vb">
-      <DependentUpon>GraphEditChannelDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\GraphEditChannelDialog.vb" />
-    <Compile Update="GUI\JiraDialog.Designer.vb">
-      <DependentUpon>JiraDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\JiraDialog.vb" />
-    <Compile Update="GUI\WelcomeDialog.Designer.vb">
-      <DependentUpon>WelcomeDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\WelcomeDialog.vb" />
-    <Compile Update="GUI\EngineForm.Designer.vb">
-      <DependentUpon>EngineForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\EngineForm.vb" />
-    <Compile Update="GUI\GearboxForm.Designer.vb">
-      <DependentUpon>GearboxForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\GearboxForm.vb" />
-    <Compile Update="GUI\VehicleAuxiliariesDialog.Designer.vb">
-      <DependentUpon>VehicleAuxiliariesDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VehicleAuxiliariesDialog.vb" />
-    <Compile Update="GUI\VehicleAxleDialog.Designer.vb">
-      <DependentUpon>VehicleAxleDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VehicleAxleDialog.vb" />
-    <Compile Update="Input Files\ElectricMachine.vb" />
-    <Compile Update="Input Files\Engine.vb" />
-    <Compile Update="Input Files\Gearbox.vb" />
-    <Compile Update="Configuration.vb" />
-    <Compile Update="File Browser\FileBrowser.vb" />
-    <Compile Update="File Browser\FileBrowserDialog.designer.vb">
-      <DependentUpon>FileBrowserDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="File Browser\FileBrowserDialog.vb" />
-    <Compile Update="File Browser\FileBrowserFavoritesDialog.designer.vb">
-      <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="File Browser\FileBrowserFavoritesDialog.vb" />
-    <Compile Update="Input Files\BusParamsEngineering.vb" />
-    <Compile Update="Input Files\HybridStrategyParams.vb" />
-    <Compile Update="Input Files\MockComponents.vb" />
-    <Compile Update="Input Files\MockVehicleInputData.vb" />
-    <Compile Update="Input Files\SuperCap.vb" />
-    <Compile Update="Input Files\VectoEPTPJob.vb" />
-    <Compile Update="Input Files\VectoJob.vb" />
-    <Compile Update="Input Files\Vehicle.vb" />
-    <Compile Update="GUI\GearboxGearDialog.Designer.vb">
-      <DependentUpon>GearboxGearDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\GearboxGearDialog.vb" />
-    <Compile Update="Input Files\SubPath.vb" />
-    <Compile Update="GUI\VectoJobForm.Designer.vb">
-      <DependentUpon>VectoJobForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VectoJobForm.vb" />
-    <Compile Update="VECTO_Global.vb" />
-    <Compile Update="VECTO_Types.vb" />
-    <Compile Update="GUI\GUI_Subs.vb" />
-    <Compile Update="GUI\VehicleForm.Designer.vb">
-      <DependentUpon>VehicleForm.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\VehicleForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\Settings.Designer.vb">
-      <DependentUpon>Settings.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\Settings.vb" />
-    <Compile Update="GUI\AboutBox.Designer.vb">
-      <DependentUpon>AboutBox.vb</DependentUpon>
-    </Compile>
-    <Compile Update="GUI\AboutBox.vb" />
-    <Compile Update="MainModule.vb" />
-    <Compile Update="GUI\MainForm.vb" />
-    <Compile Update="GUI\MainForm.Designer.vb">
-      <DependentUpon>MainForm.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="File Browser\FileBrowserModule.vb" />
+    <None Update="My Project\Settings.settings">
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="File Browser\FileBrowserDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="File Browser\FileBrowserFavoritesDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\AboutBox.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\BatteryForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\BusAuxiliariesEngParametersForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\ElectricMotorForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\EMGearRatioDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\EngineForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\GearboxForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\GearboxGearDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\GraphEditChannelDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\GraphForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\HybridStrategyParamsForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\JiraDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\MainForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\REESSPackDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\Settings.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\VectoJobForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\VectoVTPJobForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\VehicleAuxiliariesDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\VehicleAxleDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\VehicleTorqueLimitsDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="GUI\WelcomeDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <EmbeddedResource Update="BusAuxiliaries\UI\frmAuxiliaryConfig.resx">
-      <DependentUpon>frmAuxiliaryConfig.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="BusAuxiliaries\UI\frmCombinedAlternators.resx">
-      <DependentUpon>frmCombinedAlternators.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="BusAuxiliaries\UI\frmHVACTool.resx">
-      <DependentUpon>frmHVACTool.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="File Browser\FileBrowserDialog.resx">
-      <DependentUpon>FileBrowserDialog.vb</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Update="File Browser\FileBrowserFavoritesDialog.resx">
-      <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\BusAuxiliariesEngParametersForm.resx">
-      <DependentUpon>BusAuxiliariesEngParametersForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\REESSPackDialog.resx">
-      <DependentUpon>REESSPackDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\HybridStrategyParamsForm.resx">
-      <DependentUpon>HybridStrategyParamsForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\BatteryForm.resx">
-      <DependentUpon>BatteryForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\ElectricMotorForm.resx">
-      <DependentUpon>ElectricMotorForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\GraphForm.resx">
-      <DependentUpon>GraphForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\GraphEditChannelDialog.resx">
-      <DependentUpon>GraphEditChannelDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\JiraDialog.resx">
-      <DependentUpon>JiraDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VectoVTPJobForm.resx">
-      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\EMGearRatioDialog.resx">
-      <DependentUpon>EMGearRatioDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VehicleTorqueLimitsDialog.resx">
-      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\WelcomeDialog.resx">
-      <DependentUpon>WelcomeDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\EngineForm.resx">
-      <DependentUpon>EngineForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\GearboxForm.resx">
-      <DependentUpon>GearboxForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\MainForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>MainForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VectoJobForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>VectoJobForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VehicleForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>VehicleForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\Settings.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>Settings.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\AboutBox.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>AboutBox.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VehicleAuxiliariesDialog.resx">
-      <DependentUpon>VehicleAuxiliariesDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\VehicleAxleDialog.resx">
-      <DependentUpon>VehicleAxleDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\GearboxGearDialog.resx">
-      <DependentUpon>GearboxGearDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\XMLExportJobDialog.resx">
-      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GUI\XMLImportJobDialog.resx">
-      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\4x2r.png" />
     <EmbeddedResource Update="Resources\4x2rt.png" />

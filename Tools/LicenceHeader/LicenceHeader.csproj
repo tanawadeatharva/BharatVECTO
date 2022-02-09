@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>LicenceHeader</RootNamespace>
     <AssemblyName>LicenceHeader</AssemblyName>
+    <DefineConstants />
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@
     <ProjectGuid>{760C1C5B-A767-463E-BA85-F0BCFC23A550}</ProjectGuid>
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

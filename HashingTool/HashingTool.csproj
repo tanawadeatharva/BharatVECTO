@@ -8,6 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>HashingTool</RootNamespace>
     <AssemblyName>HashingTool</AssemblyName>
+    <DefineConstants />
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
