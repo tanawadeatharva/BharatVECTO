@@ -901,7 +901,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Voltage = entry.VoltageLevel,
 					ContinuousTorque = entry.ContinuousTorque * count,
 					ContinuousTorqueSpeed = entry.ContinuousTorqueSpeed,
-					OverloadTorque = entry.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
+					OverloadTorque = (entry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
 					OverloadTestSpeed = entry.OverloadTestSpeed ?? 0.RPMtoRad(),
 					OverloadTime = entry.OverloadTime,
 					FullLoadCurve = fullLoadCurveCombined,

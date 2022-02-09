@@ -31,17 +31,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 	[TestFixture]
 	public class SerialHybridTest
 	{
-		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
-		public const string BatFile = @"TestData\Hybrids\Battery\GenericBattery.vbat";
+		public const string BatFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericBattery.vreess";
 
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-		public const string MotorFile240kW = @"TestData\Hybrids\ElectricMotor\GenericEMotor240kW.vem";
+		public const string AccelerationFile = @"TestData\Hybrids\GenericVehicle_Sx\Truck.vacc";
+		public const string MotorFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericEMotor.vem";
 
-		public const string GeneratorFile = @"TestData\Hybrids\ElectricMotor\GenericGenerator.vem";
+		public const string GeneratorFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericGen.vem";
 
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 
+		public const string EngineFile = @"TestData\Hybrids\GenericVehicle_Sx\Group2_6l.veng";
 
 
 		public const bool PlotGraphs = true;
@@ -56,24 +56,24 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 
 		[
-			TestCase(30, 0.7, 0, 0, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
-			TestCase(50, 0.7, 0, 0, TestName = "S3 Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, 0, TestName = "S3 Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
 
-			TestCase(30, 0.25, 0, 0, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.25, level"),
-			TestCase(50, 0.25, 0, 0, TestName = "S3 Hybrid ConstantSpeed 50km/h SoC: 0.25, level"),
-			TestCase(80, 0.25, 0, 0, TestName = "S3 Hybrid ConstantSpeed 80km/h SoC: 0.25, level"),
+			TestCase(30, 0.25, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 50km/h SoC: 0.25, level"),
+			TestCase(80, 0.25, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 80km/h SoC: 0.25, level"),
 
-			TestCase(30, 0.5, 5, 0, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-			TestCase(50, 0.5, 5, 0, TestName = "S3 Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-			TestCase(80, 0.5, 5, 0, TestName = "S3 Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+			TestCase(30, 0.5, 5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			TestCase(80, 0.5, 5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-			TestCase(30, 0.5, -5, 0, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-			TestCase(50, 0.5, -5, 0, TestName = "S3 Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-			TestCase(80, 0.5, -5, 0, TestName = "S3 Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.5, -5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			TestCase(80, 0.5, -5, 0, TestName = "S3 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
-			TestCase(30, 0.25, 0, 1000, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-			TestCase(30, 0.25, 0, 5000, TestName = "S3 Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+			TestCase(30, 0.25, 0, 1000, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
 		]
 		public void S3HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = $"SimpleParallelHybrid-S3_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 4.6, largeMotor: true, largeGen: true, pAuxEl: pAuxEl);
+				cycle, modFilename, initialSoC, pos, 12.47, pAuxEl: pAuxEl);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -109,9 +109,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		[
-			TestCase(30, 0.7, 0, TestName = "S3 Hybrid DriveOff 30km/h SoC: 0.7, level"),
-			TestCase(80, 0.7, 0, TestName = "S3 Hybrid DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.22, 0, TestName = "S3 Hybrid DriveOff 30km/h SoC: 0.22, level")
+			TestCase(30, 0.7, 0, TestName = "S3 Serial Hybrid DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "S3 Serial Hybrid DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.22, 0, TestName = "S3 Serial Hybrid DriveOff 30km/h SoC: 0.22, level")
 		]
 		public void S3HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = $"SimpleParallelHybrid-S3_acc_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 12.47);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -142,9 +142,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-		[TestCase(50, 0.79, 0, TestName = "S3 Hybrid Brake Standstill 50km/h SoC: 0.79, level"),
-		TestCase(50, 0.25, 0, TestName = "S3 Hybrid Brake Standstill 50km/h SoC: 0.25, level"),
-		TestCase(50, 0.65, 0, TestName = "S3 Hybrid Brake Standstill 50km/h SoC: 0.65, level")
+		[TestCase(50, 0.79, 0, TestName = "S3 Serial Hybrid Brake Standstill 50km/h SoC: 0.79, level"),
+		TestCase(50, 0.25, 0, TestName = "S3 Serial Hybrid Brake Standstill 50km/h SoC: 0.25, level"),
+		TestCase(50, 0.65, 0, TestName = "S3 Serial Hybrid Brake Standstill 50km/h SoC: 0.65, level")
 		]
 		public void S3HybridBrakeStandstill(double vmax, double initialSoC, double slope)
 		{
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = $"SimpleParallelHybrid-S3_stop_{vmax}-{initialSoC}_{slope}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true);
+				cycle, modFilename, initialSoC, pos, 12.47);
 			var run = job.Runs.First().Run;
 
 			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -180,14 +180,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 
 		[
-			TestCase("LongHaul", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("RegionalDelivery", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("UrbanDelivery", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Construction", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Urban", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Suburban", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Interurban", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
-			TestCase("Coach", 2000, 0.5, 0, TestName = "S3 Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("LongHaul", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.5, 0, TestName = "S3 Serial Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
 		]
 		public void S3HybridDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
 		{
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modFilename = $"SimpleParallelHybrid-S3_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
 			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+				cycle, modFilename, initialSoC, pos, 12.47, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
 			var run = job.Runs.First().Run;
 
 			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -224,18 +224,190 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
+		// =================================================
+
+		[
+	TestCase(30, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
+	TestCase(50, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
+	TestCase(80, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
+
+	TestCase(30, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level"),
+	TestCase(50, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.25, level"),
+	TestCase(80, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.25, level"),
+
+	TestCase(30, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+	TestCase(50, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+	TestCase(80, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+
+	TestCase(30, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+	TestCase(50, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+	TestCase(80, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+
+	TestCase(30, 0.25, 0, 1000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+	TestCase(30, 0.25, 0, 5000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+]
+		public void S4HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = $"SimpleParallelHybrid-S4_constant_{vmax}-{initialSoC}_{slope}_{pAuxEl}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 12.47, pAuxEl: pAuxEl);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4, ModalResultField.P_electricMotor_mech_Gen });
+			graphWriter.Write(modFilename);
+		}
+
+		[
+			TestCase(30, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.22, level")
+		]
+		public void S4HybridDriveOff(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				   700, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = $"SimpleParallelHybrid-S4_acc_{vmax}-{initialSoC}_{slope}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 12.47);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4, ModalResultField.P_electricMotor_mech_Gen });
+			graphWriter.Write(modFilename);
+		}
+
+		[TestCase(50, 0.79, 0, TestName = "S4 Serial Hybrid Brake Standstill 50km/h SoC: 0.79, level"),
+		TestCase(50, 0.25, 0, TestName = "S4 Serial Hybrid Brake Standstill 50km/h SoC: 0.25, level"),
+		TestCase(50, 0.65, 0, TestName = "S4 Serial Hybrid Brake Standstill 50km/h SoC: 0.65, level")
+		]
+		public void S4HybridBrakeStandstill(double vmax, double initialSoC, double slope)
+		{
+			//var dst =
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				   200,   0, {1},    3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			const bool largeMotor = true;
+
+			var modFilename = $"SimpleParallelHybrid-S4_stop_{vmax}-{initialSoC}_{slope}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 12.47);
+			var run = job.Runs.First().Run;
+
+			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+			//var strategy = (DelegateParallelHybridStrategy)hybridController.Strategy;
+			//Assert.NotNull(strategy);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4, ModalResultField.P_electricMotor_mech_Gen });
+			graphWriter.Write(modFilename);
+		}
+
+
+
+
+		[
+			TestCase("LongHaul", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle LongHaul, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("RegionalDelivery", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle RegionalDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("UrbanDelivery", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle UrbanDelivery, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Construction", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle Construction, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Urban", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle Urban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Suburban", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle SubUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Interurban", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle InterUrban, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+			TestCase("Coach", 2000, 0.5, 0, TestName = "S4 Serial Hybrid DriveCycle Coach, SoC: 0.5 Payload: 2t P_auxEl: 0kW"),
+		]
+		public void S4HybridDriveCycle(string declarationMission, double payload, double initialSoC, double pAuxEl)
+		{
+			var cycleData = RessourceHelper.ReadStream(
+				DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+				declarationMission +
+				Constants.FileExtensions.CycleFile);
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
+
+			var modFilename = $"SimpleSerialHybrid-S4_cycle_{declarationMission}-{initialSoC}_{payload}_{pAuxEl}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 12.47, pAuxEl: pAuxEl, payload: payload.SI<Kilogram>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (SerialHybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4, ModalResultField.P_electricMotor_mech_Gen });
+			graphWriter.Write(modFilename);
+		}
+
+
 
 		// =================================================
 
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
-			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, bool largeGen = false, double pAuxEl = 0,
+			double initialSoc, PowertrainPosition pos, double ratio, double pAuxEl = 0,
 			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			var container = CreateSerialHybridPowerTrain(
-				cycleData, modFileName, initialSoc, largeMotor, largeGen, sumData, pAuxEl, pos, ratio, payload,
+				cycleData, modFileName, initialSoc, sumData, pAuxEl, pos, ratio, payload,
 				maxDriveTrainPower, gearboxType);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
@@ -243,7 +415,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		public static VehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
-			double initialBatCharge, bool largeMotor, bool largeGen, SummaryDataContainer sumData, double pAuxEl,
+			double initialBatCharge, SummaryDataContainer sumData, double pAuxEl,
 			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
 		{
 			var gearboxData = CreateGearboxData(gearboxType);
@@ -253,8 +425,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
 
-			var emFile = largeMotor ? MotorFile240kW : MotorFile;
-			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(emFile, 2, pos, ratio, 1);
+			var emFile = MotorFile;
+			var correctedRatio = pos == PowertrainPosition.BatteryElectricE3
+				? ratio / axleGearData.AxleGear.Ratio
+				: ratio;
+			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(emFile, 2, pos, correctedRatio, 1);
 
 			var genFile = GeneratorFile;
 			electricMotorData.AddRange(
@@ -265,7 +440,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//batteryData.TargetSoC = 0.5;
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
-				 Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+				 EngineFile, gearboxData.Gears.Count);
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(

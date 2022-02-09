@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -120,8 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			GenSetOperatingPoint genSetOperatingPoint;
-			var emTorque = (-emResponse.TorqueRequest).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
-				emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+			var emTorque = GetMechanicalAllsistPower(absTime, dt, emResponse.TorqueRequest, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
 			switch (CurrentState.SMState) {
 				case StateMachineState.Acc_S0:
 					genSetOperatingPoint = GensetOff;
@@ -130,8 +130,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					tmp.ElectricPower = 0.SI<Watt>();
 					drivetrainDemand = GetDrivetrainPowerDemand(absTime, dt, outTorque, outAngularVelocity, tmp);
 					emResponse = drivetrainDemand.Response.ElectricMotor;
-					emTorque = (-emResponse.TorqueRequest).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
-						emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+					//emTorque = (-emResponse.TorqueRequest).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
+					//	emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+					emTorque = GetMechanicalAllsistPower(absTime, dt, emResponse.TorqueRequest, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
 					break;
 				case StateMachineState.Acc_S1:
 					var optimalPoint = DataBus.ElectricMotorInfo(PowertrainPosition.Generator).DeRatingActive ?
@@ -151,8 +152,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					genSetOperatingPoint = MaxGensetPower(absTime, dt, drivetrainDemand, maxPowerGenset);
 					emTorque = TestPowertrain.ElectricMotor.GetTorqueForElectricPower(
 						DataBus.BatteryInfo.InternalVoltage, drivetrainDemand.Response.ElectricSystem.MaxPowerDrive,
-						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
-						emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt);
+					if (emTorque == null) {
+						emTorque = emResponse.MaxDriveTorque;
+					}
+					emTorque = GetMechanicalAllsistPower(absTime, dt, emTorque, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
+					//emTorque = emTorque.LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
+						//emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
 					break;
 				case StateMachineState.Break_S0:
 				case StateMachineState.Break_S1:
@@ -164,13 +170,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					tmpBr.ElectricPower = 0.SI<Watt>();
 					drivetrainDemand = GetDrivetrainPowerDemand(absTime, dt, outTorque, outAngularVelocity, tmpBr);
 					emResponse = drivetrainDemand.Response.ElectricMotor;
-					if (emTorque > 0 && emResponse.MaxRecuperationTorque == null) {
-						// we could recuperate, but max recuperation is null - so battery is full. turn off EM
-						emTorque = null;
-					} else {
-						emTorque = (-emResponse.TorqueRequest).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
-							emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
-					}
+
+					emTorque = GetMechanicalAllsistPower(absTime, dt, emResponse.TorqueRequest, emResponse, emResponse.AngularVelocity);
+					//if (emTorque > 0 && emResponse.MaxRecuperationTorque == null) {
+					//	// we could recuperate, but max recuperation is null - so battery is full. turn off EM
+					//	emTorque = null;
+					//} else {
+					//	emTorque = (-emResponse.TorqueRequest).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
+					//		emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
+					//}
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -195,6 +203,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				MechanicalAssistPower = setting
 			};
 
+		}
+
+		private NewtonMeter GetMechanicalAllsistPower(Second absTime, Second dt, NewtonMeter emOutTorque, ElectricMotorResponse emResponse, PerSecond currOutAngularVelocity)
+		{
+			if (!DataBus.GearboxInfo.GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+				var em = DataBus.ElectricMotorInfo(EmPosition);
+				var avgSpeed = (em.ElectricMotorSpeed + currOutAngularVelocity) / 2;
+				var inertiaTorqueLoss = avgSpeed.IsEqual(0)
+					? 0.SI<NewtonMeter>()
+					: Formulas.InertiaPower(currOutAngularVelocity, em.ElectricMotorSpeed, ModelData.ElectricMachinesData.First(x => x.Item1 == EmPosition).Item2.Inertia, dt) / avgSpeed;
+				//var dragTorque = ElectricMotorData.DragCurve.Lookup()
+				return (-inertiaTorqueLoss); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+			}
+
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
+				DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+				return null;
+			}
+
+			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && emOutTorque.IsSmaller(0)) {
+				return null;
+			}
+			return (-emOutTorque).LimitTo(emResponse.MaxDriveTorque ?? 0.SI<NewtonMeter>(),
+				emResponse.MaxRecuperationTorque ?? 0.SI<NewtonMeter>());
 		}
 
 		protected StateMachineState GetStateAccelerate(DrivetrainDemand drivetrainDemand,
@@ -494,6 +526,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			
 			TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
 			var r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(), iceSpeed);
+			if (r1 is ResponseOverload && !TestGenSet.CombustionEngine.PreviousState.EngineSpeed.IsEqual(op.ICESpeed)) {
+				var rampUp = GenSetCharacteristics.OptimalPoints.Values.SelectMany(x => x).Where(x =>
+						TestGenSet.ElectricMotor.DeRatingActive
+							? x.EMTorque.IsSmallerOrEqual(GenSetCharacteristics.ContinuousTorque)
+							: true).Select(x => new {
+						OperatingPoint = x,
+						RemainingTorque = x.ICETorque - Formulas.InertiaPower(x.ICESpeed,
+								TestGenSet.CombustionEngine.PreviousState.EngineSpeed, ModelData.EngineData.Inertia,
+								dt) /
+							((TestGenSet.CombustionEngine.PreviousState.EngineSpeed + x.ICESpeed) / 2)
+					});
+					var rampUp2 = rampUp.Where(
+						x => x.OperatingPoint.ICESpeed.IsGreater(TestGenSet.CombustionEngine.PreviousState.EngineSpeed))
+					.ToArray();
+				if (rampUp2.Any()) {
+					var best = rampUp2.MaxBy(x => x.RemainingTorque);
+					emTqDt = best.OperatingPoint.EMTorque;
+					iceSpeed = best.OperatingPoint.ICESpeed;
+					TestGenSet.ElectricMotorCtl.EMTorque = emTqDt;
+					r1 = TestGenSet.ElectricMotor.Request(absTime, dt, 0.SI<NewtonMeter>(),
+						best.OperatingPoint.ICESpeed);
+				}
+			}
+
 			if (r1 is ResponseOverload ovl) {
 				emTqDt = SearchAlgorithm.Search(emTqDt, ovl.Delta, emTqDt * 0.1,
 					getYValue: r => {

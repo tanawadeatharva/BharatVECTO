@@ -297,6 +297,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					emTorque < 0 ? electricSupplyResponse.MaxPowerDrive : electricSupplyResponse.MaxPowerDrag, electricSupplyResponse.ConsumerPower);
 			}
 
+
+			if (Position == PowertrainPosition.Generator && emOff && !DataBus.EngineCtl.CombustionEngineOn) {
+				emTorqueDt = 0.SI<NewtonMeter>();
+			}
 			var inTorqueDt = outTorque + emTorqueDt;
 
 			IResponse retVal;
