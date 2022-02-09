@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;

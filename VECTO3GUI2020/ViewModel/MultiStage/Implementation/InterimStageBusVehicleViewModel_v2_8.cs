@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Castle.Core.Internal;
-using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;

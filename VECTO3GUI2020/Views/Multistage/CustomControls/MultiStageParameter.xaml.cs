@@ -20,7 +20,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Castle.Components.DictionaryAdapter.Xml;
-using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Annotations;
