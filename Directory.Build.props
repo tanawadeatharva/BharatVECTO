@@ -29,28 +29,35 @@
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DefineConstants>DEBUG</DefineConstants>
-    <!--<DefineConstants>DEBUG;TRACE</DefineConstants>-->
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>false</DefineTrace>
     <WarningLevel>5</WarningLevel>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants />
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>false</DefineTrace>
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Deploy|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Deploy'">
     <DefineConstants />
     <DebugType>none</DebugType>
     <WarningLevel>5</WarningLevel>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>false</DefineTrace>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 </Project>
