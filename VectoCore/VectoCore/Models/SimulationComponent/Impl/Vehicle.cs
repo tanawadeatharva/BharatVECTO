@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			
 			if (DataBus.PowertrainInfo.HasElectricMotor) {
-				var positions = DataBus.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.Generator).ToArray();
+				var positions = DataBus.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.GEN).ToArray();
 				;
 				if (positions.Length > 1) {
 					throw new VectoException("Multiple electrical machines are currently not supported");

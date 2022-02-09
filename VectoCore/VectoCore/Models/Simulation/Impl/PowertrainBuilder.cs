@@ -703,7 +703,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new SimpleHybridController(container, es);
 
-			var pos = data.ElectricMachinesData.Select(x => x.Item1).First(x => x != PowertrainPosition.Generator);
+			var pos = data.ElectricMachinesData.Select(x => x.Item1).First(x => x != PowertrainPosition.GEN);
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 			var powertrain = vehicle
@@ -779,7 +779,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//var ctl = new SimpleHybridController(container, es);
 			var ctl = new GensetMotorController(container, es);
 
-			var genSet = GetElectricMachine(PowertrainPosition.Generator, data.ElectricMachinesData, container, es, ctl)
+			var genSet = GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
 				.AddComponent(new StopStartCombustionEngine(container, data.EngineData));
 
 			new ATClutchInfo(container);

@@ -2030,6 +2030,60 @@
     <None Include="TestData\Hybrids\GenericVehicle_Sx\Urban.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\209kW_7c7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\209kW_ICE_fld.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\209kW_ICE_Map.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\EM_drag.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\EM_fld.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\EM_Map.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\GenericBattery.vbatr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\GenericBattery.vreess">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\GenericEM.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\GenericGen.vem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\Gen_drag.vemd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\Gen_fld.vemp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\Gen_Map.vemo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\MaxCurrent.vimax">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\REESS_SOC_curve.vbatv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Sx_Job\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\175kW.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

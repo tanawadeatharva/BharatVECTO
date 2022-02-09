@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public override IHybridStrategyResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			EmPosition = DataBus.PowertrainInfo.ElectricMotorPositions.FirstOrDefault(x =>
-				x != PowertrainPosition.Generator);
+				x != PowertrainPosition.GEN);
 
 			var retVal = new HybridStrategyResponse()
 				{ MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() };
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			GenSetCharacteristics.ContinuousTorque =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.Generator) as ElectricMotor).ContinuousTorque;
+				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).ContinuousTorque;
 
 			PreviousState.AngularVelocity = outAngularVelocity;
 			PreviousState.GearboxEngaged = true;
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					emTorque = GetMechanicalAllsistPower(absTime, dt, emResponse.TorqueRequest, emResponse, emResponse.AngularVelocity /* potentially not correct! */);
 					break;
 				case StateMachineState.Acc_S1:
-					var optimalPoint = DataBus.ElectricMotorInfo(PowertrainPosition.Generator).DeRatingActive ?
+					var optimalPoint = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive ?
 						GenSetCharacteristics.OptimalPointDeRated
 						: GenSetCharacteristics.OptimalPoint;
 					genSetOperatingPoint = ApproachGensetOperatingPoint(absTime, dt, optimalPoint);
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						EmPosition,
 						Tuple.Create(drivetrainDemand.AvgEmDrivetrainSpeed, emTorque)
 					}, {
-						PowertrainPosition.Generator,
+						PowertrainPosition.GEN,
 						Tuple.Create(genSetOperatingPoint.ICESpeed, genSetOperatingPoint.ICETorque)
 					},
 				}
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return StateMachineState.Acc_S3;
 			}
 
-			var optimalGensetPoint = DataBus.ElectricMotorInfo(PowertrainPosition.Generator).DeRatingActive
+			var optimalGensetPoint = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive
 				? GenSetCharacteristics.OptimalPointDeRated
 				: GenSetCharacteristics.OptimalPoint;
 			switch (PreviousState.SMState) {
@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			DataBus = container;
 			ModelData = runData;
-			if (ModelData.ElectricMachinesData.Select(x => x.Item1).Where(x => x != PowertrainPosition.Generator).Distinct().Count() > 1) {
+			if (ModelData.ElectricMachinesData.Select(x => x.Item1).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
 				throw new VectoException("More than one electric motors are currently not supported");
 			}
 			StrategyParameters = ModelData.HybridStrategyParameters;
@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			
 			container.AddPreprocessor(new GensetPreprocessor(GenSetCharacteristics ,TestGenSet, runData.EngineData,
-				runData.ElectricMachinesData.FirstOrDefault(x => x.Item1 == PowertrainPosition.Generator)?.Item2));
+				runData.ElectricMachinesData.FirstOrDefault(x => x.Item1 == PowertrainPosition.GEN)?.Item2));
 		}
 
 		#region Implementation of IHybridControlStrategy
@@ -375,7 +375,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			var electricPowerDemand = drivetrainDemand.ElectricPowerDemand;
 
-			var gensetLimit = DataBus.ElectricMotorInfo(PowertrainPosition.Generator).DeRatingActive
+			var gensetLimit = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive
 				? GenSetCharacteristics.MaxPowerDeRated
 				: GenSetCharacteristics.MaxPower;
 			if (maxPowerGenset.ElectricPower.IsSmaller(gensetLimit.ElectricPower)) {
@@ -474,7 +474,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected GenSetOperatingPoint GetMaxElectricPowerGenerated(Second absTime, Second dt)
 		{
-			var genDerated = DataBus.ElectricMotorInfo(PowertrainPosition.Generator).DeRatingActive;
+			var genDerated = DataBus.ElectricMotorInfo(PowertrainPosition.GEN).DeRatingActive;
 			return ApproachGensetOperatingPoint(absTime, dt,
 				genDerated ? GenSetCharacteristics.MaxPowerDeRated : GenSetCharacteristics.MaxPower);
 		}
@@ -517,9 +517,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					break;
 			}
 			TestGenSet.ElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.Generator) as ElectricMotor).ThermalBuffer;
+				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).ThermalBuffer;
 			TestGenSet.ElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.Generator) as ElectricMotor).DeRatingActive;
+				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).DeRatingActive;
 
 			var iceSpeed = op.ICESpeed;
 			var emTqDt = op.ICETorque;

@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 
-			if (Position == PowertrainPosition.Generator && emOff && !DataBus.EngineCtl.CombustionEngineOn) {
+			if (Position == PowertrainPosition.GEN && emOff && !DataBus.EngineCtl.CombustionEngineOn) {
 				emTorqueDt = 0.SI<NewtonMeter>();
 			}
 			var inTorqueDt = outTorque + emTorqueDt;

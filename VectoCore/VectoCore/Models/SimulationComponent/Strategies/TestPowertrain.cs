@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			Container = container;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
-			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.Generator).Value as ElectricMotor;
+			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
 			ElectricMotorCtl = ElectricMotor.Control as GensetMotorController;
 		}
 	}

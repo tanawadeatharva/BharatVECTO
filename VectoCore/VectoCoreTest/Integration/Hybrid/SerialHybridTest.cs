@@ -8,11 +8,14 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -227,25 +230,25 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		// =================================================
 
 		[
-	TestCase(30, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
-	TestCase(50, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
-	TestCase(80, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
+			TestCase(30, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
+			TestCase(50, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
+			TestCase(80, 0.7, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
 
-	TestCase(30, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level"),
-	TestCase(50, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.25, level"),
-	TestCase(80, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.25, level"),
+			TestCase(30, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level"),
+			TestCase(50, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.25, level"),
+			TestCase(80, 0.25, 0, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.25, level"),
 
-	TestCase(30, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
-	TestCase(50, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
-	TestCase(80, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
+			TestCase(30, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, UH 5%"),
+			TestCase(50, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, UH 5%"),
+			TestCase(80, 0.5, 5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, UH 5%"),
 
-	TestCase(30, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
-	TestCase(50, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
-	TestCase(80, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
+			TestCase(30, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.5, DH 5%"),
+			TestCase(50, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 50km/h SoC: 0.5, DH 5%"),
+			TestCase(80, 0.5, -5, 0, TestName = "S4 Serial Hybrid ConstantSpeed 80km/h SoC: 0.5, DH 5%"),
 
-	TestCase(30, 0.25, 0, 1000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
-	TestCase(30, 0.25, 0, 5000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
-]
+			TestCase(30, 0.25, 0, 1000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 1kW"),
+			TestCase(30, 0.25, 0, 5000, TestName = "S4 Serial Hybrid ConstantSpeed 30km/h SoC: 0.25, level P_auxEl: 5kW"),
+		]
 		public void S4HybridConstantSpeed(double vmax, double initialSoC, double slope, double pAuxEl)
 		{
 			var cycleData = string.Format(
@@ -399,6 +402,48 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
+		[TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 0, TestName = "Generic Serial Hybrid S4 Job, LongHaul")]
+		public void S4SerialHybridJob(string jobFile, int runIdx)
+		{
+			RunHybridJob(jobFile, runIdx);
+		}
+
+		private void RunHybridJob(string jobFile, int runIdx, int? startDistance = null)
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[runIdx];
+
+			if (startDistance != null) {
+				//(run.GetContainer().BatteryInfo as Battery).PreviousState.StateOfCharge = 0.317781;
+				(run.GetContainer().RunData.Cycle as DrivingCycleProxy).Entries = run.GetContainer().RunData.Cycle
+					.Entries.Where(x => x.Distance >= startDistance.Value).ToList();
+				//run.GetContainer().MileageCounter.Distance = startDistance;
+				//run.GetContainer().DrivingCycleInfo.CycleStartDistance = startDistance;
+			}
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		// =================================================
+
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, double pAuxEl = 0,
 			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
@@ -433,7 +478,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var genFile = GeneratorFile;
 			electricMotorData.AddRange(
-				MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.Generator, 2.6, 1));
+				MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.GEN, 2.6, 1));
 
 			var batFile = BatFile;
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(batFile, initialBatCharge);
@@ -558,7 +603,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
 			}
 
-			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.Generator, runData.ElectricMachinesData, container,
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, runData.ElectricMachinesData, container,
 					es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, runData);
@@ -649,7 +694,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			container.ModData.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
-			if (pos == PowertrainPosition.Generator) {
+			if (pos == PowertrainPosition.GEN) {
 				es.Connect(new GensetChargerAdapter(motor));
 			} else {
 				motor.Connect(es);
