@@ -22,7 +22,7 @@ namespace VECTO3GUI2020.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class BusStrings {
+    public class BusStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace VECTO3GUI2020.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VECTO3GUI2020.Properties.BusStrings", typeof(BusStrings).Assembly);
@@ -51,7 +51,7 @@ namespace VECTO3GUI2020.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Airdrag Area 0.
         /// </summary>
-        internal static string AirdragArea0 {
+        public static string AirdragArea0 {
             get {
                 return ResourceManager.GetString("AirdragArea0", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Airdrag Modified.
         /// </summary>
-        internal static string AirdragModifiedEnum {
+        public static string AirdragModifiedEnum {
             get {
                 return ResourceManager.GetString("AirdragModifiedEnum", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to APT Eco Roll Release Lockup Clutch.
         /// </summary>
-        internal static string ATEcoRollReleaseLockupClutch {
+        public static string ATEcoRollReleaseLockupClutch {
             get {
                 return ResourceManager.GetString("ATEcoRollReleaseLockupClutch", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Compressor Drive.
         /// </summary>
-        internal static string CompressorDrive {
+        public static string CompressorDrive {
             get {
                 return ResourceManager.GetString("CompressorDrive", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Corrected Actual Mass.
         /// </summary>
-        internal static string CurbMassChassis {
+        public static string CurbMassChassis {
             get {
                 return ResourceManager.GetString("CurbMassChassis", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Eco Roll Type.
         /// </summary>
-        internal static string EcoRollTypeNullable {
+        public static string EcoRollTypeNullable {
             get {
                 return ResourceManager.GetString("EcoRollTypeNullable", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Engine Stop Start.
         /// </summary>
-        internal static string EngineStopStartNullable {
+        public static string EngineStopStartNullable {
             get {
                 return ResourceManager.GetString("EngineStopStartNullable", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Entrance Height.
         /// </summary>
-        internal static string EntranceHeightInMm {
+        public static string EntranceHeightInMm {
             get {
                 return ResourceManager.GetString("EntranceHeightInMm", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Tech. Perm. Max. Laden Mass.
         /// </summary>
-        internal static string GrossVehicleMassRating {
+        public static string GrossVehicleMassRating {
             get {
                 return ResourceManager.GetString("GrossVehicleMassRating", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cooling.
         /// </summary>
-        internal static string HeatPumpTypeCoolingDriverCompartment {
+        public static string HeatPumpTypeCoolingDriverCompartment {
             get {
                 return ResourceManager.GetString("HeatPumpTypeCoolingDriverCompartment", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cooling.
         /// </summary>
-        internal static string HeatPumpTypeCoolingPassengerCompartment {
+        public static string HeatPumpTypeCoolingPassengerCompartment {
             get {
                 return ResourceManager.GetString("HeatPumpTypeCoolingPassengerCompartment", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Heating.
         /// </summary>
-        internal static string HeatPumpTypeHeatingDriverCompartment {
+        public static string HeatPumpTypeHeatingDriverCompartment {
             get {
                 return ResourceManager.GetString("HeatPumpTypeHeatingDriverCompartment", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Heating.
         /// </summary>
-        internal static string HeatPumpTypeHeatingPassengerCompartment {
+        public static string HeatPumpTypeHeatingPassengerCompartment {
             get {
                 return ResourceManager.GetString("HeatPumpTypeHeatingPassengerCompartment", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Height Integrated Body.
         /// </summary>
-        internal static string HeightInMm {
+        public static string HeightInMm {
             get {
                 return ResourceManager.GetString("HeightInMm", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Legislative Category.
         /// </summary>
-        internal static string LegislativeClass {
+        public static string LegislativeClass {
             get {
                 return ResourceManager.GetString("LegislativeClass", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Vehicle Length.
         /// </summary>
-        internal static string LengthInMm {
+        public static string LengthInMm {
             get {
                 return ResourceManager.GetString("LengthInMm", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Manufacturer.
         /// </summary>
-        internal static string Manufacturer {
+        public static string Manufacturer {
             get {
                 return ResourceManager.GetString("Manufacturer", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Seats Lower Deck.
         /// </summary>
-        internal static string NumberPassengerSeatsLowerDeck {
+        public static string NumberPassengerSeatsLowerDeck {
             get {
                 return ResourceManager.GetString("NumberPassengerSeatsLowerDeck", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Seats Upper Deck.
         /// </summary>
-        internal static string NumberPassengerSeatsUpperDeck {
+        public static string NumberPassengerSeatsUpperDeck {
             get {
                 return ResourceManager.GetString("NumberPassengerSeatsUpperDeck", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Standing Lower Deck.
         /// </summary>
-        internal static string NumberPassengersStandingLowerDeck {
+        public static string NumberPassengersStandingLowerDeck {
             get {
                 return ResourceManager.GetString("NumberPassengersStandingLowerDeck", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Standing Upper Deck.
         /// </summary>
-        internal static string NumberPassengersStandingUpperDeck {
+        public static string NumberPassengersStandingUpperDeck {
             get {
                 return ResourceManager.GetString("NumberPassengersStandingUpperDeck", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Predictive Cruise Control.
         /// </summary>
-        internal static string PredictiveCruiseControlNullable {
+        public static string PredictiveCruiseControlNullable {
             get {
                 return ResourceManager.GetString("PredictiveCruiseControlNullable", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Class Bus.
         /// </summary>
-        internal static string RegisteredClass {
+        public static string RegisteredClass {
             get {
                 return ResourceManager.GetString("RegisteredClass", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ng Tank System.
         /// </summary>
-        internal static string TankSystem {
+        public static string TankSystem {
             get {
                 return ResourceManager.GetString("TankSystem", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Transferred Airdrag Area.
         /// </summary>
-        internal static string TransferredAirDragArea {
+        public static string TransferredAirDragArea {
             get {
                 return ResourceManager.GetString("TransferredAirDragArea", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Bodywork Code.
         /// </summary>
-        internal static string VehicleCode {
+        public static string VehicleCode {
             get {
                 return ResourceManager.GetString("VehicleCode", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Vehicle Width.
         /// </summary>
-        internal static string WidthInMm {
+        public static string WidthInMm {
             get {
                 return ResourceManager.GetString("WidthInMm", resourceCulture);
             }

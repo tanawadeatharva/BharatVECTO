@@ -27,6 +27,8 @@
     <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
     <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="PresentationFramework.Aero2" Version="1.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
@@ -56,95 +58,719 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\Icons\Icon2.ico" />
-    <Resource Include="Resources\Icons\folderpicker.ico" />
-    <Resource Include="Resources\Icons\Trash_16x.ico" />
-    <Resource Include="Resources\Images\JRC-About.png" />
-    <Resource Include="Resources\Images\VECTO-About.png" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Compile Update="Properties\Application.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Application.settings</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Strings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="Properties\Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Compile Update="Behaviours\AutoScrollDataGridBehaviour.cs" />
+    <Compile Update="Behaviours\PopUpHorizontalAlignmentBehavior.cs" />
+    <Compile Update="Helper\ConvertedSIDummyCreator.cs" />
+    <Compile Update="Helper\Converter\AlwaysVisibleConverter.cs" />
+    <Compile Update="Helper\Converter\BoolToVisibilityConverter.cs" />
+    <Compile Update="Helper\Converter\EnumConverter.cs" />
+    <Compile Update="Helper\Converter\InvertBoolConverter.cs" />
+    <Compile Update="Helper\Converter\JobTypeStringConverter.cs" />
+    <Compile Update="Helper\Converter\LabledTextBoxLabelConverter.cs" />
+    <Compile Update="Helper\Converter\MultipleBoolConverter.cs" />
+    <Compile Update="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
+    <Compile Update="Helper\Converter\BoolToIntConverter.cs" />
+    <Compile Update="Helper\Converter\NullToUnsetValueConverter.cs" />
+    <Compile Update="Helper\Converter\NullToVisibilityConverter.cs" />
+    <Compile Update="Helper\Converter\LabledTextBoxConverter.cs" />
+    <Compile Update="Helper\Converter\PropertyNameToLabelTextConverter.cs" />
+    <Compile Update="Helper\Converter\SIToUnitString.cs" />
+    <Compile Update="Helper\Converter\SIValueToStringConverter.cs" />
+    <Compile Update="Helper\Converter\VehicleCategoryToStringConverter.cs" />
+    <Compile Update="Helper\Converter\XToBoolConverter.cs" />
+    <Compile Update="Helper\DoubleValidation.cs" />
+    <Compile Update="Helper\ExceptionExtension.cs" />
+    <Compile Update="Helper\Exceptions.cs" />
+    <Compile Update="Helper\EnumHelper.cs" />
+    <Compile Update="Helper\FileHelper.cs" />
+    <Compile Update="Helper\IWindowHelper.cs" />
+    <Compile Update="Helper\DialogHelper.cs" />
+    <Compile Update="Helper\ObservableDictionary.cs" />
+    <Compile Update="Helper\ProcessHelper.cs" />
+    <Compile Update="Helper\VisualTreeHelperExtensions.cs" />
+    <Compile Update="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
+    <Compile Update="Model\Multistage\JSONJob.cs" />
     <Compile Update="Properties\GUILabels.Designer.cs">
-      <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>GUILabels.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Update="Properties\GUILabels.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>GUILabels.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-
-  <ItemGroup>
+    <Compile Update="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\Common\BackingStorage.cs" />
+    <Compile Update="ViewModel\Implementation\Common\ObservableObject.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
+    <Compile Update="Helper\NameResolver.cs" />
+    <Compile Update="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
+    <Compile Update="Helper\WindowHelper.cs" />
+    <Compile Update="Helper\XMLExtension.cs" />
+    <Compile Update="Helper\XmlHelper.cs" />
+    <Compile Update="Ninject\FactoryModule.cs" />
+    <Compile Update="Ninject\IMultistageDependencies.cs" />
+    <Compile Update="Ninject\MultiStageViewModelFactory.cs" />
+    <Compile Update="Ninject\MultistageLazyDependencies.cs" />
+    <Compile Update="Ninject\MultistageModule.cs" />
+    <Compile Update="Ninject\Vecto3GUI2020Module.cs" />
+    <Compile Update="Properties\Annotations.cs" />
     <Compile Update="Properties\BusStrings.Designer.cs">
-      <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>BusStrings.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Update="Properties\BusStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>BusStrings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Update="Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TestViewModel.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
+    <Compile Update="ViewModel\Implementation\AboutViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\CreateVifViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
+    <Compile Update="Model\Interfaces\IAuxiliaryModelFactory.cs" />
+    <Compile Update="ViewModel\Implementation\Document\SimulationOnlyDeclarationJob.cs" />
+    <Compile Update="ViewModel\Implementation\MessageEntry.cs" />
+    <Compile Update="ViewModel\Interfaces\Document\IDocumentViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\Document\IDocumentViewModelFactory.cs" />
+    <Compile Update="ViewModel\Interfaces\Document\IJobViewModel.cs" />
+    <Compile Update="Model\Interfaces\ISettingsModel.cs" />
+    <Compile Update="Model\Implementation\SettingsModel.cs" />
+    <Compile Update="Ninject\DocumentModule.cs" />
+    <Compile Update="Ninject\JobEditModule.cs" />
+    <Compile Update="Ninject\Vehicle\ComponentModule.cs" />
+    <Compile Update="Ninject\XMLWriterFactoryModule.cs" />
+    <Compile Update="Properties\Application.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Application.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.cs" />
+    <Compile Update="Util\AllowedEntry.cs" />
+    <Compile Update="Util\RelayCommand.cs" />
+    <Compile Update="Util\SIUtils.cs" />
+    <Compile Update="Ninject\Util\UseFirstArgumentAsNameInstanceProvider.cs" />
+    <Compile Update="Ninject\Util\UseFirstArgumentTypeAsNameInstanceProvider.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAirDragWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAuxiliariesWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleGearWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleWheelsWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleWheelWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLEngineWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLComponentsWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLGearboxWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLRetarderWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLTyreWriter.cs" />
+    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLVehicleWriter.cs" />
+    <Compile Update="Util\XML\Implementation\DocumentWriter\XMLDeclarationJobWriter.cs" />
+    <Compile Update="Util\XML\Interfaces\IXMLComponentsWriter.cs" />
+    <Compile Update="Util\XML\Interfaces\IXMLDeclarationJobWriter.cs" />
+    <Compile Update="Util\XML\Interfaces\IXMLComponentWriter.cs" />
+    <Compile Update="Util\XML\Interfaces\IXMLVehicleWriter.cs" />
+    <Compile Update="Util\XML\Interfaces\IXMLWriterFactory.cs" />
+    <Compile Update="Util\XML\XMLNamespaces.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineFuelViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineModeViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\TorqueConverterViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineFuelViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineModeViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\Common\IViewModelBase.cs" />
+    <Compile Update="ViewModel\Implementation\Common\ViewModelBase.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\DeclarationJobEditViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\ComponentsViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Trailer\ITrailerViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\ADASViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AirDragViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AngleDriveViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AuxiliariesViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AuxiliaryViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleGearViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleWheelsViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\CommonComponentViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\GearboxViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\GearViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\PTOViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\RetarderViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\TyreViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\VehicleViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\JobListViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\MainWindowViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\MessageViewModel.cs" />
+    <Compile Update="ViewModel\Implementation\SettingsViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\IEditViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAdasViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAirDragViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAuxiliariesViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAuxiliaryViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleGearViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleWheelsViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ICommonComponentViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentsViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentViewModelFactory.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\IJobEditViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\ISettingsViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\IJobListViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\IMainViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\IMainWindowViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\IMessageViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\IJobEditViewModelFactory.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IGearBoxViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IGearViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAngleDriveViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IRetarderViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IPTOViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITorqueConverterViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
+    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\StageInputViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Implementation\StageViewModelBase.cs" />
+    <Compile Update="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
+    <Compile Update="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
+    <Compile Update="ViewModel\Implementation\OutputViewModel.cs" />
+    <Compile Update="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\ComboParameter.xaml.cs">
+      <DependentUpon>ComboParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\CustomControlExtensionMethods.cs" />
+    <Compile Update="Views\CustomControls\DateTimePicker.xaml.cs">
+      <DependentUpon>DateTimePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\LabledCheckBoxAutomatic.xaml.cs">
+      <DependentUpon>LabledCheckBoxAutomatic.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\LabledTextBox.xaml.cs">
+      <DependentUpon>LabledTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\LabledTextBoxAutomatic.xaml.cs">
+      <DependentUpon>LabledTextBoxAutomatic.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\LabledTextBoxUnit.xaml.cs">
+      <DependentUpon>LabledTextBoxUnit.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\ScatterPlot.xaml.cs">
+      <DependentUpon>ScatterPlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CustomControls\Viewer.xaml.cs">
+      <DependentUpon>Viewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\DeclarationJobEditView.xaml.cs">
+      <DependentUpon>DeclarationJobEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\ADASView_v2_3.xaml.cs">
+      <DependentUpon>ADASView_v2_3.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AirDragView_v2_0.xaml.cs">
+      <DependentUpon>AirDragView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AngleDriveView_v2_0.xaml.cs">
+      <DependentUpon>AngleDriveView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AuxiliariesView_v2_0.xaml.cs">
+      <DependentUpon>AuxiliariesView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AuxiliaryView_v2_0.xaml.cs">
+      <DependentUpon>AuxiliaryView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AxleGearView_v2_0.xaml.cs">
+      <DependentUpon>AxleGearView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AxleView_v2_0.xaml.cs">
+      <DependentUpon>AxleView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\AxleWheelsView_v2_0.xaml.cs">
+      <DependentUpon>AxleWheelsView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\CommonComponentView.xaml.cs">
+      <DependentUpon>CommonComponentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\EngineFuelView.xaml.cs">
+      <DependentUpon>EngineFuelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\EngineModeViewSingleFuel.xaml.cs">
+      <DependentUpon>EngineModeViewSingleFuel.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\EngineView_v2_0.xaml.cs">
+      <DependentUpon>EngineView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\GearboxView_v2_0.xaml.cs">
+      <DependentUpon>GearboxView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\GearView_v2_0.xaml.cs">
+      <DependentUpon>GearView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\PTOView_v2_0.xaml.cs">
+      <DependentUpon>PTOView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\RetarderView_v2_0.xaml.cs">
+      <DependentUpon>RetarderView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\TyreView_v2_3.xaml.cs">
+      <DependentUpon>TyreView_v2_3.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\Components\TyreView_v2_0.xaml.cs">
+      <DependentUpon>TyreView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobEditViews\Vehicle\VehicleView_v2_0.xaml.cs">
+      <DependentUpon>VehicleView_v2_0.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\JobListView.xaml.cs">
+      <DependentUpon>JobListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MessageView.xaml.cs">
+      <DependentUpon>MessageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoStageInput.xaml.cs">
+      <DependentUpon>AdditionalJobInfoStageInput.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml.cs">
+      <DependentUpon>AdditionalJobInfoViewMultiStage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewNewVIF.xaml.cs">
+      <DependentUpon>AdditionalJobInfoViewNewVIF.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\AirDragView_v2_8.xaml.cs">
+      <DependentUpon>AirDragView_v2_8.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CreateVifView.xaml.cs">
+      <DependentUpon>CreateVifView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\FilePicker.xaml.cs">
+      <DependentUpon>FilePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\InputStageView.xaml.cs">
+      <DependentUpon>InputStageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml.cs">
+      <DependentUpon>LabledTextBoxMultistage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\MultiStageParameter.xaml.cs">
+      <DependentUpon>MultiStageParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\MultistageParameterCheckBoxView.xaml.cs">
+      <DependentUpon>MultistageParameterCheckBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\MultistageParameterComboBoxView.xaml.cs">
+      <DependentUpon>MultistageParameterComboBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\CustomControls\MultistageParameterTextView.xaml.cs">
+      <DependentUpon>MultistageParameterTextView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\ManufacturingStageAuxiliariesView.xaml.cs">
+      <DependentUpon>ManufacturingStageAuxiliariesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\MultistageAirDragView.xaml.cs">
+      <DependentUpon>MultistageAirDragView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\MultiStageView.xaml.cs">
+      <DependentUpon>MultiStageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\NewMultistageFileView.xaml.cs">
+      <DependentUpon>NewMultistageFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\ManufacturingStageView.xaml.cs">
+      <DependentUpon>ManufacturingStageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\VehicleView_v2_8.xaml.cs">
+      <DependentUpon>VehicleView_v2_8.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Multistage\VehicleView_v2_8_exempted.xaml.cs">
+      <DependentUpon>VehicleView_v2_8_exempted.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\OutputView.xaml.cs">
+      <DependentUpon>OutputView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\XMLViewer.xaml.cs">
+      <DependentUpon>XMLViewer.xaml</DependentUpon>
+    </Compile>
+    <Page Update="Resources\Icons\StatusInformationOutline_nohalo_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Sizes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\DataGridStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\DataTemplateSelectors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Icons\AddDocument_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Icons\Add_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Icons\drawables.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Icons\FolderClosed_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Icons\Trash_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\MultistageParameterDataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\ObjectProvider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Update="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Update="Resources\Converter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Styles\GlobalStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Templates\ButtonTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\Templates\ErrorTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Resources\ViewModelBindings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Test.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\ComboParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\DateTimePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\LabledCheckBoxAutomatic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\LabledTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\LabledTextBoxAutomatic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\LabledTextBoxUnit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\ScatterPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CustomControls\Viewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\DeclarationJobEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\ADASView_v2_3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AirDragView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AngleDriveView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AuxiliariesView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AuxiliaryView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AxleGearView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AxleView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\AxleWheelsView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\CommonComponentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\EngineFuelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\EngineModeViewSingleFuel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\EngineView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\GearboxView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\GearView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\PTOView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\RetarderView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\TyreView_v2_3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\Components\TyreView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobEditViews\Vehicle\VehicleView_v2_0.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\JobListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoStageInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewMultiStage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\AdditionalJobInfoViews\AdditionalJobInfoViewNewVIF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\AirDragView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CreateVifView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\FilePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\InputStageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\LabledTextBoxMultistage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\MultiStageParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\MultistageParameterCheckBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\MultistageParameterComboBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\CustomControls\MultistageParameterTextView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\ManufacturingStageAuxiliariesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\MultistageAirDragView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\MultiStageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\NewMultistageFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\ManufacturingStageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\VehicleView_v2_8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Multistage\VehicleView_v2_8_exempted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\OutputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\XMLViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Update="Properties\BusStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>BusStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\GUILabels.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GUILabels.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Application.settings">
+    <AdditionalFiles Include="..\DependencyValidation1\DependencyValidation1.layerdiagram">
+      <Link>DependencyValidation1.layerdiagram</Link>
+      <Visible>False</Visible>
+    </AdditionalFiles>
+    <None Include="app.manifest" />
+    <None Include="Documentation\InputData.cd" />
+    <None Include="Properties\Application.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Application.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="ViewModel\ClassDiagram1.cd" />
+    <None Include="ViewModel\Implementation\JobEdit\ClassDiagram1.cd" />
   </ItemGroup>
-
-
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Icon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\folderpicker.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Trash_16x.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\JRC-About.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\VECTO-About.png" />
+  </ItemGroup>
 </Project>

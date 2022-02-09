@@ -22,7 +22,7 @@ namespace VECTO3GUI2020.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class GUILabels {
+    public class GUILabels {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace VECTO3GUI2020.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VECTO3GUI2020.Properties.GUILabels", typeof(GUILabels).Assembly);
@@ -51,7 +51,7 @@ namespace VECTO3GUI2020.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Airdrag Data.
         /// </summary>
-        internal static string _consolidateAirdragData {
+        public static string _consolidateAirdragData {
             get {
                 return ResourceManager.GetString("_consolidateAirdragData", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Bus Auxiliaries Data.
         /// </summary>
-        internal static string _consolidateBusAuxiliariesData {
+        public static string _consolidateBusAuxiliariesData {
             get {
                 return ResourceManager.GetString("_consolidateBusAuxiliariesData", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to ADAS.
         /// </summary>
-        internal static string _consolidatedADAS {
+        public static string _consolidatedADAS {
             get {
                 return ResourceManager.GetString("_consolidatedADAS", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Components.
         /// </summary>
-        internal static string _consolidatedComponents {
+        public static string _consolidatedComponents {
             get {
                 return ResourceManager.GetString("_consolidatedComponents", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to HVAC Data.
         /// </summary>
-        internal static string _consolidatedHVACBusAuxiliariesData {
+        public static string _consolidatedHVACBusAuxiliariesData {
             get {
                 return ResourceManager.GetString("_consolidatedHVACBusAuxiliariesData", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Electric Consumer Data.
         /// </summary>
-        internal static string _consolidateElectricConsumerData {
+        public static string _consolidateElectricConsumerData {
             get {
                 return ResourceManager.GetString("_consolidateElectricConsumerData", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Components_Conventional_CompletedBusType.
         /// </summary>
-        internal static string Components_Conventional_CompletedBusType {
+        public static string Components_Conventional_CompletedBusType {
             get {
                 return ResourceManager.GetString("Components_Conventional_CompletedBusType", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create Exempted Interim/Completed Input.
         /// </summary>
-        internal static string CreateExemptedInterimCompletedInput {
+        public static string CreateExemptedInterimCompletedInput {
             get {
                 return ResourceManager.GetString("CreateExemptedInterimCompletedInput", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create Exempted Interim/Completed Input.
         /// </summary>
-        internal static string CreateExemptedInterimCompletedInputToolTip {
+        public static string CreateExemptedInterimCompletedInputToolTip {
             get {
                 return ResourceManager.GetString("CreateExemptedInterimCompletedInputToolTip", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Create Interim/Completed Input.
         /// </summary>
-        internal static string CreateInterimCompletedInput {
+        public static string CreateInterimCompletedInput {
             get {
                 return ResourceManager.GetString("CreateInterimCompletedInput", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string CreateInterimCompletedInputToolTip {
+        public static string CreateInterimCompletedInputToolTip {
             get {
                 return ResourceManager.GetString("CreateInterimCompletedInputToolTip", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to VECTO.
         /// </summary>
-        internal static string DefaultTitle {
+        public static string DefaultTitle {
             get {
                 return ResourceManager.GetString("DefaultTitle", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Edit Multistep Job.
         /// </summary>
-        internal static string Edit_Multistep_Job {
+        public static string Edit_Multistep_Job {
             get {
                 return ResourceManager.GetString("Edit_Multistep_Job", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Edit step input.
         /// </summary>
-        internal static string Edit_step_input {
+        public static string Edit_step_input {
             get {
                 return ResourceManager.GetString("Edit_step_input", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid Airdrag Entries.
         /// </summary>
-        internal static string IsAirdragEntriesValid {
+        public static string IsAirdragEntriesValid {
             get {
                 return ResourceManager.GetString("IsAirdragEntriesValid", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid Tank System.
         /// </summary>
-        internal static string IsTankSystemValid {
+        public static string IsTankSystemValid {
             get {
                 return ResourceManager.GetString("IsTankSystemValid", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Manufacturing Step.
         /// </summary>
-        internal static string ManufacturingSteps {
+        public static string ManufacturingSteps {
             get {
                 return ResourceManager.GetString("ManufacturingSteps", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to New Multistep File.
         /// </summary>
-        internal static string New_Multistep_File {
+        public static string New_Multistep_File {
             get {
                 return ResourceManager.GetString("New_Multistep_File", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to New Complete Job.
         /// </summary>
-        internal static string NewCompleteJob {
+        public static string NewCompleteJob {
             get {
                 return ResourceManager.GetString("NewCompleteJob", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Special Case 2: Provide primary input XML and all parameters of completed vehicle to create a VECTO job..
         /// </summary>
-        internal static string NewCompleteJobToolTip {
+        public static string NewCompleteJobToolTip {
             get {
                 return ResourceManager.GetString("NewCompleteJobToolTip", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to New Interim/Completed Job.
         /// </summary>
-        internal static string NewInterimOrCompletedJob {
+        public static string NewInterimOrCompletedJob {
             get {
                 return ResourceManager.GetString("NewInterimOrCompletedJob", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to General case: Provide VIF and completed model parameters to create a VECTO job..
         /// </summary>
-        internal static string NewInterimOrCompletedJobToolTip {
+        public static string NewInterimOrCompletedJobToolTip {
             get {
                 return ResourceManager.GetString("NewInterimOrCompletedJobToolTip", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to New Primary Job with Interim Input.
         /// </summary>
-        internal static string NewPrimaryAndInterimJob {
+        public static string NewPrimaryAndInterimJob {
             get {
                 return ResourceManager.GetString("NewPrimaryAndInterimJob", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Special Case 1: Provide primary input XML and some parameters of completed vehicle (interim XML) to create a VECTO job..
         /// </summary>
-        internal static string NewPrimaryAndInterimJobToolTip {
+        public static string NewPrimaryAndInterimJobToolTip {
             get {
                 return ResourceManager.GetString("NewPrimaryAndInterimJobToolTip", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace VECTO3GUI2020.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No Manufacturing Steps.
         /// </summary>
-        internal static string no_manufacturing_stages {
+        public static string no_manufacturing_stages {
             get {
                 return ResourceManager.GetString("no manufacturing stages", resourceCulture);
             }
