@@ -2,13 +2,6 @@
 	<!--<Target Name="VersionMessage" AfterTargets="build">
         <Message Text="$(AssemblyName) -> $(Version)" importance="high"/>
     </Target>-->
-	<PropertyGroup>
-		<CleanDependsOn>
-			$(CleanDependsOn)
-			CleanVectoDeploy
-		</CleanDependsOn>
-	</PropertyGroup>
-
 	<UsingTask TaskName="Zip" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
 		<ParameterGroup>
 			<OutputFilename ParameterType="System.String" Required="true" />
@@ -134,7 +127,7 @@
 		<Zip OutputFilename="$(SolutionDir)$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version).zip" Files="@(ZipFiles)" SourcePath="$(OutputPath)" DestinationPath="$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version)\"/>
 	</Target>
 
-	<Target Name="CleanVectoDeploy" Condition="$(Configuration) == 'Deploy'">
+	<Target Name="CleanVectoDeploy" AfterTargets="AfterClean">
 		<ItemGroup>
 			<CustomFilesToClean Include="$(OutputPath)Declaration\**\*.*" />
 			<CustomFilesToClean Include="$(OutputPath)Generic Vehicles\**\*.*" />
@@ -148,5 +141,4 @@
 		<Delete Files="@CustomFilesToClean"/>
 		<RemoveDir Directories="@(CustomFoldersToClean)"/>
 	</Target>
-
 </Project>
