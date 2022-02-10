@@ -5,7 +5,7 @@
     <RootNamespace>LicenceHeader</RootNamespace>
     <AssemblyName>LicenceHeader</AssemblyName>
     <DefineConstants />
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <None Update="header.txt">
