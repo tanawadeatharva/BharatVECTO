@@ -12,7 +12,7 @@
 
   <!-- The following settings are used as default values for ALL projects -->
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>net45;net48</TargetFrameworks>
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>

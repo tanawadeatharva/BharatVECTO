@@ -3,7 +3,6 @@
     <ProjectGuid>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <StartupObject>Sub Main</StartupObject>
-    <TargetFramework>net45</TargetFramework>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <AssemblyName>VECTO</AssemblyName>
     <DefineConstants />
@@ -35,7 +34,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Windows.Forms.DataVisualization"/>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
   </ItemGroup>
 
   <ItemGroup>

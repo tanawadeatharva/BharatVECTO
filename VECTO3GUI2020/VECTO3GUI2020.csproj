@@ -11,7 +11,7 @@
     <DefineConstants />
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
