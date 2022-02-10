@@ -8,13 +8,16 @@
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
     <DefineConstants />
+    <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Ninject" Version="3.3.4.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
