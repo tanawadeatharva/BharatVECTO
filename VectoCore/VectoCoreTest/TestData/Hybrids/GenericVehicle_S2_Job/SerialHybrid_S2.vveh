@@ -17,6 +17,11 @@
     "PowertrainConfiguration": "SerialHybrid",
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": ""
+    },
 	  "ElectricMotors": [
         {
           "Count": 2,

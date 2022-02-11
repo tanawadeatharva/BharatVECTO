@@ -1256,19 +1256,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT:
-					if (runData.JobType == VectoSimulationJobType.ConventionalVehicle) {
-						runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-						return new AMTShiftStrategyOptimized(container);
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ConventionalVehicle:
+							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+							return new AMTShiftStrategyOptimized(container);
+						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.SerialHybridVehicle:
+							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
+							return new PEVAMTShiftStrategy(container);
+						default:
+							throw new VectoException(
+								"no default gearshift strategy available for gearbox type {0} and job type {1}",
+								runData.GearboxData.Type, runData.JobType);
 					}
-
-					if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
-						runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
-						return new PEVAMTShiftStrategy(container);
-					}
-
-					throw new VectoException(
-						"no default gearshift strategy available for gearbox type {0} and job type {1}",
-						runData.GearboxData.Type, runData.JobType);
 				//return new AMTShiftStrategy(runData, container);
 				case GearboxType.MT:
 					runData.ShiftStrategy = MTShiftStrategy.Name;
