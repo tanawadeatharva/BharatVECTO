@@ -22,14 +22,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public ElectricMotor ElectricMotor;
 		public GensetMotorController ElectricMotorCtl;
 
+		public Battery Battery;
+		public BatterySystem BatterySystem;
+		public SuperCap SuperCap;
+
 		public TestGenset(SimplePowertrainContainer container, IDataBus realContainer)
 		{
 			Container = container;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
 			ElectricMotorCtl = ElectricMotor.Control as GensetMotorController;
+
+			Battery = Container.BatteryInfo as Battery;
+			BatterySystem = container.BatteryInfo as BatterySystem;
+
+			SuperCap = Container.BatteryInfo as SuperCap;
 		}
 	}
+
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;

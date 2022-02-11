@@ -4,9 +4,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONHybridStrategyParameters : JSONFile, IHybridStrategyParameters
+	public class JSONHybridStrategyParametersParallelHybrid : JSONFile, IHybridStrategyParameters
 	{
-		public JSONHybridStrategyParameters(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		public JSONHybridStrategyParametersParallelHybrid(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
 		{ }
 
 		public double EquivalenceFactorDischarge =>
@@ -32,5 +32,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public double ICEStartPenaltyFactor => Body["ICEStartPenaltyFactor"] == null ? 0 : Body.GetEx<double>("ICEStartPenaltyFactor");
 
 		public double CostFactorSOCExpponent => Body["CostFactorSOCExponent"] == null ? double.NaN : Body.GetEx<double>("CostFactorSOCExponent");
+		public double GensetMinOptPowerFactor => double.NaN;
+	}
+
+	// ---------------------
+
+	public class JSONHybridStrategyParametersSerialHybrid : JSONFile, IHybridStrategyParameters
+	{
+		public JSONHybridStrategyParametersSerialHybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		#region Implementation of IHybridStrategyParameters
+
+		public double EquivalenceFactorDischarge => double.NaN;
+		public double EquivalenceFactorCharge => double.NaN;
+		public double MinSoC { get; }
+		public double MaxSoC => double.NaN;
+		public double TargetSoC { get; }
+		public Second MinimumICEOnTime => null;
+		public Second AuxBufferTime => null;
+		public Second AuxBufferChargeTime => null;
+		public double ICEStartPenaltyFactor => double.NaN;
+		public double CostFactorSOCExpponent => double.NaN;
+		public double GensetMinOptPowerFactor => Body.GetEx<double>("GensetMinOptPowerFactor");
+		
+		#endregion
 	}
 }

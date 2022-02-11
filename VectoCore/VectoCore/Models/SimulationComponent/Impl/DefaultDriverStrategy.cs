@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var modData = new ModalDataContainer(data, null, null);
 				var builder = new PowertrainBuilder(modData);
 				var testContainer = new SimplePowertrainContainer(data);
-				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle)
+				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle && data.JobType != VectoSimulationJobType.SerialHybridVehicle)
 					builder.BuildSimplePowertrain(data, testContainer);
 				else {
 					builder.BuildSimplePowertrainElectric(data, testContainer);

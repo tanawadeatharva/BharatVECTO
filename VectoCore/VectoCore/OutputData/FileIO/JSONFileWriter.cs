@@ -1167,7 +1167,8 @@ public class JSONFileWriter : IOutputFileWriter
 			{"AuxBufferChgTime", hp.AuxBufferChargeTime.Value()},
 			{"MinICEOnTime", hp.MinimumICEOnTime.Value() },
 			{"ICEStartPenaltyFactor", hp.ICEStartPenaltyFactor},
-			{"CostFactorSOCExponent", hp.CostFactorSOCExpponent}
+			{"CostFactorSOCExponent", hp.CostFactorSOCExpponent},
+			{"GensetMinOptPowerFactor", hp.GensetMinOptPowerFactor}
 		};
 		WriteFile(header, body, filePath);
 	}

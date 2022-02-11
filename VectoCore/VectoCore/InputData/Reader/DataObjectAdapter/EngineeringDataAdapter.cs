@@ -873,8 +873,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				WarnEngineeringMode("Electric motor");
 			}
 
-			if (electricMachines.Entries.Select(x => x.Position).Distinct().Count() > 1) {
-				throw new VectoException("multiple electric motors are not supported at the moment");
+			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
 
 			return electricMachines.Entries
@@ -947,6 +947,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MaxPropulsionTorque = torqueLimit,
 				ICEStartPenaltyFactor = hybridStrategyParameters.ICEStartPenaltyFactor,
 				CostFactorSOCExponent = double.IsNaN(hybridStrategyParameters.CostFactorSOCExpponent) ? 5 : hybridStrategyParameters.CostFactorSOCExpponent,
+				GensetMinOptPowerFactor = double.IsNaN(hybridStrategyParameters.GensetMinOptPowerFactor) ? 0 : hybridStrategyParameters.GensetMinOptPowerFactor,
 			};
 			return retVal;
 		}

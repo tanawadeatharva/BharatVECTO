@@ -402,11 +402,23 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		[TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 0, TestName = "Generic Serial Hybrid S4 Job, LongHaul")]
+		[
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 0, TestName = "Generic Serial Hybrid S4 Job, LongHaul"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 1, TestName = "Generic Serial Hybrid S4 Job, RegionalDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 2, TestName = "Generic Serial Hybrid S4 Job, UrbanDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 3, TestName = "Generic Serial Hybrid S4 Job, Construction"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 4, TestName = "Generic Serial Hybrid S4 Job, Urban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 5, TestName = "Generic Serial Hybrid S4 Job, Suburban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 6, TestName = "Generic Serial Hybrid S4 Job, Interurban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_Sx_Job\SerialHybrid_S4.vecto", 7, TestName = "Generic Serial Hybrid S4 Job, Coach"),
+		]
 		public void S4SerialHybridJob(string jobFile, int runIdx)
 		{
 			RunHybridJob(jobFile, runIdx);
 		}
+
+
+		// =================================================
 
 		private void RunHybridJob(string jobFile, int runIdx, int? startDistance = null)
 		{
@@ -510,7 +522,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				EngineData = engineData,
 				BatteryData = batteryData,
 				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio, engineData.IdleSpeed),
-				HybridStrategyParameters = CreateHybridStrategyData(maxDriveTrainPower),
+				HybridStrategyParameters = CreateHybridStrategyData(),
 				ElectricAuxDemand = pAuxEl.SI<Watt>()
 			};
 			var fileWriter = new FileOutputWriter(modFileName);
@@ -577,7 +589,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData,
 							container,
 							es, ctl));
-					new DummyGearboxInfo(container);
+					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					runData.GearboxData = null;
@@ -586,7 +598,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					powertrain = powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData,
 							container,
 							es, ctl));
-					new DummyGearboxInfo(container);
+					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					runData.GearboxData = null;
@@ -611,22 +623,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return container;
 		}
 
-		private static HybridStrategyParameters CreateHybridStrategyData(Watt maxDriveTrainPower)
+		private static HybridStrategyParameters CreateHybridStrategyData()
 		{
 			return new HybridStrategyParameters() {
-				EquivalenceFactorDischarge = 2.5,
-				EquivalenceFactorCharge = 2.5,
 				MinSoC = 0.22,
-				MaxSoC = 0.8,
 				TargetSoC = 0.7,
-				AuxReserveTime = 5.SI<Second>(),
-				AuxReserveChargeTime = 2.SI<Second>(),
-				MinICEOnTime = 3.SI<Second>(),
-				ICEStartPenaltyFactor = 0,
-				//MaxDrivetrainPower = maxDriveTrainPower ?? 1e12.SI<Watt>(),
-				CostFactorSOCExponent = 5,
-				// todo: keep this factor?
-				//SerialHybridLoadpointFactor = 0.8,
+				GensetMinOptPowerFactor = 0,
 			};
 		}
 

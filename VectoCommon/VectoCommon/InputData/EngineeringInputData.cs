@@ -80,6 +80,9 @@ namespace TUGraz.VectoCommon.InputData
 		double ICEStartPenaltyFactor { get; }
 
 		double CostFactorSOCExpponent { get; }
+
+		// serial hybrid only: factor applied to the max propulsion power which the genset needs to provide in the optimal operating point
+		double GensetMinOptPowerFactor { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
