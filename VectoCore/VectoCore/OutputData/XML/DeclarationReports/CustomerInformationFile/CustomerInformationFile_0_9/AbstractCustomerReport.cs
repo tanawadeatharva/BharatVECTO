@@ -13,9 +13,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 {
 	public abstract class AbstractCustomerReport : IXMLCustomerReport
     {
-		private readonly ICustomerInformationFileFactory _cifFactory;
+		protected readonly ICustomerInformationFileFactory _cifFactory;
 
-		protected XElement Vehicle { get; private set; }
+		protected XElement Vehicle { get; set; }
 
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
 		{
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 
-		public abstract void InitializeVehicleData(IVehicleDeclarationInputData inputData);
+		public abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
 
 		#region Implementation of IXMLCustomerReport
 

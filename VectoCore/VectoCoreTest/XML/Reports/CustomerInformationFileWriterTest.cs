@@ -7,6 +7,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
@@ -40,9 +41,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		[TestCase(ConventionalHeavyLorry)]
 		public void ConventionalLorryCIFTest(string fileName)
 		{
-			var report = GetCustomerReport(fileName, out var dataProvider) as 
+			var report = GetCustomerReport(fileName, out var dataProvider) as ConventionalLorry_CIF;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
 
+			Assert.IsTrue(ValidateAndPrint(report.Report));
 		}
+
+
+		[TestCase(HEV_Px_HeavyLorry)]
+		public void HEV_Px_IHPC_LorryCIFTest(string fileName)
+		{
+			var report = GetCustomerReport(fileName, out var dataProvider) as HEV_PxLorry_CIF;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+		}
+
 
 
 

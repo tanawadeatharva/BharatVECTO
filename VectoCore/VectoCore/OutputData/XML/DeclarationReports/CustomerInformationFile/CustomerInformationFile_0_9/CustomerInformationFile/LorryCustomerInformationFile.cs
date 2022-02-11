@@ -35,9 +35,135 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IVehicleDeclarationInputData inputData)
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetConventionalLorryVehicleType(inputData);
+			Vehicle = _cifFactory.GetConventionalLorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	public class HEV_PxLorry_CIF : LorryCustomerInformationFile
+	{
+		public HEV_PxLorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			var vehicle = _cifFactory.GetHEV_PxLorryVehicleType();
+			Vehicle = _cifFactory.GetHEV_PxLorryVehicleType().GetElement(inputData);
+		}
+		#endregion
+	}
+
+	public class HEV_S2_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public HEV_S2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class HEV_S3_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public HEV_S3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class HEV_S4_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public HEV_S4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class HEV_IEPC_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public HEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class PEV_E2_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public PEV_E2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class PEV_E3_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public PEV_E3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class PEV_E4_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public PEV_E4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	public class PEV_IEPC_Lorry_CIF : LorryCustomerInformationFile
+	{
+		public PEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion
