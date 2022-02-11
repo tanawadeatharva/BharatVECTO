@@ -327,8 +327,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected TestPowertrain<Gearbox> TestPowertrain;
 		protected TestGenset TestGenSet;
-		protected GenSetCharacteristics GenSetCharacteristics = new GenSetCharacteristics();
-		
+		protected GenSetCharacteristics GenSetCharacteristics;
+			
 		protected PowertrainPosition EmPosition;
 
 
@@ -348,7 +348,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				.Select(x => new KeyValuePair<PowertrainPosition, NewtonMeter>(x.Item1, null))
 				.ToDictionary(x => x.Key, x => new Tuple<PerSecond, NewtonMeter>(null, x.Value));
 
-			
+			var emDtData = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
+			var minGensetPower = emDtData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxPower * StrategyParameters.GensetMinOptPowerFactor;
+
+			GenSetCharacteristics = new GenSetCharacteristics(minGensetPower);
+
 
 			// create testcontainer
 			var modData = new ModalDataContainer(runData, null, null);
@@ -687,7 +691,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		}
 	}
 
-	public class GenSetCharacteristics
+	public class GenSetCharacteristics : LoggingObject
 	{
 		public Dictionary<Watt, List<GenSetOperatingPoint>> OptimalPoints = new Dictionary<Watt, List<GenSetOperatingPoint>>();
 
@@ -696,12 +700,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public GenSetOperatingPoint MaxPowerDeRated;
 		private GenSetOperatingPoint _optimalPoint;
 		private GenSetOperatingPoint _optimalPointDerated;
+		private Watt MinGensetPower;
 
-		public GenSetOperatingPoint OptimalPoint => _optimalPoint ?? (_optimalPoint =
-			OptimalPoints.Values.SelectMany(x => x).MinBy(x => x.FuelConsumption / x.ElectricPower));
+		public GenSetCharacteristics(Watt minGensetPower)
+		{
+			MinGensetPower = minGensetPower;
+		}
 
-		public GenSetOperatingPoint OptimalPointDeRated => _optimalPointDerated ?? (_optimalPointDerated =
-			OptimalPoints.Values.SelectMany(x => x).Where(x => x.EMTorque.IsSmaller(ContinuousTorque)).MinBy(x => x.FuelConsumption / x.ElectricPower));
+		public GenSetOperatingPoint OptimalPoint
+		{
+			get
+			{
+				if (_optimalPoint == null) {
+					var tmp = OptimalPoints.Values.SelectMany(x => x).Where(x => x.ElectricPower > MinGensetPower).ToArray();
+					if (!tmp.Any()) {
+						Log.Error($"No GenSet operating point with a power greater than {MinGensetPower} found!");
+					}
+					_optimalPoint = tmp.MinBy(x => x.FuelConsumption / x.ElectricPower);
+				}
+
+				return _optimalPoint;
+			}
+		}
+
+		public GenSetOperatingPoint OptimalPointDeRated
+		{
+			get
+			{
+				if (_optimalPointDerated == null) {
+					var tmp = OptimalPoints.Values.SelectMany(x => x).Where(x => x.EMTorque.IsSmaller(ContinuousTorque)).Where(x => x.ElectricPower > MinGensetPower).ToArray();
+					if (!tmp.Any()) {
+						Log.Warn($"No de-rated GenSet operating point with a power greater than {MinGensetPower} found! Ignoring min power threshold");
+						tmp = OptimalPoints.Values.SelectMany(x => x)
+							.Where(x => x.EMTorque.IsSmaller(ContinuousTorque)).ToArray();
+
+					}
+					
+					_optimalPointDerated = tmp.MinBy(x => x.FuelConsumption / x.ElectricPower);
+				}
+
+				return _optimalPointDerated;
+			}
+		}
 
 		public NewtonMeter ContinuousTorque { get; set; }
 	}

@@ -45,6 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		private void MaxElectricPower(Volt voltage, bool emDerated)
 		{
 			var continuousTq = emDerated ? Genset.ElectricMotor.ContinuousTorque : double.MaxValue.SI<NewtonMeter>();
+			var maxSpeed = VectoMath.Min(EmData.EfficiencyData.MaxSpeed,
+				IceData.FullLoadCurves[0].FullLoadEntries.Select(x => x.EngineSpeed).Max());
 			var emFldDrivetrain = new ElectricMotorFullLoadCurve(EmData.EfficiencyData.VoltageLevels[0].FullLoadCurve
 				.FullLoadEntries.Select(x =>
 					new ElectricMotorFullLoadCurve.FullLoadEntry() {
@@ -53,13 +55,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						FullDriveTorque =
 							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Max(-continuousTq, x.FullDriveTorque)),
 						MotorSpeed = Genset.ElectricMotor.ConvertEmSpeedToDrivetrain(x.MotorSpeed)
-					}).ToList());
+					}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
+			if (!emFldDrivetrain.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
+				emFldDrivetrain.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
+					FullGenerationTorque =
+						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Min(continuousTq, emFldDrivetrain.FullGenerationTorque(maxSpeed))),
+					FullDriveTorque =
+						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Max(-continuousTq, emFldDrivetrain.FullLoadDriveTorque(maxSpeed))),
+					MotorSpeed = maxSpeed
+				});
+			}
 			var iceFld = new ElectricMotorFullLoadCurve(IceData.FullLoadCurves[0].FullLoadEntries.Select(x =>
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					FullDriveTorque = -x.TorqueFullLoad,
 					FullGenerationTorque = 0.SI<NewtonMeter>(),
 					MotorSpeed = x.EngineSpeed
-				}).ToList());
+				}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
+			if (!iceFld.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
+				iceFld.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
+					FullDriveTorque = -IceData.FullLoadCurves[0].FullLoadStationaryTorque(maxSpeed),
+					FullGenerationTorque = 0.SI<NewtonMeter>(),
+					MotorSpeed = maxSpeed
+				});
+			}
 
 			var combinedFldEntries = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(iceFld, emFldDrivetrain).FullLoadEntries.Select(x =>
 				new EngineFullLoadCurve.FullLoadCurveEntry() {
@@ -109,6 +127,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var dt = 1.SI<Second>();
 
 			var tolerance = 0.5 / 100;
+
+			Genset.Battery?.Initialize(Genset.Battery.MinSoC);
+			if (Genset.BatterySystem != null) {
+				foreach (var bsKey in Genset.BatterySystem.Batteries.Keys) {
+					for (var i = 0; i < Genset.BatterySystem.Batteries[bsKey].Batteries.Count; i++) {
+						Genset.BatterySystem.Batteries[bsKey].Batteries[i]
+							.Initialize(Genset.BatterySystem.MinSoC);
+					}
+				}
+			}
+
+			Genset.SuperCap?.Initialize(Genset.SuperCap.MinSoC);
 
 			var stepsPwr = 0.05;
 			for (var i = stepsPwr; i <= 1; i += stepsPwr) {
