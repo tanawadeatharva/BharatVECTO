@@ -59,6 +59,24 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 
 		[
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 0, TestName = "Generic Serial Hybrid S2 Job, LongHaul"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 1, TestName = "Generic Serial Hybrid S2 Job, RegionalDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 2, TestName = "Generic Serial Hybrid S2 Job, UrbanDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 3, TestName = "Generic Serial Hybrid S2 Job, Construction"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 4, TestName = "Generic Serial Hybrid S2 Job, Urban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 5, TestName = "Generic Serial Hybrid S2 Job, Suburban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 6, TestName = "Generic Serial Hybrid S2 Job, Interurban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 7, TestName = "Generic Serial Hybrid S2 Job, Coach"),
+		]
+		public void S2SerialHybridJob(string jobFile, int runIdx)
+		{
+			RunHybridJob(jobFile, runIdx);
+		}
+
+
+		// =================================================
+
+		[
 			TestCase(30, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 30km/h SoC: 0.7, level"),
 			TestCase(50, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 50km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, 0, TestName = "S3 Serial Hybrid ConstantSpeed 80km/h SoC: 0.7, level"),
