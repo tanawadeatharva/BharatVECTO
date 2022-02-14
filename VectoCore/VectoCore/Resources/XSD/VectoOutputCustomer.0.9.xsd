@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" 
-xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" 
-xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" 
-targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" 
-elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" schemaLocation="VectoOutputManufacturer.0.9.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:element name="VectoOutput">
@@ -97,8 +98,8 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
-			<xs:element name="Retarder"/>
-			<xs:element name="AxleRatio"/>
+			<xs:element name="Retarder" type="xs:boolean"/>
+			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
@@ -109,8 +110,8 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
-			<xs:element name="Retarder"/>
-			<xs:element name="AxleRatio"/>
+			<xs:element name="Retarder" type="xs:boolean"/>
+			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -282,33 +283,41 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 	</xs:complexType>
 	<xs:group name="GeneralVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="VIN"/>
-			<xs:element name="VehicleCategory"/>
-			<xs:element name="AxleConfiguration"/>
+			<xs:element name="VIN" type="v1.0:VINType"/>
+			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType"/>
+			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType"/>
 			<xs:element name="TechnicalPermissibleMaximumLadenMass">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleGrossVehicleMassType">
+							<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="VehicleGroup"/>
+			<xs:element name="VehicleGroup" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="LorryGeneralVehicleSequenceGroup">
 		<xs:sequence>
 			<xs:element name="VehicleGroupCO2"/>
-			<xs:element name="Manufacturer"/>
-			<xs:element name="ManufacturerAddress"/>
-			<xs:element name="Model"/>
-			<xs:element name="VehicleTypeApprovalNumber"/>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
+			<xs:element name="Model" type="v1.0:ModelType"/>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType"/>
 			<xs:element name="CorrectedActualMass">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="VocationalVehicle"/>
-			<xs:element name="SleeperCab"/>
-			<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
-			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+			<xs:element name="VocationalVehicle" type="v1.0:VocationalVehicleType"/>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
+			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType"/>
+			<xs:element name="HybridElectricHDV" type="v1.0:HybridElectricHDVType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Conventional_LorryVehicleSequenceGroup">
@@ -384,33 +393,47 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 		<xs:sequence>
 			<xs:element name="EngineRatedPower">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="v1.0:EngineRatedPower">
+							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="EngineCapacity">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:VolumeUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="mrf:EngineCapacityType">
+							<xs:attribute name="unit" type="out:VolumeUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="FuelType"/>
+			<xs:element name="FuelTypes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="FuelType" type="v1.0:FuelTypeType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="TransmissionGroup">
 		<xs:sequence>
 			<xs:element name="TransmissionValues"/>
-			<xs:element name="TransmissionType"/>
-			<xs:element name="NrOfGears"/>
+			<xs:element name="TransmissionType" type="v1.0:GearboxTransmissionTypeType"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="AxleWheelsGroup">
 		<xs:sequence>
-			<xs:element name="AverageRRC"/>
+			<xs:element name="AverageRRC" type="v1.0:TyreRRCISOType"/>
 			<xs:element name="Axle">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="TyreDimension"/>
+						<xs:element name="TyreDimension" type="v2.3:TyreDimensionType"/>
 						<xs:element name="FuelEfficiencyClass"/>
-						<xs:element name="TyreCertificationNumber"/>
+						<xs:element name="TyreCertificationNumber" type="v1.0:CertificationNumberType"/>
 					</xs:sequence>
 					<xs:attribute name="axleNumber"/>
 				</xs:complexType>
@@ -421,12 +444,20 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 		<xs:sequence>
 			<xs:element name="TotalRatedPropulsionPower">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="mrf:RatedPowerType">
+							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="MaxContinousPropulsionPower">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="mrf:RatedPowerType">
+							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -435,19 +466,27 @@ elementFormDefault="qualified" attributeFormDefault="unqualified">
 		<xs:sequence>
 			<xs:element name="TotalStorageCapacity">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="UsableStorageCapacity">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="LorryAuxGroup">
 		<xs:sequence>
-			<xs:element name="SteeringPumpTechnology"/>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="CompletedBusAuxGroup">
