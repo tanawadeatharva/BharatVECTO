@@ -183,37 +183,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool WriteModalResults { get; set; }
 
-		public IEnumerable<T> GetValues<T>(ModalResultField key)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
-		}
+		public IEnumerable<T> GetValues<T>(ModalResultField key) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[(int)key]);
 
-		public IEnumerable<T> GetValues<T>(DataColumn col)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
-		}
+		public IEnumerable<T> GetValues<T>(DataColumn col) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[col]);
 
-		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
-		{
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
-		public void SetDataValue(string fieldName, object value)
-		{
+		public void SetDataValue(string fieldName, object value) => 
 			throw new NotImplementedException();
-		}
 
 		public void AddAuxiliary(string id, string columnName = null)
 		{

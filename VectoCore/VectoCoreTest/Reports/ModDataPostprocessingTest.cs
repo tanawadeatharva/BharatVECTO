@@ -885,7 +885,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				fuel.ConsumptionMap.GetFuelConsumption(0.SI<NewtonMeter>(), runData.EngineData.IdleSpeed).Value
 					.Value() * fuel.FuelConsumptionCorrectionFactor;
 
-			var dts = modData.GetValues(x => x.Field<Second>(ModalResultField.simulationInterval.GetName())).ToArray();
+			var dts = modData.GetValues(x => (Second)x[ModalResultField.simulationInterval.GetName()]).ToArray();
 
 			var time = modData.GetValues<Second>(ModalResultField.time).ToArray();
 
