@@ -12,14 +12,6 @@
     <TargetFramework />
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\VectoCommon.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System.Security" />
   </ItemGroup>
@@ -35,5 +27,13 @@
     <PackageReference Include="System.Security.Cryptography.Xml">
       <Version>6.0.0</Version>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
   </ItemGroup>
 </Project>
