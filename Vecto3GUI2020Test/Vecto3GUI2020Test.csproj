@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VECTO3GUI2020\VECTO3GUI2020.csproj" />
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
 
   <ItemGroup>
@@ -120,6 +117,12 @@
     <None Include="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" Link="TestData\newVifInterimDiesel.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationFramework">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\PresentationFramework.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
