@@ -19,6 +19,8 @@
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
+    <PublishTrimmed>true</PublishTrimmed>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>
