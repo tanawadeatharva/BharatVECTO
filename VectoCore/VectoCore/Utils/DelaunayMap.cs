@@ -31,13 +31,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms.DataVisualization.Charting;
-using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -131,7 +126,6 @@ namespace TUGraz.VectoCore.Utils
 
 				triangles.AddRange(newTriangles);
 
-				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
 				pointCount++;
 
 				// check invariant: m = 2n-2-k
@@ -144,9 +138,6 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
-#if TRACE
-			DrawGraph(pointCount, triangles, superTriangle, points);
-#endif
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
 				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2))).ToArray();
@@ -164,67 +155,6 @@ namespace TUGraz.VectoCore.Utils
 			if (duplicates.Any()) {
 				throw new VectoException("{0}: Input Data for Delaunay map contains duplicates! \n{1}", _mapName,
 					duplicates.Select(pt => $"{pt.Key.X} / {pt.Key.Y}").Join("\n"));
-			}
-		}
-
-		public void DrawGraph()
-		{
-			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
-			DrawGraph(0, _triangles, superTriangle, _points.ToArray());
-		}
-
-		/// <summary>
-		/// Draws the delaunay map (except supertriangle).
-		/// </summary>
-		private static void DrawGraph(int i, IEnumerable<Triangle> triangles, Triangle superTriangle, Point[] points,
-			Point lastPoint = null)
-		{
-			var xmin = Math.Min(points.Min(p => p.X), lastPoint?.X ?? double.NaN);
-			var xmax = Math.Max(points.Max(p => p.X), lastPoint?.X ?? double.NaN);
-			var ymin = Math.Min(points.Min(p => p.Y), lastPoint?.Y ?? double.NaN);
-			var ymax = Math.Max(points.Max(p => p.Y), lastPoint?.Y ?? double.NaN);
-
-			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
-				chart.ChartAreas.Add(new ChartArea("main") {
-					AxisX = new Axis { Minimum = Math.Min(xmin, xmin), Maximum = Math.Max(xmax, xmax) },
-					AxisY = new Axis { Minimum = Math.Min(ymin, ymin), Maximum = Math.Max(ymax, ymax) }
-				});
-
-				foreach (var tr in triangles) {
-					if (tr.SharesVertexWith(superTriangle)) {
-						continue;
-					}
-
-					var series = new Series {
-						ChartType = SeriesChartType.FastLine,
-						Color = lastPoint != null && tr.Contains(lastPoint) ? Color.Red : Color.Blue
-					};
-					series.Points.AddXY(tr.P1.X, tr.P1.Y);
-					series.Points.AddXY(tr.P2.X, tr.P2.Y);
-					series.Points.AddXY(tr.P3.X, tr.P3.Y);
-					series.Points.AddXY(tr.P1.X, tr.P1.Y);
-					chart.Series.Add(series);
-				}
-
-				if (lastPoint != null) {
-					var series = new Series {
-						ChartType = SeriesChartType.Point,
-						Color = Color.Red,
-						MarkerSize = 5,
-						MarkerStyle = MarkerStyle.Circle
-					};
-					series.Points.AddXY(lastPoint.X, lastPoint.Y);
-					chart.Series.Add(series);
-				}
-
-				var frame = new StackFrame(2);
-				var method = frame.GetMethod();
-				System.Diagnostics.Debug.Assert(method.DeclaringType != null, "method.DeclaringType != null");
-				var type = method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()).Join("");
-				var methodName = method.Name.Split(Path.GetInvalidFileNameChars()).Join("");
-				Directory.CreateDirectory("delaunay");
-				chart.SaveImage($"delaunay\\{type}_{methodName}_{superTriangle.GetHashCode()}_{i}.png",
-					ChartImageFormat.Png);
 			}
 		}
 
