@@ -8,18 +8,9 @@
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
     <DefineConstants />
+    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
+    <TargetFramework />
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon.csproj" />
@@ -27,5 +18,22 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="System.Security.Cryptography.Xml">
+      <Version>6.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="System.Security.Cryptography.Xml">
+      <Version>6.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>
