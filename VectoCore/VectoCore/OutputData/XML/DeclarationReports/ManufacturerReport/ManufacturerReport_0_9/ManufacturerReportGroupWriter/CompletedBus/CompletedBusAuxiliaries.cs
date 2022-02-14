@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IList<XElement> GetElements(IBusAuxiliariesDeclarationData busAuxiliaries);
 
 	}
-    internal class CompletedBus_HVACSystem_Group : AbstractMrfXmlGroup, IMrfBusAuxGroup
+    internal class CompletedBus_HVACSystem_Group : AbstractReportOutputGroup, IMrfBusAuxGroup
     {
 		public CompletedBus_HVACSystem_Group(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 

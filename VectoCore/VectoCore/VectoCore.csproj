@@ -101,6 +101,9 @@
       <HintPath>..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ninject.Extensions.ContextPreservation, Version=3.3.1.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.Extensions.ContextPreservation.3.3.1\lib\net45\Ninject.Extensions.ContextPreservation.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject.Extensions.Factory, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Ninject.Extensions.Factory.3.3.3\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
     </Reference>
@@ -487,7 +490,7 @@
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFWriter\ComponentGroupWriters.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFWriter\VehicleGroups.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFWriter\VehicleWriter.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CustomerInformationFile\LorryCustomerInformationFile.cs" />
+    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CustomerInformationFile\CustomerInformationFile.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\ICustomerInformationFileFactory.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />

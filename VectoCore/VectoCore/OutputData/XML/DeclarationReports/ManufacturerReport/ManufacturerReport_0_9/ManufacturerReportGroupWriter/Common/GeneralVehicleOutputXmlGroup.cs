@@ -13,9 +13,9 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter
 {
-    public class GeneralVehicleOutputXmlGroup : AbstractMrfXmlGroup, IMrfVehicleGroup
+    public class GeneralVehicleOutputOutputXmlGroup : AbstractReportOutputGroup, IReportVehicleOutputGroup
     {
-		public GeneralVehicleOutputXmlGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public GeneralVehicleOutputOutputXmlGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMRFGroupWriter
 

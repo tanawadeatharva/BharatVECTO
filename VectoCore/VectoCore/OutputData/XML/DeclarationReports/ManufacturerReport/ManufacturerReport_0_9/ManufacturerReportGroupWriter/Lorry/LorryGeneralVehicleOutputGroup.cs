@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter
 {
-    public class LorryGeneralVehicleOutputXmlGroup : AbstractMrfXmlGroup
+    public class LorryGeneralVehicleOutputXmlGroup : AbstractReportOutputGroup
     {
 		#region Implementation of IMRFGroupWriter
 

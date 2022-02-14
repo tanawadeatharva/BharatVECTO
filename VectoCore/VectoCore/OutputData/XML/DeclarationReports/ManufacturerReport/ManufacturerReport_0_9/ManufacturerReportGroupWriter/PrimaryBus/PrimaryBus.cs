@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle
 {
-    internal class PrimaryBusGeneralVehicleOutputGroup : AbstractMrfXmlGroup
+    internal class PrimaryBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
     {
 		public PrimaryBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class HEVPrimaryBusVehicleOutputGroup : AbstractMrfXmlGroup
+	internal class HEVPrimaryBusVehicleOutputGroup : AbstractReportOutputGroup
 	{
 		public HEVPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class PEVPrimaryBusVehicleOutputGroup : AbstractMrfXmlGroup
+	internal class PEVPrimaryBusVehicleOutputGroup : AbstractReportOutputGroup
 	{
 		public PEVPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 

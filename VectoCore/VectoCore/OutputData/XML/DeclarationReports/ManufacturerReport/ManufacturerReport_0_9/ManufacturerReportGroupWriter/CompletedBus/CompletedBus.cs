@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.CompletedBus
 {
-    internal class CompletedBusGeneralVehicleOutputGroup : AbstractMrfXmlGroup
+    internal class CompletedBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
     {
 		public CompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -55,9 +55,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class CompletedBusSequenceGroup : AbstractMrfXmlGroup, IMrfVehicleGroup
+	internal class CompletedBusSequenceOutputGroup : AbstractReportOutputGroup, IReportVehicleOutputGroup
 	{
-		public CompletedBusSequenceGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public CompletedBusSequenceOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlGroup
 
@@ -88,9 +88,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class CompletedBusDimensionsSequenceGroup : AbstractMrfXmlGroup, IMrfVehicleGroup
+	internal class CompletedBusDimensionsSequenceOutputGroup : AbstractReportOutputGroup, IReportVehicleOutputGroup
 	{
-		public CompletedBusDimensionsSequenceGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public CompletedBusDimensionsSequenceOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlGroup
 

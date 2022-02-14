@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_E2_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E3_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
+		IXmlTypeWriter GetPEV_IEPC_LorryVehicleType();
 
 
 
@@ -73,18 +74,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 
-		IMrfVehicleGroup GetGeneralVehicleOutputGroup();
+		IReportVehicleOutputGroup GetGeneralVehicleOutputGroup();
 
 
-		IMrfXmlGroup GetGeneralLorryVehicleOutputGroup();
-		IMrfXmlGroup GetHEV_VehicleSequenceGroup();
-		IMrfXmlGroup GetPEV_VehicleSequenceGroup();
-		IMrfXmlGroup GetConventionalLorryVehicleOutputGroup();
-		IMrfXmlGroup GetHEV_lorryVehicleOutputGroup();
-		IMrfXmlGroup GetPEV_lorryVehicleOutputGroup();
-		IMrfXmlGroup GetHEV_lorryVehicleOutputSequenceGroup();
-		IMrfXmlGroup GetPrimaryBusGeneralVehicleOutputGroup();
-		IMrfXmlGroup GetHEV_PrimaryBusVehicleOutputGroup();
+		IReportOutputGroup GetGeneralLorryVehicleOutputGroup();
+		IReportOutputGroup GetHEV_VehicleSequenceGroup();
+		IReportOutputGroup GetPEV_VehicleSequenceGroup();
+		IReportOutputGroup GetConventionalLorryVehicleOutputGroup();
+		IReportOutputGroup GetHEV_lorryVehicleOutputGroup();
+		IReportOutputGroup GetPEV_lorryVehicleOutputGroup();
+		IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup();
+		IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup();
 
 
 
@@ -130,10 +131,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMRFBusAuxiliariesType GetCompletedBusElectricSystemType();
 
 
-		IMrfXmlGroup GetPEV_PrimaryBusVehicleOutputGroup();
-		IMrfXmlGroup GetCompletedBusGeneralVehicleOutputGroup();
-		IMrfVehicleGroup GetCompletedBusSequenceGroup();
-		IMrfVehicleGroup GetCompletedBusDimensionSequenceGroup();
+		IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup();
+		IReportOutputGroup GetCompletedBusGeneralVehicleOutputGroup();
+		IReportVehicleOutputGroup GetCompletedBusSequenceGroup();
+		IReportVehicleOutputGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
 		IMrfVehicleType GetBoostingLimitationsType();
 	}

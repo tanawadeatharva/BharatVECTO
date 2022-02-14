@@ -12,15 +12,23 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter
 {
-    public class GeneralVehicleSequenceGroupCIF : AbstractCIFGroupWriter
+    public class GeneralVehicleOutputSequenceGroupCif : AbstractCIFGroupWriter, IReportVehicleOutputGroup
 	{
-		public GeneralVehicleSequenceGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public GeneralVehicleOutputSequenceGroupCif(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = inputData.JobInputData.Vehicle;
+			return GetElements(inputData.JobInputData.Vehicle);
+		}
+
+		#endregion
+
+		#region Implementation of IReportVehicleOutputGroup
+
+		public IList<XElement> GetElements(IVehicleDeclarationInputData vehicleData)
+		{
 			var result = new List<XElement>() {
 				new XElement(_cif + XMLNames.Vehicle_VIN, vehicleData.VIN),
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
@@ -91,9 +99,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var result = new List<XElement>();
-			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(inputData));
+			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(inputData.JobInputData.Vehicle));
 			result.AddRange(_cifFactory.GetLorryGeneralVehicleSequenceGroupWriter().GetElements(inputData));
 			result.AddRange(_cifFactory.GetHEV_VehicleSequenceGroupWriter().GetElements(inputData));
+
+			return result;
+		}
+
+		#endregion
+	}
+	public class PEV_LorryVehicleTypeGroupCIF : AbstractCIFGroupWriter
+	{
+		public PEV_LorryVehicleTypeGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var result = new List<XElement>();
+			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(inputData.JobInputData.Vehicle));
+			result.AddRange(_cifFactory.GetLorryGeneralVehicleSequenceGroupWriter().GetElements(inputData));
+			result.AddRange(_cifFactory.GetPEV_VehicleSequenceGroupWriter().GetElements(inputData));
 
 			return result;
 		}
@@ -120,6 +146,49 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			if (ovCc) {
 				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW")));
 			}
+			return result;
+		}
+
+		#endregion
+	}
+
+
+	public class PEV_VehicleSequenceGroupWriter : AbstractCIFGroupWriter
+	{
+		public PEV_VehicleSequenceGroupWriter(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var result = new List<XElement>();
+			var ovCc = inputData.JobInputData.Vehicle.OvcHev;
+			result.AddRange(new List<XElement>() {
+				new XElement(_cif + "PEVArchitecture", inputData.JobInputData.Vehicle.ArchitectureID.GetLabel()),
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
+			});
+			if (ovCc)
+			{
+				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW")));
+			}
+			return result;
+		}
+
+		#endregion
+	}
+
+
+	public class CompletedBusVehicleTypeGroup : AbstractCIFGroupWriter
+	{
+		public CompletedBusVehicleTypeGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			var result = new List<XElement>();
+			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle));
 			return result;
 		}
 

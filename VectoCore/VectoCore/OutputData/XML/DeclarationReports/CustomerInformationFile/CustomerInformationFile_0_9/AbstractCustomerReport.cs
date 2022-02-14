@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	public abstract class AbstractCustomerReport : IXMLCustomerReport
     {
 		protected readonly ICustomerInformationFileFactory _cifFactory;
-
+		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		protected XElement Vehicle { get; set; }
 
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)

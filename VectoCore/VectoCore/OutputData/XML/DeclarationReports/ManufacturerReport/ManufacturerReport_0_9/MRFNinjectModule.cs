@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ninject.Activation;
+using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -22,7 +24,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     internal class MRFNinjectModule : AbstractNinjectModule
     {
-
 
 		//IXMLManufacturerReport GetManufacturerReport(string vehicleType, VectoSimulationJobType jobType,
 		//	ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
@@ -80,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void Load()
 		{
+			LoadModule<ContextPreservationModule>();
 			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod, 
 				6, 6, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
@@ -242,53 +244,66 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN,
 					false,
-					true,
+					false,
 					false)));
+
+			Bind<IXMLManufacturerReport>().To<Conventional_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
 			#region Vehicle
 
-			Bind<IXmlTypeWriter>().To<ConventionalLorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<ConventionalLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleType());
-			Bind<IXmlTypeWriter>().To<HevPxIhpcLorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevPxIhpcLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHCP_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS2LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS2LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS3LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS3LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS4LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS4LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE2LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevIepcSLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_LorryVehicleType());
+			Bind<IXmlTypeWriter>().To<PevE2LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE3LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevE3LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_LorryVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE4LorryVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevE4LorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_LorryVehicleType());
+			Bind<IXmlTypeWriter>().To<PevIEPCLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_LorryVehicleType());
 
-			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevPxIhpcPrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevPxIhpcPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHPC_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS2PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS2PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS3PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS3PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S3_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevS4PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevS4PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevIepcSPrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevIepcSPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE2PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevE2PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E2_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE3PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevE3PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<PevE4PrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevE4PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<PevIepcPrimaryBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevIepcPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_PrimaryBusVehicleType());
 
-			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_CompletedBusVehicleType());
-			Bind<IXmlTypeWriter>().To<HevCompletedBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<HevCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_CompletedBusVehicleType());
-			Bind<IXmlTypeWriter>().To<PevCompletedBusVehicleTypeWriter>()
+			Bind<IXmlTypeWriter>().To<PevCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_CompletedBusVehicleType());
 			#endregion
 			#region Components
@@ -346,10 +361,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			#endregion
 
 
-			Bind<IMrfXmlGroup>().To<HEV_VehicleSequenceGroup>()
+			Bind<IReportOutputGroup>().To<HEV_VehicleSequenceGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_VehicleSequenceGroup());
 
-			Bind<IMrfXmlGroup>().To<PEV_VehicleSequenceGroup>()
+			Bind<IReportOutputGroup>().To<PEV_VehicleSequenceGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_VehicleSequenceGroup());
 			#region ADAS
 			Bind<IMRFAdasType>().To<MRFConventionalAdasType>()
@@ -360,136 +375,149 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVADASType());
 
 			#endregion ADAS
-			Bind<IXmlTypeWriter>().To<TorqueLimitationsTypeWriter>().
-				NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineTorqueLimitationsType());
+			Bind<IXmlTypeWriter>().To<TorqueLimitationsTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineTorqueLimitationsType());
 
-			Bind<IXmlTypeWriter>().To<EngineTypeWriter>()
+			Bind<IXmlTypeWriter>().To<EngineTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetEngineType());
 
 
 
-			Bind<IXmlTypeWriter>().To<TransmissionTypeWriter>()
+			Bind<IXmlTypeWriter>().To<TransmissionTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetTransmissionType());
 
-			Bind<IXmlTypeWriter>().To<RetarderTypeWriter>()
+			Bind<IXmlTypeWriter>().To<RetarderTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetRetarderType());
 
-			Bind<IXmlTypeWriter>().To<TorqueConverterTypeWriter>()
+			Bind<IXmlTypeWriter>().To<TorqueConverterTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetTorqueConverterType());
 
-			Bind<IXmlTypeWriter>().To<AngleDriveTypeWriter>()
+			Bind<IXmlTypeWriter>().To<AngleDriveTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAngleDriveType());
 
-			Bind<IMrfAirdragType>().To<MRFAirdragType>()
+			Bind<IMrfAirdragType>().To<MRFAirdragType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAirdragType());
 
-			Bind<IXmlTypeWriter>().To<AxleWheelsTypeWriter>()
+			Bind<IXmlTypeWriter>().To<AxleWheelsTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleWheelsType());
 
-			Bind<IXmlTypeWriter>().To<AxleGearTypeWriter>()
+			Bind<IXmlTypeWriter>().To<AxleGearTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetAxleGearType());
 
-			Bind<IXmlTypeWriter>().To<ElectricMachinesTypeWriter>()
+			Bind<IXmlTypeWriter>().To<ElectricMachinesTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetElectricMachinesType());
 
-			Bind<IXmlTypeWriter>().To<MrfiepcSpecificationsTypeWriter>()
+			Bind<IXmlTypeWriter>().To<MrfiepcSpecificationsTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetIEPCSpecifications());
 
-			Bind<IXmlTypeWriter>().To<MrfreessSpecificationsTypeWriter>()
+			Bind<IXmlTypeWriter>().To<MrfreessSpecificationsTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetREESSSpecificationsType());
 
-			Bind<IMrfVehicleType>().To<MRFBoostingLimitationsType>()
+			Bind<IMrfVehicleType>().To<MRFBoostingLimitationsType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetBoostingLimitationsType());
 
 			#region Auxiliaries
-			Bind<IMRFLorryAuxiliariesType>().To<MRFConventionalLorryAuxiliariesType>()
+			Bind<IMRFLorryAuxiliariesType>().To<MRFConventionalLorryAuxiliariesType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryAuxType());
-			Bind<IMRFLorryAuxiliariesType>().To<MRFHEV_LorryAuxiliariesType>()
+			Bind<IMRFLorryAuxiliariesType>().To<MRFHEV_LorryAuxiliariesType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_LorryAuxiliariesType());
-			Bind<IMRFLorryAuxiliariesType>().To<MRFPEV_LorryAuxiliariesType>()
+			Bind<IMRFLorryAuxiliariesType>().To<MRFPEV_LorryAuxiliariesType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_LorryAuxiliariesType());
 			
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_Conventional>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_Conventional>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_Conventional());
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_P>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_P>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_P());
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_S>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_HEV_S>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_HEV_S());
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_PEV>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusAuxType_PEV>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusAuxType_PEV());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px());
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_HEV_S>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_HEV_S>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_HEV_S());
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_PEV_IEPC>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusPneumaticSystemType_PEV_IEPC>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusPneumaticSystemType_PEV_IEPC());
 
 
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_Conventional_HEV>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_Conventional_HEV>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType_Conventional_HEV());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_PEV>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusElectricSystemType_PEV>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusElectricSystemType_PEV());
 			
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_Conventional_HEV>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_Conventional_HEV>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType_Conventional_HEV());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_PEV>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFPrimaryBusHVACSystemType_PEV>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusHVACSystemType_PEV());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusAuxType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusAuxType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusAuxType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBus_HVACSystemType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBus_HVACSystemType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFCompletedBusElectricSystemType>()
+			Bind<IMRFBusAuxiliariesType>().To<MRFCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusElectricSystemType());
 
 			#region Groups
 
-			Bind<IMrfVehicleGroup>().To<GeneralVehicleOutputXmlGroup>()
+			Bind<IReportVehicleOutputGroup>().To<GeneralVehicleOutputOutputXmlGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetGeneralVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<LorryGeneralVehicleOutputXmlGroup>()
+			Bind<IReportOutputGroup>().To<LorryGeneralVehicleOutputXmlGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetGeneralLorryVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<ConventionalLorryVehicleXmlGroup>()
+			Bind<IReportOutputGroup>().To<ConventionalLorryVehicleXmlGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryVehicleOutputGroup());
 			
-			Bind<IMrfXmlGroup>().To<PrimaryBusGeneralVehicleOutputGroup>()
+			Bind<IReportOutputGroup>().To<PrimaryBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusGeneralVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<HEVPrimaryBusVehicleOutputGroup>()
+			Bind<IReportOutputGroup>().To<HEVPrimaryBusVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<PEVPrimaryBusVehicleOutputGroup>()
+			Bind<IReportOutputGroup>().To<PEVPrimaryBusVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_PrimaryBusVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<HEV_LorryVehicleOutputTypeGroup>()
+			Bind<IReportOutputGroup>().To<HEV_LorryVehicleOutputTypeGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_lorryVehicleOutputGroup());
 
-			Bind<IMrfXmlGroup>().To<PEV_LorryVehicleOutputTypeGroup>()
+			Bind<IReportOutputGroup>().To<PEV_LorryVehicleOutputTypeGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_lorryVehicleOutputGroup());
-			Bind<IMrfXmlGroup>().To<HEV_LorryVehicleOutputTypeSequenceGroup>()
+
+			Bind<IReportOutputGroup>().To<HEV_LorryVehicleOutputTypeSequenceGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_lorryVehicleOutputSequenceGroup());
 
-			Bind<IMrfVehicleGroup>().To<CompletedBusSequenceGroup>()
+			Bind<IReportVehicleOutputGroup>().To<CompletedBusSequenceOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusSequenceGroup());
 
-			Bind<IMrfVehicleGroup>().To<CompletedBusDimensionsSequenceGroup>()
+			Bind<IReportVehicleOutputGroup>().To<CompletedBusDimensionsSequenceOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusDimensionSequenceGroup());
 
-			Bind<IMrfXmlGroup>().To<CompletedBusGeneralVehicleOutputGroup>()
+			Bind<IReportOutputGroup>().To<CompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusGeneralVehicleOutputGroup());
 
 
-			Bind<IMrfBusAuxGroup>().To<CompletedBus_HVACSystem_Group>()
+			Bind<IMrfBusAuxGroup>().To<CompletedBus_HVACSystem_Group>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBus_HVACSystemGroup());
 
 			#endregion
+
+
+
+		}
+
+		private bool AccessedViaMRFFactory(IRequest request)
+		{
+			if (request.ParentRequest == null)
+			{
+				return false;
+			}
+			return typeof(IManufacturerReportFactory).IsAssignableFrom(request.ParentRequest.Service);
 		}
 
 		#endregion

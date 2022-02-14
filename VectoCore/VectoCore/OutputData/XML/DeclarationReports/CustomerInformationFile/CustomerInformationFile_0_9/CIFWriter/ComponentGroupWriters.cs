@@ -124,9 +124,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var result = new List<XElement>();
-			var totalRatedPropulsionPower =
-				inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
-					.Where(e => e.Position != PowertrainPosition.GEN).Sum((e => e.ElectricMachine.R85RatedPower));
+			Watt totalRatedPropulsionPower = null;
+			if (inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.S_IEPC || inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
+				totalRatedPropulsionPower = inputData.JobInputData.Vehicle.Components.IEPC.R85RatedPower;
+			} else {
+				totalRatedPropulsionPower =
+					inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
+						.Where(e => e.Position != PowertrainPosition.GEN).Sum((e => e.ElectricMachine.R85RatedPower));
+			}
+			
+			
 			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
 			result.Add(new XElement(_cif + "MaxContinousPropulsionPower", "TODO"));
 

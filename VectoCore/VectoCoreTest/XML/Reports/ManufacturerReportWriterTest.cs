@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml";
 		protected const string PEV_E4_HeavyLorry = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\PEV_heavyLorry_E4.xml";
+		protected const string PEV_IEPC_HeavyLorry =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\IEPC_heavyLorry.xml";
 
 		protected const string Conventional_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
@@ -85,15 +87,10 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 		protected bool ValidateAndPrint(XDocument document)
 		{
-			XmlSchemaSet schemas = new XmlSchemaSet();
 			var error = false;
-			var path = Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd");
-			TestContext.WriteLine(path);
-			XmlReader reader = new XmlTextReader(path)
-			{
-				XmlResolver = new XmlUrlResolver()
-			};
-			schemas.Add("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9", reader);
+			var schemas = XmlSchemaSet(
+				(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
+					(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9"));
 			document.Validate(schemas, (sender, args) => {
 				error = true;
 
@@ -103,6 +100,23 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			TestContext.WriteLine(document);
 
 			return !error;
+		}
+
+		private static XmlSchemaSet XmlSchemaSet(params (string path, string targetNamespace)[] paths)
+		{
+			XmlSchemaSet schemas = new XmlSchemaSet();
+			foreach (var path in paths) {
+				using (XmlReader reader = new XmlTextReader(path.path)
+						{
+							XmlResolver = new XmlUrlResolver()
+
+						})
+				{
+					schemas.Add(path.targetNamespace, reader);
+				};
+				
+			}
+			return schemas;
 		}
 
 		protected bool WriteToDisk(string basePath, string fileName, XDocument xDocument)
@@ -290,6 +304,16 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		public async Task PEV_E4_LorryMRFTest(string fileName)
 		{
 			var report = GetReport(fileName, out var dataProvider) as PEV_E4_LorryManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+			Assert.IsTrue(ValidateAndPrint(report.Report));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(PEV_IEPC_HeavyLorry)]
+		public async Task PEV_IEPC_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as PEV_IEPC_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
 			Assert.IsTrue(ValidateAndPrint(report.Report));

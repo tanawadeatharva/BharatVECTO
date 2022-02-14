@@ -8,12 +8,12 @@ using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter
 {
-    public interface IMrfXmlGroup
+    public interface IReportOutputGroup
 	{
 		IList<XElement> GetElements(IDeclarationInputDataProvider inputData);
     }
 
-	public interface IMrfVehicleGroup
+	public interface IReportVehicleOutputGroup
 	{
 		IList<XElement> GetElements(IVehicleDeclarationInputData vehicleData);
 	}

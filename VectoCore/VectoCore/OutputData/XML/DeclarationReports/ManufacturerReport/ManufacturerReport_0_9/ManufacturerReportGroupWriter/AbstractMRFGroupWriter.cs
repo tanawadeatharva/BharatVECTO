@@ -9,12 +9,12 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter
 {
-    public abstract class AbstractMrfXmlGroup : IMrfXmlGroup
+    public abstract class AbstractReportOutputGroup : IReportOutputGroup
     {
 		protected readonly IManufacturerReportFactory _mrfFactory;
 		protected XNamespace _mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
 
-		protected AbstractMrfXmlGroup(IManufacturerReportFactory mrfFactory)
+		protected AbstractReportOutputGroup(IManufacturerReportFactory mrfFactory)
 		{
 			_mrfFactory = mrfFactory;
 

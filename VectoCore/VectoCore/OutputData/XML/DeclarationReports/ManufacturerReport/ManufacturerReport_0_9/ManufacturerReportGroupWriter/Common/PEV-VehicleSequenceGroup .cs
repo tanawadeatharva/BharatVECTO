@@ -10,7 +10,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.Lorry
 {
-    internal class PEV_VehicleSequenceGroup : AbstractMrfXmlGroup
+    internal class PEV_VehicleSequenceGroup : AbstractReportOutputGroup
     {
 		public PEV_VehicleSequenceGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 

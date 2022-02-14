@@ -180,6 +180,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class PevIEPCLorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public PevIEPCLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEV_IEPC_S_LorryComponentsType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
 
 
 
