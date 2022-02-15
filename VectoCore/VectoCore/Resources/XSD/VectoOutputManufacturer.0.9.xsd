@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
- xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"
-  xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions"
-   xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions"
-    xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
-	 xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
-	  xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
-		xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
-		xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
-		 targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" 
-		 elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -284,8 +274,7 @@
 					<xs:documentation>1.1.3. Vehicle identification number (VIN)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0">
-			</xs:element>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0"/>
 			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType"/>
 			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
 				<xs:annotation>
@@ -424,8 +413,8 @@
 		<xs:sequence>
 			<xs:element name="Entry" maxOccurs="unbounded">
 				<xs:complexType>
-					<xs:attribute name="boostingTorque" use="required" type="v1.0:Double2"/>
-					<xs:attribute name="rotationalSpeed" use="required" type="v1.0:Double2"/>
+					<xs:attribute name="boostingTorque" type="v1.0:Double2" use="required"/>
+					<xs:attribute name="rotationalSpeed" type="v1.0:Double2" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -578,12 +567,12 @@
 			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
 			<xs:element name="Components">
 				<xs:complexType>
-						<xs:sequence>
-							<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
-							<xs:element name="Auxiliaries" type="mrf:ConventionalCompletedBusAuxOutputType"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
+					<xs:sequence>
+						<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
+						<xs:element name="Auxiliaries" type="mrf:ConventionalCompletedBusAuxOutputType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-CompletedBusVehicleOutputType">
@@ -665,7 +654,6 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
@@ -673,7 +661,6 @@
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			
 			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -851,7 +838,7 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E4-PrimaryBusComponentsType">
-		<xs:sequence>			
+		<xs:sequence>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
@@ -1075,8 +1062,21 @@
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
 		<xs:sequence>
-			<xs:element name="RatedPower" />
-			<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType"/>
+			<xs:element name="RatedPower"/>
+			<xs:element name="VoltageLevels">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="VoltageLevel" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="MaxContinuousPower" type="mrf:RatedPowerType"/>
+								</xs:sequence>
+								<xs:attribute name="voltage"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="IEPCGroup">
@@ -1134,7 +1134,7 @@
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
 			<xs:element name="Model" type="v1.0:ModelType"/>
-			<xs:element name="CertificationMethod" />
+			<xs:element name="CertificationMethod"/>
 			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0"/>
 			<xs:element name="CdxA" type="v1.0:AirdragCdxAType"/>
 			<xs:element name="DigestValue" type="xs:token"/>
@@ -1207,7 +1207,7 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="WasteHeatRecoverySystem" type="xs:boolean"/>
-			<xs:element name="WasteHeatRecoverySystemType" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
+			<xs:element name="WasteHeatRecoverySystemType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="ComponentCommonOutputGroup">
@@ -1229,7 +1229,6 @@
 	<xs:simpleType name="StorageCapacityType">
 		<xs:restriction base="xs:double"/>
 	</xs:simpleType>
-
 	<xs:group name="Conventional-LorryVehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
@@ -1294,7 +1293,6 @@
 			<xs:group ref="mrf:CompletedBusVehicleDimensionSequenceGroup"/>
 			<xs:element name="DoorDriveTechnology" type="v2.4:DoorDriveTechnologyType"/>
 			<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType"/>
-
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV-CompletedBusVehicleOutputTypeGroup">
@@ -1348,7 +1346,6 @@
 			<xs:element name="ReagentDosing" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:complexType>
-
 	<xs:complexType name="PneumaticSystemType_PrimaryBus_PEV_IEPC">
 		<xs:sequence>
 			<xs:element name="Technology" type="xs:string"/>
@@ -1395,7 +1392,7 @@
 		<xs:restriction base="xs:int"/>
 	</xs:simpleType>
 	<xs:simpleType name="LegislativeCategoryType">
-    	<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
+		<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
 	</xs:simpleType>
 	<xs:complexType name="ADCType">
 		<xs:sequence>
@@ -1410,11 +1407,9 @@
 				<!--xs:element name="CoupledAxleNumber" type="xs:int"/-->
 				<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
 				<xs:element name="CountAtPosition" type="xs:int"/>
-				
 			</xs:sequence>
 			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType"/>
 			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
-
 		</xs:sequence>
 	</xs:complexType>
 	<xs:group name="BusAuxHVACHeatPumpSequenceGroup">
@@ -1473,9 +1468,7 @@
 			<xs:enumeration value="Other technology Article 9 exempted"/>
 		</xs:restriction>
 	</xs:simpleType>
-
 	<xs:simpleType name="SteeringPumpOutput">
-		<xs:union memberTypes="v2.4:AuxSPTechnologyLorryType v2.4:AuxSPTechnology_HEV-S_LorryType v2.4:AuxSPTechnology_PEV_LorryType">
-		</xs:union>
+		<xs:union memberTypes="v2.4:AuxSPTechnologyLorryType v2.4:AuxSPTechnology_HEV-S_LorryType v2.4:AuxSPTechnology_PEV_LorryType"/>
 	</xs:simpleType>
 </xs:schema>
