@@ -21,72 +21,17 @@
 
   <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" NoWarn="NU1701" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" NoWarn="NU1701" />
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" NoWarn="NU1701" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" NoWarn="NU1701" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="PresentationFramework.Aero2" Version="1.0.1" NoWarn="NU1701" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Behaviours\AutoScrollDataGridBehaviour.cs" />
-    <Compile Update="Behaviours\PopUpHorizontalAlignmentBehavior.cs" />
-    <Compile Update="Helper\ConvertedSIDummyCreator.cs" />
-    <Compile Update="Helper\Converter\AlwaysVisibleConverter.cs" />
-    <Compile Update="Helper\Converter\BoolToVisibilityConverter.cs" />
-    <Compile Update="Helper\Converter\EnumConverter.cs" />
-    <Compile Update="Helper\Converter\InvertBoolConverter.cs" />
-    <Compile Update="Helper\Converter\JobTypeStringConverter.cs" />
-    <Compile Update="Helper\Converter\LabledTextBoxLabelConverter.cs" />
-    <Compile Update="Helper\Converter\MultipleBoolConverter.cs" />
-    <Compile Update="Helper\Converter\MultistageParameterModeToVisibilityConverter.cs" />
-    <Compile Update="Helper\Converter\BoolToIntConverter.cs" />
-    <Compile Update="Helper\Converter\NullToUnsetValueConverter.cs" />
-    <Compile Update="Helper\Converter\NullToVisibilityConverter.cs" />
-    <Compile Update="Helper\Converter\LabledTextBoxConverter.cs" />
-    <Compile Update="Helper\Converter\PropertyNameToLabelTextConverter.cs" />
-    <Compile Update="Helper\Converter\SIToUnitString.cs" />
-    <Compile Update="Helper\Converter\SIValueToStringConverter.cs" />
-    <Compile Update="Helper\Converter\VehicleCategoryToStringConverter.cs" />
-    <Compile Update="Helper\Converter\XToBoolConverter.cs" />
-    <Compile Update="Helper\DoubleValidation.cs" />
-    <Compile Update="Helper\ExceptionExtension.cs" />
-    <Compile Update="Helper\Exceptions.cs" />
-    <Compile Update="Helper\EnumHelper.cs" />
-    <Compile Update="Helper\FileHelper.cs" />
-    <Compile Update="Helper\IWindowHelper.cs" />
-    <Compile Update="Helper\DialogHelper.cs" />
-    <Compile Update="Helper\ObservableDictionary.cs" />
-    <Compile Update="Helper\ProcessHelper.cs" />
-    <Compile Update="Helper\VisualTreeHelperExtensions.cs" />
-    <Compile Update="Helper\TemplateSelector\MultistageParameterDataTemplateSelector.cs" />
-    <Compile Update="Model\Multistage\JSONJob.cs" />
     <Compile Update="Properties\GUILabels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GUILabels.resx</DependentUpon>
     </Compile>
-    <Compile Update="ViewModel\Implementation\Common\AdditionalJobInfoViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\Common\BackingStorage.cs" />
-    <Compile Update="ViewModel\Implementation\Common\ObservableObject.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\MultistageParameterViewModel.cs" />
-    <Compile Update="Helper\NameResolver.cs" />
-    <Compile Update="Helper\TemplateSelector\MultistageVehicleDataTemplateSelector.cs" />
-    <Compile Update="Helper\WindowHelper.cs" />
-    <Compile Update="Helper\XMLExtension.cs" />
-    <Compile Update="Helper\XmlHelper.cs" />
-    <Compile Update="Ninject\FactoryModule.cs" />
-    <Compile Update="Ninject\IMultistageDependencies.cs" />
-    <Compile Update="Ninject\MultiStageViewModelFactory.cs" />
-    <Compile Update="Ninject\MultistageLazyDependencies.cs" />
-    <Compile Update="Ninject\MultistageModule.cs" />
-    <Compile Update="Ninject\Vecto3GUI2020Module.cs" />
-    <Compile Update="Properties\Annotations.cs" />
     <Compile Update="Properties\BusStrings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,123 +40,12 @@
     <Compile Update="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
-    <Compile Update="TestViewModel.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLBusAuxiliariesWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLPTOWriter.cs" />
-    <Compile Update="ViewModel\Implementation\AboutViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\CreateVifViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\Document\DeclarationJobViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\Document\DeclarationTrailerJobDocumentViewModel.cs" />
-    <Compile Update="Model\Interfaces\IAuxiliaryModelFactory.cs" />
-    <Compile Update="ViewModel\Implementation\Document\SimulationOnlyDeclarationJob.cs" />
-    <Compile Update="ViewModel\Implementation\MessageEntry.cs" />
-    <Compile Update="ViewModel\Interfaces\Document\IDocumentViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\Document\IDocumentViewModelFactory.cs" />
-    <Compile Update="ViewModel\Interfaces\Document\IJobViewModel.cs" />
-    <Compile Update="Model\Interfaces\ISettingsModel.cs" />
-    <Compile Update="Model\Implementation\SettingsModel.cs" />
-    <Compile Update="Ninject\DocumentModule.cs" />
-    <Compile Update="Ninject\JobEditModule.cs" />
-    <Compile Update="Ninject\Vehicle\ComponentModule.cs" />
-    <Compile Update="Ninject\XMLWriterFactoryModule.cs" />
     <Compile Update="Properties\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Update="Properties\Settings.cs" />
-    <Compile Update="Util\AllowedEntry.cs" />
-    <Compile Update="Util\RelayCommand.cs" />
-    <Compile Update="Util\SIUtils.cs" />
-    <Compile Update="Ninject\Util\UseFirstArgumentAsNameInstanceProvider.cs" />
-    <Compile Update="Ninject\Util\UseFirstArgumentTypeAsNameInstanceProvider.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAirDragWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAuxiliariesWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleGearWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleWheelsWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLAxleWheelWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLEngineWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLComponentsWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLGearboxWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLRetarderWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLTyreWriter.cs" />
-    <Compile Update="Util\XML\Implementation\ComponentWriter\XMLVehicleWriter.cs" />
-    <Compile Update="Util\XML\Implementation\DocumentWriter\XMLDeclarationJobWriter.cs" />
-    <Compile Update="Util\XML\Interfaces\IXMLComponentsWriter.cs" />
-    <Compile Update="Util\XML\Interfaces\IXMLDeclarationJobWriter.cs" />
-    <Compile Update="Util\XML\Interfaces\IXMLComponentWriter.cs" />
-    <Compile Update="Util\XML\Interfaces\IXMLVehicleWriter.cs" />
-    <Compile Update="Util\XML\Interfaces\IXMLWriterFactory.cs" />
-    <Compile Update="Util\XML\XMLNamespaces.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineFuelViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineModeViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\TorqueConverterViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineFuelViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineModeViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\Common\IViewModelBase.cs" />
-    <Compile Update="ViewModel\Implementation\Common\ViewModelBase.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\DeclarationJobEditViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\ComponentsViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Trailer\ITrailerViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\ADASViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AirDragViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AngleDriveViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AuxiliariesViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AuxiliaryViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleGearViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\AxleWheelsViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\CommonComponentViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\EngineViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\GearboxViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\GearViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\PTOViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\RetarderViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\Components\TyreViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobEdit\Vehicle\VehicleViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\JobListViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\MainWindowViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\MessageViewModel.cs" />
-    <Compile Update="ViewModel\Implementation\SettingsViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\IEditViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAdasViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAirDragViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAuxiliariesViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAuxiliaryViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleGearViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAxleWheelsViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ICommonComponentViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentsViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentViewModelFactory.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\IJobEditViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\ISettingsViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\IJobListViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\IMainViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\IMainWindowViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\IMessageViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\IJobEditViewModelFactory.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IComponentViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IEngineViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IGearBoxViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IGearViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IAngleDriveViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IRetarderViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\IPTOViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITorqueConverterViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\Components\ITyreViewModel.cs" />
-    <Compile Update="ViewModel\Interfaces\JobEdit\Vehicle\IVehicleViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\InterimStageBusVehicleViewModel_v2_8.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\ManufacturingStageViewModel_v0_1.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\MultistageAirdragViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\MultistageAuxiliariesViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\NewMultiStageJobViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\MultistageJobViewModel_v0_1.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\StageInputViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Implementation\StageViewModelBase.cs" />
-    <Compile Update="ViewModel\MultiStage\Interfaces\IMultistageAirdragViewModel.cs" />
-    <Compile Update="ViewModel\MultiStage\Interfaces\IMultiStageViewModelFactory.cs" />
-    <Compile Update="ViewModel\Implementation\OutputViewModel.cs" />
     <Compile Update="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
