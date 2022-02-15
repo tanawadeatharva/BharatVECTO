@@ -395,7 +395,7 @@
 	</xs:group>
 	<xs:group name="HEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HEVArchitecture" type="v2.4:ArchitectureID_HEV_Type"/>
+			<xs:element name="HEVArchitecture" type="v2.4:ArchitectureIDType"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
@@ -403,7 +403,7 @@
 	</xs:group>
 	<xs:group name="PEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="PEVArchitecture" type="v2.4:ArchitectureID_PEV_Type"/>
+			<xs:element name="PEVArchitecture" type="v2.4:ArchitectureIDType"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
@@ -696,7 +696,7 @@
 			<xs:element name="Axlegear" type="mrf:AxleGearType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
-			<xs:element name="Airdrag" type="mrf:AirdragType" minOccurs="0"/>
+			<xs:element name="AirDrag" type="mrf:AirdragType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV-E2-LorryComponentsType">
@@ -766,7 +766,7 @@
 			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
-			<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType"/>
+			<xs:element name="Auxiliaries" type="mrf:Conventional_HEV_Px_PrimaryBusAuxOutputType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-S2-PrimaryBusComponentsType">
