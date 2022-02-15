@@ -642,7 +642,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pClutchOut = row[ModalResultField.P_clutch_out.GetName()];
 				if (pClutchOut != DBNull.Value) {
 					Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
-					Assert.AreEqual(pEngOut.Value(), (pClutchOut as Watt + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+					Assert.AreEqual(pEngOut.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
 						time, distance);
 				}
 
@@ -794,7 +794,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				//if (pClutchOut != DBNull.Value) {
 				Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 				var pP1Out = row[p1OutColumn] as Watt;
-				Assert.AreEqual(pP1Out.Value(), (pClutchOut as Watt + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+				Assert.AreEqual(pP1Out.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				var pP1Loss = row[p1LossColumn] as Watt;
