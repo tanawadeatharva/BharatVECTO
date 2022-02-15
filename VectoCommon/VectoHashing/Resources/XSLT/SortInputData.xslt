@@ -184,8 +184,28 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
+		
+	<xsl:template match="*[local-name()='Fuel' and @type]">
+		<xsl:element name="{local-name()}">
+		  <xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>	
+	</xsl:template>
 
-
+ 	<xsl:template match="*[local-name()='Mode' and ./*[local-name() = 'Fuel']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Mode']) > (count(//*[local-name()='Mode']) - 2)">
+			<xsl:for-each select="../*[local-name()='Mode']">
+				<xsl:sort data-type="number" select="count(./*[local-name() = 'Fuel'])" order="ascending"/>
+					<xsl:element name="{local-name()}">
+						<xsl:apply-templates select="@*|node()"/> 
+					</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template> 
+	
 	
 	<!--
 
