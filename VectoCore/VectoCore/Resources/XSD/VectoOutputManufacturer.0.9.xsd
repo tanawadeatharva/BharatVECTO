@@ -1408,8 +1408,9 @@
 		<xs:sequence>
 			<xs:sequence>
 				<!--xs:element name="CoupledAxleNumber" type="xs:int"/-->
-				<xs:element name="CountAtPosition" type="xs:int"/>
 				<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
+				<xs:element name="CountAtPosition" type="xs:int"/>
+				
 			</xs:sequence>
 			<xs:element name="ElectricMachineSystem" type="mrf:ElectricMachineSystemType"/>
 			<xs:element name="ADC" type="mrf:ADCType" minOccurs="0"/>
