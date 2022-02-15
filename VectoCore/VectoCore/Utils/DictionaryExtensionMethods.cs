@@ -64,7 +64,8 @@ namespace TUGraz.VectoCore.Utils
 		public static TValue GetVECTOValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key) => 
 			self.TryGetValue(key, out var value) ? value : default;
 
-		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key, TValue defaultValue) =>
+
+		public static TValue GetVECTOValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key, TValue defaultValue) =>
 			self.TryGetValue(key, out var value) ? value : defaultValue;
 	}
 }
