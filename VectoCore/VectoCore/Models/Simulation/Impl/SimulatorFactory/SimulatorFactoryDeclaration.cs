@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -84,7 +83,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 									_currentStageInputData;
 		}
 
-		[UsedImplicitly]
 		public SimulatorFactoryDeclaration(
 			IInputDataProvider dataProvider,
 			IOutputDataWriter writer,

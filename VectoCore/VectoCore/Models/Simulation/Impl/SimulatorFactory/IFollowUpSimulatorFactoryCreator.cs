@@ -1,12 +1,5 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Xml;
-using JetBrains.Annotations;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -125,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public CompletedAfterInterimPrimaryFactoryCreator(IMultistageVIFInputData originalInputData,
 			IOutputDataWriter originalOutputDataWriter,
-			[NotNull] IDeclarationReport originalDeclarationReport,
+			IDeclarationReport originalDeclarationReport,
 			IXMLInputDataReader inputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory, 
 			bool validate) : base(simulatorFactoryFactory, validate)

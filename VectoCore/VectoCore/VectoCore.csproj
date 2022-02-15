@@ -8,9 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NLog" Version="4.7.13" />
