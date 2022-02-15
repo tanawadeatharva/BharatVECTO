@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -969,6 +970,15 @@ namespace TUGraz.VectoCommon.InputData
 		bool ESSupplyFromHEVREESS { get; }
 
 		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
+	}
+
+	public static class ElectricSupplyDeclarationDataHelper
+	{
+		public static Watt GetMaxAlternatorPower(this IElectricSupplyDeclarationData electricSupply)
+		{
+			return electricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
+				.Max();
+		}
 	}
 
 	public interface IElectricConsumersDeclarationData
