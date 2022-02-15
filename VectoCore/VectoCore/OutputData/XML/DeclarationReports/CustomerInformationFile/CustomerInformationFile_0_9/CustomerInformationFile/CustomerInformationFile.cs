@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S2_LorryVehicleType().GetElement(inputData);
-			GenerateReport("HEV_S2_LorryVehicleType");
+			GenerateReport("HEV_S2_LorryOutputType");
 		}
 
 		#endregion
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S3_LorryVehicleType().GetElement(inputData);
-			GenerateReport("HEV_S3_LorryVehicleType");
+			GenerateReport("HEV_S3_LorryOutputType");
 		}
 
 		#endregion
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S4_LorryVehicleType().GetElement(inputData);
-			GenerateReport("HEV_S4_LorryVehicleType");
+			GenerateReport("HEV_S4_LorryOutputType");
 		}
 
 		#endregion
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_IEPC_LorryVehicleType().GetElement(inputData);
-			GenerateReport("HEV_IEPC_S_LorryVehicleType");
+			GenerateReport("HEV_IEPC_S_LorryOutputType");
 		}
 
 		#endregion
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E2_LorryVehicleType().GetElement(inputData);
-			GenerateReport("PEV_E2_LorryVehicleType");
+			GenerateReport("PEV_E2_LorryOutputType");
 		}
 
 		#endregion
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E3_LorryVehicleType().GetElement(inputData);
-			GenerateReport("PEV_E3_LorryVehicleType");
+			GenerateReport("PEV_E3_LorryOutputType");
 		}
 
 		#endregion
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E4_LorryVehicleType().GetElement(inputData);
-			GenerateReport("PEV_E4_LorryVehicleType");
+			GenerateReport("PEV_E4_LorryOutputType");
 		}
 
 		#endregion
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_IEPC_LorryVehicleType().GetElement(inputData);
-			GenerateReport("PEV_IEPC_LorryVehicleType");
+			GenerateReport("PEV_IEPC_LorryOutputType");
 		}
 
 		#endregion
@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport("HEV_CompltedBusOutputType");
+			GenerateReport("HEV_CompletedBusOutputType");
 		}
 	}
 

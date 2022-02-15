@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -13,9 +14,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter
 {
-    public class ComponentGroupWriters : AbstractCIFGroupWriter
+    public class EngineGroup : AbstractCIFGroupWriter
     {
-		public ComponentGroupWriters(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public EngineGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
 
@@ -34,10 +35,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var sortedFuels = fuelTypes.ToList();
 			sortedFuels.Sort((fuelType1, fuelType2) => fuelType1.CompareTo(fuelType2));
 
-			sortedFuels.ForEach(type => fuelTypesXElement.Add(new XElement(_cif + XMLNames.Engine_FuelType, type)));
+			sortedFuels.ForEach(type => fuelTypesXElement.Add(new XElement(_cif + XMLNames.Engine_FuelType, type.ToXMLFormat())));
 
 			return new List<XElement>() {
-				new XElement(_cif + XMLNames.Engine_RatedPower, engine.RatedPowerDeclared.ValueAsUnit("kW")),
+				new XElement(_cif + "EngineRatedPower", engine.RatedPowerDeclared.ValueAsUnit("kW")),
 				new XElement(_cif + "EngineCapacity", engine.Displacement.ValueAsUnit("ltr")),
 				fuelTypesXElement
 			};
@@ -135,7 +136,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			
 			
 			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
-			result.Add(new XElement(_cif + "MaxContinousPropulsionPower", "TODO"));
+			result.Add(new XElement(_cif + "MaxContinousPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW"))); //TODO: use max ContinuousPropulsionPower
 
 
 
@@ -161,8 +162,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.Sum(bp => bp.Capacity);
 			var totalUsableCapacity = batteries.Sum(bp => bp.TotalUsableCapacityInSimulation());
 			return new List<XElement>() {
-				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity),
-				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity)
+				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("Ah", 0)),
+				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("Ah", 0))
+			};
+		}
+
+		#endregion
+	}
+
+	public class CompletedBusAuxGroup : AbstractCIFGroupWriter
+	{
+		public CompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var consolidatedAuxData = ((IMultistageBusInputDataProvider)inputData).JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
+			return new List<XElement>() {
+				new XElement(_cif + XMLNames.BusAux_HVAC,
+					new XElement(_cif + XMLNames.Bus_SystemConfiguration,
+						consolidatedAuxData.HVACAux.SystemConfiguration.ToXmlFormat()),
+					new XElement(_cif + "AuxiliaryHeaterPower", consolidatedAuxData.HVACAux.AuxHeaterPower),
+					new XElement(_cif + XMLNames.Bus_DoubleGlazing, consolidatedAuxData.HVACAux.DoubleGlazing))
 			};
 		}
 

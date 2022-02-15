@@ -121,12 +121,13 @@
 	<xs:complexType name="HEV_S2_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
@@ -135,11 +136,11 @@
 	<xs:complexType name="HEV_S3_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
+			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
@@ -198,8 +199,6 @@
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
-			<xs:element name="Retarder"/>
-			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -248,7 +247,7 @@
 			<xs:element name="Model"/>
 			<xs:element name="CorrectedActualMass"/>
 			<xs:element name="SleeperCab"/>
-			<xs:element name="ZeroEmissionHDV"/>
+			<xs:element name="ZeroEmissionVehicle"/>
 			<xs:element name="HybridElectricHDV"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -265,7 +264,7 @@
 										<xs:element name="Manufacturer"/>
 										<xs:element name="ManufacturerAddress"/>
 									</xs:sequence>
-									<xs:attribute name="Count" type="xs:int"/>
+									<xs:attribute name="stepCount" type="xs:int"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -274,7 +273,7 @@
 			</xs:sequence>
 			<xs:sequence>
 				<xs:element name="CorrectedActualMass"/>
-				<xs:element name="ZeroEmissionHDV"/>
+				<xs:element name="ZeroEmissionVehicle"/>
 				<xs:element name="HybridElectricHDV"/>
 				<xs:element name="ClassBus"/>
 				<xs:element name="TotalNumberOfPassengers"/>
@@ -316,7 +315,7 @@
 			</xs:element>
 			<xs:element name="VocationalVehicle" type="v1.0:VocationalVehicleType"/>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
-			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType"/>
+			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType"/>
 			<xs:element name="HybridElectricHDV" type="v1.0:HybridElectricHDVType"/>
 		</xs:sequence>
 	</xs:group>
@@ -372,7 +371,7 @@
 										<xs:element name="Manufacturer"/>
 										<xs:element name="ManufacturerAddress"/>
 									</xs:sequence>
-									<xs:attribute name="Count" type="xs:int"/>
+									<xs:attribute name="stepCount" type="xs:int"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -381,7 +380,7 @@
 			</xs:sequence>
 			<xs:sequence>
 				<xs:element name="CorrectedActualMass"/>
-				<xs:element name="ZeroEmissionHDV"/>
+				<xs:element name="ZeroEmissionVehicle"/>
 				<xs:element name="HybridElectricHDV"/>
 				<xs:element name="ClassBus"/>
 				<xs:element name="TotalNumberOfPassengers"/>
@@ -428,7 +427,7 @@
 	<xs:group name="AxleWheelsGroup">
 		<xs:sequence>
 			<xs:element name="AverageRRC" type="v1.0:TyreRRCISOType"/>
-			<xs:element name="Axle">
+			<xs:element name="Axle" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="TyreDimension" type="v2.3:TyreDimensionType"/>
@@ -491,7 +490,7 @@
 	</xs:group>
 	<xs:group name="CompletedBusAuxGroup">
 		<xs:sequence>
-			<xs:element name="HVACSystem">
+			<xs:element name="HVAC">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="SystemConfiguration"/>

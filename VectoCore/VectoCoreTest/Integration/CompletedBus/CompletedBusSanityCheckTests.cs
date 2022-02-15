@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			completedXML.Load(completedJob);
 
 			var hvacCfgNode = completedXML.SelectSingleNode("//*[local-name()='SystemConfiguration']");
-			hvacCfgNode.InnerText = hvacConfig.GetXmlFormat();
+			hvacCfgNode.InnerText = hvacConfig.ToXmlFormat();
 
 			var airDuctsNode = completedXML.SelectSingleNode("//*[local-name()='SeparateAirDistributionDucts']");
 			airDuctsNode.InnerText = XmlConvert.ToString(separateDucts);

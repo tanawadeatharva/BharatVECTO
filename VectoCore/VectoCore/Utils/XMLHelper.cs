@@ -98,6 +98,19 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
+		public static object[] ValueAsUnit(this AmpereSecond capacity, string unit, uint? decimals = 0)
+		{
+			switch (unit)
+			{
+				case "As": return GetValueAsUnit(capacity.Value(), unit, decimals);
+				case "Ah": return GetValueAsUnit(capacity?.AsAmpHour, unit, decimals);
+			}
+
+			throw new NotImplementedException($"unknown unit '{unit}'");
+		}
+
+
+
 		public static object[] ValueAsUnit(this CubicMeter volume, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
@@ -329,6 +342,12 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var element in xElementsToAdd) {
 				xElement.AddIfContentNotNull(element);
 			}
+		}
+
+		public static XElement WithXName(this XElement xElement, XName xName)
+		{
+			xElement.Name = xName;
+			return xElement;
 		}
 	}
 }

@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new List<XElement>() {
 				new XElement(_mrf + XMLNames.Bus_SystemConfiguration,
-					busAuxiliaries.HVACAux.SystemConfiguration.GetXmlFormat()),
+					busAuxiliaries.HVACAux.SystemConfiguration.ToXmlFormat()),
 				new XElement(_mrf + XMLNames.Bus_HeatPumpTypeDriver,
 					new XElement(_mrf + XMLNames.BusHVACHeatPumpCooling,
 						busAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment.GetLabel()),

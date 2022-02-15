@@ -41,6 +41,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetTransmissionGroup();
 		IReportOutputGroup GetAxleWheelsGroup();
 		IReportOutputGroup GetLorryAuxGroup();
+		IReportOutputGroup GetCompletedBusAuxGroup();
 		IReportOutputGroup GetHEV_VehicleSequenceGroupWriter();
 		IReportOutputGroup GetHEV_LorryVehicleTypeGroup();
 		IReportOutputGroup GetElectricMachineGroup();
@@ -48,5 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetPEV_LorryVehicleTypeGroup();
 		IReportOutputGroup GetPEV_VehicleSequenceGroupWriter();
 		IReportOutputGroup GetCompletedBusVehicleTypeGroup();
+		IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus();
+	
 	}
 }

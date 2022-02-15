@@ -12,7 +12,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter
 {
-    public class GeneralVehicleOutputSequenceGroupCif : AbstractCIFGroupWriter, IReportVehicleOutputGroup
+    public class GeneralVehicleOutputSequenceGroupCif : AbstractCIFGroupWriter, IReportVehicleOutputGroup, IReportCompletedBusOutputGroup
 	{
 		public GeneralVehicleOutputSequenceGroupCif(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
@@ -36,6 +36,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
 				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, vehicleData.VehicleCategory.ToXMLFormat())
 
+			};
+			return result;
+		}
+
+		#endregion
+
+		#region Implementation of IReportCompletedBusOutputGroup
+
+		public IList<XElement> GetElements(IMultistageBusInputDataProvider multiStageInputDataProvider)
+		{
+			var consolidatedVehicleData = multiStageInputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var primary = multiStageInputDataProvider.JobInputData.PrimaryVehicle.Vehicle;
+			var result = new List<XElement>() {
+				new XElement(_cif + XMLNames.Vehicle_VIN, consolidatedVehicleData.VIN),
+				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
+				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
+				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, consolidatedVehicleData.VehicleCategory.ToXMLFormat())
 			};
 			return result;
 		}
@@ -180,6 +198,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class CompletedBusVehicleTypeGroup : AbstractCIFGroupWriter
 	{
+		private XElement GetManufacturerAndAddress(string manufacturer, string manufacturerAddress, int stepCount)
+		{
+			return new XElement(_cif + "Step",
+				new XAttribute(XMLNames.ManufacturingStep_StepCount, stepCount),
+				new XElement(_cif + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_cif + XMLNames.Component_ManufacturerAddress, manufacturerAddress));
+		}
 		public CompletedBusVehicleTypeGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
@@ -187,9 +212,44 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			if (completedBusData == null) {
+				throw new ArgumentException(
+					$"{nameof(inputData)} must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
 			var result = new List<XElement>();
-			result.AddRange(_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle));
+			result.AddRange(
+				_cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus().GetElements(completedBusData));
+			result.Add(GetManufacturers(completedBusData));
+
+
+	
+			var consolidatedVehicle = completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			result.AddRange(new List<XElement>() {
+				new XElement(_cif + XMLNames.CorrectedActualMass, consolidatedVehicle.CurbMassChassis),
+				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicle.ZeroEmissionVehicle),
+				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, consolidatedVehicle.HybridElectricHDV),
+				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, consolidatedVehicle.RegisteredClass.ToXMLFormat()),
+				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck 
+																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck 
+																+ consolidatedVehicle.NumberPassengersStandingLowerDeck 
+																+ consolidatedVehicle.NumberPassengersStandingUpperDeck),
+				consolidatedVehicle.VehicleTypeApprovalNumber != null ? new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, consolidatedVehicle.VehicleTypeApprovalNumber) : null
+			});
+
 			return result;
+		}
+
+		private XElement GetManufacturers(IMultistageBusInputDataProvider completedBusData)
+		{
+			var manufacturers = new XElement(_cif + "Manufacturers",
+				GetManufacturerAndAddress(completedBusData.JobInputData.PrimaryVehicle.Vehicle.Manufacturer,
+					completedBusData.JobInputData.PrimaryVehicle.Vehicle.ManufacturerAddress, 1));
+			foreach (var step in completedBusData.JobInputData.ManufacturingStages) {
+				manufacturers.Add(GetManufacturerAndAddress(step.Vehicle.Manufacturer, step.Vehicle.ManufacturerAddress,
+					step.StepCount));
+			}
+
+			return manufacturers;
 		}
 
 		#endregion

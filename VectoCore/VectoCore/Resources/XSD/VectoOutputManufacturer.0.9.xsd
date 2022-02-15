@@ -1472,4 +1472,9 @@
 			<xs:enumeration value="Other technology Article 9 exempted"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:simpleType name="SteeringPumpOutput">
+		<xs:union memberTypes="v2.4:AuxSPTechnologyLorryType v2.4:AuxSPTechnology_HEV-S_LorryType v2.4:AuxSPTechnology_PEV_LorryType">
+		</xs:union>
+	</xs:simpleType>
 </xs:schema>

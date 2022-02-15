@@ -39,8 +39,8 @@
 	</xs:simpleType>
 		<xs:simpleType name="StorageCapacityUnitType">
 		<xs:restriction base="xs:token">
-			<xs:enumeration value="kWh"/>
-			<xs:enumeration value="Wh"/>
+			<xs:enumeration value="As"/>
+			<xs:enumeration value="Ah"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

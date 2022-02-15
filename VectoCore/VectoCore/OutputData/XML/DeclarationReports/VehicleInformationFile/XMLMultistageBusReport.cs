@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(v24 + XMLNames.BusAux_HVAC,
 				hvac.SystemConfiguration != null
-					? new XElement(v24 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.GetXmlFormat()) : null,
+					? new XElement(v24 + XMLNames.Bus_SystemConfiguration, hvac.SystemConfiguration.ToXmlFormat()) : null,
 				hvac.HeatPumpTypeCoolingDriverCompartment != null && hvac.HeatPumpTypeHeatingDriverCompartment != null
 					? new XElement(v24 + XMLNames.Bus_HeatPumpTypeDriver, 
 						new XElement(v24 + XMLNames.BusHVACHeatPumpCooling,  hvac.HeatPumpTypeCoolingDriverCompartment.GetLabel()),
