@@ -126,16 +126,6 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
-	<xsl:template match="*[local-name()='PowerMap']">
-		<xsl:element name="{local-name()}">
-			<xsl:apply-templates select="@*"/>
-			<xsl:for-each select="*">
-				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
-				<xsl:sort data-type="number" select="@torque" order="ascending"/>
-				<xsl:apply-templates select="."/>
-			</xsl:for-each>
-		</xsl:element>
-	</xsl:template>	
 	<xsl:template match="*[local-name()='DragCurve']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
@@ -150,19 +140,198 @@
 			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@coolantTempInlet" order="ascending"/>
+				<xsl:sort data-type="number" select="@coolingPower" order="ascending"/>
 				<xsl:apply-templates select="."/>
 			</xsl:for-each>
 		</xsl:element>
-	</xsl:template>			
-	<xsl:template match="*[local-name()='VoltageLevel']">
+	</xsl:template>
+
+	<xsl:template name="VoltageLevelTemplate" match="*[local-name()='VoltageLevel']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>	
+			<xsl:apply-templates select="*[not(local-name()='PowerMap')]"/> 	
+			<xsl:apply-templates select="*[local-name()='PowerMap']"> 
+				<xsl:sort select="@gear" order="ascending" data-type="number" />			
+			</xsl:apply-templates>	
+		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template match="*[local-name()='PowerMap']" >
+		<xsl:element name="{local-name()}">
+		  <xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
+				<xsl:sort data-type="number" select="@torque" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='VoltageLevel' and ./*[local-name() = 'Voltage']]">		
+		<xsl:if test="count(preceding-sibling::*[local-name()='VoltageLevel']) > (count(//*[local-name()='VoltageLevel']) - 2)">
+			<xsl:for-each select="../*[local-name()='VoltageLevel']">
+				<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>			
+				<xsl:call-template name="VoltageLevelTemplate"/>
+			</xsl:for-each>			
+		</xsl:if>				
+	</xsl:template>
+
+	
+	<!--
+
+
+	<xsl:for-each select="../*[local-name()='VoltageLevel' and ./*[local-name() = 'Voltage']]">
+		<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>					
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*|node()"/> 
+		</xsl:element>
+	</xsl:for-each>
+
+	
+	<xsl:template match="*[local-name()='Data']">
+		<xsl:choose>		
+		
+			<xsl:when test="*[local-name()='VoltageLevel' and ./*[local-name() = 'Voltage']]/*[local-name()='Voltage' ]
+						and *[local-name()='DragCurve']/@gear 
+						and *[local-name() ='Conditioning' ]">
+			
+				<xsl:apply-templates select="@*"/>
+				
+				<xsl:apply-templates select="./*[not(local-name()='DragCurve') 
+				and not(local-name()='Conditioning') 
+				and not(local-name()='VoltageLevel')]"/>
+		
+				<xsl:apply-templates select="*[local-name()='VoltageLevel']"> 
+					<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+				</xsl:apply-templates>
+				
+				<xsl:apply-templates select="*[local-name()='DragCurve']">
+					<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				</xsl:apply-templates>				
+				
+				<xsl:apply-templates select="*[local-name()='Conditioning']"/> 	
+								
+			</xsl:when>		
+					
+			<xsl:when test="*[local-name()='VoltageLevel']/*[local-name()='Voltage'] 
+						and *[local-name()='DragCurve'][not(@gear)]
+						and *[local-name()='Conditioning']"> 
+			
+				<xsl:apply-templates select="@*"/>
+				
+				<xsl:apply-templates select="./*[not(local-name()='DragCurve') 
+				and not(local-name()='Conditioning') 
+				and not(local-name()='VoltageLevel')]"/>
+		
+				<xsl:apply-templates select="*[local-name()='VoltageLevel']"> 
+					<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+				</xsl:apply-templates>
+				
+				<xsl:apply-templates select="*[local-name()='DragCurve']"/>
+				<xsl:apply-templates select="*[local-name()='Conditioning']"/> 					
+			</xsl:when>
+			
+			<xsl:when test="*[local-name()='VoltageLevel']/*[not(local-name()='Voltage')] 
+						and *[local-name()='DragCurve'][not(@gear)] 
+						and *[not(local-name()='Conditioning')]">
+			
+				<xsl:apply-templates select="@*"/>
+				
+				<xsl:apply-templates select="./*[not(local-name()='DragCurve') 
+				and not(local-name()='VoltageLevel')]"/>
+		
+				<xsl:apply-templates select="*[local-name()='VoltageLevel']"> 
+					<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+				</xsl:apply-templates>
+				
+				<xsl:apply-templates select="*[local-name()='DragCurve']"/>
+			</xsl:when>
+			
+			<xsl:otherwise>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/> 
+				</xsl:element>
+			</xsl:otherwise>		
+		</xsl:choose>
+	</xsl:template>
+	
+-->
+
+
+
+	<!--
+	
+		<xsl:element name="{local-name()}">			
+
+			<xsl:for-each select="./*[local-name()='VoltageLevel']">
+				<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+			
+			
+						<xsl:apply-templates select="@*"/>	
+			<xsl:apply-templates select="*[not(local-name()='VoltageLevel')]"/> 			
+		</xsl:element>
+		-->
+
+
+
+	
+<!--
+
+
+
+
+	<xsl:template match="*[local-name()='Data']">	
+	
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
-			<xsl:for-each select="*">
-				<xsl:sort data-type="number" select="@gear" order="ascending"/>
-				<xsl:apply-templates select="."/>
-			</xsl:for-each>
+			<xsl:apply-templates select="*[not(local-name()='VoltageLevel')]"/>
+			<xsl:apply-templates select="*[local-name()='VoltageLevel']"> 
+				<xsl:sort data-type="number" select="*[local-name() = 'Voltage']/text()" order="ascending"/>
+	
+			</xsl:apply-templates>	
 		</xsl:element>
-	</xsl:template>			
+	</xsl:template>
+
+
+
+<xsl:template match="*" mode="copy-no-namespaces">
+    <xsl:element name="{local-name()}">
+        <xsl:copy-of select="@*"/>
+        <xsl:apply-templates select="node()" mode="copy-no-namespaces"/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="comment()| processing-instruction()" mode="copy-no-namespaces">
+    <xsl:copy/>
+</xsl:template>
+
+
+
+
+
+<xsl:template match="*[local-name()='PowerMap']" mode="copy-no-namespaces">
+  <xsl:copy-of select="." />
+
+</xsl:template> -->
+
+
+
+<!--
+
+		<xsl:template match="*[local-name()='VoltageLevel']">
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*"/>
+					<xsl:for-each select="*">
+						<xsl:sort data-type="number" select="@gear" order="ascending"/>
+						<xsl:apply-templates select="."/>
+					</xsl:for-each>
+				</xsl:element>
+		</xsl:template>
+
+-->
+	<!---
 	<xsl:template match="*[local-name()='Data']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
@@ -192,7 +361,7 @@
 			</xsl:for-each>			
 		</xsl:element>
 	</xsl:template>
-				
+				-->
 	<xsl:template match="*[local-name()='OCV']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
@@ -233,7 +402,8 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>	
-	<xsl:template match="*[local-name()='Mode']">
+	
+<!-- 	<xsl:template match="*[local-name()='Mode']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
@@ -241,6 +411,6 @@
 				<xsl:apply-templates select="."/>
 			</xsl:for-each>
 		</xsl:element>
-	</xsl:template>
+	</xsl:template> -->
 	
 </xsl:transform>
