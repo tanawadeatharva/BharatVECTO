@@ -247,13 +247,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<Conventional_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
-				ToParams(VehicleCategoryHelper.CompletedBus,
-					VectoSimulationJobType.ConventionalVehicle,
-					ArchitectureID.UNKNOWN,
-					false,
-					false,
-					false)));
 
 			#region Vehicle
 
