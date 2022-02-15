@@ -1555,6 +1555,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CertifiedAeroReduction.
+        /// </summary>
+        public static string Component_CertifiedAeroReduction {
+            get {
+                return ResourceManager.GetString("Component_CertifiedAeroReduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creator.
         /// </summary>
         public static string Component_Creator {

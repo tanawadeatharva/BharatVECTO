@@ -1878,4 +1878,7 @@
   <data name="Component_IEPC" xml:space="preserve">
     <value>IEPC</value>
   </data>
+  <data name="Component_CertifiedAeroReduction" xml:space="preserve">
+    <value>CertifiedAeroReduction</value>
+  </data>
 </root>

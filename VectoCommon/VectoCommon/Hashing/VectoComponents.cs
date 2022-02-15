@@ -53,7 +53,8 @@ namespace TUGraz.VectoCommon.Hashing
 		CapacitorSystem,
 		ElectricMachineSystem,
 		IEPC,
-		ADC
+		ADC,
+		CertifiedAeroReduction
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -97,6 +98,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.Component_IEPC;
 				case VectoComponents.ADC:
 					return XMLNames.Component_ADC;
+				case VectoComponents.CertifiedAeroReduction:
+					return XMLNames.Component_CertifiedAeroReduction;
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -141,6 +144,8 @@ namespace TUGraz.VectoCommon.Hashing
 					return "IEPC-";
 				case VectoComponents.ADC:
 					return "ADC-";
+				case VectoComponents.CertifiedAeroReduction:
+					return "AERO-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}

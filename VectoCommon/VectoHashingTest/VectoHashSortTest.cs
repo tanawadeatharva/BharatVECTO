@@ -24,11 +24,11 @@ namespace VectoHashingTest
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(@"Testdata\XML\Sort\Axlegear.xml")]
+		[TestCase(SortedComponentPath + "TrailerAerodynamicDevice.xml")]
 		public void TestHash(string filePath)
 		{
 			var loadedFile = VectoHash.Load(filePath);
-			var hash = loadedFile.ComputeHash(VectoComponents.Axlegear);
+			var hash = loadedFile.ComputeHash(VectoComponents.CertifiedAeroReduction);
 		}
 
 		[TestCase("ttvMnXYdQrEAu47QEO2AKyfzOdPSlcdsR/MrmH/mX+k=", SortedComponentPath + "Engine.xml"),
@@ -134,5 +134,14 @@ namespace VectoHashingTest
 			var loadedFile = VectoHash.Load(filePath);
 			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.IEPC));
 		}
+
+		[TestCase("3YVNlu+1souB/4IwePLPoBwhiJormfqMNRxQaZ75wvM=", SortedComponentPath + "TrailerAerodynamicDevice.xml"),
+		TestCase("3YVNlu+1souB/4IwePLPoBwhiJormfqMNRxQaZ75wvM=", UnsortedComponentPath + "TrailerAerodynamicDevice.xml")]
+		public void TestTrailerAerodynamicDeviceSort(string expectedHash, string filePath)
+		{
+			var loadedFile = VectoHash.Load(filePath);
+			Assert.AreEqual(expectedHash, loadedFile.ComputeHash(VectoComponents.CertifiedAeroReduction));
+		}
+
 	}
 }
