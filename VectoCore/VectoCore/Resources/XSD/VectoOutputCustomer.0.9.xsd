@@ -109,12 +109,12 @@
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder" type="xs:boolean"/>
 			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -123,13 +123,13 @@
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -138,11 +138,11 @@
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -151,9 +151,9 @@
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
-			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -162,11 +162,11 @@
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -174,12 +174,12 @@
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -187,11 +187,11 @@
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -199,9 +199,9 @@
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
-			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -209,11 +209,11 @@
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:group ref="ElectricMachineGroup"/>
+			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
 			<xs:group ref="AxleWheelsGroup"/>
-			<xs:group ref="ElectricMachineGroup"/>
-			<xs:group ref="REESSGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
