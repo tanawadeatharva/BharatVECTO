@@ -168,7 +168,7 @@
 	</xsl:template>
 
 	<xsl:template match="*[local-name()='VoltageLevel' and ./*[local-name() = 'Voltage']]">		
-		<xsl:if test="count(preceding-sibling::*[local-name()='VoltageLevel']) > (count(//*[local-name()='VoltageLevel']) - 2)">
+		<xsl:if test="count(preceding-sibling::*[local-name()='VoltageLevel']) = 0">
 			<xsl:for-each select="../*[local-name()='VoltageLevel']">
 				<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>			
 				<xsl:call-template name="VoltageLevelTemplate"/>
@@ -177,7 +177,7 @@
 	</xsl:template>
 
 	<xsl:template match="*[local-name()='DragCurve' and @gear]">
-		<xsl:if test="count(preceding-sibling::*[local-name()='DragCurve']) > (count(//*[local-name()='DragCurve']) - 2)">	
+		<xsl:if test="count(preceding-sibling::*[local-name()='DragCurve']) = 0">	
 			<xsl:for-each select="../*[local-name()='DragCurve']">
 				<xsl:sort data-type="number" select="@gear" order="ascending"/>
 				<xsl:call-template name="DragCurveTemplate"/>
@@ -196,7 +196,7 @@
 	</xsl:template>
 
  	<xsl:template match="*[local-name()='Mode' and ./*[local-name() = 'Fuel']]">
-		<xsl:if test="count(preceding-sibling::*[local-name()='Mode']) > (count(//*[local-name()='Mode']) - 2)">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Mode']) = 0">
 			<xsl:for-each select="../*[local-name()='Mode']">
 				<xsl:sort data-type="number" select="count(./*[local-name() = 'Fuel'])" order="ascending"/>
 					<xsl:element name="{local-name()}">
