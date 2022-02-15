@@ -4,7 +4,7 @@
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
     <DefineConstants />
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

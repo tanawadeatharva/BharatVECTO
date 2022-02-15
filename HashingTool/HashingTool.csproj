@@ -10,6 +10,7 @@
     <AssemblyName>HashingTool</AssemblyName>
     <DefineConstants />
     <UseWPF>true</UseWPF>
+    <TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

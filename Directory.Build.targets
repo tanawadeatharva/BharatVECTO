@@ -76,13 +76,13 @@
 			<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
 			<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\$(TargetFramework)\HashingTool.exe"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\$(TargetFramework)\hashingcmd.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\HashingTool.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\hashingcmd.exe"/>
 
 			<VectoConfigurationSample Include="$(SolutionDir)VECTO\install.ini"/>
 
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\$(TargetFramework)\VECTOMultistage.exe*"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\$(TargetFramework)\*.dll"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net5.0-windows\VECTOMultistage.exe*"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net5.0-windows\*.dll"/>
 		</ItemGroup>
 
 		<Message Text="@(VectoCommandLine)"/>
