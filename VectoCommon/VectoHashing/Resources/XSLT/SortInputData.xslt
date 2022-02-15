@@ -205,7 +205,15 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template> 
-	
+		
+	<xsl:template match="*[local-name()='ApplicableVehicleGroups' and ./*[local-name()='ApplicableVehicleGroup']]">
+		<xsl:element name="{local-name()}">
+			<xsl:for-each select="*[local-name()='ApplicableVehicleGroup']">
+				<xsl:sort data-type="text" select="text()" order="ascending"/>
+					<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>	
+	</xsl:template>
 	
 	<!--
 
