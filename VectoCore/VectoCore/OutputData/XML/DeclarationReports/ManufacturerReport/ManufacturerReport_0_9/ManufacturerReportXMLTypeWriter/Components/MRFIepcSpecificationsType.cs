@@ -33,8 +33,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			foreach (var electricMotorVoltageLevel in iepcData.VoltageLevels) {
 				var voltageLevel = new XElement(_mrf + XMLNames.ElectricMachine_VoltageLevel,
-					new XAttribute(XMLNames.VoltageLevel_Voltage, electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
-					new XElement(_mrf + "MaxContinousPower",
+					new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+					new XElement(_mrf + "MaxContinuousPower",
 						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
 						.ToXMLFormat(0)));
 
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			iepcXElement.Add(
 				new XElement(_mrf + "NrOfGears", iepcData.Gears.Count),
 				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
-																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio).ToXMLFormat()),
+																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio).ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)
 			);

@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_PrimaryBusVehicleType().GetElement(inputData);
+			GenerateReport("HEV-IEPC-S_PrimaryBusManufacturerOutputDataType");
 		}
 
 		#endregion

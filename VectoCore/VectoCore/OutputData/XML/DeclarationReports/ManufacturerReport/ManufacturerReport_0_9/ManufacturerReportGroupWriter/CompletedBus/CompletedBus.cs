@@ -13,6 +13,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     internal class CompletedBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
     {
+		private XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		{
+			return new XElement(_mrf + "Step",
+				new XAttribute("Count", stepCount),
+				new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, address));
+		}
 		public CompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Overrides of AbstractMrfXmlGroup
@@ -28,11 +35,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var result = new List<XElement>();
 			var manufacturers = new XElement(_mrf + "Manufacturers");
 			result.Add(manufacturers);
+			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress, 1));
 			foreach (var manufacturingStageInputData in multiStageInputData.JobInputData.ManufacturingStages) {
-				manufacturers.Add(new XElement(_mrf + "Step",
-					new XAttribute("Count", manufacturingStageInputData.StepCount), 
-					new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturingStageInputData.Vehicle.Manufacturer),
-					new XElement(_mrf + XMLNames.Component_ManufacturerAddress, manufacturingStageInputData.Vehicle.ManufacturerAddress)));
+				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
+					manufacturingStageInputData.Vehicle.ManufacturerAddress,
+					stepCount: manufacturingStageInputData.StepCount));
 			}
 			//result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle));
 			result.AddRange(new List<XElement>() {

@@ -44,8 +44,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				foreach (var electricMotorVoltageLevel in electricMachine.ElectricMachine.VoltageLevels)
 				{
 					var voltageLevel = new XElement(_mrf + XMLNames.ElectricMachine_VoltageLevel,
-						new XAttribute(XMLNames.VoltageLevel_Voltage, electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
-						new XElement(_mrf + "MaxContinousPower",
+						new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+						new XElement(_mrf + "MaxContinuousPower",
 							(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
 							.ToXMLFormat(0)));
 

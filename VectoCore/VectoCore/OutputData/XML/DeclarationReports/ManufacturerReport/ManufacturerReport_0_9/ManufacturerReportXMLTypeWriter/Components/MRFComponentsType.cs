@@ -241,6 +241,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 	}
 
+	internal class MrfPevIEPCLorryComponentsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
+	{
+		public MrfPevIEPCLorryComponentsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var components = inputData.JobInputData.Vehicle.Components;
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetIEPCSpecifications().GetElement(inputData),
+				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
+				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
+				components.AxleGearInputData != null ? _mrfFactory.GetAxleGearType().GetElement(inputData) : null,
+				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
+				_mrfFactory.GetPEV_LorryAuxiliariesType().GetXmlType(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData),
+				components.AirdragInputData != null
+					? _mrfFactory.GetAirdragType().GetXmlType(inputData.JobInputData.Vehicle.Components.AirdragInputData)
+					: null
+			);
+		}
+	}
+
 	#endregion Lorry
 
 
@@ -402,7 +423,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetElement(inputData),
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
-				_mrfFactory.GetPrimaryBusAuxType_HEV_P().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
+				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
 			);
 		}
 
@@ -487,12 +508,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var components = inputData.JobInputData.Vehicle.Components;
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				_mrfFactory.GetIEPCSpecifications().GetElement(inputData),
+				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
 				components.AxleGearInputData != null ? _mrfFactory.GetAxleGearType().GetElement(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
-				_mrfFactory.GetPrimaryBusAuxType_PEV().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries),
-				_mrfFactory.GetIEPCSpecifications().GetElement(inputData),
-				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData));
+				_mrfFactory.GetPrimaryBusAuxType_PEV()
+					.GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries));
 		}
 
 		#endregion

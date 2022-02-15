@@ -125,8 +125,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
-			//return new XElement()
+
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEV_IEPC_S_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion

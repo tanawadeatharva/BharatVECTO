@@ -167,6 +167,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					false)));
 
+			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E_IEPC,
+					false,
+					true,
+					false)));
+
 			Bind<IXMLManufacturerReport>().To<Conventional_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -207,6 +215,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					false)));
 
+			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_PrimaryBus_ManufacturerReport>().Named(
+				nameCombinationMethod.Invoke(
+					ToParams(VehicleCategoryHelper.PrimaryBus,
+						VectoSimulationJobType.SerialHybridVehicle,
+						ArchitectureID.S_IEPC, false, false, false)));
+
 			Bind<IXMLManufacturerReport>().To<PEV_E2_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
@@ -234,7 +248,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IXMLManufacturerReport>().To<PEV_IEPC_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.UNKNOWN,
+					ArchitectureID.E_IEPC,
 					false,
 					true,
 					false)));
@@ -319,11 +333,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_LorryComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfpevE4LorryComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_LorryComponentsType());
+			Bind<IXmlTypeWriter>().To<MrfPevIEPCLorryComponentsTypeWriter>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_S_LorryComponentsType());
 
 			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_PrimaryBusComponentsType());
-			Bind<IXmlTypeWriter>().To<MrfhevIepcSPrimaryBusComponentsTypeWriter>()
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
+			Bind<IXmlTypeWriter>().To<MrfhevPxIhpcPrimaryBusComponentsTypeWriter>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_Px_IHPC_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfhevS2PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S2_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfhevS3PrimaryBusComponentsTypeWriter>()
@@ -338,6 +354,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E3_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfpevE4PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusComponentsType());
+			Bind<IXmlTypeWriter>().To<MrfpevIepcPrimaryBusComponentsTypeWriter>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_PrimaryBusComponentsType());
 
 
 			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusComponentsTypeWriter>()

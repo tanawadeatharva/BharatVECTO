@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected const string Conventional_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string HEV_Px_IHPC_PrimaryBus =
-			@"";
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV_primaryBus_AMT_Px.xml";
 		protected const string HEV_S2_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
 		protected const string HEV_S3_PrimaryBus = 
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected const string HEV_S4_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml";
 		protected const string HEV_IEPC_S_PrimaryBus =
-			@"";
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
 		protected const string PEV_E2_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\PEV_primaryBus_AMT_E2.xml";
 		protected const string PEV_E3_PrimaryBus = 
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected const string PEV_E4_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\PEV_primaryBus_E4.xml";
 		protected const string PEV_IEPC_PrimaryBus =
-			@"";
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\IEPC_primaryBus.xml";
 
 
 		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
@@ -269,8 +269,6 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[Ignore("Not implemented")]
-
 		[TestCase(HEV_IEPC_S_HeavyLorry)]
 		public async Task HEV_IEPC_S_LorryMRFTest(string fileName)
 		{
@@ -333,7 +331,6 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[Ignore("No testfile")]
 		[TestCase(HEV_Px_IHPC_PrimaryBus)]
 		public void HEV_Px_IHPC_PrimaryBusTest(string fileName)
 		{
@@ -378,7 +375,6 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
-		[Ignore("No testfile")]
 		[TestCase(HEV_IEPC_S_PrimaryBus)]
 		public void HEV_IEPC_S_PrimaryBusTest(string fileName)
 		{

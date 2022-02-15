@@ -227,8 +227,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
-			var maxAlternatorPower = auxData.ElectricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
-				.Max();
+
+			var maxAlternatorPower = auxData.ElectricSupply.GetMaxAlternatorPower();
 			var electricStorageCapacity =
 				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
