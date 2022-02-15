@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;

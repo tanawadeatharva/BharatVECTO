@@ -11,7 +11,8 @@
     <DefineConstants />
     <ApplicationIcon>Resources\Icons\Icon2.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFrameworks>net48;net5.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,24 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Controls.DataVisualization.Toolkit.4.0.0.0\lib\net40-Client\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Behaviours\AutoScrollDataGridBehaviour.cs" />
     <Compile Update="Behaviours\PopUpHorizontalAlignmentBehavior.cs" />
