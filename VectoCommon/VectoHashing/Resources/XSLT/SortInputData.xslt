@@ -126,7 +126,7 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
-	<xsl:template match="*[local-name()='DragCurve']">
+	<xsl:template name="DragCurveTemplate" match="*[local-name()='DragCurve']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
@@ -176,9 +176,18 @@
 		</xsl:if>				
 	</xsl:template>
 
+	<xsl:template match="*[local-name()='DragCurve' and @gear]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='DragCurve']) > (count(//*[local-name()='DragCurve']) - 2)">	
+			<xsl:for-each select="../*[local-name()='DragCurve']">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:call-template name="DragCurveTemplate"/>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+
 	
 	<!--
-
 
 	<xsl:for-each select="../*[local-name()='VoltageLevel' and ./*[local-name() = 'Voltage']]">
 		<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>					
