@@ -54,7 +54,7 @@
 	<Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 		<ItemGroup>
 			<VectoCoreAssembly Include="$(OutputPath)VectoCore.dll" />
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\$(TargetFramework)\vectocmd.exe*"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\vectocmd.exe*"/>
 
 			<GenericVehicles Include="$(SolutionDir)Generic Vehicles\**\*.*" Exclude="$(SolutionDir)**\*.vmod;$(SolutionDir)**\*.vsum;$(SolutionDir)**\*RSLT_*.xml;$(SolutionDir)**\*.pdf"/>
 			<MissionProfiles Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
