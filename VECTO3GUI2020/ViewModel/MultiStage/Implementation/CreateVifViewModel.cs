@@ -5,18 +5,13 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Castle.Core.Internal;
-using InteractiveDataDisplay.WPF;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.WindowsAPICodePack.Shell.Interop;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
@@ -24,7 +19,6 @@ using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using Delegate = System.Delegate;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {

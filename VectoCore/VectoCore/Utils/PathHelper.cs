@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Internal;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -27,8 +26,8 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 
-			var pathArray = pathFullPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Where(s => !s.IsNullOrEmpty());
-			var relativeToArray = relativeFullPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Where(s => !s.IsNullOrEmpty());
+			var pathArray = pathFullPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Where(s => !string.IsNullOrEmpty(s));
+			var relativeToArray = relativeFullPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Where(s => !string.IsNullOrEmpty(s));
 			var result = GetRelativePath(relativeToArray, pathArray);
 
 

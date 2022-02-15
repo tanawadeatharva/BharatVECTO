@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -99,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected virtual IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
 			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, BaseNode);
-			if (voltageLevelNodes.IsNullOrEmpty())
+			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0)
 				return null;
 
 			var voltageLevels = new List<IElectricMotorVoltageLevel>();
@@ -115,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricMotorPowerMap> GetPowerMaps()
 		{
 			var powerMapNodes = GetNodes(XMLNames.PowerMap);
-			if (powerMapNodes.IsNullOrEmpty())
+			if (powerMapNodes is null || powerMapNodes.Count == 0)
 				return null;
 
 			var powerMaps = new List<IElectricMotorPowerMap>();
@@ -355,7 +354,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IDragCurve> GetDragCurves()
 		{
 			var dragCurveNodes = GetNodes(XMLNames.DragCurve, BaseNode);
-			if (dragCurveNodes.IsNullOrEmpty())
+			if (dragCurveNodes is null || dragCurveNodes.Count == 0)
 				return null;
 
 			var dragCurves = new List<IDragCurve>();
@@ -369,7 +368,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IGearEntry> GetGearEntries()
 		{
 			var gearNodes = GetNodes(XMLNames.Gear_EntryName);
-			if (gearNodes.IsNullOrEmpty())
+			if (gearNodes is null || gearNodes.Count == 0)
 				return null;
 
 			var gears = new List<IGearEntry>();

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -666,15 +665,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public bool HasErrors
-		{
-			get
-			{
-				var auxVmHasErrors = !Error.IsNullOrEmpty();
-
-				return auxVmHasErrors;
-			}
-		}
+		public bool HasErrors => !string.IsNullOrEmpty(Error);
 
 		public Dictionary<string, MultistageParameterViewModel> ParameterViewModels
 		{

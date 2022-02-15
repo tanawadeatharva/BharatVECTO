@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter;
-using TUGraz.VectoCommon.InputData;
+﻿using System.Xml.Linq;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter
 {

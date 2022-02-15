@@ -1,18 +1,8 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Components.DictionaryAdapter;
-using Castle.Core.Internal;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
-using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
 namespace VECTO3GUI2020
 {
@@ -77,7 +67,7 @@ namespace VECTO3GUI2020
 			get => _testString;
 			set
 			{
-				if (value.IsNullOrEmpty()) {
+				if (string.IsNullOrEmpty(value)) {
 					throw new VectoEmptyFieldException();
 				}
 				SetProperty(ref _testString, value);
