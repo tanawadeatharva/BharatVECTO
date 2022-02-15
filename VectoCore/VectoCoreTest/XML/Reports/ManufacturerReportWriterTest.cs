@@ -269,6 +269,8 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
+		[Ignore("Not implemented")]
+
 		[TestCase(HEV_IEPC_S_HeavyLorry)]
 		public async Task HEV_IEPC_S_LorryMRFTest(string fileName)
 		{
@@ -331,6 +333,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
+		[Ignore("No testfile")]
 		[TestCase(HEV_Px_IHPC_PrimaryBus)]
 		public void HEV_Px_IHPC_PrimaryBusTest(string fileName)
 		{
@@ -375,6 +378,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
+		[Ignore("No testfile")]
 		[TestCase(HEV_IEPC_S_PrimaryBus)]
 		public void HEV_IEPC_S_PrimaryBusTest(string fileName)
 		{
@@ -438,12 +442,15 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			Assert.IsTrue(ValidateAndPrint(report.Report));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
+
+		[Ignore("No testfile")]
 		[TestCase("")]
 		public void HEV_CompletedBusTest(string fileName)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
 
 		}
+		[Ignore("No testfile")]
 		[TestCase("")]
 		public void PEV_CompletedBusTest(string fileName)
 		{
