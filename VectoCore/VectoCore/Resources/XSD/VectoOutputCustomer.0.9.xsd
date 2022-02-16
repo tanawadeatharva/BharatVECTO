@@ -450,13 +450,18 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="MaxContinousPropulsionPower">
+			<xs:element name="VoltageLevels">
 				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="mrf:RatedPowerType">
-							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
+					<xs:sequence>
+						<xs:element name="VoltageLevel" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="MaxContinuousPropulsionPower" type="mrf:RatedPowerType"/>
+								</xs:sequence>
+								<xs:attribute name="voltage"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
