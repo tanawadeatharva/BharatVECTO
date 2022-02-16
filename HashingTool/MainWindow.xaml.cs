@@ -62,10 +62,10 @@ namespace HashingTool
 
 		private void Help_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			var myAppPath = AppDomain.CurrentDomain.BaseDirectory;
+			var myAppPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..");
 			if (File.Exists(myAppPath + @"User Manual\HashingToolHelp.html")) {
 				var defaultBrowserPath = BrowserHelper.GetDefaultBrowserPath();
-				Process.Start(defaultBrowserPath, $"\"file://{myAppPath}{@"User Manual\HashingToolHelp.html"}\"");
+				Process.Start(defaultBrowserPath, $"\"file://{Path.Combine(myAppPath, @"User Manual\HashingToolHelp.html")}\"");
 			} else {
 				MessageBox.Show("User Manual not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
