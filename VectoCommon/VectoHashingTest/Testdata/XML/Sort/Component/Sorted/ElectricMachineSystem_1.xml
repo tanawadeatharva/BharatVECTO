@@ -65,7 +65,7 @@
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>X5dgavua/V/jzBQeJ6SxZXsXm3i1jruL48LedzZ5IxU=</di:DigestValue>
+				<di:DigestValue>wLFLpJxFZ6mDXeqdlZCGVOLCoXTCf7XTL0q9ZKkmt7o=</di:DigestValue>
 			</di:Reference>
 		</v2.10.1:Signature>
 	</tns:ElectricMachineSystem>
