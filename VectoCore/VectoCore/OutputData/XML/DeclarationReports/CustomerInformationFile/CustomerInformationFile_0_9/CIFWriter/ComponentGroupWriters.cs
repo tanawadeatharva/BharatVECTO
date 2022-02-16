@@ -126,18 +126,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			var result = new List<XElement>();
 			Watt totalRatedPropulsionPower = null;
-			if (inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.S_IEPC || inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
+			IList<IElectricMotorVoltageLevel> voltageLevels = null;
+			if (inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.S_IEPC || inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.E_IEPC)
+			{
 				totalRatedPropulsionPower = inputData.JobInputData.Vehicle.Components.IEPC.R85RatedPower;
-			} else {
-				totalRatedPropulsionPower =
-					inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
-						.Where(e => e.Position != PowertrainPosition.GEN).Sum((e => e.ElectricMachine.R85RatedPower));
-			}
-			
-			
-			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
-			result.Add(new XElement(_cif + "MaxContinousPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW"))); //TODO: use max ContinuousPropulsionPower
+				voltageLevels = inputData.JobInputData.Vehicle.Components.IEPC.VoltageLevels.ToList();
 
+			}
+			else {
+				voltageLevels = new List<IElectricMotorVoltageLevel>();
+				var propulsionElectricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
+					.Where(e => e.Position != PowertrainPosition.GEN);
+				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower));
+				var groupedVoltageLevels = propulsionElectricMachines
+					.SelectMany(electricMachine => electricMachine.ElectricMachine.VoltageLevels).GroupBy((level => level.VoltageLevel));
+				foreach (IGrouping<Volt, IElectricMotorVoltageLevel> electricMotorVoltageLevels in groupedVoltageLevels) {
+					voltageLevels.Add(electricMotorVoltageLevels.MaxBy(level => level.ContinuousTorqueSpeed * level.ContinuousTorque));
+				}
+			}
+
+			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
+
+			var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
+			result.Add(voltageLevelsXElement);
+
+			foreach (var electricMotorVoltageLevel in voltageLevels)
+			{
+				var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
+					new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+					new XElement(_cif + "MaxContinuousPropulsionPower",
+						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+						.ToXMLFormat(0)));
+				voltageLevelsXElement.Add(voltageLevel);
+			}
 
 
 			return result;
