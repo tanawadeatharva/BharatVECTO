@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace TUGraz.VECTO
 {
@@ -9,21 +11,18 @@ namespace TUGraz.VECTO
 		static void Main()
 		{
 			var version = GetHighestNETVersion();
-			try {
-				Process.Start(new ProcessStartInfo($"{version}\\VECTO.exe") { CreateNoWindow = true });
-			} catch (Exception e) {
-				Console.WriteLine($"Could not start VECTO with {version}: {e.Message}");
-				Console.ReadKey();
-			}
+			Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe") {
+				WorkingDirectory = Directory.GetCurrentDirectory()
+			});
 		}
 
 		private static string GetHighestNETVersion()
 		{
 			if (SupportsNet50()) {
-				return "net5.0";
-			} 
-			
-			if (SupportsNET48()) {
+				return "net50";
+			}
+
+			if (SupportsNet48()) {
 				return "net48";
 			}
 
@@ -32,20 +31,25 @@ namespace TUGraz.VECTO
 
 		private static bool SupportsNet50()
 		{
-			var p = Process.Start(new ProcessStartInfo("dotnet", "--list-runtimes") {
-				CreateNoWindow = true,
-				UseShellExecute = false,
-				RedirectStandardError = true,
-				RedirectStandardOutput = true
-			}
-			);
+			try {
+				var p = Process.Start(new ProcessStartInfo("dotnet", "--list-runtimes") {
+					CreateNoWindow = true,
+					UseShellExecute = false,
+					RedirectStandardError = true,
+					RedirectStandardOutput = true
+				});
 
-			p.WaitForExit();
-			var output = p.StandardOutput.ReadToEnd();
-			return output.Contains("Microsoft.WindowsDesktop.App 5.0");
+				p.WaitForExit();
+				var output = p.StandardOutput.ReadToEnd();
+				return output.Contains("Microsoft.WindowsDesktop.App 5.0");
+			} catch (Exception e) {
+				Console.WriteLine(e);
+			}
+
+			return false;
 		}
 
-		private static bool SupportsNET48()
+		private static bool SupportsNet48()
 		{
 			const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 			using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey)) {

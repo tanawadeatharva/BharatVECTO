@@ -4,11 +4,12 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks />
     <TargetFramework>net45</TargetFramework>
-    <AssemblyName>VECTO</AssemblyName>
-    <ApplicationIcon>Icon2.ico</ApplicationIcon>
+    <AssemblyName>hashingcmd</AssemblyName>
+    <ApplicationIcon></ApplicationIcon>
     <PackageIconUrl />
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <ApplicationIcon>Icon2.ico</ApplicationIcon>
+    <StartupObject />
   </PropertyGroup>
 
 </Project>

@@ -107,7 +107,7 @@ Examples:
 
 		private static int Main(string[] args)
 		{
-			
+
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			try {
 				// on -h display help and terminate.
@@ -145,6 +145,12 @@ Examples:
 				}
 
 				var config = LogManager.Configuration;
+				if (config is null) {
+					// in .net5.0 the app is exported as dll, therefore the default config lookup of nlog doesn't work.
+					LogManager.LoadConfiguration($"{Assembly.GetExecutingAssembly().GetName().Name}.dll.config");
+					config = LogManager.Configuration;
+				}
+
 				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("LogFile")));
 
 				if (logLevel > LogLevel.Warn) {
