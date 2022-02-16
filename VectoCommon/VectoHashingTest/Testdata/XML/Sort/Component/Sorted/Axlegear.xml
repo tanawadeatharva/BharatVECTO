@@ -16,6 +16,11 @@
 			<Entry inputSpeed="0.00" inputTorque="0.10" torqueLoss="5.10" />
 			<Entry inputSpeed="0.00" inputTorque="125.10" torqueLoss="5.10" />
 			<Entry inputSpeed="0.00" inputTorque="50000.10" torqueLoss="2000.10" />
+			<Entry inputSpeed="4000.00" inputTorque="-60000.10" torqueLoss="2000.10" />
+			<Entry inputSpeed="4000.00" inputTorque="-788.10" torqueLoss="31.10" />
+			<Entry inputSpeed="4000.00" inputTorque="0.11" torqueLoss="31.10" />
+			<Entry inputSpeed="4000.00" inputTorque="788.10" torqueLoss="31.10" />
+			<Entry inputSpeed="4000.00" inputTorque="60000.10" torqueLoss="2000.10" />
 			<Entry inputSpeed="5000.00" inputTorque="-50000.10" torqueLoss="2000.10" />
 			<Entry inputSpeed="5000.00" inputTorque="-780.10" torqueLoss="31.10" />
 			<Entry inputSpeed="5000.00" inputTorque="0.10" torqueLoss="31.10" />
@@ -30,7 +35,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>og41nROicUT1OoesUTZ9/uoroCUbqlTo7nKmCRYQap4=</di:DigestValue>
+                <di:DigestValue>MCdQW6mfKSC6WVU+1A5UVLkxKc7eBbg4GWQp6KpzjEw=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:Axlegear>

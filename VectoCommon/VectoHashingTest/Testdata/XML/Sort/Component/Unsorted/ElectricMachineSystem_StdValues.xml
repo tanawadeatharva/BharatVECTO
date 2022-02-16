@@ -21,12 +21,14 @@
 				<OverloadDuration>30.00</OverloadDuration>
 				<MaxTorqueCurve>
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
+					<Entry outShaftSpeed="4000.00" maxTorque="101.00" minTorque="-100.00"/>
 					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 				</MaxTorqueCurve>
 				<PowerMap>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+
 					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 				</PowerMap>
 			</VoltageLevel>
@@ -42,7 +44,7 @@
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>CunnDxsiE9kciX+v9oeEGADZpEc88NtfMtmrHyJkCQ0=</di:DigestValue>
+				<di:DigestValue>qP2WjwhL0iXRHZN7OK1Bz3jEpdP4cuYvOWSeJUu6Rl8=</di:DigestValue>
 			</di:Reference>
 		</v2.10.1:Signature>
 	</tns:ElectricMachineSystem>

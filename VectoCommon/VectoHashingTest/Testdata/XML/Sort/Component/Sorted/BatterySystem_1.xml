@@ -15,14 +15,20 @@
             <TestingTemperature>20</TestingTemperature>
             <OCV>
                 <Entry SoC="0" OCV="620.00" />
+				<Entry SoC="88" OCV="640.00" />
+				<Entry SoC="89" OCV="641.00" />
                 <Entry SoC="100" OCV="640.00" />
             </OCV>
             <InternalResistance>
                 <Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00" />
+				<Entry SoC="88" R_2="13.00" R_10="14.00" R_20="16.00" />
+				<Entry SoC="88" R_2="14.00" R_10="14.00" R_20="16.00" />
                 <Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00" />
             </InternalResistance>
             <CurrentLimits>
                 <Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00" />
+				<Entry SoC="88" maxChargingCurrent="20.00" maxDischargingCurrent="50.00" />
+				<Entry SoC="88" maxChargingCurrent="21.00" maxDischargingCurrent="50.00" />
                 <Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00" />
             </CurrentLimits>
         </Data>
@@ -33,7 +39,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>tam1LGpdznHGFGo+rp0WVr0/6+F2yU2Kv4G4tYvAe+Y=</di:DigestValue>
+                <di:DigestValue>MNKcycaIzgndCWPEFDp84PlujKPkb9QaOxA8yKGNiKI=</di:DigestValue>
             </di:Reference>
         </v2.10.1:Signature>
     </tns:BatterySystem>

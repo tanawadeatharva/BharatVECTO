@@ -12,56 +12,77 @@
             <DifferentialIncluded>true</DifferentialIncluded>
             <AxlegearRatio>1.000</AxlegearRatio>
             <v2.10.1:Gears xsi:type="v2.0:GearsDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-				<Gear number="2">
-                    <Ratio>11.640</Ratio>
-                    <MaxTorque>1200</MaxTorque>
-                    <MaxSpeed>110</MaxSpeed>
-                    <TorqueLossMap>
-						<Entry inputSpeed="0.00" inputTorque="50000.20" torqueLoss="2000.20" />
-						<Entry inputSpeed="5000.00" inputTorque="-50000.20" torqueLoss="2000.20" />
-						<Entry inputSpeed="0.00" inputTorque="-50000.20" torqueLoss="2000.20" />
-						<Entry inputSpeed="0.00" inputTorque="-125.20" torqueLoss="5.20" />
-						<Entry inputSpeed="0.00" inputTorque="0.20" torqueLoss="5.20" />
-						<Entry inputSpeed="0.00" inputTorque="125.20" torqueLoss="5.20" />
-						<Entry inputSpeed="5000.00" inputTorque="780.20" torqueLoss="31.20" />
-						<Entry inputSpeed="5000.00" inputTorque="50000.20" torqueLoss="2000.20" />
-						<Entry inputSpeed="5000.00" inputTorque="-780.20" torqueLoss="31.20" />
-                        <Entry inputSpeed="5000.00" inputTorque="0.20" torqueLoss="31.20" />
-					</TorqueLossMap>
-                </Gear>
-				<Gear number="1">
-					<Ratio>14.930</Ratio>
-					<MaxTorque>1000</MaxTorque>
-					<MaxSpeed>100</MaxSpeed>
-					<TorqueLossMap>
-						<Entry inputSpeed="5000.00" inputTorque="-50000.10" torqueLoss="2000.10" />
-						<Entry inputSpeed="5000.00" inputTorque="-780.10" torqueLoss="31.10" />
-						<Entry inputSpeed="5000.00" inputTorque="0.10" torqueLoss="31.10" />
-						<Entry inputSpeed="5000.00" inputTorque="780.10" torqueLoss="31.10" />
-						<Entry inputSpeed="0.00" inputTorque="-50000.10" torqueLoss="2000.10" />
-						<Entry inputSpeed="0.00" inputTorque="125.10" torqueLoss="5.10" />
-						<Entry inputSpeed="0.00" inputTorque="50000.10" torqueLoss="2000.10" />
-						<Entry inputSpeed="5000.00" inputTorque="50000.10" torqueLoss="2000.10" />
-						<Entry inputSpeed="0.00" inputTorque="-125.10" torqueLoss="5.10" />
-						<Entry inputSpeed="0.00" inputTorque="0.10" torqueLoss="5.10" />
-					</TorqueLossMap>
-				</Gear>
-				<Gear number="3">
+			    <Gear number="3">
                     <Ratio>9.020</Ratio>
                     <MaxTorque>1300</MaxTorque>
                     <MaxSpeed>112</MaxSpeed>
                     <TorqueLossMap>
-						<Entry inputSpeed="5000.00" inputTorque="0.30" torqueLoss="31.30" />
-						<Entry inputSpeed="5000.00" inputTorque="780.30" torqueLoss="31.30" />
-						<Entry inputSpeed="5000.00" inputTorque="50000.30" torqueLoss="2000.30" />
-						<Entry inputSpeed="0.00" inputTorque="-50000.30" torqueLoss="2000.30" />
+					    <Entry inputSpeed="5000.00" inputTorque="0.30" torqueLoss="31.30" />
+                        <Entry inputSpeed="5000.00" inputTorque="780.30" torqueLoss="31.30" />
+                        <Entry inputSpeed="5000.00" inputTorque="50000.30" torqueLoss="2000.30" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+                        <Entry inputSpeed="0.00" inputTorque="-50000.30" torqueLoss="2000.30" />
                         <Entry inputSpeed="0.00" inputTorque="-125.30" torqueLoss="5.30" />
-						<Entry inputSpeed="0.00" inputTorque="50000.30" torqueLoss="2000.30" />
+                        <Entry inputSpeed="0.00" inputTorque="0.30" torqueLoss="5.30" />
+                        <Entry inputSpeed="0.00" inputTorque="125.30" torqueLoss="5.30" />
+                        <Entry inputSpeed="0.00" inputTorque="50000.30" torqueLoss="2000.30" />
                         <Entry inputSpeed="5000.00" inputTorque="-50000.30" torqueLoss="2000.30" />
                         <Entry inputSpeed="5000.00" inputTorque="-780.30" torqueLoss="31.30" />
-						<Entry inputSpeed="0.00" inputTorque="0.30" torqueLoss="5.30" />
-						<Entry inputSpeed="0.00" inputTorque="125.30" torqueLoss="5.30" />
-					</TorqueLossMap>
+
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+                    </TorqueLossMap>
+                </Gear>
+			    <Gear number="2">
+                    <Ratio>11.640</Ratio>
+                    <MaxTorque>1200</MaxTorque>
+                    <MaxSpeed>110</MaxSpeed>
+                    <TorqueLossMap>
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+					
+                        <Entry inputSpeed="0.00" inputTorque="-50000.20" torqueLoss="2000.20" />
+                        <Entry inputSpeed="0.00" inputTorque="-125.20" torqueLoss="5.20" />
+                        <Entry inputSpeed="0.00" inputTorque="0.20" torqueLoss="5.20" />
+                        <Entry inputSpeed="0.00" inputTorque="125.20" torqueLoss="5.20" />
+
+                        <Entry inputSpeed="5000.00" inputTorque="-780.20" torqueLoss="31.20" />
+                        <Entry inputSpeed="5000.00" inputTorque="0.20" torqueLoss="31.20" />
+                        <Entry inputSpeed="5000.00" inputTorque="780.20" torqueLoss="31.20" />
+                        <Entry inputSpeed="5000.00" inputTorque="50000.20" torqueLoss="2000.20" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+                        <Entry inputSpeed="0.00" inputTorque="50000.20" torqueLoss="2000.20" />
+                        <Entry inputSpeed="5000.00" inputTorque="-50000.20" torqueLoss="2000.20" />
+                    </TorqueLossMap>
+                </Gear>
+                <Gear number="1">
+                    <Ratio>14.930</Ratio>
+                    <MaxTorque>1000</MaxTorque>
+                    <MaxSpeed>100</MaxSpeed>
+                    <TorqueLossMap>
+					    <Entry inputSpeed="5000.00" inputTorque="-50000.10" torqueLoss="2000.10" />
+                        <Entry inputSpeed="5000.00" inputTorque="-780.10" torqueLoss="31.10" />
+                        <Entry inputSpeed="5000.00" inputTorque="0.10" torqueLoss="31.10" />
+					
+                        <Entry inputSpeed="0.00" inputTorque="-50000.10" torqueLoss="2000.10" />
+                        <Entry inputSpeed="0.00" inputTorque="-125.10" torqueLoss="5.10" />
+                        <Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="0.00" inputTorque="0.10" torqueLoss="5.10" />
+                        <Entry inputSpeed="0.00" inputTorque="125.10" torqueLoss="5.10" />
+                        <Entry inputSpeed="0.00" inputTorque="50000.10" torqueLoss="2000.10" />
+
+                        <Entry inputSpeed="5000.00" inputTorque="780.10" torqueLoss="31.10" />
+                        <Entry inputSpeed="5000.00" inputTorque="50000.10" torqueLoss="2000.10" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+
+                    </TorqueLossMap>
                 </Gear>
             </v2.10.1:Gears>
         </v2.0:Data>
@@ -72,7 +93,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>LrsR3WfAkFia53dMiwGEIeAiA+9bdWvaS6x7dIL9yiQ=</di:DigestValue>
+                <di:DigestValue>BlXQyrK6qVsW5MHt74jB1Y1+a9toEwNC5KXYUmKawfQ=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:Gearbox>

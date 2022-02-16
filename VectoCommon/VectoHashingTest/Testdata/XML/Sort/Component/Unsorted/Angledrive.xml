@@ -10,12 +10,17 @@
          <Ratio>1.123</Ratio>
          <CertificationMethod>Option 1</CertificationMethod>
 		<TorqueLossMap>
+			<Entry inputSpeed="800.00" inputTorque="0.00" torqueLoss="10.00" />
+			<Entry inputSpeed="800.00" inputTorque="1200.00" torqueLoss="100.00" />
 			<Entry inputSpeed="0.00" inputTorque="-10000.00" torqueLoss="100.00" />
-			<Entry inputSpeed="1000.00" inputTorque="1000.00" torqueLoss="100.00" />
-			<Entry inputSpeed="0.00" inputTorque="10000.00" torqueLoss="100.00" />
 			<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="10.00" />
 			<Entry inputSpeed="1000.00" inputTorque="0.00" torqueLoss="10.00" />
+			<Entry inputSpeed="1000.00" inputTorque="1000.00" torqueLoss="100.00" />
+			<Entry inputSpeed="0.00" inputTorque="10000.00" torqueLoss="100.00" />
+			<Entry inputSpeed="800.00" inputTorque="-1200.00" torqueLoss="100.00" />
+
 			<Entry inputSpeed="1000.00" inputTorque="-1000.00" torqueLoss="100.00" />
+
 		</TorqueLossMap>
         </v2.0:Data>
         <v2.0:Signature>
@@ -25,7 +30,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>FGaItzPcx1qGytVlroFp+PU9rzsaQWRWnxmIspkqCRM=</di:DigestValue>
+                <di:DigestValue>lFLmCC4J39gaYU+VNw4q6ScyWOBzKoeVqmQ8/mQizBQ=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:Angledrive>

@@ -10,9 +10,9 @@
          <CertificationMethod>Measured</CertificationMethod>
 		<RetarderLossMap>
 			<Entry retarderSpeed="0.00"  torqueLoss="10.00" />
-			<Entry retarderSpeed="0.00"  torqueLoss="100.00" />
 			<Entry retarderSpeed="1000.00"  torqueLoss="10.00" />
-			<Entry retarderSpeed="1000.00"  torqueLoss="100.00" />	
+			<Entry retarderSpeed="1001.00"  torqueLoss="10.00" />
+			<Entry retarderSpeed="1005.00"  torqueLoss="100.00" />
 		</RetarderLossMap>
         </v2.0:Data>
         <v2.0:Signature>
@@ -22,7 +22,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>uMH8HJlAtm/SNaj8QOhuX/cBNXTHAZ1la3oEXI42bls=</di:DigestValue>
+                <di:DigestValue>fo5vyZY6IeQgfFpGmNV49YdfJlcEsGycJoNa3qqVChM=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:Retarder>

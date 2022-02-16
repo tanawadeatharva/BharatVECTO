@@ -13,8 +13,9 @@
             <RotationalInertia>0.10</RotationalInertia>
             <DcDcConverterIncluded>true</DcDcConverterIncluded>
             <IHPCType>IHPC Type 1</IHPCType>
+ 
 			<VoltageLevel>
-				<Voltage>600</Voltage>
+				<Voltage>500</Voltage>
 				<ContinuousTorque>200.00</ContinuousTorque>
 				<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
 				<OverloadTorque>400.00</OverloadTorque>
@@ -22,20 +23,36 @@
 				<OverloadDuration>30.00</OverloadDuration>
 				<MaxTorqueCurve>
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
+					<Entry outShaftSpeed="5000.00" maxTorque="100.00" minTorque="-100.00"/>
 					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
+
 				</MaxTorqueCurve>
-				<PowerMap gear="2">
-					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
-					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
-				</PowerMap>
 				<PowerMap gear="1">
-					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
 				</PowerMap>
+				<PowerMap gear="3">
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+				</PowerMap>
+				<PowerMap gear="2">
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+				</PowerMap>
+
 			</VoltageLevel>
 			<VoltageLevel>
                 <Voltage>400</Voltage>
@@ -45,31 +62,93 @@
 				<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
 				<OverloadDuration>30.00</OverloadDuration>
                 <MaxTorqueCurve>
-					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
-					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
-				</MaxTorqueCurve>
-				<PowerMap gear="2">
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
-					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
-				</PowerMap>
-                <PowerMap gear="1">
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
-					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
-                </PowerMap>
-			</VoltageLevel>
+					<Entry outShaftSpeed="4001.00" maxTorque="101.00" minTorque="-100.00"/>
+                    <Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
+                    <Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 
+                </MaxTorqueCurve>
+                <PowerMap gear="1">
+				    <Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+                </PowerMap>
+				<PowerMap gear="3">
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+				</PowerMap>
+                <PowerMap gear="2">
+				    <Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+                </PowerMap>
+
+            </VoltageLevel>
+			
+			
+			<VoltageLevel>
+                <Voltage>600</Voltage>
+                <ContinuousTorque>200.00</ContinuousTorque>
+				<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
+				<OverloadTorque>400.00</OverloadTorque>
+				<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+				<OverloadDuration>30.00</OverloadDuration>
+                <MaxTorqueCurve>
+				    <Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
+					<Entry outShaftSpeed="4001.00" maxTorque="101.00" minTorque="-100.00"/>
+				
+                    <Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
+
+                </MaxTorqueCurve>
+
+                <PowerMap gear="2">
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+                </PowerMap>
+				<PowerMap gear="1">
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+                    <Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+                    <Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+
+                </PowerMap>
+				<PowerMap gear="3">
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="5000.00" torque="-5000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+
+					<Entry outShaftSpeed="5000.00" torque="5000.00" electricPower="20000.00"/>
+				</PowerMap>
+            </VoltageLevel>
             <DragCurve>
-				<Entry outShaftSpeed="4000.00" dragTorque="30.00" />
-				<Entry outShaftSpeed="0.00" dragTorque="10.00" />
-			</DragCurve>
+			    <Entry outShaftSpeed="4000.00" dragTorque="30.00" />
+                <Entry outShaftSpeed="0.00" dragTorque="10.00" />
+
+				<Entry outShaftSpeed="5000.00" dragTorque="30.00" />
+            </DragCurve>
             <Conditioning>
 				<Entry coolantTempInlet="50" coolingPower="5000" />
-				<Entry coolantTempInlet="30" coolingPower="5000" />
-			</Conditioning>
+                <Entry coolantTempInlet="30" coolingPower="5000" />
+
+				<Entry coolantTempInlet="60" coolingPower="5000" />
+            </Conditioning>
         </Data>
         <v2.10.1:Signature>
             <di:Reference URI="#EM-asdf">
@@ -78,7 +157,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>X5dgavua/V/jzBQeJ6SxZXsXm3i1jruL48LedzZ5IxU=</di:DigestValue>
+                <di:DigestValue>6VgGv3QToPDXpr7nSg1fupTLZ8qACAOEshZ8l5pUNI4=</di:DigestValue>
             </di:Reference>
         </v2.10.1:Signature>
     </tns:ElectricMachineSystem>

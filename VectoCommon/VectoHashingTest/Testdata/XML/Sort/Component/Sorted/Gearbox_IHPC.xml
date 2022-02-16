@@ -23,6 +23,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="2">
@@ -38,6 +43,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="3">
@@ -53,6 +63,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="4">
@@ -68,6 +83,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="5">
@@ -83,6 +103,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="6">
@@ -98,6 +123,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="7">
@@ -113,6 +143,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="8">
@@ -128,6 +163,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="9">
@@ -143,6 +183,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="10">
@@ -158,6 +203,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="11">
@@ -173,6 +223,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="780.00" torqueLoss="31.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
                 <Gear number="12">
@@ -188,6 +243,11 @@
                         <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="17.00" />
                         <Entry inputSpeed="5000.00" inputTorque="845.00" torqueLoss="17.00" />
                         <Entry inputSpeed="5000.00" inputTorque="50000.00" torqueLoss="1000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
+						<Entry inputSpeed="6000.00" inputTorque="-780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="0.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="780.00" torqueLoss="31.00" />
+						<Entry inputSpeed="6000.00" inputTorque="50000.00" torqueLoss="2000.00" />
                     </TorqueLossMap>
                 </Gear>
             </v2.10.1:Gears>
@@ -199,7 +259,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>XZCluPiG05mOAj5rTjTllCWbhCTEYVxCbE940ck3XsA=</di:DigestValue>
+                <di:DigestValue>QVPf1HhUClM3JoxJHTVqcp2gPXMiqaZ5vFTVyjnG1Co=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:Gearbox>

@@ -15,6 +15,11 @@
                 <Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="5.00" />
                 <Entry inputSpeed="0.00" inputTorque="125.00" torqueLoss="5.00" />
                 <Entry inputSpeed="0.00" inputTorque="50000.00" torqueLoss="2000.00" />
+				<Entry inputSpeed="4000.00" inputTorque="-60000.00" torqueLoss="2000.00" />
+				<Entry inputSpeed="4000.00" inputTorque="-680.00" torqueLoss="31.00" />
+				<Entry inputSpeed="4000.00" inputTorque="0.00" torqueLoss="31.00" />
+				<Entry inputSpeed="4000.00" inputTorque="680.00" torqueLoss="31.00" />
+				<Entry inputSpeed="4000.00" inputTorque="60000.00" torqueLoss="2000.00" />
                 <Entry inputSpeed="5000.00" inputTorque="-50000.00" torqueLoss="2000.00" />
                 <Entry inputSpeed="5000.00" inputTorque="-780.00" torqueLoss="31.00" />
                 <Entry inputSpeed="5000.00" inputTorque="0.00" torqueLoss="31.00" />
@@ -29,7 +34,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>NiyH2Xp0rQswwXIOf52Jm0wvK4Yc2/PL/T+zQCWQGFo=</di:DigestValue>
+                <di:DigestValue>HWRjRcjJ/S1JBoUv+xjhWQDAsRn5c7D4LbwB04yyxrQ=</di:DigestValue>
             </di:Reference>
         </v2.10.1:Signature>
     </tns:ADC>

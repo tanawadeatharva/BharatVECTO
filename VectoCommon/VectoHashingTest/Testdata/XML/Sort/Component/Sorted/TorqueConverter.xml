@@ -9,11 +9,10 @@
          <AppVersion>aaaaa</AppVersion>
          <CertificationMethod>Measured</CertificationMethod>
          <Characteristics>
-			<Entry speedRatio='0.1000' torqueRatio='1.71' inputTorqueRef='355.43'/>
-			<Entry speedRatio='0.0000' torqueRatio='1.75' inputTorqueRef='367.68'/>
-			<Entry speedRatio='0.1000' torqueRatio='1.72' inputTorqueRef='355.42'/>
 			<Entry speedRatio='0.0000' torqueRatio='1.80' inputTorqueRef='367.65'/>
-
+			<Entry speedRatio='0.0001' torqueRatio='1.75' inputTorqueRef='367.68'/>
+			<Entry speedRatio='0.1002' torqueRatio='1.72' inputTorqueRef='355.42'/>
+			<Entry speedRatio='0.1003' torqueRatio='1.71' inputTorqueRef='355.43'/>
 		</Characteristics>
         </v2.0:Data>
         <v2.0:Signature>
@@ -23,7 +22,7 @@
                     <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </di:Transforms>
                 <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <di:DigestValue>fw0SEYiGgZbq0YvrICrfQYgsDJTbz/s66w7EM2kezio=</di:DigestValue>
+                <di:DigestValue>mxPXYmGbF6eUzjxqAp9KXjy96DzMCGm5Xq9WLvNHwVA=</di:DigestValue>
             </di:Reference>
         </v2.0:Signature>
     </tns:TorqueConverter>
