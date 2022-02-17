@@ -43,7 +43,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void DoLinkClickedCommand()
 		{
-			Process.Start(EUPLLink);
+			Process.Start(new ProcessStartInfo(EUPLLink) { UseShellExecute = true});
 		}
 
 		public ICommand MailClickedCommand
@@ -53,7 +53,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void DoMailClickedCommand()
 		{
-			Process.Start(JRCMail);
+			Process.Start(new ProcessStartInfo(JRCMail) { UseShellExecute = true});
 		}
 
 		public ICommand JrcPicClickedCommand
@@ -63,7 +63,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 		private void DoJrcPicClickedCommand()
 		{
-			Process.Start(JRCPic);
+			Process.Start(new ProcessStartInfo(JRCPic) { UseShellExecute = true});
 		}
 		#endregion
 
