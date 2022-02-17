@@ -38,9 +38,6 @@ Partial Class FileBrowserDialog
 		Me.components = New System.ComponentModel.Container()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FileBrowserDialog))
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-		Me.ListViewFolder = New System.Windows.Forms.ListView()
-		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.ButtonNewDir = New System.Windows.Forms.Button()
 		Me.ButtonDesktop = New System.Windows.Forms.Button()
@@ -48,20 +45,23 @@ Partial Class FileBrowserDialog
 		Me.ButtonFolderBack = New System.Windows.Forms.Button()
 		Me.TextBoxSearchFolder = New System.Windows.Forms.TextBox()
 		Me.ComboBoxDrive = New System.Windows.Forms.ComboBox()
-		Me.ListViewFiles = New System.Windows.Forms.ListView()
-		Me.ColumnFileName = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColumnType = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColumnSize = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColumnChangedOn = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ContextMenuFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
-		Me.RenameFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-		Me.DeleteFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-		Me.Label2 = New System.Windows.Forms.Label()
+		Me.ListViewFolder = New System.Windows.Forms.ListView()
+		Me.ColumnHeader3 = New System.Windows.Forms.ColumnHeader()
+		Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
 		Me.ButtonAll = New System.Windows.Forms.Button()
 		Me.ComboBoxExt = New System.Windows.Forms.ComboBox()
 		Me.ButtonHisFile = New System.Windows.Forms.Button()
 		Me.TextBoxSearchFile = New System.Windows.Forms.TextBox()
 		Me.Label5 = New System.Windows.Forms.Label()
+		Me.Label2 = New System.Windows.Forms.Label()
+		Me.ListViewFiles = New System.Windows.Forms.ListView()
+		Me.ColumnFileName = New System.Windows.Forms.ColumnHeader()
+		Me.ColumnType = New System.Windows.Forms.ColumnHeader()
+		Me.ColumnSize = New System.Windows.Forms.ColumnHeader()
+		Me.ColumnChangedOn = New System.Windows.Forms.ColumnHeader()
+		Me.ContextMenuFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+		Me.RenameFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+		Me.DeleteFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.TextBoxPath = New System.Windows.Forms.TextBox()
 		Me.ContextMenuHisFolder = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.ContextMenuHisFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -84,14 +84,14 @@ Partial Class FileBrowserDialog
             Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.SplitContainer1.Cursor = System.Windows.Forms.Cursors.VSplit
 		Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
-		Me.SplitContainer1.Location = New System.Drawing.Point(-1, 46)
+		Me.SplitContainer1.Location = New System.Drawing.Point(6, 51)
 		Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(0)
 		Me.SplitContainer1.Name = "SplitContainer1"
 		'
 		'SplitContainer1.Panel1
 		'
-		Me.SplitContainer1.Panel1.Controls.Add(Me.ListViewFolder)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonNewDir)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonDesktop)
@@ -99,21 +99,107 @@ Partial Class FileBrowserDialog
 		Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonFolderBack)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.TextBoxSearchFolder)
 		Me.SplitContainer1.Panel1.Controls.Add(Me.ComboBoxDrive)
-		Me.SplitContainer1.Panel1MinSize = 179
+		Me.SplitContainer1.Panel1.Controls.Add(Me.ListViewFolder)
+		Me.SplitContainer1.Panel1.Cursor = System.Windows.Forms.Cursors.Default
+		Me.SplitContainer1.Panel1MinSize = 195
 		'
 		'SplitContainer1.Panel2
 		'
-		Me.SplitContainer1.Panel2.Controls.Add(Me.ListViewFiles)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ButtonAll)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ComboBoxExt)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ButtonHisFile)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.TextBoxSearchFile)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.Label5)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
-		Me.SplitContainer1.Size = New System.Drawing.Size(713, 273)
-		Me.SplitContainer1.SplitterDistance = 179
+		Me.SplitContainer1.Panel2.Controls.Add(Me.ListViewFiles)
+		Me.SplitContainer1.Panel2.Cursor = System.Windows.Forms.Cursors.Default
+		Me.SplitContainer1.Size = New System.Drawing.Size(737, 333)
+		Me.SplitContainer1.SplitterDistance = 195
+		Me.SplitContainer1.SplitterWidth = 5
 		Me.SplitContainer1.TabIndex = 5
 		Me.SplitContainer1.TabStop = false
+		'
+		'Label1
+		'
+		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+		Me.Label1.AutoSize = true
+		Me.Label1.Location = New System.Drawing.Point(2, 314)
+		Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(36, 15)
+		Me.Label1.TabIndex = 28
+		Me.Label1.Text = "Filter:"
+		'
+		'ButtonNewDir
+		'
+		Me.ButtonNewDir.Image = Global.TUGraz.VECTO.My.Resources.Resources.new_dir
+		Me.ButtonNewDir.Location = New System.Drawing.Point(129, 4)
+		Me.ButtonNewDir.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonNewDir.Name = "ButtonNewDir"
+		Me.ButtonNewDir.Size = New System.Drawing.Size(30, 29)
+		Me.ButtonNewDir.TabIndex = 21
+		Me.ButtonNewDir.TabStop = false
+		Me.ToolTip1.SetToolTip(Me.ButtonNewDir, "Create new Directory")
+		Me.ButtonNewDir.UseVisualStyleBackColor = true
+		'
+		'ButtonDesktop
+		'
+		Me.ButtonDesktop.Image = Global.TUGraz.VECTO.My.Resources.Resources.desktop
+		Me.ButtonDesktop.Location = New System.Drawing.Point(99, 4)
+		Me.ButtonDesktop.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonDesktop.Name = "ButtonDesktop"
+		Me.ButtonDesktop.Size = New System.Drawing.Size(30, 29)
+		Me.ButtonDesktop.TabIndex = 22
+		Me.ButtonDesktop.TabStop = false
+		Me.ToolTip1.SetToolTip(Me.ButtonDesktop, "Go to Desktop")
+		Me.ButtonDesktop.UseVisualStyleBackColor = true
+		'
+		'ButtonHisFolder
+		'
+		Me.ButtonHisFolder.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.ButtonHisFolder.Image = Global.TUGraz.VECTO.My.Resources.Resources.file_history
+		Me.ButtonHisFolder.Location = New System.Drawing.Point(159, 4)
+		Me.ButtonHisFolder.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonHisFolder.Name = "ButtonHisFolder"
+		Me.ButtonHisFolder.Size = New System.Drawing.Size(30, 29)
+		Me.ButtonHisFolder.TabIndex = 24
+		Me.ButtonHisFolder.TabStop = false
+		Me.ToolTip1.SetToolTip(Me.ButtonHisFolder, "History / Favorites")
+		Me.ButtonHisFolder.UseVisualStyleBackColor = true
+		'
+		'ButtonFolderBack
+		'
+		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"),System.Drawing.Image)
+		Me.ButtonFolderBack.Location = New System.Drawing.Point(69, 4)
+		Me.ButtonFolderBack.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonFolderBack.Name = "ButtonFolderBack"
+		Me.ButtonFolderBack.Size = New System.Drawing.Size(30, 29)
+		Me.ButtonFolderBack.TabIndex = 20
+		Me.ButtonFolderBack.TabStop = false
+		Me.ToolTip1.SetToolTip(Me.ButtonFolderBack, "Move up one directory")
+		Me.ButtonFolderBack.UseVisualStyleBackColor = true
+		'
+		'TextBoxSearchFolder
+		'
+		Me.TextBoxSearchFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.TextBoxSearchFolder.Location = New System.Drawing.Point(41, 309)
+		Me.TextBoxSearchFolder.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.TextBoxSearchFolder.Name = "TextBoxSearchFolder"
+		Me.TextBoxSearchFolder.Size = New System.Drawing.Size(153, 23)
+		Me.TextBoxSearchFolder.TabIndex = 15
+		Me.ToolTip1.SetToolTip(Me.TextBoxSearchFolder, "Filter the directories")
+		'
+		'ComboBoxDrive
+		'
+		Me.ComboBoxDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.ComboBoxDrive.Font = New System.Drawing.Font("Segoe UI", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+		Me.ComboBoxDrive.FormattingEnabled = true
+		Me.ComboBoxDrive.Location = New System.Drawing.Point(6, 4)
+		Me.ComboBoxDrive.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ComboBoxDrive.Name = "ComboBoxDrive"
+		Me.ComboBoxDrive.Size = New System.Drawing.Size(62, 28)
+		Me.ComboBoxDrive.TabIndex = 5
 		'
 		'ListViewFolder
 		'
@@ -124,10 +210,11 @@ Partial Class FileBrowserDialog
 		Me.ListViewFolder.FullRowSelect = true
 		Me.ListViewFolder.GridLines = true
 		Me.ListViewFolder.HideSelection = false
-		Me.ListViewFolder.Location = New System.Drawing.Point(-1, 22)
+		Me.ListViewFolder.Location = New System.Drawing.Point(-2, 37)
+		Me.ListViewFolder.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.ListViewFolder.MultiSelect = false
 		Me.ListViewFolder.Name = "ListViewFolder"
-		Me.ListViewFolder.Size = New System.Drawing.Size(179, 232)
+		Me.ListViewFolder.Size = New System.Drawing.Size(198, 273)
 		Me.ListViewFolder.SmallImageList = Me.ImageList1
 		Me.ListViewFolder.TabIndex = 10
 		Me.ListViewFolder.UseCompatibleStateImageBehavior = false
@@ -144,80 +231,73 @@ Partial Class FileBrowserDialog
 		Me.ImageList1.ImageSize = New System.Drawing.Size(16, 16)
 		Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
 		'
-		'Label1
+		'ButtonAll
 		'
-		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-		Me.Label1.AutoSize = true
-		Me.Label1.Location = New System.Drawing.Point(2, 257)
-		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(32, 13)
-		Me.Label1.TabIndex = 28
-		Me.Label1.Text = "Filter:"
+		Me.ButtonAll.Location = New System.Drawing.Point(4, 4)
+		Me.ButtonAll.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonAll.Name = "ButtonAll"
+		Me.ButtonAll.Size = New System.Drawing.Size(83, 29)
+		Me.ButtonAll.TabIndex = 19
+		Me.ButtonAll.Text = "Select All"
+		Me.ToolTip1.SetToolTip(Me.ButtonAll, "Select all shown files")
+		Me.ButtonAll.UseVisualStyleBackColor = true
 		'
-		'ButtonNewDir
+		'ComboBoxExt
 		'
-		Me.ButtonNewDir.Image = Global.TUGraz.VECTO.My.Resources.Resources.new_dir
-		Me.ButtonNewDir.Location = New System.Drawing.Point(103, -2)
-		Me.ButtonNewDir.Name = "ButtonNewDir"
-		Me.ButtonNewDir.Size = New System.Drawing.Size(26, 25)
-		Me.ButtonNewDir.TabIndex = 21
-		Me.ButtonNewDir.TabStop = false
-		Me.ToolTip1.SetToolTip(Me.ButtonNewDir, "Create new Directory")
-		Me.ButtonNewDir.UseVisualStyleBackColor = true
+		Me.ComboBoxExt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.ComboBoxExt.FormattingEnabled = true
+		Me.ComboBoxExt.Location = New System.Drawing.Point(393, 309)
+		Me.ComboBoxExt.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ComboBoxExt.Name = "ComboBoxExt"
+		Me.ComboBoxExt.Size = New System.Drawing.Size(144, 23)
+		Me.ComboBoxExt.TabIndex = 20
+		Me.ToolTip1.SetToolTip(Me.ComboBoxExt, "Filter the file type")
 		'
-		'ButtonDesktop
+		'ButtonHisFile
 		'
-		Me.ButtonDesktop.Image = Global.TUGraz.VECTO.My.Resources.Resources.desktop
-		Me.ButtonDesktop.Location = New System.Drawing.Point(78, -2)
-		Me.ButtonDesktop.Name = "ButtonDesktop"
-		Me.ButtonDesktop.Size = New System.Drawing.Size(26, 25)
-		Me.ButtonDesktop.TabIndex = 22
-		Me.ButtonDesktop.TabStop = false
-		Me.ToolTip1.SetToolTip(Me.ButtonDesktop, "Go to Desktop")
-		Me.ButtonDesktop.UseVisualStyleBackColor = true
+		Me.ButtonHisFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.ButtonHisFile.Image = Global.TUGraz.VECTO.My.Resources.Resources.file_history
+		Me.ButtonHisFile.Location = New System.Drawing.Point(493, 4)
+		Me.ButtonHisFile.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.ButtonHisFile.Name = "ButtonHisFile"
+		Me.ButtonHisFile.Size = New System.Drawing.Size(30, 29)
+		Me.ButtonHisFile.TabIndex = 24
+		Me.ButtonHisFile.TabStop = false
+		Me.ToolTip1.SetToolTip(Me.ButtonHisFile, "History")
+		Me.ButtonHisFile.UseVisualStyleBackColor = true
 		'
-		'ButtonHisFolder
+		'TextBoxSearchFile
 		'
-		Me.ButtonHisFolder.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.ButtonHisFolder.Image = Global.TUGraz.VECTO.My.Resources.Resources.file_history
-		Me.ButtonHisFolder.Location = New System.Drawing.Point(153, -2)
-		Me.ButtonHisFolder.Name = "ButtonHisFolder"
-		Me.ButtonHisFolder.Size = New System.Drawing.Size(26, 25)
-		Me.ButtonHisFolder.TabIndex = 24
-		Me.ButtonHisFolder.TabStop = false
-		Me.ToolTip1.SetToolTip(Me.ButtonHisFolder, "History / Favorites")
-		Me.ButtonHisFolder.UseVisualStyleBackColor = true
-		'
-		'ButtonFolderBack
-		'
-		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"),System.Drawing.Image)
-		Me.ButtonFolderBack.Location = New System.Drawing.Point(53, -2)
-		Me.ButtonFolderBack.Name = "ButtonFolderBack"
-		Me.ButtonFolderBack.Size = New System.Drawing.Size(26, 25)
-		Me.ButtonFolderBack.TabIndex = 20
-		Me.ButtonFolderBack.TabStop = false
-		Me.ToolTip1.SetToolTip(Me.ButtonFolderBack, "Move up one directory")
-		Me.ButtonFolderBack.UseVisualStyleBackColor = true
-		'
-		'TextBoxSearchFolder
-		'
-		Me.TextBoxSearchFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
+		Me.TextBoxSearchFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.TextBoxSearchFolder.Location = New System.Drawing.Point(35, 252)
-		Me.TextBoxSearchFolder.Name = "TextBoxSearchFolder"
-		Me.TextBoxSearchFolder.Size = New System.Drawing.Size(143, 20)
-		Me.TextBoxSearchFolder.TabIndex = 15
-		Me.ToolTip1.SetToolTip(Me.TextBoxSearchFolder, "Filter the directories")
+		Me.TextBoxSearchFile.Location = New System.Drawing.Point(44, 309)
+		Me.TextBoxSearchFile.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+		Me.TextBoxSearchFile.Name = "TextBoxSearchFile"
+		Me.TextBoxSearchFile.Size = New System.Drawing.Size(337, 23)
+		Me.TextBoxSearchFile.TabIndex = 15
+		Me.ToolTip1.SetToolTip(Me.TextBoxSearchFile, "Filter the files")
 		'
-		'ComboBoxDrive
+		'Label5
 		'
-		Me.ComboBoxDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.ComboBoxDrive.Font = New System.Drawing.Font("Segoe UI", 11!)
-		Me.ComboBoxDrive.FormattingEnabled = true
-		Me.ComboBoxDrive.Location = New System.Drawing.Point(0, -1)
-		Me.ComboBoxDrive.Name = "ComboBoxDrive"
-		Me.ComboBoxDrive.Size = New System.Drawing.Size(54, 28)
-		Me.ComboBoxDrive.TabIndex = 5
+		Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+		Me.Label5.AutoSize = true
+		Me.Label5.Location = New System.Drawing.Point(381, 313)
+		Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(10, 15)
+		Me.Label5.TabIndex = 30
+		Me.Label5.Text = "."
+		'
+		'Label2
+		'
+		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
+		Me.Label2.AutoSize = true
+		Me.Label2.Location = New System.Drawing.Point(2, 314)
+		Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+		Me.Label2.Name = "Label2"
+		Me.Label2.Size = New System.Drawing.Size(36, 15)
+		Me.Label2.TabIndex = 29
+		Me.Label2.Text = "Filter:"
 		'
 		'ListViewFiles
 		'
@@ -229,9 +309,10 @@ Partial Class FileBrowserDialog
 		Me.ListViewFiles.FullRowSelect = true
 		Me.ListViewFiles.GridLines = true
 		Me.ListViewFiles.HideSelection = false
-		Me.ListViewFiles.Location = New System.Drawing.Point(-1, 22)
+		Me.ListViewFiles.Location = New System.Drawing.Point(-1, 37)
+		Me.ListViewFiles.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.ListViewFiles.Name = "ListViewFiles"
-		Me.ListViewFiles.Size = New System.Drawing.Size(530, 232)
+		Me.ListViewFiles.Size = New System.Drawing.Size(538, 273)
 		Me.ListViewFiles.SmallImageList = Me.ImageList1
 		Me.ListViewFiles.TabIndex = 10
 		Me.ListViewFiles.UseCompatibleStateImageBehavior = false
@@ -274,76 +355,15 @@ Partial Class FileBrowserDialog
 		Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.DeleteFileToolStripMenuItem.Text = "Delete File..."
 		'
-		'Label2
-		'
-		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
-		Me.Label2.AutoSize = true
-		Me.Label2.Location = New System.Drawing.Point(2, 257)
-		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(32, 13)
-		Me.Label2.TabIndex = 29
-		Me.Label2.Text = "Filter:"
-		'
-		'ButtonAll
-		'
-		Me.ButtonAll.Location = New System.Drawing.Point(-2, -2)
-		Me.ButtonAll.Name = "ButtonAll"
-		Me.ButtonAll.Size = New System.Drawing.Size(71, 25)
-		Me.ButtonAll.TabIndex = 19
-		Me.ButtonAll.Text = "Select All"
-		Me.ToolTip1.SetToolTip(Me.ButtonAll, "Select all shown files")
-		Me.ButtonAll.UseVisualStyleBackColor = true
-		'
-		'ComboBoxExt
-		'
-		Me.ComboBoxExt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.ComboBoxExt.FormattingEnabled = true
-		Me.ComboBoxExt.Location = New System.Drawing.Point(433, 252)
-		Me.ComboBoxExt.Name = "ComboBoxExt"
-		Me.ComboBoxExt.Size = New System.Drawing.Size(96, 21)
-		Me.ComboBoxExt.TabIndex = 20
-		Me.ToolTip1.SetToolTip(Me.ComboBoxExt, "Filter the file type")
-		'
-		'ButtonHisFile
-		'
-		Me.ButtonHisFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.ButtonHisFile.Image = Global.TUGraz.VECTO.My.Resources.Resources.file_history
-		Me.ButtonHisFile.Location = New System.Drawing.Point(504, -2)
-		Me.ButtonHisFile.Name = "ButtonHisFile"
-		Me.ButtonHisFile.Size = New System.Drawing.Size(26, 25)
-		Me.ButtonHisFile.TabIndex = 24
-		Me.ButtonHisFile.TabStop = false
-		Me.ToolTip1.SetToolTip(Me.ButtonHisFile, "History")
-		Me.ButtonHisFile.UseVisualStyleBackColor = true
-		'
-		'TextBoxSearchFile
-		'
-		Me.TextBoxSearchFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.TextBoxSearchFile.Location = New System.Drawing.Point(33, 252)
-		Me.TextBoxSearchFile.Name = "TextBoxSearchFile"
-		Me.TextBoxSearchFile.Size = New System.Drawing.Size(389, 20)
-		Me.TextBoxSearchFile.TabIndex = 15
-		Me.ToolTip1.SetToolTip(Me.TextBoxSearchFile, "Filter the files")
-		'
-		'Label5
-		'
-		Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.Label5.AutoSize = true
-		Me.Label5.Location = New System.Drawing.Point(423, 257)
-		Me.Label5.Name = "Label5"
-		Me.Label5.Size = New System.Drawing.Size(10, 13)
-		Me.Label5.TabIndex = 30
-		Me.Label5.Text = "."
-		'
 		'TextBoxPath
 		'
 		Me.TextBoxPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-		Me.TextBoxPath.Font = New System.Drawing.Font("Segoe UI", 11!)
-		Me.TextBoxPath.Location = New System.Drawing.Point(46, 329)
+		Me.TextBoxPath.Font = New System.Drawing.Font("Segoe UI", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+		Me.TextBoxPath.Location = New System.Drawing.Point(48, 389)
+		Me.TextBoxPath.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.TextBoxPath.Name = "TextBoxPath"
-		Me.TextBoxPath.Size = New System.Drawing.Size(666, 27)
+		Me.TextBoxPath.Size = New System.Drawing.Size(695, 27)
 		Me.TextBoxPath.TabIndex = 15
 		'
 		'ContextMenuHisFolder
@@ -360,9 +380,10 @@ Partial Class FileBrowserDialog
 		'
 		Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.ButtonOK.DialogResult = System.Windows.Forms.DialogResult.OK
-		Me.ButtonOK.Location = New System.Drawing.Point(550, 364)
+		Me.ButtonOK.Location = New System.Drawing.Point(564, 420)
+		Me.ButtonOK.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.ButtonOK.Name = "ButtonOK"
-		Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
+		Me.ButtonOK.Size = New System.Drawing.Size(88, 27)
 		Me.ButtonOK.TabIndex = 20
 		Me.ButtonOK.TabStop = false
 		Me.ButtonOK.Text = "OK"
@@ -372,9 +393,10 @@ Partial Class FileBrowserDialog
 		'
 		Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButtonCancel.Location = New System.Drawing.Point(628, 364)
+		Me.ButtonCancel.Location = New System.Drawing.Point(655, 420)
+		Me.ButtonCancel.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.ButtonCancel.Name = "ButtonCancel"
-		Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
+		Me.ButtonCancel.Size = New System.Drawing.Size(88, 27)
 		Me.ButtonCancel.TabIndex = 25
 		Me.ButtonCancel.TabStop = false
 		Me.ButtonCancel.Text = "Cancel"
@@ -385,10 +407,12 @@ Partial Class FileBrowserDialog
 		Me.TextBoxCurrent.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
 		Me.TextBoxCurrent.Cursor = System.Windows.Forms.Cursors.Hand
-		Me.TextBoxCurrent.Location = New System.Drawing.Point(5, 17)
+		Me.TextBoxCurrent.Font = New System.Drawing.Font("Segoe UI", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+		Me.TextBoxCurrent.Location = New System.Drawing.Point(6, 20)
+		Me.TextBoxCurrent.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.TextBoxCurrent.Name = "TextBoxCurrent"
 		Me.TextBoxCurrent.ReadOnly = true
-		Me.TextBoxCurrent.Size = New System.Drawing.Size(701, 20)
+		Me.TextBoxCurrent.Size = New System.Drawing.Size(737, 27)
 		Me.TextBoxCurrent.TabIndex = 0
 		Me.TextBoxCurrent.TabStop = false
 		Me.ToolTip1.SetToolTip(Me.TextBoxCurrent, "Click for changing the directory")
@@ -397,36 +421,39 @@ Partial Class FileBrowserDialog
 		'
 		Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left),System.Windows.Forms.AnchorStyles)
 		Me.Label3.AutoSize = true
-		Me.Label3.Location = New System.Drawing.Point(5, 335)
+		Me.Label3.Location = New System.Drawing.Point(6, 395)
+		Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(38, 13)
+		Me.Label3.Size = New System.Drawing.Size(42, 15)
 		Me.Label3.TabIndex = 29
 		Me.Label3.Text = "Name:"
 		'
 		'Label4
 		'
 		Me.Label4.AutoSize = true
-		Me.Label4.Location = New System.Drawing.Point(4, 3)
+		Me.Label4.Location = New System.Drawing.Point(5, 3)
+		Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
 		Me.Label4.Name = "Label4"
-		Me.Label4.Size = New System.Drawing.Size(89, 13)
+		Me.Label4.Size = New System.Drawing.Size(101, 15)
 		Me.Label4.TabIndex = 30
 		Me.Label4.Text = "Current Directory:"
 		'
 		'FileBrowserDialog
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButtonCancel
-		Me.ClientSize = New System.Drawing.Size(711, 393)
+		Me.ClientSize = New System.Drawing.Size(752, 453)
 		Me.Controls.Add(Me.Label4)
-		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.TextBoxCurrent)
 		Me.Controls.Add(Me.ButtonCancel)
 		Me.Controls.Add(Me.ButtonOK)
 		Me.Controls.Add(Me.TextBoxPath)
 		Me.Controls.Add(Me.SplitContainer1)
+		Me.Controls.Add(Me.Label3)
+		Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
 		Me.MinimizeBox = false
-		Me.MinimumSize = New System.Drawing.Size(341, 272)
+		Me.MinimumSize = New System.Drawing.Size(395, 308)
 		Me.Name = "FileBrowserDialog"
 		Me.ShowIcon = false
 		Me.ShowInTaskbar = false
