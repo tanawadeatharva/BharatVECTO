@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DeclarationCycleZip</RootNamespace>
     <AssemblyName>DeclarationCycleZip</AssemblyName>

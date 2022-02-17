@@ -4,7 +4,6 @@
     <!--<MainProductVersion>0.0.0</MainProductVersion>-->
     <!--<VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>-->
 
-    <ProjectGuid>{760C1C5B-A767-463E-BA85-F0BCFC23A550}</ProjectGuid>
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
     <DefineConstants />

@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}</ProjectGuid>
     <RootNamespace>TUGraz.VectoCore.ModelbasedTests</RootNamespace>
     <AssemblyName>ModelbasedTests</AssemblyName>
     <DefineConstants />

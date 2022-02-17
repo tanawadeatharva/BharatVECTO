@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{6F31F8B2-6AB3-4F85-8AC9-D09ADCA6432D}</ProjectGuid>
     <RootNamespace>VectoAuxiliariesTests</RootNamespace>
     <AssemblyName>VectoAuxiliariesTests</AssemblyName>
     <DefineConstants />

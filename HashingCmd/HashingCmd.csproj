@@ -4,7 +4,6 @@
     <MainProductVersion>0.1.0</MainProductVersion>
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
 
-    <ProjectGuid>{33F9848E-9257-4BE2-915F-68E748AEB204}</ProjectGuid>
     <RootNamespace>HashingCmd</RootNamespace>
     <AssemblyName>hashingcmd</AssemblyName>
     <DefineConstants />

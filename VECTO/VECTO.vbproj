@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <StartupObject>Sub Main</StartupObject>
     <RootNamespace>TUGraz.VECTO</RootNamespace>

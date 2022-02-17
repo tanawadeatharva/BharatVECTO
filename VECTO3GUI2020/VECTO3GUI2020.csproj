@@ -3,8 +3,6 @@
     <!-- Version Information (only needed if it differs from Global VECTO Version)-->
     <MainProductVersion>0.2.0</MainProductVersion>
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
-
-    <ProjectGuid>{7E9172D4-07E3-4077-814E-7117AB2B3E22}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>VECTO3GUI2020</RootNamespace>
     <AssemblyName>VECTOMultistage</AssemblyName>

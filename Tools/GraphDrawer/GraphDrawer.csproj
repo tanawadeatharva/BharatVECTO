@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{6589CAEC-ECC9-4BCC-9699-DE3F22BBCBD4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>GraphDrawer</RootNamespace>
     <AssemblyName>GraphDrawer</AssemblyName>

@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{E8B0B447-1A54-4BEC-A160-AF0017000781}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>LicenceHeader</RootNamespace>
     <AssemblyName>LicenceHeader</AssemblyName>

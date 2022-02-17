@@ -4,7 +4,6 @@
     <!--<MainProductVersion>0.0.0</MainProductVersion>-->
     <!--<VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>-->
 
-    <ProjectGuid>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</ProjectGuid>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
     <DefineConstants />

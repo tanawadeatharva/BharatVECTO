@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{60AD4DF0-6648-4374-83CB-C7A162EFB391}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>VectoConsole</RootNamespace>
     <AssemblyName>vectocmd</AssemblyName>
