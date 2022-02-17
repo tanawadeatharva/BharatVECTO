@@ -12,9 +12,9 @@
     <MyType>WindowsForms</MyType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>false</DefineTrace>
-    <TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>
-    <!--<TargetFrameworks />
-    <TargetFramework>net5.0-windows</TargetFramework>-->
+    <!--<TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>-->
+    <TargetFrameworks />
+    <TargetFramework>net5.0-windows</TargetFramework>
   </PropertyGroup>
   
   <ItemGroup>
@@ -70,22 +70,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="My Project\Settings.Designer.vb">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="My Project\Resources.resx">
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
+    <Compile Update="My Project\Settings.Designer.vb">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <None Update="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
