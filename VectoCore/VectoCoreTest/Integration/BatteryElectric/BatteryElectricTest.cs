@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Enable();
 
 			//#else
-			//GraphWriter.Disable();
+			//graphWriter.Disable();
 			//#endif
 			
 

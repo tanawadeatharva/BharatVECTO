@@ -53,8 +53,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var r1 = a.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 			var r2 = b.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 
-			if (r1 == null && r2 == null) {
+			if (r1 is null && r2 is null) {
 				return null;
+			}
+
+			// if one of the values is limited by EM, but the other is not (is null): use maxEmTorque instead
+			if (r1 is null) {
+				r1 = maxEmTorque;
+			}
+			if (r2 is null) {
+				r2 = maxEmTorque;
 			}
 
 			var retVal = VectoMath.Interpolate(a.Voltage, b.Voltage,
