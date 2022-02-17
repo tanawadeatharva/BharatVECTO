@@ -416,6 +416,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
 		{
+			if (TestPowertrain.Gearbox != null) {
+				var currentGear = DataBus.VehicleInfo.VehicleStopped
+					? (DataBus.GearboxInfo as Gearbox).NextGear
+					: PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : (DataBus.GearboxInfo as Gearbox).NextGear;
+
+				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
+					(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
+				TestPowertrain.Gearbox.Disengaged = (DataBus.GearboxInfo as Gearbox).Disengaged;
+				TestPowertrain.Gearbox.DisengageGearbox = (DataBus.GearboxInfo as Gearbox).DisengageGearbox;
+				TestPowertrain.Gearbox.Gear = currentGear;
+				TestPowertrain.Gearbox._nextGear = (DataBus.GearboxInfo as Gearbox).NextGear;
+			}
+			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+
 			TestPowertrain.ElectricMotor.ThermalBuffer =
 				(DataBus.ElectricMotorInfo(EmPosition) as ElectricMotor).ThermalBuffer;
 			TestPowertrain.ElectricMotor.DeRatingActive =
@@ -440,6 +454,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
 				TestPowertrain.BatterySystem.PreviousState.PowerDemand = (DataBus.BatteryInfo as BatterySystem).PreviousState.PowerDemand;
 			}
+
+			//if (TestPowertrain.Gearbox != null) {
+			//	TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
+			//		(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
+			//	TestPowertrain.Gearbox.Disengaged = (DataBus.GearboxInfo as Gearbox).Disengaged;
+			//	TestPowertrain.Gearbox.DisengageGearbox = (DataBus.GearboxInfo as Gearbox).DisengageGearbox;
+			//	TestPowertrain.Gearbox.Gear = (DataBus.GearboxInfo as Gearbox).Gear;
+			//	TestPowertrain.Gearbox._nextGear = (DataBus.GearboxInfo as Gearbox).NextGear;
+			//}
 
 			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
@@ -645,7 +668,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public void OperatingpointChangedDuringRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, IResponse retVal)
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void RepeatDrivingAction(Second absTime)

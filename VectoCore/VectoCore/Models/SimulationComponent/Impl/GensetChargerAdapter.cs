@@ -68,6 +68,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
+			public void Connect(IElectricChargerPort charger)
+			{
+				throw new System.NotImplementedException();
+			}
+
 			#endregion
 		}
 	}

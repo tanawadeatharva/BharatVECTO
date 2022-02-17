@@ -744,8 +744,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             container.ModData?.AddElectricMotor(pos);
             ctl.AddElectricMotor(pos, motorData.Item2);
             var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
-            motor.Connect(es);
-            return motor;
+			if (pos == PowertrainPosition.GEN) {
+				es.Connect(new GensetChargerAdapter(motor));
+			} else {
+				motor.Connect(es);
+			}
+			return motor;
         }
 
         private static IElectricMotor GetElectricMachine(PowertrainPosition pos,

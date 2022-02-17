@@ -38,10 +38,13 @@
         "MechanicalEfficiency": 1
       }
     ],
-    "Battery": { 
-        "NumPacks": 2,
+    "Batteries": [
+      {
+        "NumPacks": 1,
+        "StreamId": 0,
         "BatteryFile": "GenericBattery.vreess"
-    },
+      }
+    ],
     "InitialSoC": 80,
     "TorqueLimits": {},
     "IdlingSpeed": 0.0,

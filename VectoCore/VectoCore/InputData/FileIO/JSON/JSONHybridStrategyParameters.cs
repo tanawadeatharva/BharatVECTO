@@ -45,9 +45,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double EquivalenceFactorDischarge => double.NaN;
 		public double EquivalenceFactorCharge => double.NaN;
-		public double MinSoC { get; }
+		public double MinSoC => Body.GetEx<double>("MinSoC") / 100.0;
+
 		public double MaxSoC => double.NaN;
-		public double TargetSoC { get; }
+		public double TargetSoC => Body.GetEx<double>("TargetSoC") / 100.0;
 		public Second MinimumICEOnTime => null;
 		public Second AuxBufferTime => null;
 		public Second AuxBufferChargeTime => null;

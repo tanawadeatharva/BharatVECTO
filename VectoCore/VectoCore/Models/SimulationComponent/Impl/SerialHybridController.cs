@@ -67,65 +67,89 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			var retry = false;
+			var retryCount = 0;
+			IResponse retVal;
+			do {
+				if (retryCount > 10) {
+					throw new VectoException("SerialHybridStrategy: retry count exceeded! {0}", DebugData);
+				}
 
-			if (strategyResponse is HybridStrategyLimitedResponse ovl) {
-				if (dryRun) {
-					return new ResponseDryRun(this) {
-						DeltaDragLoad = ovl.Delta,
-						DeltaFullLoad = ovl.Delta,
-						// TODO! delta full/drag torque
-						DeltaEngineSpeed = ovl.DeltaEngineSpeed,
-						Gearbox = {
-							InputTorque = ovl.GearboxResponse?.InputTorque,
-							InputSpeed = ovl.GearboxResponse?.InputSpeed,
-							OutputTorque = ovl.GearboxResponse?.OutputTorque,
-							OutputSpeed = ovl.GearboxResponse?.OutputSpeed,
-							PowerRequest = ovl.GearboxResponse?.PowerRequest,
-							Gear = ovl.GearboxResponse?.Gear
-						}
+				retry = false;
 
+				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+
+				if (strategyResponse is HybridStrategyLimitedResponse ovl) {
+					if (dryRun) {
+						return new ResponseDryRun(this) {
+							DeltaDragLoad = ovl.Delta,
+							DeltaFullLoad = ovl.Delta,
+							// TODO! delta full/drag torque
+							DeltaEngineSpeed = ovl.DeltaEngineSpeed,
+							Gearbox = {
+								InputTorque = ovl.GearboxResponse?.InputTorque,
+								InputSpeed = ovl.GearboxResponse?.InputSpeed,
+								OutputTorque = ovl.GearboxResponse?.OutputTorque,
+								OutputSpeed = ovl.GearboxResponse?.OutputSpeed,
+								PowerRequest = ovl.GearboxResponse?.PowerRequest,
+								Gear = ovl.GearboxResponse?.Gear
+							}
+
+						};
+					}
+
+					return new ResponseOverload(this) {
+						Delta = ovl.Delta
 					};
 				}
 
-				return new ResponseOverload(this) {
-					Delta = ovl.Delta
-				};
-			}
+				var strategySettings = strategyResponse as HybridStrategyResponse;
+				ApplyStrategySettings(strategySettings);
+				CurrentStrategySettings = strategySettings;
+				if (!dryRun) {
+					CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+					CurrentState.StrategyResponse = strategySettings;
+				}
 
-			var strategySettings = strategyResponse as HybridStrategyResponse;
-			ApplyStrategySettings(strategySettings);
-			CurrentStrategySettings = strategySettings;
-			if (!dryRun) {
-				CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
-				CurrentState.StrategyResponse = strategySettings;
-			}
+				// Todo: re-think for S2 configuration....
+				//if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
+				//	DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+				//	_shiftStrategy.SetNextGear(strategySettings.NextGear);
+				//	SelectedGear = strategySettings.NextGear;
+				//	if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				//		return new ResponseGearShift(this);
+				//	}
+				//}
 
-			// Todo: re-think for S2 configuration....
-			//if (!dryRun && /*!DataBus.EngineInfo.EngineOn &&*/ strategySettings.ShiftRequired) {
-			//	DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
-			//	_shiftStrategy.SetNextGear(strategySettings.NextGear);
-			//	SelectedGear = strategySettings.NextGear;
-			//	if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
-			//		return new ResponseGearShift(this);
-			//	}
-			//}
+				var gensetResponse = GenSetPort.Request(absTime, dt, 0.SI<NewtonMeter>(),
+					_electricMotorTorque[PowertrainPosition.GEN].Item1, dryRun);
 
-			var gensetResponse = GenSetPort.Request(absTime, dt, 0.SI<NewtonMeter>(), _electricMotorTorque[PowertrainPosition.GEN].Item1, dryRun);
+				if (!(gensetResponse is ResponseSuccess || gensetResponse is ResponseDryRun)) {
+					throw new VectoException("Invalid operating point for Genset provided by strategy! {0}",
+						gensetResponse);
+				}
 
-			if (!(gensetResponse is ResponseSuccess || gensetResponse is ResponseDryRun)) {
-				throw new VectoException("Invalid operating point for Genset provided by strategy! {0}", gensetResponse);
-			}
+				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				DebugData.Add(new {
+					DrivingAction = DataBus.DriverInfo.DrivingAction,
+					StrategySettings = strategySettings,
+					Response = retVal,
+					DryRun = dryRun
+				});
 
-			var retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			DebugData.Add(new {
-				DrivingAction = DataBus.DriverInfo.DrivingAction,
-				StrategySettings = strategySettings,
-				Response = retVal,
-				DryRun = dryRun
-			});
-			retVal.HybridController.StrategySettings = strategySettings;
-			var modifiedResponse = Strategy.AmendResponse(retVal, absTime, dt, outTorque, outAngularVelocity, dryRun);
+				if (retVal is ResponseDifferentGearEngaged) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
+				retVal.HybridController.StrategySettings = strategySettings;
+				
+			} while (retry);
+
+			var modifiedResponse =
+				Strategy.AmendResponse(retVal, absTime, dt, outTorque, outAngularVelocity, dryRun);
 
 			return modifiedResponse;
 		}
@@ -156,6 +180,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var strategyResponse = Strategy.Initialize(outTorque, outAngularVelocity);
 			PreviousState.StrategyResponse = strategyResponse as HybridStrategyResponse;
 			_electricMotorTorque = PreviousState.StrategyResponse.MechanicalAssistPower;
+
+			DuringInitialize = true;
+
 			var retVal = NextComponent.Initialize(outTorque, outAngularVelocity);
 			if (DataBus.GearboxInfo != null) {
 				SelectedGear = DataBus.GearboxInfo.Gear;
@@ -164,8 +191,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			GenSetPort.Initialize(0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
 
+			DuringInitialize = false;
+
 			return retVal;
 		}
+
+		protected bool DuringInitialize { get; set; }
 
 		#endregion
 
@@ -216,8 +247,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt,
-			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
+			NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque, bool dryRun)
 		{
+			if (DuringInitialize && pos == PowertrainPosition.BatteryElectricE2) {
+				return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
+			}
+
 			return _electricMotorTorque[pos]?.Item2;
 
 			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
@@ -277,7 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque, PowertrainPosition position, bool dryRun)
 			{
 				return _controller.MechanicalAssistPower(position, absTime, dt, outTorque, prevOutAngularVelocity,
-					currOutAngularVelocity, dryRun);
+					currOutAngularVelocity, maxDriveTorque, maxRecuperationTorque, dryRun);
 			}
 		}
 
