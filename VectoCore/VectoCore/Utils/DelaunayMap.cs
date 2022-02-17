@@ -31,16 +31,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using Point = TUGraz.VectoCommon.Utils.Point;
+#if !NET5_0_OR_GREATER
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms.DataVisualization.Charting;
+#endif
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -185,7 +187,8 @@ namespace TUGraz.VectoCore.Utils
 			var ymax = Math.Max(points.Max(p => p.Y), lastPoint?.Y ?? double.NaN);
 
 
-			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
+			using (var chart = new Chart()) {
+				chart.Size = new Size(1000, 1000);
 				chart.ChartAreas.Add(new ChartArea("main") {
 					AxisX = new Axis { Minimum = Math.Min(xmin, xmin), Maximum = Math.Max(xmax, xmax) },
 					AxisY = new Axis { Minimum = Math.Min(ymin, ymin), Maximum = Math.Max(ymax, ymax) }
