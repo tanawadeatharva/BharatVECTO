@@ -11,9 +11,9 @@
     <MyType>WindowsForms</MyType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>false</DefineTrace>
-    <!--<TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>-->
-    <TargetFrameworks />
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>
+    <!--<TargetFrameworks />
+    <TargetFramework>net5.0-windows</TargetFramework>-->
   </PropertyGroup>
   
   <ItemGroup>
