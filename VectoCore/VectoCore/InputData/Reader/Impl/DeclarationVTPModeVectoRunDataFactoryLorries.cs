@@ -120,12 +120,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				JobInputData.Vehicle.Components.BusAuxiliaries,
 				missionType,
 				Segment.VehicleClass, JobInputData.Vehicle.Length,
-				JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered));
+				JobInputData.Vehicle.Components.AxleWheels.NumSteeredAxles);
 		}
 
 		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
 		{
-			var numSteered = vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered);
+			var numSteered = vehicle.Components.AxleWheels.NumSteeredAxles;
 			var auxRD = Dao.CreateAuxiliaryData(
 								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered)
 							.ToList();

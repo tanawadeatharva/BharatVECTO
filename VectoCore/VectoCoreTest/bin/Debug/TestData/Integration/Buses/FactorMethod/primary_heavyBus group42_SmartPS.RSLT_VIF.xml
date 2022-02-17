@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
   <PrimaryVehicle>
-    <Data id="VEH-dda89003b1894b738e01" xsi:type="PrimaryVehicleDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
+    <Data id="VEH-bce95de06ff54c85bca9" xsi:type="PrimaryVehicleDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
       <Vehicle xsi:type="VehiclePIFType">
         <ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
         <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
@@ -265,13 +265,13 @@
         </di:Reference>
       </InputDataSignature>
       <ManufacturerRecordSignature>
-        <di:Reference URI="#RESULT-b24e106754644462913e">
+        <di:Reference URI="#RESULT-75ce50bbcc114a1a8fa8">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
             <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
           </di:Transforms>
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-          <di:DigestValue>tCwhy15j1jcO+sj2PNaNEQEcczz0hoj6BhzdsLxMHlo=</di:DigestValue>
+          <di:DigestValue>nFutXxdSkqt7h2WAMbnJuL50CjfABdvcu9V30e0y1NI=</di:DigestValue>
         </di:Reference>
       </ManufacturerRecordSignature>
       <Results>
@@ -587,17 +587,17 @@
       </Results>
       <ApplicationInformation>
         <SimulationToolVersion>0.7.7.2547-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-        <Date>2022-01-27T14:55:40.5963202Z</Date>
+        <Date>2022-02-04T13:12:27.6775278Z</Date>
       </ApplicationInformation>
     </Data>
     <Signature>
-      <di:Reference URI="#VEH-dda89003b1894b738e01">
+      <di:Reference URI="#VEH-bce95de06ff54c85bca9">
         <di:Transforms>
           <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
           <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
         </di:Transforms>
         <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-        <di:DigestValue>TqJtY535jeu6qydOprHVzvXTRScAKSj4mkDwzpx1y6A=</di:DigestValue>
+        <di:DigestValue>3nwxGv2EIt273Cowtnqnd99NijSf4E6945LbLgs886M=</di:DigestValue>
       </di:Reference>
     </Signature>
   </PrimaryVehicle>

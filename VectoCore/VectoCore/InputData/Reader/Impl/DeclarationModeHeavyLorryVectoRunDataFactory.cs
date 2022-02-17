@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, vehicle.Length,
-					vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
+					vehicle.Components.AxleWheels.NumSteeredAxles),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,

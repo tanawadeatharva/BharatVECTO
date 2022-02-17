@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				case VectoSimulationJobType.BatteryElectricVehicle:
 					return GetBatteryElectricVehicleRunData();
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
 			}
 		}
 

@@ -254,6 +254,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
 
+		int? NumSteeredAxles { get; }
+
 		XmlNode XMLSource { get; }
 	}
 
@@ -457,9 +459,9 @@ namespace TUGraz.VectoCommon.InputData
 		ITyreDeclarationInputData Tyre { get; }
 
 		DataSource DataSource { get; }
-		
-		bool Steered { get; }
-	}
+
+        bool Steered { get; }
+    }
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{

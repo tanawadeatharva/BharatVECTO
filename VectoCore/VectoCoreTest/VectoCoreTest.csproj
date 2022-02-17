@@ -1213,6 +1213,9 @@
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\Hybrid_Parameters.vhctl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\Interurban_Short.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\MaxCurrent.vimax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

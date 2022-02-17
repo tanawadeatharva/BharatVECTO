@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -95,6 +96,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public int? NumSteeredAxles=> AxlesDeclaration.Count(x => x.Steered);
+					
 		public XmlNode XMLSource => BaseNode;
 
 		#endregion

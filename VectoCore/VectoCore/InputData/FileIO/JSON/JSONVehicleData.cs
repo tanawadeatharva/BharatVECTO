@@ -308,6 +308,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
+		public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
