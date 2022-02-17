@@ -149,76 +149,15 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
-	<xsl:template name="VoltageLevelTemplate" match="*[local-name()='VoltageLevel']">
+	<xsl:template name="PowerMapTemplate" match="*[local-name()='PowerMap']">
 		<xsl:element name="{local-name()}">
-			<xsl:apply-templates select="@*"/>	
-			<xsl:apply-templates select="*[not(local-name()='PowerMap')]"/> 	
-			<xsl:apply-templates select="*[local-name()='PowerMap']"> 
-				<xsl:sort select="@gear" order="ascending" data-type="number" />			
-			</xsl:apply-templates>	
-		</xsl:element>
-	</xsl:template>
-	<xsl:template match="*[local-name()='PowerMap']" >
-		<xsl:element name="{local-name()}">
-		  <xsl:apply-templates select="@*"/>
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@outShaftSpeed" order="ascending"/>
 				<xsl:sort data-type="number" select="@torque" order="ascending"/>
 				<xsl:apply-templates select="."/>
 			</xsl:for-each>
 		</xsl:element>
-	</xsl:template>
-	
-	<!-- Sorts VoltageLevel, which has a child element Voltage and sorts them by this value in ascending order -->
-	<xsl:template match="*[local-name()='VoltageLevel' and ./*[local-name()='Voltage']]">		
-		<xsl:if test="count(preceding-sibling::*[local-name()='VoltageLevel']) = 0">
-			<xsl:for-each select="../*[local-name()='VoltageLevel']">
-				<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>			
-				<xsl:call-template name="VoltageLevelTemplate"/>
-			</xsl:for-each>			
-		</xsl:if>				
-	</xsl:template>
-	
-	<!-- Sorts DragCurve, which has a attribute gear and sorts them by the gear number in ascending order -->
-	<xsl:template match="*[local-name()='DragCurve' and @gear]">
-		<xsl:if test="count(preceding-sibling::*[local-name()='DragCurve']) = 0">	
-			<xsl:for-each select="../*[local-name()='DragCurve']">
-				<xsl:sort data-type="number" select="@gear" order="ascending"/>
-				<xsl:call-template name="DragCurveTemplate"/>
-			</xsl:for-each>
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- Sorts Fuel, which has a attribute type and sorts them by type string in acending order-->
-	<xsl:template match="*[local-name()='Fuel' and @type]">
-		<xsl:if test="count(preceding-sibling::*[local-name()='Fuel']) = 0">	
-			<xsl:for-each select="../*[local-name()='Fuel']">
-				<xsl:sort data-type="text" select="@type" order="ascending"/>
-				<xsl:element name="{local-name()}">
-					<xsl:apply-templates select="@*|node()"/> 
-				</xsl:element>
-			</xsl:for-each>
-		</xsl:if>
-	</xsl:template>
-	
-	<!-- Sorts Mode, which has a child element Fuel and sorts by the number of Fuel child elements in acending order-->
-	<xsl:template match="*[local-name()='Mode' and ./*[local-name()='Fuel']]">
-		<xsl:if test="count(preceding-sibling::*[local-name()='Mode']) = 0">
-			<xsl:for-each select="../*[local-name()='Mode']">
-				<xsl:sort data-type="number" select="count(./*[local-name() = 'Fuel'])" order="ascending"/>
-					<xsl:element name="{local-name()}">
-						<xsl:apply-templates select="@*|node()"/> 
-					</xsl:element>
-			</xsl:for-each>
-		</xsl:if>
-	</xsl:template> 
-	<xsl:template match="*[local-name()='ApplicableVehicleGroups' and ./*[local-name()='ApplicableVehicleGroup']]">
-		<xsl:element name="{local-name()}">
-			<xsl:for-each select="*[local-name()='ApplicableVehicleGroup']">
-				<xsl:sort data-type="text" select="text()" order="ascending"/>
-					<xsl:apply-templates select="."/>
-			</xsl:for-each>
-		</xsl:element>	
 	</xsl:template>
 	<xsl:template match="*[local-name()='OCV']">
 		<xsl:element name="{local-name()}">
@@ -229,6 +168,27 @@
 			</xsl:for-each>
 		</xsl:element>
 	</xsl:template>
+	<xsl:template match="*[local-name()='CurrentLimits']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@SoC" order="ascending"/>
+				<xsl:sort data-type="number" select="@maxChargingCurrent" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+	<xsl:template match="*[local-name()='ApplicableVehicleGroups']">
+		<xsl:element name="{local-name()}">
+			<xsl:for-each select="*[local-name()='ApplicableVehicleGroup']">
+				<xsl:sort data-type="text" select="text()" order="ascending"/>
+					<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>	
+	</xsl:template>	
+		
+	<!-- Sorts InternalResistance entries at BattterySystem component, -->
+	<!-- or create the InternalResistance element at CapacitorSystem component -->
 	<xsl:template match="*[local-name()='InternalResistance']">
 		<xsl:choose>
 			<xsl:when test="*">	
@@ -250,14 +210,66 @@
 			</xsl:otherwise>		
 		</xsl:choose>
 	</xsl:template>		
-	<xsl:template match="*[local-name()='CurrentLimits']">
-		<xsl:element name="{local-name()}">
-			<xsl:apply-templates select="@*"/>
-			<xsl:for-each select="*">
-				<xsl:sort data-type="number" select="@SoC" order="ascending"/>
-				<xsl:sort data-type="number" select="@maxChargingCurrent" order="ascending"/>
-				<xsl:apply-templates select="."/>
+	
+	<!-- Sorts PowerMap, which has a attribute gear and sorts them by the gear number in ascending order -->
+	<!-- For the components EM-IHPC and IEPC -->
+	<xsl:template match="*[local-name()='PowerMap' and @gear]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='PowerMap']) = 0">
+			<xsl:for-each select="../*[local-name()='PowerMap']">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:call-template name="PowerMapTemplate"/>
 			</xsl:for-each>
-		</xsl:element>
+		</xsl:if>	
 	</xsl:template>	
+	
+	<!-- Sorts VoltageLevel, which has a child element Voltage and sorts them by this value in ascending order -->
+	<!-- For the components EM, EM-IHPC and IEPC-->
+	<xsl:template match="*[local-name()='VoltageLevel' and ./*[local-name()='Voltage']]">		
+		<xsl:if test="count(preceding-sibling::*[local-name()='VoltageLevel']) = 0">
+			<xsl:for-each select="../*[local-name()='VoltageLevel']">
+				<xsl:sort data-type="number" select="./*[local-name() = 'Voltage']/text()" order="ascending"/>			
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>			
+		</xsl:if>				
+	</xsl:template>
+	
+	<!-- Sorts DragCurve, which has a attribute gear and sorts them by the gear number in ascending order -->
+	<!-- For the components EM IHPC and IEPC -->
+	<xsl:template match="*[local-name()='DragCurve' and @gear]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='DragCurve']) = 0">	
+			<xsl:for-each select="../*[local-name()='DragCurve']">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:call-template name="DragCurveTemplate"/>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- Sorts Fuel, which has a attribute type and sorts them by type string in acending order-->
+	<!-- For the Engine component -->
+	<xsl:template match="*[local-name()='Fuel' and @type]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Fuel']) = 0">	
+			<xsl:for-each select="../*[local-name()='Fuel']">
+				<xsl:sort data-type="text" select="@type" order="ascending"/>
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="@*|node()"/> 
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- Sorts Mode, which has a child element Fuel and sorts by the number of Fuel child elements in acending order-->
+	<!-- For the Engine component-->
+	<xsl:template match="*[local-name()='Mode' and ./*[local-name()='Fuel']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Mode']) = 0">
+			<xsl:for-each select="../*[local-name()='Mode']">
+				<xsl:sort data-type="number" select="count(./*[local-name() = 'Fuel'])" order="ascending"/>
+					<xsl:element name="{local-name()}">
+						<xsl:apply-templates select="@*|node()"/>
+					</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template> 
+
 </xsl:transform>
