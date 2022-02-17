@@ -37,8 +37,6 @@
 			<!-- All files for net48 -->
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe*"/>
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.dll*"/>
-			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe*"/>
-			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe*"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe*"/>
@@ -59,9 +57,6 @@
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\vectocmd.*" Exclude="*.dev.json"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\*.dll"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\runtimes\**\*.*"/>
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net5.0-windows\HashingTool.*" Exclude="*.dev.json"/>
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net5.0-windows\*.dll"/>
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net5.0-windows\runtimes\**\*.*"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\*.dll"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\runtimes\**\*.*"/>
@@ -122,6 +117,5 @@
 
 	<Target Name="CleanVectoDeploy" AfterTargets="Clean">
 		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
-		<Delete Files="$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip" Condition="Exists('$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip')"/>
 	</Target>
 </Project>

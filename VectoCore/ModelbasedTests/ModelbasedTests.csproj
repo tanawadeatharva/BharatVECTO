@@ -2,7 +2,6 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCore.ModelbasedTests</RootNamespace>
     <AssemblyName>ModelbasedTests</AssemblyName>
-    <DefineConstants />
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
   </PropertyGroup>
   

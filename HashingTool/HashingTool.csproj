@@ -7,9 +7,10 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>HashingTool</RootNamespace>
     <AssemblyName>HashingTool</AssemblyName>
-    <DefineConstants />
     <UseWPF>true</UseWPF>
-    <TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,5 +28,4 @@
     <Resource Include="HashingIcon.ico" />
     <Resource Include="Resources\EuropeanCommission.jpg" />
   </ItemGroup>
-
 </Project>

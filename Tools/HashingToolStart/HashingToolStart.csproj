@@ -2,13 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks />
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyName>HashingTool</AssemblyName>
-    <ApplicationIcon>Icon2.ico</ApplicationIcon>
-    <PackageIconUrl />
+    <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
-    <StartupObject />
   </PropertyGroup>
 
 </Project>

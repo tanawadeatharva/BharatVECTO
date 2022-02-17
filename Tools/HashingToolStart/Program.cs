@@ -18,13 +18,14 @@ namespace TUGraz.VECTO
 
 		private static string GetHighestNETVersion()
 		{
-			if (SupportsNet50()) {
-				return "net50";
-			}
+			//todo mk2022-02-17 hashing tool currently only works under net45. this has to be fixed.
+			//if (SupportsNet50()) {
+			//	return "net50";
+			//}
 
-			if (SupportsNet48()) {
-				return "net48";
-			}
+			//if (SupportsNet48()) {
+			//	return "net48";
+			//}
 
 			return "net45";
 		}

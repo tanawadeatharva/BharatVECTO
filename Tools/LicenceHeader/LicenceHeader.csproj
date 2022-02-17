@@ -3,7 +3,6 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>LicenceHeader</RootNamespace>
     <AssemblyName>LicenceHeader</AssemblyName>
-    <DefineConstants />
     <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>

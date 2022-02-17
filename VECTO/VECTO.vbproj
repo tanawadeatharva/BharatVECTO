@@ -4,14 +4,13 @@
     <StartupObject>Sub Main</StartupObject>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <AssemblyName>VECTO</AssemblyName>
-    <DefineConstants />
     <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
     <OptionStrict>On</OptionStrict>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>false</DefineTrace>
     <TargetFrameworks>net45;net48;net5.0-windows</TargetFrameworks>
+    <!-- The GUI Editor of Visual Studio 2019 has problems with multitargets.
+         If you want to change GUI stuff, then only use one target (uncomment the following line): -->
     <!--<TargetFrameworks>net5.0-windows</TargetFrameworks>-->
   </PropertyGroup>
   

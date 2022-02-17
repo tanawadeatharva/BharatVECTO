@@ -2,8 +2,6 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCore</RootNamespace>
     <AssemblyName>VectoCore</AssemblyName>
-    <DefineConstants />
-    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

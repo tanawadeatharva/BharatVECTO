@@ -1,14 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <!--<MainProductVersion>0.0.0</MainProductVersion>-->
-    <!--<VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>-->
-
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
-    <DefineConstants />
-    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
-    <TargetFramework />
   </PropertyGroup>
 
   <ItemGroup>

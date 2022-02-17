@@ -6,9 +6,6 @@
 
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
-    <DefineConstants />
-    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
-    <TargetFramework />
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">

@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <!--<MainProductVersion>0.0.0</MainProductVersion>-->
-    <!--<VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>-->
-
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
     <DefineConstants />
