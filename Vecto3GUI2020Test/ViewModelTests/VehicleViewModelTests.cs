@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
-using Ninject;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using VECTO3GUI2020.Annotations;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -144,7 +132,8 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 
-			Assert.IsTrue(vm.MultiStageJobViewModel.ManufacturingStages.IsNullOrEmpty());
+			Assert.NotNull(vm.MultiStageJobViewModel.ManufacturingStages);
+			Assert.IsNotEmpty(vm.MultiStageJobViewModel.ManufacturingStages);
 
 			Assert.NotNull(vehicleViewModel.ConsolidatedVehicleData);
 			var consolidatedADAS = vehicleViewModel.ConsolidatedVehicleData.ADAS;

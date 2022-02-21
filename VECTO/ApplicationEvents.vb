@@ -45,7 +45,7 @@ Namespace My
 			Dim i As Integer
 
 			'Paths
-			MyAppPath = Application.Info.DirectoryPath
+			MyAppPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..")
 
 			ReadInstallMode()
 

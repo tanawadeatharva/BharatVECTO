@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
-using NLog.LayoutRenderers;
+﻿using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -455,7 +451,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!emTorque.IsEqual(emTorqueBwd, 1e-8.SI<NewtonMeter>())) {
 				Log.Debug("Forward Calculation and Backward Calculation do not match...");
 				dtTorque = SearchAlgorithm.Search(emTorque, (emTorqueBwd - emTorque) * 1e3, emTorque / 10,
-					getYValue: r => (r as NewtonMeter - emTorque) * 1e3,
+					getYValue: r => ((r as NewtonMeter) - emTorque) * 1e3,
 					evaluateFunction: x => ConvertDrivetrainTorqueToEm(dtSpeed, x),
 					criterion: r => {
 						var i = r as NewtonMeter;

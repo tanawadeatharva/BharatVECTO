@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+﻿using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {

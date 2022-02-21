@@ -227,8 +227,8 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
 			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
-				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
-				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected,  double.NaN,
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
+				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
@@ -264,11 +264,11 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			0, 0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st,
 			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_stop) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case B (8); standstill, ICE off, battery empty")]
-		[TestCase(DrivingBehavior.Braking, true, 0.5, 
+		[TestCase(DrivingBehavior.Braking, true, 0.5,
 			P_aux_m_Base + P_PS_1000 + MaxAlternatorPower / AlternatorEfficiency, MaxAlternatorPower, P_ES_base - MaxAlternatorPower, P_ES_base,
 			MaxAlternatorPower / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (9); braking, ICE on, battery not full")]
-		[TestCase(DrivingBehavior.Braking, true, 1, 
+		[TestCase(DrivingBehavior.Braking, true, 1,
 			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base,
 			P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case B (10); braking, ICE on, battery full")]
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Smart, batterySoC, null, false);
-			
+
 
 			// check powertrain architecture and config
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is StopStartCombustionEngine));
@@ -295,37 +295,37 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.IsFalse(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
 			TestBusAux_Cases(container, drivingBehavior, iceOn, batterySoC, double.NaN,
-				P_auxMech_expected, P_busAux_ES_gen_expected, -P_bat_P0, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
+				P_auxMech_expected, P_busAux_ES_gen_expected, -P_bat_P0, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
 				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, null, null, null);
 		}
 
 		// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-		[TestCase(DrivingBehavior.Driving, true, 0.5, 
+		[TestCase(DrivingBehavior.Driving, true, 0.5,
 			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (1); driving, ICE on, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, true, REESS_MinSoC,
 			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (2); driving, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (3); driving, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Driving, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (4); driving, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Halted, true, 0.5,
 			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, P_ES_base, 0, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C1 (5); standstill, ICE on, REESS not empty")]
-		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC, 
+		[TestCase(DrivingBehavior.Halted, true, REESS_MinSoC,
 			P_aux_m_Base + P_PS_600, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_600,
 			TestName = "BusAux Case C1 (6); standstill, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Halted, false, 0.5,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st , P_aux_m_Base , P_ES_ICEOff_stop, 0, 0, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, P_ES_ICEOff_stop, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (7); standstill, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Halted, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st , P_aux_m_Base , 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_stop, 0, P_aux_m_ICEOff_st, P_aux_m_Base, 0, P_ES_ICEOff_stop, P_ES_base - P_ES_ICEOff_stop, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (8); standstill, ICE off, REESS empty")]
 
 		[TestCase(DrivingBehavior.Braking, true, 0.5,
@@ -335,10 +335,10 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			P_aux_m_Base + P_PS_1000, 0, P_ES_base, 0, 0, 0, 0, P_ES_base, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C1 (10); braking, ICE on, REESS empty")]
 		[TestCase(DrivingBehavior.Braking, false, 0.5,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, P_ES_ICEOff_dr, 0, 0, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (11); braking, ICE off, REESS not empty")]
 		[TestCase(DrivingBehavior.Braking, false, REESS_MinSoC,
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr , P_aux_m_Base , 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base, 0, P_ES_ICEOff_dr, P_ES_base - P_ES_ICEOff_dr, 0, Nl_PS, 0,
 			TestName = "BusAux Case C1 (12); braking, ICE off, REESS empty")]
 		public void TestBusAux_Case_C1(DrivingBehavior drivingBehavior, bool iceOn, double reessSoC,
 			double P_auxMech_expected, double P_busAux_ES_gen_expected, double P_busAux_ES_consumer_sum_expected,
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.None, double.NaN, reessSoC, true);
-			
+
 			// check powertrain architecture and config
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is StopStartCombustionEngine));
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is BusAuxiliariesAdapter));
@@ -362,7 +362,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			Assert.IsTrue(container.RunData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS);
 
 			TestBusAux_Cases(container, drivingBehavior, iceOn, double.NaN, reessSoC,
-				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech, 
+				P_auxMech_expected, P_busAux_ES_gen_expected, double.NaN, P_busAux_ES_consumer_sum_expected, P_busAux_ES_mech,
 				Nl_PS_gen_expected, Nl_PS_consumer_expected, P_PS_expected, double.NaN,
 				P_aux_ESS_mech_ICE_off_expected, P_aux_ESS_mech_ICE_on_expected, P_DCDC_out_expected, P_DCDC_missing_expected, P_DCDC_missing_ESS_ICE_on);
 
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Conventional, double.NaN, reessSoC, true);
-			
+
 			// check powertrain architecture and config
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is StopStartCombustionEngine));
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is BusAuxiliariesAdapter));
@@ -443,8 +443,8 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		[TestCase(DrivingBehavior.Driving, true, 0,
 			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C2b (1); driving, ICE on")]
-		[TestCase(DrivingBehavior.Driving, false, 0, 
-			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr ,
+		[TestCase(DrivingBehavior.Driving, false, 0,
+			0, 0, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr,
 			P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
 			TestName = "BusAux Case C2b (2); driving, ICE off")]
 		[TestCase(DrivingBehavior.Halted, true, 0,
@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Conventional, batterySoC, 0.5, false);
-			
+
 			// check powertrain architecture and config
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is StopStartCombustionEngine));
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is BusAuxiliariesAdapter));
@@ -602,7 +602,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double Nl_PS_gen_expected, double Nl_PS_consumer_expected, double P_PS_expected)
 		{
 			var container = CreatePowerTrain(AlternatorType.Smart, batterySoC, reessSoC, true);
-			
+
 
 			// check powertrain architecture and config
 			Assert.NotNull(container.Components.FirstOrDefault(x => x is StopStartCombustionEngine));
@@ -630,7 +630,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			P_aux_m_Base + P_PS_1000, 0, P_ES_base, P_ES_base, 0, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 			TestName = "BusAux Case C3b (1); driving, ICE on, P0 battery not empty")]
 		[TestCase(DrivingBehavior.Driving, true, 0, double.NaN,
-			P_aux_m_Base + P_PS_1000 + P_ES_base /  AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
+			P_aux_m_Base + P_PS_1000 + P_ES_base / AlternatorEfficiency, P_ES_base, 0, P_ES_base, P_ES_base / AlternatorEfficiency, 0, 0, Nl_PS, Nl_PS, P_PS_1000,
 		TestName = "BusAux Case C3b (2); driving, ICE on, P0 battery empty")]
 		[TestCase(DrivingBehavior.Driving, false, 0.5, double.NaN,
 			0, 0, P_ES_ICEOff_dr, P_ES_ICEOff_dr, 0, P_aux_m_ICEOff_dr, P_aux_m_Base + (P_ES_base - P_ES_ICEOff_dr) / AlternatorEfficiency, 0, Nl_PS, 0,
@@ -725,7 +725,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			double Nl_gen_expected, double Nl_consumed_expected, double P_PS_m_expected,
 			double P1_recup_Pct,
 			double P_aux_ESS_mech_ICE_off_expected, double P_aux_ESS_mech_ICE_on_expected, double? P_DCDC_out_expected,
-			double? P_DCDC_missing_expected, double? P_DCDC_missing_ESS_ICE_on) 
+			double? P_DCDC_missing_expected, double? P_DCDC_missing_ESS_ICE_on)
 		{
 			container.VehicleStopped = drivingBehavior == DrivingBehavior.Halted;
 			container.VehicleSpeed = drivingBehavior == DrivingBehavior.Halted
@@ -774,7 +774,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 			Assert.NotNull(response);
 			Assert.IsAssignableFrom<ResponseSuccess>(response);
-			
+
 			container.CommitSimulationStep(absTime, dt);
 			modData.CommitSimulationStep();
 
@@ -782,22 +782,22 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 			var row = modData.Data.Rows[0];
 
-			Assert.AreEqual(iceOn, row.Field<bool>(ModalResultField.ICEOn.GetName()), ModalResultField.ICEOn.GetName());
-			Assert.AreEqual(P_auxMech_expected, row.Field<SI>(ModalResultField.P_aux_mech.GetName()).Value(), 1e-3, ModalResultField.P_aux_mech.GetName());
-			Assert.AreEqual(P_busAux_ES_gen_expected, row.Field<SI>(ModalResultField.P_busAux_ES_generated.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_generated.GetName());
-			Assert.AreEqual(P_busAux_ES_consumer_sum_expected, row.Field<SI>(ModalResultField.P_busAux_ES_consumer_sum.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_consumer_sum.GetName());
-			Assert.AreEqual(P_busAux_ES_consumer_sum_expected, row.Field<SI>(ModalResultField.P_busAux_ES_other.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_other.GetName());
-			Assert.AreEqual(P_busAux_ES_mech, row.Field<SI>(ModalResultField.P_busAux_ES_sum_mech.GetName()).Value(), 1e-3, ModalResultField.P_busAux_ES_sum_mech.GetName());
+			Assert.AreEqual(iceOn, (bool)row[ModalResultField.ICEOn.GetName()], ModalResultField.ICEOn.GetName());
+			Assert.AreEqual(P_auxMech_expected, ((SI)row[ModalResultField.P_aux_mech.GetName()]).Value(), 1e-3, ModalResultField.P_aux_mech.GetName());
+			Assert.AreEqual(P_busAux_ES_gen_expected, ((SI)row[ModalResultField.P_busAux_ES_generated.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_ES_generated.GetName());
+			Assert.AreEqual(P_busAux_ES_consumer_sum_expected, ((SI)row[ModalResultField.P_busAux_ES_consumer_sum.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_ES_consumer_sum.GetName());
+			Assert.AreEqual(P_busAux_ES_consumer_sum_expected, ((SI)row[ModalResultField.P_busAux_ES_other.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_ES_other.GetName());
+			Assert.AreEqual(P_busAux_ES_mech, ((SI)row[ModalResultField.P_busAux_ES_sum_mech.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_ES_sum_mech.GetName());
 
-			Assert.AreEqual(Nl_consumed_expected, row.Field<SI>(ModalResultField.Nl_busAux_PS_consumer.GetName()).Value(), 1e-3, ModalResultField.Nl_busAux_PS_consumer.GetName());
-			Assert.AreEqual(Nl_gen_expected, row.Field<SI>(ModalResultField.Nl_busAux_PS_generated.GetName()).Value(), 1e-3, ModalResultField.Nl_busAux_PS_generated.GetName());
-			Assert.AreEqual(P_PS_m_expected, row.Field<SI>(ModalResultField.P_busAux_PS_generated.GetName()).Value(), 1e-3, ModalResultField.P_busAux_PS_generated.GetName());
+			Assert.AreEqual(Nl_consumed_expected, ((SI)row[ModalResultField.Nl_busAux_PS_consumer.GetName()]).Value(), 1e-3, ModalResultField.Nl_busAux_PS_consumer.GetName());
+			Assert.AreEqual(Nl_gen_expected, ((SI)row[ModalResultField.Nl_busAux_PS_generated.GetName()]).Value(), 1e-3, ModalResultField.Nl_busAux_PS_generated.GetName());
+			Assert.AreEqual(P_PS_m_expected, ((SI)row[ModalResultField.P_busAux_PS_generated.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_PS_generated.GetName());
 
-			Assert.AreEqual(P_aux_ESS_mech_ICE_off_expected, row.Field<SI>(ModalResultField.P_aux_ESS_mech_ice_off.GetName()).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_off.GetName());
-			Assert.AreEqual(P_aux_ESS_mech_ICE_on_expected, row.Field<SI>(ModalResultField.P_aux_ESS_mech_ice_on.GetName()).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_on.GetName());
+			Assert.AreEqual(P_aux_ESS_mech_ICE_off_expected, ((SI)row[ModalResultField.P_aux_ESS_mech_ice_off.GetName()]).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_off.GetName());
+			Assert.AreEqual(P_aux_ESS_mech_ICE_on_expected, ((SI)row[ModalResultField.P_aux_ESS_mech_ice_on.GetName()]).Value(), 1e-3, ModalResultField.P_aux_ESS_mech_ice_on.GetName());
 
 			if (!double.IsNaN(P_bat_P0)) {
-				Assert.AreEqual(P_bat_P0, row.Field<SI>(ModalResultField.P_busAux_bat.GetName()).Value(), 1e-3, ModalResultField.P_busAux_bat.GetName());
+				Assert.AreEqual(P_bat_P0, ((SI)row[ModalResultField.P_busAux_bat.GetName()]).Value(), 1e-3, ModalResultField.P_busAux_bat.GetName());
 			} else {
 				Assert.IsTrue(container.Components.Any(x => x is NoBattery));
 			}
@@ -809,9 +809,9 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				// 'consumed' and 'missing' electric energy is applied in next simulation step - read out directly and perform additional step
 				if (reessSoC.IsEqual(REESS_MinSoC)) {
 					Assert.AreEqual(P_DCDC_missing_expected.Value, (dcdcConverter.PreviousState.ConsumedEnergy / dt).Value(), 1e-3, ModalResultField.P_DCDC_missing.GetName());
-                } else {
-                    Assert.AreEqual(P_busAux_ES_consumer_sum_expected, (dcdcConverter.PreviousState.ConsumedEnergy / dt).Value(), 1e-3, ModalResultField.P_DCDC_Out.GetName());
-                }
+				} else {
+					Assert.AreEqual(P_busAux_ES_consumer_sum_expected, (dcdcConverter.PreviousState.ConsumedEnergy / dt).Value(), 1e-3, ModalResultField.P_DCDC_Out.GetName());
+				}
 
 				var dcdcDemand = dcdcConverter.PowerDemand(absTime, dt, false);
 
@@ -825,12 +825,12 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				dcdcConverter.CommitSimulationStep(absTime, dt, modData);
 				modData.CommitSimulationStep();
 				var row1 = modData.Data.Rows[1];
-				
-				Assert.AreEqual(P_DCDC_missing_expected.Value, row1.Field<SI>(ModalResultField.P_DCDC_missing.GetName()).Value(), 1e-3, ModalResultField.P_DCDC_missing.GetName());
-				
-				Assert.AreEqual(P_DCDC_out_expected.Value, row1.Field<SI>(ModalResultField.P_DCDC_Out.GetName()).Value(), 1e-3, ModalResultField.P_DCDC_Out.GetName());
-				Assert.AreEqual(P_DCDC_out_expected.Value / DCDCEfficiency, row1.Field<SI>(ModalResultField.P_DCDC_In.GetName()).Value(), 1e-3, ModalResultField.P_DCDC_In.GetName());
-			
+
+				Assert.AreEqual(P_DCDC_missing_expected.Value, ((SI)row1[ModalResultField.P_DCDC_missing.GetName()]).Value(), 1e-3, ModalResultField.P_DCDC_missing.GetName());
+
+				Assert.AreEqual(P_DCDC_out_expected.Value, ((SI)row1[ModalResultField.P_DCDC_Out.GetName()]).Value(), 1e-3, ModalResultField.P_DCDC_Out.GetName());
+				Assert.AreEqual(P_DCDC_out_expected.Value / DCDCEfficiency, ((SI)row1[ModalResultField.P_DCDC_In.GetName()]).Value(), 1e-3, ModalResultField.P_DCDC_In.GetName());
+
 				// TODO: Assertion P_DCDC_missing_ESS_ICE_on
 
 			}
@@ -843,17 +843,17 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 		{
 			//var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 6);
-            //var axleGearData = CreateAxleGearData();
-            var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
-            //var airdragData = CreateAirdragData();
-            //var driverData = CreateDriverData(AccelerationFile);
+			//var axleGearData = CreateAxleGearData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			//var airdragData = CreateAirdragData();
+			//var driverData = CreateDriverData(AccelerationFile);
 
-            var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
+			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 
 			var runData = new VectoRunData() {
 				JobRunId = 0,
-                VehicleData = vehicleData,
-                EngineData = engineData,
+				VehicleData = vehicleData,
+				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData,
@@ -867,16 +867,16 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			};
 
 			var container = new MockVehicleContainer() {
-				CycleData = new CycleData() { LeftSample = cycleData.Entries.First()},
-				ModalData = modData, 
+				CycleData = new CycleData() { LeftSample = cycleData.Entries.First() },
+				ModalData = modData,
 				HasCombustionEngine = true,
 				HasElectricMotor = false,
 				RunData = runData
 			};
 			var engine = new StopStartCombustionEngine(container, engineData);
-			
+
 			container.EngineInfo = engine;
-			
+
 			var conventionalAux = CreateAuxiliaries(runData.Aux, container);
 			var aux = new BusAuxiliariesAdapter(container, runData.BusAuxiliaries, conventionalAux);
 
@@ -1075,7 +1075,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			return retVal;
 		}
 
-		
+
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{

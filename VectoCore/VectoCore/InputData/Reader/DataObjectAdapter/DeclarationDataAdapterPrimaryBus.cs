@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			return mission.BusParameter.ElectricalConsumers.GetValueOrDefault(consumer.ConsumerName, 0);
+			return mission.BusParameter.ElectricalConsumers.GetVECTOValueOrDefault(consumer.ConsumerName, 0);
 		}
 
 		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)

@@ -2,35 +2,22 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using Castle.Core.Internal;
-using Microsoft.Build.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCore.Models.Declaration;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
-using VECTO3GUI2020.Views.Multistage.CustomControls;
-using Convert = System.Convert;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
@@ -1233,14 +1220,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get => String.Join(",", Errors.Values);
 		}
-		public bool HasErrors
-		{
-			get
-			{
-				return !Error.IsNullOrEmpty() || 
-						(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
-			}
-		}
+		public bool HasErrors =>
+			!string.IsNullOrEmpty(Error) || 
+			(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
+
 		#endregion
 
 		private bool _airdragModifiedMultistepMandatory;

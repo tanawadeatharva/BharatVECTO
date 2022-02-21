@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Xml.Linq;
-using Castle.Core.Internal;
-using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
@@ -29,11 +27,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 			BaseWriter = baseWriter;
 			_reportsToWrite = new HashSet<ReportType>();
-			if (!reportsToWrite.IsNullOrEmpty()) {
+			if (!(reportsToWrite is null))
 				foreach (var reportType in reportsToWrite) {
 					_reportsToWrite.Add(reportType);
 				}
-			}
 		}
 
 		#region Overrides of FileOutputWriter

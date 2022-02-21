@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using VECTO3GUI2020.ViewModel.Interfaces;
-using Ninject;
-using System.Diagnostics;
 using System.Windows.Input;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using System.Reflection;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.Util;
-using VECTO3GUI2020.Views;
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {

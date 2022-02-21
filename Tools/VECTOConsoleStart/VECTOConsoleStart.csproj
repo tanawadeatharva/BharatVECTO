@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <AssemblyName>vectocmd</AssemblyName>
+    <ApplicationIcon>Icon2.ico</ApplicationIcon>
+    <RootNamespace>TUGraz.VECTO</RootNamespace>
+  </PropertyGroup>
+
+</Project>

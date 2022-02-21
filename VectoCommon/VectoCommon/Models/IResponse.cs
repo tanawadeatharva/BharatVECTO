@@ -30,7 +30,6 @@
 */
 
 using System.Diagnostics;
-using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
