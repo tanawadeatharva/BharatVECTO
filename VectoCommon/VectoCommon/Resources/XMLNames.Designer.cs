@@ -3355,6 +3355,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to REESS.
+        /// </summary>
+        public static string REESS {
+            get {
+                return ResourceManager.GetString("REESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BatteryType.
         /// </summary>
         public static string REESS_BatteryType {

@@ -271,5 +271,46 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template> 
+	
+	<!-- Sorting for Job files -->
+		
+	<!-- ElectricEnergyStorage -->
+	<xsl:template match="*[local-name()='Battery' and ./*[local-name()='StringID']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Battery']) = 0">
+			<xsl:for-each select="../*[local-name()='Battery']">
+				<xsl:sort data-type="number" select="./*[local-name() = 'StringID']/text()" order="ascending"/>				
+				<xsl:sort data-type="text" select="./*[local-name() = 'REESS']/*[local-name() = 'Data']/@id" order="ascending"/>				
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+			
+	<!-- ElectricMotorTorqueLimits -->	
+	<xsl:template match="*[local-name()='ElectricMachine' and ./*[local-name()='Position']]">		
+		<xsl:if test="count(preceding-sibling::*[local-name()='ElectricMachine']) = 0">
+			<xsl:for-each select="../*[local-name()='ElectricMachine']">
+				<xsl:sort data-type="text" select="./*[local-name() = 'Position']/text()" order="ascending"/>			
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>			
+		</xsl:if>				
+	</xsl:template>	
+	
+	<!-- AUX SteeringPump -->
+	<xsl:template match="*[local-name()='SteeringPump']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@axleNumber" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>	
+	
+
+	
 
 </xsl:transform>
