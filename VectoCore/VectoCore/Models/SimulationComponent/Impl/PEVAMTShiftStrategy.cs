@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -604,6 +605,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return InitStartGear(absTime, outTorque, outAngularVelocity);
 			}
 
+			var emE2 = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
+			if (emE2 is null) {
+				throw new VectoException("PEV Shift Strategy requires electric motor at position E2");
+			}
+
+			var emCtl = emE2.Control;
+			emE2.Control = new PEVInitControl(DataBus as IVehicleContainer);
 			foreach (var gear in GearList.Reverse()) {
 				//for (var gear = (uint)GearboxModelData.Gears.Count; gear > 1; gear--) {
 				var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
@@ -617,6 +625,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return gear;
 				}
 			}
+			emE2.Control = emCtl;
 			// fallback: return first gear
 			_nextGear = GearList.First();
 			return _nextGear;
@@ -628,6 +637,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var emSpeeds = new Dictionary<GearshiftPosition, Tuple<PerSecond, PerSecond, double>>();
 
+
+			var emE2 = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
+			if (emE2 is null) {
+				throw new VectoException("PEV Shift Strategy requires electric motor at position E2");
+			}
+
+			var emCtl = emE2.Control;
+			emE2.Control = new PEVInitControl(DataBus as IVehicleContainer);
 			foreach (var gear in GearList.Reverse()) {
 				//for (var gear = (uint)GearboxModelData.Gears.Count; gear >= 1; gear--) {
 				var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
@@ -656,6 +673,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
+			emE2.Control = emCtl;
+
 			if (emSpeeds.Any()) {
 				var optimum = emSpeeds.MaxBy(x => x.Key.Gear); //x => VectoMath.Abs(x.Value.Item2 - FullLoadCurve.MaxSpeed * 0.5));
 				_nextGear = optimum.Key;
@@ -664,6 +683,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextGear = GearList.First();
 			return _nextGear;
 		}
+
+		
 
 
 		protected bool IsBelowDownShiftCurve(GearshiftPosition gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
@@ -776,11 +797,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void WriteModalResults(IModalDataContainer container) { }
 
+
 		#endregion
 
-		#region Implementation of IShiftPolygonCalculator
+		private class PEVInitControl : IElectricMotorControl
+		{
+			protected IDataBus DataBus;
+			protected ElectricMotorData ElectricMotorData;
 
-		
-		#endregion
+			public PEVInitControl(IVehicleContainer dataBus)
+			{
+				DataBus = dataBus;
+				ElectricMotorData = dataBus.RunData.ElectricMachinesData
+					.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2;
+			}
+
+			#region Implementation of IElectricMotorControl
+
+			public NewtonMeter MechanicalAssistPower(Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity,
+				PerSecond currOutAngularVelocity, NewtonMeter maxDriveTorque, NewtonMeter maxRecuperationTorque,
+				PowertrainPosition position, bool dryRun)
+			{
+				if (!DataBus.GearboxInfo.GearEngaged(absTime) && DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+					var avgSpeed = (prevOutAngularVelocity + currOutAngularVelocity) / 2;
+					var inertiaTorqueLoss = avgSpeed.IsEqual(0)
+						? 0.SI<NewtonMeter>()
+						: Formulas.InertiaPower(currOutAngularVelocity, prevOutAngularVelocity, ElectricMotorData.Inertia, dt) / avgSpeed;
+					//var dragTorque = ElectricMotorData.DragCurve.Lookup()
+					return (-inertiaTorqueLoss); //.LimitTo(maxDriveTorque, maxRecuperationTorque);
+				}
+				if (DataBus.DriverInfo.DrivingAction == DrivingAction.Coast ||
+					DataBus.DriverInfo.DrivingAction == DrivingAction.Roll) {
+					return null;
+				}
+
+				if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
+					return null;
+				}
+
+				if (maxDriveTorque == null) {
+					return null;
+				}
+
+				return (-outTorque).LimitTo(maxDriveTorque, maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
+			}
+
+			#endregion
+		}
 	}
 }

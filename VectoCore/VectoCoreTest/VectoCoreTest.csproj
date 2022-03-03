@@ -806,6 +806,9 @@
     <None Include="TestData\Hybrids\GenericVehicle_S2_Job\REESS_SOC_curve.vbatv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3Speed.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

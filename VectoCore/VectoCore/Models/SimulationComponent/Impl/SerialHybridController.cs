@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//}
 
 				var gensetResponse = GenSetPort.Request(absTime, dt, 0.SI<NewtonMeter>(),
-					_electricMotorTorque[PowertrainPosition.GEN].Item1, dryRun);
+					strategySettings.GenSetSpeed, dryRun);
 
 				if (!(gensetResponse is ResponseSuccess || gensetResponse is ResponseDryRun)) {
 					throw new VectoException("Invalid operating point for Genset provided by strategy! {0}",
@@ -190,6 +190,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			GenSetPort.Initialize(0.SI<NewtonMeter>(), DataBus.EngineInfo.EngineIdleSpeed);
+			(DataBus.EngineInfo as CombustionEngine).PreviousState.EngineOn = false;
 
 			DuringInitialize = false;
 
@@ -254,8 +255,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return _electricMotorTorque[pos]?.Item2;
-
-			//return CurrentState.StrategyResponse.MechanicalAssistPower[pos];
 		}
 
 		///=======================================================================================

@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
@@ -40,7 +41,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			MaxElectricPower(voltage, false);
 
 			MaxElectricPower(voltage, true);
-		}
+			
+        }
+
 
 		private void MaxElectricPower(Volt voltage, bool emDerated)
 		{
@@ -105,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					ICESpeed = ratedSpeed,
 					ICETorque = Genset.ElectricMotorCtl.EMTorque,
 					FuelConsumption = fc,
-					EMSpeed = response.ElectricMotor.AngularVelocity,
+					AvgEmDrivetrainSpeed = response.ElectricMotor.AngularVelocity,
 					EMTorque = response.ElectricMotor.TorqueRequestEmMap
 				};
 				if (emDerated) {
@@ -171,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								ICESpeed = speed,
 								ICETorque = tq,
 								FuelConsumption = fc,
-								EMSpeed = response.ElectricMotor.AngularVelocity,
+								AvgEmDrivetrainSpeed = response.ElectricMotor.AngularVelocity,
 								EMTorque = response.ElectricMotor.TorqueRequestEmMap
 							});
 						}

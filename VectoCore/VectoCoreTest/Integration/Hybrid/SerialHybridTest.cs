@@ -31,7 +31,8 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 {
-	[TestFixture]
+	[TestFixture,
+	Parallelizable(ParallelScope.All)]
 	public class SerialHybridTest
 	{
 		public const string BatFile = @"TestData\Hybrids\GenericVehicle_Sx\GenericBattery.vreess";
@@ -56,17 +57,25 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		}
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 0, TestName = "Generic Serial Hybrid S2 Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 1, TestName = "Generic Serial Hybrid S2 Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 2, TestName = "Generic Serial Hybrid S2 Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 3, TestName = "Generic Serial Hybrid S2 Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 4, TestName = "Generic Serial Hybrid S2 Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 5, TestName = "Generic Serial Hybrid S2 Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 6, TestName = "Generic Serial Hybrid S2 Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 7, TestName = "Generic Serial Hybrid S2 Job, Coach"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 0, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, LongHaul"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, RegionalDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 2, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, UrbanDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 3, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Construction"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 4, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Urban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 5, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Suburban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 6, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Interurban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 7, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Coach"),
+		]
+		[
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 0, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, LongHaul"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, RegionalDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 2, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, UrbanDelivery"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 3, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Construction"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 4, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Urban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 5, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Suburban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 6, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Interurban"),
+			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 7, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Coach"),
 		]
 		public void S2SerialHybridJob(string jobFile, int runIdx)
 		{
@@ -644,7 +653,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		private static HybridStrategyParameters CreateHybridStrategyData()
 		{
 			return new HybridStrategyParameters() {
-				MinSoC = 0.22,
+				MinSoC = 0.24,
 				TargetSoC = 0.7,
 				GensetMinOptPowerFactor = 0,
 			};

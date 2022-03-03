@@ -31,6 +31,7 @@ namespace TUGraz.VectoCommon.Models {
 		public HybridResultEntry EvaluatedSolution { get; set; }
 		public bool GearboxEngaged { get; set; }
 		public bool ProhibitGearshift { get; set; }
+		public PerSecond GenSetSpeed { get; set; }
 	}
 
 	[DebuggerDisplay("{U,nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]

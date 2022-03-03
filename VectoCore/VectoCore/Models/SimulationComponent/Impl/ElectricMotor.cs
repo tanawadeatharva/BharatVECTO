@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 
 		protected internal IElectricSystem ElectricPower;
-		internal IElectricMotorControl Control { get; }
+		internal IElectricMotorControl Control { get; set; }
 		protected ElectricMotorData ModelData;
 		private PerSecond _maxSpeed;
 
