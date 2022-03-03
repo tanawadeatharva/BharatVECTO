@@ -206,7 +206,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			retVal.Inertia = engine.Inertia +
-							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
+							(gbx != null && gbx.Type.AutomaticTransmission()
+								? (gbx.Type == GearboxType.APTN ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
+								: 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx?.Gears.Count ?? 0;
@@ -321,7 +323,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var gears = new Dictionary<uint, GearData>();
 			ShiftPolygon tcShiftPolygon = null;
-			if (gearbox.Type.AutomaticTransmission()) {
+			if (gearbox.Type.AutomaticTransmission() && gearbox.Type != GearboxType.APTN) {
 				tcShiftPolygon = torqueConverter.ShiftPolygon != null
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
@@ -356,7 +358,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Gears = gears;
 
-			if (retVal.Type.AutomaticTransmission()) {
+			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
@@ -398,7 +400,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
 		{
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = gearbox.TractionInterruption;
+			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN ? 0.SI<Second>() : gearbox.TractionInterruption;
 			
 		}
 
