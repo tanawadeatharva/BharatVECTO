@@ -660,7 +660,7 @@ namespace TUGraz.VectoCore.OutputData
 			var eGbxOut = modData.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
 			row[Fields.AVERAGE_GEARBOX_EFFICIENCY] = eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
 
-			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission()) {
+			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN) {
 				var eTcIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
 				var eTcOut = eGbxIn;
 				row[Fields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP] = eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();

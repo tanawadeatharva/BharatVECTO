@@ -129,6 +129,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gensetResponse);
 				}
 
+				var gear = DataBus.GearboxInfo.Gear;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add(new {
 					DrivingAction = DataBus.DriverInfo.DrivingAction,
@@ -136,6 +137,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Response = retVal,
 					DryRun = dryRun
 				});
+
+				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !gear.Equals(DataBus.GearboxInfo.Gear)) {
+					retryCount++;
+					retry = true;
+					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
+						retVal);
+					continue;
+				}
 
 				if (retVal is ResponseDifferentGearEngaged) {
 					retryCount++;

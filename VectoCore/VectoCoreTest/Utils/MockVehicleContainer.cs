@@ -109,6 +109,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
+		public IElectricSystemInfo ElectricSystemInfo { get; }
+
 		public ITorqueConverterInfo TorqueConverterInfo => null;
 
 		public ITorqueConverterControl TorqueConverterCtl => null;

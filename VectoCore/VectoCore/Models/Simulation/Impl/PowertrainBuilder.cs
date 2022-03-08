@@ -518,7 +518,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//var battery = new Battery(container, data.BatteryData);
 			//battery.Initialize(data.BatteryData.InitialSoC);
 			//es.Connect(battery);
-			var strategy = new SerialHybridStrategy(data, container);
+			var strategy = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission()
+				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
+				: new SerialHybridStrategy(data, container);
 
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
@@ -851,7 +853,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("invalid powertrain position");
 				case PowertrainPosition.BatteryElectricE2:
 					var gearbox = data.GearboxData.Type.AutomaticTransmission()
-						? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
+						? (IHybridControlledGearbox)new APTNGearbox(container, ctl.ShiftStrategy)
 						: new Gearbox(container, ctl.ShiftStrategy);
 					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(data.AngledriveData != null
@@ -862,7 +864,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							container,
 							es, ctl));
 					ctl.Gearbox = gearbox;
-
+					if (data.GearboxData.Type.AutomaticTransmission()) {
+						new DummyEngineInfo(container);
+					}
 					break;
 				case PowertrainPosition.BatteryElectricE3:
 					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -1057,6 +1061,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
+			es.Charger = new SimpleCharger();
 
 			var ctl = new DummyElectricMotorControl();
 			var powertrain = vehicle
@@ -1302,7 +1307,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			if (runData.GearboxData.Type.AutomaticTransmission()) {
+			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN) {
 				new ATClutchInfo(container);
 				return new ATGearbox(container, null);
 			}
@@ -1311,6 +1316,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
     }
+
+	public class SimpleCharger : IElectricChargerPort
+	{
+		#region Implementation of IElectricChargerPort
+
+		public Watt ChargingPower { get; set; }
+
+		public SimpleCharger()
+		{
+			ChargingPower = 0.SI<Watt>();
+		}
+
+		public Watt Initialize()
+		{
+			ChargingPower = 0.SI<Watt>();
+			return ChargingPower;
+		}
+
+		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
+		{
+			return ChargingPower;
+		}
+
+		#endregion
+	}
 
 	internal class DummyEngineInfo : VectoSimulationComponent, IEngineInfo, IEngineControl
 	{
