@@ -87,5 +87,10 @@ namespace TUGraz.VectoCommon.InputData {
 					return false;
 			}
 		}
+
+		public static bool IsSerialHybrid(this PowertrainPosition pos)
+		{
+			return IsBatteryElectric(pos);
+		}
 	}
 }

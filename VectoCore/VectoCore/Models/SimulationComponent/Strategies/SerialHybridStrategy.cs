@@ -403,6 +403,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					if (emTorque == null) {
 						emTorque = -emResponse.MaxDriveTorque;
 					} else {
+						// multiply with -1 here because the following method again changes the sign...
 						emTorque *= -1;
 					}
 					emTorque = GetMechanicalAssistPower(absTime, dt, emTorque, emResponse, emResponse.AngularVelocity /* potentially not correct! */);

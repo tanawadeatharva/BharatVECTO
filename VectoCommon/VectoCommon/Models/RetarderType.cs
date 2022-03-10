@@ -85,6 +85,8 @@ namespace TUGraz.VectoCommon.Models
 					return "Engine Retarder";
 				case RetarderType.LossesIncludedInTransmission:
 					return "Included in Transmission Loss Maps";
+				case RetarderType.AxlegearInputRetarder:
+					return "Axlegear Input Retarder";
 				default:
 					throw new ArgumentOutOfRangeException("RetarderType", retarder, null);
 			}

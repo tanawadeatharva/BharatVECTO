@@ -82,8 +82,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Model", electricMachine.Model);
         body.Add("Inertia", electricMachine.Inertia.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
-		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
-
+		
 		var vlevels = new List<Dictionary<string, object>>();
 		foreach (var entry in electricMachine.VoltageLevels) {
 			var vlevel = new Dictionary<string, object>();
@@ -321,6 +320,7 @@ public class JSONFileWriter : IOutputFileWriter
 				SaveConventionalVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.ParallelHybridVehicle:
+			case VectoSimulationJobType.SerialHybridVehicle:
 				SaveHybridVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.BatteryElectricVehicle:
@@ -523,7 +523,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
-		body.Add("PowertrainConfiguration", "ParallelHybrid");
+		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid": "ParallelHybrid");
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
 
