@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				vehicleInput, engineInput.EngineModes.First(),
 				mission); //(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 			return dao.CreateGearboxData(
-				new MockDeclarationVehicleInputData() {
+				new MockVehicleInputData() {
 					Components = new MockComponents() {
 						GearboxInputData = gearboxInput,
 						TorqueConverterInputData = (ITorqueConverterDeclarationInputData)gearboxInput,
