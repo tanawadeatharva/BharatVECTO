@@ -8,7 +8,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Utils {
-	public class MockDeclarationVehicleInputData : IVehicleDeclarationInputData, IVehicleComponentsDeclaration
+	public class MockDeclarationVehicleInputData : IVehicleDeclarationInputData
 	{
 		#region Implementation of IComponentInputData
 
@@ -34,7 +34,13 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public AxleConfiguration AxleConfiguration { get; }
 		public Kilogram CurbMassChassis { get; }
 		public Kilogram GrossVehicleMassRating { get; }
-		public IList<ITorqueLimitInputData> TorqueLimits => new List<ITorqueLimitInputData>();
+
+		private IList<ITorqueLimitInputData> _torqueLimits;
+		public IList<ITorqueLimitInputData> TorqueLimits {
+			get => _torqueLimits ??= new List<ITorqueLimitInputData>();
+			init => _torqueLimits = value;
+		}
+
 		public string ManufacturerAddress { get; }
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
@@ -67,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
-		public IVehicleComponentsDeclaration Components => this;
+		public IVehicleComponentsDeclaration Components { get; set; }
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }

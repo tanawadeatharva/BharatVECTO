@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using TUGraz.VECTO;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;

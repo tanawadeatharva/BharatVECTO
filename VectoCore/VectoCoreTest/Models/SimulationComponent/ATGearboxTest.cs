@@ -33,7 +33,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
-using TUGraz.VECTO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -277,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				vehicleInput, engineInput.EngineModes.First(),
 				mission); //(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 			return dao.CreateGearboxData(
-				new MockVehicleInputData() {
+				new MockDeclarationVehicleInputData() {
 					Components = new MockComponents() {
 						GearboxInputData = gearboxInput,
 						TorqueConverterInputData = (ITorqueConverterDeclarationInputData)gearboxInput,
