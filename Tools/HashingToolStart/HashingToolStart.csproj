@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyName>HashingTool</AssemblyName>
     <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
-
 </Project>

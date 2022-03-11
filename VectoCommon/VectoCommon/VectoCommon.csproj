@@ -3,6 +3,7 @@
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
     <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

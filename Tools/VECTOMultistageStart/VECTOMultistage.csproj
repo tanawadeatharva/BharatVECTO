@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyName>VECTOMultistage</AssemblyName>
     <ApplicationIcon>Icon2.ico</ApplicationIcon>
     <RootNamespace>TUGraz.VECTO</RootNamespace>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
 </Project>

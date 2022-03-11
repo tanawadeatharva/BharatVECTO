@@ -3,6 +3,7 @@
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

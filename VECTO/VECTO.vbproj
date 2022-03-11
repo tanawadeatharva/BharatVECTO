@@ -12,8 +12,10 @@
     <!-- The GUI Editor of Visual Studio 2019 has problems with multitargets.
          If you want to change GUI stuff, then only use one target (uncomment the following line): -->
     <!--<TargetFrameworks>net5.0-windows</TargetFrameworks>-->
+    <DefineTrace>false</DefineTrace>
+    <DefineConstants />
   </PropertyGroup>
-  
+ 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.13" />
