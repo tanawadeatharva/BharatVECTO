@@ -1,6 +1,4 @@
-VECTO/bin/
-VECTO/obj/
-
+Deploy/
 ## From github on 15/5/2014: https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 ## Ignore Visual Studio temporary files, build results, and

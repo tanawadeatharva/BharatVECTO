@@ -9,11 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using Microsoft.Toolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using NLog;
@@ -22,7 +20,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -30,7 +27,6 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -674,7 +670,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			var sortedOutputWriters = outputWriters.OrderBy(ow => ow.JobFile);
 			foreach (var outputDataWriter in sortedOutputWriters) {
 				var writtenFiles = outputDataWriter.GetWrittenFiles();
-				if (writtenFiles.IsNullOrEmpty()) {
+				if (writtenFiles is null || writtenFiles.Count == 0) {
 					continue;
 				}
 				var jobFileName = outputDataWriter.JobFile;

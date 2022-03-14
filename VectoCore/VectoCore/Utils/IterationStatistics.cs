@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			var t = typeof(T).Name;
 			var c = Current.GetOrAdd(t, _ => new Dictionary<string, double>());
-			c[key] = c.GetValueOrDefault(key, 0) + value ?? 1;
+			c[key] = c.GetVECTOValueOrDefault(key, 0) + value ?? 1;
 		}
 
 		[Conditional("TRACE")]

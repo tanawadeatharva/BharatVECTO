@@ -41,7 +41,8 @@ namespace TUGraz.VectoCommon.Models
 		TransmissionOutputRetarder,
 		EngineRetarder,
 		LossesIncludedInTransmission,
-		AxlegearInputRetarder,
+		//todo mk2022-02-17 add the AxlegearInputRetarder later when working on the retarder positions
+		//AxlegearInputRetarder
 	}
 
 	public static class RetarderTypeHelper

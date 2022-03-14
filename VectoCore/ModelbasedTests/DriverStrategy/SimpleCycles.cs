@@ -59,8 +59,8 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 			graphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 			graphWriter.Yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
+				ModalResultField.P_ice_out, ModalResultField.T_ice_fcmap, ModalResultField.FCMap
 			};
 			graphWriter.Series1Label = "Vecto 3";
 			return graphWriter;

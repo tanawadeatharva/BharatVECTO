@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
@@ -22,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		/// <param name="inputDataProvider"></param>
 		/// <param name="report"></param>
 		/// <returns></returns>
-		public IVectoRunDataFactory CreateDeclarationRunDataFactory([NotNull] IInputDataProvider inputDataProvider,
+		public IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
 			IDeclarationReport report, IVTPReport vtpReport)
 		{
 			if (inputDataProvider == null)

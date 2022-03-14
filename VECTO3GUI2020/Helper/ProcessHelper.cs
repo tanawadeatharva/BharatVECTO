@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace VECTO3GUI2020.Helper
 {
@@ -25,7 +23,7 @@ namespace VECTO3GUI2020.Helper
 			explorerCommandStrBuilder.Append(" /select ");
 			explorerCommandStrBuilder.Append(path);
 
-			StartProcess("explorer.exe", ("/select," + path));
+			StartProcess("explorer.exe", "/select," + path);
 		}
 
 
@@ -63,7 +61,7 @@ namespace VECTO3GUI2020.Helper
 
 			try
 			{
-				Process.Start(command, argumentsString);
+				Process.Start(new ProcessStartInfo(command, argumentsString) { UseShellExecute = true});
 			}
 			catch (Exception e)
 			{

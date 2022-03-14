@@ -64,11 +64,11 @@ namespace TUGraz.VectoCommon.Utils
 			if (entity == null) {
 				return new[] { new ValidationResult($"null value given for {typeof(T)}") };
 			}
-			var context = new ValidationContext(entity);
-			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
-				new VectoValidationModeServiceContainer(mode, jobType, emPosition, gbxType, emsCycle));
-
 			var results = new List<ValidationResult>();
+			var context = new ValidationContext(entity);
+
+			context.InitializeServiceProvider(type => new VectoValidationModeServiceContainer(mode, jobType, emPosition, gbxType, emsCycle));
+
 			Validator.TryValidateObject(entity, context, results, true);
 
 			const BindingFlags flags =

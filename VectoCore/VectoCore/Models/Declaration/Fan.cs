@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override AuxDemandEntry Lookup(MissionType mission, string technology, bool electrical)
 		{
 			var lookup = Tuple.Create(mission, technology, electrical);
-			return Data.GetValueOrDefault(lookup, new AuxDemandEntry { PowerDemand = 0.SI<Watt>() });
+			return Data.GetVECTOValueOrDefault(lookup, new AuxDemandEntry { PowerDemand = 0.SI<Watt>() });
 		}
 		
 		public string[] FullyElectricTechnologies() => Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();

@@ -32,7 +32,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;

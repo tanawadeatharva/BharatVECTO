@@ -138,13 +138,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public GearLossMapEntry this[int i] => _entries[i];
 
-#if DEBUG
-		public void DrawGraph()
-		{
-			_lossMap.DrawGraph();
-		}
-#endif
-
 		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
