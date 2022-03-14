@@ -1081,6 +1081,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
 				}
 
+				if (nextGear.Equals(GearList.First()) && engineSpeedTooLow) {
+					// disengage gearbox...
+					var response = ResponseEmOff;
+					response.Gear = new GearshiftPosition(0);
+					response.Setting.GearboxEngaged = false;
+					response.Setting.GearboxInNeutral = true;
+					eval.Add(response);
+					return;
+				}
+
 				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && firstResponse == null && nextGear.Equals(GearList.First())) {
 					var downshift = ResponseEmOff;
 					downshift.Gear = nextGear;
