@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 
 namespace VECTO3GUI2020.Util.XML
 {
@@ -47,7 +42,7 @@ namespace VECTO3GUI2020.Util.XML
 
 		public static string GetPrefix(XNamespace xNamespace)
 		{
-			if (xNamespace.NamespaceName.IsNullOrEmpty()) {
+			if (string.IsNullOrEmpty(xNamespace.NamespaceName)) {
 				return null;
 			}
 			string prefix = NamespacePrefix[xNamespace];

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;

@@ -1,13 +1,5 @@
 using System;
-using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Xml;
-using Castle.Core.Internal;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -15,15 +7,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Utils;
-using VECTO3GUI2020;
-using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test
@@ -158,9 +141,9 @@ namespace Vecto3GUI2020Test
 			var vehicleViewModel =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as IMultistageVehicleViewModel;
 			Assert.NotNull(vehicleViewModel);
-			Assert.IsTrue(vehicleViewModel.Manufacturer.IsNullOrEmpty());
-			Assert.IsTrue(vehicleViewModel.ManufacturerAddress.IsNullOrEmpty());
-			Assert.IsTrue(vehicleViewModel.VIN.IsNullOrEmpty());
+			Assert.IsTrue(string.IsNullOrEmpty(vehicleViewModel.Manufacturer));
+			Assert.IsTrue(string.IsNullOrEmpty(vehicleViewModel.ManufacturerAddress));
+			Assert.IsTrue(string.IsNullOrEmpty(vehicleViewModel.VIN));
 			Assert.IsNull(vehicleViewModel.Model);
 
 			var vehicleViewModelV28 = vehicleViewModel as InterimStageBusVehicleViewModel_v2_8;

@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Util.XML.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
@@ -80,7 +75,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 			dataElement.Add(new XElement(_defaultNamespace + XMLNames.AirDrag_DeclaredCdxA, _inputData.AirDragArea.ToXMLFormat(2)));
 
 
-			dataElement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+			dataElement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
 		}
 
 		protected override void Initialize()

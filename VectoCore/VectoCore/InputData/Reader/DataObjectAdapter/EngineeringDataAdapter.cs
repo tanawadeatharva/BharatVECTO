@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			fullLoadCurves[0].EngineData = retVal;
 			if (gbx != null) {
 				foreach (var gear in gbx.Gears) {
-					var maxTorque = VectoMath.Min(gear.MaxTorque, limits.GetValueOrDefault(gear.Gear)?.MaxTorque);
+					var maxTorque = VectoMath.Min(gear.MaxTorque, limits.GetVECTOValueOrDefault(gear.Gear)?.MaxTorque);
 					fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 				}
 			}

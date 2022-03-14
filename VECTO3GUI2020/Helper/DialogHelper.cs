@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using VECTO3GUI2020.Properties;
 using MessageBox = System.Windows.MessageBox;
 
@@ -128,17 +122,13 @@ namespace VECTO3GUI2020.Helper
 			if (initialDirectory == null) {
 				initialDirectory = lastUsedDirectoryFolderPicker;
 			}
-			using (var dialog = new CommonOpenFileDialog())
-			{
-				dialog.InitialDirectory = initialDirectory;
-				dialog.IsFolderPicker = true;
-				dialog.Multiselect = false;
-				dialog.RestoreDirectory = true;
+			using (var dialog = new FolderBrowserDialog()) {
+				dialog.SelectedPath = initialDirectory;
 
 				var result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok) {
-					lastUsedDirectoryFolderPicker = Path.GetDirectoryName(dialog.FileName);
-					return dialog.FileName;
+				if (result == DialogResult.OK) {
+					lastUsedDirectoryFolderPicker = Path.GetDirectoryName(dialog.SelectedPath);
+					return dialog.SelectedPath;
 				}
 			}
 			return null;

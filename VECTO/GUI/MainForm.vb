@@ -763,7 +763,7 @@ lbFound:
 
     Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenLogToolStripMenuItem.Click
-        Process.Start(Path.Combine(MyAppPath, "log.txt"))
+        Process.Start(new ProcessStartInfo(Path.Combine(MyAppPath, "log.txt")) with {.UseShellExecute = true})
     End Sub
 
     Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -773,20 +773,20 @@ lbFound:
 
     Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UserManualToolStripMenuItem.Click
-        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
-            Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html")}""")
-        Else
-            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-        End If
+        OpenFileExternal("User Manual\help.html")
     End Sub
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
-            Process.Start(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf"))
+        OpenFileExternal("User Manual\Release Notes.pdf")
+    End Sub
+
+    Private Sub OpenFileExternal(filename As String)
+        Dim filepath = Path.Combine(MyAppPath, filename)
+        If File.Exists(filepath) Then
+            Process.Start(new ProcessStartInfo(filepath) With {.UseShellExecute = true})
         Else
-            MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
+            MsgBox("File not found!", MsgBoxStyle.Critical)
         End If
     End Sub
 
@@ -1563,9 +1563,9 @@ lbFound:
                     txt = txt.Replace("\", "/")
                     txt = "file:///" & txt
                     Try
-                        Process.Start(txt)
+                        Process.Start(new ProcessStartInfo(txt) With {.UseShellExecute = True})
                     Catch ex As Exception
-                        MsgBox("Cannot open link! (-_-;)")
+                        MsgBox("Cannot open link!")
                     End Try
                 ElseIf _
                     Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
@@ -1577,7 +1577,7 @@ lbFound:
                     Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<RUN>" Then
                     txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<RUN>", "")
                     Try
-                        Process.Start(txt)
+                        Process.Start(new ProcessStartInfo(txt) With {.UseShellExecute = true})
                     Catch ex As Exception
                         GUIMsg(MessageType.Err, "Could not run '" & txt & "'!")
                     End Try

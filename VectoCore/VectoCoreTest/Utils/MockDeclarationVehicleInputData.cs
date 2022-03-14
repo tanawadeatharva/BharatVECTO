@@ -7,7 +7,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
-namespace TUGraz.VectoCore.Tests.Utils {
+namespace TUGraz.VectoCore.Tests.Utils
+{
 	public class MockDeclarationVehicleInputData : IVehicleDeclarationInputData, IVehicleComponentsDeclaration
 	{
 		#region Implementation of IComponentInputData
@@ -63,10 +64,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-
 		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
-
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
@@ -193,8 +192,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IElectricStorageSystemEngineeringInputData ElectricStorage { get; set; }
 		public IElectricMachinesEngineeringInputData ElectricMachines { get; set; }
 
-        Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+		Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 
-        #endregion
-    }
+		#endregion
+	}
 }

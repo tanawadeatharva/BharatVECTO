@@ -52,16 +52,16 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 #if TRACE
 			graphWriter.Enable();
 #else
-			GraphWriter.Disable();
+			graphWriter.Disable();
 #endif
 
 			graphWriter.Xfields = new[] { ModalResultField.dist };
 
 			graphWriter.Yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
+				ModalResultField.P_ice_out, /*ModalResultField.T_eng_fcmap, */ ModalResultField.FCMap,
 			};
-			GraphWriter.PlotDrivingMode = true;
+			graphWriter.PlotDrivingMode = true;
 			graphWriter.Series1Label = "Vecto 3";
 			return graphWriter;
 		}

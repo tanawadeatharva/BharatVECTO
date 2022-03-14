@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque.GetValueOrDefault(pos)?.Item2;
+			return _electricMotorTorque.GetVECTOValueOrDefault(pos)?.Item2;
 		}
 
 		///=======================================================================================

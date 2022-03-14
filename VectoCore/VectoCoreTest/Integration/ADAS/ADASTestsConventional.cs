@@ -1466,7 +1466,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var pccStates = pccCol.Values<PCCStates>();
 			var driverAction = driverActionCol.Values<DrivingAction>();
 			var distances = sCol.Values<Meter>();
-			var sections = GetDistancesOfStateChanges(pccStates.Zip(driverAction), distances).ToArray();
+			var sections = GetDistancesOfStateChanges(pccStates.ZipAll(driverAction), distances).ToArray();
 
 			Console.WriteLine("Start-End Segments:");
 			if (sections.Any()) {

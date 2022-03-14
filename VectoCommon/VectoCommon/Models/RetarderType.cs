@@ -41,7 +41,8 @@ namespace TUGraz.VectoCommon.Models
 		TransmissionOutputRetarder,
 		EngineRetarder,
 		LossesIncludedInTransmission,
-		AxlegearInputRetarder,
+		//todo mk2022-02-17 add the AxlegearInputRetarder later when working on the retarder positions
+		//AxlegearInputRetarder
 	}
 
 	public static class RetarderTypeHelper
@@ -85,8 +86,6 @@ namespace TUGraz.VectoCommon.Models
 					return "Engine Retarder";
 				case RetarderType.LossesIncludedInTransmission:
 					return "Included in Transmission Loss Maps";
-				case RetarderType.AxlegearInputRetarder:
-					return "Axlegear Input Retarder";
 				default:
 					throw new ArgumentOutOfRangeException("RetarderType", retarder, null);
 			}

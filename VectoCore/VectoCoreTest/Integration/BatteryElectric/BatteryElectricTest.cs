@@ -71,9 +71,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Enable();
 
 			//#else
-			//GraphWriter.Disable();
+			//graphWriter.Disable();
 			//#endif
-			
+
 
 			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
@@ -196,8 +196,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
 				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
 				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
-					speed = r.Field<SI>(ModalResultField.v_act.GetName()),
-					brakePwr = r.Field<SI>(ModalResultField.P_brake_loss.GetName())
+					speed = (SI)r[ModalResultField.v_act.GetName()],
+					brakePwr = (SI)r[ModalResultField.P_brake_loss.GetName()]
 				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
 				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
 			}
@@ -350,7 +350,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
 		}
@@ -386,8 +386,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
 				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
 				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
-					speed = r.Field<SI>(ModalResultField.v_act.GetName()),
-					brakePwr = r.Field<SI>(ModalResultField.P_brake_loss.GetName())
+					speed = (SI)r[ModalResultField.v_act.GetName()],
+					brakePwr = (SI)r[ModalResultField.P_brake_loss.GetName()]
 				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
 				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
 			}
@@ -432,7 +432,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			job.WaitFinished();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
 		}
@@ -616,8 +616,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Write(modFilename + ".vmod");
 		}
 
-        [
-            TestCase(BEV_E2_Job, 0, TestName = "PEV E2 Job LongHaul"),
+		[
+			TestCase(BEV_E2_Job, 0, TestName = "PEV E2 Job LongHaul"),
 			TestCase(BEV_E2_Job, 1, TestName = "PEV E2 Job Coach"),
 			TestCase(BEV_E2_Job, 2, TestName = "PEV E2 Job Construction"),
 			TestCase(BEV_E2_Job, 3, TestName = "PEV E2 Job HeavyUrban"),
@@ -689,7 +689,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 
-		
+
 
 		// =================================================
 
@@ -701,8 +701,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			var container = CreateBatteryElectricPowerTrain(
-				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor,  pAuxEl, pos, payload);
-			
+				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor, pAuxEl, pos, payload);
+
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -724,11 +724,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
-			
-			//var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
-				 //Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
 
-			
+			//var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
+			//Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+
+
 
 			var runData = new VectoRunData() {
 				JobRunId = 0,
@@ -750,8 +750,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			};
 
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
-			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter)
-			{
+			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter) {
 				WriteModalResults = true,
 			};
 			if (pos == PowertrainPosition.BatteryElectricE3) {
@@ -762,13 +761,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				runData.AxleGearData = axleGearData;
 				runData.GearboxData = gearboxData;
 			}
-			
+
 			var container = new VehicleContainer(
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
 				RunData = runData
 			};
 
-			
+
 
 			var es = new ElectricSystem(container);
 			var battery = new BatterySystem(container, batteryData);
@@ -794,11 +793,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			switch (pos) {
 				case PowertrainPosition.HybridPositionNotSet:
 					throw new VectoException("invalid powertrain position");
-				case PowertrainPosition.HybridP0: 
+				case PowertrainPosition.HybridP0:
 				case PowertrainPosition.HybridP1:
-				case PowertrainPosition.HybridP2: 
-				case PowertrainPosition.HybridP3: 
-				case PowertrainPosition.HybridP4: 
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
 					throw new VectoException("testcase does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
 					powertrain.AddComponent(
@@ -829,7 +828,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
-					//throw new VectoException("Battery Electric configuration B2 currently not supported");
+				//throw new VectoException("Battery Electric configuration B2 currently not supported");
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
 			}
 
@@ -868,7 +867,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							Ratio = ratio,
 							//ShiftPolygon = shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, )
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				
+
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
 				InputData = new DummyGearboxData() {
@@ -986,7 +985,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
-			
+
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
@@ -1003,7 +1002,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
 				//ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
-														//.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+				//.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 			};
 
 			return retVal;
@@ -1056,5 +1055,5 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		public bool EngineOn => true;
 	}
 
-	
+
 }

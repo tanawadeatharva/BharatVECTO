@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var actual = VectoCSVFile.Read(result.actualFile);
 
 				if (actual.Columns.Contains(ModalResultField.v_act.GetShortCaption()) &&
-					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.v_act.GetShortCaption()).ToDouble(double.NaN))) {
+					!double.IsNaN(((string)actual.Rows[0][ModalResultField.v_act.GetShortCaption()]).ToDouble(double.NaN))) {
 					// test v_act >= 0
 					Assert.IsTrue(actual.Rows.Cast<DataRow>()
 						.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				if (actual.Columns.Contains(ModalResultField.dist.GetShortCaption()) &&
-					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.dist.GetShortCaption()).ToDouble(double.NaN))) {
+					!double.IsNaN(((string)actual.Rows[0][ModalResultField.dist.GetShortCaption()]).ToDouble(double.NaN))) {
 					// test distance monotonous increasing
 
 					var distPrev = actual.Rows[0].ParseDouble(ModalResultField.dist.GetShortCaption());

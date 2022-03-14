@@ -278,15 +278,15 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			Second tracStart = null;
 			foreach (DataRow row in modData.Rows) {
-				var velocity = row.Field<MeterPerSecond>(ModalResultField.v_act.GetName());
+				var velocity = (MeterPerSecond)row[ModalResultField.v_act.GetName()];
 				if (velocity.IsEqual(0)) {
 					tracStart = null;
 					continue;
 				}
 
-				var gear = row.Field<uint>(ModalResultField.Gear.GetName());
-				var absTime = row.Field<Second>(ModalResultField.time.GetName());
-				var dt = row.Field<Second>(ModalResultField.simulationInterval.GetName());
+				var gear = (uint)row[ModalResultField.Gear.GetName()];
+				var absTime = (Second)row[ModalResultField.time.GetName()];
+				var dt = (Second)row[ModalResultField.simulationInterval.GetName()];
 				if (gear == 0 && tracStart == null) {
 					tracStart = absTime - dt / 2.0;
 				}
@@ -553,8 +553,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
-			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (distanceBased && totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]).Value())) {
 					continue;
@@ -642,7 +642,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pClutchOut = row[ModalResultField.P_clutch_out.GetName()];
 				if (pClutchOut != DBNull.Value) {
 					Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
-					Assert.AreEqual(pEngOut.Value(), (pClutchOut as Watt + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+					Assert.AreEqual(pEngOut.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
 						time, distance);
 				}
 
@@ -686,8 +686,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
-			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 
 			var p1OutColumn =
 				modData.Columns[string.Format(ModalResultField.P_EM_out_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
@@ -794,7 +794,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				//if (pClutchOut != DBNull.Value) {
 				Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 				var pP1Out = row[p1OutColumn] as Watt;
-				Assert.AreEqual(pP1Out.Value(), (pClutchOut as Watt + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+				Assert.AreEqual(pP1Out.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				var pP1Loss = row[p1LossColumn] as Watt;
@@ -889,8 +889,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
-			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]))) {
 					continue;
