@@ -4,6 +4,7 @@
     <RootNamespace>DeclarationCycleZip</RootNamespace>
     <AssemblyName>DeclarationCycleZip</AssemblyName>
     <TargetFrameworks>net5.0</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

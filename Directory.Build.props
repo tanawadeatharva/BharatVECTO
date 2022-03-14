@@ -1,18 +1,17 @@
 <Project>
   <PropertyGroup>
-    <!-- For a Release Candidate uncomment the following line: -->
-    <!--<DefineConstants>$(DefineConstants),RELEASE_CANDIDATE</DefineConstants>-->
+    <DefineConstants />
+    <!-- For a Release-Candidate uncomment the following line: -->
+    <!--<DefineConstants>RELEASE_CANDIDATE</DefineConstants>-->
 
     <!-- For a Release uncomment the following line: -->
-    <!--<DefineConstants>$(DefineConstants),CERTIFICATION_RELEASE</DefineConstants>-->
+    <!--<DefineConstants>CERTIFICATION_RELEASE</DefineConstants>-->
 
     <!-- Global VECTO Version -->
     <MainProductVersion>0.7.7</MainProductVersion>
-  </PropertyGroup>
+    <VersionSuffix>DEV</VersionSuffix>
 
-  <!-- The following settings are used as default values for ALL projects -->
-  <PropertyGroup>
-    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
+    <!-- The following settings are used as default values for ALL projects -->
     <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <Authors>Graz University of Technology</Authors>
     <Company>European Union</Company>
@@ -22,11 +21,13 @@
     <PublishTrimmed>true</PublishTrimmed>
     <IsTrimmable>true</IsTrimmable>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+	  <DefineTrace>false</DefineTrace>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <DebugType>none</DebugType>
+    <WarningLevel>5</WarningLevel>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionSuffix>DEV</VersionSuffix>
-  </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('RELEASE_CANDIDATE'))">
     <VersionSuffix>RC</VersionSuffix>
   </PropertyGroup>
@@ -41,19 +42,5 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <RemoveIntegerChecks>true</RemoveIntegerChecks>
-    <DebugType>none</DebugType>
-    <WarningLevel>5</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Deploy'">
-    <DebugType>none</DebugType>
-    <WarningLevel>5</WarningLevel>
-    <RemoveIntegerChecks>true</RemoveIntegerChecks>
-    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 </Project>

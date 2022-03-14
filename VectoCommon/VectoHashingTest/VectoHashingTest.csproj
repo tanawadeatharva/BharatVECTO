@@ -2,8 +2,8 @@
   <PropertyGroup>
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
-    <DefineConstants />
     <TargetFrameworks>net5.0</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>

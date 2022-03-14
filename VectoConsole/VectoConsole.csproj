@@ -4,6 +4,8 @@
     <RootNamespace>VectoConsole</RootNamespace>
     <AssemblyName>vectocmd</AssemblyName>
     <ApplicationIcon>VECTO.ico</ApplicationIcon>
+    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
 
   <ItemGroup>
