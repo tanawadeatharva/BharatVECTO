@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
 													vehicle.Components.BusAuxiliaries, mission.MissionType, 
 													_segment.VehicleClass, vehicle.Length ?? mission.BusParameter.VehicleLength,
-													vehicle.Components.AxleWheels.AxlesDeclaration.Count(x => x.Steered)),
+													vehicle.Components.AxleWheels.NumSteeredAxles),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,

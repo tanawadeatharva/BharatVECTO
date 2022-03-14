@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return GetSerialHybridRunData();
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
 			}
 		}
 

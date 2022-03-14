@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			public IVehicleEngineeringInputData Vehicle { get; set; }
 			public IHybridStrategyParameters HybridStrategyParameters { get; }
 			public IList<ICycleData> Cycles { get; set; }
-			public VectoSimulationJobType JobType { get; }
+			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 			public bool EngineOnlyMode => false;
 			public IEngineEngineeringInputData EngineOnly => null;
 			public TableData PTOCycleWhileDrive { get; set; }
