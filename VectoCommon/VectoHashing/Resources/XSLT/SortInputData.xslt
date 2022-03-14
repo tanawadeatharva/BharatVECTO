@@ -287,7 +287,7 @@
 		</xsl:if>
 	</xsl:template>
 			
-	<!-- ElectricMotorTorqueLimits -->	
+	<!-- ElectricMachineTorqueLimits -->	
 	<xsl:template match="*[local-name()='ElectricMachine' and ./*[local-name()='Position']]">		
 		<xsl:if test="count(preceding-sibling::*[local-name()='ElectricMachine']) = 0">
 			<xsl:for-each select="../*[local-name()='ElectricMachine']">
@@ -299,7 +299,7 @@
 		</xsl:if>				
 	</xsl:template>	
 	
-	<!-- AUX SteeringPump -->
+	<!-- For AUX Component SteeringPump -->
 	<xsl:template match="*[local-name()='SteeringPump']">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*"/>
@@ -310,7 +310,28 @@
 		</xsl:element>
 	</xsl:template>	
 	
-
+	<!-- For ElectricMachine component at HEV-Px, HEV-S2, HEV-S3, HEV-S4, PEV-E2, PEV-E3 and PEV-E4 -->
+	<xsl:template match="*[local-name()='P2.5GearRatios']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@gear" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>	
+	</xsl:template>
+	
+	<!-- For Vehicle HEV IEPC-S and Vehicle HEV-Px -->
+	<xsl:template match="*[local-name()='BoostingLimitations']">
+		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
+			<xsl:for-each select="*">
+				<xsl:sort data-type="number" select="@rotationalSpeed" order="ascending"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</xsl:element>	
+	</xsl:template>
+	
 	
 
 </xsl:transform>

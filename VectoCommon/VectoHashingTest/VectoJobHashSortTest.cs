@@ -17,8 +17,8 @@ namespace VectoHashingTest
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase("IpWiBzrQINrCc3ZqloHqhPROp7XLcAAfHlTf1IRxsGg=", SortedComponentPath + "HEV-S_heavyLorry_IEPC-S.xml")]
-		[TestCase("IpWiBzrQINrCc3ZqloHqhPROp7XLcAAfHlTf1IRxsGg=", UnsortedComponentPath + "HEV-S_heavyLorry_IEPC-S.xml")]
+		[TestCase("NBawT5DzeZHW9gIupRB8uNtII+JYLP/JxgiMKMaskpg=", SortedComponentPath + "HEV-S_heavyLorry_IEPC-S.xml")]
+		[TestCase("NBawT5DzeZHW9gIupRB8uNtII+JYLP/JxgiMKMaskpg=", UnsortedComponentPath + "HEV-S_heavyLorry_IEPC-S.xml")]
 		public void TestJobHashSort(string expectedJobHash, string filePath)
 		{
 			var loadedFile = VectoHash.Load(filePath);
