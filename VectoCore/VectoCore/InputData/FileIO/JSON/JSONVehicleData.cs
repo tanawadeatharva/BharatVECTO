@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				switch (Body.GetEx<String>("PowertrainConfiguration")) {
 					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
 					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}

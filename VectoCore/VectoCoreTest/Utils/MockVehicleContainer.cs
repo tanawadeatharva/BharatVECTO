@@ -109,6 +109,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
+		public IElectricSystemInfo ElectricSystemInfo { get; }
+
 		public ITorqueConverterInfo TorqueConverterInfo => null;
 
 		public ITorqueConverterControl TorqueConverterCtl => null;
@@ -330,6 +332,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool HasElectricMotor { get; set; }
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
+		public VectoSimulationJobType VehicleArchitecutre { get; }
 
 		#endregion
 	}

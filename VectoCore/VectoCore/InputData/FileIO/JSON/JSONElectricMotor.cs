@@ -29,15 +29,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				OverloadTorque = entry.GetEx<double>("OverloadTorque").SI<NewtonMeter>(),
 				OverloadTestSpeed = entry.GetEx<double>("OverloadTorqueSpeed").RPMtoRad(),
 				OverloadTime = entry.GetValueOrDefault<double>("OverloadTime")?.SI<Second>() ?? 0.SI<Second>(),
-				PowerMap = new List<IElectricMotorPowerMap>() {
+				PowerMap = ReadPowermap(entry),
+				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
+				FullLoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
+			}).Cast<IElectricMotorVoltageLevel>().ToList();
+		}
+
+		protected virtual IList<IElectricMotorPowerMap> ReadPowermap(JToken entry)
+		{
+			//if (entry.)
+			var powermap = entry["EfficiencyMap"];
+
+			if (!powermap.HasValues) {
+				return new List<IElectricMotorPowerMap>() {
 					new JSONElectricMotorPowerMap() {
 						Gear = 0,
 						PowerMap = ReadTableData(entry.GetEx<string>("EfficiencyMap"), "ElectricMotor Map")
 					}
-				},
-				// DragCurve = ReadTableData(entry.GetEx<string>("DragCurve"), "ElectricMotor DragCurve"),
-				FullLoadCurve = ReadTableData(entry.GetEx<string>("FullLoadCurve"), "ElectricMotor FullLoadCurve")
-			}).Cast<IElectricMotorVoltageLevel>().ToList();
+				};
+			}
+
+			return powermap.Select(x => new JSONElectricMotorPowerMap() {
+				Gear = (((JProperty) x).Name).ToInt(),
+				PowerMap = ReadTableData((x as JProperty).Value.Value<string>(), "ElectricMotor Map")
+			}).Cast<IElectricMotorPowerMap>().ToList();
 		}
 
 		#endregion

@@ -90,6 +90,11 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsDeclarationType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="AbstractPTODataType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractPTODataType"/>
@@ -1374,11 +1379,40 @@
 			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ElectricMachineTorqueLimitsSerialHybridType">
+		<xs:complexContent>
+			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType">
+				<xs:sequence>
+					<xs:element name="ElectricMachine" maxOccurs="2">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
+								<xs:element name="VoltageLevel" minOccurs="2" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Voltage">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minExclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="MaxTorqueCurve" type="v2.3:ElectricMachineSystemMaxTorqueCurveType"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ElectricMachineTorqueLimitsType">
 		<xs:complexContent>
 			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" maxOccurs="unbounded">
+					<xs:element name="ElectricMachine">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
@@ -2081,7 +2115,7 @@
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2106,7 +2140,7 @@
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2141,7 +2175,7 @@
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>

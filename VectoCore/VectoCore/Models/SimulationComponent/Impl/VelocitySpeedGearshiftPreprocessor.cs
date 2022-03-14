@@ -152,6 +152,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var simulationInterval = TractionInterruption;
 
+			if (simulationInterval.IsEqual(0)) {
+				return vehicle.VehicleSpeed;
+			}
+
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
@@ -176,7 +180,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
 						return r != null && (vehicle.VehicleSpeed + r.Driver.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
-					}
+					},
+					searcher: this
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
 				if (!(step is ResponseSuccess)) {

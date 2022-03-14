@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 
-		public SimpleHybridController(VehicleContainer container, ElectricSystem es, SwitchableClutch clutch) : base(container)
+		public SimpleHybridController(VehicleContainer container, ElectricSystem es) : base(container)
 		{
 			ElectricSystem = es;
 			//this.clutch = clutch;
@@ -117,8 +117,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public void ApplyStrategySettings(HybridStrategyResponse strategySettings)
 		{
-			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
-			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
+			if (Gearbox != null) {
+				Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
+			}
+
+			if (Engine != null) {
+				Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
+			}
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
 		}
 

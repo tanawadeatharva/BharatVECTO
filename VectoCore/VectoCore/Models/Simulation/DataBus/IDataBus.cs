@@ -74,6 +74,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IRESSInfo BatteryInfo { get; }
 
+		IElectricSystemInfo ElectricSystemInfo { get; }
+
 		ITorqueConverterInfo TorqueConverterInfo { get; }
 
 		ITorqueConverterControl TorqueConverterCtl { get; }
@@ -98,5 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool HasElectricMotor { get; }
 
 		PowertrainPosition[] ElectricMotorPositions { get; }
+
+		VectoSimulationJobType VehicleArchitecutre { get; }
 	}
 }

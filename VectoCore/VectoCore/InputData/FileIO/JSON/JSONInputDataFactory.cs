@@ -99,11 +99,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 7:
 					return new JSONInputDataCompletedBusFactorMethodV7(json, filename, tolerateMissing);
 				case 8:
-					return new JSONInputDataV8_Hybrid(json, filename, tolerateMissing);
+					return new JSONInputDataV8_ParallelHybrid(json, filename, tolerateMissing);
 				case 9:
 					return new JSONInputDataV9_BEV(json, filename, tolerateMissing);
 				case 10:
 					return new JSONInputDataV10_PrimaryAndStageInputBus(json, filename, tolerateMissing);
+				case 11:
+					return new JSONInputDataV11_SerialHybrid(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -183,7 +185,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var version = ReadVersion(json);
 			switch (version) {
 				case 1:
-					return new JSONHybridStrategyParameters(json, filename, tolerateMissing);
+					return new JSONHybridStrategyParametersParallelHybrid(json, filename, tolerateMissing);
+				case 2:
+					return new JSONHybridStrategyParametersSerialHybrid(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("HybridStrategyParameter-File: Unsupported FileVersion. Got {0}", version);
 

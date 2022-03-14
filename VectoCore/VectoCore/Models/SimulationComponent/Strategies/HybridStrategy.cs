@@ -958,7 +958,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					var r = (IResponse)resp;
 					var deltaMaxTq = r.Engine.TotalTorqueDemand - r.Engine.DynamicFullLoadTorque;
 					return (deltaMaxTq * avgEngineSpeed).Value();
-				});
+				},
+				searcher: this);
 			var rqMaxTorque = RequestDryRun(absTime, dt, maxTorque, outAngularVelocity, currentGear, maxEmDriveSetting);
 			// limiting to ICE FLD with max propulsion - delta gearbox torque
 			var rqMaxGbxInTq = GetGearboxInTorqueLimitedVehiclePorpTorque(rqMaxTorque, emPos);
@@ -1238,7 +1239,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							deltaDragLoad = response.Gearbox.InputTorque;
 						}
 						return deltaDragLoad.Value();
-					}
+					},
+					searcher: this
 				);
 				if (emRecuperationTq.IsBetween(
 					firstResponse.ElectricMotor.MaxDriveTorque ?? 0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque ?? 0.SI<NewtonMeter>())) {
@@ -1923,7 +1925,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								var response = r as IResponse;
 								return response.Engine.TorqueOutDemand.Value();
 							},
-							abortCriterion: (r, c) => r == null
+							abortCriterion: (r, c) => r == null,
+							searcher: this
 						);
 						if (emTorqueICEOff.IsBetween(
 							firstResponse.ElectricMotor.MaxDriveTorque, VectoMath.Min(0.SI<NewtonMeter>(), firstResponse.ElectricMotor.MaxRecuperationTorque))) {
@@ -1962,7 +1965,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								var response = r as IResponse;
 								return (response.Engine.TotalTorqueDemand - response.Engine.DynamicFullLoadTorque).Value();
 							},
-							abortCriterion: (r, c) => r == null
+							abortCriterion: (r, c) => r == null,
+							searcher: this
 						);
 						if (emTorqueICEMax.IsBetween(maxEmTorque, 0.SI<NewtonMeter>())) {
 							// only consider where EM is recuperating
@@ -2018,7 +2022,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 									var response = r as IResponse;
 									return response.Engine.TorqueOutDemand.Value();
 								},
-								abortCriterion: (r, c) => r == null
+								abortCriterion: (r, c) => r == null,
+								searcher: this
 							);
 							if (emTorqueICEOff.IsBetween(maxEmTorqueRecuperate, 0.SI<NewtonMeter>())) {
 								// only consider where EM is recuperating

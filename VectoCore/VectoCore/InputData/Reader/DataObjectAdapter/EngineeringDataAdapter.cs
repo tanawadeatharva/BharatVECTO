@@ -206,7 +206,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			retVal.Inertia = engine.Inertia +
-							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
+							(gbx != null && gbx.Type.AutomaticTransmission()
+								? (gbx.Type == GearboxType.APTN ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
+								: 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx?.Gears.Count ?? 0;
@@ -321,7 +323,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var gears = new Dictionary<uint, GearData>();
 			ShiftPolygon tcShiftPolygon = null;
-			if (gearbox.Type.AutomaticTransmission()) {
+			if (gearbox.Type.AutomaticTransmission() && gearbox.Type != GearboxType.APTN) {
 				tcShiftPolygon = torqueConverter.ShiftPolygon != null
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
@@ -356,7 +358,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Gears = gears;
 
-			if (retVal.Type.AutomaticTransmission()) {
+			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
@@ -398,7 +400,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
 		{
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = gearbox.TractionInterruption;
+			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN ? 0.SI<Second>() : gearbox.TractionInterruption;
 			
 		}
 
@@ -873,8 +875,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				WarnEngineeringMode("Electric motor");
 			}
 
-			if (electricMachines.Entries.Select(x => x.Position).Distinct().Count() > 1) {
-				throw new VectoException("multiple electric motors are not supported at the moment");
+			if (electricMachines.Entries.Select(x => x.Position).Where(x => x != PowertrainPosition.GEN).Distinct().Count() > 1) {
+				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
 
 			return electricMachines.Entries
@@ -901,7 +903,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Voltage = entry.VoltageLevel,
 					ContinuousTorque = entry.ContinuousTorque * count,
 					ContinuousTorqueSpeed = entry.ContinuousTorqueSpeed,
-					OverloadTorque = entry.OverloadTorque ?? 0.SI<NewtonMeter>() * count,
+					OverloadTorque = (entry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
 					OverloadTestSpeed = entry.OverloadTestSpeed ?? 0.RPMtoRad(),
 					OverloadTime = entry.OverloadTime,
 					FullLoadCurve = fullLoadCurveCombined,
@@ -947,6 +949,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MaxPropulsionTorque = torqueLimit,
 				ICEStartPenaltyFactor = hybridStrategyParameters.ICEStartPenaltyFactor,
 				CostFactorSOCExponent = double.IsNaN(hybridStrategyParameters.CostFactorSOCExpponent) ? 5 : hybridStrategyParameters.CostFactorSOCExpponent,
+				GensetMinOptPowerFactor = double.IsNaN(hybridStrategyParameters.GensetMinOptPowerFactor) ? 0 : hybridStrategyParameters.GensetMinOptPowerFactor,
 			};
 			return retVal;
 		}

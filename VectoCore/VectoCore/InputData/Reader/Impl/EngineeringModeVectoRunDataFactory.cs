@@ -73,9 +73,152 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					return GetConventionalVehicleRunData();
 				case VectoSimulationJobType.BatteryElectricVehicle:
 					return GetBatteryElectricVehicleRunData();
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return GetSerialHybridRunData();
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+		}
+
+		private IEnumerable<VectoRunData> GetSerialHybridRunData()
+		{
+			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
+			var engineModes = engine.EngineModes;
+
+			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				var engineMode = engineModes[modeIdx];
+				foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
+					var dao = new EngineeringDataAdapter();
+					var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
+					if (InputDataProvider.JobInputData.JobType != VectoSimulationJobType.ConventionalVehicle) {
+						driver.EngineStopStart.UtilityFactorDriving = 1;
+						driver.EngineStopStart.UtilityFactorStandstill = 1;
+					}
+
+					var vehicle = InputDataProvider.JobInputData.Vehicle;
+					var engineData = dao.CreateEngineData(vehicle, engineMode);
+					engineData.FuelMode = modeIdx;
+					
+					var axlegearData = vehicle.Components.AxleGearInputData != null
+						? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
+						: null;
+					var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits);
+
+					GearboxData gearboxData = null;
+					ShiftStrategyParameters gearshiftParams = null;
+					var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
+					if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
+						// gearbox required!
+						gearshiftParams = dao.CreateGearshiftData(
+							InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
+							axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
+						var tmpRunData = new VectoRunData() {
+							JobType = VectoSimulationJobType.SerialHybridVehicle,
+							GearboxData = new GearboxData() {
+								Type = vehicle.Components.GearboxInputData.Type,
+							},
+							GearshiftParameters = gearshiftParams,
+							ElectricMachinesData = electricMachinesData,
+							//VehicleData = dao.CreateVehicleData(vehicle)
+						};
+						var tempVehicle = dao.CreateVehicleData(vehicle);
+						var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+						gearboxData = dao.CreateGearboxData(
+							InputDataProvider, new VectoRunData() {
+								JobType = VectoSimulationJobType.SerialHybridVehicle,
+								VehicleData = tempVehicle,
+								AxleGearData = axlegearData,
+								ElectricMachinesData = electricMachinesData
+							}, tmpStrategy);
+						angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
+
+					}
+
+					if (gearshiftParams == null) {
+						gearshiftParams = new ShiftStrategyParameters() {
+							StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+							StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+							TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
+							DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+							UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+							UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+						};
+					}
+
+					var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
+											CrossWindCorrectionMode.VAirBetaLookupTable;
+					var ptoTransmissionData =
+						dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+
+					if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear != null &&
+						InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed != null) {
+						driver.PTODriveMinSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed /
+							axlegearData.AxleGear.Ratio /
+							gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Gear].Ratio /
+							(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
+						driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear;
+						engineData.PTORoadSweepEngineSpeed =
+							InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
+					}
+
+					var ptoCycleWhileDrive =
+						InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData
+							.PTOCycleWhileDriving != null
+							? DrivingCycleDataReader.ReadFromDataTable(
+								InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData
+									.PTOCycleWhileDriving,
+								"PTO During Drive", false)
+							: null;
+
+
+					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _ => DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
+
+					var electricMachines =
+						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
+							vehicle.ElectricMotorTorqueLimits) ??
+						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+
+
+					var jobType = VectoSimulationJobType.SerialHybridVehicle;
+
+					var vehicleData = dao.CreateVehicleData(vehicle);
+
+					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
+							null, engineData);
+					yield return new VectoRunData {
+						JobName = InputDataProvider.JobInputData.JobName,
+						JobType = jobType,
+						EngineData = engineData,
+						GearboxData = gearboxData,
+						AxleGearData = axlegearData,
+						AngledriveData = angledriveData,
+						VehicleData = vehicleData,
+						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+						DriverData = driver,
+						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
+						BusAuxiliaries =
+							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, jobType),
+						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+						PTO = ptoTransmissionData,
+						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
+						ExecutionMode = ExecutionMode.Engineering,
+						PTOCycleWhileDrive = ptoCycleWhileDrive,
+
+						ElectricMachinesData = electricMachines,
+						HybridStrategyParameters = hybridParameters,
+						BatteryData = battery,
+						SuperCapData = superCap,
+						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |
+										SimulationType.PWheel,
+						GearshiftParameters = gearshiftParams,
+						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
+							.Auxiliaries.ElectricPowerDemand,
+					};
+				}
+			}
+		
 		}
 
 		private IEnumerable<VectoRunData> GetBatteryElectricVehicleRunData()
@@ -107,8 +250,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						},
 						GearshiftParameters = gearshiftParams,
 						ElectricMachinesData = electricMachinesData,
-                        //VehicleData = dao.CreateVehicleData(vehicle)
-                    };
+						//VehicleData = dao.CreateVehicleData(vehicle)
+					};
 					var tempVehicle = dao.CreateVehicleData(vehicle);
 					var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
 					gearboxData = dao.CreateGearboxData(
@@ -147,14 +290,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-                    BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
-                    Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+					BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
+					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 					//PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
-                    ElectricMachinesData = electricMachinesData,
-                    //HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
-                    BatteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
+					ElectricMachinesData = electricMachinesData,
+					//HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
+					BatteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
 					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 					GearshiftParameters = gearshiftParams,
@@ -174,8 +317,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 					var dao = new EngineeringDataAdapter();
 					var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
-					if (InputDataProvider.JobInputData.JobType != VectoSimulationJobType.ConventionalVehicle)
+					if (InputDataProvider.JobInputData.JobType != VectoSimulationJobType.ConventionalVehicle) {
 						driver.EngineStopStart.UtilityFactorDriving = 1;
+					}
+
 					var vehicle = InputDataProvider.JobInputData.Vehicle;
 					var engineData = dao.CreateEngineData(vehicle, engineMode);
 					engineData.FuelMode = modeIdx;
@@ -225,18 +370,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=> DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
 
 					var electricMachines =
-                        dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
-                            vehicle.ElectricMotorTorqueLimits) ??
-                        new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-                    var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
+							vehicle.ElectricMotorTorqueLimits) ??
+						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
-                   
-                    var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
-                        ? VectoSimulationJobType.ParallelHybridVehicle
-                        : VectoSimulationJobType.ConventionalVehicle;
+				   
+					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
+						? VectoSimulationJobType.ParallelHybridVehicle
+						: VectoSimulationJobType.ConventionalVehicle;
 
-                    var vehicleData = dao.CreateVehicleData(vehicle);
+					var vehicleData = dao.CreateVehicleData(vehicle);
 
 					var gearshiftParams = dao.CreateGearshiftData(
 						gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
@@ -252,15 +397,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
 						};
 					}
-                    
+					
 					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
-                        ? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
-                            vehicle.BoostingLimitations, engineData)
-                        : null;
-                    yield return new VectoRunData {
+						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
+							vehicle.BoostingLimitations, engineData)
+						: null;
+					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
-                        JobType = jobType,
-                        EngineData = engineData,
+						JobType = jobType,
+						EngineData = engineData,
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,
 						AngledriveData = angledriveData,
@@ -276,9 +421,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						ExecutionMode = ExecutionMode.Engineering,
 						PTOCycleWhileDrive = ptoCycleWhileDrive,
 
-                        ElectricMachinesData = electricMachines,
-                        HybridStrategyParameters = hybridParameters,
-                        BatteryData = battery,
+						ElectricMachinesData = electricMachines,
+						HybridStrategyParameters = hybridParameters,
+						BatteryData = battery,
 						SuperCapData = superCap,
 						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |
 										SimulationType.PWheel,

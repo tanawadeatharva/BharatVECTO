@@ -13,9 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class APTNGearbox : Gearbox
 	{
 		public APTNGearbox(IVehicleContainer container, IShiftStrategy strategy) : base(container, strategy)
-		{
-			ModelData.TractionInterruption = 0.SI<Second>();
-		}
+		{ }
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

@@ -660,7 +660,7 @@ namespace TUGraz.VectoCore.OutputData
 			var eGbxOut = modData.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
 			row[Fields.AVERAGE_GEARBOX_EFFICIENCY] = eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
 
-			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission()) {
+			if (runData.GearboxData != null && runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN) {
 				var eTcIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
 				var eTcOut = eGbxIn;
 				row[Fields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP] = eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
@@ -1065,13 +1065,16 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
 					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[Fields.TORQUECONVERTER_MANUFACTURER] = data.TorqueConverterData.Manufacturer;
-				row[Fields.TORQUECONVERTER_MODEL] = data.TorqueConverterData.ModelName;
-				row[Fields.TORQUE_CONVERTER_CERTIFICATION_NUMBER] =
-					data.TorqueConverterData.CertificationMethod == CertificationMethod.StandardValues
-						? ""
-						: data.TorqueConverterData.CertificationNumber;
-				row[Fields.TORQUE_CONVERTER_CERTIFICATION_METHOD] = data.TorqueConverterData.CertificationMethod.GetName();
+				if (data.Type != GearboxType.APTN) {
+					row[Fields.TORQUECONVERTER_MANUFACTURER] = data.TorqueConverterData.Manufacturer;
+					row[Fields.TORQUECONVERTER_MODEL] = data.TorqueConverterData.ModelName;
+					row[Fields.TORQUE_CONVERTER_CERTIFICATION_NUMBER] =
+						data.TorqueConverterData.CertificationMethod == CertificationMethod.StandardValues
+							? ""
+							: data.TorqueConverterData.CertificationNumber;
+					row[Fields.TORQUE_CONVERTER_CERTIFICATION_METHOD] =
+						data.TorqueConverterData.CertificationMethod.GetName();
+				}
 			} else {
 				row[Fields.GEAR_RATIO_FIRST_GEAR] = data.Gears.Count > 0
 					? (ConvertedSI)data.Gears.First().Value.Ratio.SI<Scalar>()

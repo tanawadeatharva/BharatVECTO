@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -72,10 +72,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -89,19 +89,20 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount, bool forceLineSearch) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
+			bool forceLineSearch, object searcher) where T : SIBase<T>
 		{
 			T result;
 			try {
 				if (forceLineSearch) {
-					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 				} else {
-					result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+					result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 				}
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 				log.Debug("Falling back to LineSearch. Reverse InterpolationSearch failed: " + ex.Message);
-				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 			}
 			return result;
 		}
@@ -111,8 +112,10 @@ namespace TUGraz.VectoCore.Utils
 		/// Phase 1: Linear Bracketing: Search iterative for the area of interest (with fixed step size).
 		/// Phase 2: Binary Sectioning: Binary search in the area of interest.
 		/// </summary>
-		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount) where T : SIBase<T>
+		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue,
+			Func<T, object> evaluateFunction,
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
+			object searcher) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 
@@ -196,7 +199,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		private static T InterpolateSearch<T>(T x1SI, SI y1SI, T intervalSI, Func<object, SI> getYValue,
 			Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,
-			ref int iterationCount) where T : SIBase<T>
+			ref int iterationCount, object searcher) where T : SIBase<T>
 		{
 			var (x1, y1) = (x1SI.Value(), y1SI.Value());
 			var interval = intervalSI.Value();
