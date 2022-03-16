@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-							xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
-							xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
-							xmlns:v2.10.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+
 	<v2.0:Vehicle xsi:type="Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType" id="a">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
@@ -17,9 +15,9 @@
 		<IdlingSpeed>650</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<PTO xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:PTOType">
-			<v2.0:PTOShaftsGearWheels>none</v2.0:PTOShaftsGearWheels>
-			<v2.0:PTOOtherElements>none</v2.0:PTOOtherElements>
+		<PTO xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="v2.4:PTOType">
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
@@ -30,8 +28,8 @@
 		<ArchitectureID>S-IEPC</ArchitectureID>
 		<OvcHev>false</OvcHev>
 		<ADAS xsi:type="ADAS_HEV_Type">
-			<v2.10.2:EngineStopStart>true</v2.10.2:EngineStopStart>
-			<v2.10.2:PredictiveCruiseControl>1,2,3</v2.10.2:PredictiveCruiseControl>
+			<EngineStopStart>true</EngineStopStart>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
 			<!-- optional -->
@@ -41,60 +39,25 @@
 		</TorqueLimits>
 		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
 			<!-- optional -->
-
-			<ElectricMachine>
-				<Position>GEN</Position>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-				<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-						<v2.10.1:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
 			<ElectricMachine>
 				<Position>1</Position>
 				<VoltageLevel>
 					<Voltage>500</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.02" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1002.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.02" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1002.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="1001.00" maxTorque="300.00" minTorque="-300.00"/>
-						<v2.10.1:Entry outShaftSpeed="0.01" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="1001.00" maxTorque="300.00" minTorque="-300.00"/>
+						<v2.3:Entry outShaftSpeed="0.01" maxTorque="200.00" minTorque="-200.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
-			<ElectricMachine>
-				<Position>2</Position>
-				<VoltageLevel>
-					<Voltage>200</Voltage>
-					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="0.03" maxTorque="200.00" minTorque="-200.00"/>
-						<v2.10.1:Entry outShaftSpeed="1003.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<v2.10.1:Entry outShaftSpeed="1004.00" maxTorque="300.00" minTorque="-300.00"/>
-						<v2.10.1:Entry outShaftSpeed="0.04" maxTorque="200.00" minTorque="-200.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>			
-		</ElectricMotorTorqueLimits>
-		<BoostingLimitations xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xsi:type="v2.10.2:BoostingLimitationsType">
+			</ElectricMotorTorqueLimits>
+		<BoostingLimitations xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="v2.4:BoostingLimitationsType">
 			<Entry rotationalSpeed="0.12" boostingTorque="0.40"/>
 			<Entry rotationalSpeed="0.10" boostingTorque="0.30"/>
 			<Entry rotationalSpeed="1.40" boostingTorque="0.60"/>
@@ -147,7 +110,7 @@
 				<PowertrainPosition>GEN</PowertrainPosition>
 				<Count>1</Count>
 				<ElectricMachineSystem>
-					<v2.10.1:Data xsi:type="v2.10.1:ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>a</Manufacturer>
 						<Model>a</Model>
 						<CertificationNumber>token</CertificationNumber>
@@ -203,8 +166,8 @@
 							<Entry coolantTempInlet="40" coolingPower="5000"/>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
 						</Conditioning>
-					</v2.10.1:Data>
-					<v2.10.1:Signature>
+					</v2.3:Data>
+					<v2.3:Signature>
 						<di:Reference URI="#EM-1234">
 							<di:Transforms>
 								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -213,14 +176,14 @@
 							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 							<di:DigestValue>gFUN+RoDzgSrZHc2r7bYZzaKgnqU9VWVbD2H0NeUqWc=</di:DigestValue>
 						</di:Reference>
-					</v2.10.1:Signature>
+					</v2.3:Signature>
 				</ElectricMachineSystem>
 			</ElectricMachineGEN>
 			<ElectricEnergyStorage>
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.10.2:Data xsi:type="BatterySystemDataType" id="REESS-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.4:Data xsi:type="BatterySystemDataType" id="REESS-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -244,8 +207,8 @@
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
-						<v2.10.2:Signature>
+						</v2.4:Data>
+						<Signature>
 							<di:Reference URI="#REESS-asdf">
 								<di:Transforms>
 									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -254,7 +217,7 @@
 								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 								<di:DigestValue>1oSQlI5CZcN9ZgLkGNofXP4z7jld9gAIDGlsXryqoMM=</di:DigestValue>
 							</di:Reference>
-						</v2.10.2:Signature>
+						</Signature>
 					</REESS>
 					<SOCmin>21</SOCmin>
 					<SOCmax>80</SOCmax>
@@ -262,7 +225,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.10.2:Data xsi:type="BatterySystemDataType" id="REESS-asdfg" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+						<v2.4:Data xsi:type="BatterySystemDataType" id="REESS-asdfg" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -286,8 +249,8 @@
 								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
 								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
 							</CurrentLimits>
-						</v2.10.2:Data>
-						<v2.10.2:Signature>
+						</v2.4:Data>
+						<Signature>
 							<di:Reference URI="#REESS-asdfg">
 								<di:Transforms>
 									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -296,12 +259,12 @@
 								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 								<di:DigestValue>vm6ZSTyOqaxiB7x+T3vpvFIMeM8wDIDiSta6JDI101k=</di:DigestValue>
 							</di:Reference>
-						</v2.10.2:Signature>
+						</Signature>
 					</REESS>
 				</Battery>
 			</ElectricEnergyStorage>
 			<IEPC>
-				<v2.10.1:Data xsi:type="IEPCMeasuredDataDeclarationType" id="IEPC-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.1">
+				<v2.3:Data xsi:type="IEPCMeasuredDataDeclarationType" id="IEPC-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 					<Manufacturer>a</Manufacturer>
 					<Model>a</Model>
 					<CertificationNumber>token</CertificationNumber>
@@ -313,7 +276,7 @@
 					<RotationalInertia>0.10</RotationalInertia>
 					<DifferentialIncluded>false</DifferentialIncluded>
 					<DesignTypeWheelMotor>false</DesignTypeWheelMotor>
-					<Gears xsi:type="v2.10.1:IEPCGearsDeclarationType">
+					<Gears xsi:type="v2.3:IEPCGearsDeclarationType">
 						<Gear number="2">
 							<Ratio>1.000</Ratio>
 							<MaxOutShaftTorque>2000</MaxOutShaftTorque>
@@ -382,8 +345,8 @@
 					<Conditioning>
 						<Entry coolantTempInlet="30" coolingPower="5000"/>
 					</Conditioning>
-				</v2.10.1:Data>
-				<v2.10.1:Signature>
+				</v2.3:Data>
+				<v2.3:Signature>
 					<di:Reference URI="#IEPC-asdf">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -392,7 +355,7 @@
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>PwNmfGr07RNTd9qsy6Av/jl9rRCtve4sBrcqf9zDFU0=</di:DigestValue>
 					</di:Reference>
-				</v2.10.1:Signature>
+				</v2.3:Signature>
 			</IEPC>
 			<Retarder>
 				<!-- optional -->
