@@ -272,7 +272,7 @@
 		</xsl:if>
 	</xsl:template> 
 	
-	<!-- Sorting for Job files -->
+	<!-- Sorting for Job files tags -->
 		
 	<!-- ElectricEnergyStorage -->
 	<xsl:template match="*[local-name()='Battery' and ./*[local-name()='StringID']]">
@@ -287,18 +287,7 @@
 		</xsl:if>
 	</xsl:template>
 			
-	<!-- ElectricMachineTorqueLimits -->	
-	<xsl:template match="*[local-name()='ElectricMachine' and ./*[local-name()='Position']]">		
-		<xsl:if test="count(preceding-sibling::*[local-name()='ElectricMachine']) = 0">
-			<xsl:for-each select="../*[local-name()='ElectricMachine']">
-				<xsl:sort data-type="text" select="./*[local-name() = 'Position']/text()" order="ascending"/>			
-				<xsl:element name="{local-name()}">
-					<xsl:apply-templates select="*"/> 	
-				</xsl:element>
-			</xsl:for-each>			
-		</xsl:if>				
-	</xsl:template>	
-	
+	<!-- Sort SteeringPump Technology entries by axleNumber attribute -->
 	<!-- For AUX Component SteeringPump -->
 	<xsl:template match="*[local-name()='SteeringPump']">
 		<xsl:element name="{local-name()}">
@@ -310,6 +299,7 @@
 		</xsl:element>
 	</xsl:template>	
 	
+	<!-- Sort P2.5GearRatios by gear attribute number-->
 	<!-- For ElectricMachine component at HEV-Px, HEV-S2, HEV-S3, HEV-S4, PEV-E2, PEV-E3 and PEV-E4 -->
 	<xsl:template match="*[local-name()='P2.5GearRatios']">
 		<xsl:element name="{local-name()}">
@@ -321,6 +311,7 @@
 		</xsl:element>	
 	</xsl:template>
 	
+	<!-- Sort BoostingLimitation entries by rotationalSpeed attribute number -->
 	<!-- For Vehicle HEV IEPC-S and Vehicle HEV-Px -->
 	<xsl:template match="*[local-name()='BoostingLimitations']">
 		<xsl:element name="{local-name()}">
@@ -332,6 +323,45 @@
 		</xsl:element>	
 	</xsl:template>
 	
+	<!-- Sort SmartAlternator elements by the value of the child element RatedCurrent -->
+	<!-- For AUX_Conventional_PrimaryBusType ElectricSystem --> 
+	<xsl:template match="*[local-name()='SmartAlternator' and ./*[local-name()='RatedCurrent']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='SmartAlternator']) = 0">
+			<xsl:for-each select="../*[local-name()='SmartAlternator']">
+				<xsl:sort data-type="number" select="./*[local-name() = 'RatedCurrent']/text()" order="ascending"/>				
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
 	
+	<!-- Sort Battery elements by the value of the child elements BatteryTechnology and RatedCapacity-->
+	<!-- For AUX_Conventional_PrimaryBusType ElectricSystem --> 
+	<xsl:template match="*[local-name()='Battery' and ./*[local-name()='BatteryTechnology']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Battery']) = 0">
+			<xsl:for-each select="../*[local-name()='Battery']">
+				<xsl:sort data-type="text" select="./*[local-name() = 'BatteryTechnology']/text()" order="ascending"/>				
+				<xsl:sort data-type="number" select="./*[local-name() = 'RatedCapacity']/text()" order="ascending"/>				
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- Sort Capacitor elements by the value of the child elements CapacitorTechnology and RatedCapacitance -->
+	<!-- For AUX_Conventional_PrimaryBusType ElectricSystem --> 
+	<xsl:template match="*[local-name()='Capacitor' and ./*[local-name()='CapacitorTechnology']]">
+		<xsl:if test="count(preceding-sibling::*[local-name()='Capacitor']) = 0">
+			<xsl:for-each select="../*[local-name()='Capacitor']">
+				<xsl:sort data-type="text" select="./*[local-name() = 'CapacitorTechnology']/text()" order="ascending"/>				
+				<xsl:sort data-type="number" select="./*[local-name() = 'RatedCapacitance']/text()" order="ascending"/>				
+				<xsl:element name="{local-name()}">
+					<xsl:apply-templates select="*"/> 	
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
 
 </xsl:transform>
