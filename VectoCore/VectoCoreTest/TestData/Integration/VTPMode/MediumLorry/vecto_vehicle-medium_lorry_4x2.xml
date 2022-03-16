@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 

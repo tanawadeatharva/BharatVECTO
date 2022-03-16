@@ -40,7 +40,9 @@ namespace TUGraz.VectoCommon.Models
 		TransmissionInputRetarder,
 		TransmissionOutputRetarder,
 		EngineRetarder,
-		LossesIncludedInTransmission
+		LossesIncludedInTransmission,
+		//todo mk2022-02-17 add the AxlegearInputRetarder later when working on the retarder positions
+		//AxlegearInputRetarder
 	}
 
 	public static class RetarderTypeHelper
@@ -52,6 +54,8 @@ namespace TUGraz.VectoCommon.Models
 					return RetarderType.TransmissionInputRetarder;
 				case "secondary":
 					return RetarderType.TransmissionOutputRetarder;
+				case "losses included in gearbox":
+					return RetarderType.LossesIncludedInTransmission;
 				default:
 					return retarderType.ParseEnum<RetarderType>();
 			}

@@ -31,9 +31,10 @@ namespace TUGraz.VectoCommon.Models {
 		public HybridResultEntry EvaluatedSolution { get; set; }
 		public bool GearboxEngaged { get; set; }
 		public bool ProhibitGearshift { get; set; }
+		public PerSecond GenSetSpeed { get; set; }
 	}
 
-	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
+	[DebuggerDisplay("{U,nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]
 	public class HybridResultEntry
 	{
 		public Second SimulationInterval;
@@ -44,9 +45,18 @@ namespace TUGraz.VectoCommon.Models {
 		public IResponse Response { get; set; }
 
 
-		public double Score =>
-			(FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
-			RampUpPenalty) / GearshiftPenalty;
+		public double Score
+		{
+			get
+			{
+				Cost = (FuelCosts + EquivalenceFactor * (BatCosts + ICEStartPenalty1) * SoCPenalty + ICEStartPenalty2 +
+				RampUpPenalty);
+				var gearshift = Cost.IsSmaller(0) ? GearshiftPenalty : 1 / GearshiftPenalty;
+				return Cost * gearshift;
+			}
+		}
+
+		public double Cost { get; set; }
 
 		public double FuelCosts { get; set; }
 
@@ -75,9 +85,8 @@ namespace TUGraz.VectoCommon.Models {
 			return ToString().Equals(other.ToString(), StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		public override string ToString()
-		{
-			var setting = string.Join(", ", Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}"));
+		public override string ToString() {
+			var setting = Setting.MechanicalAssistPower.Select(x => $"{x.Key}, {x.Value}").Join();
 			return $"{U}: {setting} {Score} G{Gear}";
 		}
 	}
@@ -148,7 +157,7 @@ namespace TUGraz.VectoCommon.Models {
 				}
 			}
 
-			return string.Join("/", retVal);
+			return retVal.Join("/");
 		}
 
 		public static bool InvalidEngineSpeed(this HybridConfigurationIgnoreReason x)

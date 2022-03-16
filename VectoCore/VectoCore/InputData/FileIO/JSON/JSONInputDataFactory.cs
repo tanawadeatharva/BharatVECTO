@@ -63,6 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (!File.Exists(fileName)) {
 				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
 			}
+
 			using (var reader = File.OpenText(fileName)) {
 				return (JObject)JToken.ReadFrom(new JsonTextReader(reader));
 			}
@@ -98,23 +99,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 7:
 					return new JSONInputDataCompletedBusFactorMethodV7(json, filename, tolerateMissing);
 				case 8:
-					return new JSONInputDataV8_Hybrid(json, filename, tolerateMissing);
+					return new JSONInputDataV8_ParallelHybrid(json, filename, tolerateMissing);
 				case 9:
 					return new JSONInputDataV9_BEV(json, filename, tolerateMissing);
 				case 10:
 					return new JSONInputDataV10_PrimaryAndStageInputBus(json, filename, tolerateMissing);
+				case 11:
+					return new JSONInputDataV11_SerialHybrid(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
 		}
 
-		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, IJSONVehicleComponents job,  bool tolerateMissing = false)
+		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
 			switch (version) {
 				case 7:
-					return new JSONVehicleDataV7(json, filename, job,tolerateMissing);
+					return new JSONVehicleDataV7(json, filename, job, tolerateMissing);
 				case 8:
 					return new JSONVehicleDataV8(json, filename, job, tolerateMissing);
 				case 9:
@@ -182,7 +185,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var version = ReadVersion(json);
 			switch (version) {
 				case 1:
-					return new JSONHybridStrategyParameters(json, filename, tolerateMissing);
+					return new JSONHybridStrategyParametersParallelHybrid(json, filename, tolerateMissing);
+				case 2:
+					return new JSONHybridStrategyParametersSerialHybrid(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("HybridStrategyParameter-File: Unsupported FileVersion. Got {0}", version);
 
@@ -194,8 +199,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version)
-			{
+			switch (version) {
 				case 1:
 					return new JSONBatteryV1(json, filename, tolerateMissing);
 				default:
@@ -207,14 +211,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version)
-			{
+			switch (version) {
 				case 1:
 					return new JSONElectricMotorV1(json, filename, tolerateMissing);
 				case 2:
 					return new JSONElectricMotorV2(json, filename, tolerateMissing);
 				case 3:
 					return new JSONElectricMotorV3(json, filename, tolerateMissing);
+				case 4:
+					return new JSONElectricMotorV4(json, filename, tolerateMissing);
+				case 5:
+					return new JSONElectricMotorV5(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("ElectricMotor-File: Unsupported FileVersion. Got {0}", version);
 			}

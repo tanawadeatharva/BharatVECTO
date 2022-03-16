@@ -32,7 +32,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -569,9 +568,9 @@ namespace VectoHashingTest
 		{
 			var h = VectoHash.Load(file);
 
-			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStage, 0);
+			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStep, 0);
 
-			Assert.AreEqual("Muaefd8RS+EjtmMVbSejxbSy5Tgcpm/WqnoLk+YH8ho=", primaryHash);
+			Assert.AreEqual("Ce88HeMkWznnWAYoilvoYNbzrALiWyImvTVsW9Myno0=", primaryHash);
 		}
 
 
@@ -580,9 +579,9 @@ namespace VectoHashingTest
 		{
 			var h = VectoHash.Load(file);
 
-			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStage, 1);
+			var primaryHash = h.ComputeHash(VectoComponents.VectoManufacturingStep, 1);
 
-			Assert.AreEqual("l7Z22F1bPMaAD4+0WNY+cahbjDKE80gxYv6K91YTMcU=", primaryHash);
+			Assert.AreEqual("ErE9njkgNIeg+SaPkbvpLfBQSTmw/WTDvmirEmzll2s=", primaryHash);
 		}
 
 
@@ -591,7 +590,7 @@ namespace VectoHashingTest
 		{
 			var h = VectoHash.Load(file);
 
-			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStage, 0);
+			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStep, 0);
 
 			Assert.AreEqual("Muaefd8RS+EjtmMVbSejxbSy5Tgcpm/WqnoLk+YH8ho=", primaryHash);
 		}
@@ -602,7 +601,7 @@ namespace VectoHashingTest
 		{
 			var h = VectoHash.Load(file);
 
-			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStage, 1);
+			var primaryHash = h.ReadHash(VectoComponents.VectoManufacturingStep, 1);
 
 			Assert.AreEqual("l7Z22F1bPMaAD4+0WNY+cahbjDKE80gxYv6K91YTMcU=", primaryHash);
 		}
@@ -618,23 +617,23 @@ namespace VectoHashingTest
 
             Assert.AreEqual(hashReadPrimary, hashCalcPrimary);
 
-            var hashCalcInterim1 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 0);
-			var hashReadInterim1 = h.ReadHash(VectoComponents.VectoManufacturingStage, 0);
+            var hashCalcInterim1 = h.ComputeHash(VectoComponents.VectoManufacturingStep, 0);
+			var hashReadInterim1 = h.ReadHash(VectoComponents.VectoManufacturingStep, 0);
 
 			Assert.AreEqual(hashReadInterim1, hashCalcInterim1);
 
-			var hashCalcInterim2 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 1);
-			var hashReadInterim2 = h.ReadHash(VectoComponents.VectoManufacturingStage, 1);
+			var hashCalcInterim2 = h.ComputeHash(VectoComponents.VectoManufacturingStep, 1);
+			var hashReadInterim2 = h.ReadHash(VectoComponents.VectoManufacturingStep, 1);
 
 			Assert.AreEqual(hashReadInterim2, hashCalcInterim2);
 
-			var hashCalcInterim3 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 2);
-			var hashReadInterim3 = h.ReadHash(VectoComponents.VectoManufacturingStage, 2);
+			var hashCalcInterim3 = h.ComputeHash(VectoComponents.VectoManufacturingStep, 2);
+			var hashReadInterim3 = h.ReadHash(VectoComponents.VectoManufacturingStep, 2);
 
 			Assert.AreEqual(hashReadInterim3, hashCalcInterim3);
 
-			var hashCalcInterim4 = h.ComputeHash(VectoComponents.VectoManufacturingStage, 3);
-			var hashReadInterim4 = h.ReadHash(VectoComponents.VectoManufacturingStage, 3);
+			var hashCalcInterim4 = h.ComputeHash(VectoComponents.VectoManufacturingStep, 3);
+			var hashReadInterim4 = h.ReadHash(VectoComponents.VectoManufacturingStep, 3);
 
 			Assert.AreEqual(hashReadInterim4, hashCalcInterim4);
 
@@ -647,13 +646,13 @@ namespace VectoHashingTest
 
 			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.VehicleSignatureHash.DigestValue);
 
-			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[0].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadPrimary, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[0].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim1, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[1].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim1, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[1].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim2, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[2].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim2, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[2].HashPreviousStep.DigestValue);
 
-			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStage.DigestValue);
+			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStep.DigestValue);
 
 		}
 	}

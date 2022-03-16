@@ -8,12 +8,14 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ShiftStrategyV2Test
 	{
 		public const string Class9Decl =
@@ -40,11 +42,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var relativeJobPath = jobFile;
 			var writer = new FileOutputWriter(relativeJobPath);
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? xmlInputReader.CreateDeclaration(relativeJobPath) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 
 			Assert.NotNull(((IEngineeringInputDataProvider)inputData).DriverInputData.GearshiftInputData);
 			var jobContainer = new JobContainer(new MockSumWriter());
@@ -312,11 +312,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
 			var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 			var sumWriter = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumWriter);
 
@@ -335,11 +333,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? xmlInputReader.CreateDeclaration(relativeJobPath) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			var runs = factory.SimulationRuns().ToArray();
@@ -354,11 +350,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? xmlInputReader.CreateDeclaration(relativeJobPath) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);

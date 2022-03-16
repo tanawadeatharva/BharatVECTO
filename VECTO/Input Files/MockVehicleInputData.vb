@@ -28,8 +28,8 @@ Public Class MockVehicleInputData
     Public Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
     Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
     Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-    Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
-    Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+    Public Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
+    Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
     Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
@@ -56,8 +56,13 @@ Public Class MockVehicleInputData
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
     Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
     Public ReadOnly Property VehicleDeclarationType As VehicleDeclarationType Implements IVehicleDeclarationInputData.VehicleDeclarationType
-    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
     Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
+        Get
+            Throw New NotImplementedException
+        End Get
+    End Property
+
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber

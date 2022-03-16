@@ -49,13 +49,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ICycleData> Cycles { get; }
 
-		//ToDo Remove use JobType
 		IEngineEngineeringInputData EngineOnly { get; }
 	}
 
 	public enum VectoSimulationJobType
 	{
-		ConventionalVehicle,
+		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
 		BatteryElectricVehicle,
@@ -81,6 +80,9 @@ namespace TUGraz.VectoCommon.InputData
 		double ICEStartPenaltyFactor { get; }
 
 		double CostFactorSOCExpponent { get; }
+
+		// serial hybrid only: factor applied to the max propulsion power which the genset needs to provide in the optimal operating point
+		double GensetMinOptPowerFactor { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -103,7 +105,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
 
-		Meter Height { get; }
+        Meter Height { get; }
 
 		
 		new IVehicleComponentsEngineering Components { get; }
@@ -205,9 +207,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData PTOCycleWhileDriving { get; }
 
-		PTOShaftGearWheel? PTOShaftGearWheel { get; }
-
-		PTOOtherElement? PTOOtherElement { get; }
 	}
 	
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
@@ -342,6 +341,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double? PEV_TargetSpeedBrakeNorm { get; }
 
+		double? PEV_DownshiftSpeedFactor { get; }
 		double? PEV_DeRatingDownshiftSpeedFactor { get; }
 		double? PEV_DownshiftMinSpeedFactor { get; }
 	}
@@ -476,6 +476,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
 	{
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData
@@ -628,98 +629,4 @@ namespace TUGraz.VectoCommon.InputData
 		Watt ElectricPowerDemand { get; }
 	}
 	
-	public enum PTOShaftGearWheel
-	{
-		none,
-		only_the_drive_shaft_of_the_PTO,
-		drive_shaft_and_or_up_to_2_gear_wheels,
-		drive_shaft_and_or_more_than_2_gear_wheels,
-		only_one_engaged_gearwheel_above_oil_level
-	}
-
-	public static class PTOShaftGearWheelHelper
-	{
-		public static PTOShaftGearWheel? Parse(string value)
-		{
-			switch (value)
-			{
-				case "none":
-					return PTOShaftGearWheel.none;
-				case "only the drive shaft of the PTO":
-					return PTOShaftGearWheel.only_the_drive_shaft_of_the_PTO;
-				case "drive shaft and/or up to 2 gear wheels":
-					return PTOShaftGearWheel.drive_shaft_and_or_up_to_2_gear_wheels;
-				case "drive shaft and/or more than 2 gear wheels":
-					return PTOShaftGearWheel.drive_shaft_and_or_more_than_2_gear_wheels;
-				case "only one engaged gearwheel above oil level":
-					return PTOShaftGearWheel.only_one_engaged_gearwheel_above_oil_level;
-				default:
-					return null;
-			}
-		}
-
-		public static string ToXMLFormat(this PTOShaftGearWheel ptoGearWheel)
-		{
-			switch (ptoGearWheel)
-			{
-				case PTOShaftGearWheel.none:
-					return "none";
-				case PTOShaftGearWheel.only_the_drive_shaft_of_the_PTO:
-					return "only the drive shaft of the PTO";
-				case PTOShaftGearWheel.drive_shaft_and_or_up_to_2_gear_wheels:
-					return "drive shaft and/or up to 2 gear wheels";
-				case PTOShaftGearWheel.drive_shaft_and_or_more_than_2_gear_wheels:
-					return "drive shaft and/or more than 2 gear wheels";
-				case PTOShaftGearWheel.only_one_engaged_gearwheel_above_oil_level:
-					return "only one engaged gearwheel above oil level";
-				default:
-					return null;
-			}
-		}
-	}
-	
-	public enum PTOOtherElement
-	{
-		none,
-		shift_claw_synchronizer_sliding_gearwheel,
-		multi_disc_clutch,
-		multi_disc_clutch_oil_pump
-	}
-	
-	public static class PTOOtherElementHelper
-	{
-		public static PTOOtherElement? Parse(string value)
-		{
-			switch (value)
-			{
-				case "none":
-					return PTOOtherElement.none;
-				case "shift claw, synchronizer, sliding gearwheel":
-					return PTOOtherElement.shift_claw_synchronizer_sliding_gearwheel;
-				case "multi-disc clutch":
-					return PTOOtherElement.multi_disc_clutch;
-				case "multi-disc clutch, oil pump":
-					return PTOOtherElement.multi_disc_clutch_oil_pump;
-				default:
-					return null;
-			}
-		}
-
-		public static string ToXMLFormat(this PTOOtherElement ptoOtherElement)
-		{
-			switch (ptoOtherElement)
-			{
-				case PTOOtherElement.none:
-					return "none";
-				case PTOOtherElement.shift_claw_synchronizer_sliding_gearwheel:
-					return "shift claw, synchronizer, sliding gearwheel";
-				case PTOOtherElement.multi_disc_clutch:
-					return "multi-disc clutch";
-				case PTOOtherElement.multi_disc_clutch_oil_pump:
-					return "multi-disc clutch, oil pump";
-				default:
-					return null;
-			}
-		}
-	}
 }

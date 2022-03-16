@@ -51,7 +51,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VECTO;
+
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

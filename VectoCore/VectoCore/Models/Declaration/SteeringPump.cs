@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -121,11 +122,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public SteeringPumpValues<double> Lookup(string tech, MissionType mission)
 			{
 				var values = base.Lookup(tech);
-				if (tech == "Electric") {
-					var alternator = new ElectricSystem.Alternator();
-					values.Banking /= alternator.Lookup(mission);
-					values.Steering /= alternator.Lookup(mission);
-				}
 				return values;
 			}
 
@@ -161,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		[DebuggerDisplay("UnloadedFriction = {UnloadedFriction,nq}, Banking = {Banking,nq}, Steering = {Steering,nq}")]
 		private struct SteeringPumpValues<T>
 		{
 			public T UnloadedFriction;

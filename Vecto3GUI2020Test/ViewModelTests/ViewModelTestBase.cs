@@ -156,23 +156,23 @@ namespace Vecto3GUI2020Test
 			File.Delete(fileName);
 		}
 
-		public virtual NewMultiStageJobViewModel loadFile(string fileName)
+		public virtual NewMultiStageJobViewModel LoadFileFromPath(string filePath)
 		{
-			
-
 			var newMultistageJobViewModel = _kernel.Get<NewMultiStageJobViewModel>();
-			var filePath = GetTestDataPath(fileName);
+
+			WriteLine("Loading" + filePath);
 			newMultistageJobViewModel.AddVifFile(filePath);
-		
+
 
 			Assert.NotNull(newMultistageJobViewModel.MultiStageJobViewModel);
 
 			var manstageVehicleViewModel = newMultistageJobViewModel.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
 			Assert.NotNull(manstageVehicleViewModel);
 
-			Assert.AreEqual(GetTestDataPath(fileName), newMultistageJobViewModel.VifPath);
+			//Assert.AreEqual(GetTestDataPath(fileName), newMultistageJobViewModel.VifPath);
 
-			if (!manstageVehicleViewModel.ExemptedVehicle) {
+			if (!manstageVehicleViewModel.ExemptedVehicle)
+			{
 				var auxiliariesViewModel = manstageVehicleViewModel.MultistageAuxiliariesViewModel;
 				Assert.NotNull(auxiliariesViewModel);
 
@@ -180,6 +180,13 @@ namespace Vecto3GUI2020Test
 				Assert.NotNull(airdragViewModel);
 			}
 			return newMultistageJobViewModel;
+		}
+
+		public virtual NewMultiStageJobViewModel LoadFileFromTestDirectory(string fileName)
+		{
+			var filePath = GetTestDataPath(fileName);
+
+			return LoadFileFromPath(filePath);
 		}
 
 

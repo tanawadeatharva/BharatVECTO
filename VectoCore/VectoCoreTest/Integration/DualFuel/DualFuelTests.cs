@@ -5,12 +5,14 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class DualFuelTests
 	{
 		private StandardKernel _kernel;
@@ -34,10 +36,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 			var jobContainer = new JobContainer(sumData);
 			var inputData = xmlInputReader.CreateDeclaration(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true,
-				Validate = false
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
+			runsFactory.Validate = false;
 
 			jobContainer.AddRuns(runsFactory);
 
@@ -57,10 +58,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DualFuel
 			var jobContainer = new JobContainer(sumData);
 			var inputData = xmlInputReader.CreateDeclaration(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true,
-				Validate = false
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
+			runsFactory.Validate = false;
 
 			jobContainer.AddRuns(runsFactory);
 

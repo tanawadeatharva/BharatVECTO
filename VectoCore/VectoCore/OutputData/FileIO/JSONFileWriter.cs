@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -34,7 +33,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoVTPJobFormatVersion = 4;
 
-	private const int ElectricMotorFormatVersion = 3;
+	private const int ElectricMotorFormatVersion = 5;
 
 	private const int REESSFormatVersion = 1;
 
@@ -79,26 +78,27 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("SavedInDeclMode", declMode);
 
 		body.Add("Model", electricMachine.Model);
-		//body.Add("FullLoadCurve", GetRelativePath(electricMachine.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-		//body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
-		//body.Add("EfficiencyMap", GetRelativePath(electricMachine.EfficiencyMap.Source, Path.GetDirectoryName(filename)));
-		body.Add("Inertia", electricMachine.Inertia.Value());
-		body.Add("ContinuousTorque", electricMachine.ContinuousTorque.Value());
-		body.Add("ContinuousTorqueSpeed", electricMachine.ContinuousTorqueSpeed.AsRPM);
-		body.Add("OverloadTorque", electricMachine.OverloadTorque.Value());
-		body.Add("OverloadTorqueSpeed", electricMachine.OverloadTestSpeed.AsRPM);
-		body.Add("OverloadTime", electricMachine.OverloadTime.Value());
+        body.Add("Inertia", electricMachine.Inertia.Value());
 		body.Add("ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor);
-
+		
 		var vlevels = new List<Dictionary<string, object>>();
 		foreach (var entry in electricMachine.VoltageLevels) {
 			var vlevel = new Dictionary<string, object>();
 			vlevel.Add("Voltage", entry.VoltageLevel.Value());
+			vlevel.Add("ContinuousTorque", entry.ContinuousTorque.Value());
+			vlevel.Add("ContinuousTorqueSpeed", entry.ContinuousTorqueSpeed.AsRPM);
+			vlevel.Add("OverloadTorque", entry.OverloadTorque.Value());
+			vlevel.Add("OverloadTorqueSpeed", entry.OverloadTestSpeed.AsRPM);
+			vlevel.Add("OverloadTime", entry.OverloadTime.Value());
 			vlevel.Add("FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)));
-			// vlevel.Add("DragCurve", GetRelativePath(entry.DragCurve.Source, Path.GetDirectoryName(filename)));
-			// vlevel.Add("EfficiencyMap", GetRelativePath(entry.EfficiencyMap.Source, Path.GetDirectoryName(filename))); //PowerMap
-			vlevels.Add(vlevel);
+			var powerMaps = new Dictionary<int, object>();
+			foreach (var pMap in entry.PowerMap) {
+				powerMaps.Add(pMap.Gear, GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
+			}
+            vlevel.Add("EfficiencyMap", powerMaps); //PowerMap
+            vlevels.Add(vlevel);
         }
+		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 
 		body.Add("VoltageLevels", vlevels);
 		WriteFile(header, body, filename);
@@ -318,6 +318,7 @@ public class JSONFileWriter : IOutputFileWriter
 				SaveConventionalVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.ParallelHybridVehicle:
+			case VectoSimulationJobType.SerialHybridVehicle:
 				SaveHybridVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.BatteryElectricVehicle:
@@ -520,7 +521,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
-		body.Add("PowertrainConfiguration", "ParallelHybrid");
+		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid": "ParallelHybrid");
 		body.Add("ElectricMotors", electricMotorsOut);
 		body.Add("Batteries", battery);
 
@@ -664,7 +665,6 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
 		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
 
 		var auxList = new List<object>();
@@ -805,6 +805,14 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
+		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
+			var aux = engVehicle.Components.AuxiliaryInputData;
+			if (aux.BusAuxiliariesData != null) {
+				body.Add("BusAux",
+					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+						basePath));
+			}
+		}
 		//if (!job.SavedInDeclarationMode)
 		//      {
 		//}
@@ -932,7 +940,7 @@ public class JSONFileWriter : IOutputFileWriter
 		var job = input.JobInputData;
 
 		body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
-		body.Add("EngineOnlyMode", job.JobType);
+		body.Add("EngineOnlyMode", job.JobType == VectoSimulationJobType.EngineOnlySimulation);
 
 		
 			body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath));
@@ -972,9 +980,7 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 			
 		}
-		body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy);
-
-
+		
 		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
 			var aux = declVehicle.Components.AuxiliaryInputData;
 			var auxList = new List<object>();
@@ -1159,7 +1165,8 @@ public class JSONFileWriter : IOutputFileWriter
 			{"AuxBufferChgTime", hp.AuxBufferChargeTime.Value()},
 			{"MinICEOnTime", hp.MinimumICEOnTime.Value() },
 			{"ICEStartPenaltyFactor", hp.ICEStartPenaltyFactor},
-			{"CostFactorSOCExponent", hp.CostFactorSOCExpponent}
+			{"CostFactorSOCExponent", hp.CostFactorSOCExpponent},
+			{"GensetMinOptPowerFactor", hp.GensetMinOptPowerFactor}
 		};
 		WriteFile(header, body, filePath);
 	}
@@ -1170,7 +1177,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 
 		var ps = new Dictionary<string, object>() {
-			{"CompressorMap", GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath))},
+			{"CompressorMap", busAux.PneumaticSystem.CompressorMap != null ? GetRelativePath(busAux.PneumaticSystem.CompressorMap.Source, Path.GetDirectoryName(filePath)) : ""},
 			{"AverageAirDemand", busAux.PneumaticSystem.AverageAirConsumed.Value()},
 			{"SmartAirCompression", busAux.PneumaticSystem.SmartAirCompression},
 			{"GearRatio", busAux.PneumaticSystem.GearRatio},

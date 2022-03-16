@@ -35,7 +35,11 @@ Public Class BatteryForm
 
     Private _contextMenuFiles As String()
 
-
+    Public ReadOnly Property BatteryFile As String
+        Get
+            Return _batteryFile
+        End Get
+    End Property
 
 
     'Before closing Editor: Check if file was changed and ask to save.
@@ -392,11 +396,15 @@ Public Class BatteryForm
 
     'Save and close
     Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
-        If SaveOrSaveAs(False) Then Close()
+        If SaveOrSaveAs(False) Then
+            DialogResult = DialogResult.OK
+            Close()
+        End If
     End Sub
 
     'Close without saving (see FormClosing Event)
     Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
+        DialogResult = DialogResult.Cancel
         Close()
     End Sub
 

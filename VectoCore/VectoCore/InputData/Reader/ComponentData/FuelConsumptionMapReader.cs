@@ -69,9 +69,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				LoggingObject.Logger<FuelConsumptionMap>().Warn(
-					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}. Falling back to column index.",
+					Fields.EngineSpeed, 
+					Fields.Torque, 
+					Fields.FuelConsumption,
+					data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 			var delaunayMap = new DelaunayMap("FuelConsumptionMap");
 

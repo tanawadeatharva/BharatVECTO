@@ -18,6 +18,7 @@ namespace TUGraz.VectoCommon.InputData {
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
+		
 	}
 
 	public static class PowertrainPositionHelper
@@ -85,6 +86,11 @@ namespace TUGraz.VectoCommon.InputData {
 				default:
 					return false;
 			}
+		}
+
+		public static bool IsSerialHybrid(this PowertrainPosition pos)
+		{
+			return IsBatteryElectric(pos);
 		}
 	}
 }

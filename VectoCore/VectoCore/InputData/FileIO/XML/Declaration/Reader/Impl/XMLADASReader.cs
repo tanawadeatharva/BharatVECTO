@@ -116,24 +116,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLADASReaderV23 : XMLADASReaderV21
+	public class XMLADASReaderV24 : XMLADASReaderV21
 	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
-
-		public new const string XSD_TYPE = "AdvancedDriverAssistantSystemsType";
-
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLADASReaderV23(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
-			vehicle, vehicleNode)
-		{ }
-
-		public override XNamespace SchemaNamespace => NAMESPACE_URI;
-	}
-
-	public class XMLADASReaderV210 : XMLADASReaderV21
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public const string XSD_TYPE_CONVENTIONAL = "ADAS_Conventional_Type";
 		public const string XSD_TYPE_HEV = "ADAS_HEV_Type";
@@ -148,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public static readonly string QUALIFIED_XSD_TYPE_IEPC = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE_IEPC);
 
-		public XMLADASReaderV210(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
+		public XMLADASReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode) : base(
 			vehicle, vehicleNode)
 		{ }
 

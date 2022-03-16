@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 
 					new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 					new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
-					new XElement(tns + XMLNames.Bus_HeighIntegratedBody,
+					new XElement(tns + XMLNames.Bus_HeightIntegratedBody,
 						modelData.VehicleData.InputData.Height.ToXMLFormat(3)),
 
 					GetInputDataSignature(modelData)

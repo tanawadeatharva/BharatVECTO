@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.WindowsAPICodePack.Shell.Interop;
 using VECTO3GUI2020.Helper;
+using VECTO3GUI2020.Util;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
-using VECTO3GUI2020.ViewModel.Interfaces.Common;
 
 namespace VECTO3GUI2020.ViewModel
 {

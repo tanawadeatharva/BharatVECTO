@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -13,15 +14,11 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using static TUGraz.VectoCommon.InputData.VectoSimulationJobType;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	public abstract class AbstractDeclarationVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected static readonly object CyclesCacheLock = new object();
-
-		protected static readonly Dictionary<MissionType, DrivingCycleData> CyclesCache =
-			new Dictionary<MissionType, DrivingCycleData>();
-
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
@@ -46,6 +43,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
 			InputDataProvider = dataProvider;
+			
+			if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle)){
+				throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
+			}
 			Report = report;
 
 			_allowVocational = true;
@@ -93,7 +94,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			} 
 			_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
 			var tmpRunData = new VectoRunData() {
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
 				GearboxData =  new GearboxData() {
 					Type = vehicle.Components.GearboxInputData.Type,
 				}

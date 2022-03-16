@@ -20,9 +20,11 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
+
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestFixture]
+	[Parallelizable(ParallelScope.All)]
 	public class ElectricMotorTest
 	{
 		public const string MotorFile = @"TestData\Hybrids\ElectricMotor\GenericEMotor.vem";
@@ -35,13 +37,52 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(100, 100, -1479.601019),
-		 TestCase(100, 30, -494.148831),
-		 TestCase(100, 300, -5033.132712),
-		 TestCase(600, 100, -7290.510011),
-		 TestCase(600, 300, -21431.717255),
-		 TestCase(800, -100, 7178.770573),
-		 TestCase(800, -300, 22444.155535)]
+
+		[TestCase(1),
+		TestCase(2),
+		]
+		public void ElectricMotorModelDataTest(int count)
+		{
+			var inputData = JSONInputDataFactory.ReadElectricMotorData(MotorFile, false);
+			var dao = new EngineeringDataAdapter();
+			var electricMachine = new MockElectricMachinesInputData() {
+				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
+					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
+						ElectricMachine = inputData,
+						Count = count,
+						RatioADC = 1,
+						MechanicalTransmissionEfficiency = 1
+					}
+				}
+			};
+			var data = dao.CreateElectricMachines(electricMachine, null);
+			var emModelData = data.First().Item2;
+
+			Assert.AreEqual(0.15 * count, emModelData.Inertia.Value(), 1e-3);
+
+			//Assert.AreEqual(2000, emModelData.ContinuousTorqueSpeed.AsRPM, 1e-3);
+			Assert.AreEqual(238.7323 * count, emModelData.ContinuousTorque.Value(), 1e-3);
+
+			Assert.AreEqual(334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullLoadDriveTorque(2000.RPMtoRad()).Value(), 1e-3);
+			Assert.AreEqual(-334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullGenerationTorque(2000.RPMtoRad()).Value(), 1e-3);
+
+			Assert.AreEqual(30 * count, emModelData.DragCurve.Lookup(2500.RPMtoRad()).Value(), 1e-3);
+
+			Assert.AreEqual(-14579 * count,
+				emModelData.EfficiencyData.VoltageLevels.First().EfficiencyMap
+					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), false).ElectricalPower.Value(),
+				1e-3);
+
+
+		}
+
+		[TestCase(100, 100, -1484.401151),
+		 TestCase(100, 30, -498.336701),
+		 TestCase(100, 300, -5058.393920),
+		 TestCase(600, 100, -7292.591952),
+		 TestCase(600, 300, -21459.016866),
+		 TestCase(800, -100, 7174.730264),
+		 TestCase(800, -300, 22354.108093)]
 		public void ElectricMotorOnlyRequestTest(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -82,13 +123,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < enginePower.Value());
 		}
 
-		[TestCase(100, 100, -1557.958914),
-		 TestCase(100, 30, -514.409252),
-		 TestCase(100, 300, -5354.8590277),
-		 TestCase(600, 100, -7634.931063),
-		 TestCase(600, 300, -22551.5067289),
-		 TestCase(800, -100, 6899.830573),
-		 TestCase(800, -300, 21495.107228)]
+		[TestCase(100, 100, -1566.457317),
+		 TestCase(100, 30, -519.553356),
+		 TestCase(100, 300, -5395.304809),
+		 TestCase(600, 100, -7653.267447),
+		 TestCase(600, 300, -22631.653148),
+		 TestCase(800, -100, 6785.258050),
+		 TestCase(800, -300, 21273.378603)]
 		public void ElectricMotorOnlyRequestTestMechLoss(double speed, double torque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -129,12 +170,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < enginePower.Value());
 		}
 
-		[TestCase(100, 100, -30, -494.148831),
-		TestCase(100, 300, -150, -2265.054223),
-		TestCase(600, 100, 100, 5368.366615),
-		TestCase(600, 300, -50, -3926.835416),
-		TestCase(800, -100, 200, 14945.984737),
-		TestCase(800, -300, 200, 14945.984737),]
+		[TestCase(100, 100, -30, -498.33670),
+		TestCase(100, 300, -150, -2273.504629),
+		TestCase(600, 100, 100, 5367.264248),
+		TestCase(600, 300, -50, -3925.642046),
+		TestCase(800, -100, 200, 14907.629627),
+		TestCase(800, -300, 200, 14907.629627),]
 		public void ElectricMotorAssistingRequestTest(double speed, double torque, double electricTorque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -180,12 +221,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(response.ElectricSystem.ConsumerPower.Value() < response.ElectricMotor.ElectricMotorPowerMech.Value());
 		}
 
-		[TestCase(100, 100, -30, -514.409252),
-		TestCase(100, 300, -150, -2393.422644),
-		TestCase(600, 100, 100, 5089.426615),
-		TestCase(600, 300, -50, -4095.4354163),
-		TestCase(800, -100, 200, 14414.8247370),
-		TestCase(800, -300, 200, 14414.8247370),]
+		[TestCase(100, 100, -30, -519.553356),
+		TestCase(100, 300, -150, -2407.931677),
+		TestCase(600, 100, 100, 5075.160087),
+		TestCase(600, 300, -50, -4102.198874),
+		TestCase(800, -100, 200, 14165.993213),
+		TestCase(800, -300, 200, 14165.993213),]
 		public void ElectricMotorAssistingRequestTestMechLoss(double speed, double torque, double electricTorque, double expectedBatteryPower)
 		{
 			var container = new MockVehicleContainer();
@@ -275,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			var dragTorque = data.First().Item2.EfficiencyData.VoltageLevels.First().DragCurve.Lookup(speed.RPMtoRad());
+			var dragTorque = data.First().Item2.DragCurve.Lookup(speed.RPMtoRad());
 			var enginePower = speed.RPMtoRad() * (torque.SI<NewtonMeter>() + dragTorque);
 			var motorMechPower = dragTorque * speed.RPMtoRad();
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
@@ -286,12 +327,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			battery.CommitSimulationStep(absTime, dt, modData);
 		}
 
-		[TestCase(0.5, 100, 100, -1479.601019, 2.674905),
-		TestCase(0.5, 100, 300, -5033.132712, 31.224759),
-		TestCase(0.5, 600, 100, -7290.510011, 65.884061),
-		TestCase(0.5, 600, 300, -21431.717255, 590.431866),
-		TestCase(0.5, 800, -100, 7178.770573, 61.667578),
-		TestCase(0.5, 800, -300, 22444.155535, 581.889779)
+		[TestCase(0.5, 100, 100, -1484.401151, 2.69232),
+		TestCase(0.5, 100, 300, -5058.393920, 31.54095),
+		TestCase(0.5, 600, 100, -7292.591952, 65.92202),
+		TestCase(0.5, 600, 300, -21459.016866, 591.97964),
+		TestCase(0.5, 800, -100, 7174.730264, 61.59876),
+		TestCase(0.5, 800, -300, 22354.108093, 577.346990)
 		]
 		public void ElectricMotorOnlyWithBatteryRequestTest(double initialSoc, double speed, double torque, double expectedBatteryPower, double expectedBatteryLoss)
 		{
@@ -400,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var i = 0;
 
 			var t1 = 21;
-			var t2 = 13;
+			var t2 = 14;
 			var t3 = 20;
 
 			try {

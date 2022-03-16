@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class SimpleHybridController : VectoSimulationComponent, IHybridController, ITnInPort, ITnOutPort
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 
-		public SimpleHybridController(VehicleContainer container, ElectricSystem es, SwitchableClutch clutch) : base(container)
+		public SimpleHybridController(VehicleContainer container, ElectricSystem es) : base(container)
 		{
 			ElectricSystem = es;
 			//this.clutch = clutch;
@@ -116,8 +117,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public void ApplyStrategySettings(HybridStrategyResponse strategySettings)
 		{
-			Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
-			Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
+			if (Gearbox != null) {
+				Gearbox.SwitchToNeutral = strategySettings.GearboxInNeutral;
+			}
+
+			if (Engine != null) {
+				Engine.CombustionEngineOn = strategySettings.CombustionEngineOn;
+			}
 			_electricMotorTorque = strategySettings.MechanicalAssistPower;
 		}
 
@@ -126,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private NewtonMeter MechanicalAssistPower(PowertrainPosition pos, Second absTime, Second dt, NewtonMeter outTorque, PerSecond prevOutAngularVelocity, PerSecond currOutAngularVelocity, bool dryRun)
 		{
-			return _electricMotorTorque.ContainsKey(pos) ? _electricMotorTorque[pos].Item2 : null;
+			return _electricMotorTorque.GetVECTOValueOrDefault(pos)?.Item2;
 		}
 
 		///=======================================================================================

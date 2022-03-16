@@ -72,7 +72,6 @@ Public Class VectoJob
 
     Public LookAheadMinSpeed As Double
     Public EngineStopStartActivationThreshold As Double
-    Private _shiftStrategy As String
     public EngineOffTimeLimit As double
     public EngineStStUtilityFactor As Double
     public EngineStStUtilityFactorDriving as Double
@@ -509,6 +508,7 @@ Public Class VectoJob
         Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.JobInputData.Vehicle
         Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.Components.EngineInputData
         Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.Components.GearboxInputData
+        Dim gearshiftInputData As IGearshiftEngineeringInputData = vectoJob.DriverInputData.GearshiftInputData
 
         If vehicleInputData Is Nothing Then _
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
@@ -517,6 +517,9 @@ Public Class VectoJob
         If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
              AndAlso gearboxInputData Is Nothing Then _
             result.Add(New ValidationResult("Gearbox File is missing or invalid"))
+        If (mode = ExecutionMode.Engineering andalso vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
+             AndAlso gearshiftInputData Is Nothing Then _
+            result.Add(New ValidationResult("Gearshift File is missing or invalid"))
 
         If result.Any() Then
             Return _
@@ -563,7 +566,7 @@ Public Class VectoJob
             End If
 
 
-            result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), vehicleInputData.VehicleType, vehicleInputData.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position, If(jobData.GearboxData?.Type, GearboxType.NoGeabox), False)
+            result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), vehicleInputData.VehicleType, vehicleInputData.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position, If(jobData.GearboxData?.Type, GearboxType.NoGearbox), False)
             If result.Any() Then
                 Return _
                     New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -694,15 +697,7 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
-    Get
-            Return _shiftStrategy
-    End Get
-        set (value as string)
-            _shiftStrategy = value
-        End set
-    End Property
-
+    
     Public Property AuxPwrICEOn As Double
 
     Public ReadOnly Property IAuxiliariesDeclarationInputData_SavedInDeclarationMode As Boolean _

@@ -38,6 +38,7 @@ using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Factory;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -127,10 +128,8 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 		private XAttribute GetSchemaLocations()
 		{
 			var xsns = RegisterNamespace(XMLDefinitions.XML_SCHEMA_NAMESPACE);
-
-			return new XAttribute(
-				xsns + "schemaLocation",
-				string.Join(" ", NamespaceLocationMap.Where(x => _namespaces.ContainsKey(x.Key)).Select(x => $"{x.Key} {x.Value}")));
+			return new XAttribute(xsns + "schemaLocation", 
+				NamespaceLocationMap.Where(x => _namespaces.ContainsKey(x.Key)).Select(x => $"{x.Key} {x.Value}").Join(" "));
 		}
 
 		public WriterConfiguration Configuration { get; set; }
@@ -149,16 +148,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering
 		}
 
 
-		public XNamespace RegisterNamespace(string namespaceUri)
-		{
-			if (_namespaces.ContainsKey(namespaceUri)) {
-				return _namespaces[namespaceUri];
-			}
-
-			var ns = XNamespace.Get(namespaceUri);
-			_namespaces.Add(namespaceUri, ns);
-			return ns;
-		}
+		public XNamespace RegisterNamespace(string namespaceUri) => _namespaces.GetOrAdd(namespaceUri, XNamespace.Get);
 
 		#region Implementation of IXMLEngineeringWriter
 

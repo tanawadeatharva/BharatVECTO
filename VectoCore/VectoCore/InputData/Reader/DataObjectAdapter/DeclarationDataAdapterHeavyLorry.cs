@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
-			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
+			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ?? new Dictionary<int, ITorqueLimitInputData>();
 			var numGears = gearbox.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
+		protected static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
 		{
 			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				throw new VectoException("Missing WHR Data");
@@ -292,9 +292,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			if (gear.Gear - 1 >= numGears / 2) {
 				// only upper half of gears can limit if max-torque <= 0.95 of engine max torque
-				if (limits.ContainsKey(gear.Gear) &&
-					limits[gear.Gear].MaxTorque <= DeclarationData.Engine.TorqueLimitVehicleFactor * maxEngineTorque) {
-					return limits[gear.Gear].MaxTorque;
+				if (limits.TryGetValue(gear.Gear, out var limit) && limit.MaxTorque <= DeclarationData.Engine.TorqueLimitVehicleFactor * maxEngineTorque) {
+					return limit.MaxTorque;
 				}
 			}
 
@@ -343,14 +342,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-				!adas.ATEcoRollReleaseLockupClutch.HasValue) {
-				throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-			}
+			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
+			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
+			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+			//}
 
 			retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
-					? adas.ATEcoRollReleaseLockupClutch.Value
+					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;
 
 			if (!SupportedGearboxTypes.Contains(gearbox.Type)) {
@@ -489,7 +488,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength)
+		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, 
+			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength, int? numSteeredAxles)
 		{
 			if (!auxInputData.SavedInDeclarationMode) {
 				WarnDeclarationMode("AuxiliariesData");
@@ -521,6 +521,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
+						if (numSteeredAxles.HasValue && auxData.Technology.Count != numSteeredAxles.Value) {
+							throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
+						}
 						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
@@ -561,7 +564,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		private void WarnDeclarationMode(string inputData)
+		protected void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}

@@ -7,6 +7,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -26,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writerAsm = new FileOutputVIFWriter(filename, 0);
 
-			var factoryAsm = new SimulatorFactory(ExecutionMode.Declaration, inputDataAsm, writerAsm);
+			var factoryAsm = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataAsm, writerAsm);
 			var jobContainer = new JobContainer(new MockSumWriter());
 			jobContainer.AddRuns(factoryAsm);
 			jobContainer.Execute();

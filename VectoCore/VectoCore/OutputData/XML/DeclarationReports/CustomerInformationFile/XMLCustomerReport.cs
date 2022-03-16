@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
 
 		protected Kilogram _weightedPayload = 0.SI<Kilogram>();
-		protected double _passengerCount = 0;
+		protected double _passengerCount;
 
 
 		public XMLCustomerReport()

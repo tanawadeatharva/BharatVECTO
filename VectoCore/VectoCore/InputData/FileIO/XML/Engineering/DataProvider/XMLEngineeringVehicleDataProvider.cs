@@ -110,9 +110,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public bool VocationalVehicle => false;
 
-		public bool SleeperCab => false;
+		public bool? SleeperCab => false;
 
-		public virtual bool? AirdragModifiedMultistage => null;
+		public virtual bool? AirdragModifiedMultistep => null;
 
 		public TankSystem? TankSystem =>
 			ElementExists(XMLNames.Vehicle_NgTankSystem)
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => null;
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 
 		public TableData BoostingLimitations => null;
 
@@ -250,9 +250,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				AttributeMappings.PTOCycleMap);
 
 		public virtual TableData PTOCycleWhileDriving => null;
-		public virtual PTOShaftGearWheel? PTOShaftGearWheel => null;
-		public virtual PTOOtherElement? PTOOtherElement => null;
-
+		
 		#endregion
 
 		#region Overrides of AbstractXMLResource

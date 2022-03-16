@@ -48,6 +48,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		public IList<IAxleDeclarationInputData> AxlesDeclaration =>
 			AxleViewModels.Cast<IAxleDeclarationInputData>().ToList();
 
+		public int? NumSteeredAxles => null;
+
 		public XmlNode XMLSource => _xmlSource;
 	}
 

@@ -708,6 +708,13 @@ Public Class Gearbox
         Return Nothing
     End Get
     End Property
+
+    Public ReadOnly Property PEV_DownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DownshiftSpeedFactor
+        get
+            return nothing
+        End Get
+    End Property
+
     Public ReadOnly Property PEV_DeRatingDownshiftSpeedFactor As Double? Implements IGearshiftEngineeringInputData.PEV_DeRatingDownshiftSpeedFactor
     get
         return Nothing
@@ -828,8 +835,8 @@ Public Class MockEngineeringVehicle
     Public Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
     Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
     Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-    Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
-    Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+    Public Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
+    Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
     Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 
     Public Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering _
@@ -870,13 +877,15 @@ Public Class MockEngineeringVehicle
     Public Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
-    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
     Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
     Public ReadOnly Property DoorDriveTechnology As ConsumerTechnology? Implements IVehicleDeclarationInputData.DoorDriveTechnology
     Public ReadOnly Property VehicleDeclarationType As VehicleDeclarationType Implements IVehicleDeclarationInputData.VehicleDeclarationType
+
+
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
@@ -927,7 +936,6 @@ Public Class MockJobInputData
     Public Property JobType As VectoSimulationJobType Implements IEngineeringJobInputData.JobType
     Public Property EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
     Public Property JobName As String Implements IDeclarationJobInputData.JobName
-    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
 End Class
 
 Public Class MockDriverInputData

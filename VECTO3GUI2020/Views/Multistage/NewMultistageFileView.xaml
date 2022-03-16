@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:VECTO3GUI2020.Views.Multistage"
              xmlns:implementation="clr-namespace:VECTO3GUI2020.ViewModel.MultiStage.Implementation"
              xmlns:customControls="clr-namespace:VECTO3GUI2020.Views.Multistage.CustomControls"
+             xmlns:properties="clr-namespace:VECTO3GUI2020.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" x:Name="NewMultistageJobView" d:DesignWidth="800" d:DataContext="{d:DesignInstance implementation:NewMultiStageJobViewModel }">
     <Grid>
@@ -14,8 +15,7 @@
                 <Grid DockPanel.Dock="Top">
                     <customControls:FilePicker x:Name="NewMultistageFilePicker" Grid.Row="0" Text="{Binding VifPath}" HorizontalAlignment="Stretch" Command="{Binding AddVifFileCommand}"/>
                 </Grid>
-                <Button Style="{DynamicResource MultiStageButtonStyle1}" 
-                        Margin="4"  DockPanel.Dock="Bottom" 
+                <Button Style="{DynamicResource MultiStageButtonStyle1}" DockPanel.Dock="Bottom" 
                         Visibility="{Binding MultiStageJobViewModel, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
                         Command="{Binding CloseWindow}" 
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
@@ -25,7 +25,7 @@
                     <Binding Path="MultiStageJobViewModel" Mode="TwoWay" >
                         <Binding.TargetNullValue>
                             <Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
-                                <TextBlock>Load VIF File to add new manufacturing Stage</TextBlock>
+                                <TextBlock>Load VIF to add new manufacturing step</TextBlock>
                             </Grid>
                         </Binding.TargetNullValue>
                     </Binding>

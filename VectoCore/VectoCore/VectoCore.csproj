@@ -1,770 +1,76 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TUGraz.VectoCore</RootNamespace>
     <AssemblyName>VectoCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
-    <NuGetPackageImportStamp>5f3566e7</NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
+    <DefineConstants />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
-    <CodeContractsAssertsToContractsCheckBox>False</CodeContractsAssertsToContractsCheckBox>
-    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
-    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
-    <CodeContractsMissingPublicEnsuresAsWarnings>True</CodeContractsMissingPublicEnsuresAsWarnings>
-    <CodeContractsInferRequires>True</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>True</CodeContractsInferEnsures>
-    <CodeContractsInferEnsuresAutoProperties>True</CodeContractsInferEnsuresAutoProperties>
-    <CodeContractsInferObjectInvariants>True</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>True</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestAssumptionsForCallees>False</CodeContractsSuggestAssumptionsForCallees>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsNecessaryEnsures>False</CodeContractsNecessaryEnsures>
-    <CodeContractsSuggestObjectInvariants>True</CodeContractsSuggestObjectInvariants>
-    <CodeContractsSuggestReadonly>False</CodeContractsSuggestReadonly>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsSQLServerOption />
-    <CodeContractsBaseLineFile>baseline.xml</CodeContractsBaseLineFile>
-    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
-    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
-    <CodeContractsFailBuildOnWarnings>True</CodeContractsFailBuildOnWarnings>
-    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>3</CodeContractsAnalysisWarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
+    <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ninject.Extensions.Factory, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.Extensions.Factory.3.3.3\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Extensions.NamedScope, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Ninject.Extensions.NamedScope.3.3.0\lib\net45\Ninject.Extensions.NamedScope.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ValueInjecter.3.1.1.5\lib\net40\Omu.ValueInjecter.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Configuration\Constants.cs" />
-    <Compile Include="InputData\FileIO\JSON\BusAuxiliaryInputData.cs" />
-    <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONBattery.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONBusAuxiliariesEngineeringData.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONElectricMotor.cs" />
-    <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONHybridStrategyParameters.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONSubComponent.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
-    <Compile Include="InputData\FileIO\JSON\SSMInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
-    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
-    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricMachinesDeclarationInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationMultistageInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPrimaryVehicleBusApplicationInformationDataProviderV01.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationBusAuxiliariesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAngledriveDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAuxiliariesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxlegearDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxlesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationComponentsDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationEngineDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationGearboxDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationJobInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPTODataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationRetarderDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTorqueConverterDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTyreDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricMotorDeclarationInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLElectricStorageSystemDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLGearData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLADCDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAirdragDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAngledriveInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLApplicationInformationData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAuxiliariesDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleGearInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxlesDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLBatteryPackDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLBusAuxiliariesDeclarationData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLElectricMachinesDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationJobInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLElectricMotorDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLElectricStorageSystemDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLEngineDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearboxDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLIEPCInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLPTOTransmissionInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLResultsInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLRetarderInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLSuperCapDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTorqueConverterDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTyreDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLVehicleComponentsDeclaration.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataMultistageV01InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV20InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV21InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV210InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLDeclarationMultistageInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLPTOReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLADASReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLComponentReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Factory\IDeclarationInjectFactory.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationVehicleData.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV10InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLDeclarationInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLJobDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLJobDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLPTOReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractCommonComponentType.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractEngineeringXMLComponentDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractVehicleEngineeringType.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLCyclesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLDriverAcceleration.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAirdragDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAngledriveDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAuxiliariesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAxlegearDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAxlesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverLookAhead.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEcoRollDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEngineDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEngineStopStartDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearboxDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearshiftData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringJobInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringOverspeed.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringPCCInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringRetarderDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringTorqueConverterDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleComponentsDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLTyreEngineeringDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Factory\IEngineeringReaderInjectFactory.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAirdragData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAngledriveData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAuxiliairesData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAuxiliaryData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxleEngineeringData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxlegearData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxlesData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLCyclesDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLDriverAcceleration.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringDriverData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEcoRollData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringGearshiftData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringJobInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringPCCInputData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleComponentsData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEngineStopStartData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearboxData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLLookaheadData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLOverspeedData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLRetarderData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTorqueconverterData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTyreData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLComponentsReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLDriverDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\IXMLEngineeringInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLJobDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderTestOverrides.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV07InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV10InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\AbstractExternalResourceReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLComponentsEngineeringReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLDriverDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLEngineeringInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLJobDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderInjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\IXMLResource.cs" />
-    <Compile Include="InputData\FileIO\XML\XMLInputDataFactory.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
-    <Compile Include="InputData\Reader\ComponentData\BatteryInternalResistanceReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\BatteryMaxCurrentReader.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\BatterySystem.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PTODriveAuxiliary.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\RoadSweeperAuxiliary.cs" />
-    <Compile Include="InputData\Reader\ComponentData\ElectricMotorMapReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterMultistageBus.cs" />
-    <Compile Include="InputData\Reader\ComponentData\MaxPropulsionTorqueReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
-    <Compile Include="InputData\Reader\ComponentData\ElectricFullLoadCurveReader.cs" />
-    <Compile Include="InputData\Reader\Impl\AbstractDeclarationMultistageBusVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedMultistageBusVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeMultistageBusVectoRunDataFactory.cs" />
-    <Compile Include="Models\Connector\Ports\Impl\BatteryResponse.cs" />
-    <Compile Include="Models\Connector\Ports\IElectricEnergyStoragePort.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Battery\BatteryData.cs" />
-    <Compile Include="InputData\Reader\ComponentData\BatterySOCReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterSingleBus.cs" />
-    <Compile Include="InputData\Reader\Impl\AbstractVTPModeVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\CombinedBusAuxiliaries.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusSpecific.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeCompletedBusVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl_P0.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleAlternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\TechnologyBenefits.cs" />
-    <Compile Include="Models\Declaration\ADASCombination.cs" />
-    <Compile Include="InputData\Reader\ComponentData\AlternatorReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\CompressorMapReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\ElectricConsumerReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\EnvironmentalContidionsMapReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\SSMTechnologiesReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\ActuationsMapReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterCompletedBusGeneric.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs" />
-    <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModePrimaryBusVectoRunDataFactory.cs" />
-    <Compile Include="Models\BusAuxiliaries\Actuations.cs" />
-    <Compile Include="Models\BusAuxiliaries\BusAuxiliaries.cs" />
-    <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\AbstractModule.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\AlternatorMap.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\Alternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\CombinedAlternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\CombinedAlternatorMapRow.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricalConsumer.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricalConsumerList.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricsUserInputsConfig.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M00Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M02Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M0_5Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ResultCard.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\EnvironmentalConditionMapEntry.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\EnvironmentalConditionsMap.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\M01Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMCalculate.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMInputs.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
-    <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
-    <Compile Include="Models\GenericModelData\GenericTorqueConverterData.cs" />
-    <Compile Include="Models\GenericModelData\GenericTransmissionComponentData.cs" />
-    <Compile Include="Models\GenericModelData\GenericBusEngineData.cs" />
-    <Compile Include="Models\GenericModelData\GenericBusRetarderData.cs" />
-    <Compile Include="Models\Declaration\SSMTechnology.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M08Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M09Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M10Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M11Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M12Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M13Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M14Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\CompressorMap.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\M03Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\M04Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\ActuationsMap.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticsConsumersDemand.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticUserInputsConfig.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\AltUserInput.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\IAlternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ICombinedAlternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMCalculate.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMRun.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMTOOL.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IAbstractModule.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM0_5_SmartAlternatorSetEfficiency.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM0_NonSmart_AlternatorsSetEfficiency.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM10.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM11.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM13.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM14.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM1_AverageHVACLoadDemand.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM2_AverageElectrialLoadDemand.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM3_AveragePneumaticLoadDemand.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM4_AirCompressor.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM5_SmartAlternatorSetGeneration.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM6.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM7.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM8.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM9.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\Enumerations.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\IBusAuxiliaries.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\IAuxiliaryEvent.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\IM12.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
-    <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
-    <Compile Include="Models\Declaration\BusAlternatorTechnologies.cs" />
-    <Compile Include="Models\Declaration\PrimaryBusSegments.cs" />
-    <Compile Include="Models\Declaration\HVACCoolingPower.cs" />
-    <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ElectricMotor\DragCurve.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ElectricMotor\EfficiencyMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorFullLoadCurve.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ElectricMotor\ElectricMotorData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\VehicleMaxPropulsionTorque.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
-    <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\HybridStrategyParameters.cs" />
-    <Compile Include="Models\SimulationComponent\DCDCConverter.cs" />
-    <Compile Include="Models\SimulationComponent\ElectricSystem.cs" />
-    <Compile Include="Models\SimulationComponent\IElectricEnergyStorage.cs" />
-    <Compile Include="Models\SimulationComponent\IElectricMotor.cs" />
-    <Compile Include="Models\SimulationComponent\IElectricMotorControl.cs" />
-    <Compile Include="Models\SimulationComponent\IHybridControlledGearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PEVAMTShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ShiftLineSet.cs" />
-    <Compile Include="Models\Simulation\DataBus\IDCDCConverter.cs" />
-    <Compile Include="Models\Simulation\DataBus\IHybridControllerInfo.cs" />
-    <Compile Include="Models\SimulationComponent\IHybridControlStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Battery.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\BatteryElectricMotorController.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DummyGearboxInfo.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ElectricAuxiliary.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ElectricMotor.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\HybridController.cs" />
-    <Compile Include="Models\SimulationComponent\IHybridController.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\SimpleHybridController.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\SuperCap.cs" />
-    <Compile Include="Models\SimulationComponent\Strategies\DelegateParallelHybridStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Strategies\HybridStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Strategies\TestPowertrain.cs" />
-    <Compile Include="Models\SimulationComponent\SwitchableClutch.cs" />
-    <Compile Include="Models\Simulation\DataBus\IRESSInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IElectricMotorInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeSingleBusVectoRunDataFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ATClutchInfo.cs" />
-    <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
-    <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
-    <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
-    <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
-    <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
-    <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
-    <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
-    <Compile Include="OutputData\FileIO\FileOutputVIFWriter.cs" />
-    <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
-    <Compile Include="OutputData\ModalDataPostprocessingCorrection.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\IXMLCustomerReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportExemptedCompletedBus.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\AbstractXMLManufacturerReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationJobs\XMLCompletedBusWriter.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\IXMLManufacturerReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportExemptedCompletedBus.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\IXMLMultistageReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\IXMLPrimaryVehicleReport.cs" />
-    <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
-    <Compile Include="OutputData\XML\Engineering\Factory\IEngineeringWriterInjectFactory.cs" />
-    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringComponentWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringEngineWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringJobWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\NinjectModules\XMLEngineeringWriterTestOverrides.cs" />
-    <Compile Include="OutputData\XML\Engineering\NinjectModules\XMLEngineeringWriterV10InjectModule.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\AbstractComponentWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLAccelerationDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLEngineeringLookaheadDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLEngineeringOverspeedDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLShiftParmeterDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringADASWriterV10.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAirdragWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAngledriveWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAuxiliariesWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAuxiliaryWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxlegearWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxlesWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxleWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringComponentsWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringDriverDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringEngineWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringGearboxWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringGearDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringJobWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringRetarderWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringTorqueconverterWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringTyreWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringVehicleDataWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
-    <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
-    <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReportCompletedBus.cs" />
-    <Compile Include="OutputData\XML\XMLDeclarationReportCompletedVehicle.cs" />
-    <Compile Include="OutputData\XML\XMLDeclarationReportMultistageBusVehicle.cs" />
-    <Compile Include="OutputData\XML\XMLDeclarationReportPrimaryVehicle.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportCompletedBus.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportExemptedTruck.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportExeptedPrimaryBus.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportPrimaryBus.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLExemptedPrimaryBusVehicleReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLMultistageBusReport.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VehicleInformationFile\XMLPrimaryBusVehicleReport.cs" />
-    <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XMLReports\XMLManufacturerReportReader.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONInputData.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONInputDataFactory.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONVehicleData.cs" />
-    <Compile Include="InputData\Impl\InputData.cs" />
-    <Compile Include="InputData\IVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\PTOIdleLossMapReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterHeavyLorry.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\EngineeringDataAdapter.cs" />
-    <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
-    <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeHeavyLorryVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactoryLorries.cs" />
-    <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\ComponentData\ShiftPolygonReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShiftStrategyInterfaces.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareTorque99lLookup.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\ShareTorque99lLookupReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AccelerationReserveLookup.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\AccelerationReserveLookupReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\EngineSpeedHighFactorLookup.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\EngineSpeedHighLookupReader.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\LookupDataReader.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\PredictionDurationLookupReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareIdleLowLookup.cs" />
-    <Compile Include="InputData\Reader\ShiftStrategy\ShareIdleLowReader.cs" />
-    <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
-    <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
-    <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
-    <Compile Include="Models\Connector\Ports\IDrivingCyclePort.cs" />
-    <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
-    <Compile Include="Models\Connector\Ports\IFvPort.cs" />
-    <Compile Include="Models\Connector\Ports\ITnPort.cs" />
-    <Compile Include="Models\Declaration\FuelData.cs" />
-    <Compile Include="Models\Declaration\PTOTransmission.cs" />
-    <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
-    <Compile Include="Models\Declaration\TyreClass.cs" />
-    <Compile Include="Models\Declaration\WeightingFactors.cs" />
-    <Compile Include="Models\Declaration\WeightingGroups.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
-    <Compile Include="InputData\Reader\ComponentData\FuelConsumptionMapReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\PredictionDurationLookup.cs" />
-    <Compile Include="Models\SimulationComponent\ILossMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyOptimized.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategyOptimized.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AverageAccelerationTorquePreprocessor.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
-    <Compile Include="Utils\SchmittTrigger.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\VelocitySpeedGearshiftPreprocessor.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\VTPCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\VTPGearbox.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
-    <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactoryLorries.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
-    <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
-    <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\VTPReport\XMLVTPReport.cs" />
-    <Compile Include="OutputData\VTPReport.cs" />
-    <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
-    <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
-    <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
-    <Compile Include="OutputData\XML\AttributeMappings.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\CustomerInformationFile\XMLCustomerReport.cs" />
-    <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
-    <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
-    <Compile Include="OutputData\XML\DeclarationReports\ManufacturerReport\XMLManufacturerReportTruck.cs" />
-    <Compile Include="Utils\Interpolate2D.cs" />
-    <Compile Include="Utils\DataIntegrityHelper.cs" />
-    <Compile Include="Utils\MeanShiftClustering.cs" />
-    <Compile Include="Utils\ProviderExtensions.cs" />
-    <Compile Include="Models\Declaration\AirDrag.cs" />
-    <Compile Include="Models\Declaration\Fan.cs" />
-    <Compile Include="Models\Declaration\HVAC.cs" />
-    <Compile Include="Models\Declaration\LACDecisionFactor.cs" />
-    <Compile Include="Models\Declaration\Payloads.cs" />
-    <Compile Include="Models\Declaration\PneumaticSystem.cs" />
-    <Compile Include="Models\Declaration\PT1.cs" />
-    <Compile Include="Models\Declaration\TruckSegments.cs" />
-    <Compile Include="Models\Declaration\StandardBodies.cs" />
-    <Compile Include="Models\Declaration\SteeringPump.cs" />
-    <Compile Include="Models\Declaration\Wheels.cs" />
-    <Compile Include="Models\Declaration\WHTCCorrection.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
-    <Compile Include="Models\Declaration\DeclarationData.cs" />
-    <Compile Include="Models\Declaration\ElectricSystem.cs" />
-    <Compile Include="Models\Declaration\LookupData.cs" />
-    <Compile Include="Models\Declaration\Mission.cs" />
-    <Compile Include="Models\Declaration\MissionType.cs" />
-    <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
-    <Compile Include="Models\SimulationComponent\IAxlegear.cs" />
-    <Compile Include="Models\SimulationComponent\IBrakes.cs" />
-    <Compile Include="Models\SimulationComponent\IIdleController.cs" />
-    <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
-    <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
-    <Compile Include="Models\SimulationComponent\IAuxPort.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Angledrive.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\TransmissionComponent.cs" />
-    <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
-    <Compile Include="Models\Simulation\DataBus\IAxlegearInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IWheelsInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
-    <Compile Include="Utils\DebugData.cs" />
-    <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
-    <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
-    <Compile Include="Models\Simulation\Impl\TimeRun.cs" />
-    <Compile Include="OutputData\DeclarationReport.cs" />
-    <Compile Include="OutputData\FileIO\FileOutputWriter.cs" />
-    <Compile Include="OutputData\IModalDataContainer.cs" />
-    <Compile Include="OutputData\IDataWriter.cs" />
-    <Compile Include="OutputData\ModalDataContainer.cs" />
-    <Compile Include="OutputData\SummaryDataContainer.cs" />
-    <Compile Include="Properties\Version.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Version.tt</DependentUpon>
-    </Compile>
-    <Compile Include="JsonKeys.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>JsonKeys.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\DataTableExtensionMethods.cs" />
-    <Compile Include="Utils\DateTimeFallbackDeserializer.cs" />
-    <Compile Include="Utils\DictionaryExtensionMethods.cs" />
-    <Compile Include="Utils\IterationStatistics.cs" />
-    <Compile Include="Utils\RessourceHelper.cs" />
-    <Compile Include="Models\Declaration\Segment.cs" />
-    <Compile Include="Models\Declaration\Axle.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Engine\EngineFullLoadCurve.cs" />
-    <Compile Include="Models\SimulationComponent\Data\GearboxData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Gearbox\GearData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Gearbox\TransmissionLossMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Gearbox\ShiftPolygon.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Gearbox\TorqueConverterData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
-    <Compile Include="Models\SimulationComponent\IClutch.cs" />
-    <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\IDriver.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
-    <Compile Include="Models\SimulationComponent\IVehicle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Clutch.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AxleGear.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Retarder.cs" />
-    <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
-    <Compile Include="Models\Simulation\Data\VectoRunData.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
-    <Compile Include="Utils\Formulas.cs" />
-    <Compile Include="Utils\Physics.cs" />
-    <Compile Include="Utils\SearchAlgorithm.cs" />
-    <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
-    <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\IGearbox.cs" />
-    <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
-    <Compile Include="Models\SimulationComponent\IWheels.cs" />
-    <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResult.cs" />
-    <Compile Include="Models\Simulation\IVectoRun.cs" />
-    <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
-    <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
-    <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
-    <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />
-    <Compile Include="Models\Simulation\DataBus\IDataBus.cs" />
-    <Compile Include="Models\Simulation\DataBus\IEngineInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IGearboxInfo.cs" />
-    <Compile Include="Models\Simulation\DataBus\IVehicleInfo.cs" />
-    <Compile Include="Models\Simulation\IVehicleContainer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OutputData\FileIO\ShiftPolygonExport.cs" />
-    <Compile Include="Utils\VectoCSVFile.cs" />
-    <Compile Include="Utils\DelaunayMap.cs" />
-    <Compile Include="Utils\VectoVersionCore.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VectoVersionCore.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\XMLDefinitions.cs" />
-    <Compile Include="Utils\XMLHelper.cs" />
-    <Compile Include="Utils\XmlResourceResolver.cs" />
-    <Compile Include="Utils\XMLValidator.cs" />
-    <Compile Include="Utils\XPathHelper.cs" />
-    <Compile Include="Ninject\VectoNinjectModule.cs" />
-    <Compile Include="VersionNumber1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VersionNumber.t4</DependentUpon>
-    </Compile>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
   </ItemGroup>
+  
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <EmbeddedResource Include="JsonKeys.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
+    <InternalsVisibleTo Include="VectoAPI" />
+    <InternalsVisibleTo Include="VectoEngineeringAPI" />
+    <InternalsVisibleTo Include="VectoXML" />
+    <InternalsVisibleTo Include="XMLTest" />
+    <InternalsVisibleTo Include="VECTO" />
+    <InternalsVisibleTo Include="VectoCoreTest" />
+    <InternalsVisibleTo Include="VectoAPITest" />
+    <InternalsVisibleTo Include="VectoXML" />
+    <InternalsVisibleTo Include="XMLTest" />
+    <InternalsVisibleTo Include="VECTO_GIT" />
+    <InternalsVisibleTo Include="VectoAuxiliariesTests" />
+    <InternalsVisibleTo Include="VECTO3" />
+    <InternalsVisibleTo Include="VECTOMultistage" />
+    <InternalsVisibleTo Include="Vecto3GUI2020Test" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.6.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.7.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
     <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\HeavyUrban.vdri" />
@@ -791,37 +97,23 @@
     <EmbeddedResource Include="Resources\Declaration\Report\cyclePageTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title2CyclesTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title3CyclesTemplate.pdf" />
-    <None Include="Properties\Version.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Version.cs</LastGenOutput>
-    </None>
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vdrop.csv" />
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
     <EmbeddedResource Include="Resources\Declaration\Body_Trailers_Weights.csv" />
     <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
-    <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.6.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.7.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptoc" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptol" />
     <EmbeddedResource Include="Resources\Declaration\FuelTypes.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\PredictionTimeLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\AccelerationReserveLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareEngineSpeedHigh.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareIdleLow.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareTq99L.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\MissionProfileWeights.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\WeightingGroups.csv" />
+    <EmbeddedResource Include="Resources\Declaration\TyreLabeling.csv" />
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.1.0.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -852,20 +144,12 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.6.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\PredictionTimeLookup.csv" />
-    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\AccelerationReserveLookup.csv" />
-    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareEngineSpeedHigh.csv" />
-    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareIdleLow.csv" />
-    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareTq99L.csv" />
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\CO2Standards\MissionProfileWeights.csv" />
-    <EmbeddedResource Include="Resources\Declaration\CO2Standards\WeightingGroups.csv" />
-    <EmbeddedResource Include="Resources\Declaration\TyreLabeling.csv" />
     <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -934,8 +218,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\Fan-Tech-Medium.csv" />
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd">
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Buses\ElectricConsumers.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMTechList.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMDefaults.ahsm" />
@@ -953,9 +235,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
-    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoVTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -976,27 +255,30 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_normalized.vmap" />
     <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_normalized.vmap" />
-    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistage.0.1.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoOutputMultistep.0.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoComponent.2.10.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoComponent.2.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.1_xEV_Components.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.10.2_JobInputData.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Utils\VectoVersionCore.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
-    </None>
-    <None Include="VersionNumber.t4">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VersionNumber1.cs</LastGenOutput>
-    </None>
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
+
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
     <EmbeddedResource Include="Resources\Declaration\Report\4x2rt.png" />
@@ -1006,31 +288,21 @@
     <EmbeddedResource Include="Resources\Declaration\Report\6x2tt.png" />
     <EmbeddedResource Include="Resources\Declaration\Report\Undef.png" />
   </ItemGroup>
+
+
+
+
+
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Update="JSONKeys.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>JSONKeys.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="JSONKeys.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
-      <Name>VectoCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
-      <Project>{b673e12f-d323-4c4c-8805-9915b2c72d3d}</Project>
-      <Name>VectoHashing</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
-  <PropertyGroup Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">
-    <SolutionDir>..\..\</SolutionDir>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)Build\CommonSettings.targets" />
+
 </Project>

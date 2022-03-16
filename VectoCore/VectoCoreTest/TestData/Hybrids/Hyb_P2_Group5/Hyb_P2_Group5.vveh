@@ -11,8 +11,9 @@
     "LegislativeClass": "Unknown",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
-    "MassMax": 18.0,
     "Loading": 19300.0,
+    "MassMax": 18.0,
+    "CdA": 5.3,
     "rdyn": 492.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
@@ -70,7 +71,6 @@
     "EcoRoll": "None",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
-    "CdA": 5.3,
     "VehicleHeight": 4.0,
     "IdlingSpeed": 600.0,
     "Retarder": {

@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -57,13 +58,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		protected Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
 			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
 
-		private Second _duration;
-		private Meter _distance;
-
-
 		public MockModalDataContainer()
 		{
 			Data = new ModalResults();
+
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
 				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
 					continue;
@@ -113,18 +111,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public object this[ModalResultField key, IFuelProperties fuel]
 		{
 			get {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				try {
+					return CurrentRow[FuelColumns[fuel][key]];
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
 
-				return CurrentRow[FuelColumns[fuel][key]];
 			}
 			set {
-				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
-					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				try {
+					CurrentRow[FuelColumns[fuel][key]] = value;
+				} catch (KeyNotFoundException e) {
+					throw new VectoException($"unknown fuel {fuel.GetLabel()} for key {key.GetName()}", e);
 				}
-
-				CurrentRow[FuelColumns[fuel][key]] = value;
 			}
 		}
 
@@ -136,35 +135,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public object this[ModalResultField key, int? pos]
 		{
-			get
-			{
+			get {
 				if (pos == null) {
 					return CurrentRow[key.GetName()];
 				}
 
-				if (!BatteryColumns.ContainsKey(pos.Value)) {
-					return null;
-				}
-
-				var entry = BatteryColumns[pos.Value];
-				return !entry.ContainsKey(key) ? null : CurrentRow[entry[key]];
+				return BatteryColumns.TryGetValue(pos.Value, out var entry) && entry.TryGetValue(key, out var col)
+					? CurrentRow[col]
+					: null;
 			}
-			set
-			{
+			set {
 				if (pos == null) {
 					CurrentRow[key.GetName()] = value;
 				} else {
-					if (!BatteryColumns.ContainsKey(pos.Value)) {
-						BatteryColumns[pos.Value] = new Dictionary<ModalResultField, DataColumn>();
-					}
-
-					var entry = BatteryColumns[pos.Value];
-					if (!entry.ContainsKey(key)) {
-						var col = Data.Columns.Add($"{key.GetName()}_{pos.Value}", typeof(SI));
-						entry[key] = col;
-					}
-
-					CurrentRow[entry[key]] = value;
+					var entry = BatteryColumns.GetOrAdd(pos.Value, _ => new Dictionary<ModalResultField, DataColumn>());
+					var col = entry.GetOrAdd(key, _ => Data.Columns.Add($"{key.GetName()}_{pos.Value}", typeof(SI)));
+					CurrentRow[col] = value;
 				}
 			}
 		}
@@ -193,41 +179,29 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public string StackTrace => null;
 
-		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
-		
+		public void Finish(VectoRun.Status runStatus, Exception exception = null) { }
+
 		public bool WriteModalResults { get; set; }
 
-		public IEnumerable<T> GetValues<T>(ModalResultField key)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
-		}
+		public IEnumerable<T> GetValues<T>(ModalResultField key) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[(int)key]);
 
-		public IEnumerable<T> GetValues<T>(DataColumn col)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
-		}
+		public IEnumerable<T> GetValues<T>(DataColumn col) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[col]);
 
-		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
-		{
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
-		public void SetDataValue(string fieldName, object value)
-		{
+		public void SetDataValue(string fieldName, object value) => 
 			throw new NotImplementedException();
-		}
 
 		public void AddAuxiliary(string id, string columnName = null)
 		{
@@ -250,21 +224,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
-			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
-				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
+			try {
+				return FuelColumns[fuelData][mrf].ColumnName;
+			} catch (KeyNotFoundException e) {
+				throw new VectoException($"unknown fuel {fuelData.GetLabel()} for key {mrf.GetName()}", e);
 			}
-
-			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
 		public void Reset()
 		{
-			
+
 		}
 
-		public Second Duration => _duration;
+		public Second Duration => null;
 
-		public Meter Distance => _distance;
+		public Meter Distance => null;
 
 		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
 
@@ -275,12 +249,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void CalculateAggregateValues()
 		{
-			
+
 		}
 
 		public void AddElectricMotor(PowertrainPosition pos)
 		{
-			
+
 		}
 
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)

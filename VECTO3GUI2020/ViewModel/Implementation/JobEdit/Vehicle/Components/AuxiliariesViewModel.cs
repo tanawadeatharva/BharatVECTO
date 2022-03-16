@@ -82,21 +82,5 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		}
 	}
 
-    public class AuxiliariesViewModel_v2_3 : AuxiliariesViewModel_v2_0
-    {
-        public static new readonly string VERSION = typeof(XMLDeclarationAuxiliariesDataProviderV23).ToString();
-
-        public AuxiliariesViewModel_v2_3(IXMLAuxiliariesDeclarationInputData inputData, IComponentViewModelFactory componentViewModelFactory) : base(inputData, componentViewModelFactory)
-        {
-        }
-
-		public override void CreateAuxiliaries()
-		{
-			base.CreateAuxiliaries();
-		}
-	}
-
-
-
 
 }

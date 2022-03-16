@@ -175,8 +175,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string JobName => "";
 
-		public string ShiftStrategy => "";
-
 		public string Identifier => Vehicle.Identifier;
 
 		public bool ExemptedVehicle => false;
@@ -257,8 +255,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
 		public TableData BoostingLimitations => Vehicle.BoostingLimitations;
+		
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
@@ -319,9 +318,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool VocationalVehicle => DeclarationData.Vehicle.VocationalVehicleDefault;
 
-		public bool SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
+		public bool? SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
 
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 
 		public TankSystem? TankSystem => DeclarationData.Vehicle.TankSystemDefault;
 

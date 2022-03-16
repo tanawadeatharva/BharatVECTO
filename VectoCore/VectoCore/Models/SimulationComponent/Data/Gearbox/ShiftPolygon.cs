@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is positive (which means that X was on the right side of from--to).</remarks>
 		public static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque,
-			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
+			(ShiftPolygonEntry, ShiftPolygonEntry) segment)
 		{
 			if (segment.Item1.AngularSpeed < angularSpeed && segment.Item2.AngularSpeed < angularSpeed)
 				return false;
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is negative (which means that X was on the left side of from--to).</remarks>
 		public static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque,
-			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
+			(ShiftPolygonEntry, ShiftPolygonEntry) segment)
 		{
 			if (segment.Item1.AngularSpeed > angularSpeed && segment.Item2.AngularSpeed > angularSpeed)
 				return false;
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				return ValidationResult.Success;
 			}
 
-			return shiftPolygon.Downshift.Pairwise(Tuple.Create).Any(downshiftLine =>
+			return shiftPolygon.Downshift.Pairwise().Any(downshiftLine =>
 				shiftPolygon.Upshift.Any(upshiftEntry => IsLeftOf(upshiftEntry.AngularSpeed, upshiftEntry.Torque, downshiftLine)))
 				? new ValidationResult("upshift line has to be right of the downshift line!")
 				: ValidationResult.Success;

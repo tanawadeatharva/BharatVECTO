@@ -179,6 +179,7 @@ Public Class HybridStrategyParamsForm
 
         tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
         tbCostFactorSoCExponent.Text = if(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
+        tbGensetMinOptPowerFactor.Text = if (double.IsNaN(strategyParams.GensetMinOptPowerFactor), "", strategyParams.GensetMinOptPowerFactor.ToGUIFormat())
         DeclInit()
 
         REESSFileBrowser.UpdateHistory(file)
@@ -221,6 +222,7 @@ Public Class HybridStrategyParamsForm
         strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
         strategyParams.ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble()
         strategyParams.CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(5)
+        strategyParams.GensetMinOptPowerFactor = 1
 
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)

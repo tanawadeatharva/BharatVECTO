@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -72,10 +72,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -89,28 +89,20 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount, bool forceLineSearch) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
+			bool forceLineSearch, object searcher) where T : SIBase<T>
 		{
 			T result;
 			try {
 				if (forceLineSearch) {
-					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount); 
-					
+					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 				} else {
-					result = InterpolateSearch(
-						x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
-						ref iterationCount);
+					result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 				}
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-				log.Debug("Falling back to InterpolationSearch in reverse. Normal InterpolationSearch failed: " + ex.Message);
-				try {
-					result = InterpolateSearch(x, y, -interval, getYValue, evaluateFunction, criterion, abortCriterion,
-						ref iterationCount);
-				} catch (VectoException ex1) {
-					log.Debug("Falling back to LineSearch. Reverse InterpolationSearch failed: " + ex1.Message);
-					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
-				}
+				log.Debug("Falling back to LineSearch. Reverse InterpolationSearch failed: " + ex.Message);
+				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
 			}
 			return result;
 		}
@@ -120,8 +112,10 @@ namespace TUGraz.VectoCore.Utils
 		/// Phase 1: Linear Bracketing: Search iterative for the area of interest (with fixed step size).
 		/// Phase 2: Binary Sectioning: Binary search in the area of interest.
 		/// </summary>
-		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount) where T : SIBase<T>
+		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue,
+			Func<T, object> evaluateFunction,
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
+			object searcher) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 
@@ -205,24 +199,24 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		private static T InterpolateSearch<T>(T x1SI, SI y1SI, T intervalSI, Func<object, SI> getYValue,
 			Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,
-			ref int iterationCount) where T : SIBase<T>
+			ref int iterationCount, object searcher) where T : SIBase<T>
 		{
-			var x1 = x1SI.Value();
+			var (x1, y1) = (x1SI.Value(), y1SI.Value());
 			var interval = intervalSI.Value();
-			var y1 = y1SI.Value();
 
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-			var debug = new DebugData();
-			debug.Add(new { x = x1, y = y1 });
 			log.Debug("Log Disabled during InterpolateSearch.");
 			LogManager.DisableLogging();
+
+			var debug = new DebugData();
+			debug.Add(new { x = x1, y = y1 });
 
 			try {
 				var x2 = x1 + interval;
 				var result = evaluateFunction(x2.SI<T>());
 				if (abortCriterion != null && abortCriterion(result, iterationCount)) {
 					LogManager.EnableLogging();
-					log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+					log.Debug("InterpolateSearch aborted due to abortCriterion: {0}", result);
 					LogManager.DisableLogging();
 					throw new VectoSearchAbortedException("InterpolateLinearSearch");
 				}
@@ -240,27 +234,29 @@ namespace TUGraz.VectoCore.Utils
 					debug.Add(new { x = x2, y = y2, delta = criterion(result), result });
 
 					var k = (y2 - y1) / (x2 - x1);
-					var d = y2 - k * x2;
-					x1 = x2;
-					x2 = -d / k;
+					if (count == 2 && k.IsEqual(0)) {
+						x2 = x1 - interval;
+						y2 = y1SI.Value();
+					} else {
+						var d = y2 - k * x2;
+						x1 = x2;
+						x2 = -d / k;
+					}
 					if (double.IsInfinity(x2) || double.IsNaN(x2)) {
 						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
 						AppendDebug(debug);
-						//iterationCount += count;
-
-						//return x1.SI<T>();
-						throw new VectoSearchAbortedException("InterpolateLinearSearch");
+						throw new VectoSearchAbortedException("InterpolateLinearSearch: y-Value constant");
 					}
 
 					result = evaluateFunction(x2.SI<T>());
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
 						LogManager.EnableLogging();
-						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
+						log.Debug("InterpolateSearch aborted due to abortCriterion: {0}", result);
 						LogManager.DisableLogging();
-						throw new VectoSearchAbortedException("InterpolateLinearSearch");
+						throw new VectoSearchAbortedException("InterpolateLinearSearch: AbortCriterion true");
 					}
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
@@ -270,7 +266,7 @@ namespace TUGraz.VectoCore.Utils
 						AppendDebug(debug);
 						return x2.SI<T>();
 					}
-					
+
 					y1 = y2;
 				}
 			} finally {

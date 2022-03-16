@@ -33,17 +33,15 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using System.Xml.XPath;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
-using TUGraz.VectoCore.OutputData.XML;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
@@ -68,13 +66,12 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
-			
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
+
 			jobContainer.AddRuns(runsFactory);
 
 			Assert.AreEqual(1, jobContainer.Runs.Count);
@@ -101,12 +98,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
 
 			jobContainer.AddRuns(runsFactory);
 
@@ -140,12 +136,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
 
 			jobContainer.AddRuns(runsFactory);
 
@@ -177,12 +172,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
-				ModalResults1Hz = false,
-				WriteModalResults = true,
-				ActualModalData = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			runsFactory.ModalResults1Hz = false;
+			runsFactory.WriteModalResults = true;
+			runsFactory.ActualModalData = false;
+			runsFactory.Validate = false;
 
 			jobContainer.AddRuns(runsFactory);
 

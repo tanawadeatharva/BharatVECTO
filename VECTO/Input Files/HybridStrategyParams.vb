@@ -45,7 +45,7 @@ Public Class HybridStrategyParams
             writer.SaveStrategyParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Faled to write Strategy Parameters file: " + ex.Message)
+            MsgBox("Failed to write Strategy Parameters file: " + ex.Message)
             Return False
         End Try
         Return True
@@ -104,6 +104,8 @@ Public Class HybridStrategyParams
 
     Public Property ICEStartPenaltyFactor As Double Implements IHybridStrategyParameters.ICEStartPenaltyFactor
     Public Property CostFactorSOCExpponent As Double Implements IHybridStrategyParameters.CostFactorSOCExpponent
+    Public Property GensetMinOptPowerFactor As Double Implements IHybridStrategyParameters.GensetMinOptPowerFactor
+       
 
     Public Property AuxiliaryBufferTime As Double
 

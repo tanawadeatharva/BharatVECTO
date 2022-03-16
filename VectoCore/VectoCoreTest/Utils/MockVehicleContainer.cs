@@ -55,8 +55,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
-		private ITorqueConverter _torqueConverter;
-		private IGearboxInfo _gearboxInfoImplementation;
 
 		public IAxlegearInfo AxlegearInfo => this;
 
@@ -111,9 +109,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
-		public ITorqueConverterInfo TorqueConverterInfo => _torqueConverter;
+		public IElectricSystemInfo ElectricSystemInfo { get; }
 
-		public ITorqueConverterControl TorqueConverterCtl => _torqueConverter;
+		public ITorqueConverterInfo TorqueConverterInfo => null;
+
+		public ITorqueConverterControl TorqueConverterCtl => null;
 
 		public IPowertainInfo PowertrainInfo => this;
 
@@ -130,13 +130,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Second LastShift { get;  set; }
-		public Second LastUpshift => _gearboxInfoImplementation.LastUpshift;
+		public Second LastUpshift => null;
 
-		public Second LastDownshift => _gearboxInfoImplementation.LastDownshift;
+		public Second LastDownshift => null;
 
 		public GearData GetGearData(uint gear)
 		{
-			throw new NotImplementedException();
+			return null;
 		}
 
 		public PerSecond EngineSpeed { get; set; }
@@ -234,6 +234,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public DrivingAction DrivingAction { get; set; }
 
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
+		public PCCStates PCCState => PCCStates.OutsideSegment;
 
 		public CycleData CycleData { get; set; }
 
@@ -331,6 +332,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool HasElectricMotor { get; set; }
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
+		public VectoSimulationJobType VehicleArchitecutre { get; }
 
 		#endregion
 	}

@@ -4,7 +4,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -33,26 +32,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void RunPreprocessing()
 		{
-			var vehicle = Container?.VehicleInfo as Vehicle;
-
-			if (vehicle == null) {
+			if (!(Container?.VehicleInfo is Vehicle vehicle)) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = Container.GearboxInfo as Gearbox;
-			if (gearbox != null) {
-				RunPreprocessingAMTGearbox(gearbox, vehicle);
-				return;
+			switch (Container.GearboxInfo) {
+				case Gearbox gearbox:
+					RunPreprocessingAMTGearbox(gearbox, vehicle);
+					return;
+				case ATGearbox atGearbox:
+					RunPreprocessingATGearbox(atGearbox, vehicle);
+					return;
+				case null when !Container.HasGearbox:
+					RunPreprocessingNoGearbox(vehicle);
+					return;
+				default:
+					throw new VectoException("no valid gearbox found...");
 			}
-			var atGearbox = Container.GearboxInfo as ATGearbox;
-			if (atGearbox != null) {
-				RunPreprocessingATGearbox(atGearbox, vehicle);
-				return;
-			}
-
-			throw new VectoException("no valid gearbox found...");
-			
-
 		}
 
 		private void RunPreprocessingATGearbox(ATGearbox gearbox, Vehicle vehicle)
@@ -60,17 +56,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
-			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
-				//gearbox.TorqueConverterLocked = true;
 				gearbox.DisengageGearbox = true;
-
-				//gearbox._nextGear = new GearInfo(gear, true);
 				vehicle.Initialize(speed, 0.SI<Radian>());
-
 				var slope = SearchSlope(vehicle, Container);
+				modData?.Reset();
+				SlopeData[speed] = slope;
+			}
+		}
 
+		private void RunPreprocessingNoGearbox(Vehicle vehicle)
+		{
+			var modData = Container.ModalData as ModalDataContainer;
+			SlopeData.Clear();
+
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
+				vehicle.Initialize(speed, 0.SI<Radian>());
+				var slope = SearchSlope(vehicle, Container);
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
@@ -81,15 +85,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
-			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+			for (var speed = MinSpeed; speed <= MaxSpeed + SpeedStep; speed += SpeedStep) {
 				var gear = FindLowestGearForSpeed(speed);
 				gearbox.Gear = gear;
 				gearbox.DisengageGearbox = true;
 				gearbox._nextGear = gear;
 				vehicle.Initialize(speed, 0.SI<Radian>());
-
 				var slope = SearchSlope(vehicle, Container);
-
 				modData?.Reset();
 				SlopeData[speed] = slope;
 			}
@@ -107,9 +109,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				var n = speed * ratio * data.GearboxData.Gears[gear.Gear].Ratio;
-				possible.Add(n < data.EngineData.IdleSpeed ? new GearshiftPosition(0) : gear);
+
+				possible.Add(n < (data.EngineData?.IdleSpeed ?? 0.SI<PerSecond>()) ? new GearshiftPosition(0) : gear);
 			}
-			
+
 			var selected = possible.MaxBy(x => x.Gear);
 			return selected;
 		}
@@ -120,21 +123,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var gradient = 0.SI<Radian>();
+
+			foreach (var motor in container.ElectricMotors.Values) {
+				((motor as ElectricMotor).Control as DummyElectricMotorControl).EmTorque = null;
+			}
+
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-			var delta = initialResponse.Gearbox.PowerRequest;
+			var delta = initialResponse.Gearbox?.PowerRequest ?? initialResponse.ElectricMotor?.TotalTorqueDemand * initialResponse.ElectricMotor?.AvgDrivetrainSpeed;
 
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest;
+						return r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed;
 					},
-					evaluateFunction: grad => { return vehicle.Request(absTime, simulationInterval, acceleration, grad, true); },
+					evaluateFunction: grad => vehicle.Request(absTime, simulationInterval, acceleration, grad, true),
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						return r.Gearbox.PowerRequest.Value();
-					}
+						return (r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed).Value();
+					},
+					searcher: this
 				);
 			} catch (VectoSearchAbortedException) {
 				return gradient;
@@ -176,13 +185,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class PCCSegment
 	{
 		public Meter StartDistance { get; set; }
-
-		public Meter DistanceMinSpeed { get; set; }
+		public Meter DistanceAtLowestSpeed { get; set; }
 		public Meter EndDistance { get; set; }
 		public MeterPerSecond TargetSpeed { get; set; }
 		public Meter Altitude { get; set; }
-
-		public Joule EnergyMinSpeed { get; set; }
-		public Joule EnergyEnd { get; set; }
+		public Joule EnergyAtLowestSpeed { get; set; }
+		public Joule EnergyAtEnd { get; set; }
 	}
 }

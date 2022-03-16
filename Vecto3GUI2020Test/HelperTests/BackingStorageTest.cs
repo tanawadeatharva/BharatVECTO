@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using Castle.Components.DictionaryAdapter;
 using NUnit.Framework;
-using VECTO3GUI2020;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace Vecto3GUI2020Test.HelperTests
 {

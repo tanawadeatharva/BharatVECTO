@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EngineInertia = dataBus.RunData.EngineData?.Inertia ?? 0.SI<KilogramSquareMeter>();
 
 			if (Gears.Any(x => !x.TorqueConverterLocked.HasValue)) {
-				throw new VectoException("Gear list must have TC info for all gears! {0}", string.Join(", ", Gears));
+				throw new VectoException("Gear list must have TC info for all gears! {0}", Gears.Join());
 			}
 
 			MaxStartGear = Gears.Any() ? Gears.First() : new GearshiftPosition(0);
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, GearshiftPosition gear)
 		{
 			// Emergency Downshift: if lower than engine idle speed
-			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed)) {
+			if (inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed) && Gears.HasPredecessor(gear)) {
 				Log.Debug("engine speed would fall below idle speed - shift down");
 				Downshift(absTime, gear);
 				return true;
@@ -342,6 +342,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEngineTorque, nextEngineSpeed, _gearbox.TorqueConverterLocked);
 
 			var minAccelerationReachable = true;
+			if (DataBus.DriverInfo.DriverAcceleration.IsSmaller(0)) {
+				return null;
+			}
 			if (!DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
 				var reachableAcceleration = EstimateAccelerationForGear(nextGear, outAngularVelocity);
 				var minAcceleration = _gearbox.TorqueConverterLocked

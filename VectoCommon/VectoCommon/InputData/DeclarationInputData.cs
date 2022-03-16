@@ -31,14 +31,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 
 namespace TUGraz.VectoCommon.InputData
@@ -50,8 +48,6 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData Vehicle { get; }
 
 		string JobName { get; }
-
-		string ShiftStrategy { get; }
 
 		VectoSimulationJobType JobType { get; }
 	}
@@ -144,9 +140,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool VocationalVehicle { get; }
 
-		bool SleeperCab { get; }
+		bool? SleeperCab { get; }
 
-		bool? AirdragModifiedMultistage { get; }
+		bool? AirdragModifiedMultistep { get; }
 
 		TankSystem? TankSystem { get; }
 
@@ -198,8 +194,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
-		Dictionary<PowertrainPosition, List<Tuple<int, TableData>>> ElectricMotorTorqueLimits { get; }
-
+		Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		
 		TableData BoostingLimitations { get; }
 
 		// components
@@ -256,6 +252,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
+
+		int? NumSteeredAxles { get; }
 
 		XmlNode XMLSource { get; }
 	}
@@ -323,7 +321,7 @@ namespace TUGraz.VectoCommon.InputData
 		public static EcoRollType Get(bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop)
 		{
 			if (ecoRollWithEngineStop && ecoRollWithoutEngineStop) {
-				throw new VectoException("invalid combination or EcoRoll");
+				throw new VectoException("invalid combination for EcoRoll");
 			}
 
 			if (ecoRollWithoutEngineStop) {
@@ -460,7 +458,9 @@ namespace TUGraz.VectoCommon.InputData
 		ITyreDeclarationInputData Tyre { get; }
 
 		DataSource DataSource { get; }
-	}
+
+        bool Steered { get; }
+    }
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{
@@ -725,22 +725,23 @@ namespace TUGraz.VectoCommon.InputData
 		IList<string> Technology { get; }
 	}
 
-	public interface IPowerRatingInputData
+    //public interface IPowerRatingInputData
+    //{
+
+    //NewtonMeter ContinuousTorque { get; }
+    //PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
+    //NewtonMeter OverloadTorque { get; }
+    //PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+    //Second OverloadTime { get; } //OverloadDuration
+                                 //}
+
+
+    public interface IElectricMotorDeclarationInputData : IComponentInputData
 	{
 		ElectricMachineType ElectricMachineType { get; }
 		Watt R85RatedPower { get; }
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
-		NewtonMeter ContinuousTorque { get; }
-		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
-		NewtonMeter OverloadTorque { get; }
-		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-		Second OverloadTime { get; } //OverloadDuration
-	}
 
-
-	public interface IElectricMotorDeclarationInputData : IComponentInputData, IPowerRatingInputData
-	{
-		Volt TestVoltageOverload { get; }
 
 		bool DcDcConverterIncluded { get; }
 
@@ -752,12 +753,21 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData Conditioning { get; }
 		
-		double OverloadRecoveryFactor { get; }
+		//double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMotorVoltageLevel
 	{
 		Volt VoltageLevel { get; }
+
+		NewtonMeter ContinuousTorque { get; }
+
+		PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
+		NewtonMeter OverloadTorque { get; }
+
+		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
+
+		Second OverloadTime { get; } //OverloadDuration
 
 		TableData FullLoadCurve { get; } //MaxTorqueCurve
 
@@ -809,9 +819,11 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 
-	public interface IIEPCDeclarationInputData : IComponentInputData , IPowerRatingInputData
+	public interface IIEPCDeclarationInputData : IComponentInputData 
 	{
-		Volt TestVoltageOverload { get; }
+		ElectricMachineType ElectricMachineType { get; }
+		Watt R85RatedPower { get; }
+		KilogramSquareMeter Inertia { get; } //RotationalInertia
 
 		bool DifferentialIncluded { get; }
 
@@ -945,6 +957,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 
+		bool ESSupplyFromHEVREESS { get; }
+
 		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 
@@ -1068,8 +1082,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IManufacturingStageInputData
 	{
-		DigestData HashPreviousStage { get; }
-		int StageCount { get; }
+		DigestData HashPreviousStep { get; }
+		int StepCount { get; }
 
 		IVehicleDeclarationInputData Vehicle { get; }
 

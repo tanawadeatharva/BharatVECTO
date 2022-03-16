@@ -135,7 +135,7 @@ Partial Class BatteryForm
         Me.tbCapacity.Location = New System.Drawing.Point(90, 4)
         Me.tbCapacity.Name = "tbCapacity"
         Me.tbCapacity.Size = New System.Drawing.Size(57, 20)
-        Me.tbCapacity.TabIndex = 3
+        Me.tbCapacity.TabIndex = 0
         '
         'lblCapacityUnit
         '
@@ -159,20 +159,20 @@ Partial Class BatteryForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(811, 323)
+        Me.ButCancel.Location = New System.Drawing.Point(811, 321)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 13
+        Me.ButCancel.TabIndex = 4
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = true
         '
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(730, 323)
+        Me.ButOK.Location = New System.Drawing.Point(730, 321)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 12
+        Me.ButOK.TabIndex = 3
         Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = true
         '
@@ -261,7 +261,7 @@ Partial Class BatteryForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 349)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 347)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(898, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -327,14 +327,14 @@ Partial Class BatteryForm
         Me.pnInertia.Location = New System.Drawing.Point(3, 3)
         Me.pnInertia.Name = "pnInertia"
         Me.pnInertia.Size = New System.Drawing.Size(212, 30)
-        Me.pnInertia.TabIndex = 3
+        Me.pnInertia.TabIndex = 0
         '
         'tbSoCCurve
         '
         Me.tbSoCCurve.Location = New System.Drawing.Point(3, 123)
         Me.tbSoCCurve.Name = "tbSoCCurve"
         Me.tbSoCCurve.Size = New System.Drawing.Size(434, 20)
-        Me.tbSoCCurve.TabIndex = 5
+        Me.tbSoCCurve.TabIndex = 6
         '
         'lblSoCCurve
         '
@@ -351,8 +351,7 @@ Partial Class BatteryForm
         Me.btnBrowseSoCCurve.Location = New System.Drawing.Point(437, 122)
         Me.btnBrowseSoCCurve.Name = "btnBrowseSoCCurve"
         Me.btnBrowseSoCCurve.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowseSoCCurve.TabIndex = 6
-        Me.btnBrowseSoCCurve.TabStop = false
+        Me.btnBrowseSoCCurve.TabIndex = 7
         Me.btnBrowseSoCCurve.UseVisualStyleBackColor = true
         '
         'btnSoCCurveOpen
@@ -361,8 +360,7 @@ Partial Class BatteryForm
         Me.btnSoCCurveOpen.Location = New System.Drawing.Point(460, 122)
         Me.btnSoCCurveOpen.Name = "btnSoCCurveOpen"
         Me.btnSoCCurveOpen.Size = New System.Drawing.Size(24, 24)
-        Me.btnSoCCurveOpen.TabIndex = 7
-        Me.btnSoCCurveOpen.TabStop = false
+        Me.btnSoCCurveOpen.TabIndex = 8
         Me.btnSoCCurveOpen.UseVisualStyleBackColor = true
         '
         'btnRiMapOpen
@@ -371,8 +369,7 @@ Partial Class BatteryForm
         Me.btnRiMapOpen.Location = New System.Drawing.Point(460, 159)
         Me.btnRiMapOpen.Name = "btnRiMapOpen"
         Me.btnRiMapOpen.Size = New System.Drawing.Size(24, 24)
-        Me.btnRiMapOpen.TabIndex = 42
-        Me.btnRiMapOpen.TabStop = false
+        Me.btnRiMapOpen.TabIndex = 11
         Me.btnRiMapOpen.UseVisualStyleBackColor = true
         '
         'btnBrowseRiMap
@@ -381,8 +378,7 @@ Partial Class BatteryForm
         Me.btnBrowseRiMap.Location = New System.Drawing.Point(437, 159)
         Me.btnBrowseRiMap.Name = "btnBrowseRiMap"
         Me.btnBrowseRiMap.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowseRiMap.TabIndex = 41
-        Me.btnBrowseRiMap.TabStop = false
+        Me.btnBrowseRiMap.TabIndex = 10
         Me.btnBrowseRiMap.UseVisualStyleBackColor = true
         '
         'lblRiMap
@@ -399,7 +395,7 @@ Partial Class BatteryForm
         Me.tbRiCurve.Location = New System.Drawing.Point(3, 161)
         Me.tbRiCurve.Name = "tbRiCurve"
         Me.tbRiCurve.Size = New System.Drawing.Size(434, 20)
-        Me.tbRiCurve.TabIndex = 40
+        Me.tbRiCurve.TabIndex = 9
         '
         'lblTitle
         '
@@ -430,7 +426,7 @@ Partial Class BatteryForm
         Me.Panel1.Location = New System.Drawing.Point(3, 36)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(212, 30)
-        Me.Panel1.TabIndex = 25
+        Me.Panel1.TabIndex = 1
         '
         'lblMinSoc
         '
@@ -455,7 +451,7 @@ Partial Class BatteryForm
         Me.tbSoCMin.Location = New System.Drawing.Point(90, 4)
         Me.tbSoCMin.Name = "tbSoCMin"
         Me.tbSoCMin.Size = New System.Drawing.Size(57, 20)
-        Me.tbSoCMin.TabIndex = 3
+        Me.tbSoCMin.TabIndex = 0
         '
         'Panel2
         '
@@ -465,7 +461,7 @@ Partial Class BatteryForm
         Me.Panel2.Location = New System.Drawing.Point(225, 36)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(212, 30)
-        Me.Panel2.TabIndex = 25
+        Me.Panel2.TabIndex = 2
         '
         'lblSoCMax
         '
@@ -490,17 +486,17 @@ Partial Class BatteryForm
         Me.tbSoCMax.Location = New System.Drawing.Point(90, 4)
         Me.tbSoCMax.Name = "tbSoCMax"
         Me.tbSoCMax.Size = New System.Drawing.Size(57, 20)
-        Me.tbSoCMax.TabIndex = 3
+        Me.tbSoCMax.TabIndex = 0
         '
         'FlowLayoutPanel1
         '
         Me.FlowLayoutPanel1.Controls.Add(Me.pnBattery)
         Me.FlowLayoutPanel1.Controls.Add(Me.pnSuperCap)
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(8, 136)
-        Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(2)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(495, 200)
-        Me.FlowLayoutPanel1.TabIndex = 50
+        Me.FlowLayoutPanel1.TabIndex = 2
         '
         'pnBattery
         '
@@ -520,7 +516,7 @@ Partial Class BatteryForm
         Me.pnBattery.Controls.Add(Me.btnRiMapOpen)
         Me.pnBattery.Controls.Add(Me.btnBrowseRiMap)
         Me.pnBattery.Location = New System.Drawing.Point(2, 2)
-        Me.pnBattery.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.pnBattery.Margin = New System.Windows.Forms.Padding(2)
         Me.pnBattery.Name = "pnBattery"
         Me.pnBattery.Size = New System.Drawing.Size(489, 188)
         Me.pnBattery.TabIndex = 0
@@ -530,7 +526,7 @@ Partial Class BatteryForm
         Me.tbMaxCurrentMap.Location = New System.Drawing.Point(4, 87)
         Me.tbMaxCurrentMap.Name = "tbMaxCurrentMap"
         Me.tbMaxCurrentMap.Size = New System.Drawing.Size(434, 20)
-        Me.tbMaxCurrentMap.TabIndex = 44
+        Me.tbMaxCurrentMap.TabIndex = 3
         '
         'lblMaxCurrentMap
         '
@@ -547,8 +543,7 @@ Partial Class BatteryForm
         Me.btnBrowseMaxCurrentMap.Location = New System.Drawing.Point(438, 85)
         Me.btnBrowseMaxCurrentMap.Name = "btnBrowseMaxCurrentMap"
         Me.btnBrowseMaxCurrentMap.Size = New System.Drawing.Size(24, 24)
-        Me.btnBrowseMaxCurrentMap.TabIndex = 45
-        Me.btnBrowseMaxCurrentMap.TabStop = false
+        Me.btnBrowseMaxCurrentMap.TabIndex = 4
         Me.btnBrowseMaxCurrentMap.UseVisualStyleBackColor = true
         '
         'btnMaxCurrentMapOpen
@@ -557,8 +552,7 @@ Partial Class BatteryForm
         Me.btnMaxCurrentMapOpen.Location = New System.Drawing.Point(461, 85)
         Me.btnMaxCurrentMapOpen.Name = "btnMaxCurrentMapOpen"
         Me.btnMaxCurrentMapOpen.Size = New System.Drawing.Size(24, 24)
-        Me.btnMaxCurrentMapOpen.TabIndex = 46
-        Me.btnMaxCurrentMapOpen.TabStop = false
+        Me.btnMaxCurrentMapOpen.TabIndex = 5
         Me.btnMaxCurrentMapOpen.UseVisualStyleBackColor = true
         '
         'pnSuperCap
@@ -570,7 +564,7 @@ Partial Class BatteryForm
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapResistance)
         Me.pnSuperCap.Controls.Add(Me.pnSuperCapCapacity)
         Me.pnSuperCap.Location = New System.Drawing.Point(2, 194)
-        Me.pnSuperCap.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.pnSuperCap.Margin = New System.Windows.Forms.Padding(2)
         Me.pnSuperCap.Name = "pnSuperCap"
         Me.pnSuperCap.Size = New System.Drawing.Size(489, 110)
         Me.pnSuperCap.TabIndex = 1
@@ -583,7 +577,7 @@ Partial Class BatteryForm
         Me.Panel4.Location = New System.Drawing.Point(225, 76)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(212, 30)
-        Me.Panel4.TabIndex = 27
+        Me.Panel4.TabIndex = 5
         '
         'lblMaxCurrentDischarge
         '
@@ -608,7 +602,7 @@ Partial Class BatteryForm
         Me.tbSuperCapMaxCurrentDischarge.Location = New System.Drawing.Point(108, 5)
         Me.tbSuperCapMaxCurrentDischarge.Name = "tbSuperCapMaxCurrentDischarge"
         Me.tbSuperCapMaxCurrentDischarge.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapMaxCurrentDischarge.TabIndex = 3
+        Me.tbSuperCapMaxCurrentDischarge.TabIndex = 0
         '
         'Panel3
         '
@@ -618,7 +612,7 @@ Partial Class BatteryForm
         Me.Panel3.Location = New System.Drawing.Point(3, 76)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(212, 30)
-        Me.Panel3.TabIndex = 26
+        Me.Panel3.TabIndex = 2
         '
         'lblMaxCurrentChg
         '
@@ -643,7 +637,7 @@ Partial Class BatteryForm
         Me.tbSuperCapMaxCurrentCharge.Location = New System.Drawing.Point(90, 4)
         Me.tbSuperCapMaxCurrentCharge.Name = "tbSuperCapMaxCurrentCharge"
         Me.tbSuperCapMaxCurrentCharge.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapMaxCurrentCharge.TabIndex = 3
+        Me.tbSuperCapMaxCurrentCharge.TabIndex = 0
         '
         'pnSuperCapMaxV
         '
@@ -653,7 +647,7 @@ Partial Class BatteryForm
         Me.pnSuperCapMaxV.Location = New System.Drawing.Point(225, 40)
         Me.pnSuperCapMaxV.Name = "pnSuperCapMaxV"
         Me.pnSuperCapMaxV.Size = New System.Drawing.Size(212, 30)
-        Me.pnSuperCapMaxV.TabIndex = 26
+        Me.pnSuperCapMaxV.TabIndex = 4
         '
         'lblSuperCapMaxV
         '
@@ -678,7 +672,7 @@ Partial Class BatteryForm
         Me.tbSuperCapMaxV.Location = New System.Drawing.Point(108, 5)
         Me.tbSuperCapMaxV.Name = "tbSuperCapMaxV"
         Me.tbSuperCapMaxV.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapMaxV.TabIndex = 3
+        Me.tbSuperCapMaxV.TabIndex = 0
         '
         'pnSuperCapMinV
         '
@@ -688,7 +682,7 @@ Partial Class BatteryForm
         Me.pnSuperCapMinV.Location = New System.Drawing.Point(3, 40)
         Me.pnSuperCapMinV.Name = "pnSuperCapMinV"
         Me.pnSuperCapMinV.Size = New System.Drawing.Size(212, 30)
-        Me.pnSuperCapMinV.TabIndex = 25
+        Me.pnSuperCapMinV.TabIndex = 1
         '
         'lblSuperCapMinV
         '
@@ -713,7 +707,7 @@ Partial Class BatteryForm
         Me.tbSuperCapMinV.Location = New System.Drawing.Point(90, 4)
         Me.tbSuperCapMinV.Name = "tbSuperCapMinV"
         Me.tbSuperCapMinV.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapMinV.TabIndex = 3
+        Me.tbSuperCapMinV.TabIndex = 0
         '
         'pnSuperCapResistance
         '
@@ -723,7 +717,7 @@ Partial Class BatteryForm
         Me.pnSuperCapResistance.Location = New System.Drawing.Point(225, 3)
         Me.pnSuperCapResistance.Name = "pnSuperCapResistance"
         Me.pnSuperCapResistance.Size = New System.Drawing.Size(212, 30)
-        Me.pnSuperCapResistance.TabIndex = 25
+        Me.pnSuperCapResistance.TabIndex = 3
         '
         'lblSuperCapRi
         '
@@ -748,7 +742,7 @@ Partial Class BatteryForm
         Me.tbSuperCapRi.Location = New System.Drawing.Point(108, 5)
         Me.tbSuperCapRi.Name = "tbSuperCapRi"
         Me.tbSuperCapRi.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapRi.TabIndex = 3
+        Me.tbSuperCapRi.TabIndex = 0
         '
         'pnSuperCapCapacity
         '
@@ -758,7 +752,7 @@ Partial Class BatteryForm
         Me.pnSuperCapCapacity.Location = New System.Drawing.Point(3, 3)
         Me.pnSuperCapCapacity.Name = "pnSuperCapCapacity"
         Me.pnSuperCapCapacity.Size = New System.Drawing.Size(212, 30)
-        Me.pnSuperCapCapacity.TabIndex = 4
+        Me.pnSuperCapCapacity.TabIndex = 0
         '
         'lblSuperCapCapacity
         '
@@ -783,16 +777,16 @@ Partial Class BatteryForm
         Me.tbSuperCapCapacity.Location = New System.Drawing.Point(90, 4)
         Me.tbSuperCapCapacity.Name = "tbSuperCapCapacity"
         Me.tbSuperCapCapacity.Size = New System.Drawing.Size(57, 20)
-        Me.tbSuperCapCapacity.TabIndex = 3
+        Me.tbSuperCapCapacity.TabIndex = 0
         '
         'cbRESSType
         '
         Me.cbRESSType.FormattingEnabled = true
         Me.cbRESSType.Location = New System.Drawing.Point(111, 107)
-        Me.cbRESSType.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.cbRESSType.Margin = New System.Windows.Forms.Padding(2)
         Me.cbRESSType.Name = "cbRESSType"
         Me.cbRESSType.Size = New System.Drawing.Size(142, 21)
-        Me.cbRESSType.TabIndex = 51
+        Me.cbRESSType.TabIndex = 1
         '
         'lblRessType
         '
@@ -809,7 +803,7 @@ Partial Class BatteryForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(898, 371)
+        Me.ClientSize = New System.Drawing.Size(898, 369)
         Me.Controls.Add(Me.lblRessType)
         Me.Controls.Add(Me.cbRESSType)
         Me.Controls.Add(Me.FlowLayoutPanel1)

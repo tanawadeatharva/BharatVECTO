@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public virtual FuelType FuelType
 			{
 				get {
-					var value = GetString(XMLNames.Engine_FuelType).Replace(" ","");
+					var value = GetString(XMLNames.Engine_FuelType).Replace(" ", "");
 					if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
 						return FuelType.LPGPI;
 					}
@@ -164,7 +164,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationEngineDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile) { }
+			vehicle, componentNode, sourceFile)
+		{ }
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
@@ -336,13 +337,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					var missing = GetNodes(
 							new[] { XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry }, whrFuelNode)
 						.Cast<XmlNode>().Where(x => x.Attributes?[fcMapAttr] == null);
-					throw new VectoException(
-						"WHRData has to be provided for every entry in the FC-Map! {0}",
-						string.Join(
-							"; ",
-							missing.Select(
-								x => $"n: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr]?.Value}, " +
-									$"T: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_Torque_Attr]?.Value}")));
+					throw new VectoException("WHRData has to be provided for every entry in the FC-Map! {0}",
+						missing.Select(x => $"n: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr]?.Value}, " +
+											$"T: {x.Attributes?[XMLNames.Engine_FuelConsumptionMap_Torque_Attr]?.Value}").Join("; "));
 				}
 
 				if (correctionFactorNodes[0].ParentNode.ParentNode != whrFuelNode) {

@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Writer;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.Engineering {
 	internal static class XMLWriterMapping
@@ -159,19 +160,10 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering {
 			public string FilenameTemplate { get; set; }
 		}
 
-		public static Type GetWriterType(Type inputType)
-		{
-			return mapping.ContainsKey(inputType) ? mapping[inputType].WriterType : null;
-		}
+		public static Type GetWriterType(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.WriterType;
 
-		public static string GetXMLTag(Type inputType)
-		{
-			return mapping.ContainsKey(inputType) ? mapping[inputType].XMLTag : null;
-		}
+		public static string GetXMLTag(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.XMLTag;
 
-		public static string GetFilenameTemplate(Type inputType)
-		{
-			return mapping.ContainsKey(inputType) ? mapping[inputType].FilenameTemplate : "{0}_{1}.xml";
-		}
+		public static string GetFilenameTemplate(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.FilenameTemplate ?? "{0}_{1}.xml";
 	}
 }

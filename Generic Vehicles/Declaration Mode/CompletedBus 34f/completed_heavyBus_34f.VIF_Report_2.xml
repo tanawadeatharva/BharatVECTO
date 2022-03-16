@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vif0.1:VectoOutputMultistage xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.10.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd">
+<vif0.1:VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
   <vif0.1:PrimaryVehicle>
     <vif0.1:Data xsi:type="PrimaryVehicleDataType" id="PIF-7f30aafa027a41a1864b">
       <vif0.1:Vehicle xsi:type="VehiclePIFType">
@@ -42,9 +42,9 @@
               <vif0.1:RatedPower>325032</vif0.1:RatedPower>
               <vif0.1:MaxEngineTorque>2134</vif0.1:MaxEngineTorque>
               <vif0.1:WHRType>
-                <MechanicalOutputICE xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3">false</MechanicalOutputICE>
-                <MechanicalOutputDrivetrain xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3">false</MechanicalOutputDrivetrain>
-                <ElectricalOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3">false</ElectricalOutput>
+                <MechanicalOutputICE xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</MechanicalOutputICE>
+                <MechanicalOutputDrivetrain xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</MechanicalOutputDrivetrain>
+                <ElectricalOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</ElectricalOutput>
               </vif0.1:WHRType>
               <vif0.1:Mode>
                 <vif0.1:IdlingSpeed>600</vif0.1:IdlingSpeed>
@@ -602,9 +602,9 @@
       </di:Reference>
     </vif0.1:Signature>
   </vif0.1:PrimaryVehicle>
-  <vif0.1:ManufacturingStage stageCount="2">
-    <vif0.1:Data xsi:type="BusManufacturingStageDataType" id="MST-607e449d2b0e45228b69">
-      <vif0.1:HashPreviousStage>
+  <vif0.1:ManufacturingStep stepCount="2">
+    <vif0.1:Data xsi:type="BusManufacturingStepDataType" id="MST-607e449d2b0e45228b69">
+      <vif0.1:HashPreviousStep>
         <di:Reference URI="#PIF-7f30aafa027a41a1864b">
           <di:Transforms>
             <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
@@ -613,8 +613,8 @@
           <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
           <di:DigestValue>a3ai89pd92w4O1za7mc+ut712QqNJqAfX0FeeZdfrFk=</di:DigestValue>
         </di:Reference>
-      </vif0.1:HashPreviousStage>
-      <vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-684dbf252718426b9fde" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2">
+      </vif0.1:HashPreviousStep>
+      <vif0.1:Vehicle xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" id="VEH-684dbf252718426b9fde" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
         <Manufacturer>Some Manufacturer</Manufacturer>
         <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
         <VIN>VEH-1234567890</VIN>
@@ -682,5 +682,5 @@
         <di:DigestValue>D1pKqglxP9ST/vCUSHkr8y4L7miQhPPPywLTCCOIPZk=</di:DigestValue>
       </di:Reference>
     </vif0.1:Signature>
-  </vif0.1:ManufacturingStage>
-</vif0.1:VectoOutputMultistage>
+  </vif0.1:ManufacturingStep>
+</vif0.1:VectoOutputMultistep>

@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
@@ -359,26 +360,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(double))]HybridStrategySolution,
 
-		//[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartIdleAlternatorsEfficiency [%]")] AA_SmartIdleAlternatorsEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartTractionCurrent_Amps [A]")] AA_SmartTractionCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartTractionAlternatorEfficiency [%]")] AA_SmartTractionAlternatorEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_SmartOverrunCurrent_Amps [A]")] AA_SmartOverrunCurrent_Amps,
-		//[ModalResultField(typeof(double), caption: "AA_SmartOverrunAlternatorEfficiency [%]")] AA_SmartOverrunAlternatorEfficiency,
-		//[ModalResultField(typeof(SI), caption: "AA_CompressorFlowRate_LitrePerSec [Ni L/s]")] AA_CompressorFlowRate_LitrePerSec,
 		[ModalResultField(typeof(int), caption: "BusAux_Overrun [bool]")] BusAux_OverrunFlag,
-		//[ModalResultField(typeof(int), caption: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
-		//[ModalResultField(typeof(int), caption: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]", outputFactor: 1000)] AA_TotalCycleFC_Grams,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,
-		//[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
-		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
-
+		
 		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
 		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr,
 		[ModalResultField(typeof(SI), "P_WHR_mech [kW]", outputFactor: 1e-3)] P_WHR_mech_map,
@@ -403,6 +386,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_{0}_in [kW]", outputFactor: 1e-3)] P_EM_in_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_out [kW]", outputFactor: 1e-3)] P_EM_out_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_mech [kW]", outputFactor: 1e-3)] P_EM_mech_,
+		[ModalResultField(typeof(SI), caption: "P_E2_mech [kW]", outputFactor: 1e-3)] P_E2_mech_,
 		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_EM_loss_,
 		
 		[ModalResultField(typeof(SI), caption: "P_{0}_transm_loss [kW]", outputFactor: 1e-3)] P_EM_TransmissionLoss_,
@@ -410,6 +394,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "EM_OVL-{0}-em [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
 		[ModalResultField(typeof(SI), caption: "EM_{0}_off")] EM_Off_,
+		[ModalResultField(typeof(SI), caption: "EM_E2_off")] EM_E2_Off_,
 
 
 		// only for graphDrawing Testcase
@@ -430,7 +415,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		
 		[ModalResultField(typeof(SI), caption: "P_E2_mech [kW]", outputFactor: 1e-3)]
 		P_electricMotor_mech_B2,
-        // -->
+
+		[ModalResultField(typeof(SI), caption: "P_GEN_mech [kW]", outputFactor: 1e-3)]
+		P_electricMotor_mech_Gen,
+
+		// -->
 
 		[ModalResultField(typeof(SI), caption: "P_REESS_T [kW]", outputFactor: 1e-3)] P_reess_terminal,
 		[ModalResultField(typeof(SI), caption: "P_REESS_int [kW]", outputFactor: 1e-3)] P_reess_int,
@@ -473,6 +462,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 	public static class ModalResultFieldExtensionMethods
 	{
+		private static ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute> _attributeDictionary =
+			new ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute>();
 		public static string GetName(this ModalResultField field)
 		{
 			return GetAttribute(field).Name ?? field.ToString();
@@ -480,7 +471,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public static string GetCaption(this ModalResultField field)
 		{
-			return GetAttribute(field).Caption ?? GetAttribute(field).Name ?? field.ToString();
+			var attribute = GetAttribute(field);
+			return attribute.Caption ?? attribute.Name ?? field.ToString();
 		}
 
 		public static string GetShortCaption(this ModalResultField field)
@@ -496,7 +488,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public static ModalResultFieldAttribute GetAttribute(this ModalResultField field)
 		{
-			return (ModalResultFieldAttribute)Attribute.GetCustomAttribute(ForValue(field), typeof(ModalResultFieldAttribute));
+			var attributeCached = _attributeDictionary.TryGetValue(field, out var attribute);
+			if (attributeCached) {
+				return attribute;
+			} else {
+				attribute = (ModalResultFieldAttribute)Attribute.GetCustomAttribute(ForValue(field), typeof(ModalResultFieldAttribute));
+				_attributeDictionary.TryAdd(field, attribute);
+			}
+			return attribute;
 		}
 
 		private static MemberInfo ForValue(ModalResultField field)

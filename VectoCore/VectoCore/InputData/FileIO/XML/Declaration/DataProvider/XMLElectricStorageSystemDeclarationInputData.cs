@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLElectricStorageSystemDeclarationInputData : AbstractCommonComponentType,
 		IXMLElectricStorageSystemDeclarationInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLBatteryPackDeclarationDeclarationInputData : AbstractCommonComponentType,
 		IXMLBatteryPackDeclarationInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSBatteryType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) : (double?)null;
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
-		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI<AmpereSecond>() * 3600;
+		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
 		public virtual bool ConnectorsSubsystemsIncluded => GetBool(XMLNames.REESS_ConnectorsSubsystemsIncluded);
 		public virtual bool JunctionboxIncluded => GetBool(XMLNames.REESS_JunctionboxIncluded);
 
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	
 	public class XMLSuperCapDeclarationInputData : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSCapacitorType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		

@@ -64,18 +64,23 @@ namespace TUGraz.VectoCommon.Utils
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static TResult Interpolate<TInput, T, TResult>(this Tuple<TInput, TInput> self, Func<TInput, T> x,
-			Func<TInput, TResult> y, T xInterpolate)
-			where T : SIBase<T>
-			where TResult : SIBase<TResult>
+			Func<TInput, TResult> y, T xInterpolate) where T : SIBase<T> where TResult : SIBase<TResult>
 		{
 			return Interpolate(x(self.Item1).Value(), x(self.Item2).Value(), y(self.Item1).Value(), y(self.Item2).Value(),
 				xInterpolate.Value()).SI<TResult>();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static TResult Interpolate<TInput, TResult>(this (TInput, TInput) self, Func<TInput, double> x,
+			Func<TInput, TResult> y, double xInterpolate) where TResult : SIBase<TResult>
+		{
+			return Interpolate(x(self.Item1), x(self.Item2), y(self.Item1).Value(), y(self.Item2).Value(), xInterpolate).SI<TResult>();
+		}
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static TResult Interpolate<TInput, TResult>(this Tuple<TInput, TInput> self, Func<TInput, double> x,
-			Func<TInput, TResult> y, double xInterpolate)
-			where TResult : SIBase<TResult>
+			Func<TInput, TResult> y, double xInterpolate) where TResult : SIBase<TResult>
 		{
 			return
 				Interpolate(x(self.Item1), x(self.Item2), y(self.Item1).Value(), y(self.Item2).Value(), xInterpolate).SI<TResult>();
@@ -94,6 +99,13 @@ namespace TUGraz.VectoCommon.Utils
 			Func<TInput, double> y, double xInterpolate)
 		{
 			return self.GetSection(elem => x(elem) < xInterpolate).Interpolate(x, y, xInterpolate);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Interpolate<TInput>(this (TInput, TInput) self, Func<TInput, double> x,
+			Func<TInput, double> y, double xInterpolate)
+		{
+			return Interpolate(x(self.Item1), x(self.Item2), y(self.Item1), y(self.Item2), xInterpolate);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -175,13 +187,11 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Max<T>(T c1, T c2) where T : IComparable
 		{
-			if (c1 == null)
-			{
+			if (c1 == null) {
 				return c2;
 			}
 
-			if (c2 == null)
-			{
+			if (c2 == null) {
 				return c1;
 			}
 			return c1.CompareTo(c2) > 0 ? c1 : c2;
@@ -252,7 +262,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Math.Atan(inclinationPercent).SI<Radian>();
 		}
 
-		
+
 		public static Point Intersect(Edge line1, Edge line2)
 		{
 			var s10X = line1.P2.X - line1.P1.X;
@@ -350,7 +360,7 @@ namespace TUGraz.VectoCommon.Utils
 			return retVal;
 		}
 
-		
+
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -359,65 +369,45 @@ namespace TUGraz.VectoCommon.Utils
 			return Math.Ceiling(si.Value()).SI<T>();
 		}
 
-		
+
 		private static double Cbrt(double x)
 		{
 			return x < 0 ? -Math.Pow(-x, 1.0 / 3.0) : Math.Pow(x, 1.0 / 3.0);
 		}
 
 
-		public static void LeastSquaresFitting<T>(IEnumerable<T> entries, Func<T, double> getX, Func<T, double> getY,
-			out double k, out double d, out double r)
-		{
+		public static (double k, double d) LeastSquaresFitting<T>(IEnumerable<T> entries, Func<T, double> getX, Func<T, double> getY) =>
+			LeastSquaresFitting(entries?.Select(x => new Point(getX(x), getY(x))));
 
-			LeastSquaresFitting(entries?.Select(x => new Point(getX(x), getY(x))), out k, out d, out r);
-		}
-
-		public static void LeastSquaresFitting(IEnumerable<Point> entries, out double k, out double d, out double r)
+		public static (double k, double d) LeastSquaresFitting(IEnumerable<Point> entries)
 		{
-			// algoritm taken from http://mathworld.wolfram.com/LeastSquaresFitting.html (eqn. 27 & 28)
-			var count = 0;
-			var sumX = 0.0;
-			var sumY = 0.0;
-			var sumXSquare = 0.0;
-			var sumYSquare = 0.0;
-			var sumXY = 0.0;
 			if (entries == null) {
-				k = 0;
-				d = 0;
-				r = 0;
-				return;
+				return (0, 0);
 			}
-			foreach (var entry in entries) {
-				var x = entry.X;
-				var y = entry.Y;
-				sumX += x;
-				sumY += y;
-				sumXSquare += x * x;
-				sumYSquare += y * y;
-				sumXY += x * y;
+
+			// algorithm taken from http://mathworld.wolfram.com/LeastSquaresFitting.html (eqn. 27 & 28)
+			var count = 0;
+			double sumX = 0, sumY = 0, sumXSquare = 0, sumYSquare = 0, sumXY = 0;
+			foreach (var e in entries) {
+				sumX += e.X;
+				sumY += e.Y;
+				sumXSquare += e.X * e.X;
+				sumYSquare += e.Y * e.Y;
+				sumXY += e.X * e.Y;
 				count++;
 			}
-			if (count == 0) {
-				k = 0;
-				d = 0;
-				r = 0;
-				return;
+			switch (count) {
+				case 0: return (0, 0);
+				case 1: return (0, sumY);
+				default:
+					var ssxx = sumXSquare - sumX * sumX / count;
+					var ssxy = sumXY - sumX * sumY / count;
+					var k = ssxy / ssxx;
+					var d = (sumY - k * sumX) / count;
+					return (k, d);
 			}
-			if (count == 1) {
-				k = 0;
-				d = sumY;
-				r = 0;
-				return;
-			}
-			var ssxx = sumXSquare - sumX * sumX / count;
-			var ssxy = sumXY - sumX * sumY / count;
-			var ssyy = sumYSquare - sumY * sumY / count;
-			k = ssxy / ssxx;
-			d = (sumY - k * sumX) / count;
-			r = ssxy * ssxy / ssxx / ssyy;
 		}
-
+		
 		public static double[] QuadraticEquationSolver(double a, double b, double c)
 		{
 			return Polynom2Solver(a, b, c);
@@ -445,7 +435,7 @@ namespace TUGraz.VectoCommon.Utils
 			// one real solution
 			return new[] { -b / (2 * a) };
 		}
-		
+
 
 		public static double[] Polynom3Solver(double a, double b, double c, double d)
 		{
@@ -528,84 +518,35 @@ namespace TUGraz.VectoCommon.Utils
 	}
 
 	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
-	public class Point
+	public class Point : IEquatable<Point>
 	{
 		public readonly double X;
 		public readonly double Y;
 		public readonly double Z;
 
-		public Point(double x, double y, double z = 0)
-		{
-			X = x;
-			Y = y;
-			Z = z;
-		}
+		public Point(double x, double y, double z = 0) => (X, Y, Z) = (x, y, z);
 
-		public static Point operator +(Point p1, Point p2)
-		{
-			return new Point(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
-		}
+		public void Deconstruct(out double x, out double y) => (x, y) = (X, Y);
 
-		public static Point operator -(Point p1, Point p2)
-		{
-			return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
-		}
+		public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
 
-		public static Point operator -(Point p1)
-		{
-			return new Point(-p1.X, -p1.Y);
-		}
+		public static Point operator -(Point p1, Point p2) => new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
 
-		public static Point operator *(Point p1, double scalar)
-		{
-			return new Point(p1.X * scalar, p1.Y * scalar, p1.Z * scalar);
-		}
+		public static Point operator -(Point p1) => new Point(-p1.X, -p1.Y);
 
-		public static Point operator *(double scalar, Point p1)
-		{
-			return p1 * scalar;
-		}
+		public static Point operator *(Point p1, double scalar) => new Point(p1.X * scalar, p1.Y * scalar, p1.Z * scalar);
+
+		public static Point operator *(double scalar, Point p1) => p1 * scalar;
 
 		/// <summary>
 		/// Returns perpendicular vector for xy-components of this point. P = (-Y, X)
 		/// </summary>
-		/// <returns></returns>
-		public Point Perpendicular()
-		{
-			return new Point(-Y, X);
-		}
+		public Point Perpendicular() => new Point(-Y, X);
 
 		/// <summary>
 		/// Returns dot product between two 3d-vectors.
 		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		public double Dot(Point other)
-		{
-			return X * other.X + Y * other.Y + Z * other.Z;
-		}
-
-		#region Equality members
-
-		private bool Equals(Point other)
-		{
-			return X.IsEqual(other.X) && Y.IsEqual(other.Y) && Z.IsEqual(other.Z);
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			return obj.GetType() == GetType() && Equals((Point)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return unchecked((((X.GetHashCode() * 397) ^ Y.GetHashCode()) * 397) ^ Z.GetHashCode());
-		}
-
-		#endregion
+		public double Dot(Point other) => X * other.X + Y * other.Y + Z * other.Z;
 
 		/// <summary>
 		/// Test if point is on the left side of an edge.
@@ -621,6 +562,14 @@ namespace TUGraz.VectoCommon.Utils
 			var z = abX * acY - abY * acX;
 			return z.IsGreater(0);
 		}
+
+		#region Equality members
+		public bool Equals(Point other) => X.IsEqual(other.X) && Y.IsEqual(other.Y) && Z.IsEqual(other.Z);
+
+		public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Point)obj));
+
+		public override int GetHashCode() => unchecked((((X.GetHashCode() * 397) ^ Y.GetHashCode()) * 397) ^ Z.GetHashCode());
+		#endregion
 	}
 
 	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]
@@ -657,13 +606,10 @@ namespace TUGraz.VectoCommon.Utils
 
 		public Triangle(Point p1, Point p2, Point p3)
 		{
-			P1 = p1;
-			P2 = p2;
-			P3 = p3;
-
-			if ((P1.X.IsEqual(P2.X) && P2.X.IsEqual(P3.X)) || (P1.Y.IsEqual(P2.Y) && P2.Y.IsEqual(P3.Y))) {
+			if (p1.X.IsEqual(p2.X) && p2.X.IsEqual(p3.X) || p1.Y.IsEqual(p2.Y) && p2.Y.IsEqual(p3.Y)) {
 				throw new VectoException("triangle is not extrapolatable by a plane.");
 			}
+			(P1, P2, P3) = (p1, p2, p3);
 		}
 
 		/// <summary>
@@ -711,71 +657,31 @@ namespace TUGraz.VectoCommon.Utils
 
 		public bool ContainsInCircumcircle(Point p)
 		{
-			var p0X = P1.X - p.X;
-			var p0Y = P1.Y - p.Y;
-			var p1X = P2.X - p.X;
-			var p1Y = P2.Y - p.Y;
-			var p2X = P3.X - p.X;
-			var p2Y = P3.Y - p.Y;
-
-			var p0Square = p0X * p0X + p0Y * p0Y;
-			var p1Square = p1X * p1X + p1Y * p1Y;
-			var p2Square = p2X * p2X + p2Y * p2Y;
-
-			var det01 = p0X * p1Y - p1X * p0Y;
-			var det12 = p1X * p2Y - p2X * p1Y;
-			var det20 = p2X * p0Y - p0X * p2Y;
-
-			var result = p0Square * det12 + p1Square * det20 + p2Square * det01;
+			var ax = P1.X - p.X;
+			var ay = P1.Y - p.Y;
+			var bx = P2.X - p.X;
+			var by = P2.Y - p.Y;
+			var cx = P3.X - p.X;
+			var cy = P3.Y - p.Y;
+			var result = (ax * ax + ay * ay) * (bx * cy - cx * by)
+						- (bx * bx + by * by) * (ax * cy - cx * ay)
+						+ (cx * cx + cy * cy) * (ax * by - bx * ay);
 			return result > 0;
 		}
 
-		public bool Contains(Point p)
-		{
-			return p.Equals(P1) || p.Equals(P2) || p.Equals(P3);
-		}
+		public bool Contains(Point p) => p.Equals(P1) || p.Equals(P2) || p.Equals(P3);
 
-		public bool SharesVertexWith(Triangle t)
-		{
-			return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
-		}
+		public bool SharesVertexWith(Triangle t) => Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 
-		public IEnumerable<Edge> GetEdges()
-		{
-			return new[] { new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1) };
-		}
+		public Edge[] GetEdges() => new[] { new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1) };
 
 		#region Equality members
+		protected bool Equals(Triangle other) => Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
 
-		protected bool Equals(Triangle other)
-		{
-			return Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
-		}
+		public override bool Equals(object obj) =>
+			!ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Triangle)obj));
 
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (obj.GetType() != GetType()) {
-				return false;
-			}
-			return Equals((Triangle)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked {
-				var hashCode = P1.GetHashCode();
-				hashCode = (hashCode * 397) ^ P2.GetHashCode();
-				hashCode = (hashCode * 397) ^ P3.GetHashCode();
-				return hashCode;
-			}
-		}
-
+		public override int GetHashCode() => (P1, P2, P3).GetHashCode();
 		#endregion
 	}
 
@@ -787,11 +693,7 @@ namespace TUGraz.VectoCommon.Utils
 
 		private Point _vector;
 
-		public Edge(Point p1, Point p2)
-		{
-			P1 = p1;
-			P2 = p2;
-		}
+		public Edge(Point p1, Point p2) => (P1, P2) = (p1, p2);
 
 		public Point Vector => _vector ?? (_vector = P2 - P1);
 
@@ -801,37 +703,19 @@ namespace TUGraz.VectoCommon.Utils
 
 		#region Equality members
 
-		protected bool Equals(Edge other)
-		{
-			return (P1.Equals(other.P1) && Equals(P2, other.P2)) || (P1.Equals(other.P2) && P2.Equals(other.P1));
-		}
+		protected bool Equals(Edge other) =>
+			P1.Equals(other.P1) && Equals(P2, other.P2) || P1.Equals(other.P2) && P2.Equals(other.P1);
 
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			return obj.GetType() == GetType() && Equals((Edge)obj);
-		}
+		public override bool Equals(object obj) =>
+			!ReferenceEquals(null, obj) && (ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Edge)obj));
 
-		public override int GetHashCode()
-		{
-			return P1.GetHashCode() ^ P2.GetHashCode();
-		}
+		public override int GetHashCode() => P1.GetHashCode() ^ P2.GetHashCode();
 
 		#endregion
 
-		public static Edge Create(Point arg1, Point arg2)
-		{
-			return new Edge(arg1, arg2);
-		}
+		public static Edge Create(Point arg1, Point arg2) => new Edge(arg1, arg2);
 
-		public bool ContainsXY(Point point)
-		{
-			return (SlopeXY * point.X + (P1.Y - SlopeXY * P1.X) - point.Y).IsEqual(0, 1E-9);
-		}
+		public bool ContainsXY(Point point) =>
+			(SlopeXY * point.X + (P1.Y - SlopeXY * P1.X) - point.Y).IsEqual(0, 1E-9);
 	}
 }

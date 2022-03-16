@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				using (var fs = new StreamReader(File.OpenRead(fileName))) {
+				using (var fs = File.OpenText(fileName)) {
 					var retVal = new TableData(fileName);
 					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
 					return retVal;
@@ -120,11 +120,10 @@ namespace TUGraz.VectoCore.Utils
 				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
 				.ToArray();
 
-			double tmp;
 			var columns = colsWithoutComment
 				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
 				.Select(l => l.Trim())
-				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
+				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
 				.Distinct()
 				.ToList();
 
@@ -209,7 +208,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			entries.Add(string.Join(Delimiter, header));
+			entries.Add(header.Join(Delimiter));
 
 			var columnFormatter = new Func<ConvertedSI, string>[table.Columns.Count];
 			for (var i = 0; i < table.Columns.Count; i++) {
@@ -242,7 +241,7 @@ namespace TUGraz.VectoCore.Utils
 						formattedList[i] = $"\"{formattedList[i]}\"";
 					}
 				}
-				entries.Add(string.Join(Delimiter, formattedList));
+				entries.Add(formattedList.Join(Delimiter));
 			}
 
 			if (addDigest) {

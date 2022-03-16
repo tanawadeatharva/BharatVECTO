@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public enum BusHVACSystemConfiguration

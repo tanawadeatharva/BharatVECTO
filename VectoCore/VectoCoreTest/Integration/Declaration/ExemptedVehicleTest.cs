@@ -32,7 +32,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
@@ -44,6 +43,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
@@ -57,8 +57,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class ExemptedVehicleTest
 	{
 		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
+		const string ExemptedVehicleNoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_nonHEV.xml";
+		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
+		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
-		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\exempted_primary_heavyBus.xml";
+		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\exempted_primary_heavyBus.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -72,7 +75,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(ExemptedVehicle, 1)]
+		[TestCase(ExemptedVehicle, 1),
+		TestCase(ExemptedVehicleNoHEV, 1),
+		TestCase(ExemptedVehicleV2, 1),
+		TestCase(ExemptedVehicleV2NoHEV, 1)
+		]
 		public void TestSimulationExemptedVehicle(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
@@ -91,19 +98,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
 			var inputData = xmlInputReader.CreateDeclaration(filename);
-			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
-			var jobContainer = new JobContainer(new MockSumWriter());
 
-			var runs = factory.SimulationRuns().ToList();
-			Assert.AreEqual(numRuns, runs.Count);
-			foreach (var run in runs) {
-				jobContainer.AddRun(run);
-			}
-			//jobContainer.AddRuns(factory);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
+			var jobContainer = new JobContainer(new MockSumWriter());
+			jobContainer.AddRuns(factory);
+			Assert.That(jobContainer.Runs.Count, Is.EqualTo(numRuns));
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -156,10 +157,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -234,10 +234,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -251,6 +250,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsFalse(File.Exists(manufactuerFile));
 			Assert.IsFalse(File.Exists(monitoringFile));
 		}
+
 
 
 		private static void SetExemptedParameters(XPathNavigator nav, bool zeroEmission, bool hybrid, bool dualFuel)
@@ -310,10 +310,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(filename);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			var runs = factory.SimulationRuns().ToList();
@@ -335,7 +334,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport), validator.ValidationError);
 
 			var val2 = new XMLValidator(XmlReader.Create(primaryReportFile));
-			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.MultistageOutputData), val2.ValidationError);
+			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.MultistepOutputData), val2.ValidationError);
 
 			//var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
 			//Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);

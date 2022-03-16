@@ -14,6 +14,7 @@ using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -198,11 +199,9 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 
 			factory.SumData = sumContainer;
 
@@ -240,11 +239,9 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
 
 			factory.SumData = sumContainer;
 
@@ -280,7 +277,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			public IVehicleEngineeringInputData Vehicle { get; set; }
 			public IHybridStrategyParameters HybridStrategyParameters { get; }
 			public IList<ICycleData> Cycles { get; set; }
-			public VectoSimulationJobType JobType { get; }
+			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 			public bool EngineOnlyMode => false;
 			public IEngineEngineeringInputData EngineOnly => null;
 			public TableData PTOCycleWhileDrive { get; set; }

@@ -154,7 +154,7 @@ Public Class Engine
 			writer.SaveEngine(Me, _filePath, Cfg.DeclMode)
 
 		Catch ex As Exception
-			MsgBox("Faled to write Engine file: " + ex.Message)
+			MsgBox("Failed to write Engine file: " + ex.Message)
 			Return False
 		End Try
 		Return True
@@ -228,7 +228,8 @@ Public Class Engine
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Dim dummyVehicle As IVehicleEngineeringInputData = New DummyVehicle() With {
-						.IVehicleComponentsEngineering_EngineInputData = engine
+						.IVehicleComponentsEngineering_EngineInputData = engine,
+						.TankSystem = TankSystem.Compressed
 						}
 				engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
 			End If
@@ -632,8 +633,8 @@ Public Class DummyVehicle
 	Public Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
 	Public Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
 	Public Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
-	Public Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
-	Public ReadOnly Property AirdragModifiedMultistage As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistage
+	Public Property SleeperCab As Boolean? Implements IVehicleDeclarationInputData.SleeperCab
+	Public ReadOnly Property AirdragModifiedMultistep As Boolean? Implements IVehicleDeclarationInputData.AirdragModifiedMultistep
 	Public Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 	Public Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
 	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
@@ -664,7 +665,7 @@ Public Class DummyVehicle
 	Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
 	Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
 	Public ReadOnly Property LowEntry As Boolean? Implements IVehicleDeclarationInputData.LowEntry
-	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Integer, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+	Public ReadOnly Property ElectricMotorTorqueLimits As Dictionary(Of PowertrainPosition, List(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
 	Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
 	Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 	Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height

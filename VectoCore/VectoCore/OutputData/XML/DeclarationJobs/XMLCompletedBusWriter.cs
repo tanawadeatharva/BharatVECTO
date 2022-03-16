@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
-
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationJobs
 {
@@ -23,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationJobs
 		
 		public bool WriteCompletedBusXml(string filePath, XDocument xmlDocument)
 		{
-			if (filePath.IsNullOrEmpty())
+			if (string.IsNullOrEmpty(filePath))
 				return false;
 			
 			using (var xmlWriter = XmlWriter.Create(_stringBuilder, _xmlWriterSettings))

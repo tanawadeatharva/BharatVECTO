@@ -89,11 +89,8 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 							tns + tagName,
 							table.Columns.Cast<DataColumn>()
 								.Where(c => mapping.ContainsKey(c.ColumnName))
-								.Select(
-									c => {
-										var p = precision != null && precision.ContainsKey(c.ColumnName) ? precision[c.ColumnName] : 2;
-										return new XAttribute(mapping[c.ColumnName], row.Field<string>(c).ToDouble().ToXMLFormat(p));
-									})))
+								.Select(c => new XAttribute(mapping[c.ColumnName], 
+									row.Field<string>(c).ToDouble().ToXMLFormat(precision?.GetVECTOValueOrDefault(c.ColumnName, 2u) ?? 2u)))))
 				.Cast<object>().ToArray();
 		}
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TUGraz.VectoCommon.BusAuxiliaries
+﻿namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface ISSMTechnologyBenefits
 	{

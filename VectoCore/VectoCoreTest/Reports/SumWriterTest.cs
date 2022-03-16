@@ -51,6 +51,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -235,10 +236,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 				File.Delete(writer.SumFileName);
 			}
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
-				WriteModalResults = false,
-				Validate = false,
-			};
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport);
+			runsFactory.WriteModalResults = false;
+			runsFactory.Validate = false;
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -252,6 +252,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Model, sumRow[SummaryDataContainer.Fields.ENGINE_MODEL]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType.ToXMLFormat(),
 				sumRow[SummaryDataContainer.Fields.ENGINE_FUEL_TYPE]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType.ToXMLFormat(),
+				sumRow[SummaryDataContainer.Fields.VEHICLE_FUEL_TYPE]);
 			Assert.AreEqual((dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
 				((ConvertedSI)sumRow[SummaryDataContainer.Fields.ENGINE_RATED_POWER]));
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM,
@@ -292,10 +294,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var sumWriter = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumWriter);
 
@@ -324,10 +325,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = xmlInputReader.CreateDeclaration(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var sumWriter = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumWriter);
 

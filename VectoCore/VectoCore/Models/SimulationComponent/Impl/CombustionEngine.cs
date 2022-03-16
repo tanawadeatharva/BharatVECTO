@@ -369,11 +369,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
-			if (DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.TCLocked) {
+			if (DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime)) {
 				return ModelData.FullLoadCurves[0].N95hSpeed;
 			}
 
-			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
+			return VectoMath.Min(DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.Gear.Gear)?.MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -718,7 +718,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						if (angularSpeed < _engine.ModelData.IdleSpeed) {
@@ -732,7 +733,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed2);
 						angularSpeed2 = angularSpeed2.LimitTo(_engine.ModelData.IdleSpeed, engineMaxSpeed);
@@ -787,7 +789,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value(),
+							searcher: this);
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", 
 							absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed, false);

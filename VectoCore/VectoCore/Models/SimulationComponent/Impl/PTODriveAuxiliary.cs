@@ -14,9 +14,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		protected IDataBus DataBus;
 		protected IDrivingCycleData Cycle;
 
-		protected Second PTOActivityStart = null;
+		protected Second PTOActivityStart;
 
-		protected Meter PTOCycleDistanceStart = null;
+		protected Meter PTOCycleDistanceStart;
 
 		public PTODriveAuxiliary(IVehicleContainer container, IDrivingCycleData cycle)
 		{

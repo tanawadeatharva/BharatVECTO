@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -60,6 +61,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public class ValidationTestClass
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
@@ -101,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.FullLoadCurves[0].EngineData = data;
 
 			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + results.Select(r => r.ErrorMessage).Join("; "));
 			Assert.IsTrue(data.IsValid());
 		}
 
@@ -137,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = dao.CreateEngineData(data, data.EngineModes.First());
 
 			var results = engineData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
-			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation failed: " + results.Select(r => r.ErrorMessage).Join("; "));
 			Assert.IsTrue(engineData.IsValid());
 		}
 
@@ -183,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = dao.CreateEngineData(vehicle, data.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
 
 			var results = engineData.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
-			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation failed: " + results.Select(r => r.ErrorMessage).Join("; "));
 
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -353,8 +360,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
-			Assert.AreEqual(32, results.Count,
-				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
+			Assert.AreEqual(32, results.Count, "Validation Error: " + results.Select(r => r.ErrorMessage).Join("\n_eng_avg"));
 		}
 
 		[TestCase]

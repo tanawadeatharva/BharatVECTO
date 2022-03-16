@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		protected readonly List<IElectricAuxPort> Consumers = new List<IElectricAuxPort>();
 
-		protected IElectricChargerPort Charger;
+		protected internal IElectricChargerPort Charger;
 
 		protected IElectricEnergyStorage Battery;
 

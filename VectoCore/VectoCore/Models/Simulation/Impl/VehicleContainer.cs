@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -78,9 +79,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IRESSInfo BatteryInfo { get; protected set; }
 		public ITorqueConverterInfo TorqueConverterInfo { get; protected set; }
 
-		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; protected set; }
 
-		public IDCDCConverter DCDCConverter { get; private set; }
+		public IDCDCConverter DCDCConverter { get; protected set; }
+
+		public IElectricSystemInfo ElectricSystemInfo { get; protected set; }
 
 		public virtual bool IsTestPowertrain => false;
 
@@ -117,7 +120,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors.ContainsKey(pos) ? ElectricMotors[pos] : null;
+			return ElectricMotors.GetVECTOValueOrDefault(pos);
 		}
 
 
@@ -149,11 +152,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IRESSInfo c14) { BatteryInfo = c14; }
 			if (component is BusAuxiliariesAdapter c15) { BusAux = c15; }
 			if (component is IDCDCConverter c16) { DCDCConverter = c16; }
+			if (component is IElectricSystemInfo c24) { ElectricSystemInfo = c24; }
 			
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
 				commitPriority = 2;
-				HasCombustionEngine = true;
+				HasCombustionEngine = !(component is DummyEngineInfo); // true;
 			}
 			if (component is IGearboxInfo c18) {
 				GearboxInfo = c18;
@@ -245,11 +249,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PowertrainPosition[] ElectricMotorPositions => ElectricMotors.Keys.ToArray();
 
+		public VectoSimulationJobType VehicleArchitecutre => RunData.JobType;
+
 		public virtual bool HasCombustionEngine { get; private set; }
 
 		public virtual bool HasGearbox { get; private set; }
 
-
+		[Required, ValidateObject]
 		public virtual VectoRunData RunData { get; set; }
 		public virtual ExecutionMode ExecutionMode { get; }
 

@@ -88,10 +88,6 @@ Public Class VectoJobForm
 
 		_changed = False
 
-		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-		cbGearshiftStrategy.DisplayMember = "Label"
-        cbGearshiftStrategy.ValueMember = "Value"
-
         'Attempt to select that found in Config
 
         UpdateEnabledControls()
@@ -105,6 +101,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Parallel Hybrid Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = True
+            case VectoSimulationJobType.SerialHybridVehicle
+                lblTitle.Text = prefix + "Serial Hybrid Vehicle"
+                gbElectricAux.Enabled = true
+                GrAuxMech.Enabled = true
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = prefix + "Battery Electric Vehicle"
                 gbElectricAux.Enabled = True
@@ -475,7 +475,7 @@ Public Class VectoJobForm
         Else
             TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
         End If
-        If (JobType = VectoSimulationJobType.ParallelHybridVehicle) Then
+        If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle) Then
             tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
         End If
 
@@ -570,25 +570,12 @@ Public Class VectoJobForm
 
         '-------------------------------------------------------------
 
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle OrElse Not IsNothing(inputData.JobInputData.Vehicle.Components.GearboxInputData)) Then
-            cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type) _
-            .Concat({Tuple.Create("", "Not specified - use default")}) _
-            .Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-            cbGearshiftStrategy.DisplayMember = "Label"
-            cbGearshiftStrategy.ValueMember = "Value"
-        End If
-        If (Not inputData.JobInputData.ShiftStrategy Is Nothing) Then
-            cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
-        End If
-
         if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
             cbEnableBusAux.Checked = True
             tbBusAuxParams.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, _basePath)
-            pnBusAux.Enabled = true
         Else 
             cbEnableBusAux.Checked = False
             tbBusAuxParams.Text = ""
-            pnBusAux.Enabled = False
         End If
 
         DeclInit()
@@ -643,7 +630,6 @@ Public Class VectoJobForm
 
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
-        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
         vectoJob.PathHybridStrategyParams = tbHybridStrategyParams.Text
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
@@ -1044,6 +1030,7 @@ Public Class VectoJobForm
             Case VectoSimulationJobType.ParallelHybridVehicle
                 ' empty line - do not fall-through
                 pnHybridStrategy.Enabled = True
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
@@ -1487,7 +1474,7 @@ Public Class VectoJobForm
         'Thus Veh-file is returned
         BusAuxiliariesEngParametersForm.JobDir = GetPath(VectoFile)
         BusAuxiliariesEngParametersForm.AutoSendTo = True
-
+        BusAuxiliariesEngParametersForm.JobType = JobType
         If Not Trim(f) = "" Then
             If Not File.Exists(f) Then
                 MsgBox("File not found!")
@@ -1501,18 +1488,19 @@ Public Class VectoJobForm
             If BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Minimized Then BusAuxiliariesEngParametersForm.WindowState = FormWindowState.Normal
             BusAuxiliariesEngParametersForm.BringToFront()
         End If
-        Dim vehicleType As VehicleCategory
-        Try
-            If Not Trim(f) = "" Then
-                Dim vehInput As IVehicleDeclarationInputData =
-                        CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
-                              IEngineeringInputDataProvider).JobInputData.Vehicle
-                vehicleType = vehInput.VehicleCategory
-            End If
+        'Dim vehicleType As VehicleCategory
+        'Try
+        '    If Not Trim(f) = "" Then
+        '        Dim vehInput As IVehicleDeclarationInputData =
+        '                CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
+        '                      IEngineeringInputDataProvider).JobInputData.Vehicle
+        '        vehicleType = vehInput.VehicleCategory
+        '    End If
 
-        Catch ex As Exception
-            vehicleType = VehicleCategory.RigidTruck
-        End Try
+        'Catch ex As Exception
+        '    vehicleType = VehicleCategory.RigidTruck
+        'End Try
+        
         Try
             If Not Trim(f) = "" Then BusAuxiliariesEngParametersForm.OpenBusAuxParametersFile(f)
         Catch ex As Exception

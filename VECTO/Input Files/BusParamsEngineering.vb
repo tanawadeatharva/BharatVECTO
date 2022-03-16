@@ -72,7 +72,7 @@ Public Class BusAuxEngineeringParams
             writer.SaveBusAuxEngineeringParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Faled to write Strategy Parameters file: " + ex.Message)
+            MsgBox("Failed to write Strategy Parameters file: " + ex.Message)
             Return False
         End Try
         Return True
@@ -131,6 +131,9 @@ Public Class BusAuxEngineeringParams
 
     Public ReadOnly Property PS_CompressorMap As TableData Implements IBusAuxPneumaticSystemEngineeringData.CompressorMap
     get
+        if JobType =VectoSimulationJobType.BatteryElectricVehicle then
+                return Nothing
+        End If
         if Not file.Exists(CompressorMap.FullPath) Then
              Throw new VectoException("Compressor Map is missing or invalid")               
         End If
@@ -233,4 +236,7 @@ Public Class BusAuxEngineeringParams
         Return AlternatorType
     End Get
     End Property
+
+    Public Property JobType As VectoSimulationJobType
+
 End Class

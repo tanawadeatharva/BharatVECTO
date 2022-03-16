@@ -14,9 +14,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
         #region Implementation of IDocumentViewModel
         public string DocumentName { get; }
 
-        public XmlDocumentType DocumentType { get; }
+        public XmlDocumentType? DocumentType { get; }
 
-        public DataSource DataSource => _jobEditViewModel.DataSource;
+		public string DocumentTypeName => DocumentType?.GetName();
+
+		public DataSource DataSource => _jobEditViewModel.DataSource;
 
 
 		private IJobEditViewModel _jobEditViewModel;

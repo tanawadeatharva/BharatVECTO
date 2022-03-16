@@ -76,12 +76,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission,
-			VehicleClass hdvClass, Meter vehicleLength)
+			VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles)
 		{
 			if (auxInputData != null) {
 				throw new VectoException("Only BusAuxiliaries can be provided as input!");
 			}
 
+			if (numSteeredAxles.HasValue && busAuxData.SteeringPumpTechnology.Count != numSteeredAxles.Value) {
+				throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {busAuxData.SteeringPumpTechnology.Count})");
+			}
 			var retVal = new List<VectoRunData.AuxData>();
 
 			retVal.Add(
@@ -236,13 +239,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						return 0;
 				}
 			}
-			if (mission.BusParameter.ElectricalConsumers.ContainsKey(consumer.ConsumerName)) {
-				return mission.BusParameter.ElectricalConsumers[consumer.ConsumerName];
-			}
 
-			
-			return 0;
-			
+			return mission.BusParameter.ElectricalConsumers.GetVECTOValueOrDefault(consumer.ConsumerName, 0);
 		}
 
 		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)

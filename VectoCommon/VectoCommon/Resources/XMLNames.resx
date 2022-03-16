@@ -1251,7 +1251,7 @@
   <data name="Bus_LowEntry" xml:space="preserve">
     <value>LowEntry</value>
   </data>
-  <data name="Bus_HeighIntegratedBody" xml:space="preserve">
+  <data name="Bus_HeightIntegratedBody" xml:space="preserve">
     <value>HeightIntegratedBody</value>
   </data>
   <data name="Bus_VehicleLength" xml:space="preserve">
@@ -1386,11 +1386,8 @@
   <data name="Vehicle_LegislativeCategory" xml:space="preserve">
     <value>LegislativeCategory</value>
   </data>
-  <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>APTEcoRollReleaseLockupClutch</value>
-  </data>
-  <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
-    <value>AirdragModifiedMultistage</value>
+  <data name="Bus_AirdragModifiedMultistep" xml:space="preserve">
+    <value>AirdragModifiedMultistep</value>
   </data>
   <data name="CorrectedActualMass" xml:space="preserve">
     <value>CorrectedActualMass</value>
@@ -1404,6 +1401,12 @@
   <data name="Bus_AirElectricHeater" xml:space="preserve">
     <value>AirElectricHeater</value>
   </data>
+  <data name="Bus_HeatPumpModeDriver" xml:space="preserve">
+    <value>HeatPumpModeDriverCompartment</value>
+  </data>
+  <data name="Bus_HeatPumpModePassenger" xml:space="preserve">
+    <value>HeatPumpModePassengerCompartment</value>
+  </data>
   <data name="Bus_HeatPumpTypeDriver" xml:space="preserve">
     <value>HeatPumpTypeDriverCompartment</value>
   </data>
@@ -1416,17 +1419,17 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
-  <data name="VectoOutputMultistage" xml:space="preserve">
-    <value>VectoOutputMultistage</value>
+  <data name="VectoOutputMultistep" xml:space="preserve">
+    <value>VectoOutputMultistep</value>
   </data>
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
-  <data name="ManufacturingStage" xml:space="preserve">
-    <value>ManufacturingStage</value>
+  <data name="ManufacturingStep" xml:space="preserve">
+    <value>ManufacturingStep</value>
   </data>
-  <data name="ManufacturingStage_StageCount" xml:space="preserve">
-    <value>stageCount</value>
+  <data name="ManufacturingStep_StepCount" xml:space="preserve">
+    <value>stepCount</value>
   </data>
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>
@@ -1577,6 +1580,30 @@
   </data>
   <data name="BusHVACHeatPumpHeating" xml:space="preserve">
     <value>Heating</value>
+  </data>
+  <data name="Exempted_SumNetPower" xml:space="preserve">
+    <value>SumNetPower</value>
+  </data>
+  <data name="Exempted_Technology" xml:space="preserve">
+    <value>Technology</value>
+  </data>
+  <data name="VehicleTypeApprovalNumber" xml:space="preserve">
+    <value>VehicleTypeApprovalNumber</value>
+  </data>
+  <data name="BusManufacturingStepDataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
+  </data>
+  <data name="ManufacturingStep_HashPreviousStep" xml:space="preserve">
+    <value>HashPreviousStep</value>
+  </data>
+  <data name="ManufacturingStep_stepCount_Attr" xml:space="preserve">
+    <value>stepCount</value>
+  </data>
+  <data name="ManufacturingStep_Bus_DataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
+  </data>
+  <data name="Report_CO2StandardsGroup" xml:space="preserve">
+    <value>CO2StandardsGroup</value>
   </data>
   <data name="ElectricMachine_Count" xml:space="preserve">
     <value>Count</value>

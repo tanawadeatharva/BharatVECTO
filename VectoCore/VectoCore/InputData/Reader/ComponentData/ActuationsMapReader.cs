@@ -31,8 +31,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("Invalid header for pneumatic actuations. expected: {0}, got: {1}",
-					string.Join(", ", Header),
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Header.Join(), data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Join());
 			}
 
 			var retVal = new Dictionary<MissionType, IActuations>();
@@ -42,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					throw new VectoException("Duplicate entries in actuations map! {0} / {1}", key.GetLabel());
 				}
 
-				var entry = new Actuations() {
+				var entry = new Actuations {
 					Braking = row.Field<string>(Fields.Braking).ToInt(),
 					ParkBrakeAndDoors = row.Field<string>(Fields.ParkBrakeAndDoors).ToInt(),
 					Kneeling = row.Field<string>(Fields.Kneeling).ToInt(),

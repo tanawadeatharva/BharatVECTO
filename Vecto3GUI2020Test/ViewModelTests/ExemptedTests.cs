@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
@@ -19,12 +17,12 @@ namespace Vecto3GUI2020Test.ViewModelTests
 	public class ExemptedTests : ViewModelTestBase
 	{
 
-		public const string _exemptedMandatory = "exempted_vif_mandatory.xml";
+		public const string _exemptedCompleted = "exempted_completed.VIF_Report_2.xml";
 
 		[Test]
 		public void LoadAndSaveExemptedPrimary()
 		{
-			var newMultiStageJob = loadFile(exempted_primary_vif);
+			var newMultiStageJob = LoadFileFromTestDirectory(exempted_primary_vif);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
@@ -90,7 +88,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public async Task SaveAsNewVifAndSimulate()
 		{
-			var newMultiStageJob = loadFile(exempted_primary_vif);
+			var newMultiStageJob = LoadFileFromTestDirectory(exempted_primary_vif);
 			Assert.IsTrue(newMultiStageJob.MultiStageJobViewModel.Exempted);
 
 
@@ -182,7 +180,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		{
 			//Setup
 			var jobListViewModel = _kernel.Get<IJobListViewModel>() as JobListViewModel;
-			await jobListViewModel.AddJobAsync(GetTestDataPath(_exemptedMandatory));
+			await jobListViewModel.AddJobAsync(GetTestDataPath(_exemptedCompleted));
 			Assert.AreEqual(1, jobListViewModel.Jobs.Count);
 
 			jobListViewModel.Jobs[0].Selected = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,8 +33,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace v21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
-		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3";
-		protected XNamespace v210 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.10.2";
+		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
+		protected XNamespace v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
 		protected XNamespace v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 		
 		protected XElement VehiclePart;
@@ -56,20 +57,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument();
 			retVal.Add(
-				new XElement(XMLNames.VectoOutputMultistage,
+				new XElement(tns + XMLNames.VectoOutputMultistep,
 					new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 					new XAttribute(XNamespace.Xmlns + "vif0.1", tns),
 					new XAttribute(XNamespace.Xmlns + "v2.0", v20),
 					new XAttribute(XNamespace.Xmlns + "v2.1", v21),
 					new XAttribute(XNamespace.Xmlns + "v2.3", v23),
-					new XAttribute(XNamespace.Xmlns + "v2.8", v210),
-					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistage.0.1.xsd"),
+					new XAttribute(XNamespace.Xmlns + "v2.8", v24),
+					new XAttribute(xsi + "schemaLocation", $"{tns.NamespaceName} "+ @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 					new XAttribute("xmlns", tns),
 
 					GeneratePrimaryVehicle(resultSignature))
 				);
-
+			
+			Debug.WriteLine(retVal.ToString());
 			Report = retVal;
 		}
 		
@@ -79,10 +81,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
 
-			var primaryVehicle = new XElement( tns + XMLNames.Bus_PrimaryVehicle,
+			var primaryVehicle = new XElement(tns + XMLNames.Bus_PrimaryVehicle,
 				new XElement(tns + XMLNames.Report_DataWrap,
 					new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
 					new XAttribute(xsi + "type", "PrimaryVehicleDataType"),
+					new XAttribute("xmlns", tns),
 					VehiclePart,
 					InputDataIntegrity,
 					new XElement(tns + "ManufacturerRecordSignature", resultSignature),
@@ -150,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				GetTorqueLimits(modelData),
 				VehicleComponents(modelData, fuelModes)
 			);
-
+			
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
 											modelData.InputDataHash == null ? XMLHelper.CreateDummySig(di) : new XElement(modelData.InputDataHash));
 		}
@@ -161,10 +164,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			//const string adasPrefix = "adas";
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
-				new XAttribute("xmlns", ns),
 				new XAttribute(
 					xsi + "type",
 					$"{adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Name}"),
+				new XAttribute("xmlns", ns),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
 			);
 		}
@@ -181,9 +184,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			//const string adasPrefix = "tcl";
 			return new XElement(
 				tns + XMLNames.Vehicle_TorqueLimits,
-				new XAttribute("xmlns", ns.NamespaceName),
 				new XAttribute(
 					xsi + "type", $"{tcLimits.SchemaInfo.SchemaType.QualifiedName.Name}"),
+				new XAttribute("xmlns", ns.NamespaceName),
 				XElement.Parse(tcLimits.OuterXml).Elements()
 			);
 		}
@@ -259,16 +262,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			//		$".//*[local-name()='{XMLNames.BusAux_ElectricSystem_SupplyFromHEVPossible}']")?.InnerText);
 
 
-			return new XElement(tns + XMLNames.Component_Auxiliaries,
+			var result =  new XElement(tns + XMLNames.Component_Auxiliaries,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(xsi + "type", "AuxiliaryDataPIFType"),
-					new XAttribute("xmlns", tns.NamespaceName),
+					//new XAttribute("xmlns", tns.NamespaceName), //automically created
 					new XElement(tns + XMLNames.BusAux_Fan, new XElement(tns + XMLNames.BusAux_Technology,  aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
 					GetElectricSystem(aux.ElectricSupply),
 					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
 					GetHvac(aux.HVACAux))
 				);
+
+
+			return result;
 		}
 
 

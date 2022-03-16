@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -147,15 +148,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 			var engineMode = engineModes[modeIdx];
-			DrivingCycleData cycle;
-			lock (CyclesCacheLock) {
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
-				}
-			}
+
+			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+			
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),
@@ -169,7 +164,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
-					_segment.VehicleClass, vehicle.Length),
+					_segment.VehicleClass, vehicle.Length,
+					vehicle.Components.AxleWheels.NumSteeredAxles),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,
@@ -184,7 +180,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
 				GearshiftParameters = _gearshiftData,
-				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
