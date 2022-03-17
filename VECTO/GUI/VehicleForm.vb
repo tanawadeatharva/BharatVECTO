@@ -526,6 +526,11 @@ Public Class VehicleForm
 
     Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
+
+	    gbVehicleIdlingSpeed.Enabled = true
+	    gbTankSystem.Enabled = true
+	    gbAngledrive.Enabled = true
+		
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
@@ -547,8 +552,6 @@ Public Class VehicleForm
 			case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsSerialHybrid())
-
-                tpPowertrain.Enabled = true
 				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
                 tpTorqueLimits.Enabled = False
 			    cbEngineStopStart.Checked = False
@@ -559,8 +562,11 @@ Public Class VehicleForm
 			    tpGensetComponents.Visible = True
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
-				tpPowertrain.Enabled = False
-
+				
+				gbVehicleIdlingSpeed.Enabled = false
+				gbTankSystem.Enabled = false
+				gbAngledrive.Enabled = False
+				
 				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
 
 				tpTorqueLimits.Enabled = False
@@ -634,11 +640,11 @@ Public Class VehicleForm
 			veh.Axles.Add(a0)
 		Next
 
+		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
+		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
+		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
+		
 		If (VehicleType = VectoSimulationJobType.ConventionalVehicle OrElse VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
-			veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
-			veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
-			veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
-
 			veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
 
 			veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
@@ -647,8 +653,8 @@ Public Class VehicleForm
 
 			veh.PtoType = CType(cbPTOType.SelectedValue, String)
 			veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-		veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
-		veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
+			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+			veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
 
 			For Each item As ListViewItem In lvTorqueLimits.Items
 				Dim tl As TorqueLimitInputData = New TorqueLimitInputData()
@@ -809,14 +815,15 @@ Public Class VehicleForm
 	'Rt Type Change
 	Private Sub CbRtType_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbRtType.SelectedIndexChanged
-		Select Case CbRtType.SelectedIndex
-			Case 1 'Primary
+		Select Case CType(CbRtType.SelectedValue, RetarderType)
+			Case RetarderType.TransmissionInputRetarder 'Primary
 				LbRtRatio.Text = "Ratio to engine speed"
 				PnRt.Enabled = True
-			Case 2 'Secondary
+			Case RetarderType.TransmissionOutputRetarder 'Secondary
 				LbRtRatio.Text = "Ratio to cardan shaft speed"
-				TbRtPath.Enabled = True
-				BtRtBrowse.Enabled = True
+				PnRt.Enabled = True
+			case RetarderType.AxlegearInputRetarder
+				LbRtRatio.Text = "Ratio to axle shaft speed"
 				PnRt.Enabled = True
 			Case Else '0 None
 				LbRtRatio.Text = "Ratio"
