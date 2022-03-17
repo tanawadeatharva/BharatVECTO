@@ -84,58 +84,31 @@ Public Class VehicleForm
 		gbPTODrive.Enabled = not Cfg.DeclMode
 		tpRoadSweeper.Visible = Not cfg.DeclMode
 
-		CbCdMode.ValueMember = "Value"
-		CbCdMode.DisplayMember = "Label"
-		CbCdMode.DataSource = [Enum].GetValues(GetType(CrossWindCorrectionMode)) _
-			.Cast(Of CrossWindCorrectionMode) _
-			.Select(Function(mode) New With {Key .Value = mode, .Label = mode.GetLabel()}).ToList()
+		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(of CrossWindCorrectionMode)(Function(t) t.GetLabel())
 
-		CbRtType.ValueMember = "Value"
-		CbRtType.DisplayMember = "Label"
-		CbRtType.DataSource = [Enum].GetValues(GetType(RetarderType)) _
-			.Cast(Of RetarderType) _
-			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel())
+		CbRtType.Enabled = true
 
-		CbAxleConfig.ValueMember = "Value"
-		CbAxleConfig.DisplayMember = "Label"
 		If (cfg.DeclMode) Then
 			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
 				.Cast(Of AxleConfiguration) _
-				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+				.Select(Function(category) New With {.Key = category, .Value = category.GetName()}).ToList()
 		Else
-			CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
-					.Cast(Of AxleConfiguration) _
-					.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+			CbAxleConfig.DataSource = EnumHelper.GetKeyValuePairs(of AxleConfiguration)(function(t) t.GetName())
 		End If
 
-		
+		cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(of EcoRollType)(function(t) t.GetName())
 
-		cbEcoRoll.ValueMember = "Value"
-		cbEcoRoll.DisplayMember = "Label"
-		cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) new With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+		cbPcc.DataSource = EnumHelper.GetKeyValuePairs(Of PredictiveCruiseControlType)(function(t) t.GetName())
 
-
-		cbPcc.ValueMember = "Value"
-		cbPcc.DisplayMember = "Label"
-		cbPcc.DataSource = [Enum].GetValues(GetType(PredictiveCruiseControlType)).Cast(Of PredictiveCruiseControlType).Select(Function(pcc) new With {Key .Value = pcc, .Label = pcc.GetName()}).ToList()
-
-		cbTankSystem.ValueMember = "Value"
-		cbTankSystem.DisplayMember = "Label"
-		
-		cbTankSystem.DataSource = {New With {Key .Value = CType(Nothing, TankSystem?), .Label = ""}}.Concat([Enum].GetValues(GetType(TankSystem)).Cast(Of TankSystem?).Select(Function(ts) New With {Key .Value = ts , .Label = ts.ToString()})).ToList()
+		cbTankSystem.DataSource = EnumHelper.GetKeyValuePairs(Of TankSystem)()
 
 		'tpADAS.Enabled = Cfg.DeclMode
 
-		CbCat.ValueMember = "Value"
-		CbCat.DisplayMember = "Label"
-		CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
-			.Cast(Of VehicleCategory) _
-			.Select(Function(category) New With {Key .Value = category, .Label = category.GetLabel()}).ToList()
+		CbCat.DataSource = EnumHelper.GetKeyValuePairs(of VehicleCategory)(function(t) t.GetLabel())
 
-		cbAngledriveType.ValueMember = "Value"
-		cbAngledriveType.DisplayMember = "Label"
-		cbAngledriveType.DataSource = [Enum].GetValues(GetType(AngledriveType)) _
-			.Cast(Of AngledriveType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(of AngledriveType)(function(t) t.GetLabel())
+
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
 		_emRatioPerGearDlog = new EMGearRatioDialog()
@@ -351,10 +324,7 @@ Public Class VehicleForm
 		TbCdFile.Text = ""
 
 		CbRtType.SelectedIndex = 0
-		TbRtRatio.Text = ""
-		TbRtPath.Text = ""
-
-		CbRtType.SelectedIndex = 0
+		CbRtType.Enabled = true
 		TbRtRatio.Text = ""
 		TbRtPath.Text = ""
 
@@ -365,6 +335,12 @@ Public Class VehicleForm
 		TbMassMass.Text = ""
 		TbMassExtra.Text = ""
 		CbAxleConfig.SelectedIndex = 0
+
+		cbPcc.SelectedIndex = 0
+
+		cbTankSystem.SelectedIndex = 0
+
+		cbAngledriveType.SelectedIndex = 0
 
 		cbPTOType.SelectedIndex = 0
 		tbPTOLossMap.Text = ""
@@ -555,37 +531,44 @@ Public Class VehicleForm
 				lblTitle.Text = "Conventional Vehicle"
 				tpElectricComponents.Enabled = False
 				cbEmPos.DataSource = New List(Of Object)
-				'cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = True
-				cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(of EcoRollType)(function(t) t.GetName())
+				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), function(t) t <> RetarderType.AxlegearInputRetarder)
+				cbEcoRoll.Enabled = true
 				gbEMTorqueLimits.Enabled = false
 				tpGensetComponents.Visible = False
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
-				cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsParallelHybrid()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
-				'cbEngineStopStart.Checked = False
-				'cbEngineStopStart.Enabled = False
-				'cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
-				gbEMTorqueLimits.Enabled	= True
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsParallelHybrid())
+				gbEMTorqueLimits.Enabled = True
+				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), function(t) t <> RetarderType.AxlegearInputRetarder)
+				cbEcoRoll.Enabled = true
 			    tpGensetComponents.Visible = False
 			case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
-				cbEmPos.DataSource = [enum].GetValues(GetType(PowertrainPosition)).cast(of PowertrainPosition).where(function(x) x.IsSerialHybrid()).select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsSerialHybrid())
+
                 tpPowertrain.Enabled = true
+				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
                 tpTorqueLimits.Enabled = False
 			    cbEngineStopStart.Checked = False
 			    cbEngineStopStart.Enabled = False
-			    cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+			    cbEcoRoll.DataSource = {new with {.Key=EcoRollType.None, .Value=EcoRollType.None.GetName()}}
+				cbEcoRoll.Enabled = false
 			    gbEMTorqueLimits.Enabled = False
 			    tpGensetComponents.Visible = True
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
 				tpPowertrain.Enabled = False
+
+				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
+
 				tpTorqueLimits.Enabled = False
 				cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
 				cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = False
-				cbEcoRoll.DataSource = New EcoRollType() {EcoRollType.None}.Select(Function(ecoRoll) New With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+				cbEcoRoll.DataSource = {new with {.Key=EcoRollType.None, .Value=EcoRollType.None.GetName()}}
+				cbEcoRoll.Enabled = false
 				gbEMTorqueLimits.Enabled = False
 			    tpGensetComponents.Visible = False
 		End Select
@@ -1166,7 +1149,7 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles cbAtEcoRollReleaseLockupClutch.CheckedChanged
-
+		Change()
 	End Sub
 
 	Private Sub tbVehicleHeight_TextChanged(sender As Object, e As EventArgs) Handles tbVehicleHeight.TextChanged
@@ -1238,12 +1221,12 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub lvTorqueLimits_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvTorqueLimits.SelectedIndexChanged
-
-	End Sub
-
 	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
-		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5) 
+		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5)
+
+		if (VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle)) then
+			CbRtType.Enabled = PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue)
+		end if
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click
@@ -1290,10 +1273,6 @@ Public Class VehicleForm
 		End If
 		_emRatioPerGearDlog.tbGear.ReadOnly = False
 	End Sub
-
-    Private Sub lvRatioPerGear_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvRatioPerGear.SelectedIndexChanged
-
-    End Sub
 
     Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
         If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
@@ -1380,5 +1359,21 @@ Public Class VehicleForm
         If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbGenSetADC.Text, GetPath(_vehFile))) Then _
             tbGenSetADC.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
     End Sub
+
+	Private Sub cbTankSystem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbTankSystem.SelectedIndexChanged
+		Change()
+	End Sub
+
+	Private Sub cbEcoRoll_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEcoRoll.SelectedIndexChanged
+		Change()
+	End Sub
+
+	Private Sub cbPcc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPcc.SelectedIndexChanged
+		Change()
+	End Sub
+
+	Private Sub cbEngineStopStart_CheckedChanged(sender As Object, e As EventArgs) Handles cbEngineStopStart.CheckedChanged
+		Change()
+	End Sub
 End Class
 
