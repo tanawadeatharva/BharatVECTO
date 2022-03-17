@@ -52,6 +52,29 @@ namespace VectoHashingTest
             Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 1));
 
             Assert.AreEqual(expectedJobHash, loadedFile.ComputeHash());
+		}
+
+
+		[TestCase("xf+qFgxVz77cGsAoamoIPMCHztxIXqD1vFwz8sGbyiU=", SortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
+		[TestCase("xf+qFgxVz77cGsAoamoIPMCHztxIXqD1vFwz8sGbyiU=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
+
+        public void TestJobPEVMediumLorry(string expectedJobHash, string filePath)
+		{
+
+			var loadedFile = VectoHash.Load(filePath);
+
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricMachineSystem));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.REESS,0));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.REESS,1));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Gearbox));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.TorqueConverter));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Angledrive));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Retarder));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 0));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 1));
+			Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Airdrag));
+
+			Assert.AreEqual(expectedJobHash, loadedFile.ComputeHash());
 
         }
     }
