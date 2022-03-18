@@ -93,6 +93,9 @@ namespace TUGraz.VectoCommon.Models
 		}
 
 		public static bool IsDedicatedComponent(this RetarderType retarder) =>
-			retarder.IsOneOf(RetarderType.TransmissionInputRetarder, RetarderType.TransmissionOutputRetarder);
+			retarder.IsOneOf(
+				RetarderType.TransmissionInputRetarder, 
+				RetarderType.TransmissionOutputRetarder, 
+				RetarderType.AxlegearInputRetarder);
 	}
 }
