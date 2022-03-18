@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (Body[JsonKeys.Vehicle_Retarder] != null) {
 					return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
 				}
-				return 1;
+				return 1.0;
 			}
 		}
 
@@ -551,15 +551,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private readonly IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> _entries;
 
-		public JSONElectricMotors(IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries)
-		{
+		public JSONElectricMotors(IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries) => 
 			_entries = entries;
-		}
 
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries =>
 			_entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
 
-		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries => _entries;
+		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries => 
+			_entries;
 	}
 
 	// ###################################################################
