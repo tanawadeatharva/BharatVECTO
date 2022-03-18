@@ -127,9 +127,7 @@ Public Class VehicleForm
 
 		_changed = False
 
-		cbEmPos.ValueMember = "Value"
-		cbEmPos.DisplayMember = "Label"
-		cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
+		cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel())
 
 		NewVehicle()
 	End Sub
@@ -570,7 +568,7 @@ Public Class VehicleForm
 				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
 
 				tpTorqueLimits.Enabled = False
-				cbEmPos.DataSource = [Enum].GetValues(GetType(PowertrainPosition)).Cast(Of PowertrainPosition).Where(Function(x) x.IsBatteryElectric()).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsBatteryElectric())
 				cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = False
 				cbEcoRoll.DataSource = {new with {.Key=EcoRollType.None, .Value=EcoRollType.None.GetName()}}
