@@ -67,12 +67,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual RetarderType Type
 		{
 			get {
-				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
-				return RetarderTypeHelper.Parse(retarderType);
+				if (Body[JsonKeys.Vehicle_Retarder] != null) {
+					var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
+					return RetarderTypeHelper.Parse(retarderType);
+				}
+				return RetarderType.None;
 			}
 		}
 
-		public virtual double Ratio => Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
+		public virtual double Ratio
+		{
+			get {
+				if (Body[JsonKeys.Vehicle_Retarder] != null) {
+					return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
+				}
+				return 1;
+			}
+		}
 
 		public virtual TableData LossMap
 		{
@@ -96,7 +107,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							DataSourceType.Missing);
 					}
 				}
-
 				return null;
 			}
 		}
@@ -104,32 +114,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 
 
-	}
-
-	internal class JSONRetarderInputDataBEV : JSONRetarderInputData
-	{
-		public JSONRetarderInputDataBEV(JSONVehicleDataV7 vehicle) : base(vehicle) { }
-
-		public override RetarderType Type
-		{
-			get {
-				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle) {
-					return RetarderType.None;
-				}
-
-				return base.Type;
-			}
-		}
-
-		public override double Ratio
-		{
-			get {
-				if (Base.VehicleType == VectoSimulationJobType.BatteryElectricVehicle) {
-					return 0.0;
-				}
-				return base.Ratio;
-			}
-		}
 	}
 
 	// ###################################################################

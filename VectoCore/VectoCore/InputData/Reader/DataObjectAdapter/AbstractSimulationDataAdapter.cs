@@ -99,9 +99,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var retarder = new RetarderData { Type = data.Type };
 
 				switch (retarder.Type) {
-					//case RetarderType.EngineRetarder:
 					case RetarderType.TransmissionInputRetarder:
 					case RetarderType.TransmissionOutputRetarder:
+					case RetarderType.AxlegearInputRetarder:
 						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
@@ -111,8 +111,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						retarder.Ratio = 1;
 						break;
 					default:
-						// ReSharper disable once NotResolvedInText
-						// ReSharper disable once LocalizableElement
 						throw new ArgumentOutOfRangeException("retarder", retarder.Type, "RetarderType unknown");
 				}
 
