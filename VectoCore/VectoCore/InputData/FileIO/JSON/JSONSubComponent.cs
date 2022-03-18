@@ -59,18 +59,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONRetarderInputData : JSONSubComponent, IRetarderInputData
 	{
-		public JSONRetarderInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile)
-		{ }
+		public JSONRetarderInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
+
+		private bool RetarderIsAllowed()
+		{
+			var retarderIsAllowed = true;
+			var isElectricOrSerialHybrid = Body["PowertrainConfiguration"].IsOneOf("BatteryElectric", "SerialHybrid");
+			if (isElectricOrSerialHybrid) {
+				// BEV and S-HEV do not have retarder except E3,S3,S-IEPC,E-IEPC: they can have Anglegear Input Retarder
+				retarderIsAllowed = false;
+				var isE3 = Body["ElectricMotors"] != null
+							&& Body["ElectricMotors"].Any(entry => PowertrainPosition.BatteryElectricE3
+								.Equals(PowertrainPositionHelper.Parse(entry.GetEx<string>("Position"))));
+				if (isE3)
+					retarderIsAllowed = true;
+			}
+
+			return retarderIsAllowed;
+		}
 
 		#region IRetarderInputData
 
 		public virtual RetarderType Type
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null) {
+				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed()) {
 					var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
 					return RetarderTypeHelper.Parse(retarderType);
 				}
+
 				return RetarderType.None;
 			}
 		}
@@ -78,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double Ratio
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null) {
+				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed()) {
 					return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
 				}
 				return 1.0;
@@ -88,7 +105,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual TableData LossMap
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null &&
+				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed() &&
 					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
 					var lossmapFile = Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile];
 					if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
@@ -551,13 +568,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private readonly IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> _entries;
 
-		public JSONElectricMotors(IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries) => 
+		public JSONElectricMotors(IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> entries) =>
 			_entries = entries;
 
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> IElectricMachinesDeclarationInputData.Entries =>
 			_entries.Cast<ElectricMachineEntry<IElectricMotorDeclarationInputData>>().ToList();
 
-		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries => 
+		public virtual IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries =>
 			_entries;
 	}
 
