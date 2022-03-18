@@ -1230,7 +1230,14 @@ Public Class VehicleForm
 		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5)
 
 		if (VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle)) then
-			gbRetarderLosses.Enabled = PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue)
+			if (PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue)) then
+				gbRetarderLosses.Enabled = true
+			else
+				gbRetarderLosses.Enabled = false
+				CbRtType.SelectedValue = RetarderType.None
+				TbRtRatio.Text = ""
+				TbRtPath.Text = ""
+			end if
 		end if
 	End Sub
 

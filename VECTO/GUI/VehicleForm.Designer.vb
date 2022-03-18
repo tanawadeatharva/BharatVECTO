@@ -1517,11 +1517,14 @@ Partial Class VehicleForm
         '
         'cbEmPos
         '
+        Me.cbEmPos.DisplayMember = "Value"
+        Me.cbEmPos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbEmPos.FormattingEnabled = true
         Me.cbEmPos.Location = New System.Drawing.Point(110, 52)
         Me.cbEmPos.Name = "cbEmPos"
         Me.cbEmPos.Size = New System.Drawing.Size(153, 21)
         Me.cbEmPos.TabIndex = 1
+        Me.cbEmPos.ValueMember = "Key"
         '
         'lblEmCount
         '
