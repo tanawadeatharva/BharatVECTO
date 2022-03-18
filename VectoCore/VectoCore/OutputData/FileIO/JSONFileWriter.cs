@@ -467,8 +467,7 @@ public class JSONFileWriter : IOutputFileWriter
 		else {
 			retarderOut.Add("Type", retarder.Type.GetName());
 			retarderOut.Add("Ratio", retarder.Ratio);
-			retarderOut.Add(
-				"File",
+			retarderOut.Add("File",
 				retarder.Type.IsDedicatedComponent() && retarder.LossMap != null
 					? GetRelativePath(retarder.LossMap.Source, basePath)
 					: "");
@@ -538,7 +537,8 @@ public class JSONFileWriter : IOutputFileWriter
 		var header = GetHeader(HEV_BEVVehicleFormatVersion);
 
 		// Body
-		//var retarderOut = GetRetarderOut(retarder, basePath);
+
+		var retarderOut = GetRetarderOut(retarder, basePath);
 
 		//var ptoOut = GetPTOOut(pto, basePath);
 
@@ -557,7 +557,8 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Batteries", battery);
 
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
-		//body.Add("Retarder", retarderOut);
+		if (retarder.Type != RetarderType.None)
+			body.Add("Retarder", retarderOut);
 		//body.Add("Angledrive", angledriveOut);
 		//body.Add("PTO", ptoOut);
 		//body.Add("TorqueLimits", torqueLimits);
