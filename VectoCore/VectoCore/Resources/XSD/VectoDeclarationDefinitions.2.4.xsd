@@ -2931,6 +2931,25 @@
 			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="RetarderTypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">052</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P052 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Losses included in Gearbox"/>
+			<xs:enumeration value="Engine Retarder"/>
+			<xs:enumeration value="Transmission Input Retarder"/>
+			<xs:enumeration value="Transmission Output Retarder"/>
+			<xs:enumeration value="Axlegear Input Retarder"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:group name="BusAuxElectricSystemLightsGroup">
 		<xs:sequence>
 			<xs:element name="LEDLights">
@@ -3773,7 +3792,7 @@
 	</xs:group>
 	<xs:group name="Vehicle_RetarderSequenceGroup">
 		<xs:sequence>
-			<xs:element name="RetarderType" type="v1.0:RetarderTypeType">
+			<xs:element name="RetarderType" type="v2.4:RetarderTypeType">
 				<xs:annotation>
 					<xs:documentation>P052 - enum</xs:documentation>
 				</xs:annotation>
