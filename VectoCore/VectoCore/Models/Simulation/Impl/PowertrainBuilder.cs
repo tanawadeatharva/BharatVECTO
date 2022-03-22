@@ -642,13 +642,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Count > 1) {
 				throw new VectoException("Electric motors on multiple positions not supported");
 			}
-
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-
 			if (data.BatteryData != null && data.SuperCapData != null) {
 				throw new VectoException("Only one REESS is supported.");
 			}
 
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = new ElectricSystem(container);
 
 			if (data.BatteryData != null) {
@@ -673,56 +671,50 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var powertrain = cycle
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
-					data.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First().Item1;
 			IElectricMotor em;
 			switch (pos) {
-				case PowertrainPosition.HybridPositionNotSet:
-					throw new VectoException("invalid powertrain position");
-				case PowertrainPosition.HybridP0:
-				case PowertrainPosition.HybridP1:
-				case PowertrainPosition.HybridP2:
-				case PowertrainPosition.HybridP3:
-				case PowertrainPosition.HybridP4:
-					throw new VectoException("BatteryElectric Vehicle does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
+					//-->Engine E4
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
 					powertrain.AddComponent(em);
 					new DummyGearboxInfo(container);
 					new DummyAxleGearInfo(container);
 					new ATClutchInfo(container);
 					break;
+
 				case PowertrainPosition.BatteryElectricE3:
+					//-->AxleGear-->Engine E3
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(em);
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type != GearboxType.APTN:
-					var strategy = new PEVAMTShiftStrategy(container);
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
-						container, es, ctl);
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(new PEVGearbox(container, strategy))
-						.AddComponent(em);
+
+				case PowertrainPosition.BatteryElectricE2:
+					//-->AxleGear-->APTNGearbox or PEVGearbox-->Engine E2
+					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData));
+
+					Gearbox gearbox;
+					if (data.GearboxData.Type == GearboxType.APTN) {
+						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
+					} else {
+						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
+					}
+					powertrain = powertrain.AddComponent(gearbox);
+
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
+					powertrain.AddComponent(em);
+
 					new ATClutchInfo(container);
 					break;
 
-				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type == GearboxType.APTN:
-					var strategyAPTN = new APTNShiftStrategy(container);
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
-						container, es, ctl);
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(new APTNGearbox(container, strategyAPTN))
-						.AddComponent(em);
-					new ATClutchInfo(container);
-					break;
-
-				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
 			}
 
 			new DummyEngineInfo(container);
@@ -733,14 +725,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				var auxCfg = data.BusAuxiliaries;
-
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
-
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-
-				var dcdc = new DCDCConverter(container,
-					data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
