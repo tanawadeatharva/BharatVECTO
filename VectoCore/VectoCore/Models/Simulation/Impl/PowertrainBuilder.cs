@@ -73,21 +73,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IVehicleContainer Build(VectoRunData data)
 		{
 			switch (data.Cycle.CycleType) {
-				case CycleType.EngineOnly:
-					return BuildEngineOnly(data);
-				case CycleType.PWheel:
-					return BuildPWheel(data);
-				case CycleType.VTP:
-					return BuildVTP(data);
-				case CycleType.MeasuredSpeed:
-					return BuildMeasuredSpeed(data);
-				case CycleType.MeasuredSpeedGear:
-					return BuildMeasuredSpeedGear(data);
 				case CycleType.DistanceBased:
-					return BuildFullPowertrain(data);
-				default:
-					throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}",
-						data.Cycle.CycleType);
+					switch (data.JobType) {
+						case VectoSimulationJobType.ConventionalVehicle: return BuildFullPowertrainConventional(data);
+						case VectoSimulationJobType.ParallelHybridVehicle: return BuildFullPowertrainParallelHybrid(data);
+						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data);
+						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
+						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
+						default: throw new ArgumentOutOfRangeException($"Powertrain Builder cannot build Powertrain for JobType: {data.JobType}");
+					}
+				case CycleType.EngineOnly: return BuildEngineOnly(data);
+				case CycleType.PWheel: return BuildPWheel(data);
+				case CycleType.VTP: return BuildVTP(data);
+				case CycleType.MeasuredSpeed: return BuildMeasuredSpeed(data);
+				case CycleType.MeasuredSpeedGear: return BuildMeasuredSpeedGear(data);
+				default: throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
 			}
 		}
 
@@ -342,25 +342,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 			return container;
-		}
-
-		private IVehicleContainer BuildFullPowertrain(VectoRunData data)
-		{
-			var isHybridVehicle = data.BatteryData != null && data.ElectricMachinesData.Count > 0;
-			switch (data.JobType) {
-				case VectoSimulationJobType.ConventionalVehicle:
-					return BuildFullPowertrainConventional(data);
-				case VectoSimulationJobType.ParallelHybridVehicle:
-					return BuildFullPowertrainParallelHybrid(data);
-				case VectoSimulationJobType.SerialHybridVehicle:
-					return BuildFullPowertrainSerialHybrid(data);
-					case VectoSimulationJobType.BatteryElectricVehicle:
-					return BuildBatteryElectricPowertrain(data);
-				case VectoSimulationJobType.EngineOnlySimulation:
-					return BuildEngineOnly(data);
-				default:
-					throw new ArgumentOutOfRangeException($"unknown job type: {data.JobType}");
-			}
 		}
 
 		/// <summary>
