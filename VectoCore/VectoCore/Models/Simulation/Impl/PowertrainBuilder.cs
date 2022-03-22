@@ -335,29 +335,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle
-				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+			cycle.IdleController = idleController as IdleControllerSwitcher;
+			cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container), data.Retarder, container);
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
-
-			var engine = new StopStartCombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine, container);
-			cycle.IdleController = idleController as IdleControllerSwitcher;
-
-			powertrain.AddComponent(engine, idleController)
+				.AddComponent(GetGearbox(container), data.Retarder, container)
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
+				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
-
 
 			return container;
 		}
