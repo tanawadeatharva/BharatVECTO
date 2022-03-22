@@ -1058,8 +1058,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		public void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
 		{
-			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
-
 			var es = new ElectricSystem(container);
 			if (data.BatteryData != null) {
 				var battery = new BatterySystem(container, data.BatteryData);
@@ -1073,31 +1071,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				es.Connect(superCap);
 			}
 
-			//var battery = new Battery(container, data.BatteryData);
-			//battery.Initialize(data.BatteryData.InitialSoC);
-			//es.Connect(battery);
-
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 			es.Charger = new SimpleCharger();
 
-			var ctl = new DummyElectricMotorControl();
-			var powertrain = vehicle
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container));
-
-			if (data.AxleGearData != null) { // missing for E4
-				powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData));
-			}
-
-			powertrain = powertrain.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null);
-
-			if (data.GearboxData != null) { // missing for E3
-				powertrain = powertrain.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container);
-			}
-
-			powertrain.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1, data.ElectricMachinesData, container, es, ctl));
+			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
@@ -1106,9 +1085,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
 					break;
 				case CycleType.MeasuredSpeed:
-					var dummyData = GetMeasuredSpeedDummnCycle();
-					var msCycle = new MeasuredSpeedDrivingCycle(container, dummyData);
-					msCycle.AddComponent(vehicle);
+					new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
 					break;
 				case CycleType.EngineOnly:
 					break;
@@ -1116,6 +1093,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("Wrong CycleType for SimplePowertrain");
 			}
 
+			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData is null ? null : new Angledrive(container, data.AngledriveData))
+				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data), data.Retarder, container)
+				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
+					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
 		}
 
 		private DrivingCycleData GetMeasuredSpeedDummnCycle()
