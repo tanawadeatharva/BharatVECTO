@@ -137,21 +137,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var gearbox = new CycleGearbox(container, data);
-
-			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
-			var powertrain = new PWheelCycle(container, data.Cycle)
+			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
+			new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, container)
-				.AddComponent(new Clutch(container, data.EngineData));
-			new ZeroMileageCounter(container);
-			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var idleController = GetIdleController(data.PTO, engine, container);
-
-			powertrain.AddComponent(engine, idleController)
+				.AddComponent(new CycleGearbox(container, data), data.Retarder, container)
+				.AddComponent(new Clutch(container, data.EngineData))
+				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
 				.AddAuxiliaries(container, data);
 
+			new ZeroMileageCounter(container);
 			return container;
 		}
 
