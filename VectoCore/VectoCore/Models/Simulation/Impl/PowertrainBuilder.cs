@@ -415,35 +415,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			HybridController ctl;
 			SwitchableClutch clutch = null;
 			if (data.GearboxData.Type.ManualTransmission()) {
-				var strategy = new HybridStrategy(data, container);
+				ctl = new HybridController(container, new HybridStrategy(data, container), es);
 				clutch = new SwitchableClutch(container, data.EngineData);
-
-				ctl = new HybridController(container, strategy, es);
 			} else {
-				var strategy = new HybridStrategyAT(data, container);
-
-				ctl = new HybridController(container, strategy, es);
+				ctl = new HybridController(container, new HybridStrategyAT(data, container), es);
 				new ATClutchInfo(container);
 			}
 
-			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
+			// add engine before gearbox in the container, that gearbox can obtain it
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
+
 			var gearbox = GetGearbox(container, ctl.ShiftStrategy);
-			var gbx = gearbox as IHybridControlledGearbox;
-			if (gbx == null) {
+			if (!(gearbox is IHybridControlledGearbox gbx)) {
 				throw new VectoException("Gearbox can not be used for parallel hybrid");
 			}
 
 			var idleController = GetIdleController(data.PTO, engine, container);
-
 			ctl.Gearbox = gbx;
 			ctl.Engine = engine;
 
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			cycle
-				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+			cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
