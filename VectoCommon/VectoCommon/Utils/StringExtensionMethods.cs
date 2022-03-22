@@ -84,20 +84,14 @@ namespace TUGraz.VectoCommon.Utils
 			return int.Parse(self) != 0;
 		}
 
-		public static double IndulgentParse(this string self)
-		{
-			return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
+		public static double IndulgentParse(this string self) =>
+			double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
 				CultureInfo.InvariantCulture);
-		}
 
-		public static Stream ToStream(this string self)
-		{
-			return new MemoryStream(Encoding.UTF8.GetBytes(self));
-		}
+		public static Stream ToStream(this string self) => 
+			new MemoryStream(Encoding.UTF8.GetBytes(self));
 
-		public static string RemoveWhitespace(this string self)
-		{
-			return string.Concat(self.Split());
-		}
+		public static string RemoveWhitespace(this string self) => 
+			string.Concat(self.Split());
 	}
 }
