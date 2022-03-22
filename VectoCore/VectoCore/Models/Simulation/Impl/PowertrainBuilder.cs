@@ -67,32 +67,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IModalDataContainer _modData;
 		private readonly WriteSumData _sumWriter;
 
-		//private static List<Tuple<GbxTypeList, string, string, StrategyCreator>> ShiftStrategies =
-		//	new List<Tuple<GbxTypeList, string, string, StrategyCreator>> {
-		//		Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.MT },
-		//			typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, c => new MTShiftStrategy(c)),
-		//		Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
-		//			typeof(AMTShiftStrategy).FullName, AMTShiftStrategy.Name, c => new AMTShiftStrategy(c)),
-		//		Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
-		//			typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name,
-		//			c => new AMTShiftStrategyOptimized(c)),
-		//		//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(new GbxTypeList { GearboxType.AMT },
-		//		//	typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name,
-		//		//	c => new AMTShiftStrategyACEA(c)),
-		//		Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
-		//			new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
-		//			typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, c => new ATShiftStrategy(c)),
-		//		//Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
-		//		//	new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
-		//		//	typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name,
-		//		//	c => new ATShiftStrategyVoith(c)),
-		//		Tuple.Create<GbxTypeList, string, string, StrategyCreator>(
-		//			new GbxTypeList { GearboxType.ATPowerSplit, GearboxType.ATSerial },
-		//			typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name,
-		//			c => new ATShiftStrategyOptimized(c)),
-		//	};
-
-
 		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
 		{
 			if (modData == null) {
