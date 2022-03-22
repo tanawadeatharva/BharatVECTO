@@ -544,62 +544,53 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
 
+
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
-					data.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container));
 
 			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
-			IElectricMotor em;
 			switch (pos) {
-				case PowertrainPosition.HybridPositionNotSet:
-					throw new VectoException("invalid powertrain position");
-				case PowertrainPosition.HybridP0:
-				case PowertrainPosition.HybridP1:
-				case PowertrainPosition.HybridP2:
-				case PowertrainPosition.HybridP3:
-				case PowertrainPosition.HybridP4:
-					throw new VectoException("Serial Hybrid Vehicle does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData, container, es, ctl);
-					powertrain.AddComponent(em);
+					//-->Engine E4
+					powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4,
+						data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					new DummyAxleGearInfo(container);
 					new ATClutchInfo(container);
 					break;
+
 				case PowertrainPosition.BatteryElectricE3:
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
+					//-->AxleGear-->Engine E3
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(em);
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3,
+							data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					new ATClutchInfo(container);
 					break;
-				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type != GearboxType.APTN:
-					var shiftstrategy = new PEVAMTShiftStrategy(container);
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
-						container, es, ctl);
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(new PEVGearbox(container, shiftstrategy))
-						.AddComponent(em);
-					new ATClutchInfo(container);
-					break;
 
-				case PowertrainPosition.BatteryElectricE2 when data.GearboxData.Type == GearboxType.APTN:
-					var strategyAPTN = new APTNShiftStrategy(container);
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
-						container, es, ctl);
+				case PowertrainPosition.BatteryElectricE2:
+					//-->AxleGear-->PEVGearbox or APTNGearbox-->Engine E2
+					Gearbox gearbox;
+					if (data.GearboxData.Type == GearboxType.APTN) {
+						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
+					} else {
+						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
+					}
+
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(new APTNGearbox(container, strategyAPTN))
-						.AddComponent(em);
+						.AddComponent(gearbox)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
+							data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 
 				default:
-					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for serial hybrid vehicle.");
 			}
 
 			if (data.BusAuxiliaries != null) {
@@ -620,8 +611,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container,
-					es, ctl))
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
