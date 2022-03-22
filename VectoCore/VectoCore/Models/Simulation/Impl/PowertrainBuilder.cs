@@ -167,32 +167,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-			var gearbox = new VTPGearbox(container, data);
-
-			// VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
-			var powertrain = new VTPCycle(container, data.Cycle)
+			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+			new VTPCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, container)
-				.AddComponent(new Clutch(container, data.EngineData));
-			new ZeroMileageCounter(container);
-			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+				.AddComponent(new VTPGearbox(container, data), data.Retarder, container)
+				.AddComponent(new Clutch(container, data.EngineData))
+				.AddComponent(engine, new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container));
 
+			new ZeroMileageCounter(container);
 			if (data.VehicleData.VehicleCategory.IsLorry()) {
 				AddVTPTruckAuxiliaries(data, container, engine);
 			} else if (data.VehicleData.VehicleCategory.IsBus()) {
 				AddVTPBusAuxiliaries(data, container, engine);
 			}
-
-
-			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
-			//if (data.PTO != null && data.PTO.PTOCycle != null) {
-			//    var ptoController = new PTOCycleController(container, data.PTO.PTOCycle);
-			//    idleController = new IdleControllerSwitcher(engine.IdleController, ptoController);
-			//}
-
-			powertrain.AddComponent(engine, idleController);
-			//.AddAuxiliaries(container, data);
 
 			return container;
 		}
