@@ -790,45 +790,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
 		{
-			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
-			//	throw new VectoException("CycleType must be DistanceBased");
-			//}
-
-			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
-			//var dummyDriver = new Driver(container, data.DriverData, new DefaultDriverStrategy(container));
-			var powertrain = vehicle
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container);
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
-
+			IVehicle vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
 			//       should be a reference/proxy to the main driving cyle. but how to access it?
 			switch (data.Cycle.CycleType) {
+				case CycleType.MeasuredSpeed:
+					new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
+					break;
 				case CycleType.DistanceBased:
 					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
 					break;
-				case CycleType.MeasuredSpeed:
-					var dummyData = GetMeasuredSpeedDummnCycle();
-					var msCycle = new MeasuredSpeedDrivingCycle(container, dummyData);
-					msCycle.AddComponent(vehicle);
+				case CycleType.EngineOnly:
 					break;
-				case CycleType.EngineOnly: break;
-				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
+				default:
+					throw new VectoException("Wrong CycleType for SimplePowertrain");
 			}
 
-
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine, container);
-			//cycle.IdleController = idleController as IdleControllerSwitcher;
-
-			powertrain.AddComponent(engine, idleController)
+			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container)
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
+				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
 				.AddAuxiliaries(container, data);
 		}
 
