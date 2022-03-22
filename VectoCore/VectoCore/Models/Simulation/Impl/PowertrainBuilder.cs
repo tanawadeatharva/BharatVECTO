@@ -860,64 +860,55 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new SimpleHybridController(container, es);
 
-			var pos = data.ElectricMachinesData.Select(x => x.Item1).First(x => x != PowertrainPosition.GEN);
-
+			//Vehicle-->Wheels-->SimpleHybridController-->Brakes
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 			var powertrain = vehicle
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
-					data.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container));
 
+			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 			switch (pos) {
-				case PowertrainPosition.HybridPositionNotSet:
-					throw new VectoException("invalid powertrain position");
+				case PowertrainPosition.BatteryElectricE4:
+					//-->Engine E4
+					powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4,
+						data.ElectricMachinesData, container, es, ctl));
+
+					new DummyGearboxInfo(container);
+					new ATClutchInfo(container);
+					break;
+
+				case PowertrainPosition.BatteryElectricE3:
+					//-->AxleGear-->Engine E3
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3,
+							data.ElectricMachinesData, container, es, ctl));
+
+					new DummyGearboxInfo(container);
+					new ATClutchInfo(container);
+					break;
+
 				case PowertrainPosition.BatteryElectricE2:
+					//-->AxleGear-->(AngleDrive)-->(Output Retarder)-->APTNGearbox or Gearbox-->(Input Retarder)-->Engine E2
 					var gearbox = data.GearboxData.Type.AutomaticTransmission()
-						? (IHybridControlledGearbox)new APTNGearbox(container, ctl.ShiftStrategy)
+						? new APTNGearbox(container, ctl.ShiftStrategy)
 						: new Gearbox(container, ctl.ShiftStrategy);
-					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(data.AngledriveData != null
-							? new Angledrive(container, data.AngledriveData)
-							: null)
-						.AddComponent((IGearbox)gearbox, data.Retarder, container)
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData,
-							container,
-							es, ctl));
+
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(gearbox, data.Retarder, container)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
+							data.ElectricMachinesData, container, es, ctl));
+
 					ctl.Gearbox = gearbox;
 					if (data.GearboxData.Type.AutomaticTransmission()) {
 						new DummyEngineInfo(container);
 					}
 					break;
-				case PowertrainPosition.BatteryElectricE3:
-					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData,
-							container,
-							es, ctl));
-					new DummyGearboxInfo(container);
-					//new MockEngineInfo(container);
-					new ATClutchInfo(container);
-					break;
-				case PowertrainPosition.BatteryElectricE4:
-					powertrain = powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, data.ElectricMachinesData,
-							container,
-							es, ctl));
-					new DummyGearboxInfo(container);
-					//new MockEngineInfo(container);
-					new ATClutchInfo(container);
-					break;
-				case PowertrainPosition.HybridP0:
-				case PowertrainPosition.HybridP1:
-				case PowertrainPosition.HybridP2_5:
-				case PowertrainPosition.HybridP2:
-				case PowertrainPosition.HybridP3:
-				case PowertrainPosition.HybridP4:
 
-					throw new VectoException("testcase does not support parallel powertrain configurations");
 				default:
-					throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for simple serial hybrid vehicles.");
 			}
-
 		}
 
 		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
