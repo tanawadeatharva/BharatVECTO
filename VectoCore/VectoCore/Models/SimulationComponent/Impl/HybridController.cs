@@ -496,7 +496,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity)
 			{
-				if (!_controller.ShiftRequired && DataBus.DriverInfo.DrivingAction != DrivingAction.Halt) {
+				if (!_controller.ShiftRequired && !_controller.CurrentStrategySettings.GearboxInNeutral && DataBus.DriverInfo.DrivingAction != DrivingAction.Halt) {
 					// gearbox disengaged on its own! set next gear!
 					var gear = _nextGear;
 					while (GearList.HasPredecessor(gear) && SpeedTooLowForEngine(gear, outAngularVelocity)) {

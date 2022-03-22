@@ -1258,7 +1258,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					gradient, targetDistance: targetDistance);
 			}
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response == null) {
+			if ((DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null) && response == null) {
 				for (var i = 0; i < 3 && response == null; i++) {
 					DataBus.Brakes.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(
