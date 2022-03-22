@@ -66,11 +66,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
 		{
-			if (modData == null) {
-				throw new VectoException("Modal Data Container can't be null");
-			}
-
-			_modData = modData;
+			_modData = modData ?? throw new VectoException("Modal Data Container can't be null");
 			_sumWriter = sumWriter;
 		}
 
