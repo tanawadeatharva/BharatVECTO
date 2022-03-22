@@ -295,25 +295,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-
-			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(new CycleGearbox(container, data));
-			new ATClutchInfo(container);
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
-
-			powertrain.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
+				.AddComponent(new CycleGearbox(container, data))
+				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
+				.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
-
+			new ATClutchInfo(container);
 			return container;
 		}
 
