@@ -161,13 +161,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					MotorSpeed = 0.RPMtoRad(),
-					FullDriveTorque = -em.ContinuousTorque,
-					FullGenerationTorque = em.ContinuousTorque
+					FullDriveTorque = -em.Overload.ContinuousTorque,
+					FullGenerationTorque = em.Overload.ContinuousTorque
 				},
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					MotorSpeed = 1.1 * emFld.MaxSpeed,
-					FullDriveTorque = -em.ContinuousTorque,
-					FullGenerationTorque = em.ContinuousTorque
+					FullDriveTorque = -em.Overload.ContinuousTorque,
+					FullGenerationTorque = em.Overload.ContinuousTorque
 				}
 			});
 			var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);

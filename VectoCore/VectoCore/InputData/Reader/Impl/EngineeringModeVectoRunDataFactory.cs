@@ -35,12 +35,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -98,11 +100,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var vehicle = InputDataProvider.JobInputData.Vehicle;
 					var engineData = dao.CreateEngineData(vehicle, engineMode);
 					engineData.FuelMode = modeIdx;
-					
+
+					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+
+					var averageVoltage = battery != null 
+						? CalculateAverageVoltage(battery)
+							: null;
+
 					var axlegearData = vehicle.Components.AxleGearInputData != null
 						? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
 						: null;
-					var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits);
+					var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, averageVoltage);
 
 					GearboxData gearboxData = null;
 					ShiftStrategyParameters gearshiftParams = null;
@@ -175,12 +184,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var electricMachines =
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
-							vehicle.ElectricMotorTorqueLimits) ??
+							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
-					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
-
-
+					
 					var jobType = VectoSimulationJobType.SerialHybridVehicle;
 
 					var vehicleData = dao.CreateVehicleData(vehicle);
@@ -233,7 +239,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
 					: null;
 
-				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits);
+				var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+				var supercapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+
+				var averageVoltage = batteryData != null ? CalculateAverageVoltage(batteryData) : null;
+				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, averageVoltage);
 
 				GearboxData gearboxData = null;
 				ShiftStrategyParameters gearshiftParams = null;
@@ -297,8 +307,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					ExecutionMode = ExecutionMode.Engineering,
 					ElectricMachinesData = electricMachinesData,
 					//HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
-					BatteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
-					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
+					BatteryData = batteryData,
+					SuperCapData = supercapData,
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
 					GearshiftParameters = gearshiftParams,
 					ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
@@ -369,12 +379,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=> DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
 
-					var electricMachines =
-						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
-							vehicle.ElectricMotorTorqueLimits) ??
-						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+					var averageVoltage = battery != null ? CalculateAverageVoltage(battery): null;
+
+					var electricMachines =
+						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
+							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
+						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					
 
 				   
 					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
@@ -433,6 +446,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					};
 				}
 			}
+		}
+
+		private Volt CalculateAverageVoltage(BatterySystemData batteryData)
+		{
+			// use the battery system to get min/max SoC of the whole battery system (multiple batteries in series/parallel)
+			//   the battery system already contains all necessary models, no need to duplicate here the rather complex calculations
+			var tmpBattery = new BatterySystem(null, batteryData);
+			var min = tmpBattery.MinSoC;
+			var max = tmpBattery.MaxSoC;
+			var averageSoC = (min + max) / 2.0;
+
+			tmpBattery.Initialize(averageSoC);
+			return tmpBattery.InternalVoltage;
 		}
 	}
 }

@@ -865,7 +865,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
-			IElectricMachinesEngineeringInputData electricMachines, Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits)
+			IElectricMachinesEngineeringInputData electricMachines,
+			Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -882,11 +883,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return electricMachines.Entries
 				.Select(x => Tuple.Create(x.Position,
 					CreateElectricMachine(x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
-						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value))).ToList();
+						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value, averageVoltage))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
-			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap, List<Tuple<Volt, TableData>> torqueLimits)
+			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
+			List<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage)
 		{
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
@@ -901,23 +903,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
-					ContinuousTorque = entry.ContinuousTorque * count,
-					ContinuousTorqueSpeed = entry.ContinuousTorqueSpeed,
-					OverloadTorque = (entry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count,
-					OverloadTestSpeed = entry.OverloadTestSpeed ?? 0.RPMtoRad(),
-					OverloadTime = entry.OverloadTime,
+					
 					FullLoadCurve = fullLoadCurveCombined,
                     // DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
                     EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
                 });
 			}
 
+			if (averageVoltage == null) {
+				// if no average voltage is provided (e.g. for supercap) use mean value of measured voltage maps
+				averageVoltage = (voltageLevels.Min(x => x.Voltage) + voltageLevels.Max(x => x.Voltage)) / 2.0;
+			}
 
 			var lossMap = adcLossMap != null
 				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
 				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
-			return new ElectricMotorData() {
+			var retVal = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
@@ -925,7 +927,58 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RatioADC = ratio,
 				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap,
-				ContinuousTorque = voltageLevels.First().ContinuousTorque,
+			};
+			retVal.Overload = CalculateOverloadData(motorData, count, retVal.EfficiencyData, averageVoltage);
+			return retVal;
+		}
+
+		private OverloadData CalculateOverloadData(IElectricMotorEngineeringInputData motorData, int count, VoltageLevelData voltageLevels, Volt averageVoltage)
+		{
+			
+			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+			if (averageVoltage < motorData.VoltageLevels.Min(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(motorData.VoltageLevels.First(), count, voltageLevels);
+			}
+			if (averageVoltage > motorData.VoltageLevels.Max(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(motorData.VoltageLevels.Last(), count, voltageLevels);
+			}
+
+			var (vLow, vHigh) = motorData.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+			var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevels);
+			var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevels);
+
+			var retVal = new OverloadData() {
+				OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+				ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+				ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+			};
+			return retVal;
+		}
+
+		private OverloadData CalculateOverloadBuffer(IElectricMotorVoltageLevel voltageEntry,
+			int count, VoltageLevelData voltageLevels)
+		{
+			var continuousTorque = voltageEntry.ContinuousTorque * count;
+			var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed;
+			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count;
+			var overloadTestSpeed = voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad();
+
+
+			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, true)
+				.ElectricalPower;
+			var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
+			
+			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+								-continuousTorque).ElectricalPower ??
+							voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
+								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
+								true).ElectricalPower;
+			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
+			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
+			return new OverloadData() {
+				OverloadBuffer = overloadBuffer,
+				ContinuousTorque = continuousTorque,
+				ContinuousPowerLoss = continuousPowerLoss
 			};
 		}
 

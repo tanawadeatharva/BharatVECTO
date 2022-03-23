@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				new JSONComponentInputData(@"TestData\Hybrids\ElectricMotor\GenericEMotorV3.vem", null,
 					false);
 			var daa = new EngineeringDataAdapter();
-			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null).First().Item2;
+			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null, null).First().Item2;
 
 
 			Assert.AreEqual(26, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());

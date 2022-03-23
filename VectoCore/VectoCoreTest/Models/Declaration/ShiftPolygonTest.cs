@@ -938,7 +938,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
 			var dao = new EngineeringDataAdapter();
 			var emData = dao.CreateElectricMachines(inputData.JobInputData.Vehicle.Components.ElectricMachines,
-				null).FirstOrDefault()?.Item2;
+				null, null).FirstOrDefault()?.Item2;
 			var axlegearRatio = inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
 			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle);
 			var r_dyn = vehicleData.DynamicTyreRadius;
@@ -989,7 +989,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
 			var dao = new EngineeringDataAdapter();
 			var emData = dao.CreateElectricMachines(inputData.JobInputData.Vehicle.Components.ElectricMachines,
-				null).FirstOrDefault()?.Item2;
+				null, null).FirstOrDefault()?.Item2;
 			
 			var axlegearRatio = inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
 			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle);
@@ -999,13 +999,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					MotorSpeed = 0.RPMtoRad(),
-					FullDriveTorque = -emData.ContinuousTorque,
-					FullGenerationTorque = emData.ContinuousTorque
+					FullDriveTorque = -emData.Overload.ContinuousTorque,
+					FullGenerationTorque = emData.Overload.ContinuousTorque
 				},
 				new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					MotorSpeed = 1.1 * emData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxSpeed,
-					FullDriveTorque = -emData.ContinuousTorque,
-					FullGenerationTorque = emData.ContinuousTorque
+					FullDriveTorque = -emData.Overload.ContinuousTorque,
+					FullGenerationTorque = emData.Overload.ContinuousTorque
 				}
 			});
 			var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emData.EfficiencyData.VoltageLevels.First().FullLoadCurve, contTqFld);
