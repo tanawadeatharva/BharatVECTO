@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		const string TestJobP1_APTS = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_Ser.vecto";
 		const string TestJobP1_APTP = @"TestData\Hybrids\GenericVehicle_P1-APT\CityBus_AT_PS.vecto";
 
-		private const string TestJobP1 = @"E:\QUAM\tmp\Citybus_P1-APT-S-175kW-6.8l_C1\CityBus_AT_Ser.vecto";
+		//private const string TestJobP1 = @"E:\QUAM\tmp\Citybus_P1-APT-S-175kW-6.8l_C1\CityBus_AT_Ser.vecto";
 
 		private const string TestJobCityBusP1_APTP = @"TestData\Hybrids\Citybus_P1-APT-P-220kW-7.7l\CityBus_AT-P.vecto";
 
@@ -576,6 +576,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob325kW = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW.vecto";
 
+		public const string Group5TestJob325kW_WhrEl = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_325kW_WHR.vecto";
+
 		[
 		TestCase(Group5TestJob325kW, 0, TestName = "P2 Hybrid Group 5 325kW DriveCycle LongHaul"),
 		TestCase(Group5TestJob325kW, 1, TestName = "P2 Hybrid Group 5 325kW DriveCycle Coach"),  
@@ -586,7 +588,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group5TestJob325kW, 6, TestName = "P2 Hybrid Group 5 325kW DriveCycle RegionalDelivery"),
 		TestCase(Group5TestJob325kW, 7, TestName = "P2 Hybrid Group 5 325kW DriveCycle Suburban"), 
 		TestCase(Group5TestJob325kW, 8, TestName = "P2 Hybrid Group 5 325kW DriveCycle Urban"), 
-		TestCase(Group5TestJob325kW, 9, TestName = "P2 Hybrid Group 5 325kW DriveCycle UrbanDelivery"), 
+		TestCase(Group5TestJob325kW, 9, TestName = "P2 Hybrid Group 5 325kW DriveCycle UrbanDelivery"),
+
+		TestCase(Group5TestJob325kW_WhrEl, 6, TestName = "P2 Hybrid Group 5 325kW WHR DriveCycle RegionalDelivery"),
 		]
 		public void P2HybridGroup5DriveCycle_325kW(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }

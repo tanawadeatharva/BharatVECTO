@@ -100,6 +100,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public const double AlternatorEfficiency = 0.7;
 
+		public const double WHRChargerEfficiency = 0.98;
+
 		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
 			new ConcurrentDictionary<MissionType, DrivingCycleData>();
 

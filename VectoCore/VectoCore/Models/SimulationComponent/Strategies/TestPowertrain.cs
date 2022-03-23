@@ -58,6 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
 		public TorqueConverter TorqueConverter;
 		public DCDCConverter DCDCConverter;
+		public WHRCharger WHRCharger;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -94,6 +95,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var busAux = container.RunData.BusAuxiliaries;
 			if (busAux != null && busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
 				DCDCConverter = container.DCDCConverter as DCDCConverter;
+			}
+
+			var whrCharger = container.SimulationComponents().FirstOrDefault(x => x is WHRCharger);
+			if (whrCharger != null) {
+				WHRCharger = whrCharger as WHRCharger;
 			}
 			var driver = new MockDriver(container, realContainer);
 			var cycle = new MockDrivingCycle(container, realContainer);

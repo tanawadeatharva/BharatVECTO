@@ -83,6 +83,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IDCDCConverter DCDCConverter { get; protected set; }
 
+		public WHRCharger WHRCharger { get; protected set; }
+
 		public IElectricSystemInfo ElectricSystemInfo { get; protected set; }
 
 		public virtual bool IsTestPowertrain => false;
@@ -186,6 +188,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				ElectricMotors[c23.Position] = c23;
 				HasElectricMotor = true;
+			}
+
+			if (component is WHRCharger c25) {
+				WHRCharger = c25;
 			}
 			
 			_components.Add(Tuple.Create(commitPriority, component));

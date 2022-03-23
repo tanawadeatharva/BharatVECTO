@@ -137,6 +137,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
 			}
 
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 				(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
 
@@ -315,6 +322,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (TestPowertrain.DCDCConverter != null) {
 				TestPowertrain.DCDCConverter.PreviousState.ConsumedEnergy =
 					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
+			}
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
 			}
 
 			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity = gearboxInfo.PreviousState.OutAngularVelocity;
