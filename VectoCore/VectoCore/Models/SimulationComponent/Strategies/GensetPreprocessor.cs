@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private void MaxElectricPower(Volt voltage, bool emDerated)
 		{
-			var continuousTq = emDerated ? Genset.ElectricMotor.ContinuousTorque : double.MaxValue.SI<NewtonMeter>();
+			var continuousTq = emDerated ? EmData.Overload.ContinuousTorque : double.MaxValue.SI<NewtonMeter>();
 			var maxSpeed = VectoMath.Min(EmData.EfficiencyData.MaxSpeed,
 				IceData.FullLoadCurves[0].FullLoadEntries.Select(x => x.EngineSpeed).Max());
 			var emFldDrivetrain = new ElectricMotorFullLoadCurve(EmData.EfficiencyData.VoltageLevels[0].FullLoadCurve

@@ -26,10 +26,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public VoltageLevelData EfficiencyData { get; internal set; }
 
-		// not read direcly from input but calculated in a pre-processing step
-		public NewtonMeter ContinuousTorque { get; internal set; }
-
 		public DragCurve DragCurve { get; internal set; }
+
+		// not read direcly from input but calculated in a pre-processing step
+		public OverloadData Overload { get; internal set; }
 	}
 
 	public class VoltageLevelData
@@ -146,23 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		[SIRange(0, double.MaxValue)]
 		public Volt Voltage { get; internal set; }
-
-		[SIRange(double.MinValue, double.MaxValue)]
-		public NewtonMeter ContinuousTorque { get; internal set; }
-
-		[SIRange(0, double.MaxValue)]
-		public PerSecond ContinuousTorqueSpeed { get; internal set; }
-
-		[SIRange(double.MinValue, double.MaxValue)]
-		public NewtonMeter OverloadTorque { get; set; }
-
-		[SIRange(0, double.MaxValue)]
-		public PerSecond OverloadTestSpeed { get; set; }
-
-
-		[SIRange(0, double.MaxValue)]
-		public Second OverloadTime { get; internal set; }
-
+		
 		[ValidateObject]
 		public ElectricMotorFullLoadCurve FullLoadCurve { get; internal set; }
 
@@ -170,5 +154,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public EfficiencyMap EfficiencyMap { get; internal set; }
 
 
+	}
+
+	public class OverloadData
+	{
+		public NewtonMeter ContinuousTorque { get; internal set; }
+
+		public Joule OverloadBuffer { get; internal set; }
+
+		public Watt ContinuousPowerLoss { get; internal set; }
 	}
 }
