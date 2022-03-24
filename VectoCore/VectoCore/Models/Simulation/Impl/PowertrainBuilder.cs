@@ -1079,7 +1079,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
-			es.Charger = new SimpleCharger();
+			es.Connect(new SimpleCharger());
 
 			var ctl = new DummyElectricMotorControl();
 			var powertrain = vehicle

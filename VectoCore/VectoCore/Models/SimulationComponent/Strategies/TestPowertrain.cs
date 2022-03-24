@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
-			Charger = (ElectricMotor?.ElectricPower as ElectricSystem)?.Charger as GensetChargerAdapter;
+			Charger = ((ElectricMotor?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
