@@ -55,13 +55,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var emModelData = data.First().Item2;
 
 			Assert.AreEqual(0.15 * count, emModelData.Inertia.Value(), 1e-3);
 
 			//Assert.AreEqual(2000, emModelData.ContinuousTorqueSpeed.AsRPM, 1e-3);
-			Assert.AreEqual(238.7323 * count, emModelData.ContinuousTorque.Value(), 1e-3);
+			Assert.AreEqual(238.7323 * count, emModelData.Overload.ContinuousTorque.Value(), 1e-3);
 
 			Assert.AreEqual(334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullLoadDriveTorque(2000.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(-334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullGenerationTorque(2000.RPMtoRad()).Value(), 1e-3);
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var tmp = new MockBatteryInputData()
@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var tmp = new MockBatteryInputData()

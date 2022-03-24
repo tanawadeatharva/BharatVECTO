@@ -5,6 +5,10 @@
     <TargetFrameworks>net45;net48;net5.0</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
+    <None Remove="Resources\XSD\VectoOutputPrimaryBus.xsd" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -53,6 +57,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.6.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -64,6 +69,7 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd" />
     <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>

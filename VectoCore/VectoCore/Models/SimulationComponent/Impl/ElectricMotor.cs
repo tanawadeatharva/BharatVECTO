@@ -27,11 +27,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		public bool DeRatingActive { get; protected internal set; }
 
-		public Joule OverloadBuffer { get; }
-		public NewtonMeter ContinuousTorque { get; }
-
-		public Watt ContinuousPowerLoss { get; }
-
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
@@ -50,20 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 
-			var vLevel = ModelData.EfficiencyData.VoltageLevels.First();
-			ContinuousTorque = vLevel.ContinuousTorque;
-			var voltage = ModelData.EfficiencyData.VoltageLevels.First().Voltage;
-			var contElPwr =
-				ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.ContinuousTorqueSpeed, -ContinuousTorque).ElectricalPower ??
-				ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.ContinuousTorqueSpeed, ModelData.EfficiencyData.FullLoadDriveTorque(voltage, vLevel.ContinuousTorqueSpeed), true).ElectricalPower;
-			ContinuousPowerLoss = -contElPwr - ContinuousTorque * vLevel.ContinuousTorqueSpeed; // loss needs to be positive
-			
-			var peakElPwr = ModelData.EfficiencyData.LookupElectricPower(voltage, vLevel.OverloadTestSpeed, -vLevel.OverloadTorque, true)
-				.ElectricalPower;
-			var peakPwrLoss = -peakElPwr - vLevel.OverloadTorque * vLevel.OverloadTestSpeed; // losses need to be positive
-
-			OverloadBuffer = (peakPwrLoss - ContinuousPowerLoss) * vLevel.OverloadTime;
-			if (OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
+			if (ModelData.Overload.OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
 				Log.Error("Overload buffer for thermal de-rating is zero or negative! Please check electric motor data!");
 			}
 		}
@@ -399,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private NewtonMeter GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed)
 		{
-			var tqContinuousPwr = DeRatingActive ? ContinuousTorque : null;
+			var tqContinuousPwr = DeRatingActive ? ModelData.Overload.ContinuousTorque : null;
 			
 			var maxEmTorque = VectoMath.Min(tqContinuousPwr, ModelData.EfficiencyData.FullGenerationTorque(volt, avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
@@ -427,7 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private NewtonMeter GetMaxDriveTorque(Volt volt, Second dt, PerSecond avgSpeed)
 		{
-			var tqContinuousPwr = DeRatingActive ? -ContinuousTorque : null;
+			var tqContinuousPwr = DeRatingActive ? -ModelData.Overload.ContinuousTorque : null;
 			
 			var maxEmTorque = VectoMath.Max(tqContinuousPwr ,ModelData.EfficiencyData.FullLoadDriveTorque(volt, avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
@@ -522,9 +504,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.EM_Off_, Position] = CurrentState.EMTorque == null ? 1.SI<Scalar>() : 0.SI<Scalar>();
 
 			var losses = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed - CurrentState.ElectricPowerToBattery;
-			var contribution = (losses - ContinuousPowerLoss) * simulationInterval;
-			if (OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
-				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / OverloadBuffer);
+			var contribution = (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
+			if (ModelData.Overload.OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
+				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
 			}
 				
 			if (NextComponent == null && BusAux != null) {
@@ -536,17 +518,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var avgSpeed = (PreviousState.EMSpeed + CurrentState.EMSpeed) / 2;
 			var losses = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>()) * avgSpeed - CurrentState.ElectricPowerToBattery;
-			ThermalBuffer += (losses - ContinuousPowerLoss) * simulationInterval;
+			ThermalBuffer += (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
 			if (ThermalBuffer < 0) {
 				ThermalBuffer = 0.SI<Joule>();
 			}
 
 			if (DeRatingActive) {
-				if (ThermalBuffer.IsSmallerOrEqual(OverloadBuffer * ModelData.OverloadRegenerationFactor)) {
+				if (ThermalBuffer.IsSmallerOrEqual(ModelData.Overload.OverloadBuffer * ModelData.OverloadRegenerationFactor)) {
 					DeRatingActive = false;
 				}
 			} else {
-				if (ThermalBuffer.IsGreater(OverloadBuffer)) {
+				if (ThermalBuffer.IsGreater(ModelData.Overload.OverloadBuffer)) {
 					DeRatingActive = true;
 				}
 			}

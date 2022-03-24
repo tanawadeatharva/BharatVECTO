@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
 					}
 				}
-			}, null);
+			}, null, null);
 		}
 	
 

@@ -25,10 +25,10 @@
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
 				<PowerMap>
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 				</PowerMap>
 			</VoltageLevel>
 			<VoltageLevel>
@@ -43,10 +43,10 @@
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
 				<PowerMap>
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 				</PowerMap>
 			</VoltageLevel>
 			<DragCurve>
@@ -64,7 +64,7 @@
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>s2YFYllDgw5jrF+W6Pc9cF4aQfsswnICqlWYgqg9NPI=</di:DigestValue>
+				<di:DigestValue>TilK8FUXim9VK3Jy2qTIdogjpWvSF0cj/Ny1fyuoajk=</di:DigestValue>
 			</di:Reference>
 		</v2.3:Signature>
 	</tns:ElectricMachineSystem>

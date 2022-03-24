@@ -104,9 +104,13 @@
 						</Conditioning>
 					</v2.3:Data>
 					<v2.3:Signature>
-						<di:Reference>
-							<di:DigestMethod Algorithm=""/>
-							<di:DigestValue/>
+						<di:Reference URI="#EM-1234">
+							<di:Transforms>
+								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+							</di:Transforms>
+							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+							<di:DigestValue>siONkqzC3QW+4si2eVwLNTwtAxUM0dxMFdAYXjVNl+0=</di:DigestValue>
 						</di:Reference>
 					</v2.3:Signature>
 				</ElectricMachineSystem>
@@ -145,9 +149,13 @@
 							</CurrentLimits>
 						</v2.4:Data>
 						<Signature>
-							<di:Reference>
-								<di:DigestMethod Algorithm=""/>
-								<di:DigestValue/>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
 							</di:Reference>
 						</Signature>
 					</REESS>
@@ -183,9 +191,13 @@
 							</CurrentLimits>
 						</v2.4:Data>
 						<Signature>
-							<di:Reference>
-								<di:DigestMethod Algorithm=""/>
-								<di:DigestValue/>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
 							</di:Reference>
 						</Signature>
 					</REESS>
@@ -211,7 +223,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
+						<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Retarder>
@@ -241,7 +253,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
+						<di:DigestValue>Ux2vo+s07pGr9XCbvNs/YbJcFaZClORRGXpP6Eyeze8=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Axlegear>
@@ -270,7 +282,7 @@
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										<di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -297,7 +309,7 @@
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
+										<di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>

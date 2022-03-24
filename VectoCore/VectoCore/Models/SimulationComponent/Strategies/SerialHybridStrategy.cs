@@ -294,8 +294,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				retVal.MechanicalAssistPower[em.Item1] = null;
 			}
 
-			GenSetCharacteristics.ContinuousTorque =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.GEN) as ElectricMotor).ContinuousTorque;
+			GenSetCharacteristics.ContinuousTorque = ModelData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == EmPosition)?.Item2.Overload.ContinuousTorque ?? 0.SI<NewtonMeter>(); 
 
 			PreviousState.AngularVelocity = outAngularVelocity;
 			PreviousState.SMState = DataBus.BatteryInfo.StateOfCharge > StrategyParameters.TargetSoC

@@ -82,7 +82,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			var torquesMinRpm = entries.Where(x => x.MotorSpeed.IsBetween(lowerSpeed, upperSpeed)).OrderBy(x => x.Torque).ToList();
 			// entries at 0 rpm grid point
 			var torquesZeroRpm = entries.Where(x => x.MotorSpeed.IsEqual(0)).OrderBy(x => x.Torque).ToList();
-
+			if (torquesZeroRpm.Count == 0) {
+				throw new VectoException("Electric Motor PowerMap contains no entries at 0 rpm!");
+			}
 
 			var entriesZero = new List<EfficiencyMap.Entry>();
 			var avgSpeed = torquesMinRpm.Average(x => x.MotorSpeed.Value()).SI<PerSecond>();

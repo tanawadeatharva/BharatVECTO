@@ -19,7 +19,7 @@
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
     <ProjectReference Include="..\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\VectoHashing\VectoHashing.csproj" />
-  </ItemGroup>
+</ItemGroup>
 
   <ItemGroup>
     <None Include="TestData\**\*.xml">
