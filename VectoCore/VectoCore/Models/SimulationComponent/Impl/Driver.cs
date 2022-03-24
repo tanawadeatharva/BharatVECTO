@@ -794,7 +794,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
 				gradient, false);
 			var gearChanged = !(DataBus.GearboxInfo.Gear == gear && DataBus.GearboxInfo.TCLocked == tcLocked);
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && gearChanged && (retVal is ResponseOverload || retVal is ResponseUnderload)) {
+			if ((DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null) && gearChanged && (retVal is ResponseOverload || retVal is ResponseUnderload)) {
 				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload");
 				return null;
 			}
