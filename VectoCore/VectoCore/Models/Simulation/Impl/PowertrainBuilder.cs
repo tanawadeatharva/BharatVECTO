@@ -239,17 +239,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a measured speed powertrain.
 		/// <code>
 		/// MeasuredSpeedDrivingCycle
-		/// └┬ Vehicle
-		///  └┬ Wheels
-		///   └┬ Brakes
-		///    └┬ AxleGear
-		///     └┬ (Angledrive)
-		///      └┬ (Transmission Output Retarder)
-		///       └┬ Gearbox, ATGearbox, or APTNGearbox
-		///        └┬ (Transmission Input Retarder)
-		///         └┬ (Clutch if Manual Transmission)
-		///          └ StopStartCombustionEngine
-		///                                    └(Aux)
+		/// └┬Vehicle
+		///  └┬Wheels
+		///   └┬Brakes
+		///    └┬AxleGear
+		///     └┬(Angledrive)
+		///      └┬(Transmission Output Retarder)
+		///       └┬Gearbox, ATGearbox, or APTNGearbox
+		///        └┬(Transmission Input Retarder)
+		///         └┬(Clutch if Manual Transmission)
+		///          └StopStartCombustionEngine
+		///                                   └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
@@ -777,13 +777,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// └┬Vehicle
 		///  └┬Wheels
 		///   └┬Brakes
-		///    └┬(Angledrive)
-		///     └┬(Transmission Output Retarder)
-		///      └┬ATGearbox or Gearbox
-		///       └┬(Transmission Input Retarder)
-		///        └┬(Clutch if Manual Transmission)
-		///         └CombustionEngine
-		///                         └(Aux)
+		///    └┬AxleGear
+		///     └┬(Angledrive)
+		///      └┬(Transmission Output Retarder)
+		///       └┬ATGearbox or Gearbox
+		///        └┬(Transmission Input Retarder)
+		///         └┬(Clutch if Manual Transmission)
+		///          └CombustionEngine
+		///                          └(Aux)
 		/// </code>
 		/// </summary>
 		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
