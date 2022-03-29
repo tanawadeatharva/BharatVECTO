@@ -93,6 +93,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		/// <summary>
 		/// Builds an engine only powertrain.
+		/// <code>
+		/// PowertrainDrivingCycle────────┐
+		/// └StopStartCombustionEngine    │
+		///                          └(Aux)
+		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildEngineOnly(VectoRunData data)
 		{
@@ -101,18 +106,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
-
-			var directAux = new EngineAuxiliary(container);
-			directAux.AddCycle(Constants.Auxiliaries.Cycle);
 			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
+
+			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
+			var directAux = new EngineAuxiliary(container);
+
+			cycle.InPort().Connect(engine.OutPort());
+			engine.Connect(directAux.Port());
+			directAux.AddCycle(Constants.Auxiliaries.Cycle);
+			
 			new EngineOnlyGearboxInfo(container);
 			new ZeroMileageCounter(container);
 			new DummyDriverInfo(container);
-			engine.Connect(directAux.Port());
-
-			cycle.InPort().Connect(engine.OutPort());
+			
 			return container;
 		}
 
