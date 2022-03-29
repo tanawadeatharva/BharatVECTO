@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.ServiceModel.Configuration;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -110,35 +111,14 @@ namespace TUGraz.VectoCore.Utils
 			return next;
 		}
 
-		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox,
-			RetarderData data, IVehicleContainer container)
+		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox next, IVehicleContainer container)
 		{
-			if (gearbox is null) {
+			if (next is null) {
 				return prev;
 			}
 
-			switch (data.Type) {
-				case RetarderType.TransmissionOutputRetarder:
-					// --> Transmission Output Retarder --> Gearbox -->
-					return prev.AddComponent(new Retarder(container, data.LossMap, data.Ratio)).AddComponent(gearbox);
-
-				case RetarderType.TransmissionInputRetarder:
-					// --> Gearbox --> Transmission Input Retarder -->
-					return prev.AddComponent(gearbox).AddComponent(new Retarder(container, data.LossMap, data.Ratio));
-
-				case RetarderType.None:
-				case RetarderType.LossesIncludedInTransmission:
-				case RetarderType.EngineRetarder:
-					// --> DummyRetarder --> Gearbox -->
-					return prev.AddComponent(new DummyRetarder(container)).AddComponent(gearbox);
-
-				case RetarderType.AxlegearInputRetarder:
-					//todo mk2022-03-21 implement this!
-					throw new NotImplementedException();
-
-				default:
-					throw new ArgumentOutOfRangeException("retarderdata.Type", data.Type.ToString(), "Retardertype unknown");
-			}
+			prev.InPort().Connect(next.OutPort());
+			return next;
 		}
 	}
 }
