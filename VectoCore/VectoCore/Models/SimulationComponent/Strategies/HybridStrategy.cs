@@ -1014,13 +1014,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				eval.Add(ResponseEmOff);
 				return;
 			}
+
+			var emPos = ModelData.ElectricMachinesData.First().Item1;
+			var disengageSpeedThreshold = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+				? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
+				: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
+			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
+
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
-				var emPos = ModelData.ElectricMachinesData.First().Item1;
-				var disengageSpeedThreshold = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
-					? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
-					: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
-				var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
 				if (vehiclespeedBelowThreshold && (emPos == PowertrainPosition.HybridP2 || emPos == PowertrainPosition.HybridP1)) {
 					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 						var firstgear = ResponseEmOff;
@@ -1028,7 +1030,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						eval.Add(firstgear);
 						return;
 					} else {
-						eval.Add(ResponseEmOff);
+						var off = ResponseEmOff;
+						off.Setting.GearboxInNeutral = true;
+						eval.Add(off);
 						return;
 					}
 				}
@@ -1061,6 +1065,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
 
 				var engineSpeedTooLow = EngineSpeedTooLow(firstResponse);
+
+				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
+								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
+				if (engineSpeedTooLow && DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
+					endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+					var response = ResponseEmOff;
+					response.Gear = new GearshiftPosition(0);
+					response.Setting.GearboxEngaged = false;
+					response.Setting.GearboxInNeutral = true;
+					eval.Add(response);
+					return;
+				}
 
 				if (GearList.HasPredecessor(nextGear) && engineSpeedTooLow && (!vehiclespeedBelowThreshold || AllowEmergencyShift)) {
 					// engine speed would fall below idling speed - consider downshift
@@ -1114,6 +1130,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								var downshift = ResponseEmOff;
 								//downshift.Gear = GearList.Predecessor(nextGear);
 								downshift.Gear = best; // GearList.Predecessor(nextGear);
+                                downshift.Setting.GearboxInNeutral = best.Gear == 0;
+								downshift.Setting.ShiftRequired = best.Gear == 0;
 								eval.Add(downshift);
 								return;
 							}
@@ -1288,7 +1306,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 			} else {
-				eval.Add(ResponseEmOff);
+				var off = ResponseEmOff;
+				if (vehiclespeedBelowThreshold && (emPos == PowertrainPosition.HybridP2 || emPos == PowertrainPosition.HybridP1)) {
+					off.Setting.GearboxInNeutral = true;
+				} else {
+					off.Setting.GearboxInNeutral = PreviousState.Solution.Setting.GearboxInNeutral;
+				}
+
+				eval.Add(off);
 			}
 		}
 
@@ -1309,6 +1334,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse)
 		{
+			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
+							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
+			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
+				endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+				return new GearshiftPosition(0);
+			}
+
 			var tmpGear = new GearshiftPosition(nextGear.Gear, nextGear.TorqueConverterLocked);
 			var candidates = new Dictionary<GearshiftPosition, PerSecond>();
 			var gbxOutSpeed = firstResponse.Engine.EngineSpeed /
