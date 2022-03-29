@@ -75,6 +75,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 				Controller.PreviousState.OutAngularVelocity);
 
@@ -169,6 +177,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 				Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;

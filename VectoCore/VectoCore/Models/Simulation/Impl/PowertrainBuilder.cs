@@ -386,6 +386,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = new ElectricSystem(container);
 
+			if (data.BatteryData != null && data.SuperCapData != null) {
+				throw new VectoException("Only one type of REESS is supported!");
+			}
 			if (data.BatteryData != null) {
 				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
 					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
@@ -403,10 +406,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				superCap.Initialize(data.SuperCapData.InitialSoC);
 				es.Connect(superCap);
 			}
-
-			//var battery = new Battery(container, data.BatteryData);
-			//battery.Initialize(data.BatteryData.InitialSoC);
-			//es.Connect(battery);
 
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
@@ -438,6 +437,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ctl.Gearbox = gbx;
 			ctl.Engine = engine;
+
+			if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+				var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+				es.Connect(whrCharger);
+				engine.WHRCharger = whrCharger;
+
+			}
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
@@ -500,6 +507,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = new ElectricSystem(container);
 
+			if (data.BatteryData != null && data.SuperCapData != null) {
+				throw new VectoException("Only one type of REESS is supported!");
+			}
 			if (data.BatteryData != null) {
 				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
 					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
@@ -535,6 +545,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
+
+			if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+				var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+				es.Connect(whrCharger);
+				engine.WHRCharger = whrCharger;
+
+			}
 
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
@@ -1064,7 +1082,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
-			es.Charger = new SimpleCharger();
+			es.Connect(new SimpleCharger());
 
 			var ctl = new DummyElectricMotorControl();
 			var powertrain = vehicle

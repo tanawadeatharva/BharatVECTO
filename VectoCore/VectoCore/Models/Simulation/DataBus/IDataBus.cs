@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
@@ -90,6 +91,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IDCDCConverter DCDCConverter { get; }
 
+		WHRCharger WHRCharger { get; }
 		bool IsTestPowertrain { get; }
 	}
 

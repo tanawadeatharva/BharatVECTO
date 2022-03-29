@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			// todo mk-2021-08-26 this check is redundant. Previous code would have thrown exception otherwise.
 			if (!headerValid && (type == WHRType.ElectricalOutput || type == WHRType.MechanicalOutputDrivetrain)) {
-				throw new VectoException("expected column headers: {0}", whrColumn.Join());
+				throw new VectoException("expected column headers: {0}", whrColumn);
 			}
 
 			if (!headerValid) {
