@@ -417,6 +417,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.GEN)) {
+				throw new VectoException("ParallelHybrid does not support GEN set.");
+			}
+			if (data.ElectricMachinesData.Count != 1) {
+				throw new VectoException("ParallelHybrid needs exactly one electric motor.");
+			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = new ElectricSystem(container);
@@ -541,6 +547,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 == PowertrainPosition.GEN) != 1) {
+				throw new VectoException("SerialHybrid needs exactly one GEN set.");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 != PowertrainPosition.GEN) != 1) {
+				throw new VectoException("SerialHybrid needs exactly one electric motor.");
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
