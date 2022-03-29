@@ -94,9 +94,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <summary>
 		/// Builds an engine only powertrain.
 		/// <code>
-		/// PowertrainDrivingCycle────────┐
-		/// └StopStartCombustionEngine    │
-		///                          └(Aux)
+		/// PowertrainDrivingCycle
+		/// └StopStartCombustionEngine
+		///  └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildEngineOnly(VectoRunData data)
@@ -115,11 +115,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			cycle.InPort().Connect(engine.OutPort());
 			engine.Connect(directAux.Port());
 			directAux.AddCycle(Constants.Auxiliaries.Cycle);
-			
+
 			new EngineOnlyGearboxInfo(container);
 			new ZeroMileageCounter(container);
 			new DummyDriverInfo(container);
-			
+
 			return container;
 		}
 
@@ -127,15 +127,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a PWheel powertrain.
 		/// <code>
 		/// PWheelCycle
-		/// └┬AxleGear
-		///  └┬(AxlegearInputRetarder)
-		///   └┬(Angledrive)
-		///    └┬(TransmissionOutputRetarder)
-		///     └┬CycleGearbox
-		///      └┬(TransmissionInputRetarder)
-		///       └┬Clutch
-		///        └StopStartCombustionEngine
-		///                                 └(Aux)
+		/// └AxleGear
+		///  ├(Angledrive)
+		///  ├(TransmissionOutputRetarder)
+		///  └CycleGearbox
+		///   ├(TransmissionInputRetarder)
+		///   └Clutch
+		///    └StopStartCombustionEngine
+		///     └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildPWheel(VectoRunData data)
@@ -148,7 +147,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new CycleGearbox(container, data), container)
@@ -165,15 +163,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a VTP powertrain.
 		/// <code>
 		/// VTPCycle
-		/// └┬AxleGear
-		///  └┬(AxlegearInputRetarder)
-		///   └┬(Angledrive)
-		///    └┬(TransmissionOutputRetarder)
-		///     └┬VTPGearbox
-		///      └┬(TransmissionInputRetarder)
-		///       └┬Clutch
-		///        └VTPCombustionEngine
-		///                           └(VTPTruckAuxiliaries or VTPBusAuxiliaries)
+		/// └AxleGear
+		///  ├(Angledrive)
+		///  ├(TransmissionOutputRetarder)
+		///  └VTPGearbox
+		///   ├(TransmissionInputRetarder)
+		///   └Clutch
+		///    └VTPCombustionEngine
+		///     └(VTPTruckAuxiliaries or VTPBusAuxiliaries)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildVTP(VectoRunData data)
@@ -187,7 +184,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			new VTPCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new VTPGearbox(container, data), container)
@@ -202,7 +198,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} else if (data.VehicleData.VehicleCategory.IsBus()) {
 				AddVTPBusAuxiliaries(data, container, engine);
 			}
-			
+
 			return container;
 		}
 
@@ -260,18 +256,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a measured speed powertrain.
 		/// <code>
 		/// MeasuredSpeedDrivingCycle
-		/// └┬Vehicle
-		///  └┬Wheels
-		///   └┬Brakes
-		///    └┬AxleGear
-		///     └┬(AxlegearInputRetarder)
-		///      └┬(Angledrive)
-		///       └┬(TransmissionOutputRetarder)
-		///        └┬Gearbox, ATGearbox, or APTNGearbox
-		///         └┬(TransmissionInputRetarder)
-		///          └┬(Clutch)
-		///           └StopStartCombustionEngine
-		///                                    └(Aux)
+		/// └Vehicle
+		///  └Wheels
+		///   └Brakes
+		///    └AxleGear
+		///     ├(Angledrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └Gearbox, ATGearbox, or APTNGearbox
+		///      ├(TransmissionInputRetarder)
+		///      ├(Clutch)
+		///      └StopStartCombustionEngine
+		///       └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
@@ -287,7 +282,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetGearbox(container), container)
@@ -302,18 +296,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a measured speed (with gear) powertrain.
 		/// <code>
 		/// MeasuredSpeedDrivingCycle
-		/// └┬Vehicle
-		///  └┬Wheels
-		///   └┬Brakes
-		///    └┬AxleGear
-		///     └┬(AxlegearInputRetarder)
-		///      └┬(Angledrive)
-		///       └┬(TransmissionOutputRetarder)
-		///        └┬CycleGearbox
-		///         └┬(TransmissionInputRetarder)
-		///          └┬(Clutch)
-		///           └StopStartCombustionEngine
-		///                                    └(Aux)
+		/// └Vehicle
+		///  └Wheels
+		///   └Brakes
+		///    └AxleGear
+		///     ├(Angledrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └CycleGearbox
+		///      ├(TransmissionInputRetarder)
+		///      ├(Clutch)
+		///      └StopStartCombustionEngine
+		///       └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
@@ -328,7 +321,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new CycleGearbox(container, data))
@@ -345,19 +337,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a distance-based conventional powertrain.
 		/// <code>
 		/// DistanceBasedDrivingCycle
-		/// └┬Driver
-		///  └┬Vehicle
-		///   └┬Wheels
-		///    └┬Brakes
-		///     └┬AxleGear
-		///      └┬(AxlegearInputRetarder)
-		///       └┬(Angledrive)
-		///        └┬(TransmissionOutputRetarder)
-		///         └┬Gearbox, ATGearbox, or APTNGearbox
-		///          └┬(TransmissionInputRetarder)
-		///           └┬(Clutch)
-		///            └StopStartCombustionEngine
-		///                                     └(Aux)
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     └AxleGear
+		///      ├(Angledrive)
+		///      ├(TransmissionOutputRetarder)
+		///      └Gearbox, ATGearbox, or APTNGearbox
+		///       ├(TransmissionInputRetarder)
+		///       ├(Clutch)
+		///       └StopStartCombustionEngine
+		///        └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainConventional(VectoRunData data)
@@ -376,7 +367,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetGearbox(container), container)
@@ -391,25 +381,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a distance-based parallel hybrid powertrain.
 		/// <code>
 		/// DistanceBasedDrivingCycle
-		/// └┬Driver
-		///  └┬Vehicle
-		///   └┬Wheels
-		///    └┬HybridController
-		///     └┬Brakes
-		///      └┬(Engine P4)
-		///       └┬AxleGear
-		///        └┬(AxlegearInputRetarder)
-		///         └┬(Engine P3)
-		///          └┬(Angledrive)
-		///           └┬(TransmissionOutputRetarder)
-		///            └┬Gearbox, ATGearbox, or APTNGearbox
-		///             └┬(TransmissionInputRetarder)
-		///              └┬(Engine P2.5)
-		///               └┬(Engine P2)
-		///                └┬(SwitchableClutch when Manual Transmission)
-		///                 └┬(Engine P1)
-		///                  └StopStartCombustionEngine
-		///                                           └(Aux)
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └HybridController
+		///     └Brakes
+		///      ├(Engine P4)
+		///      └AxleGear
+		///       ├(Engine P3)
+		///       ├(Angledrive)
+		///       ├(TransmissionOutputRetarder)
+		///       └Gearbox, ATGearbox, or APTNGearbox
+		///        ├(TransmissionInputRetarder)
+		///        ├(Engine P2.5)
+		///        ├(Engine P2)
+		///        ├(SwitchableClutch)
+		///        ├(Engine P1)
+		///        └StopStartCombustionEngine
+		///         └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainParallelHybrid(VectoRunData data)
@@ -483,7 +472,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
@@ -530,17 +518,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a distance-based serial hybrid powertrain for either E4, E3, or E2.
 		/// <code>
 		/// DistanceBasedDrivingCycle
-		/// └┬Driver
-		///  └┬Vehicle
-		///   └┬Wheels
-		///    └┬SerialHybridController
-		///     └┬Brakes
-		///      ├(Engine E4) ------------ stop building here if E4 engine exists
-		///      └┬AxleGear
-		///       └┬(AxlegearInputRetarder)
-		///        ├(Engine E3)  ------------ stop building here if E3 engine exists
-		///        └┬PEVGearbox or APTNGearbox
-		///         └(Engine E2) ------------ stop building here if E2 engine exists
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └SerialHybridController
+		///     └Brakes
+		///      │ └Engine E4
+		///      └AxleGear
+		///       │ ├(AxlegearInputRetarder)
+		///       │ └Engine E3
+		///       └PEVGearbox or APTNGearbox
+		///        └Engine E2
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainSerialHybrid(VectoRunData data)
@@ -624,7 +612,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->AxlegearInputRetarder-->PEVGearbox or APTNGearbox-->Engine E2
+					//-->AxleGear-->PEVGearbox or APTNGearbox-->Engine E2
 					Gearbox gearbox;
 					if (data.GearboxData.Type == GearboxType.APTN) {
 						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
@@ -634,7 +622,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 					powertrain
 						.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(gearbox)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
@@ -656,7 +643,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
+						//todo mk20220329 maybe missing: em.BusAux = busAux; like in battery electric?
 					}
+					//todo mk20220329 maybe throw exception "BusAux must be supplied from REESS!", like in battery electric?
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
@@ -671,18 +660,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		/// <summary>
-		/// Builds a battery electric powertrain with EITHER E4, E3, or E2.
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
 		/// <code>
 		/// DistanceBasedDrivingCycle
-		/// └┬Driver
-		///  └┬Vehicle
-		///   └┬Wheels
-		///    └┬Brakes
-		///     ├(Engine E4)
-		///     └┬AxleGear
-		///      ├(Engine E3)
-		///      └┬PEVGearbox or APTNGearbox
-		///       └(Engine E2)
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     │ └Engine E4
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | └Engine E3
+		///      └PEVGearbox or APTNGearbox
+		///       └Engine E2
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildBatteryElectricPowertrain(VectoRunData data)
@@ -690,11 +680,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
-			if (data.ElectricMachinesData.Count > 1) {
-				throw new VectoException("Electric motors on multiple positions not supported");
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.GEN)) {
+				throw new VectoException("Battery electric vehicle does not support GEN set.");
+			}
+			if (data.ElectricMachinesData.Count != 1) {
+				throw new VectoException("Battery electric vehicle needs exactly one electric motor.");
 			}
 			if (data.BatteryData != null && data.SuperCapData != null) {
-				throw new VectoException("Only one REESS is supported.");
+				throw new VectoException("Battery electric vehicle only supports a single REESS: Battery OR SuperCap. But both are defined.");
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
@@ -738,9 +731,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE3:
-					//-->AxleGear-->Engine E3
+					//-->AxleGear-->(AxlegearInputRetarder)-->Engine E3
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl);
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(em);
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
@@ -748,18 +743,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				case PowertrainPosition.BatteryElectricE2:
 					//-->AxleGear-->APTNGearbox or PEVGearbox-->Engine E2
-					powertrain = powertrain.AddComponent(new AxleGear(container, data.AxleGearData));
-
 					Gearbox gearbox;
 					if (data.GearboxData.Type == GearboxType.APTN) {
 						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
 					} else {
 						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					}
-					powertrain = powertrain.AddComponent(gearbox);
-
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
-					powertrain.AddComponent(em);
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(gearbox)
+						.AddComponent(em);
 
 					new ATClutchInfo(container);
 					break;
@@ -788,11 +782,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition, 
+		private IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
 				ElectricMotorData>> electricMachinesData, VehicleContainer container, IElectricSystem es, IHybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData == null) {
+			if (motorData is null) {
 				return null;
 			}
 
@@ -807,11 +801,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return motor;
 		}
 
-		private static IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition, 
+		private static IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
 				ElectricMotorData>> electricMachinesData, VehicleContainer container, IElectricSystem es, IElectricMotorControl ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
-			if (motorData == null) {
+			if (motorData is null) {
 				return null;
 			}
 
@@ -825,17 +819,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a simple conventional powertrain.
 		/// <code>
 		///(MeasuredSpeedDrivingCycle)
-		/// └┬Vehicle
-		///  └┬Wheels
-		///   └┬Brakes
-		///    └┬AxleGear
-		///     └┬(Angledrive)
-		///      └┬(Transmission Output Retarder)
-		///       └┬ATGearbox or Gearbox
-		///        └┬(Transmission Input Retarder)
-		///         └┬(Clutch if Manual Transmission)
-		///          └CombustionEngine
-		///                          └(Aux)
+		/// └Vehicle
+		///  └Wheels
+		///   └Brakes
+		///    └AxleGear
+		///     ├(Angledrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └ATGearbox or Gearbox
+		///      ├(TransmissionInputRetarder)
+		///      ├(Clutch)
+		///      └CombustionEngine
+		///       └(Aux)
 		/// </code>
 		/// </summary>
 		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
@@ -861,7 +855,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(GetSimpleGearbox(container, data), container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
 				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
 				.AddAuxiliaries(container, data);
@@ -1289,34 +1285,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT when runData.JobType == VectoSimulationJobType.ConventionalVehicle:
-							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-							return new AMTShiftStrategyOptimized(container);
+					runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+					return new AMTShiftStrategyOptimized(container);
 
 				case GearboxType.AMT when runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle):
-							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
-							return new PEVAMTShiftStrategy(container);
+					runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
+					return new PEVAMTShiftStrategy(container);
 				case GearboxType.AMT:
-							throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}",
-								runData.GearboxData.Type, runData.JobType);
+					throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}",
+						runData.GearboxData.Type, runData.JobType);
 
 				case GearboxType.MT:
 					runData.ShiftStrategy = MTShiftStrategy.Name;
 					return new MTShiftStrategy(container);
-				
+
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 					return new ATShiftStrategyOptimized(container);
 
 				case GearboxType.APTN when runData.JobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.BatteryElectricVehicle):
-							runData.ShiftStrategy = APTNShiftStrategy.Name;
-							return new APTNShiftStrategy(container);
+					runData.ShiftStrategy = APTNShiftStrategy.Name;
+					return new APTNShiftStrategy(container);
 
 				case GearboxType.APTN when runData.JobType == VectoSimulationJobType.ConventionalVehicle && container.IsTestPowertrain:
-							return null;
+					return null;
 
 				case GearboxType.APTN:
-							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
+					throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
 
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "VECTO can not automatically derive shift strategy for GearboxType.");
@@ -1464,7 +1460,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 	}
-	
+
 	internal class DummyDriverInfo : VectoSimulationComponent, IDriverInfo
 	{
 		public DummyDriverInfo(VehicleContainer container) : base(container)
