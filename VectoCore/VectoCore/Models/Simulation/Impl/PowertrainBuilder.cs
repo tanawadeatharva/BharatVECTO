@@ -529,11 +529,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///   └┬Wheels
 		///    └┬SerialHybridController
 		///     └┬Brakes
-		///      ├(Engine E4)
+		///      ├(Engine E4) ------------ stop building here if E4 engine exists
 		///      └┬AxleGear
-		///       ├(Engine E3)
-		///       └┬PEVGearbox or APTNGearbox
-		///        └(Engine E2)
+		///       └┬(AxlegearInputRetarder)
+		///        ├(Engine E3)  ------------ stop building here if E3 engine exists
+		///        └┬PEVGearbox or APTNGearbox
+		///         └(Engine E2) ------------ stop building here if E2 engine exists
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainSerialHybrid(VectoRunData data)
@@ -581,7 +582,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
 
-
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
@@ -602,16 +602,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE3:
-					//-->AxleGear-->Engine E3
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3,
-							data.ElectricMachinesData, container, es, ctl));
+					//-->AxleGear-->(AxlegearInputRetarder)-->Engine E3
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					new ATClutchInfo(container);
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->PEVGearbox or APTNGearbox-->Engine E2
+					//-->AxleGear-->AxlegearInputRetarder-->PEVGearbox or APTNGearbox-->Engine E2
 					Gearbox gearbox;
 					if (data.GearboxData.Type == GearboxType.APTN) {
 						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
@@ -619,10 +620,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					}
 
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(gearbox)
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
-							data.ElectricMachinesData, container, es, ctl));
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 
