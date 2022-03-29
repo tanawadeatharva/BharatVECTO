@@ -575,12 +575,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					}
 
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-						.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(gearbox, container)
-						.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, 
+							data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 
@@ -817,9 +816,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     │ ├(AxlegearInputRetarder)
 		///     │ └Engine E3
 		///     ├(AngleDrive)
-		///     ├(TransmissionOutputRetarder)
 		///     └APTNGearbox or Gearbox
-		///      ├(TransmissionInputRetarder)
 		///      └Engine E2
 		/// </code>
 		/// </summary>
@@ -869,9 +866,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-						.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(gearbox, container)
-						.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 
 					ctl.Gearbox = gearbox;
@@ -946,19 +941,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
-			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
-			//       should be a reference/proxy to the main driving cyle. but how to access it?
-			switch (data.Cycle.CycleType) {
-				case CycleType.DistanceBased:
-					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
-					break;
-				case CycleType.MeasuredSpeed:
-					new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
-					break;
-				case CycleType.EngineOnly: break;
-				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
-			}
-
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
@@ -975,6 +957,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+				
+			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+			//       should be a reference/proxy to the main driving cyle. but how to access it?
+			switch (data.Cycle.CycleType) {
+				case CycleType.DistanceBased:
+					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+					break;
+				case CycleType.MeasuredSpeed:
+					new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
+					break;
+				case CycleType.EngineOnly: break;
+				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
+			}
 
 			if (data.BusAuxiliaries != null) {
 				if (!(container.BusAux is BusAuxiliariesAdapter busAux)) {
@@ -1036,9 +1031,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData is null ? null : new Angledrive(container, data.AngledriveData))
-				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data), container)
-				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1, data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
 		}
 
