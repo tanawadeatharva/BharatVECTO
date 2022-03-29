@@ -264,13 +264,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///  └┬Wheels
 		///   └┬Brakes
 		///    └┬AxleGear
-		///     └┬(Angledrive)
-		///      └┬(Transmission Output Retarder)
-		///       └┬Gearbox, ATGearbox, or APTNGearbox
-		///        └┬(Transmission Input Retarder)
-		///         └┬(Clutch if Manual Transmission)
-		///          └StopStartCombustionEngine
-		///                                   └(Aux)
+		///     └┬(AxlegearInputRetarder)
+		///      └┬(Angledrive)
+		///       └┬(TransmissionOutputRetarder)
+		///        └┬Gearbox, ATGearbox, or APTNGearbox
+		///         └┬(TransmissionInputRetarder)
+		///          └┬(Clutch)
+		///           └StopStartCombustionEngine
+		///                                    └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
@@ -286,8 +287,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container), data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(GetGearbox(container), container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
 				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
 				.AddAuxiliaries(container, data);
