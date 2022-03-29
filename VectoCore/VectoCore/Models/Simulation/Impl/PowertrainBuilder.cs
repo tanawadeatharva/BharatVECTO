@@ -414,30 +414,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-			var es = new ElectricSystem(container);
-
-			if (data.BatteryData != null) {
-				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
-					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
-				}
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				if (data.SuperCapData.InitialSoC < data.SuperCapData.MinVoltage / data.SuperCapData.MaxVoltage) {
-					throw new VectoException("SuperCap: Initial SoC has to be higher than min SoC");
-				}
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
-			//var battery = new Battery(container, data.BatteryData);
-			//battery.Initialize(data.BatteryData.InitialSoC);
-			//es.Connect(battery);
-
+			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
@@ -544,29 +521,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-			var es = new ElectricSystem(container);
-
-			if (data.BatteryData != null) {
-				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
-					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
-				}
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				if (data.SuperCapData.InitialSoC < data.SuperCapData.MinVoltage / data.SuperCapData.MaxVoltage) {
-					throw new VectoException("SuperCap: Initial SoC has to be higher than min SoC");
-				}
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
-			//var battery = new Battery(container, data.BatteryData);
-			//battery.Initialize(data.BatteryData.InitialSoC);
-			//es.Connect(battery);
+			var es = ConnectREESS(data, container);
 			var strategy = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission()
 				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
 				: new SerialHybridStrategy(data, container);
@@ -620,9 +575,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						gearbox = new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					}
 
-					powertrain
-						.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(gearbox)
+					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+						.AddComponent(gearbox, container)
+						.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
@@ -686,24 +643,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Count != 1) {
 				throw new VectoException("Battery electric vehicle needs exactly one electric motor.");
 			}
-			if (data.BatteryData != null && data.SuperCapData != null) {
-				throw new VectoException("Battery electric vehicle only supports a single REESS: Battery OR SuperCap. But both are defined.");
-			}
-
+			
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-			var es = new ElectricSystem(container);
-
-			if (data.BatteryData != null) {
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
+			var es = ConnectREESS(data, container);
 
 			var ctl = new BatteryElectricMotorController(container, es);
 
@@ -864,41 +806,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		/// <summary>
-		/// Builds a simple serial hybrid powertrain with EITHER E4, E3, or E2.
+		/// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
 		/// <code>
 		/// Vehicle
-		/// └┬Wheels
-		///  └┬SimpleHybridController
-		///   └┬Brakes
-		///    ├(Engine E4)
-		///    └┬AxleGear
-		///     ├(Engine E3)
-		///     └┬(AngleDrive)
-		///      └┬(Output Retarder)
-		///       └┬APTNGearbox or Gearbox
-		///        └┬(Input Retarder)
-		///         └(Engine E2)
+		/// └Wheels
+		///  └SimpleHybridController
+		///   └Brakes
+		///    │ └Engine E4
+		///    └AxleGear
+		///     │ ├(AxlegearInputRetarder)
+		///     │ └Engine E3
+		///     ├(AngleDrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └APTNGearbox or Gearbox
+		///      ├(TransmissionInputRetarder)
+		///      └Engine E2
 		/// </code>
 		/// </summary>
 		public void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
-			var es = new ElectricSystem(container);
-			if (data.BatteryData != null) {
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
-			//var battery = new Battery(container, data.BatteryData);
-			//battery.Initialize(data.BatteryData.InitialSoC);
-			//es.Connect(battery);
-
+			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
@@ -925,26 +852,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE3:
-					//-->AxleGear-->Engine E3
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3,
-							data.ElectricMachinesData, container, es, ctl));
-
+					//-->AxleGear-->(AxlegearInputRetarder)-->Engine E3
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, data.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->(AngleDrive)-->(Output Retarder)-->APTNGearbox or Gearbox-->(Input Retarder)-->Engine E2
+					//-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->APTNGearbox or Gearbox-->(TransmissionInputRetarder)-->Engine E2
 					var gearbox = data.GearboxData.Type.AutomaticTransmission()
 						? new APTNGearbox(container, ctl.ShiftStrategy)
 						: new Gearbox(container, ctl.ShiftStrategy);
 
 					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-						.AddComponent(gearbox, data.Retarder, container)
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
-							data.ElectricMachinesData, container, es, ctl));
+						.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+						.AddComponent(gearbox, container)
+						.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl));
 
 					ctl.Gearbox = gearbox;
 					if (data.GearboxData.Type.AutomaticTransmission()) {
@@ -959,20 +887,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
 		{
-			var es = new ElectricSystem(container);
-			if (data.BatteryData != null) {
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
-			//var ctl = new SimpleHybridController(container, es);
+			var es = ConnectREESS(data, container);
 			var ctl = new GensetMotorController(container, es);
 
 			GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
@@ -986,41 +901,28 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a simple hybrid powertrain.
 		///<code>
 		/// (MeasuredSpeedDrivingCycle)
-		/// └┬Vehicle
-		///  └┬Wheels
-		///   └┬SimpleHybridController
-		///    └┬Brakes
-		///     └┬(Engine P4)
-		///      └┬AxleGear
-		///       └┬(Engine P3)
-		///        └┬(Angledrive)
-		///         └┬(Output Retarder)
-		///          └┬Gearbox or ATGearbox
-		///           └┬(Input Retarder)
-		///            └┬(Engine P2.5)
-		///             └┬(Engine P2)
-		///              └┬(SwitchableClutch when Manual Transmission)
-		///               └┬(Engine P1)
-		///                └StopStartCombustionEngine
-		///                                         └(Aux)
+		///  └Vehicle
+		///   └Wheels
+		///    └SimpleHybridController
+		///     └Brakes
+		///      ├(Engine P4)
+		///      └AxleGear
+		///       ├(Engine P3)
+		///       ├(Angledrive)
+		///       ├(TransmissionOutputRetarder)
+		///       └Gearbox, ATGearbox, or APTNGearbox
+		///        ├(TransmissionInputRetarder)
+		///        ├(Engine P2.5)
+		///        ├(Engine P2)
+		///        ├(SwitchableClutch)
+		///        ├(Engine P1)
+		///        └StopStartCombustionEngine
+		///         └(Aux)
 		/// </code>
 		/// </summary>
 		public void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
-			var es = new ElectricSystem(container);
-
-			if (data.BatteryData != null) {
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
+			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
@@ -1064,7 +966,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(gearbox, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
@@ -1094,29 +998,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Builds a simple battery electric powertrain.
 		/// <code>
 		/// (Dummy MeasureSpeedDrivingCycle)
-		/// └┬Vehicle
-		///  └┬Wheels
-		///   └┬Brakes
-		///    └┬AxleGear
-		///     └┬ATGearbox or Gearbox
-		///      └(Electric Motor)
+		/// └Vehicle
+		///  └Wheels
+		///   └Brakes
+		///    └AxleGear
+		///     └ATGearbox or Gearbox
+		///      └Electric Motor
 		/// </code>
 		/// </summary>
 		public void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
 		{
-			var es = new ElectricSystem(container);
-			if (data.BatteryData != null) {
-				var battery = new BatterySystem(container, data.BatteryData);
-				battery.Initialize(data.BatteryData.InitialSoC);
-				es.Connect(battery);
-			}
-
-			if (data.SuperCapData != null) {
-				var superCap = new SuperCap(container, data.SuperCapData);
-				superCap.Initialize(data.SuperCapData.InitialSoC);
-				es.Connect(superCap);
-			}
-
+			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
@@ -1142,10 +1034,43 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData is null ? null : new Angledrive(container, data.AngledriveData))
-				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data), data.Retarder, container)
-				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
-					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data), container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1, data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+		}
+
+		private static ElectricSystem ConnectREESS(VectoRunData data, VehicleContainer container) {
+			
+			if (data.BatteryData != null && data.SuperCapData != null) {
+				throw new VectoException("Powertrain requires either Battery OR SuperCap, but both are defined.");
+			}
+			if (data.BatteryData is null && data.SuperCapData is null) {
+				throw new VectoException("Powertrain requires either Battery OR SuperCap, but none are defined.");
+			}
+
+			var es = new ElectricSystem(container);
+			if (data.BatteryData != null) {
+				if (data.BatteryData.InitialSoC < data.BatteryData.Batteries.Min(x => x.Item2.MinSOC)) {
+					throw new VectoException("Battery: Initial SoC has to be higher than min SoC");
+				}
+				var battery = new BatterySystem(container, data.BatteryData);
+				battery.Initialize(data.BatteryData.InitialSoC);
+				es.Connect(battery);
+			}
+
+			if (data.SuperCapData != null) {
+				if (data.SuperCapData.InitialSoC < data.SuperCapData.MinVoltage / data.SuperCapData.MaxVoltage) {
+					throw new VectoException("SuperCap: Initial SoC has to be higher than min SoC");
+				}
+				var superCap = new SuperCap(container, data.SuperCapData);
+				superCap.Initialize(data.SuperCapData.InitialSoC);
+				es.Connect(superCap);
+			}
+
+			return es;
 		}
 
 		private DrivingCycleData GetMeasuredSpeedDummyCycle() =>
