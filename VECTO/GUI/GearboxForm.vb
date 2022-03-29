@@ -510,20 +510,20 @@ Public Class GearboxForm
         Dim gStype As GearboxType = CType(CbGStype.SelectedValue, GearboxType)
 
         Change()
+        Dim tcAllowed As Boolean = gStype.AutomaticTransmission() And gStype <> GearboxType.APTN
 
-        'ChTCon.Enabled = (GStype.AutomaticTransmission())
-        gbTC.Enabled = gStype.AutomaticTransmission()
-        pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
-        TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
-        TbTqResv.Enabled = Not gStype.AutomaticTransmission()
-        GroupBox2.Enabled = Not gStype.AutomaticTransmission()
-        TBI_getr.Enabled = Not gStype.AutomaticTransmission()
-        TbTracInt.Enabled = Not gStype.AutomaticTransmission()
-        tbDownshiftAfterUpshift.Enabled = Not gStype.AutomaticTransmission()
-        tbUpshiftAfterDownshift.Enabled = Not gStype.AutomaticTransmission()
+        gbTC.Enabled = tcAllowed
+        pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso tcAllowed
+        gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso tcAllowed
+        gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso tcAllowed
+        TbStartAcc.Enabled = Not tcAllowed
+        TbStartSpeed.Enabled = Not tcAllowed
+        TbTqResv.Enabled = Not tcAllowed
+        GroupBox2.Enabled = Not tcAllowed
+        TBI_getr.Enabled = Not tcAllowed
+        TbTracInt.Enabled = Not tcAllowed
+        tbDownshiftAfterUpshift.Enabled = Not tcAllowed
+        tbUpshiftAfterDownshift.Enabled = Not tcAllowed
         UpdateGearboxInfoText()
     End Sub
 
