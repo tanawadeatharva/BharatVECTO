@@ -121,6 +121,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <code>
 		/// PWheelCycle
 		/// └┬AxleGear
+		///  └┬(AxlegearInputRetarder)
 		///  └┬(Angledrive)
 		///   └┬(Transmission Output Retarder)
 		///    └┬CycleGearbox
@@ -140,8 +141,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(new CycleGearbox(container, data), data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(new CycleGearbox(container, data), container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new Clutch(container, data.EngineData))
 				.AddComponent(engine, GetIdleController(data.PTO, engine, container))
 				.AddAuxiliaries(container, data);
