@@ -1214,14 +1214,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			modData.AddAuxiliary(auxId);
 		}
 
-		private static IGearbox GetGearbox(IVehicleContainer container)
+		private static IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy = null)
 		{
-			var strategy = GetShiftStrategy(container);
-			return GetGearbox(container, strategy);
-		}
-
-		private static IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy)
-		{
+			strategy = strategy ?? GetShiftStrategy(container);
 			switch (container.RunData.GearboxData.Type) {
 				case GearboxType.AMT:
 				case GearboxType.MT:
