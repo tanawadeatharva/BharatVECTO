@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new VTPGearbox(container, data), container)
 				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new Clutch(container, data.EngineData))
-				.AddComponent(engine, new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container));
+				.AddComponent(engine, new CombustionEngine.CombustionEngineNoDoubleClutchIdleController(engine, container));
 
 			new ZeroMileageCounter(container);
 
