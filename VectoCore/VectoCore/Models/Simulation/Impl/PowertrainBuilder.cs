@@ -159,9 +159,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <code>
 		/// VTPCycle
 		/// └┬AxleGear
+		///  └┬(AxlegearInputRetarder)
+		///   └┬(Angledrive)
+		///    └┬(TransmissionOutputRetarder)
+		///     └┬VTPGearbox
+		///      └┬(TransmissionInputRetarder)
 		///  └┬Clutch
 		///   └VTPCombustionEngine
-		///                      └(Aux)
+		///                           └(VTPTruckAuxiliaries or VTPBusAuxiliaries)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildVTP(VectoRunData data)
@@ -172,14 +177,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+
 			new VTPCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(new VTPGearbox(container, data), data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(new VTPGearbox(container, data), container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new Clutch(container, data.EngineData))
 				.AddComponent(engine, new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container));
 
 			new ZeroMileageCounter(container);
+
 			if (data.VehicleData.VehicleCategory.IsLorry()) {
 				AddVTPTruckAuxiliaries(data, container, engine);
 			} else if (data.VehicleData.VehicleCategory.IsBus()) {
