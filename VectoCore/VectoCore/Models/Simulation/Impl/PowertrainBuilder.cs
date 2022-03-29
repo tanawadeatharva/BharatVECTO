@@ -171,8 +171,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///    └┬(TransmissionOutputRetarder)
 		///     └┬VTPGearbox
 		///      └┬(TransmissionInputRetarder)
-		///  └┬Clutch
-		///   └VTPCombustionEngine
+		///       └┬Clutch
+		///        └VTPCombustionEngine
 		///                           └(VTPTruckAuxiliaries or VTPBusAuxiliaries)
 		/// </code>
 		/// </summary>
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} else if (data.VehicleData.VehicleCategory.IsBus()) {
 				AddVTPBusAuxiliaries(data, container, engine);
 			}
-
+			
 			return container;
 		}
 
