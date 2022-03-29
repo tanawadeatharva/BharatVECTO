@@ -398,17 +398,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     └┬Brakes
 		///      └┬(Engine P4)
 		///       └┬AxleGear
-		///        └┬(Engine P3)
-		///         └┬(Angledrive)
-		///          └┬(Transmission Output Retarder)
-		///           └┬Gearbox, ATGearbox, or APTNGearbox
-		///            └┬(Transmission Input Retarder)
-		///             └┬(Engine P2.5)
-		///              └┬(Engine P2)
-		///               └┬(SwitchableClutch when Manual Transmission)
-		///                └┬(Engine P1)
-		///                 └StopStartCombustionEngine
-		///                                          └(Aux)
+		///        └┬(AxlegearInputRetarder)
+		///         └┬(Engine P3)
+		///          └┬(Angledrive)
+		///           └┬(TransmissionOutputRetarder)
+		///            └┬Gearbox, ATGearbox, or APTNGearbox
+		///             └┬(TransmissionInputRetarder)
+		///              └┬(Engine P2.5)
+		///               └┬(Engine P2)
+		///                └┬(SwitchableClutch when Manual Transmission)
+		///                 └┬(Engine P1)
+		///                  └StopStartCombustionEngine
+		///                                           └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainParallelHybrid(VectoRunData data)
@@ -476,9 +477,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
+				.AddComponent(gearbox, container)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
@@ -508,7 +512,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
-
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
