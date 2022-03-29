@@ -306,11 +306,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///  └┬Wheels
 		///   └┬Brakes
 		///    └┬AxleGear
-		///     └┬(Angledrive)
-		///      └┬CycleGearbox
-		///       └┬Clutch
-		///        └StartStopCombustionEngine
-		///                                 └(Aux)
+		///     └┬(AxlegearInputRetarder)
+		///      └┬(Angledrive)
+		///       └┬(TransmissionOutputRetarder)
+		///        └┬CycleGearbox
+		///         └┬(TransmissionInputRetarder)
+		///          └┬(Clutch)
+		///           └StopStartCombustionEngine
+		///                                    └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
@@ -325,8 +328,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(new CycleGearbox(container, data))
+				.AddComponent(data.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio) : null)
 				.AddComponent(data.GearboxData.Type.ManualTransmission() ? new Clutch(container, data.EngineData) : null)
 				.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
