@@ -129,13 +129,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// PWheelCycle
 		/// └┬AxleGear
 		///  └┬(AxlegearInputRetarder)
-		///  └┬(Angledrive)
-		///   └┬(Transmission Output Retarder)
-		///    └┬CycleGearbox
-		///     └┬(Transmission Input Retarder)
-		///      └┬Clutch
-		///       └StopStartCombustionEngine
-		///                                └(Aux)
+		///   └┬(Angledrive)
+		///    └┬(TransmissionOutputRetarder)
+		///     └┬CycleGearbox
+		///      └┬(TransmissionInputRetarder)
+		///       └┬Clutch
+		///        └StopStartCombustionEngine
+		///                                 └(Aux)
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildPWheel(VectoRunData data)
