@@ -1242,21 +1242,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var runData = container.RunData;
 
 			switch (runData.GearboxData.Type) {
-				case GearboxType.AMT:
-					switch (runData.JobType) {
-						case VectoSimulationJobType.ConventionalVehicle:
+				case GearboxType.AMT when runData.JobType == VectoSimulationJobType.ConventionalVehicle:
 							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
 							return new AMTShiftStrategyOptimized(container);
 
-						case VectoSimulationJobType.BatteryElectricVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
+				case GearboxType.AMT when runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle):
 							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
 							return new PEVAMTShiftStrategy(container);
-						
-						default:
+				case GearboxType.AMT:
 							throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}",
 								runData.GearboxData.Type, runData.JobType);
-					}
 
 				case GearboxType.MT:
 					runData.ShiftStrategy = MTShiftStrategy.Name;
@@ -1267,23 +1262,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 					return new ATShiftStrategyOptimized(container);
 
-				case GearboxType.APTN:
-					switch (runData.JobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
-						case VectoSimulationJobType.BatteryElectricVehicle:
+				case GearboxType.APTN when runData.JobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.BatteryElectricVehicle):
 							runData.ShiftStrategy = APTNShiftStrategy.Name;
 							return new APTNShiftStrategy(container);
 
-						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
+				case GearboxType.APTN when runData.JobType == VectoSimulationJobType.ConventionalVehicle && container.IsTestPowertrain:
 							return null;
 
-						default:
+				case GearboxType.APTN:
 							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
-					}
 
 				default:
-					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "Unknown Gearbox Type");
+					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "VECTO can not automatically derive shift strategy for GearboxType.");
 			}
 		}
 
