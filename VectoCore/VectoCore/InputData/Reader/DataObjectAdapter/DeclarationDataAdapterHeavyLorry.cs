@@ -427,7 +427,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			return retVal;
+            // update disengageWhenHaltingSpeed
+            if (retVal.Type.AutomaticTransmission()) {
+                var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+				if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
+					var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+						.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+					var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+												dynamicTyreRadius;
+					retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+				}
+			}
+
+            return retVal;
 		}
 
 		protected virtual TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
