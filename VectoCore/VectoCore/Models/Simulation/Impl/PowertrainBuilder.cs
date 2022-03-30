@@ -504,7 +504,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///      └AxleGear
 		///       │ ├(AxlegearInputRetarder)
 		///       │ └Engine E3
+		///       ├(AngleDrive)
+		///       ├(TransmissionOutputRetarder)
 		///       └PEVGearbox or APTNGearbox
+		///        ├(TransmissionInputRetarder)
 		///        └Engine E2
 		/// </code>
 		/// </summary>
@@ -567,7 +570,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->PEVGearbox or APTNGearbox-->Engine E2
+					//-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->PEVGearbox or APTNGearbox-->(TransmissionInputRetarder)-->Engine E2
 					Gearbox gearbox;
 					if (data.GearboxData.Type == GearboxType.APTN) {
 						gearbox = new APTNGearbox(container, new APTNShiftStrategy(container));
@@ -577,7 +580,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 					powertrain
 						.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(gearbox, container)
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
+						.AddComponent(gearbox)
+						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
@@ -625,7 +631,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     └AxleGear
 		///      │ ├(AxlegearInputRetarder)
 		///      | └Engine E3
+		///      ├(Angledrive)
+		///      ├(TransmissionOutputRetarder)
 		///      └PEVGearbox or APTNGearbox
+		///       ├(TransmissionInputRetarder)
 		///       └Engine E2
 		/// </code>
 		/// </summary>
@@ -681,14 +690,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->APTNGearbox or PEVGearbox-->Engine E2
+					//-->AxleGear-->(Angledrive)-->(TransmissionOutputRetarder)-->APTNGearbox or PEVGearbox-->(TransmissionInputRetarder)-->Engine E2
 					var gearbox = data.GearboxData.Type == GearboxType.APTN
 						? (Gearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
 						: new PEVGearbox(container, new PEVAMTShiftStrategy(container));
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 					powertrain
 						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
+						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 						.AddComponent(em);
 
 					new ATClutchInfo(container);
@@ -814,7 +826,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     │ ├(AxlegearInputRetarder)
 		///     │ └Engine E3
 		///     ├(AngleDrive)
-		///     └APTNGearbox or Gearbox
+		///     ├(TransmissionOutputRetarder)
+		///     └Gearbox or APTNGearbox
+		///      ├(TransmissionInputRetarder)
 		///      └Engine E2
 		/// </code>
 		/// </summary>
@@ -858,18 +872,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 
 				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->(AngleDrive)-->APTNGearbox or Gearbox-->Engine E2
+					//-->AxleGear-->(AngleDrive)-->(TransmissionOutputRetarder)-->APTNGearbox or Gearbox-->(TransmissionInputRetarder)-->Engine E2
 					Gearbox gearbox;
 					if (data.GearboxData.Type.AutomaticTransmission()) {
 						gearbox = new APTNGearbox(container, ctl.ShiftStrategy);
-						new DummyEngineInfo(container);
 					} else {
 						gearbox = new Gearbox(container, ctl.ShiftStrategy);
 					}
+					
 					ctl.Gearbox = gearbox;
+					new DummyEngineInfo(container);
 
-					powertrain.AddComponent(new AxleGear(container, data.AxleGearData))
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
+						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, 
 							data.ElectricMachinesData, container, es, ctl));
 					break;
@@ -1029,6 +1048,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1, 
 					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
@@ -1036,7 +1056,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static ElectricSystem ConnectREESS(VectoRunData data, VehicleContainer container)
 		{
-
 			if (data.BatteryData != null && data.SuperCapData != null) {
 				throw new VectoException("Powertrain requires either Battery OR SuperCap, but both are defined.");
 			}
@@ -1209,6 +1228,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.AMT when runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle):
 					runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
 					return new PEVAMTShiftStrategy(container);
+
 				case GearboxType.AMT:
 					throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}",
 						runData.GearboxData.Type, runData.JobType);
