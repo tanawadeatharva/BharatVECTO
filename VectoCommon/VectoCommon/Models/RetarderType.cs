@@ -70,8 +70,8 @@ namespace TUGraz.VectoCommon.Models
 		{
 			switch (retarderType) {
 				case RetarderType.None: return "None";
-				case RetarderType.TransmissionInputRetarder: return "Primary Retarder";
-				case RetarderType.TransmissionOutputRetarder: return "Secondary Retarder";
+				case RetarderType.TransmissionInputRetarder: return "Transmission Input Retarder";
+				case RetarderType.TransmissionOutputRetarder: return "Transmission Output Retarder";
 				case RetarderType.EngineRetarder: return "Engine Retarder";
 				case RetarderType.LossesIncludedInTransmission: return "Included in Transmission Loss Maps";
 				case RetarderType.AxlegearInputRetarder: return "Axlegear Input Retarder";
@@ -94,8 +94,8 @@ namespace TUGraz.VectoCommon.Models
 
 		public static bool IsDedicatedComponent(this RetarderType retarder) =>
 			retarder.IsOneOf(
-				RetarderType.TransmissionInputRetarder, 
-				RetarderType.TransmissionOutputRetarder, 
+				RetarderType.TransmissionInputRetarder,
+				RetarderType.TransmissionOutputRetarder,
 				RetarderType.AxlegearInputRetarder);
 	}
 }
