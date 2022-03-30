@@ -14,11 +14,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		private ElectricSystem ElectricSystem;
 		protected ElectricMotorData ElectricMotorData;
 
+		protected readonly GearboxData GearboxModelData;
+
 		public BatteryElectricMotorController(VehicleContainer container, ElectricSystem es)
 		{
 			DataBus = container;
 			ElectricMotorData = container.RunData.ElectricMachinesData.FirstOrDefault()?.Item2;
 			ElectricSystem = es;
+			GearboxModelData = container.RunData.GearboxData;
 		}
 
 		#region Implementation of IElectricMotorControl
@@ -41,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
                 return null;
             }
 
-            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
+            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData.DisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
                 return null;
             }
 

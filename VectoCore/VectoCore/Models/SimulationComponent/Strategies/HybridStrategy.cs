@@ -1016,9 +1016,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			var disengageSpeedThreshold = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
-				? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
-				: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
+			var disengageSpeedThreshold = ModelData.GearboxData.DisengageWhenHaltingSpeed;
 			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
 
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
@@ -1069,7 +1067,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 				if (engineSpeedTooLow && DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-					endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+					endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 					var response = ResponseEmOff;
 					response.Gear = new GearshiftPosition(0);
 					response.Setting.GearboxEngaged = false;
@@ -1337,7 +1335,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-				endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+				endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 				return new GearshiftPosition(0);
 			}
 
