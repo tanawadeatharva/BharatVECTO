@@ -19,6 +19,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
 ''' Vehicle Editor.
@@ -45,7 +46,7 @@ Public Class VehicleForm
 		Ratio = 1
 	End Enum
 
-	private Enum REESPackTbl
+	Private Enum REESPackTbl
 		ReessFile = 0
 		Count = 1
 		StringId = 2
@@ -61,8 +62,8 @@ Public Class VehicleForm
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
-	private _emRatioPerGearDlog as EMGearRatioDialog
-	private _reessPackDlg as REESSPackDialog
+	Private _emRatioPerGearDlog As EMGearRatioDialog
+	Private _reessPackDlg As REESSPackDialog
 	Friend VehicleType As VectoSimulationJobType
 
 	'Close - Check for unsaved changes
@@ -79,50 +80,45 @@ Public Class VehicleForm
 		ButAxlRem.Enabled = Not Cfg.DeclMode
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
-		'gbPTO.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
-		gbPTODrive.Enabled = not Cfg.DeclMode
-		tpRoadSweeper.Visible = Not cfg.DeclMode
+		gbPTODrive.Enabled = Not Cfg.DeclMode
+		tpRoadSweeper.Visible = Not Cfg.DeclMode
 
-		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(of CrossWindCorrectionMode)(Function(t) t.GetLabel())
+		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(Of CrossWindCorrectionMode)(Function(t) t.GetLabel())
 
-		CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel())
+		CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel()).ToDataView()
 
-		If (cfg.DeclMode) Then
+		If (Cfg.DeclMode) Then
 			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
 				.Cast(Of AxleConfiguration) _
 				.Select(Function(category) New With {.Key = category, .Value = category.GetName()}).ToList()
 		Else
-			CbAxleConfig.DataSource = EnumHelper.GetKeyValuePairs(of AxleConfiguration)(function(t) t.GetName())
+			CbAxleConfig.DataSource = EnumHelper.GetKeyValuePairs(Of AxleConfiguration)(Function(t) t.GetName())
 		End If
 
-		cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(of EcoRollType)(function(t) t.GetName())
+		cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
 
-		cbPcc.DataSource = EnumHelper.GetKeyValuePairs(Of PredictiveCruiseControlType)(function(t) t.GetName())
+		cbPcc.DataSource = EnumHelper.GetKeyValuePairs(Of PredictiveCruiseControlType)(Function(t) t.GetName())
 
 		cbTankSystem.DataSource = EnumHelper.GetKeyValuePairs(Of TankSystem)()
 
 		'tpADAS.Enabled = Cfg.DeclMode
 
-		CbCat.DataSource = EnumHelper.GetKeyValuePairs(of VehicleCategory)(function(t) t.GetLabel())
+		CbCat.DataSource = EnumHelper.GetKeyValuePairs(Of VehicleCategory)(Function(t) t.GetLabel())
 
-		cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(of AngledriveType)(function(t) t.GetLabel())
+		cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(Of AngledriveType)(Function(t) t.GetLabel())
 
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
-		_emRatioPerGearDlog = new EMGearRatioDialog()
-		_reessPackDlg = New REESSPAckDialog()
+		_emRatioPerGearDlog = New EMGearRatioDialog()
+		_reessPackDlg = New REESSPackDialog()
 
-		cbPTOType.ValueMember = "Value"
-		cbPTOType.DisplayMember = "Label"
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
-			Function(technology) New With {Key .Value = technology, .Label = technology}).ToList()
+			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
 
-		cbLegislativeClass.ValueMember = "Value"
-		cbLegislativeClass.DisplayMember = "Label"
-		cbLegislativeClass.DataSource = [Enum].GetValues(GetType(LegislativeClass)) _
-			.Cast(Of LegislativeClass?).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).ToList()
-		'Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
+		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
+		'cbLegislativeClass.DataSource = EnumHelper.GetValues(Of LegislativeClass).Cast(Of LegislativeClass?).Select( _
+		'	Function(x) New With {.Key = x, .Value = x.GetLabel()}).ToList()
 
 		_changed = False
 
@@ -402,17 +398,17 @@ Public Class VehicleForm
 		cbPcc.SelectedValue = vehicle.ADAS.PredictiveCruiseControl
 		cbEcoRoll.SelectedValue = vehicle.ADAS.EcoRoll
 		cbEngineStopStart.Checked = vehicle.ADAS.EngineStopStart
-		cbAtEcoRollReleaseLockupClutch.Checked = If(vehicle.ADAS.ATEcoRollReleaseLockupClutch , false)
+		cbAtEcoRollReleaseLockupClutch.Checked = If(vehicle.ADAS.ATEcoRollReleaseLockupClutch, False)
 
-		if (vehicle.SavedInDeclarationMode) then
-			Dim declVehicle as IVehicleDeclarationInputData = vehicle
-			
-			if (declVehicle.TankSystem.HasValue) then
+		If (vehicle.SavedInDeclarationMode) Then
+			Dim declVehicle As IVehicleDeclarationInputData = vehicle
+
+			If (declVehicle.TankSystem.HasValue) Then
 				cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
 			End If
-        else
+		Else
 			tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
-			tbPtoGear.Text = if (not vehicle.PTO_DriveGear is nothing, vehicle.PTO_DriveGear.Gear.ToString() ,"")
+			tbPtoGear.Text = If(Not vehicle.PTO_DriveGear Is Nothing, vehicle.PTO_DriveGear.Gear.ToString(), "")
 		End If
 
 		LvRRC.Items.Clear()
@@ -445,7 +441,7 @@ Public Class VehicleForm
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
-		tbPTODrive.Text = If (Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
+		tbPTODrive.Text = If(Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
 		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
@@ -453,11 +449,11 @@ Public Class VehicleForm
 			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		If (vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
-		    lvREESSPacks.Items.Clear()
-		    For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(function(x) x.StringId)
-		        lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
-		    Next
-		    tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
+			lvREESSPacks.Items.Clear()
+			For Each entry As IElectricStorageEngineeringInputData In vehicle.Components.ElectricStorage.ElectricStorageElements.OrderBy(Function(x) x.StringId)
+				lvREESSPacks.Items.Add(CreateREESSPackListViewItem(GetRelativePath(entry.REESSPack.DataSource.SourceFile, basePath), entry.Count, entry.StringId))
+			Next
+			tbInitialSoC.Text = (vehicle.InitialSOC * 100).ToGUIFormat()
 
 			Dim em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position <> PowertrainPosition.GEN)
 			tbElectricMotor.Text = GetRelativePath(em.ElectricMachine.DataSource.SourceFile, basePath)
@@ -467,10 +463,10 @@ Public Class VehicleForm
 			tbRatioEm.Text = em.RatioADC.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
 
-			If (em.Position = PowertrainPosition.HybridP2_5) AndAlso Not em.RatioPerGear Is nothing Then
+			If (em.Position = PowertrainPosition.HybridP2_5) AndAlso Not em.RatioPerGear Is Nothing Then
 				lvRatioPerGear.Items.Clear()
-				dim gear as integer = 1
-				for each entry as Double in em.RatioPerGear
+				Dim gear As Integer = 1
+				For Each entry As Double In em.RatioPerGear
 					lvRatioPerGear.Items.Add(CreateRatioPerGearListViewItem(gear, entry))
 					gear += 1
 				Next
@@ -478,20 +474,20 @@ Public Class VehicleForm
 
 		End If
 
-		if (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
-		    Dim gen As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position = PowertrainPosition.GEN)
-		    tbGenSetEM.Text = GetRelativePath(gen.ElectricMachine.DataSource.SourceFile, basePath)
-		    tbGenSetCount.Text = gen.Count.ToGUIFormat()
-		    tbGenSetADC.Text = If(gen.MechanicalTransmissionLossMap Is Nothing, gen.MechanicalTransmissionEfficiency.ToGUIFormat(),
-                                     GetRelativePath(gen.MechanicalTransmissionLossMap.Source, basePath))
-		    tbGenSetRatio.Text = gen.RatioADC.ToGUIFormat()
+		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+			Dim gen As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position = PowertrainPosition.GEN)
+			tbGenSetEM.Text = GetRelativePath(gen.ElectricMachine.DataSource.SourceFile, basePath)
+			tbGenSetCount.Text = gen.Count.ToGUIFormat()
+			tbGenSetADC.Text = If(gen.MechanicalTransmissionLossMap Is Nothing, gen.MechanicalTransmissionEfficiency.ToGUIFormat(),
+									 GetRelativePath(gen.MechanicalTransmissionLossMap.Source, basePath))
+			tbGenSetRatio.Text = gen.RatioADC.ToGUIFormat()
 		End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
 			'tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
 			'ToDo ElectricMotorTorqueLimits changed
 			'tbEmTorqueLimits.Text = if (Not vehicle.ElectricMotorTorqueLimits Is Nothing, GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath), "")
-			tbPropulsionTorqueLimit.Text = if (Not vehicle.BoostingLimitations Is Nothing, GetRelativePath(vehicle.BoostingLimitations.Source, basePath), "")
+			tbPropulsionTorqueLimit.Text = If(Not vehicle.BoostingLimitations Is Nothing, GetRelativePath(vehicle.BoostingLimitations.Source, basePath), "")
 		End If
 
 		DeclInit()
@@ -505,74 +501,75 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
-    Private Function CreateRatioPerGearListViewItem(gear As Integer, ratio As Double) As ListViewItem
-        dim retval as new ListViewItem
-        retVal.SubItems(0).Text = gear.ToGUIFormat()
-        retVal.SubItems.Add(ratio.ToGUIFormat())
-		return retval
-    End Function
+	Private Function CreateRatioPerGearListViewItem(gear As Integer, ratio As Double) As ListViewItem
+		Dim retval As New ListViewItem
+		retval.SubItems(0).Text = gear.ToGUIFormat()
+		retval.SubItems.Add(ratio.ToGUIFormat())
+		Return retval
+	End Function
 
-    Private Function CreateREESSPackListViewItem(batFile As String, count As Integer, stringid As Integer) As ListViewItem
-        dim retval as new ListViewItem
-        retVal.SubItems(0).Text = If(File.Exists(_vehFile), GetRelativePath(batFile, Path.GetDirectoryName(_vehFile)), batFile)
-        retVal.SubItems.Add(count.ToGUIFormat())
+	Private Function CreateREESSPackListViewItem(batFile As String, count As Integer, stringid As Integer) As ListViewItem
+		Dim retval As New ListViewItem
+		retval.SubItems(0).Text = If(File.Exists(_vehFile), GetRelativePath(batFile, Path.GetDirectoryName(_vehFile)), batFile)
+		retval.SubItems.Add(count.ToGUIFormat())
 		retval.SubItems.Add(stringid.ToGUIFormat())
-        return retval
-    End Function
+		Return retval
+	End Function
 
-    Private Sub UpdateForm(vehType As VectoSimulationJobType)
+	Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
 
-	    gbVehicleIdlingSpeed.Enabled = true
-	    gbTankSystem.Enabled = true
-	    gbAngledrive.Enabled = true
-		
+		gbVehicleIdlingSpeed.Enabled = True
+		gbTankSystem.Enabled = True
+		gbAngledrive.Enabled = True
+
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
+				gbRetarderLosses.Enabled = True
 				tpElectricComponents.Enabled = False
-				cbEmPos.DataSource = New List(Of Object)
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetName,
+					Function(t) t = PowertrainPosition.HybridPositionNotSet)
 				cbEngineStopStart.Enabled = True
-				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(of EcoRollType)(function(t) t.GetName())
-				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), function(t) t <> RetarderType.AxlegearInputRetarder)
-				cbEcoRoll.Enabled = true
-				gbEMTorqueLimits.Enabled = false
+				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
+				cbEcoRoll.Enabled = True
+				gbEMTorqueLimits.Enabled = False
 				tpGensetComponents.Visible = False
 			Case VectoSimulationJobType.ParallelHybridVehicle
+				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Parallel Hybrid Vehicle"
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsParallelHybrid())
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
+					Function(x) x.IsParallelHybrid() Or x = PowertrainPosition.HybridPositionNotSet)
 				gbEMTorqueLimits.Enabled = True
-				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), function(t) t <> RetarderType.AxlegearInputRetarder)
-				cbEcoRoll.Enabled = true
-			    tpGensetComponents.Visible = False
-			case VectoSimulationJobType.SerialHybridVehicle
+				cbEcoRoll.Enabled = True
+				tpGensetComponents.Visible = False
+			Case VectoSimulationJobType.SerialHybridVehicle
+				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Serial Hybrid Vehicle"
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsSerialHybrid())
-				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
-                tpTorqueLimits.Enabled = False
-			    cbEngineStopStart.Checked = False
-			    cbEngineStopStart.Enabled = False
-			    cbEcoRoll.DataSource = {new with {.Key=EcoRollType.None, .Value=EcoRollType.None.GetName()}}
-				cbEcoRoll.Enabled = false
-			    gbEMTorqueLimits.Enabled = False
-			    tpGensetComponents.Visible = True
-			Case VectoSimulationJobType.BatteryElectricVehicle
-				lblTitle.Text = "Battery Electric Vehicle"
-				
-				gbVehicleIdlingSpeed.Enabled = false
-				gbTankSystem.Enabled = false
-				gbAngledrive.Enabled = False
-				
-				CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel(), Function(t) t.IsOneOf(RetarderType.None, RetarderType.AxlegearInputRetarder))
-
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
+					Function(x) x.IsSerialHybrid() Or x = PowertrainPosition.HybridPositionNotSet)
 				tpTorqueLimits.Enabled = False
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(of PowertrainPosition)(function(t) t.GetLabel, function(x) x.IsBatteryElectric())
 				cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = False
-				cbEcoRoll.DataSource = {new with {.Key=EcoRollType.None, .Value=EcoRollType.None.GetName()}}
-				cbEcoRoll.Enabled = false
+				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
+				cbEcoRoll.Enabled = False
 				gbEMTorqueLimits.Enabled = False
-			    tpGensetComponents.Visible = False
+				tpGensetComponents.Visible = True
+			Case VectoSimulationJobType.BatteryElectricVehicle
+				gbRetarderLosses.Enabled = False
+				lblTitle.Text = "Battery Electric Vehicle"
+				gbVehicleIdlingSpeed.Enabled = False
+				gbTankSystem.Enabled = False
+				gbAngledrive.Enabled = False
+				tpTorqueLimits.Enabled = False
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
+					Function(x) x.IsBatteryElectric() Or x = PowertrainPosition.HybridPositionNotSet)
+				cbEngineStopStart.Checked = False
+				cbEngineStopStart.Enabled = False
+				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
+				cbEcoRoll.Enabled = False
+				gbEMTorqueLimits.Enabled = False
+				tpGensetComponents.Visible = False
 		End Select
 	End Sub
 
@@ -639,7 +636,7 @@ Public Class VehicleForm
 		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
-		
+
 		If (VehicleType = VectoSimulationJobType.ConventionalVehicle OrElse VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
 			veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
 
@@ -663,71 +660,71 @@ Public Class VehicleForm
 		End If
 
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
-		    For Each reess As ListViewItem In lvREESSPacks.Items
-		        veh.ReessPacks.Add(tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
-		    Next
+			For Each reess As ListViewItem In lvREESSPacks.Items
+				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
+			Next
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
 
-			If tbElectricMotor.Text = "" then
+			If tbElectricMotor.Text = "" Then
 				MsgBox("Electric Motor File is required.")
 				tcVehicleComponents.SelectedTab = tpElectricComponents
 				tbElectricMotor.Focus()
-				return false
+				Return False
 			End If
 			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt(1)
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble(1)
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
-			If tbEmADCLossMap.Text = "" then
+			If tbEmADCLossMap.Text = "" Then
 				MsgBox("Loss Map EM ADC is required.")
 				tcVehicleComponents.SelectedTab = tpElectricComponents
 				tbEmADCLossMap.Focus()
-				return false
+				Return False
 			End If
 			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
-			if (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) 
-				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
+			If (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) Then
+				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(Function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
 			End If
 		End If
 
-		if (VehicleType = VectoSimulationJobType.SerialHybridVehicle) then
-		    If tbGenSetEM.Text = "" then
-		        MsgBox("Generator File is required.")
-		        tcVehicleComponents.SelectedTab = tpGensetComponents
-		        tbGenSetEM.Focus()
-		        return false
-		    End If
-		    veh.GenSetEMFile.Init(GetPath(file), tbGenSetEM.Text)
-		    veh.GenSetPosition = PowertrainPosition.GEN
-		    veh.GenSetCount = tbGenSetCount.Text.ToInt(1)
-		    veh.GenSetRatio = tbGenSetRatio.Text.ToDouble(1)
-		    'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
-		    If tbGenSetADC.Text = "" then
-		        MsgBox("Loss Map GenSet ADC is required.")
-		        tcVehicleComponents.SelectedTab = tpGensetComponents
-		        tbGenSetADC.Focus()
-		        return false
-		    End If
-		    veh.GenSetMechLossMap.Init(GetPath(file), tbGenSetADC.Text)
+		If (VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+			If tbGenSetEM.Text = "" Then
+				MsgBox("Generator File is required.")
+				tcVehicleComponents.SelectedTab = tpGensetComponents
+				tbGenSetEM.Focus()
+				Return False
+			End If
+			veh.GenSetEMFile.Init(GetPath(file), tbGenSetEM.Text)
+			veh.GenSetPosition = PowertrainPosition.GEN
+			veh.GenSetCount = tbGenSetCount.Text.ToInt(1)
+			veh.GenSetRatio = tbGenSetRatio.Text.ToDouble(1)
+			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+			If tbGenSetADC.Text = "" Then
+				MsgBox("Loss Map GenSet ADC is required.")
+				tcVehicleComponents.SelectedTab = tpGensetComponents
+				tbGenSetADC.Focus()
+				Return False
+			End If
+			veh.GenSetMechLossMap.Init(GetPath(file), tbGenSetADC.Text)
 		End If
 
-		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
+		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle) AndAlso Not String.IsNullOrWhiteSpace(tbEmTorqueLimits.Text) Then
 			veh.EmTorqueLimitsFile.Init(GetPath(file), tbEmTorqueLimits.Text)
 		End If
 
-		if (VehicleType = VectoSimulationJobType.ParallelHybridVehicle AndAlso Not String.IsNullOrEmpty(tbPropulsionTorqueLimit.Text)) Then
-			veh.PropulsionTorqueFile.init(GetPath(file), tbPropulsionTorqueLimit.Text)
+		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle AndAlso Not String.IsNullOrEmpty(tbPropulsionTorqueLimit.Text)) Then
+			veh.PropulsionTorqueFile.Init(GetPath(file), tbPropulsionTorqueLimit.Text)
 		End If
 
-		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+		veh.EcoRolltype = CType(cbEcoRoll.SelectedValue, EcoRollType)
 		veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
 		veh.EngineStop = cbEngineStopStart.Checked
 		veh.EcoRollReleaseLockupClutch = cbAtEcoRollReleaseLockupClutch.Checked
 
 
-		veh.GearDuringPTODrive = If(string.IsNullOrWhiteSpace(tbPtoGear.Text), nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
-		veh.EngineSpeedDuringPTODrive = if(string.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
+		veh.GearDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoGear.Text), Nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
+		veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
@@ -809,19 +806,21 @@ Public Class VehicleForm
 #Region "Retarder"
 
 	'Rt Type Change
-	Private Sub CbRtType_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles CbRtType.SelectedIndexChanged
+	Private Sub CbRtType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbRtType.SelectedIndexChanged
 		Select Case CType(CbRtType.SelectedValue, RetarderType)
-			Case RetarderType.TransmissionInputRetarder 'Primary
+			Case RetarderType.TransmissionInputRetarder
 				LbRtRatio.Text = "Ratio to engine speed"
-			Case RetarderType.TransmissionOutputRetarder 'Secondary
+				PnRt.Enabled = True
+			Case RetarderType.TransmissionOutputRetarder
 				LbRtRatio.Text = "Ratio to cardan shaft speed"
-			case RetarderType.AxlegearInputRetarder
+				PnRt.Enabled = True
+			Case RetarderType.AxlegearInputRetarder
 				LbRtRatio.Text = "Ratio to axle shaft speed"
-			Case Else '0 None
+				PnRt.Enabled = True
+			Case Else
 				LbRtRatio.Text = "Ratio"
+				PnRt.Enabled = False
 		End Select
-
 		Change()
 	End Sub
 
@@ -969,7 +968,7 @@ Public Class VehicleForm
 		_axlDlog.TbRRC.Text = lv0.SubItems(AxleTbl.RRC).Text
 		_axlDlog.TbFzISO.Text = lv0.SubItems(AxleTbl.FzISO).Text
 		_axlDlog.TbI_wheels.Text = lv0.SubItems(AxleTbl.Inertia).Text
-		_axlDlog.CbWheels.SelectedItem = if(string.IsNullOrWhiteSpace(lv0.SubItems(AxleTbl.WheelsDimension).Text), "-", lv0.SubItems(AxleTbl.WheelsDimension).Text)
+		_axlDlog.CbWheels.SelectedItem = If(String.IsNullOrWhiteSpace(lv0.SubItems(AxleTbl.WheelsDimension).Text), "-", lv0.SubItems(AxleTbl.WheelsDimension).Text)
 		_axlDlog.cbAxleType.SelectedValue = lv0.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
 
 		If _axlDlog.ShowDialog = DialogResult.OK Then
@@ -1047,7 +1046,7 @@ Public Class VehicleForm
 
 #End Region
 
-	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged 
+	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
 
 		If (Cfg.DeclMode) Then
 			Exit Sub
@@ -1055,7 +1054,7 @@ Public Class VehicleForm
 
 		If (cbPTOType.SelectedIndex = 0) Then
 			pnPTO.Enabled = False
-			gbPTODrive.Enabled = false
+			gbPTODrive.Enabled = False
 			tbPTOLossMap.Text = ""
 		Else
 			pnPTO.Enabled = True
@@ -1065,13 +1064,13 @@ Public Class VehicleForm
 		Change()
 	End Sub
 
-	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click 
+	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
 		If PtoLossMapFileBrowser.OpenDialog(FileRepl(tbPTOLossMap.Text, GetPath(_vehFile))) Then
 			tbPTOLossMap.Text = GetFilenameWithoutDirectory(PtoLossMapFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
-	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click 
+	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click
 		If PTODrivingCycleStandstillFileBrowser.OpenDialog(FileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
 			tbPTOCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleStandstillFileBrowser.Files(0), GetPath(_vehFile))
 		End If
@@ -1139,12 +1138,8 @@ Public Class VehicleForm
 		_torqueLimitDlog.tbGear.ReadOnly = False
 	End Sub
 
-	Private Sub Label18_Click(sender As Object, e As EventArgs)
-
-	End Sub
-
-	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs)
-
+	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
+		Change()
 	End Sub
 
 	Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles cbAtEcoRollReleaseLockupClutch.CheckedChanged
@@ -1169,11 +1164,11 @@ Public Class VehicleForm
 
 		'Thus Veh-file is returned
 		ElectricMotorForm.JobDir = GetPath(_vehFile)
-		ElectricMotorForm.AutoSendTo = sub(file, vehicleForm) 
-		    If UCase(FileRepl(VehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
-		        VehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
-		    VectoJobForm.UpdatePic()
-		End sub
+		ElectricMotorForm.AutoSendTo = Sub(file, vehicleForm)
+										   If UCase(FileRepl(vehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
+											   vehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
+										   VectoJobForm.UpdatePic()
+									   End Sub
 
 		If Not Trim(f) = "" Then
 			If Not File.Exists(f) Then
@@ -1221,18 +1216,29 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
-		gbRatiosPerGear.Enabled = cbEmPos.SelectedValue.Equals(PowertrainPosition.HybridP2_5)
+		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
 
-		if (VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle)) then
-			if (PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue)) then
-				gbRetarderLosses.Enabled = true
-			else
-				gbRetarderLosses.Enabled = false
-				CbRtType.SelectedValue = RetarderType.None
-				TbRtRatio.Text = ""
-				TbRtPath.Text = ""
-			end if
-		end if
+		Dim selectedValue = CbRtType.SelectedValue
+		CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
+
+		If PowertrainPosition.BatteryElectricE4.Equals(cbEmPos.SelectedValue) Then
+			gbRetarderLosses.Enabled = False
+			TbRtRatio.Text = ""
+			TbRtPath.Text = ""
+			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)})"
+
+		ElseIf PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue) Then
+			gbRetarderLosses.Enabled = True
+			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)}, {CInt(RetarderType.AxlegearInputRetarder)})"
+
+		ElseIf PowertrainPosition.BatteryElectricE2.Equals(cbEmPos.SelectedValue) Then
+			gbRetarderLosses.Enabled = True
+			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
+		End If
+
+		If (selectedValue IsNot Nothing) Then
+			CbRtType.SelectedValue = selectedValue
+		End If
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click
@@ -1280,91 +1286,91 @@ Public Class VehicleForm
 		_emRatioPerGearDlog.tbGear.ReadOnly = False
 	End Sub
 
-    Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
-        If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
+	Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
+		If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
 
-        Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
+		Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
 		_reessPackDlg._vehFile = _vehFile
-        _reessPackDlg.tbBattery.Text = entry.SubItems(REESPackTbl.ReessFile).Text
-        _reessPackDlg.tbBatteryPackCnt.Text = entry.SubItems(REESPackTbl.Count).Text
-        _reessPackDlg.tbStreamId.Text = entry.SubItems(REESPackTbl.StringId).Text
-        _reessPackDlg.tbBattery.Focus()
-        If (_reessPackDlg.ShowDialog() = DialogResult.OK) Then
-            entry.SubItems(REESPackTbl.ReessFile).Text = _reessPackDlg.tbBattery.Text
-            entry.SubItems(REESPackTbl.Count).Text = _reessPackDlg.tbBatteryPackCnt.Text
-            entry.SubItems(REESPackTbl.StringId).Text = _reessPackDlg.tbStreamId.Text
-        End If
-    End Sub
+		_reessPackDlg.tbBattery.Text = entry.SubItems(REESPackTbl.ReessFile).Text
+		_reessPackDlg.tbBatteryPackCnt.Text = entry.SubItems(REESPackTbl.Count).Text
+		_reessPackDlg.tbStreamId.Text = entry.SubItems(REESPackTbl.StringId).Text
+		_reessPackDlg.tbBattery.Focus()
+		If (_reessPackDlg.ShowDialog() = DialogResult.OK) Then
+			entry.SubItems(REESPackTbl.ReessFile).Text = _reessPackDlg.tbBattery.Text
+			entry.SubItems(REESPackTbl.Count).Text = _reessPackDlg.tbBatteryPackCnt.Text
+			entry.SubItems(REESPackTbl.StringId).Text = _reessPackDlg.tbStreamId.Text
+		End If
+	End Sub
 
-    Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
-        _reessPackDlg.Clear()
+	Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
+		_reessPackDlg.Clear()
 		_reessPackDlg._vehFile = _vehFile
-        If _reessPackDlg.ShowDialog() = DialogResult.OK Then
+		If _reessPackDlg.ShowDialog() = DialogResult.OK Then
 
-            lvREESSPacks.Items.Add(CreateREESSPackListViewItem(_reessPackDlg.tbBattery.Text, _reessPackDlg.tbBatteryPackCnt.Text.ToInt(0), _reessPackDlg.tbStreamId.Text.ToInt(0)))
+			lvREESSPacks.Items.Add(CreateREESSPackListViewItem(_reessPackDlg.tbBattery.Text, _reessPackDlg.tbBatteryPackCnt.Text.ToInt(0), _reessPackDlg.tbStreamId.Text.ToInt(0)))
 
-            Change()
+			Change()
 
-        End If
-    End Sub
+		End If
+	End Sub
 
-    Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click
-        If lvREESSPacks.SelectedItems.Count = 0 Then
-            If lvREESSPacks.Items.Count = 0 Then
-                Exit Sub
-            Else
-                lvREESSPacks.Items(lvREESSPacks.Items.Count - 1).Selected = True
-            End If
-        End If
+	Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click
+		If lvREESSPacks.SelectedItems.Count = 0 Then
+			If lvREESSPacks.Items.Count = 0 Then
+				Exit Sub
+			Else
+				lvREESSPacks.Items(lvREESSPacks.Items.Count - 1).Selected = True
+			End If
+		End If
 
-        lvREESSPacks.SelectedItems(0).Remove()
-    End Sub
+		lvREESSPacks.SelectedItems(0).Remove()
+	End Sub
 
-    Private Sub btnOpenGenSetEM_Click(sender As Object, e As EventArgs) Handles btnOpenGenSetEM.Click
-        Dim f As String
-        f = FileRepl(tbGenSetEM.Text, GetPath(_vehFile))
+	Private Sub btnOpenGenSetEM_Click(sender As Object, e As EventArgs) Handles btnOpenGenSetEM.Click
+		Dim f As String
+		f = FileRepl(tbGenSetEM.Text, GetPath(_vehFile))
 
-        'Thus Veh-file is returned
-        ElectricMotorForm.JobDir = GetPath(_vehFile)
-        ElectricMotorForm.AutoSendTo = sub(file, vehicleForm) 
-            If UCase(FileRepl(VehicleForm.tbGenSetEM.Text, JobDir)) <> UCase(file) Then _
-                VehicleForm.tbGenSetEM.Text = GetFilenameWithoutDirectory(file, JobDir)
-            VectoJobForm.UpdatePic()
-            End sub
+		'Thus Veh-file is returned
+		ElectricMotorForm.JobDir = GetPath(_vehFile)
+		ElectricMotorForm.AutoSendTo = Sub(file, vehicleForm)
+										   If UCase(FileRepl(vehicleForm.tbGenSetEM.Text, JobDir)) <> UCase(file) Then _
+											   vehicleForm.tbGenSetEM.Text = GetFilenameWithoutDirectory(file, JobDir)
+										   VectoJobForm.UpdatePic()
+									   End Sub
 
-        If Not Trim(f) = "" Then
-            If Not File.Exists(f) Then
-                MsgBox("File not found!")
-                Exit Sub
-            End If
-        End If
+		If Not Trim(f) = "" Then
+			If Not File.Exists(f) Then
+				MsgBox("File not found!")
+				Exit Sub
+			End If
+		End If
 
-        If Not ElectricMotorForm.Visible Then
-            ElectricMotorForm.Show()
-        Else
-            If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
-            ElectricMotorForm.BringToFront()
-        End If
+		If Not ElectricMotorForm.Visible Then
+			ElectricMotorForm.Show()
+		Else
+			If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
+			ElectricMotorForm.BringToFront()
+		End If
 
-        If Not Trim(f) = "" Then
-            Try
-                ElectricMotorForm.OpenElectricMachineFile(f)
-            Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
-            End Try
-        End If
-    End Sub
+		If Not Trim(f) = "" Then
+			Try
+				ElectricMotorForm.OpenElectricMachineFile(f)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+			End Try
+		End If
+	End Sub
 
-    Private Sub btnBrowseGenSetEM_Click(sender As Object, e As EventArgs) Handles btnBrowseGenSetEM.Click
-        If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbGenSetEM.Text, GetPath(_vehFile))) Then
-            tbGenSetEM.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
-        End If
-    End Sub
+	Private Sub btnBrowseGenSetEM_Click(sender As Object, e As EventArgs) Handles btnBrowseGenSetEM.Click
+		If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbGenSetEM.Text, GetPath(_vehFile))) Then
+			tbGenSetEM.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
 
-    Private Sub btnGenSetLossMap_Click(sender As Object, e As EventArgs) Handles btnGenSetLossMap.Click
-        If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbGenSetADC.Text, GetPath(_vehFile))) Then _
-            tbGenSetADC.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
-    End Sub
+	Private Sub btnGenSetLossMap_Click(sender As Object, e As EventArgs) Handles btnGenSetLossMap.Click
+		If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbGenSetADC.Text, GetPath(_vehFile))) Then _
+			tbGenSetADC.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
+	End Sub
 
 	Private Sub cbTankSystem_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbTankSystem.SelectedIndexChanged
 		Change()
