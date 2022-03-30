@@ -2,10 +2,11 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCommon.InputData {
+namespace TUGraz.VectoCommon.InputData
+{
 	public enum PowertrainPosition
 	{
-		HybridPositionNotSet, // this has to be the first entrie so that it is used as default for not initialized fields!
+		HybridPositionNotSet, // this has to be the first entry so that it is used as default for not initialized fields!
 		HybridP0,
 		HybridP1,
 		HybridP2,
@@ -18,13 +19,13 @@ namespace TUGraz.VectoCommon.InputData {
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
-		
+
 	}
 
 	public static class PowertrainPositionHelper
 	{
 		public const string HybridPrefix = "Hybrid";
-		public const string BatteryElectriPrefix = "BatteryElectric";
+		public const string BatteryElectricPrefix = "BatteryElectric";
 
 		public static PowertrainPosition Parse(string pos)
 		{
@@ -32,22 +33,22 @@ namespace TUGraz.VectoCommon.InputData {
 				return PowertrainPosition.GEN;
 			}
 
-			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
+			if (pos.StartsWith("P", StringComparison.InvariantCultureIgnoreCase)) {
 				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
 
 			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectriPrefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
+				return (BatteryElectricPrefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
 			}
 			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectriPrefix + pos).ParseEnum<PowertrainPosition>();
+				return (BatteryElectricPrefix + pos).ParseEnum<PowertrainPosition>();
 			}
 			throw new VectoException("invalid powertrain position {0}", pos);
 		}
 
 		public static string GetName(this PowertrainPosition pos)
 		{
-			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "").Replace("_", ".");
+			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectricPrefix, "").Replace("_", ".");
 		}
 
 		public static string GetLabel(this PowertrainPosition pos)
@@ -63,8 +64,10 @@ namespace TUGraz.VectoCommon.InputData {
 					return pos.ToString().Replace(HybridPrefix, "").Replace("_", ".");
 				case PowertrainPosition.GEN:
 					return nameof(PowertrainPosition.GEN);
+				case PowertrainPosition.HybridPositionNotSet:
+					return "Position not set";
 			}
-			return pos.ToString().Replace(BatteryElectriPrefix, "").Replace("B", "E");
+			return pos.ToString().Replace(BatteryElectricPrefix, "").Replace("B", "E");
 		}
 
 		public static bool IsBatteryElectric(this PowertrainPosition pos)
