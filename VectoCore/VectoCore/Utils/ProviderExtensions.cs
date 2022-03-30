@@ -106,15 +106,5 @@ namespace TUGraz.VectoCore.Utils
 
 			return next;
 		}
-
-		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox next, IVehicleContainer container)
-		{
-			if (next is null) {
-				return prev;
-			}
-
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
 	}
 }
