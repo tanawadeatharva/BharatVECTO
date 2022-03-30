@@ -798,11 +798,11 @@ public class JSONFileWriter : IOutputFileWriter
 		// Main Files
 		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath));
 		if (input.JobInputData.Vehicle.Components.GearboxInputData != null) {
-			body.Add(
-				"GearboxFile",
-				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile,
-					basePath));
-			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+			body.Add("GearboxFile",	
+				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile,					basePath));
+			if (input.DriverInputData.GearshiftInputData != null) {
+				body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+			}
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
