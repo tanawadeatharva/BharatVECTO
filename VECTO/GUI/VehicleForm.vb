@@ -87,7 +87,6 @@ Public Class VehicleForm
 		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(of CrossWindCorrectionMode)(Function(t) t.GetLabel())
 
 		CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel())
-		CbRtType.Enabled = true
 
 		If (cfg.DeclMode) Then
 			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
@@ -322,7 +321,6 @@ Public Class VehicleForm
 		TbCdFile.Text = ""
 
 		CbRtType.SelectedIndex = 0
-		CbRtType.Enabled = true
 		TbRtRatio.Text = ""
 		TbRtPath.Text = ""
 
@@ -816,16 +814,12 @@ Public Class VehicleForm
 		Select Case CType(CbRtType.SelectedValue, RetarderType)
 			Case RetarderType.TransmissionInputRetarder 'Primary
 				LbRtRatio.Text = "Ratio to engine speed"
-				PnRt.Enabled = True
 			Case RetarderType.TransmissionOutputRetarder 'Secondary
 				LbRtRatio.Text = "Ratio to cardan shaft speed"
-				PnRt.Enabled = True
 			case RetarderType.AxlegearInputRetarder
 				LbRtRatio.Text = "Ratio to axle shaft speed"
-				PnRt.Enabled = True
 			Case Else '0 None
 				LbRtRatio.Text = "Ratio"
-				PnRt.Enabled = False
 		End Select
 
 		Change()
