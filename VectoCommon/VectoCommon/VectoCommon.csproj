@@ -27,7 +27,7 @@
       <DependentUpon>XMLNames.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Resources\XMLNames.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

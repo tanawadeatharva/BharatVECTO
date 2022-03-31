@@ -3418,7 +3418,7 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to REESS.
+        ///   Looks up a localized string similar to ElectricEnergyStorage.
         /// </summary>
         public static string REESS {
             get {

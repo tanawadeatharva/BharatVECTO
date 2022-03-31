@@ -55,7 +55,7 @@ namespace TUGraz.VectoCommon.Hashing
 		IEPC,
 		ADC,
 		CertifiedAeroReduction,
-		REESS
+		ElectricEnergyStorage
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.Component_ADC;
 				case VectoComponents.CertifiedAeroReduction:
 					return XMLNames.Component_CertifiedAeroReduction;
-				case VectoComponents.REESS:
+				case VectoComponents.ElectricEnergyStorage:
 					return XMLNames.REESS;
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCommon.Hashing
 					return "ADC-";
 				case VectoComponents.CertifiedAeroReduction:
 					return "AERO-";
-				case VectoComponents.REESS:
+				case VectoComponents.ElectricEnergyStorage:
 					return "REESS-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);

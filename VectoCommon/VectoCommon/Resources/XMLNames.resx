@@ -1909,6 +1909,6 @@
     <value>CertifiedAeroReduction</value>
   </data>
   <data name="REESS" xml:space="preserve">
-    <value>REESS</value>
+    <value>ElectricEnergyStorage</value>
   </data>
 </root>
