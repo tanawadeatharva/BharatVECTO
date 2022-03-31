@@ -42,9 +42,9 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xm
               <RatedPower>200000</RatedPower>
               <MaxEngineTorque>1100</MaxEngineTorque>
               <WHRType>
-                <v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
-                <v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
-                <v2.3:ElectricalOutput>false</v2.3:ElectricalOutput>
+                <MechanicalOutputICE>false</MechanicalOutputICE>
+                <MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+                <ElectricalOutput>false</ElectricalOutput>
               </WHRType>
               <Mode>
                 <IdlingSpeed>700</IdlingSpeed>
