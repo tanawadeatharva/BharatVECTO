@@ -1,4 +1,4 @@
-##Modal Results (.vmod)
+## Modal Results (.vmod)
 
 Modal results are only created if enabled in the [Options](#main-form) tab. One file is created for each calculation and stored in the same directory as the .vecto file.
 
@@ -9,7 +9,7 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 
 **Note:** Columns for the torque converter operating point represent the torque/angular speed at the end of the simulation interval!
 
-###Quantities:
+### Quantities:
 
  The following table lists the columns in the .vmod file:
 	

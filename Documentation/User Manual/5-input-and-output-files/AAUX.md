@@ -1,4 +1,4 @@
-##Bus Auxiliary Input Data (.aaux)
+## Bus Auxiliary Input Data (.aaux)
 
 Only applicable in Engineering Mode.
 

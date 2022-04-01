@@ -1,21 +1,21 @@
-##Auxiliary Dialog
+## Auxiliary Dialog
 
 
 <div class="declaration">
 ![Auxiliary Dialog (Declaration Mode)](pics/VECTO-Editor_Aux_DECL.jpg)
 
-###Description
+### Description
 
 
 The Auxiliary Dialog is used to configure auxiliaries. In [Declaration Mode](#declaration-mode) the set of auxiliaries and their power demand is pre-defined. For every auxiliary the user has to select the technology from a given list. 
 
-###Settings
+### Settings
 
 Technology
 :   List of available technology for the auxiliary type
 For the  steering pump multiple technologies can be defined, one for each steered axle.
 
-###Controls
+### Controls
 
 ![ok](pics/OK.png) ***Save and close***
 
@@ -28,7 +28,7 @@ In Engineering Mode the auxiliary power demand can either be specified in the dr
 </div>
 
 
-##BusAuxiliary Dialog
+## BusAuxiliary Dialog
 
 <div class="engineering">
 
@@ -36,7 +36,7 @@ In Engineering Mode the auxiliary power demand can either be specified in the dr
 
 In Engineering Mode the electrical and mechanical power demand for the electric system, the pneumatic system and the HVAC can be provided.
 
-####Electric System
+#### Electric System
 
 Current Demand Engine On
 :   Demand of the electric system when the ICE is on. The current is multiplied with the nominal voltage of 28.3V.
@@ -65,7 +65,7 @@ Electric Storage Efficiency
 ESS supply from HEV REESS
 :   If selected, the low-voltage electric auxiliaries can be supplied from the high voltage REESS via the DC/DC converter. Needs to be selected in case "no alternator" is chosen as alternator technology. In case of a smart alternator, the low-voltage battery is used first and if empty the energy is drawn from the high voltage system.
 
-####Pneumatic System
+#### Pneumatic System
 
 Compressor Map
 :   [Compressor map file](#advanced-compressor-map-.acmp) defining the mechanical power demand and the air flow depending on the compressor speed.
@@ -79,7 +79,7 @@ Compressor Ratio
 Smart Air Compressor
 :    If enabled, the air compressor may generate excessive air during braking events. The air consumed and generated are [corrected in post processing](#engine-fuel-consumption-correction).
 
-####HVAC System
+#### HVAC System
 
 Mechanical Power Demand
 :   Power demand of the HVAC system directly applied at the crank shaft

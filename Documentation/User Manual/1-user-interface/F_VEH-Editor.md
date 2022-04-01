@@ -1,21 +1,21 @@
-##Vehicle Editor -- General Tab
+## Vehicle Editor -- General Tab
 
 ![](pics/VEH-Editor.PNG)
 
-###Description
+### Description
 
 The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and masses.
 
 The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The third tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the fourth tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The fifth tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The last tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
 
-###Relative File Paths
+### Relative File Paths
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
 Example: "Demo\\RT1.vrlm" points to the "Demo" subdirectory of the Vehicle File's directoy.
 
 VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (*Note:* The Vehicle File must be saved before browsing for input files.)
 
-###General vehicle parameters
+### General vehicle parameters
 
 Vehicle Category
 : Needed for [Declaration Mode](#declaration-mode) to identify the HDV Group.
@@ -29,7 +29,7 @@ Technically Permissible Maximum Laden Mass [t] (TPMLM)
 HDV Group
 : Displays the automatically selected HDV Group depending on the settings above.
 
-###Masses/Loading
+### Masses/Loading
 
 Corrected Actual Curb Mass Vehicle
 : Specifies the vehicle's mass without loading
@@ -50,7 +50,7 @@ Loading
 In Declaration Mode only the vehicle itself needs to be specified. Depending on the vehicle category and mission the simulation adds a standard trailer for certain missions.
 </div>
 
-###Air Resistance and Corss Wind Correction Options
+### Air Resistance and Corss Wind Correction Options
 
 The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value **c~d x A** as input. 
 **Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#vehicle-cross-wind-correction).**
@@ -71,12 +71,12 @@ In delcaration mode the 'Speed dependent (Declaration Mode)' cross-wind correcti
 
 Depending on the chosen mode either a [Speed Dependent Cross Wind Correction Input File (.vcdv)](#speed-dependent-cross-wind-correction-input-file-.vcdv) or a [Vair & Beta Cross Wind Correction Input File (.vcdb)](#speed-dependent-cross-wind-correction-input-file-.vcdv) must be defined. For details see [Cross Wind Correction](#vehicle-cross-wind-correction).
 
-###Dynamic Tyre Radius
+### Dynamic Tyre Radius
 
 In [Engineering Mode](#engineering-mode) this defines the effective (dynamic) wheel radius (in [mm]) used to calculate engine speed. In [Declaration Mode](#declaration-mode) the radius calculated automatically using tyres of the powered axle.
 
 
-###Axles/Wheels
+### Axles/Wheels
 
 For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient).
 
@@ -98,7 +98,7 @@ Doubleclick entries to edit existing axle configurations.
 
 
 
-###Controls
+### Controls
 
 
 ![](pics/blue-document-icon.png) New file
@@ -121,15 +121,15 @@ Doubleclick entries to edit existing axle configurations.
 
 
 
-##Vehicle Editor -- Powertrain Tab
+## Vehicle Editor -- Powertrain Tab
 
 ![](pics/VehicleForm_Powertrain.png)
 
-###Vehicle Idling Speed
+### Vehicle Idling Speed
 
 The idling speed of the combustion engine can be increased in the vehicle settings. This may be necessary due to certain auxiliaries or for other technical reasons. This value is only considered if it is higher than the idling speed defined in the combustion engine.
 
-###Retarder Losses
+### Retarder Losses
 
 If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
 
@@ -143,7 +143,7 @@ Both, primary and secondary retarders, require an [Retarder Torque Loss Input Fi
 
 The Retarder Ratio defines the ratio between the engine speed/cardan shaft speed and the retarder.
 
-###Angledrive
+### Angledrive
 
 If an angledrive is used in the vehicle, it can be defined here.
 Three options are available:
@@ -154,7 +154,7 @@ Three options are available:
 
 
 
-##Vehicle Editor -- Electric Components Tab
+## Vehicle Editor -- Electric Components Tab
 
 ![](pics/VECTO_VehicleEditor_ParHyb_El.png)
 
@@ -182,7 +182,7 @@ In the REESS Dialog the battery file itself and how it is connected to the elect
 ![](pics/BatteryPackDialog.png)
 
 
-##Vehicle Editor -- Torque Limits Tab
+## Vehicle Editor -- Torque Limits Tab
 
 ![](pics/VehicleForm_TorqueLimits.png)
 
@@ -195,7 +195,7 @@ Next, the maximum available torque for the electric machine can be reduced at th
 
 Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
 
-##Vehicle Editor -- ADAS Tab
+## Vehicle Editor -- ADAS Tab
 
 ![](pics/VehicleForm_ADAS.png)
 
@@ -217,11 +217,11 @@ The following table describes which ADAS technology can be used and is supported
 * Inputs for EcoRoll possible in GUI, but no effect in simulation
 
 
-##Vehicle Editor -- PTO Tab
+## Vehicle Editor -- PTO Tab
 
 ![](pics/Vehicleform_PTO.png)
 
-###PTO Transmission
+### PTO Transmission
 
 If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here. (Only in [Engineering Mode](#engineering-mode))
 
@@ -235,12 +235,12 @@ Three settings can be set:
 In engineering mode additional PTO activations are available to simulate different types of municipal vehicles. It is possible to add a certain PTO load during driving while the engine speed and gear is fixed (to simulate for example roadsweepers), or to add PTO activation while driving (to simulate side loader refuse trucks for example). In both cases the PTO activation is indicated in the [driving cycle](#driving-cycles-.vdri) (column "PTO").
 
 
-###Roadsweeper operation
+### Roadsweeper operation
 
 PTO activation mode 2 simulates PTO activation while driving at a fixed engine speed and gear. The minimum engine speed and working gear is entered in the PTO tab. For details see [PTO](#pto).
 
 
-###Sideloader operation
+### Sideloader operation
 
 PTO activation mode 3 simulates a time-based PTO activation while driving. Therefore, a separate PTO cycle ([.vptor]()) containing the PTO power over time has to be provided. The start of PTO activation is indicated with a '3' in the 'PTO' column of the [driving cycle](#driving-cycles-.vdri). For details see [PTO](#pto).
 

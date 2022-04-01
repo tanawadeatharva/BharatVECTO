@@ -1,8 +1,8 @@
-##Supported Powertrain Architectures
+## Supported Powertrain Architectures
 
 The following xEV architectures are currently supported in VECTO. All architectures can be used together with the bus auxiliaries model in engineering mode.
 
-###Parallel Hybrid Electric Vehicle Architectures
+### Parallel Hybrid Electric Vehicle Architectures
 
 * P1 + AMT
 * P1 + APT-S/P
@@ -14,7 +14,7 @@ The following xEV architectures are currently supported in VECTO. All architectu
 * P4 + AMT
 * P4 + APT-S/P
 
-###Pure Electric Vehicle Architectures
+### Pure Electric Vehicle Architectures
 
 * E2 + AMT
 * E2 + APT-N

@@ -1,6 +1,6 @@
-##RESS
+## RESS
 
-###Battery
+### Battery
 
 The battery model uses the following model parameters:
 
@@ -21,11 +21,11 @@ The maximum discharge current is further limited by the battery's internal resis
 
 $I_\textrm{disch,max} = \frac{U(\textrm{SoC})}{4 * R_i(\textrm{SoC})}$
 
-####Time-dependent Internal Resistance
+#### Time-dependent Internal Resistance
 
 If the internal resistance is provided for different pulse durations, the actual internal resistance is interpolated between the provided resistance values with the current pulse duration. No extrapolation is applied. For pulses below Ri_2, Ri_2 is applied, for pulse durations longer then Ri_20 (or Ri_120 if provided) this value is used. The pulse duration is reset every time the current changes its sign.
 
-###Modular Battery System
+### Modular Battery System
 
 VECTO allows to connect multiple batteries togehter to a single battery system. Therefore, every battery has assigned a stream identifier. All batteries with the same stream identifier are connected in series. All battery strins are then connected in parallel.
 
@@ -66,7 +66,7 @@ $P_{B_i} = (U_{B_i} + R_{B_i} \cdot I_i) \cdot I_i$
 
 ![](pics/BatterySystemCalculation.png)
 
-###Super Capacitor
+### Super Capacitor
 
 The super capacitor model uses the following model parameters:
 
