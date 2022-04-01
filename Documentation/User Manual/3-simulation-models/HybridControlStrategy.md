@@ -1,12 +1,12 @@
-##Hybrid Control Strategy
+## Hybrid Control Strategy
 
 The basic principle of the hybrid control strategy is to evaluate different options of operating modes, i.e., different splits of the demanded torque at the wheels among the electric motor and the combustion engine. For every option a cost function is calculated, taking onto account the required electric energy and the fuel consumption. Out of the examined operating modes the best option, i.e, the option with the lowest cost value is selected.
 
 The hybrid control is located in the simulated power train right after the wheels. Hence, the hybrid control strategy gets as input the torque and angular velocity at the wheels as input. 
 
-###Model Parameters
+### Model Parameters
 
-####Hybrid Strategy
+#### Hybrid Strategy
 
 * MinICEOnTime
 * MinSoC
@@ -17,7 +17,7 @@ The hybrid control is located in the simulated power train right after the wheel
 * AuxReserveTime
 * AuxReserveChargeTime
 
-####Gear Selection
+#### Gear Selection
 
 * MinTimeBetweenGearshifts
 * DownshiftAfterUpshiftDelay
@@ -26,7 +26,7 @@ The hybrid control is located in the simulated power train right after the wheel
 * AllowedGearRangeDown
 
 
-###Evaluation of different options
+### Evaluation of different options
 
 Note: The convention is that for all powertrain components (except te ICE) a positive torque loss means an additional drag while a negative torque loss means the component contributes to propel the vehicle. So all passive components can only apply positive torque losses and only active components such as electric motors can propel the vehicle which means it has a negative torque loss.
 
@@ -68,7 +68,7 @@ In case the driver performs a brake aktion the following options are considered
        described for the case the driver accelerates (see above).
 2. In case of vehicle configuration P2 and the gearbox is not engaged, turn the electric motor off 
 
-###Gear selection
+### Gear selection
 
 For hybrid vehicles it is not possible to decouple gear selection from the electric motor's operating point because the gearshift strategy only considers the çombustion engine's operating point. In some situations it is more efficient to select a different gear which results in an overall more efficient operating point (considering both, electric motor and combustion engine).
 
@@ -76,7 +76,7 @@ The hybrid strategy combines the main ideas of the EffShift gearshift strategy a
 
 Depending on the last gearshift the allowed gear range for upshifts and downshifts is determined. For every allowed gear all possible settings of the hybrid powertrain as describe above are evaluated.
 
-###Cost Function
+### Cost Function
 
 A cost value is calculated for every evaluated solution described above. In case the configurration results in an invalid operating point the cost value is set to invalid. Reasons for invalid configurations are that the engine operating point is outside the shift polygons, the engine speed is too high or too low, the electric power demand is too high or too low, the battery's SoC would go below the $\textrm{SoC}_{low}$ threshold, etc.
 
@@ -115,7 +115,7 @@ The following graph depicts the shape of $f_\textrm{SoC}$ (red line) and both su
 
 ![](pics/graph_SoC-Factor.png)
 
-####Flags for ignoring a evaluated hybrid configuration
+#### Flags for ignoring a evaluated hybrid configuration
 
 - *EngineSpeedTooLow*: the engine speed is below the engine idle speed
 - *EngineSpeedTooHigh*: the engine speed is above the engine's $n_{95h}$ speed
@@ -128,7 +128,7 @@ The following graph depicts the shape of $f_\textrm{SoC}$ (red line) and both su
 - *BatterySoCTooLow*: the strategy may add a certain safety margin to the minimum SoC for certain reasons. Set if the SoC falls below the lower boundary $\textrm{SoC}_\textrm{low}$
 
 
-###Selection of the best option.
+### Selection of the best option.
 
 From the list of possible hybrid powertrain configurations with its cost value the best option is selected according to the following list of conditions. If one or many configurations match the criteria listed in a step, the first configuration is used. If no configuration matches the criteria the next step is evaluated.
 

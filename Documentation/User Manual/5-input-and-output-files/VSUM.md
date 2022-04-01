@@ -1,7 +1,7 @@
-##Summary Results (.vsum)
+## Summary Results (.vsum)
 The .vsum file includes total / average results for each calculation run in one execution (ie. click of [START Button](#main-form)). The file is located in the directory of the fist run .vecto file.
 
-###Quantities:
+### Quantities:
 
 **Note:** For dual-fuel vehicles the fuel consumption columns are present for each fuel (e.g., FC-Map_Diesel CI, FC-Map_NG CI).
 

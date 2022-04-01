@@ -1,14 +1,14 @@
-##Hybrid Strategy Parameters Editor
+## Hybrid Strategy Parameters Editor
 
 
 ![](pics/HybridStrategyParams.png)
 
-###Description
+### Description
 
 
 The [Hybrid Strategy Parameters File (.vhctl)](#hybrid-strategy-parameters-file-.vhctl) defines all parameters used by the [Hybrid Control Strategy](#hybrid-control-strategy) to evaluate the best option for splitting the demanded torque between electric motor and combustion engine.
 
-###Strategy Parameters
+### Strategy Parameters
 
 The hybrid control strategy evaluates different allocations of torque to the electric motor and different gears and calculates the following cost function:
 
