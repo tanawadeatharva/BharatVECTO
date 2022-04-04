@@ -6,6 +6,13 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
+	<!--
+Changelog:
+	03.02.2022: First version uploaded to CITnet
+	14.03.2022: Correcting ElectricMotorTorqueLimits 
+                   before: ElectricMotorTorqueLimits element was allowed two times for HEV-S, and each element allowed to specify multiple electric machines
+                   now: ElectricMotorTorqueLimits is allowed only once, torque limits can be defined for up to 2 EM in case of HEV-S
+-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
