@@ -526,6 +526,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5.vecto";
 
+		public const string Group5TestJob_GbxTqLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_GbxTqLimit.vecto";
+
 		public const string Group5TestJob_BatterySystem = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5.vecto";
 
 		public const string Group5TestJob_BatterySystem2 = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5_2.vecto";
@@ -542,8 +544,22 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"), 
 		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), 
 		]
+		[
+			TestCase(Group5TestJob_GbxTqLimit, 0, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle LongHaul"),
+			TestCase(Group5TestJob_GbxTqLimit, 1, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Coach"),
+			TestCase(Group5TestJob_GbxTqLimit, 2, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Construction"),
+			TestCase(Group5TestJob_GbxTqLimit, 3, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_GbxTqLimit, 4, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Interurban"),
+			TestCase(Group5TestJob_GbxTqLimit, 5, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_GbxTqLimit, 6, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_GbxTqLimit, 7, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Suburban"),
+			TestCase(Group5TestJob_GbxTqLimit, 8, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Urban"),
+			TestCase(Group5TestJob_GbxTqLimit, 9, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle UrbanDelivery"),
+		]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
+
+
 
 		[
 			TestCase(Group5TestJob_BatterySystem, 0, TestName = "P2 Hybrid Group 5 BatterySystem DriveCycle LongHaul"),
