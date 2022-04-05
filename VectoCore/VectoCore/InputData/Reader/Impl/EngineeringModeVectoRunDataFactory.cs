@@ -191,8 +191,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var vehicleData = dao.CreateVehicleData(vehicle);
 
-					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
-							null, engineData);
+					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData,
+							engineData, gearboxData);
 					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
 						JobType = jobType,
@@ -412,8 +412,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					}
 					
 					var hybridParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
-						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters,
-							vehicle.BoostingLimitations, engineData)
+						? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData, engineData, gearboxData)
 						: null;
 					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,

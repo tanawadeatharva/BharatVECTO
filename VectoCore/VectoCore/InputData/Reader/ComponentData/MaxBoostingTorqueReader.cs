@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public static class MaxPropulsionTorqueReader
+	public static class MaxBoostingTorqueReader
 	{
 		public static VehicleMaxPropulsionTorque Read(Stream str)
 		{

@@ -106,24 +106,24 @@ namespace TUGraz.VectoCore.Utils
 				row["StepDuration"] = entry.Duration.TotalMilliseconds;
 
 				if (entry.Values.ContainsKey("DistanceRun")) {
-					row["Distance"] = entry.Values["DistanceRun"].GetValueOrNull("Distance");
-					row["Time"] = entry.Values["DistanceRun"].GetValueOrNull("Time");
-					row["StepIterationCount"] = entry.Values["DistanceRun"].GetValueOrNull("Iterations");
+					row["Distance"] = entry.Values["DistanceRun"].GetValueOrDBNull("Distance");
+					row["Time"] = entry.Values["DistanceRun"].GetValueOrDBNull("Time");
+					row["StepIterationCount"] = entry.Values["DistanceRun"].GetValueOrDBNull("Iterations");
 				}
 				if (entry.Values.ContainsKey("Driver")) {
-					row["NumDriverRequests"] = entry.Values["Driver"].GetValueOrNull("Requests");
-					row["NumAccelActions"] = entry.Values["Driver"].GetValueOrNull("Accelerate");
-					row["NumBrakeActions"] = entry.Values["Driver"].GetValueOrNull("Brake");
-					row["NumCoastActions"] = entry.Values["Driver"].GetValueOrNull("Coast");
-					row["NumRollActions"] = entry.Values["Driver"].GetValueOrNull("Roll");
-					row["SearchOPIterations"] = entry.Values["Driver"].GetValueOrNull("SearchOperatingPoint");
-					row["SearchBrakeIterations"] = entry.Values["Driver"].GetValueOrNull("SearchBrakingPower");
+					row["NumDriverRequests"] = entry.Values["Driver"].GetValueOrDBNull("Requests");
+					row["NumAccelActions"] = entry.Values["Driver"].GetValueOrDBNull("Accelerate");
+					row["NumBrakeActions"] = entry.Values["Driver"].GetValueOrDBNull("Brake");
+					row["NumCoastActions"] = entry.Values["Driver"].GetValueOrDBNull("Coast");
+					row["NumRollActions"] = entry.Values["Driver"].GetValueOrDBNull("Roll");
+					row["SearchOPIterations"] = entry.Values["Driver"].GetValueOrDBNull("SearchOperatingPoint");
+					row["SearchBrakeIterations"] = entry.Values["Driver"].GetValueOrDBNull("SearchBrakingPower");
 				}
 				if (entry.Values.ContainsKey("Gearbox")) {
-					row["NumGearboxRequests"] = entry.Values["Gearbox"].GetValueOrNull("Requests");
+					row["NumGearboxRequests"] = entry.Values["Gearbox"].GetValueOrDBNull("Requests");
 				}
 				if (entry.Values.ContainsKey("CombustionEngine")) {
-					row["NumEngineRequests"] = entry.Values["CombustionEngine"].GetValueOrNull("Requests");
+					row["NumEngineRequests"] = entry.Values["CombustionEngine"].GetValueOrDBNull("Requests");
 				}
 				table.Rows.Add(row);
 			}

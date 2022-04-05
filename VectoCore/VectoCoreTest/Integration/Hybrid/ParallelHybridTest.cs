@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -315,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
-				   700, {0}, {1},    0", vmax, slope);
+				  1200, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
 			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}.vmod";
@@ -338,23 +339,121 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			graphWriter.Write(modFilename);
 		}
 
-
 		[
-			TestCase(80, 0.7, 5, 320, TestName = "P2 Hybrid DriveOff 80km/h SoC: 0.7, UH 5% MaxPWR: 320kW"),
-			
+			TestCase(80, 0.7, 5, TestName = "P2 Hybrid GbxTqLimit DriveOff 80km/h SoC: 0.7, UH 5%"),
 		]
-		public void P2HybridDriveOffLimitPwr(double vmax, double initialSoC, double slope, double maxPwrkW)
+		public void P2HybridDriveOffGbxTqLimit(double vmax, double initialSoC, double slope)
 		{
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
 			var cycleData = string.Format(
 				@"   0,   0, {1},    3
-				   700, {0}, {1},    0", vmax, slope);
+				  1200, {0}, {1},    0", vmax, slope);
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 
-			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_maxPwr-{maxPwrkW}.vmod";
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_gbxLimit-2300.vmod";
 			const PowertrainPosition pos = PowertrainPosition.HybridP2;
 			var job = CreateEngineeringRun(
-				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, maxDriveTrainPower: (maxPwrkW * 1000).SI<Watt>());
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, maxGearboxTorque: 2370.SI<NewtonMeter>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			graphWriter.Write(modFilename);
+		}
+
+		[
+			TestCase(80, 0.7, 5, 0, TestName = "P2 Hybrid BoostingLimit 0Nm DriveOff 80km/h SoC: 0.7, UH 5%"),
+			TestCase(80, 0.7, 5, 100, TestName = "P2 Hybrid BoostingLimit 100Nm DriveOff 80km/h SoC: 0.7, UH 5%"),
+		]
+		public void P2HybridDriveOffBoostingLimitLimit(double vmax, double initialSoC, double slope, double boostingLimit)
+		{
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				  1200, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_boostingLimit-{boostingLimit}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, boostingLimit: boostingLimit.SI<NewtonMeter>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			graphWriter.Write(modFilename);
+		}
+
+
+		[
+			TestCase(80, 0.7, 5, 100, TestName = "P2 Hybrid BoostingAndGbxLimit 150Nm DriveOff 80km/h SoC: 0.7, UH 5%"),
+		]
+		public void P2HybridDriveOffBoostingAndGbxLimit(double vmax, double initialSoC, double slope, double boostingLimit)
+		{
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				  1200, {0}, {1},    0", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_boostingAndGbxLimit-{boostingLimit}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true, boostingLimit: boostingLimit.SI<NewtonMeter>(), maxGearboxTorque: 2370.SI<NewtonMeter>());
+			var run = job.Runs.First().Run;
+
+			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
+			Assert.NotNull(hybridController);
+
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+			job.Execute();
+			job.WaitFinished();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+			graphWriter.Write(modFilename);
+		}
+
+		[
+			TestCase(80, 0.7, 5, 100, TestName = "P2 Hybrid BoostingAndGbxLimit TopTorque 150Nm DriveOff 80km/h SoC: 0.7, UH 5%"),
+		]
+		public void P2HybridDriveOffBoostingAndGbxLimitTopTorque(double vmax, double initialSoC, double slope, double boostingLimit)
+		{
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_P2 });
+			var cycleData = string.Format(
+				@"   0,   0, {1},    3
+				  1200, {0}, {1},    0
+				  1201, {0}, {2},    0
+				  2000, {0}, {2},    0", vmax, slope, 7.2);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleParallelHybrid-P2_acc_{vmax}-{initialSoC}_{slope}_boostingAndGbxLimitTopTorque-{boostingLimit}.vmod";
+			const PowertrainPosition pos = PowertrainPosition.HybridP2;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 1.0, largeMotor: true,
+				boostingLimit: boostingLimit.SI<NewtonMeter>(), maxGearboxTorque: 2370.SI<NewtonMeter>(),
+				topTorque: 2000.SI<NewtonMeter>());
+			
 			var run = job.Runs.First().Run;
 
 			var hybridController = (HybridController)((VehicleContainer)run.GetContainer()).HybridController;
@@ -545,16 +644,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), 
 		]
 		[
-			TestCase(Group5TestJob_GbxTqLimit, 0, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle LongHaul"),
-			TestCase(Group5TestJob_GbxTqLimit, 1, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Coach"),
-			TestCase(Group5TestJob_GbxTqLimit, 2, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Construction"),
-			TestCase(Group5TestJob_GbxTqLimit, 3, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle HeavyUrban"),
-			TestCase(Group5TestJob_GbxTqLimit, 4, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Interurban"),
-			TestCase(Group5TestJob_GbxTqLimit, 5, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle MunicipalUtility"),
-			TestCase(Group5TestJob_GbxTqLimit, 6, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle RegionalDelivery"),
-			TestCase(Group5TestJob_GbxTqLimit, 7, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Suburban"),
-			TestCase(Group5TestJob_GbxTqLimit, 8, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle Urban"),
-			TestCase(Group5TestJob_GbxTqLimit, 9, TestName = "P2 Hybrid Group 5 TbxTqLimit DriveCycle UrbanDelivery"),
+			TestCase(Group5TestJob_GbxTqLimit, 0, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle LongHaul"),
+			TestCase(Group5TestJob_GbxTqLimit, 1, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Coach"),
+			TestCase(Group5TestJob_GbxTqLimit, 2, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Construction"),
+			TestCase(Group5TestJob_GbxTqLimit, 3, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_GbxTqLimit, 4, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Interurban"),
+			TestCase(Group5TestJob_GbxTqLimit, 5, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_GbxTqLimit, 6, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_GbxTqLimit, 7, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Suburban"),
+			TestCase(Group5TestJob_GbxTqLimit, 8, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Urban"),
+			TestCase(Group5TestJob_GbxTqLimit, 9, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle UrbanDelivery"),
 		]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
@@ -1384,14 +1483,14 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
-			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
+			Kilogram payload = null, GearboxType gearboxType = GearboxType.NoGearbox,
+			NewtonMeter maxGearboxTorque = null, NewtonMeter boostingLimit = null, NewtonMeter topTorque = null)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			var container = CreateParallelHybridPowerTrain(
-				cycleData, modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload,
-				maxDriveTrainPower, gearboxType);
+				cycleData, modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload, gearboxType, maxGearboxTorque, boostingLimit, topTorque);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -1407,7 +1506,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static VehicleContainer CreateParallelHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, bool largeMotor, SummaryDataContainer sumData, double pAuxEl,
-			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
+			PowertrainPosition pos, double ratio, Kilogram payload = null,
+			GearboxType gearboxType = GearboxType.NoGearbox, NewtonMeter maxGearboxTorque = null,
+			NewtonMeter boostingLimit = null, NewtonMeter topTorque = null)
 		{ 
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
@@ -1424,7 +1525,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//batteryData.TargetSoC = 0.5;
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
-				 Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+				 Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count, topTorque);
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
@@ -1449,9 +1550,32 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				EngineData = engineData,
 				BatteryData = batteryData,
 				GearshiftParameters = CreateGearshiftData(gearboxData, axleGearData.AxleGear.Ratio, engineData.IdleSpeed),
-				HybridStrategyParameters = CreateHybridStrategyData(maxDriveTrainPower),
+				HybridStrategyParameters = CreateHybridStrategyData(),
 				ElectricAuxDemand = pAuxEl.SI<Watt>()
 			};
+			var mockVehicleInput = new MockEngineeringVehicleInputData() { };
+			mockVehicleInput.ElectricMachines = new MockElectricMachinesInputData() {
+				Entries = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>() {
+					new ElectricMachineEntry<IElectricMotorEngineeringInputData>() {
+						Position = pos
+					}
+				}
+			};
+			if (boostingLimit != null) {
+				mockVehicleInput.BoostingLimitations = VectoCSVFile.ReadStream(
+					$"n, T_drive\n0, {boostingLimit.Value()}\n1000, {boostingLimit.Value()}".ToStream());
+				runData.HybridStrategyParameters.MaxPropulsionTorque =
+					EngineeringDataAdapter.CreateMaxPropulsionTorque(mockVehicleInput, engineData,
+						gearboxData);
+			}
+			if (maxGearboxTorque != null) {
+				foreach (var gear in gearboxData.Gears) {
+					gear.Value.MaxTorque = maxGearboxTorque;
+				}
+				runData.HybridStrategyParameters.MaxPropulsionTorque =
+					EngineeringDataAdapter.CreateMaxPropulsionTorque(mockVehicleInput, engineData,
+						gearboxData);
+			}
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
 			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter)
@@ -1522,7 +1646,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			return container;
 		}
 
-		private static HybridStrategyParameters CreateHybridStrategyData(Watt maxDriveTrainPower)
+		private static HybridStrategyParameters CreateHybridStrategyData()
 		{
 			return new HybridStrategyParameters() {
 				EquivalenceFactorDischarge = 2.5,

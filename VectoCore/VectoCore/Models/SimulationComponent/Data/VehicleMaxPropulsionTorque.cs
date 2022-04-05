@@ -8,9 +8,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class VehicleMaxPropulsionTorque
 	{
-		internal readonly List<FullLoadEntry> FullLoadEntries;
+		internal readonly IList<FullLoadEntry> FullLoadEntries;
 
-		internal VehicleMaxPropulsionTorque(List<FullLoadEntry> entries)
+		internal VehicleMaxPropulsionTorque(IList<FullLoadEntry> entries)
 		{
 			FullLoadEntries = entries;
 		}
