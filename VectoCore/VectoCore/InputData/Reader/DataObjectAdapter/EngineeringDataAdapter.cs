@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
 			}
 
-			if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle &&
+			if ((vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle)&&
 				gearbox.Type.AutomaticTransmission()) {
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
 				retVal.Type = GearboxType.APTN;
