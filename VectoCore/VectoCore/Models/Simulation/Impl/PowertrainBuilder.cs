@@ -1299,22 +1299,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 								"no default gearshift strategy available for gearbox type {0} and job type {1}",
 								runData.GearboxData.Type, runData.JobType);
 					}
-				//return new AMTShiftStrategy(runData, container);
 				case GearboxType.MT:
 					runData.ShiftStrategy = MTShiftStrategy.Name;
 					return new MTShiftStrategy(container);
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
-					runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
-					return new ATShiftStrategyOptimized(container);
-				//return new ATShiftStrategy(runData, container);
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ParallelHybridVehicle:
+						case VectoSimulationJobType.ConventionalVehicle:
+							runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
+							return new ATShiftStrategyOptimized(container);
+						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.BatteryElectricVehicle:
+							runData.ShiftStrategy = APTNShiftStrategy.Name;
+							return new APTNShiftStrategy(container);
+						default:
+							throw new VectoException(
+								"no default gearshift strategy available for gearbox type {0} and job type {1}",
+								runData.GearboxData.Type, runData.JobType);
+					}
 				case GearboxType.APTN:
 					switch (runData.JobType) {
 						case VectoSimulationJobType.ParallelHybridVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
-						runData.ShiftStrategy = APTNShiftStrategy.Name;
-						return new APTNShiftStrategy(container);
+							runData.ShiftStrategy = APTNShiftStrategy.Name;
+							return new APTNShiftStrategy(container);
 						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
 							return null;
 						default:
