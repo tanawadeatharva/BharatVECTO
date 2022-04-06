@@ -627,21 +627,29 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string Group5TestJob_GbxTqLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_GbxTqLimit.vecto";
 
+		public const string Group5TestJob_BoostingLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingLimit.vecto";
+
+		public const string Group5TestJob_BoostingAndGbxLimit = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingAndGbxLimit.vecto";
+
+		public const string Group5TestJob_BoostingAndGbxLimitTopTorque = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingAndGbxLimitTopTorque.vecto";
+
+		public const string Group5TestJob_BoostingLimitTopTorque = @"TestData\Hybrids\GenericVehicle_Group5_P2\P2 Group 5_BoostingLimitTopTorque.vecto";
+
 		public const string Group5TestJob_BatterySystem = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5.vecto";
 
 		public const string Group5TestJob_BatterySystem2 = @"TestData\Hybrids\GenericVehicle_Group5_P2_BatSystem\P2 Group 5_2.vecto";
 
 		[
-		TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
-		TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  
-		TestCase(Group5TestJob, 2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),  
-		TestCase(Group5TestJob, 3, TestName = "P2 Hybrid Group 5 DriveCycle HeavyUrban"),
-		TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),  
-		TestCase(Group5TestJob, 5, TestName = "P2 Hybrid Group 5 DriveCycle MunicipalUtility"),
-		TestCase(Group5TestJob, 6, TestName = "P2 Hybrid Group 5 DriveCycle RegionalDelivery"),
-		TestCase(Group5TestJob, 7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),  
-		TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"), 
-		TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), 
+			TestCase(Group5TestJob, 0, TestName = "P2 Hybrid Group 5 DriveCycle LongHaul"),
+			TestCase(Group5TestJob, 1, TestName = "P2 Hybrid Group 5 DriveCycle Coach"),  
+			TestCase(Group5TestJob, 2, TestName = "P2 Hybrid Group 5 DriveCycle Construction"),  
+			TestCase(Group5TestJob, 3, TestName = "P2 Hybrid Group 5 DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob, 4, TestName = "P2 Hybrid Group 5 DriveCycle Interurban"),  
+			TestCase(Group5TestJob, 5, TestName = "P2 Hybrid Group 5 DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob, 6, TestName = "P2 Hybrid Group 5 DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob, 7, TestName = "P2 Hybrid Group 5 DriveCycle Suburban"),  
+			TestCase(Group5TestJob, 8, TestName = "P2 Hybrid Group 5 DriveCycle Urban"), 
+			TestCase(Group5TestJob, 9, TestName = "P2 Hybrid Group 5 DriveCycle UrbanDelivery"), 
 		]
 		[
 			TestCase(Group5TestJob_GbxTqLimit, 0, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle LongHaul"),
@@ -654,6 +662,54 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			TestCase(Group5TestJob_GbxTqLimit, 7, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Suburban"),
 			TestCase(Group5TestJob_GbxTqLimit, 8, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle Urban"),
 			TestCase(Group5TestJob_GbxTqLimit, 9, TestName = "P2 Hybrid Group 5 GbxTqLimit DriveCycle UrbanDelivery"),
+		]
+		[
+			TestCase(Group5TestJob_BoostingLimit, 0, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BoostingLimit, 1, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle Coach"),
+			TestCase(Group5TestJob_BoostingLimit, 2, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle Construction"),
+			TestCase(Group5TestJob_BoostingLimit, 3, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BoostingLimit, 4, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle Interurban"),
+			TestCase(Group5TestJob_BoostingLimit, 5, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BoostingLimit, 6, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BoostingLimit, 7, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle Suburban"),
+			TestCase(Group5TestJob_BoostingLimit, 8, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle Urban"),
+			TestCase(Group5TestJob_BoostingLimit, 9, TestName = "P2 Hybrid Group 5 BoostingLimit DriveCycle UrbanDelivery"),
+		]
+		[
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 0, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 1, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle Coach"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 2, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle Construction"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 3, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 4, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle Interurban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 5, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 6, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 7, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle Suburban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 8, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle Urban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimit, 9, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit DriveCycle UrbanDelivery"),
+		]
+		[
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 0, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 1, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle Coach"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 2, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle Construction"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 3, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 4, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle Interurban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 5, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 6, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 7, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle Suburban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 8, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle Urban"),
+			TestCase(Group5TestJob_BoostingAndGbxLimitTopTorque, 9, TestName = "P2 Hybrid Group 5 BoostingAndGbxLimit TopTorque DriveCycle UrbanDelivery"),
+		]
+		[
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 0, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle LongHaul"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 1, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle Coach"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 2, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle Construction"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 3, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle HeavyUrban"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 4, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle Interurban"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 5, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle MunicipalUtility"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 6, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle RegionalDelivery"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 7, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle Suburban"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 8, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle Urban"),
+			TestCase(Group5TestJob_BoostingLimitTopTorque, 9, TestName = "P2 Hybrid Group 5 BoostingLimit TopTorque DriveCycle UrbanDelivery"),
 		]
 		public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
 		{ RunHybridJob(jobFile, cycleIdx); }
