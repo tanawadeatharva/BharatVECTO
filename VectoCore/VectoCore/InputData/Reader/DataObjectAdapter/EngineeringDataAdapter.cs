@@ -1030,8 +1030,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var belowIdle = offset?.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
 
 			var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
-			var isP1OrP2Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
-				.Any(x => x == PowertrainPosition.HybridP1 || x == PowertrainPosition.HybridP2);
+			var isP3OrP4Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
+				.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
 			foreach (var key in engineData.FullLoadCurves.Keys) {
 				if (key == 0) {
 					continue;
@@ -1082,7 +1082,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				// if no gearbox limit is defined, MaxTorque is null;
 				// in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
-				var gearboxTorqueLimit = isP1OrP2Hybrid ? gearboxData.Gears[key].MaxTorque : null;
+				var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
 				retVal[new GearshiftPosition(key)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
 
 			}
