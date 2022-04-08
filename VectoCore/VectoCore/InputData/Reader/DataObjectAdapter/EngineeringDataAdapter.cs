@@ -828,12 +828,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new BatterySystemData();
 			foreach (var entry in bat) {
-                var b = entry.REESSPack as IBatteryPackDeclarationInputData;
-                if (b == null) {
-                    continue;
-                }
+				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
+				if (b == null) {
+					continue;
+				}
 
-                for (var i = 0; i < entry.Count; i++) {
+				for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
 						MinSOC = b.MinSOC.Value,
 						MaxSOC = b.MaxSOC.Value,
@@ -918,9 +918,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Voltage = entry.VoltageLevel,
 					
 					FullLoadCurve = fullLoadCurveCombined,
-                    // DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-                    EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
-                });
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				});
 			}
 
 			if (averageVoltage == null) {
