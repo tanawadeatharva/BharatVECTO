@@ -439,9 +439,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.Engine.TorqueOutDemand / fullLoadPower;
 
-					if (_runData != null && _runData.HybridStrategyParameters.MaxPropulsionTorque != null) {
+					if (_runData != null && _runData.HybridStrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(gear) != null) {
 						var tqRequest = response.Gearbox.InputTorque;
-						var maxTorque = _runData.HybridStrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(response.Gearbox.InputSpeed);
+						var maxTorque = _runData.HybridStrategyParameters.MaxPropulsionTorque[gear].FullLoadDriveTorque(response.Gearbox.InputSpeed);
 						reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower,  tqRequest / maxTorque);
 					}
 

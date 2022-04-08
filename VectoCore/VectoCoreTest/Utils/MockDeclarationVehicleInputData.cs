@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool Articulated { get; }
 		public Meter Height { get; }
 		public TableData ElectricMotorTorqueLimits { get; }
-		public TableData BoostingLimitations { get; }
+		public TableData BoostingLimitations { get; set; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public Meter EntranceHeight { get; }

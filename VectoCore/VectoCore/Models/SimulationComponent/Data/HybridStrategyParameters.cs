@@ -1,5 +1,7 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 	public class HybridStrategyParameters 
@@ -20,7 +22,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 
 		public Second MinICEOnTime { get; set; }
 		
-		public VehicleMaxPropulsionTorque MaxPropulsionTorque { get; set; }
+		public Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> MaxPropulsionTorque { get; set; }
+
 		public double ICEStartPenaltyFactor { get; set; }
 
 		//public Watt MaxDrivetrainPower { get; set; }

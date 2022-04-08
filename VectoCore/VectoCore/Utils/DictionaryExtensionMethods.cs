@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Utils
 {
 	internal static class DictionaryExtensionMethods
 	{
-		public static object GetValueOrNull<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) =>
+		public static object GetValueOrDBNull<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) =>
 			dictionary.TryGetValue(key, out var value) ? (object)value : DBNull.Value;
 
 		public static TValue GetValueOrZero<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
