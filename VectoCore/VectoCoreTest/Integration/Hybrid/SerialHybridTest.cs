@@ -634,11 +634,9 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 						? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
 						: new Gearbox(container, ctl.ShiftStrategy);
 					powertrain = powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-						.AddComponent(runData.AngledriveData != null
-							? new Angledrive(container, runData.AngledriveData)
-							: null)
+						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
-						.AddComponent((IGearbox)gearbox, container)
+						.AddComponent((IGearbox)gearbox)
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData,
 							container,
@@ -649,7 +647,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 					
 				case PowertrainPosition.BatteryElectricE3:
 					powertrain = powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-						.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio):null)
+						.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData,
 							container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));

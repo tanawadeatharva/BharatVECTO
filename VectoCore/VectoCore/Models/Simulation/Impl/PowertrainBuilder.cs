@@ -445,11 +445,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
 				es.Connect(whrCharger);
 				engine.WHRCharger = whrCharger;
-
 			}
 
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
@@ -1075,10 +1072,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static ElectricSystem ConnectREESS(VectoRunData data, VehicleContainer container)
 		{
 			if (data.BatteryData != null && data.SuperCapData != null) {
-				throw new VectoException("Powertrain requires either Battery OR SuperCap, but both are defined.");
+				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but both are defined.");
 			}
 			if (data.BatteryData is null && data.SuperCapData is null) {
-				throw new VectoException("Powertrain requires either Battery OR SuperCap, but none are defined.");
+				throw new VectoException("Powertrain requires either Battery OR SuperCapacitor, but none are defined.");
 			}
 
 			var es = new ElectricSystem(container);

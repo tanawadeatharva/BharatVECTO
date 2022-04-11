@@ -10,7 +10,6 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 'Option Infer On
 
-Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
 Imports TUGraz.VectoCommon.InputData
@@ -536,7 +535,7 @@ Public Class VehicleForm
 				gbEMTorqueLimits.Enabled = False
 				tpGensetComponents.Visible = False
 			Case VectoSimulationJobType.ParallelHybridVehicle
-				gbRetarderLosses.Enabled = False
+				gbRetarderLosses.Enabled = True
 				lblTitle.Text = "Parallel Hybrid Vehicle"
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
 					Function(x) x.IsParallelHybrid() Or x = PowertrainPosition.HybridPositionNotSet)
@@ -1237,7 +1236,10 @@ Public Class VehicleForm
 		End If
 
 		If (selectedValue IsNot Nothing) Then
-			CbRtType.SelectedValue = selectedValue
+			If Not selectedValue.Equals(CbRtType.SelectedValue) Then
+				MsgBox("Retarder has changed due to change of electric motor position. Please check.", MsgBoxStyle.Information)
+				CbRtType.SelectedValue = selectedValue
+			End If
 		End If
 	End Sub
 
