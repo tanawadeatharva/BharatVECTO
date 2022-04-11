@@ -440,6 +440,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ctl.Gearbox = gbx;
 			ctl.Engine = engine;
 
+			if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+				var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+				es.Connect(whrCharger);
+				engine.WHRCharger = whrCharger;
+
+			}
+
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
@@ -539,6 +549,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
+
+			if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+				var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+				var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+				es.Connect(whrCharger);
+				engine.WHRCharger = whrCharger;
+
+			}
 
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
@@ -1026,7 +1044,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
-			es.Charger = new SimpleCharger();
+			es.Connect(new SimpleCharger());
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 
@@ -1221,35 +1239,50 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var runData = container.RunData;
 
 			switch (runData.GearboxData.Type) {
-				case GearboxType.AMT when runData.JobType == VectoSimulationJobType.ConventionalVehicle:
-					runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-					return new AMTShiftStrategyOptimized(container);
-
-				case GearboxType.AMT when runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle):
-					runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
-					return new PEVAMTShiftStrategy(container);
-
 				case GearboxType.AMT:
-					throw new VectoException("no default gearshift strategy available for gearbox type {0} and job type {1}",
-						runData.GearboxData.Type, runData.JobType);
-
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ConventionalVehicle:
+							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+							return new AMTShiftStrategyOptimized(container);
+						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.SerialHybridVehicle:
+							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
+							return new PEVAMTShiftStrategy(container);
+						default:
+							throw new VectoException(
+								"no default gearshift strategy available for gearbox type {0} and job type {1}",
+								runData.GearboxData.Type, runData.JobType);
+					}
 				case GearboxType.MT:
 					runData.ShiftStrategy = MTShiftStrategy.Name;
 					return new MTShiftStrategy(container);
 
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
-					runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
-					return new ATShiftStrategyOptimized(container);
-
-				case GearboxType.APTN when runData.JobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.BatteryElectricVehicle):
-					runData.ShiftStrategy = APTNShiftStrategy.Name;
-					return new APTNShiftStrategy(container);
-
-				case GearboxType.APTN when runData.JobType == VectoSimulationJobType.ConventionalVehicle && container.IsTestPowertrain:
-					return null;
-
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ParallelHybridVehicle:
+						case VectoSimulationJobType.ConventionalVehicle:
+							runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
+							return new ATShiftStrategyOptimized(container);
+						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.BatteryElectricVehicle:
+							runData.ShiftStrategy = APTNShiftStrategy.Name;
+							return new APTNShiftStrategy(container);
+						default:
+							throw new VectoException(
+								"no default gearshift strategy available for gearbox type {0} and job type {1}",
+								runData.GearboxData.Type, runData.JobType);
+					}
 				case GearboxType.APTN:
+					switch (runData.JobType) {
+						case VectoSimulationJobType.ParallelHybridVehicle:
+						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.BatteryElectricVehicle:
+							runData.ShiftStrategy = APTNShiftStrategy.Name;
+							return new APTNShiftStrategy(container);
+						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
+							return null;
+						default:
 					throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
 
 				default:

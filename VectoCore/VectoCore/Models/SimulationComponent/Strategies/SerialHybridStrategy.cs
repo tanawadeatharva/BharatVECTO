@@ -75,6 +75,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 				Controller.PreviousState.OutAngularVelocity);
 
@@ -169,6 +177,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 				Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
@@ -494,7 +510,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return null;
 			}
 
-			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && emOutTorque.IsSmaller(0)) {
+			if (ModelData.GearboxData != null && DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed) && emOutTorque.IsSmaller(0)) {
 				return null;
 			}
 
@@ -556,7 +572,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	GenSetOperatingPoint maxPowerGenset, Second dt)
 		{
 			var reqBatteryPower = maxPowerGenset.ElectricPower + drivetrainDemand.ElectricPowerDemand;
-			if (DataBus.BatteryInfo.StateOfCharge.IsEqual(StrategyParameters.MinSoC, 0.01) && reqBatteryPower < 0 && drivetrainDemand.ElectricPowerDemand < drivetrainDemand.Response.ElectricSystem.MaxPowerDrive) {
+			if (DataBus.BatteryInfo.StateOfCharge.IsEqual(StrategyParameters.MinSoC, 0.01) && reqBatteryPower < 0 &&
+				drivetrainDemand.ElectricPowerDemand < drivetrainDemand.Response.ElectricSystem.MaxPowerDrive) {
 				return StateMachineState.Acc_S3;
 			}
 

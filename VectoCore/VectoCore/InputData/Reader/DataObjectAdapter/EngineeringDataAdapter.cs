@@ -308,6 +308,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() && !adas.ATEcoRollReleaseLockupClutch.HasValue) {
 				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
 			}
+
+			if ((vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle)&&
+				gearbox.Type.AutomaticTransmission()) {
+				// PEV with APT-S or APT-P transmission are simulated as APT-N
+				retVal.Type = GearboxType.APTN;
+			}
 			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
@@ -317,13 +323,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
-			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
+			var hasTorqueConverter = retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN;
+
+			var gearDifferenceRatio = hasTorqueConverter && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
 			ShiftPolygon tcShiftPolygon = null;
-			if (gearbox.Type.AutomaticTransmission() && gearbox.Type != GearboxType.APTN) {
+			if (hasTorqueConverter) {
 				tcShiftPolygon = torqueConverter.ShiftPolygon != null
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
@@ -348,17 +356,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
+					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,
 					LossMap = lossMap,
 				};
 
-				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
+				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
 
 			retVal.Gears = gears;
 
-			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN) {
+			if (hasTorqueConverter) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
@@ -367,19 +376,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					gearshiftData.CLUpshiftMinAcceleration, gearshiftData.CCUpshiftMinAcceleration);
 			}
 
+			// update disengageWhenHaltingSpeed
+			if (retVal.Type.AutomaticTransmission()) {
+				var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+				if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
+					var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+						.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+					var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+												dynamicTyreRadius;
+					retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+				}
+			}
+
 			return retVal;
 		}
 
 		protected virtual void CreateATGearData(
-			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
+			GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
 		{
-			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
+			if (gearboxType == GearboxType.ATPowerSplit && i == 0) {
 				// powersplit transmission: torque converter already contains ratio and losses
 				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
 			}
-			if (gearbox.Type == GearboxType.ATSerial) {
+			if (gearboxType == GearboxType.ATSerial) {
 				if (i == 0) {
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
@@ -815,12 +836,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new BatterySystemData();
 			foreach (var entry in bat) {
-                var b = entry.REESSPack as IBatteryPackDeclarationInputData;
-                if (b == null) {
-                    continue;
-                }
+				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
+				if (b == null) {
+					continue;
+				}
 
-                for (var i = 0; i < entry.Count; i++) {
+				for (var i = 0; i < entry.Count; i++) {
 					retVal.Batteries.Add(Tuple.Create(entry.StringId, new BatteryData() {
 						MinSOC = b.MinSOC.Value,
 						MaxSOC = b.MaxSOC.Value,
@@ -905,9 +926,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Voltage = entry.VoltageLevel,
 					
 					FullLoadCurve = fullLoadCurveCombined,
-                    // DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-                    EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
-                });
+					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+				});
 			}
 
 			if (averageVoltage == null) {
@@ -983,13 +1004,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public HybridStrategyParameters CreateHybridStrategyParameters(
-			IHybridStrategyParameters hybridStrategyParameters,
-			TableData maxPropulsionTorque, CombustionEngineData combustionEngineData)
+			IEngineeringJobInputData jobInputData,
+			CombustionEngineData combustionEngineData, GearboxData gearboxData)
 		{
-			VehicleMaxPropulsionTorque torqueLimit = maxPropulsionTorque == null
-				? null
-				: CreateMaxPropulsionTorque(maxPropulsionTorque, combustionEngineData);
+			var hybridStrategyParameters = jobInputData.HybridStrategyParameters;
 			
+			var torqueLimit = CreateMaxPropulsionTorque(jobInputData.Vehicle, combustionEngineData, gearboxData);
+
 			var retVal = new HybridStrategyParameters() {
 				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
 				EquivalenceFactorCharge = hybridStrategyParameters.EquivalenceFactorCharge,
@@ -1007,34 +1028,74 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private VehicleMaxPropulsionTorque CreateMaxPropulsionTorque(TableData maxPropulsionTorque, CombustionEngineData engineData)
+		protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(IVehicleEngineeringInputData vehicleInputData, CombustionEngineData engineData, GearboxData gearboxData)
 		{
-			var offset = MaxPropulsionTorqueReader.Create(maxPropulsionTorque);
-			var belowIdle = offset.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
 
-			var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
-					{ MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
-				.Concat(
-					engineData.FullLoadCurves[0].FullLoadEntries.Where(x => x.EngineSpeed > engineData.IdleSpeed)
-						.Select(fullLoadCurveEntry =>
+			// engine data contains full-load curves already cropped with max gearbox torque and max ICE torque (vehicle level)
+
+			var maxBoostingTorque = vehicleInputData.BoostingLimitations;
+			var offset = maxBoostingTorque == null ? null : MaxBoostingTorqueReader.Create(maxBoostingTorque);
+			var belowIdle = offset?.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
+
+			var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
+			var isP3OrP4Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
+				.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
+			foreach (var key in engineData.FullLoadCurves.Keys) {
+				if (key == 0) {
+					continue;
+				}
+				if (maxBoostingTorque == null) {
+					if (gearboxData.Gears[key].MaxTorque == null) {
+						continue;
+					}
+					// don't know what to do...
+					// idea 1: apply gearbox limit for whole speed range
+					// idea 2: use em max torque as boosting limitation
+					var gbxLimit = new[] {
+						new VehicleMaxPropulsionTorque.FullLoadEntry()
+							{ MotorSpeed = 0.RPMtoRad(), FullDriveTorque = gearboxData.Gears[key].MaxTorque },
+						new VehicleMaxPropulsionTorque.FullLoadEntry() {
+							MotorSpeed = engineData.FullLoadCurves[0].N95hSpeed * 1.1,
+							FullDriveTorque = gearboxData.Gears[key].MaxTorque
+						}
+					}.ToList();
+					retVal[new GearshiftPosition(key)] = new VehicleMaxPropulsionTorque(gbxLimit);
+					continue;
+				} 
+
+				// case boosting limit is defined, gearbox limit can be defined or not (handled in Intersect method)
+
+				// entries contains ICE full-load curve with the boosting torque added. handles ICE speeds below idle
+				var entries = belowIdle.Select(fullLoadEntry => new VehicleMaxPropulsionTorque.FullLoadEntry()
+						{ MotorSpeed = fullLoadEntry.MotorSpeed, FullDriveTorque = fullLoadEntry.FullDriveTorque })
+					.Concat(
+						engineData.FullLoadCurves[key].FullLoadEntries.Where(x => x.EngineSpeed > engineData.IdleSpeed)
+							.Select(fullLoadCurveEntry =>
+								new VehicleMaxPropulsionTorque.FullLoadEntry() {
+									MotorSpeed = fullLoadCurveEntry.EngineSpeed,
+									FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
+													VectoMath.Max(
+														offset?.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+														0.SI<NewtonMeter>())
+								}))
+					.Concat(
+						new[] { engineData.IdleSpeed, engineData.IdleSpeed - 0.1.RPMtoRad() }.Select(x =>
 							new VehicleMaxPropulsionTorque.FullLoadEntry() {
-								MotorSpeed = fullLoadCurveEntry.EngineSpeed,
-								FullDriveTorque = fullLoadCurveEntry.TorqueFullLoad +
-												VectoMath.Max(
-													offset.FullLoadDriveTorque(fullLoadCurveEntry.EngineSpeed),
+								MotorSpeed = x,
+								FullDriveTorque = engineData.FullLoadCurves[0].FullLoadStationaryTorque(x) +
+												VectoMath.Max(offset?.FullLoadDriveTorque(x),
 													0.SI<NewtonMeter>())
 							}))
-				.Concat(
-					new[] { engineData.IdleSpeed, engineData.IdleSpeed - 0.1.RPMtoRad() }.Select(x =>
-						new VehicleMaxPropulsionTorque.FullLoadEntry() {
-							MotorSpeed = x,
-							FullDriveTorque = engineData.FullLoadCurves[0].FullLoadStationaryTorque(x) +
-											VectoMath.Max(offset.FullLoadDriveTorque(x),
-												0.SI<NewtonMeter>())
-						}))
-				.OrderBy(x => x.MotorSpeed).ToList();
+					.OrderBy(x => x.MotorSpeed).ToList();
 
-			return new VehicleMaxPropulsionTorque(entries);
+				// if no gearbox limit is defined, MaxTorque is null;
+				// in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
+				var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
+				retVal[new GearshiftPosition(key)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+
+			}
+
+			return retVal;
 		}
 	}
 }

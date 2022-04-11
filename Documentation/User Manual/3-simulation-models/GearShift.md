@@ -1,4 +1,4 @@
-##Gear Shift Model
+## Gear Shift Model
 
 This VECTO version contains a new shift strategy called EffShift.
 

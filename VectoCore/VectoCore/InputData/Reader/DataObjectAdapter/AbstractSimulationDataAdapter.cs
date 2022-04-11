@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 		/// <summary>
-		/// Intersects full load curves.
+		/// Intersects ICE full load curves.
 		/// </summary>
 		/// <param name="engineCurve"></param>
 		/// <param name="maxTorque"></param>
@@ -443,6 +443,65 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EngineData = engineCurve.EngineData,
 			};
 			return flc;
+		}
+
+
+		/// <summary>
+		/// Intersects max torque curve.
+		/// </summary>
+		/// <param name="maxTorqueEntries"></param>
+		/// <param name="maxTorque"></param>
+		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
+		internal static IList<VehicleMaxPropulsionTorque.FullLoadEntry> IntersectMaxPropulsionTorqueCurve(IList<VehicleMaxPropulsionTorque.FullLoadEntry> maxTorqueEntries, NewtonMeter maxTorque)
+		{
+			if (maxTorque == null) {
+				return maxTorqueEntries;
+			}
+
+			var entries = new List<VehicleMaxPropulsionTorque.FullLoadEntry>();
+			var firstEntry = maxTorqueEntries.First();
+			if (firstEntry.FullDriveTorque < maxTorque) {
+				entries.Add(maxTorqueEntries.First());
+			} else {
+				entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
+					MotorSpeed = firstEntry.MotorSpeed,
+					FullDriveTorque = maxTorque,
+				});
+			}
+			foreach (var entry in maxTorqueEntries.Pairwise(Tuple.Create)) {
+				if (entry.Item1.FullDriveTorque <= maxTorque && entry.Item2.FullDriveTorque <= maxTorque) {
+					// segment is below maxTorque line -> use directly
+					entries.Add(entry.Item2);
+				} else if (entry.Item1.FullDriveTorque > maxTorque && entry.Item2.FullDriveTorque > maxTorque) {
+					// segment is above maxTorque line -> add limited entry
+					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
+						MotorSpeed = entry.Item2.MotorSpeed,
+						FullDriveTorque = maxTorque,
+					});
+				} else {
+					// segment intersects maxTorque line -> add new entry at intersection
+					var edgeFull = Edge.Create(
+						new Point(entry.Item1.MotorSpeed.Value(), entry.Item1.FullDriveTorque.Value()),
+						new Point(entry.Item2.MotorSpeed.Value(), entry.Item2.FullDriveTorque.Value()));
+					
+					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+					if (!entries.Any(x => x.MotorSpeed.IsEqual(intersectionX)) && !intersectionX.IsEqual(entry.Item2.MotorSpeed.Value())) {
+						entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
+							MotorSpeed = intersectionX.SI<PerSecond>(),
+							FullDriveTorque = maxTorque,
+						});
+					}
+
+					entries.Add(new VehicleMaxPropulsionTorque.FullLoadEntry {
+						MotorSpeed = entry.Item2.MotorSpeed,
+						FullDriveTorque = entry.Item2.FullDriveTorque > maxTorque ? maxTorque : entry.Item2.FullDriveTorque,
+						
+					});
+				}
+			}
+
+			
+			return entries;
 		}
 	}
 }

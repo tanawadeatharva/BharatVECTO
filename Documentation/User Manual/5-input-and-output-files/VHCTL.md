@@ -1,4 +1,4 @@
-##Hybrid Strategy Parameters File (.vhctl)
+## Hybrid Strategy Parameters File (.vhctl)
 
 File for the definition of the hybrid control strategy parameters in VECTO. Can be created with the [Hybrid Strategy Parameters Editor](#hybrid-strategy-parameters-editor).
 

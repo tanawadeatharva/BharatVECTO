@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
 			TestContainerSuperCap = TestContainer.BatteryInfo as SuperCap;
-			TestContainerElectricSystemCharger = (TestContainer.ElectricSystemInfo as ElectricSystem)?.Charger as SimpleCharger;
+			TestContainerElectricSystemCharger = (TestContainer.ElectricSystemInfo as ElectricSystem)?.Charger.FirstOrDefault(x => x is SimpleCharger) as SimpleCharger ;
 			TestContainerElectricMotor =
 				TestContainer.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
 			if (TestContainerGbx == null) {
@@ -817,11 +817,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected IDataBus DataBus;
 			protected ElectricMotorData ElectricMotorData;
 
+			protected readonly GearboxData GearboxModelData;
+
 			public PEVInitControl(IVehicleContainer dataBus)
 			{
 				DataBus = dataBus;
 				ElectricMotorData = dataBus.RunData.ElectricMachinesData
 					.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2;
+				GearboxModelData = dataBus.RunData.GearboxData;
 			}
 
 			#region Implementation of IElectricMotorControl
@@ -843,7 +846,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return null;
 				}
 
-				if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
+				if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData.DisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
 					return null;
 				}
 

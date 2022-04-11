@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal IAuxPort EngineAux;
 
+		public WHRCharger WHRCharger { get; set; }
+
 		public CombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false)
 			: base(container)
 		{
@@ -450,7 +452,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.ICEOn] = CurrentState.EngineOn;
 
-			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque);
+			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque, simulationInterval);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
@@ -473,43 +475,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcNCVcorr = fc * fuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
 				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
-				//var fcAAUX = fcWHTC;
-				var advancedAux = EngineAux as BusAuxiliariesAdapter;
-				if (advancedAux != null) {
+
+				if (EngineAux is BusAuxiliariesAdapter advancedAux) {
 					advancedAux.DoWriteModalResultsICE(time, simulationInterval ,container);
-					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
-				var fcFinal = fcWHTC; // fcAAUX;
+				var fcFinal = fcWHTC;
 
 				container[ModalResultField.FCMap, fuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
-				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				//container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}
 
-		protected virtual void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		protected virtual void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed,
+			NewtonMeter engineTorque, Second simulationInterval)
 		{
-			var pWHRelMap = 0.SI<Watt>();
-			var pWHRelCorr = 0.SI<Watt>();
-			var pWHRmechMap = 0.SI<Watt>();
-			var pWHRmechCorr = 0.SI<Watt>();
-			GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque, ref pWHRelMap, ref pWHRelCorr);
-			GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque, ref pWHRmechMap, ref pWHRmechCorr);
+			
+			var (pWHRelMap, pWHRelCorr) =  GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque);
+			var (pWHRmechMap, pWHRmechCorr) = GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque);
 			
 			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
 			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+
+			WHRCharger?.GeneratedEnergy(pWHRelCorr * simulationInterval);
 
 			container[ModalResultField.P_WHR_mech_map] = pWHRmechMap;
 			container[ModalResultField.P_WHR_mech_corr] = pWHRmechCorr;
 		}
 
-		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRMap, ref Watt pWHRCorr)
+		protected virtual (Watt, Watt) GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque)
 		{
 			if (whr == null) {
-				return;
+				return (0.SI<Watt>(), 0.SI<Watt>());
 			}
 
 			var whrPwr = whr.WHRMap.GetWHRPower(
@@ -520,9 +518,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					engineSpeed.Value(), engineTorque.Value(), whr.WHRMap.Name);
 			}
 			if (whrPwr.GeneratedPower != null) {
-				pWHRMap = whrPwr.GeneratedPower;
-				pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
+				var pWHRMap = whrPwr.GeneratedPower;
+				var pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
+				return (pWHRMap, pWHRCorr);
 			}
+			return (0.SI<Watt>(), 0.SI<Watt>());
 		}
 
 		protected virtual double WHTCCorrectionFactor(IFuelProperties fuel)
@@ -580,7 +580,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// new check in vecto 3.x (according to Martin Rexeis)
-			if (dynFullPowerCalculated < StationaryIdleFullLoadPower) {
+			if (dynFullPowerCalculated < StationaryIdleFullLoadPower) {	
 				dynFullPowerCalculated = StationaryIdleFullLoadPower;
 			}
 			if (dynFullPowerCalculated > stationaryFullLoadPower) {

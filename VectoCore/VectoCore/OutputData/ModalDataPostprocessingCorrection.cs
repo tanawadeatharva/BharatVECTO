@@ -265,8 +265,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		private static void SetWHRWork(IModalDataContainer modData, VectoRunData runData, CorrectedModalData r)
 		{
-			r.WorkWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+			// no post-processing correction for electric WHR for HEV (WHR is connected to REESS in simulation)
+			r.WorkWHREl = (runData.BatteryData != null || runData.SuperCapData != null) && runData.EngineData.WHRType.IsElectrical()
+					? 0.SI<WattSecond>()
+					: modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
 			var altEff = DeclarationData.AlternatorEfficiency;
+			// in case of bus-auxiliaries update alternator efficiency depending on busaux configuration
 			if (runData.BusAuxiliaries != null) {
 				if (runData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS &&
 					runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
@@ -287,6 +291,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			r.WorkWHRElMech = -r.WorkWHREl / altEff;
+
 			r.WorkWHRMech = -modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
 		}
 

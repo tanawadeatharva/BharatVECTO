@@ -137,6 +137,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
 			}
 
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
+			}
+
 			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
 				(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
 
@@ -315,6 +322,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (TestPowertrain.DCDCConverter != null) {
 				TestPowertrain.DCDCConverter.PreviousState.ConsumedEnergy =
 					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
+			}
+
+			if (TestPowertrain.WHRCharger != null) {
+				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
+					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
+				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
+					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
 			}
 
 			TestPowertrain.Gearbox.PreviousState.OutAngularVelocity = gearboxInfo.PreviousState.OutAngularVelocity;
@@ -588,15 +602,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual IHybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-
-			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && StrategyParameters.MaxPropulsionTorque != null && DataBus.GearboxInfo.TCLocked) {
-				var nextGear = DataBus.VehicleInfo.VehicleStopped
+			var nextGear = DataBus.VehicleInfo.VehicleStopped
+				? Controller.ShiftStrategy.NextGear
+				: !DataBus.GearboxInfo.GearEngaged(absTime)
 					? Controller.ShiftStrategy.NextGear
-					: !DataBus.GearboxInfo.GearEngaged(absTime)
-						? Controller.ShiftStrategy.NextGear
-						: PreviousState.GearboxEngaged
-							? DataBus.GearboxInfo.Gear
-							: Controller.ShiftStrategy.NextGear;
+					: PreviousState.GearboxEngaged
+						? DataBus.GearboxInfo.Gear
+						: Controller.ShiftStrategy.NextGear;
+			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear) != null && DataBus.GearboxInfo.TCLocked) {
+				
 				var emOff = new HybridStrategyResponse {
 					CombustionEngineOn = DataBus.EngineInfo.EngineOn, // AllowICEOff(absTime), 
 					GearboxInNeutral = false,
@@ -614,7 +628,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (testRequest.Gearbox.InputSpeed < DataBus.EngineInfo.EngineN95hSpeed) {
 					var emPos = ModelData.ElectricMachinesData.First().Item1;
 					var tqRequest = GetGearboxInTorqueLimitedVehiclePorpTorque(testRequest, emPos); //testRequest.Gearbox.InputTorque;
-					var maxTorque = StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
+					var maxTorque = StrategyParameters.MaxPropulsionTorque[nextGear].FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
 
 					if (!dryRun) {
 						CurrentState.MaxGbxTq = maxTorque;
@@ -741,14 +755,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//	}
 			//}
 
-			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && StrategyParameters.MaxPropulsionTorque != null) {
+			if (dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(response.Gearbox.Gear) != null) {
 				var dryRunResponse = response as ResponseDryRun;
 				if (response.Engine.EngineOn && dryRunResponse.DeltaFullLoad.IsSmallerOrEqual(0) &&
 					dryRunResponse.DeltaDragLoad.IsGreaterOrEqual(0) && LimitedGbxTorque) {
 					// during this request the torque at gbx-in was limited - engine is ok and a seaerch operation is going on
 					// overwrite delta value...
 					var maxTorque =
-						StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(response.Gearbox.InputSpeed);
+						StrategyParameters.MaxPropulsionTorque[response.Gearbox.Gear].FullLoadDriveTorque(response.Gearbox.InputSpeed);
 
 					var emPos = ModelData.ElectricMachinesData.First().Item1;
 
@@ -857,7 +871,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var candidates = new Dictionary<GearshiftPosition, Tuple<Watt, IResponse>>();
 			var maxTorqueGbxIn =
-				StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(emOffResponse.Gearbox.InputSpeed);
+				StrategyParameters.MaxPropulsionTorque[gear].FullLoadDriveTorque(emOffResponse.Gearbox.InputSpeed);
 			candidates[emOffResponse.Gearbox.Gear] = Tuple.Create(maxTorqueGbxIn * emOffResponse.Gearbox.InputSpeed, emOffResponse);
 			foreach (var nextGear in GearList.IterateGears(firstGear, lastGear)) {
 				if (candidates.ContainsKey(nextGear)) {
@@ -878,8 +892,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				var testRequest = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOff);
 				if (testRequest != null && testRequest.Engine.EngineSpeed < ModelData.EngineData.FullLoadCurves[0].NTq99hSpeed) {
-					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
-					candidates[nextGear] = Tuple.Create(maxGbxTorque * testRequest.Gearbox.InputSpeed, testRequest);
+					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear).FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
+					candidates[nextGear] = maxGbxTorque != null
+						? Tuple.Create(maxGbxTorque * testRequest.Gearbox.InputSpeed, testRequest)
+						: Tuple.Create(testRequest.Gearbox.InputTorque * testRequest.Gearbox.InputSpeed, testRequest);
 				}
 			}
 
@@ -1016,9 +1032,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
-			var disengageSpeedThreshold = DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
-				? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
-				: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
+			var disengageSpeedThreshold = ModelData.GearboxData.DisengageWhenHaltingSpeed;
 			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
 
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
@@ -1069,7 +1083,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 				if (engineSpeedTooLow && DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-					endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+					endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 					var response = ResponseEmOff;
 					response.Gear = new GearshiftPosition(0);
 					response.Setting.GearboxEngaged = false;
@@ -1337,7 +1351,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-				endSpeed.IsSmallerOrEqual(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+				endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 				return new GearshiftPosition(0);
 			}
 
@@ -2141,10 +2155,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate &&
-				StrategyParameters.MaxPropulsionTorque != null) {
+				StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(resp.Gearbox.Gear) != null) {
 				var tqRequest = resp.Gearbox.InputTorque;
 				var maxTorque =
-					StrategyParameters.MaxPropulsionTorque.FullLoadDriveTorque(resp.Gearbox.InputSpeed);
+					StrategyParameters.MaxPropulsionTorque[resp.Gearbox.Gear].FullLoadDriveTorque(resp.Gearbox.InputSpeed);
 				if (((tqRequest - maxTorque) * resp.Gearbox.InputSpeed).IsGreater(0, Constants.SimulationSettings.LineSearchTolerance)) {
 					tmp.IgnoreReason |= HybridConfigurationIgnoreReason.MaxPropulsionTorqueExceeded;
 				}
