@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements.First().REESSPack as IBatteryPackEngineeringInputData;
-			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve);
+			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, false);
 			var imax = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap);
 			
 			Assert.NotNull(bat);

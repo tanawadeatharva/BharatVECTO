@@ -848,7 +848,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve),
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
 					}));
 				}

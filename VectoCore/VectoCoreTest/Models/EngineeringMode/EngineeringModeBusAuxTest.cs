@@ -900,7 +900,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 							MaxSOC = REESS_MaxSoC,
 							SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 							InternalResistance =
-								BatteryInternalResistanceReader.Create("SoC, Ri\n0,0.02\n100,0.02".ToStream()),
+								BatteryInternalResistanceReader.Create("SoC, Ri\n0,0.02\n100,0.02".ToStream(), false),
 							MaxCurrent = BatteryMaxCurrentReader.Create(
 								"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 						}),
