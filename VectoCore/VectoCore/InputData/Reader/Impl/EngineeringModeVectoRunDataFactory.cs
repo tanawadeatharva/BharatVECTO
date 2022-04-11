@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
@@ -52,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		private static readonly Dictionary<string, DrivingCycleData> CyclesCache = new Dictionary<string, DrivingCycleData>();
+		private static readonly Dictionary<string, Tuple<DrivingCycleData, DateTime>> CyclesCache = new Dictionary<string, Tuple<DrivingCycleData, DateTime>>();
 
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
 
@@ -180,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							: null;
 
 
-					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _ => DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
+					var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 					var electricMachines =
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
@@ -225,6 +226,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				}
 			}
 		
+		}
+
+		private DrivingCycleData GetDrivingCycle(ICycleData cycle, bool crossWindRequired)
+		{
+			var lastModified = File.GetLastWriteTimeUtc(cycle.CycleData.Source);
+			if (CyclesCache.TryGetValue(cycle.CycleData.Source, out var lookup)) {
+				if (lastModified.Equals(lookup.Item2)) {
+					return lookup.Item1;
+				}
+			}
+
+			lock (CyclesCache) {
+				var cycleData =
+					DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
+				CyclesCache[cycle.CycleData.Source] = Tuple.Create(cycleData, lastModified);
+				return cycleData;
+			}
 		}
 
 		private IEnumerable<VectoRunData> GetBatteryElectricVehicleRunData()
@@ -286,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 										CrossWindCorrectionMode.VAirBetaLookupTable;
 				//var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
-				var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=>DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
+				var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 				var vehicleData = dao.CreateVehicleData(vehicle);
 				yield return new VectoRunData
@@ -377,7 +395,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							: null;
 
 
-					var drivingCycle = CyclesCache.GetOrAdd(cycle.CycleData.Source, _=> DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired));
+					var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 					var battery = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 					var superCap = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
