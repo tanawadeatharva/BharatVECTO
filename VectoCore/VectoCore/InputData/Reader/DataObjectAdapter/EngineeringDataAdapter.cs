@@ -308,6 +308,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() && !adas.ATEcoRollReleaseLockupClutch.HasValue) {
 				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
 			}
+
+			if ((vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle)&&
+				gearbox.Type.AutomaticTransmission()) {
+				// PEV with APT-S or APT-P transmission are simulated as APT-N
+				retVal.Type = GearboxType.APTN;
+			}
 			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
@@ -317,13 +323,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
-			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
+			var hasTorqueConverter = retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN;
+
+			var gearDifferenceRatio = hasTorqueConverter && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
 			ShiftPolygon tcShiftPolygon = null;
-			if (gearbox.Type.AutomaticTransmission() && gearbox.Type != GearboxType.APTN) {
+			if (hasTorqueConverter) {
 				tcShiftPolygon = torqueConverter.ShiftPolygon != null
 					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
@@ -353,13 +361,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					LossMap = lossMap,
 				};
 
-				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
+				CreateATGearData(retVal.Type, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
 
 			retVal.Gears = gears;
 
-			if (retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN) {
+			if (hasTorqueConverter) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
@@ -384,15 +392,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual void CreateATGearData(
-			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
+			GearboxType gearboxType, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
 		{
-			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
+			if (gearboxType == GearboxType.ATPowerSplit && i == 0) {
 				// powersplit transmission: torque converter already contains ratio and losses
 				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
 			}
-			if (gearbox.Type == GearboxType.ATSerial) {
+			if (gearboxType == GearboxType.ATSerial) {
 				if (i == 0) {
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);

@@ -14,6 +14,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 ''' <summary>
@@ -34,6 +35,20 @@ Module MainModule
 		retVal.IdleSpeed = nIdle
 		Return retVal
 	End Function
+
+    public Function ConvertToElectricMotorData(emFld As ElectricMotorFullLoadCurve, gear As Integer) As ElectricMotorData
+        Dim retval = new ElectricMotorData
+
+        retval.EfficiencyData = New VoltageLevelData()
+        retval.EfficiencyData.VoltageLevels = new List(Of ElectricMotorVoltageLevelData)
+
+        Dim vl = new ElectricMotorVoltageLevelData
+        retval.EfficiencyData.VoltageLevels.Add(vl)
+
+        vl.FullLoadCurve = emFld
+
+        Return retval
+    End Function
 
     Public Function ConvPicPath(hdVclass As VehicleClass, isLongHaul As Boolean) As Bitmap
 

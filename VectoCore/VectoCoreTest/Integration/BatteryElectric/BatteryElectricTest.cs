@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
 		protected const string BEV_E2_APTN_Job = @"TestData\BatteryElectric\GenericVehicleB2_APTN\BEV_B2_Group5LH_rl_APTN.vecto";
+		protected const string BEV_E2_APTS_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTS.vecto";
+		protected const string BEV_E2_APTP_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTP.vecto";
 
 
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
@@ -673,6 +675,24 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			TestCase(BEV_E2_APTN_Job, 5, TestName = "PEV E2 APT-N Job Suburban"),
 			TestCase(BEV_E2_APTN_Job, 6, TestName = "PEV E2 APT-N Job Interurban"),
 			TestCase(BEV_E2_APTN_Job, 7, TestName = "PEV E2 APT-N Job Coach"),
+
+			TestCase(BEV_E2_APTS_Job, 0, TestName = "PEV E2 APT-S Job LongHaul"),
+			TestCase(BEV_E2_APTS_Job, 1, TestName = "PEV E2 APT-S Job RegionalDelivery"),
+			TestCase(BEV_E2_APTS_Job, 2, TestName = "PEV E2 APT-S Job UrbanDelivery"),
+			TestCase(BEV_E2_APTS_Job, 3, TestName = "PEV E2 APT-S Job Construction"),
+			TestCase(BEV_E2_APTS_Job, 4, TestName = "PEV E2 APT-S Job Urban"),
+			TestCase(BEV_E2_APTS_Job, 5, TestName = "PEV E2 APT-S Job Suburban"),
+			TestCase(BEV_E2_APTS_Job, 6, TestName = "PEV E2 APT-S Job Interurban"),
+			TestCase(BEV_E2_APTS_Job, 7, TestName = "PEV E2 APT-S Job Coach"),
+
+			TestCase(BEV_E2_APTP_Job, 0, TestName = "PEV E2 APT-P Job LongHaul"),
+			TestCase(BEV_E2_APTP_Job, 1, TestName = "PEV E2 APT-P Job RegionalDelivery"),
+			TestCase(BEV_E2_APTP_Job, 2, TestName = "PEV E2 APT-P Job UrbanDelivery"),
+			TestCase(BEV_E2_APTP_Job, 3, TestName = "PEV E2 APT-P Job Construction"),
+			TestCase(BEV_E2_APTP_Job, 4, TestName = "PEV E2 APT-P Job Urban"),
+			TestCase(BEV_E2_APTP_Job, 5, TestName = "PEV E2 APT-P Job Suburban"),
+			TestCase(BEV_E2_APTP_Job, 6, TestName = "PEV E2 APT-P Job Interurban"),
+			TestCase(BEV_E2_APTP_Job, 7, TestName = "PEV E2 APT-P Job Coach"),
 		]
 		public void B2PEVRunJob(string jobFile, int cycleIdx)
 		{
