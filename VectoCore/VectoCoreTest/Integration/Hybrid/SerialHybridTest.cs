@@ -639,8 +639,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 						.AddComponent((IGearbox)gearbox)
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData,
-							container,
-							es, ctl));
+							container, es, ctl));
 					ctl.Gearbox = gearbox;
 
 					break;

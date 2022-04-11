@@ -869,7 +869,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					//-->Engine E4
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
-					
+
 					powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4,
 						data.ElectricMachinesData, container, es, ctl));
 					break;
@@ -878,11 +878,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					//-->AxleGear-->(AxlegearInputRetarder)-->Engine E3
 					new DummyGearboxInfo(container);
 					new ATClutchInfo(container);
-					
+
 					powertrain
 						.AddComponent(new AxleGear(container, data.AxleGearData))
 						.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, 
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3,
 							data.ElectricMachinesData, container, es, ctl));
 					break;
 
@@ -894,7 +894,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					} else {
 						gearbox = new Gearbox(container, ctl.ShiftStrategy);
 					}
-					
+
 					ctl.Gearbox = gearbox;
 					new DummyEngineInfo(container);
 
@@ -904,7 +904,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, 
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					break;
 
@@ -987,7 +987,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case CycleType.EngineOnly: break;
 				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
 			}
-			
+
 			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
@@ -1065,7 +1065,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
-				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1, 
+				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
 					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
 		}
 
@@ -1279,8 +1279,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return new APTNShiftStrategy(container);
 						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
 							return null;
-						default:
-					throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
+						default: 
+							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
+					}
 
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "VECTO can not automatically derive shift strategy for GearboxType.");

@@ -1782,7 +1782,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(new AxleGear(container, runData.AxleGearData))
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+<<<<<<< HEAD
 				.AddComponent(new Gearbox(container, new AMTShiftStrategyOptimized(container)))
+=======
+				.AddComponent(gearbox)
+>>>>>>> cf118898c (Corrected bugs after merging)
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 				.AddComponent(new SwitchableClutch(container, runData.EngineData))
 				.AddComponent(engine, engine.IdleController)
