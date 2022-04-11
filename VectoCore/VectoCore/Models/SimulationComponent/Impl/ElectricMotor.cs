@@ -505,6 +505,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var losses = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed - CurrentState.ElectricPowerToBattery;
 			var contribution = (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
+			if (DeRatingActive && contribution.IsGreater(0)) {
+				contribution = 0.SI<WattSecond>();
+			}
+
+			if (ThermalBuffer + contribution > ModelData.Overload.OverloadBuffer) {
+				contribution = (ModelData.Overload.OverloadBuffer - ThermalBuffer).Cast<WattSecond>();
+			}
 			if (ModelData.Overload.OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
 				container[ModalResultField.ElectricMotor_OvlBuffer_, Position] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
 			}
@@ -518,7 +525,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var avgSpeed = (PreviousState.EMSpeed + CurrentState.EMSpeed) / 2;
 			var losses = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>()) * avgSpeed - CurrentState.ElectricPowerToBattery;
-			ThermalBuffer += (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
+			var contribution = (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
+			if (DeRatingActive && contribution.IsGreater(0)) {
+				contribution = 0.SI<WattSecond>();
+			}
+			if (ThermalBuffer + contribution > ModelData.Overload.OverloadBuffer) {
+				contribution = (ModelData.Overload.OverloadBuffer - ThermalBuffer).Cast<WattSecond>();
+			}
+			ThermalBuffer += contribution;
+			
 			if (ThermalBuffer < 0) {
 				ThermalBuffer = 0.SI<Joule>();
 			}
@@ -528,7 +543,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeRatingActive = false;
 				}
 			} else {
-				if (ThermalBuffer.IsGreater(ModelData.Overload.OverloadBuffer)) {
+				if (ThermalBuffer.IsGreaterOrEqual(ModelData.Overload.OverloadBuffer)) {
 					DeRatingActive = true;
 				}
 			}
