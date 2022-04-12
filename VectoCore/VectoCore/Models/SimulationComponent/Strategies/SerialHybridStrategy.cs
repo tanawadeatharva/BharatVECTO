@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return null;
 			}
 
-			if (ModelData.GearboxData != null && DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed) && emOutTorque.IsSmaller(0)) {
+			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(ModelData.GearboxData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && emOutTorque.IsSmaller(0)) {
 				return null;
 			}
 
