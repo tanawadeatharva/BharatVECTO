@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2022-03-30T07:41:25.7869007Z",
+    "Date": "2022-04-12T12:56:45.6383313Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -68,7 +68,7 @@
       {
         "Count": 2,
         "Ratio": 8.56,
-        "Position": "E4",
+        "Position": "E3",
         "MotorFile": "GenericEMotor_125kW_485Nm.vem",
         "MechanicalEfficiency": 0.97
       }
@@ -79,6 +79,11 @@
         "BatteryFile": "GenericBattery_243kWh_750V.vbat",
         "StreamId": 0
       }
-    ]
+    ],
+    "Retarder": {
+      "Type": "AxlegearInputRetarder",
+      "Ratio": 1.0,
+      "File": "Retarder.vrlm"
+    }
   }
 }

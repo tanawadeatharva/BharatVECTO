@@ -28,6 +28,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using static System.Formats.Asn1.AsnWriter;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 
 
@@ -725,6 +726,110 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 
 
+		[TestCase]
+		public void Run_E3_AxlegearInputRetarder()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n500, 80, 0, 0");
+			var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5,
+				PowertrainPosition.BatteryElectricE3, 2, 2,largeMotor: true, retarderType: RetarderType.AxlegearInputRetarder);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void Run_E3_WithoutAxlegearInputRetarder()
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", 80, 0);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B3_constant";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, 0.5, pos, 2, 22.6, largeMotor: true, pAuxEl: 0);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+
+
+			//var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n7000, 80, 0, 0");
+			//var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5,
+			//	PowertrainPosition.BatteryElectricE3, 2, 2, largeMotor: true, retarderType: RetarderType.None, pAuxEl:0);
+			//var run = job.Runs.First().Run;
+			//var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+
+			//Assert.IsTrue(run.FinishedWithoutErrors);
+			//Assert.IsTrue(modData.Rows.Count > 0);
+			//Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			//Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+		}
+
+		[TestCase]
+		public void RunJob_E3_AxlegearInputRetarder() {
+			var jobFile = @"TestData\Components\Retarder\E3\E3WithAxlegearInputRetarder.vecto";
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+			factory.SumData = new SummaryDataContainer(writer);
+			var run = factory.SimulationRuns().ToArray()[0];
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void RunJob_E3_NoAxlegearInputRetarder()
+		{
+			var jobFile = @"TestData\Components\Retarder\E3\E3WithoutAxlegearInputRetarder.vecto";
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+			factory.SumData = new SummaryDataContainer(writer);
+			var run = factory.SimulationRuns().First();
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+		}
 
 		// =================================================
 
@@ -841,16 +946,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				case PowertrainPosition.HybridP4:
 					throw new VectoException("testcase does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
-					powertrain.AddComponent(
-						GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData, container, es, ctl));
+					powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE3:
-					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-							.AddComponent(
-								GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData, container, es, ctl));
+					powertrain
+						.AddComponent(new AxleGear(container, runData.AxleGearData))
+						.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
@@ -863,10 +968,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							(int)entry.Key, null, new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), null, axleGearData.AxleGear.Ratio,
 							vehicleData.DynamicTyreRadius, electricMotorData.First().Item2);
 					}
-					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
+
+					powertrain
+						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(new PEVGearbox(container, strategy))
-						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
 				//throw new VectoException("Battery Electric configuration B2 currently not supported");
