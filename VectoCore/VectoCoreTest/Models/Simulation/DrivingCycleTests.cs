@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestCase()]
-		[Parallelizable(ParallelScope.All)]
+		//[Parallelizable(ParallelScope.All)]
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();
