@@ -12,6 +12,8 @@ Changelog:
 	14.03.2022: Correcting ElectricMotorTorqueLimits 
                    before: ElectricMotorTorqueLimits element was allowed two times for HEV-S, and each element allowed to specify multiple electric machines
                    now: ElectricMotorTorqueLimits is allowed only once, torque limits can be defined for up to 2 EM in case of HEV-S
+    12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
+                Remove BoostingLimitations for HEV-IEPC-S
 -->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
@@ -1945,9 +1947,7 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1971,9 +1971,7 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2007,9 +2005,7 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2121,7 +2117,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2146,7 +2141,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2181,7 +2175,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 				</xs:sequence>
@@ -2349,7 +2342,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2369,7 +2361,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2399,7 +2390,6 @@ Changelog:
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
 				</xs:sequence>
