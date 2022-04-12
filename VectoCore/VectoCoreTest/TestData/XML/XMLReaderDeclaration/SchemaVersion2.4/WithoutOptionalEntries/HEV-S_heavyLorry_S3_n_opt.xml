@@ -30,10 +30,6 @@
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
-			<!-- optional -->
-			<v2.0:Entry gear="9" maxTorque="2000"/>
-		</TorqueLimits>
 		<Components xsi:type="Components_HEV-S3_LorryType">
 			<Engine>
 				<v2.0:Data xsi:type="v1.0:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">

@@ -22,10 +22,6 @@
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
-			<!-- optional -->
-			<v2.0:Entry gear="9" maxTorque="2000"/>
-		</TorqueLimits>
 		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
 			<!-- optional -->
 			<ElectricMachine>
