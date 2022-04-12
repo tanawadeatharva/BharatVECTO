@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -12,6 +13,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -727,24 +729,24 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		// =================================================
 
 
-		public static JobContainer CreateEngineeringRun(
-			DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, 
+			PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null,
+			RetarderType retarderType = RetarderType.None)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
-			var container = CreateBatteryElectricPowerTrain(
-				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor, pAuxEl, pos, payload);
+			var container = CreateBatteryElectricPowerTrain(cycleData, modFileName, fileWriter, sumData, initialSoc, 
+				count, ratio, largeMotor, pAuxEl, pos, payload, retarderType);
 
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
 		}
 
-		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData,
-			string modFileName, FileOutputWriter fileWriter, SummaryDataContainer sumData,
-			double initialBatCharge, int count, double ratio, bool largeMotor, double pAuxEl, PowertrainPosition pos,
-			Kilogram payload = null)
+		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData, string modFileName, 
+			FileOutputWriter fileWriter, SummaryDataContainer sumData, double initialBatCharge, int count, double ratio, 
+			bool largeMotor, double pAuxEl, PowertrainPosition pos, Kilogram payload = null, RetarderType retarderType = RetarderType.None)
 		{
 			var gearboxData = CreateGearboxData_2Speed();
 			var axleGearData = CreateAxleGearData();
@@ -753,16 +755,22 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
 
-			var electricMotorData =
-				MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
+			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, 
+				ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
 
 			//var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
 			//Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
 
-
-
+			var retarderLossMapEntries = new RetarderLossMap.RetarderLossEntry[] {
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 0.RPMtoRad(), TorqueLoss = 10.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 1000.RPMtoRad(), TorqueLoss = 12.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2000.RPMtoRad(), TorqueLoss = 18.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2300.RPMtoRad(), TorqueLoss = 20.58.SI<NewtonMeter>()},
+			};
+			var retarderData = new RetarderData { Type = retarderType, LossMap = new RetarderLossMap(retarderLossMapEntries), Ratio = 1 };
+			
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
@@ -773,7 +781,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				AirdragData = airdragData,
 				JobName = modFileName,
 				Cycle = cycleData,
-				Retarder = new RetarderData() { Type = RetarderType.None },
+				Retarder = retarderData,
 				Aux = new List<VectoRunData.AuxData>(),
 				ElectricMachinesData = electricMotorData,
 				//EngineData = engineData,
