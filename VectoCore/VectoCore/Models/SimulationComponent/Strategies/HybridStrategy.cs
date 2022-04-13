@@ -1324,7 +1324,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (vehiclespeedBelowThreshold && (emPos == PowertrainPosition.HybridP2 || emPos == PowertrainPosition.HybridP1)) {
 					off.Setting.GearboxInNeutral = true;
 				} else {
-					off.Setting.GearboxInNeutral = PreviousState.Solution.Setting.GearboxInNeutral;
+					off.Setting.GearboxInNeutral = PreviousState.Solution?.Setting.GearboxInNeutral ?? false;
 				}
 
 				eval.Add(off);

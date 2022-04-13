@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestCase()]
-		[Parallelizable(ParallelScope.All)]
+		//[Parallelizable(ParallelScope.All)]
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCycleDetect(File.ReadAllText(filename), type);
 		}
 
-		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased, 6116),
+		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased, 6036),
 		TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly, 696),
 		TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel, 3917),
 		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed, 1300),
