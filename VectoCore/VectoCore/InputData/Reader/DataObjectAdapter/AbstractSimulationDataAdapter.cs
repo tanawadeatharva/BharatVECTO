@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 		{
 			try {
-				var retarder = new RetarderData { Type = retarderInputData.Type, Ratio = retarderInputData.Ratio};
+				var retarder = new RetarderData { Type = retarderInputData.Type };
 
 				switch (retarder.Type) {
 					case RetarderType.TransmissionInputRetarder:
@@ -104,20 +104,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						if (position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, 
 							PowertrainPosition.BatteryElectricE2))
 							throw new ArgumentException("Transmission retarder is only allowed in powertrains that " +
-														"contain a gearbox: Conventional, P-HEV and PEV-E2.", nameof(retarder));
+														"contain a gearbox: Conventional, HEV-P, and PEV-E2.", nameof(retarder));
 						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+						retarder.Ratio = retarderInputData.Ratio;
 						break;
+					
 					case RetarderType.AxlegearInputRetarder:
 						if (position != PowertrainPosition.BatteryElectricE3)
-							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, S-HEV-S3, S-IEPC, E-IEPC. " +
-														$"But engine position was: {position}", nameof(retarder));
+							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, HEV-S3, S-IEPC, E-IEPC. ", nameof(retarder));
 						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+						retarder.Ratio = retarderInputData.Ratio;
 						break;
+					
 					case RetarderType.None:
 					case RetarderType.LossesIncludedInTransmission:
 					case RetarderType.EngineRetarder:
 						retarder.Ratio = 1;
 						break;
+					
 					default:
 						throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
 				}
