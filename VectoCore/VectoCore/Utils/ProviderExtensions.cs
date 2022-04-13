@@ -29,14 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Utils
@@ -108,25 +105,6 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return next;
-		}
-
-		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
-			IVehicleContainer container)
-		{
-			switch (data.Type) {
-				case RetarderType.TransmissionOutputRetarder:
-					return prev.AddComponent(new Retarder(container, data.LossMap, data.Ratio)).AddComponent(gearbox);
-				case RetarderType.TransmissionInputRetarder:
-					return prev.AddComponent(gearbox).AddComponent(new Retarder(container, data.LossMap, data.Ratio));
-				case RetarderType.None:
-				case RetarderType.LossesIncludedInTransmission:
-				case RetarderType.EngineRetarder:
-					return prev.AddComponent(new DummyRetarder(container)).AddComponent(gearbox);
-				default:
-					// ReSharper disable once NotResolvedInText
-					// ReSharper disable once LocalizableElement
-					throw new ArgumentOutOfRangeException("retarderdata.Type", data.Type.ToString(), "Retardertype unknown");
-			}
 		}
 	}
 }

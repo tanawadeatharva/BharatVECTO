@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 				var negTorque = torquesMinRpm.Where(x => x.Torque <= 0).OrderBy(x => x.Torque).ToList();
 				if (negTorque.Count < 2) {
 					throw new VectoException(
-						"Failed to generate electrip power map - at least two negative entries are required");
+						"Failed to generate electric power map - at least two negative entries are required");
 				}
 
 				var (k, d) = VectoMath.LeastSquaresFitting(negTorque.Take(numEntriesExtrapolationFitting), x => x.Torque.Value(),

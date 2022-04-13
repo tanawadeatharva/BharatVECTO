@@ -802,9 +802,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		protected internal class CombustionEngineNoDubleclutchIdleController : CombustionEngineIdleController
+		protected internal class CombustionEngineNoDoubleClutchIdleController : CombustionEngineIdleController
 		{
-			public CombustionEngineNoDubleclutchIdleController(CombustionEngine combustionEngine, IDataBus dataBus) : base(combustionEngine, dataBus)
+			public CombustionEngineNoDoubleClutchIdleController(CombustionEngine combustionEngine, IDataBus dataBus) : base(combustionEngine, dataBus)
 			{
 			}
 
