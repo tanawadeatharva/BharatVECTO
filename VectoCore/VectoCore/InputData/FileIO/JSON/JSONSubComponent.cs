@@ -61,29 +61,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONRetarderInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
 
-		private bool RetarderIsAllowed()
-		{
-			var retarderIsAllowed = true;
-			var isElectricOrSerialHybrid = Body["PowertrainConfiguration"].IsOneOf("BatteryElectric", "SerialHybrid");
-			if (isElectricOrSerialHybrid) {
-				// BEV and S-HEV do not have retarder except E3,S3,S-IEPC,E-IEPC: they can have Anglegear Input Retarder
-				retarderIsAllowed = false;
-				var isE3 = Body["ElectricMotors"] != null
-							&& Body["ElectricMotors"].Any(entry => PowertrainPosition.BatteryElectricE3
-								.Equals(PowertrainPositionHelper.Parse(entry.GetEx<string>("Position"))));
-				if (isE3)
-					retarderIsAllowed = true;
-			}
-
-			return retarderIsAllowed;
-		}
-
 		#region IRetarderInputData
 
 		public virtual RetarderType Type
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed()) {
+				if (Body[JsonKeys.Vehicle_Retarder] != null) {
 					var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
 					return RetarderTypeHelper.Parse(retarderType);
 				}
@@ -95,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double Ratio
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed()) {
+				if (Body[JsonKeys.Vehicle_Retarder] != null) {
 					return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
 				}
 				return 1.0;
@@ -105,8 +88,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual TableData LossMap
 		{
 			get {
-				if (Body[JsonKeys.Vehicle_Retarder] != null && RetarderIsAllowed() &&
-					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
+				if (Body[JsonKeys.Vehicle_Retarder] != null 
+					&& Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
 					var lossmapFile = Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile];
 					if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
 						return null;
@@ -129,8 +112,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
-
-
 	}
 
 	// ###################################################################
