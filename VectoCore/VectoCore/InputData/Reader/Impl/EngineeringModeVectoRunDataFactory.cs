@@ -187,13 +187,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
 							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-					
+					var powertrainPosition = electricMachines.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
 					var jobType = VectoSimulationJobType.SerialHybridVehicle;
-
 					var vehicleData = dao.CreateVehicleData(vehicle);
+					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData, 
+						engineData, gearboxData);
 
-					var hybridParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData,
-							engineData, gearboxData);
 					yield return new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
 						JobType = jobType,
@@ -205,20 +204,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-						BusAuxiliaries =
-							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, jobType),
-						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+						BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, 
+							vehicleData, jobType),
+						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,
 						PTOCycleWhileDrive = ptoCycleWhileDrive,
-
 						ElectricMachinesData = electricMachines,
 						HybridStrategyParameters = hybridParameters,
 						BatteryData = battery,
 						SuperCapData = superCap,
-						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle |
-										SimulationType.PWheel,
+						SimulationType = SimulationType.DistanceCycle
+										| SimulationType.MeasuredSpeedCycle 
+										| SimulationType.PWheel,
 						GearshiftParameters = gearshiftParams,
 						ElectricAuxDemand = InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData
 							.Auxiliaries.ElectricPowerDemand,
@@ -262,7 +261,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				var averageVoltage = batteryData != null ? CalculateAverageVoltage(batteryData) : null;
 				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, averageVoltage);
-
+				var powertrainPosition = electricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
 				GearboxData gearboxData = null;
 				ShiftStrategyParameters gearshiftParams = null;
 				var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
@@ -319,7 +318,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 					BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
-					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition),
 					//PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
@@ -405,9 +404,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
 							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+					var powertrainPosition = electricMachines.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
 					
-
-				   
 					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
 						? VectoSimulationJobType.ParallelHybridVehicle
 						: VectoSimulationJobType.ConventionalVehicle;
@@ -445,7 +443,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 						BusAuxiliaries =
 							dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, jobType),
-						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
+						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,

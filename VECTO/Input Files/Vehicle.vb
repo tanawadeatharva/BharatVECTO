@@ -132,7 +132,7 @@ Public Class Vehicle
 		Dim vehicleData As VehicleData
 		Dim airdragData As AirdragData
 		Dim retarderData As RetarderData
-		Dim ptoData As PTOData = Nothing
+		Dim ptoData As PTOData
 		Dim angledriveData As AngledriveData
 
 		Dim modeService As VectoValidationModeServiceContainer =
@@ -142,8 +142,7 @@ Public Class Vehicle
 		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
 		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
 		Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
-		Dim emPos As PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
-
+		Dim emPos = If(modeService Is Nothing, modeService.EMPowertrainPosition, PowertrainPosition.HybridPositionNotSet)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
@@ -160,7 +159,7 @@ Public Class Vehicle
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
 				airdragData = doa.CreateAirdragData(vehicle, vehicle)
-				retarderData = doa.CreateRetarderData(vehicle)
+				retarderData = doa.CreateRetarderData(vehicle, emPos)
 				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If

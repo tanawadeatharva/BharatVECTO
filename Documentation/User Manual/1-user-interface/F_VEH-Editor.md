@@ -133,15 +133,16 @@ The idling speed of the combustion engine can be increased in the vehicle settin
 
 If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
 
-Four options are available:
+The following options are available:
 : -   No retarder
 -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map-.vtlm) already include retarder losses.
--   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
--   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
+-   Primary Retarder (before gearbox, transmission input retarder): The rpm ratio is relative to the engine speed.
+-   Secondary Retarder (after gearbox, transmission output retarder): The rpm ratio is relative to the cardan shaft speed.
+-   Engine Retarder: Used this if the engine already includes the retarder losses.
+-   Axlegear Input Retarder (after axlegear): The rpm ratio is relative to the axlegear input shaft speed. Only available for battery electric vehicles with E3 motor, serial hybrid with S3 motor, S-IEPC, and E-IEPC.
 
-Both, primary and secondary retarders, require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
-
-The Retarder Ratio defines the ratio between the engine speed/cardan shaft speed and the retarder.
+Primary, secondary and axlegear input retarder require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
+The retarder ratio defines the ratio between the engine speed/cardan shaft speed and the retarder.
 
 ### Angledrive
 

@@ -521,9 +521,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		//=================================
-		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition powertrainPosition)
 		{
-			return SetCommonRetarderData(retarder);
+			return SetCommonRetarderData(retarder, powertrainPosition);
 		}
 
 		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)

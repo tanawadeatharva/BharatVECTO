@@ -1545,8 +1545,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
-			var container = CreateParallelHybridPowerTrain(
-				cycleData, modFileName, initialSoc, largeMotor, sumData, pAuxEl, pos, ratio, payload, gearboxType, maxGearboxTorque, boostingLimit, topTorque);
+			var container = CreateParallelHybridPowerTrain(cycleData, modFileName, initialSoc, largeMotor, sumData, 
+				pAuxEl, pos, ratio, payload, gearboxType, maxGearboxTorque, boostingLimit, topTorque);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -1585,7 +1585,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
+					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1)
+						.Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
 					vehicleData.DynamicTyreRadius);
 			}
 
@@ -1673,22 +1674,23 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			cycle
 				.AddComponent(new Driver(container, runData.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
-				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
-					runData.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius, runData.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container))
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container,
-					es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(new AxleGear(container, runData.AxleGearData))
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container,
-					es, ctl))
+				.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, 
+					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
-				.AddComponent((IGearbox)gearbox, runData.Retarder, container)
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container,
-					es, ctl))
+				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, 
+					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+				.AddComponent((IGearbox)gearbox)
+				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, 
+					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
-				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container,
-					es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, runData);
 
@@ -1739,7 +1741,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
+					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1)
+						.Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
 					vehicleData.DynamicTyreRadius);
 			}
 
@@ -1770,16 +1773,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var container = new VehicleContainer(
 				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
-
-
-			var clutch = new SwitchableClutch(container, runData.EngineData);
-
-			var gbxStrategy = new AMTShiftStrategyOptimized(container);
 			
-			var gearbox = new Gearbox(container, gbxStrategy);
-
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
-			var idleController = engine.IdleController;
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			var aux = new ElectricAuxiliary(container);
@@ -1787,23 +1782,17 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			cycle
 				.AddComponent(new Driver(container, runData.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
-				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
-					runData.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius, runData.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
-				//.AddComponent(ctl)
-				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP4, runData.ElectricMachinesData, container,
-				//	es, ctl))
 				.AddComponent(new AxleGear(container, runData.AxleGearData))
-				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP3, runData.ElectricMachinesData, container,
-				//	es, ctl))
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
-				.AddComponent(gearbox, runData.Retarder, container)
-				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, runData.ElectricMachinesData, container,
-				//	es, ctl))
-				.AddComponent(clutch)
-				//.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container,
-				//	es, ctl))
-				.AddComponent(engine, idleController)
+				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, 
+					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+				.AddComponent(new Gearbox(container, new AMTShiftStrategyOptimized(container)))
+				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, 
+					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+				.AddComponent(new SwitchableClutch(container, runData.EngineData))
+				.AddComponent(engine, engine.IdleController)
 				.AddAuxiliaries(container, runData);
 
 			return container;

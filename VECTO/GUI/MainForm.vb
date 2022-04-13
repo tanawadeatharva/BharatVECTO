@@ -2175,14 +2175,8 @@ lbFound:
     Private Sub JobEditorEngineOnlyModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorEngineOnlyModeToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.EngineOnlySimulation)
     End Sub
+
+    Private Sub JobEditorSerialHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorSerialHybridVehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.SerialHybridVehicle)
+    End Sub
 End Class
-
-'Public Enum VectoJobType
-'    NotSet
-'    ConventionalVehicle
-'    ParallelHybrid
-'    BatteryElectric
-'    EngineOnly
-'End Enum
-
-

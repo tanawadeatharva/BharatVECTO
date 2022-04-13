@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using System.Data;
+using System.Reflection;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -481,7 +483,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// =================================================
 
-		private void RunHybridJob(string jobFile, int runIdx, int? startDistance = null)
+		private ModalResults RunHybridJob(string jobFile, int runIdx, int? startDistance = null)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
@@ -508,25 +510,87 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Assert.NotNull(run);
 
 			var pt = run.GetContainer();
-
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
 			Assert.NotNull(pt);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
+			return modData;
 		}
+		
+		[TestCase]
+		public void Run_S3_AxlegearInputRetarder()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n100, 80, 0, 0");
+			var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5, 
+				PowertrainPosition.BatteryElectricE3, 12.47, retarderType:RetarderType.AxlegearInputRetarder);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r=>r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void Run_S3_WithoutAxlegearInputRetarder()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n100, 80, 0, 0");
+			var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5,
+				PowertrainPosition.BatteryElectricE3, 12.47, retarderType: RetarderType.None);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+		}
+
+		[TestCase]
+		public void RunJob_S3_AxlegearInputRetarder()
+		{
+			var modData = RunHybridJob(@"TestData\Components\Retarder\S3\S3WithAxlegearInputRetarder.vecto", 0);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void RunJob_S3_NoAxlegearInputRetarder()
+		{
+			var modData = RunHybridJob(@"TestData\Components\Retarder\S3\S3WithoutAxlegearInputRetarder.vecto", 0);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+		}
+
+
 
 		// =================================================
 
-		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
-			double initialSoc, PowertrainPosition pos, double ratio, double pAuxEl = 0,
-			Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, 
+			PowertrainPosition pos, double ratio, double pAuxEl = 0, Kilogram payload = null, Watt maxDriveTrainPower = null,
+			GearboxType gearboxType = GearboxType.NoGearbox, RetarderType retarderType = RetarderType.None)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
-			var container = CreateSerialHybridPowerTrain(
-				cycleData, modFileName, initialSoc, sumData, pAuxEl, pos, ratio, payload,
-				maxDriveTrainPower, gearboxType);
+			var container = CreateSerialHybridPowerTrain(cycleData, modFileName, initialSoc, sumData, pAuxEl, pos, ratio,
+				payload, maxDriveTrainPower, gearboxType, retarderType);
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
@@ -534,11 +598,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public static VehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, SummaryDataContainer sumData, double pAuxEl,
-			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, GearboxType gearboxType = GearboxType.NoGearbox)
+			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, 
+			GearboxType gearboxType = GearboxType.NoGearbox, RetarderType retarderType = RetarderType.None)
 		{
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
-
+			
 			var vehicleData = CreateVehicleData(payload ?? 3300.SI<Kilogram>());
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
@@ -562,11 +627,19 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			foreach (var entry in gearboxData.Gears) {
 				entry.Value.ShiftPolygon = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
+					(int)entry.Key, engineData.FullLoadCurves[entry.Key], new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1)
+						.Cast<ITransmissionInputData>().ToList(), engineData, axleGearData.AxleGear.Ratio,
 					vehicleData.DynamicTyreRadius);
 			}
 
-			var runData = new VectoRunData() {
+			var retarderLossMapEntries = new RetarderLossMap.RetarderLossEntry[] {
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 0.RPMtoRad(), TorqueLoss = 10.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 1000.RPMtoRad(), TorqueLoss = 12.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2000.RPMtoRad(), TorqueLoss = 18.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2300.RPMtoRad(), TorqueLoss = 20.58.SI<NewtonMeter>()},
+			};
+			var retarderData = new RetarderData { Type = retarderType, LossMap=new RetarderLossMap(retarderLossMapEntries), Ratio=1 };
+			var runData = new VectoRunData {
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.SerialHybridVehicle,
@@ -577,7 +650,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				AirdragData = airdragData,
 				JobName = Path.GetFileNameWithoutExtension(modFileName),
 				Cycle = cycleData,
-				Retarder = new RetarderData() { Type = RetarderType.None },
+				Retarder = retarderData,
 				Aux = new List<VectoRunData.AuxData>(),
 				ElectricMachinesData = electricMotorData,
 				EngineData = engineData,
@@ -591,9 +664,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter) {
 				WriteModalResults = true,
 			};
-			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
-			container.RunData = runData;
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, 
+				x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
 
 			var strategy = new SerialHybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
@@ -621,8 +693,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var powertrain = cycle
 				.AddComponent(new Driver(container, runData.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, runData.VehicleData, runData.AirdragData))
-				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius,
-					runData.VehicleData.WheelsInertia))
+				.AddComponent(new Wheels(container, runData.VehicleData.DynamicTyreRadius, runData.VehicleData.WheelsInertia))
 				.AddComponent(ctl)
 				.AddComponent(new Brakes(container));
 
@@ -634,31 +705,32 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 						? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
 						: new Gearbox(container, ctl.ShiftStrategy);
 					powertrain = powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-						.AddComponent(runData.AngledriveData != null
-							? new Angledrive(container, runData.AngledriveData)
-							: null)
-						.AddComponent((IGearbox)gearbox, runData.Retarder, container)
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData,
-							container,
-							es, ctl));
+						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder 
+							? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent((IGearbox)gearbox)
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder 
+							? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, 
+							runData.ElectricMachinesData, container, es, ctl));
 					ctl.Gearbox = gearbox;
 
 					break;
 					
 				case PowertrainPosition.BatteryElectricE3:
 					powertrain = powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData,
-							container,
-							es, ctl));
+						.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder 
+							? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, 
+							runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					runData.GearboxData = null;
 					break;
 				case PowertrainPosition.BatteryElectricE4:
-					powertrain = powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData,
-							container,
-							es, ctl));
+					powertrain = powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, 
+						runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container, new GearshiftPosition(0));
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);

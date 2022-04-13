@@ -302,7 +302,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public static string GetName(this PredictiveCruiseControlType pcc)
 		{
-			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, "&");
+			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, " & ");
 		}
 	}
 
@@ -368,6 +368,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum TankSystem
 	{
+		None,
 		Liquefied,
 		Compressed
 	}

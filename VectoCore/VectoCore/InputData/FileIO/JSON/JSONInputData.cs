@@ -193,16 +193,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 			} catch (Exception e) {
 				if (!TolerateMissing) {
-					throw new VectoException(
-						"JobFile: Failed to read Gearbox file '{0}': {1}", e,
-						Body[JsonKeys.Vehicle_GearboxFile],
-						e.Message);
+					throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e,
+						Body[JsonKeys.Vehicle_GearboxFile], e.Message);
 				}
 
-				return new JSONGearboxDataV6(
-					GetDummyJSONStructure(),
-					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>()) +
-					MissingFileSuffix);
+				return new JSONGearboxDataV6(GetDummyJSONStructure(), 
+					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>())
+					+ MissingFileSuffix);
 			}
 		}
 
