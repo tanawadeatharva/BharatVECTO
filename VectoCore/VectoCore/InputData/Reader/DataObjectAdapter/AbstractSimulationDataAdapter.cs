@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -93,17 +92,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData retarderInputData, 
+			PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 		{
 			try {
-				var retarder = new RetarderData { Type = data.Type };
+				var retarder = new RetarderData { Type = retarderInputData.Type, Ratio = retarderInputData.Ratio};
 
 				switch (retarder.Type) {
 					case RetarderType.TransmissionInputRetarder:
 					case RetarderType.TransmissionOutputRetarder:
+						if (position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, 
+							PowertrainPosition.BatteryElectricE2))
+							throw new ArgumentException("Transmission retarder is only allowed in powertrains that " +
+														"contain a gearbox: Conventional, P-HEV and PEV-E2.", nameof(retarder));
+						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
+						break;
 					case RetarderType.AxlegearInputRetarder:
-						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
-						retarder.Ratio = data.Ratio;
+						if (position != PowertrainPosition.BatteryElectricE3)
+							throw new ArgumentException("AxlegearInputRetarder is only allowed for PEV-E3, S-HEV-S3, S-IEPC, E-IEPC. " +
+														$"But engine position was: {position}", nameof(retarder));
+						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
 						break;
 					case RetarderType.None:
 					case RetarderType.LossesIncludedInTransmission:
@@ -111,19 +119,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						retarder.Ratio = 1;
 						break;
 					default:
-						throw new ArgumentOutOfRangeException("retarder", retarder.Type, "RetarderType unknown");
+						throw new ArgumentOutOfRangeException(nameof(retarder), retarder.Type, "RetarderType unknown");
 				}
 
-				if (!retarder.Type.IsDedicatedComponent()) {
-					return retarder;
+				if (retarder.Type.IsDedicatedComponent()) {
+					retarder.SavedInDeclarationMode = retarderInputData.SavedInDeclarationMode;
+					retarder.Manufacturer = retarderInputData.Manufacturer;
+					retarder.ModelName = retarderInputData.Model;
+					retarder.Date = retarderInputData.Date;
+					retarder.CertificationMethod = retarderInputData.CertificationMethod;
+					retarder.CertificationNumber = retarderInputData.CertificationNumber;
+					retarder.DigestValueInput = retarderInputData.DigestValue != null ? retarderInputData.DigestValue.DigestValue : "";
 				}
-				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
-				retarder.Manufacturer = data.Manufacturer;
-				retarder.ModelName = data.Model;
-				retarder.Date = data.Date;
-				retarder.CertificationMethod = data.CertificationMethod;
-				retarder.CertificationNumber = data.CertificationNumber;
-				retarder.DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "";
 
 				return retarder;
 			} catch (Exception e) {
@@ -171,7 +178,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, 
+			bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, $"Gear {i + 1}", true);
@@ -282,7 +290,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						}
 						return angledriveData;
 					default:
-						throw new ArgumentOutOfRangeException("data", "Unknown Angledrive Type.");
+						throw new ArgumentOutOfRangeException(nameof(data), "Unknown Angledrive Type.");
 				}
 			} catch (Exception e) {
 				throw new VectoException("Error while reading Angledrive data: {0}", e.Message, e);
