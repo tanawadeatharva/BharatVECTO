@@ -1288,9 +1288,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						if (response is ResponseOverload) {
 							Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
 							var gear = DataBus.GearboxInfo.Gear;
-							response = DataBus.GearboxInfo.GearEngaged(absTime)
-								? Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient)
-								: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+							if (DataBus.GearboxInfo.GearEngaged(absTime))
+								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							else
+								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 
 							switch (response) {
 								case ResponseGearShift _:

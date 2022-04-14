@@ -1735,7 +1735,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				// ICE is off, selected solution has a too low or too high engine speed - keep ICE off
 				retVal.CombustionEngineOn = false;
 			}
-			if (best.IgnoreReason.EngineSpeedTooLow() && !DataBus.EngineInfo.EngineOn && DataBus.VehicleInfo.VehicleSpeed.IsGreater(ModelData.GearshiftParameters.StartSpeed)) {
+			if (best.IgnoreReason.EngineSpeedTooLow() && !DataBus.EngineInfo.EngineOn 
+				&& DataBus.VehicleInfo.VehicleSpeed.IsGreater(ModelData.GearshiftParameters.StartSpeed)) {
 				// ICE is off, selected solution has a too low or too high engine speed - keep ICE off
 				retVal.CombustionEngineOn = false;
 			}
