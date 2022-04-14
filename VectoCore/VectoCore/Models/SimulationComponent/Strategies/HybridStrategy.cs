@@ -602,13 +602,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		public virtual IHybridStrategyResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
-			var nextGear = DataBus.VehicleInfo.VehicleStopped
-				? Controller.ShiftStrategy.NextGear
-				: !DataBus.GearboxInfo.GearEngaged(absTime)
-					? Controller.ShiftStrategy.NextGear
-					: PreviousState.GearboxEngaged
-						? DataBus.GearboxInfo.Gear
-						: Controller.ShiftStrategy.NextGear;
+			GearshiftPosition nextGear;
+			if (DataBus.VehicleInfo.VehicleStopped)
+				nextGear = Controller.ShiftStrategy.NextGear;
+			else if (!DataBus.GearboxInfo.GearEngaged(absTime))
+				nextGear = Controller.ShiftStrategy.NextGear;
+			else if (PreviousState.GearboxEngaged)
+				nextGear = DataBus.GearboxInfo.Gear;
+			else
+				nextGear = Controller.ShiftStrategy.NextGear;
+
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear) != null && DataBus.GearboxInfo.TCLocked) {
 				
 				var emOff = new HybridStrategyResponse {
