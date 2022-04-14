@@ -47,7 +47,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
-			TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped ? Controller.ShiftStrategy.NextGear : PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
+			if (DataBus.VehicleInfo.VehicleStopped) {
+				TestPowertrain.Gearbox.Gear = Controller.ShiftStrategy.NextGear;
+			}
+			else if (PreviousState.GearboxEngaged) {
+				TestPowertrain.Gearbox.Gear = DataBus.GearboxInfo.Gear;
+			} else {
+				TestPowertrain.Gearbox.Gear = Controller.ShiftStrategy.NextGear;
+			}
+
 			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
