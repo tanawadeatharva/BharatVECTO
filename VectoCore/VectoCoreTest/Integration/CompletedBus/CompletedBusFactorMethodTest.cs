@@ -834,12 +834,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				case 0:
 				case 1://Interurban
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.55, specificValue, 1e-6);
+					Assert.AreEqual(3.57, specificValue, 1e-6);
 					break;
 				case 2:
 				case 3://Coach
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.5632156, specificValue, 1e-6);
+					Assert.AreEqual(3.57, specificValue, 1e-6);
 					break;
 			}
 		}
