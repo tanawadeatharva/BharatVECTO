@@ -101,10 +101,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				switch (retarder.Type) {
 					case RetarderType.TransmissionInputRetarder:
 					case RetarderType.TransmissionOutputRetarder:
-						if (!(position.IsParallelHybrid()
-							|| position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2))) {
+						if (!(position.IsParallelHybrid() || position.IsOneOf(PowertrainPosition.HybridPositionNotSet, PowertrainPosition.BatteryElectricE2))) {
 							throw new ArgumentException("Transmission retarder is only allowed in powertrains that " +
 														"contain a gearbox: Conventional, HEV-P, and PEV-E2.", nameof(retarder));
+						}
+
 						retarder.LossMap = RetarderLossMapReader.Create(retarderInputData.LossMap);
 						retarder.Ratio = retarderInputData.Ratio;
 						break;
