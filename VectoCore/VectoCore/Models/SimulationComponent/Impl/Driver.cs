@@ -979,27 +979,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var limitApplied = false;
 			var retVal = new OperatingPoint(operatingPoint);
-			var originalAcceleration = retVal.Acceleration;
-			//if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
-			//	retVal.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
-			//	retVal.Acceleration = DriverData.LookAheadCoasting.Deceleration;
-			//	limitApplied = true;
-			//}
+
 			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleInfo.VehicleSpeed);
-			//if (retVal.Acceleration > accelerationLimits.Acceleration) {
+			
 			if (limits != LimitationMode.NoLimitation && operatingPoint.Acceleration > accelerationLimits.Acceleration) {
 				retVal.Acceleration = accelerationLimits.Acceleration;
 				limitApplied = true;
 			}
-			if (((limits & LimitationMode.LimitDecelerationDriver) != 0) &&
-				retVal.Acceleration < accelerationLimits.Deceleration) {
+			
+			if ((limits & LimitationMode.LimitDecelerationDriver) != 0 
+				&& retVal.Acceleration < accelerationLimits.Deceleration) {
 				retVal.Acceleration = accelerationLimits.Deceleration;
 				limitApplied = true;
 			}
+			
 			if (limitApplied) {
-				retVal.SimulationInterval =
-					ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance)
-						.SimulationInterval;
+				retVal.SimulationInterval = 
+					ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance).SimulationInterval;
 				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", operatingPoint.Acceleration,
 						retVal.Acceleration, retVal.SimulationInterval);
 			}
