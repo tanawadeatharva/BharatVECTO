@@ -729,7 +729,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case ResponseUnderload _:
 					break; // will be handled in SearchBrakingPower
 				case ResponseEngineSpeedTooHigh r:
-					Log.Debug("Engine speeed was too high, search for appropriate acceleration first.");
+					Log.Debug("Engine speed was too high, search for appropriate acceleration first.");
 					operatingPoint = SearchOperatingPoint(absTime, ds, gradient, point.Acceleration, response);
 					break; // will be handled in SearchBrakingPower
 				case ResponseGearShift _:
