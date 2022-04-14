@@ -975,14 +975,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		// ================================================
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="operatingPoint"></param>
-		/// <param name="limits"></param>
-		/// <returns></returns>
-		private OperatingPoint LimitAccelerationByDriverModel(OperatingPoint operatingPoint,
-			LimitationMode limits)
+		private OperatingPoint LimitAccelerationByDriverModel(OperatingPoint operatingPoint, LimitationMode limits)
 		{
 			var limitApplied = false;
 			var retVal = new OperatingPoint(operatingPoint);
