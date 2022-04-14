@@ -257,6 +257,7 @@
 				<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\WithoutOptionalEntries\PEV_primaryBus_E4_n_opt.xml" HomeFolder="Yes"/>
 			</Folder>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\exempted_primary_heavyBus.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\HEV-S_heavyLorry_AMT_S2_ADC.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-completed_heavyBus-sample.xml"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-exempted_input_completewithoutTMPLM.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-exempted_input_full-sample.xml"/>
