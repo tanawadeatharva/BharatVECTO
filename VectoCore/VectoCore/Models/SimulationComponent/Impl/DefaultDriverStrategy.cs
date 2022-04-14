@@ -1328,9 +1328,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IResponse DoCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient, Meter currentDistance)
 		{
-			IResponse response;
 			Driver.DriverBehavior = DrivingBehavior.Coasting;
-			response = DataBus.ClutchInfo.ClutchClosed(absTime)
+			var response = DataBus.ClutchInfo.ClutchClosed(absTime)
 				? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleInfo.VehicleSpeed), gradient)
 				: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleInfo.VehicleSpeed), gradient);
 			switch (response) {
