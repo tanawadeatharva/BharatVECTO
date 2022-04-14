@@ -164,6 +164,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override TableData BoostingLimitations => null;
 
+		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
 		#endregion
 	}
 
