@@ -1222,22 +1222,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Meter brakingDistance, Meter currentDistance)
 		{
 			IResponse response;
-			Log.Debug(
-				"Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
+			var debug = new DebugData();
+
+			Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 				DriverStrategy.BrakeTrigger.BrakingStartDistance);
+
 			if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(
-				currentDistance,
-				Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
-				Log.Info(
-					"Expected Braking Deceleration could not be reached! {0}",
+				currentDistance, Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
+				Log.Info("Expected Braking Deceleration could not be reached! {0}",
 					DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance);
 			}
-			var targetDistance = DataBus.VehicleInfo.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
-				? DriverStrategy.BrakeTrigger.TriggerDistance
-				: null;
+
+			Meter targetDistance = null;
+			if (DataBus.VehicleInfo.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast) {
+				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance;
+			}
+
 			if (targetDistance == null && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
 				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
 			}
+
 			Driver.DriverBehavior = DrivingBehavior.Braking;
 
 			if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
@@ -1248,62 +1252,81 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+				debug.Add(new { a = "(1) Accelerate", response });
+
 				if (response is ResponseUnderload) {
-					response = Driver.DrivingActionBrake(
-						absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response, overrideAction: DrivingAction.Accelerate);
+					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response,
+						overrideAction: DrivingAction.Accelerate);
+					debug.Add(new { a = "(2) Brake", response });
 				}
 			} else {
-				response = Driver.DrivingActionBrake(
-					absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+				response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 					gradient, targetDistance: targetDistance);
+				debug.Add(new { a = "(3) Brake", response });
 			}
 
-			if ((DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null) && response == null) {
+			if ((DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null)
+				&& response == null) {
 				for (var i = 0; i < 3 && response == null; i++) {
 					DataBus.Brakes.BrakePower = 0.SI<Watt>();
-					response = Driver.DrivingActionBrake(
-						absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
+					debug.Add(new { a = "(4) Brake", response });
 				}
 
 				if (response == null) {
 					throw new VectoException("No valid operating point found");
 				}
 			}
-
 			switch (response) {
 				case ResponseOverload r:
 					Log.Info("Brake -> Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}", r);
 					if (!DataBus.ClutchInfo.ClutchClosed(absTime)) {
 						Log.Info("Brake -> Overload -> Clutch is open - Trying roll action");
 						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-						if (response is ResponseSpeedLimitExceeded)
+						debug.Add(new { a = "(5) Roll", response });
+						if (response is ResponseSpeedLimitExceeded) {
 							response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+							debug.Add(new { a = "(6) Brake", response });
+						}
 					} else {
 						Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
 						DataBus.Brakes.BrakePower = 0.SI<Watt>();
 						DataBus.HybridControllerCtl?.RepeatDrivingAction(absTime);
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 							gradient, targetDistance: targetDistance);
+						debug.Add(new { a = "(7) Brake", response });
 						if (response is ResponseOverload) {
 							Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
 							var gear = DataBus.GearboxInfo.Gear;
-							if (DataBus.GearboxInfo.GearEngaged(absTime))
+							if (DataBus.GearboxInfo.GearEngaged(absTime)) {
 								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-							else
-								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+								debug.Add(new { a = "(8) Accelerate", response });
+							} else {
+								//try {
+									response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+									debug.Add(new { a = "(9) Roll", response });
+								//} catch (VectoException e) {
+								//	debug.Add(new { a = "(10) Exception", e });
+								//	Log.Info("Got a VectoException {e}", e);
+								//	response = Driver.DrivingActionCoast(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								//	debug.Add(new { a = "(11) Coast", response });
+								//}
+							}
 
 							switch (response) {
 								case ResponseGearShift _:
-									Log.Info("Brake -> Overload -> 2nd Brake -> Accelerate -> Got GearShift response, performing roll action");
+									Log.Info("Brake -> Overload -> 2nd Brake -> Accelerate or Roll -> Got GearShift response, performing roll action");
 									response = Driver.DrivingActionRoll(absTime, ds,
 										DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+									debug.Add(new { a = "(12) Roll", response });
 									break;
 								case ResponseUnderload _:
 									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear) {
 										// AT Gearbox switched gears, shift losses are no longer applied, try once more...
 										response = Driver.DrivingActionAccelerate(absTime, ds,
 											DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+										debug.Add(new { a = "(13 Accelerate", response });
 									}
 									break;
 							}
@@ -1317,9 +1340,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.Brakes.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
+					debug.Add(new { a = "(14) Brake", response });
 					if (response is ResponseOverload) {
 						Log.Info("Brake -> Gearshift -> Overload -> trying roll action (no gear engaged)");
 						response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+						debug.Add(new { a = "(15) Roll", response });
 					}
 					break;
 			}
