@@ -227,48 +227,69 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void CreateRetarderTest()
 		{
 			var adapter = new EngineeringDataAdapter();
-
-			var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]", 
+			var lossMap = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 				new[] { "0, 10", "1000, 12", "2000, 18", "2300, 20.58" }));
-			
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, PowertrainPosition.HybridPositionNotSet);
 
-			Assert.Throws<VectoException>(() => 
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, PowertrainPosition.HybridPositionNotSet));
+			//----------------------------------
+			var pos = PowertrainPosition.HybridPositionNotSet;
 
-			Assert.Throws<VectoException>(() => 
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, PowertrainPosition.HybridPositionNotSet));
-
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, PowertrainPosition.HybridPositionNotSet);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, PowertrainPosition.HybridPositionNotSet);
-
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, PowertrainPosition.BatteryElectricE3);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder, LossMap = lossMap}, PowertrainPosition.BatteryElectricE3);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder, LossMap = lossMap}, PowertrainPosition.BatteryElectricE3);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, PowertrainPosition.BatteryElectricE3);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, PowertrainPosition.BatteryElectricE3);
-
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, PowertrainPosition.BatteryElectricE2);
-			
-			Assert.Throws<VectoException>(() => 
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, PowertrainPosition.BatteryElectricE2));
-			
-			Assert.Throws<VectoException>(() => 
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, PowertrainPosition.BatteryElectricE2));
-
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, PowertrainPosition.BatteryElectricE2);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, PowertrainPosition.BatteryElectricE2);
-
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, PowertrainPosition.HybridP3);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, pos);
 
 			Assert.Throws<VectoException>(() =>
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, PowertrainPosition.HybridP3));
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, pos));
 
-			Assert.Throws<VectoException>(() => 
-				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, PowertrainPosition.HybridP3));
+			Assert.Throws<VectoException>(() =>
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, pos));
 
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, PowertrainPosition.HybridP3);
-			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, PowertrainPosition.HybridP3);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, pos);
+
+			//----------------------------------
+			pos = PowertrainPosition.BatteryElectricE3;
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, pos);
+			Assert.Throws<VectoException>(() =>
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder, LossMap = lossMap }, pos));
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder, LossMap = lossMap }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, pos);
+
+			//----------------------------------
+			pos = PowertrainPosition.BatteryElectricE2;
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, pos);
+
+			Assert.Throws<VectoException>(() =>
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, pos));
+
+			Assert.Throws<VectoException>(() =>
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, pos));
+
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, pos);
+
+			//----------------------------------
+			pos = PowertrainPosition.HybridP3;
+
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, pos);
+
+			Assert.Throws<VectoException>(() =>
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder }, pos));
+
+			Assert.Throws<VectoException>(() =>
+				adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, pos));
+
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, pos);
+
+			//----------------------------------
+			pos = PowertrainPosition.HybridP2;
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.None }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.TransmissionInputRetarder, LossMap = lossMap }, pos);
+			
+			Assert.Throws<VectoException>(() =>
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.AxlegearInputRetarder }, pos));
+			
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.EngineRetarder }, pos);
+			adapter.CreateRetarderData(new RetarderInputData { Type = RetarderType.LossesIncludedInTransmission }, pos);
 		}
 	}
 }

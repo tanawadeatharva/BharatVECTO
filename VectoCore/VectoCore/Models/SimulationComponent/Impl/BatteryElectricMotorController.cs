@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -42,8 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
                 return null;
             }
 			
-            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) && outTorque.IsSmaller(0)) {
-				&& DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData.DisengageWhenHaltingSpeed) 
+            if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(GearboxModelData?.DisengageWhenHaltingSpeed ?? Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed) 
 				&& outTorque.IsSmaller(0)) {
                 return null;
             }
