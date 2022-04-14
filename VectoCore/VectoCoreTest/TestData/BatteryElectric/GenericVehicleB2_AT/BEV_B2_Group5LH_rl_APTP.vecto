@@ -7,7 +7,7 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "BEV_B2_Group5_LH_rl.vveh",
+    "VehicleFile": "BEV_B2_Group5_LH_rl_APTP.vveh",
     "EngineFile": "209kW_7c7l.veng",
     "GearboxFile": "GearboxPowerSplit.vgbx",
     "TCU": "GearboxPowerSplit.vgbx",
