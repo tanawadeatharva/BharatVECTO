@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var applyLimit = rollAction || tcOperatingPointSet;
 
 			var limitedOperatingPoint = LimitAccelerationByDriverModel(searchedOperatingPoint,
-				applyLimit ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationDriver);
+				applyLimit ? LimitationMode.LimitDecelerationDriver : LimitationMode.NoLimitation);
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleInfo.VehicleSpeed +
