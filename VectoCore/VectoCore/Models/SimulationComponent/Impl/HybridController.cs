@@ -436,18 +436,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 
-			protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
-			{
-				return (outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
-			}
+			protected virtual bool SpeedTooLowForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) => 
+				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsSmaller(DataBus.EngineInfo.EngineIdleSpeed);
 
-			protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed)
-			{
-				return
-					(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(
-						GearboxModelData.Gears[gear.Gear].MaxSpeed,
-						DataBus.EngineInfo.EngineN95hSpeed));
-			}
+			protected virtual bool SpeedTooHighForEngine(GearshiftPosition gear, PerSecond outAngularSpeed) =>
+				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(
+					VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed));
 
 			public override GearshiftPosition Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
@@ -492,23 +486,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override IGearbox Gearbox
 			{
 				get => _gearbox;
-				set {
-					var myGearbox = value as Gearbox;
-					if (myGearbox == null) {
-						throw new VectoException("This shift strategy can't handle gearbox of type {0}",
-							value.GetType());
-					}
-
-					_gearbox = myGearbox;
-				}
+				set => _gearbox = value as Gearbox ?? throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
 			}
 
 			public override GearshiftPosition NextGear => _nextGear;
 
-			public void SetNextGear(GearshiftPosition nextGear)
-			{
-				_nextGear = nextGear;
-			}
+			public void SetNextGear(GearshiftPosition nextGear) => _nextGear = nextGear;
 		}
 
 
