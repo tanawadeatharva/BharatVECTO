@@ -479,10 +479,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Disengaged = false;
 			var lastGear = Gear;
-			Gear = DataBus.VehicleInfo.VehicleStopped
-				? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
-				: _strategy.Engage(absTime, dt, outTorque,
-					VectoMath.Min(PreviousState.OutAngularVelocity, outAngularVelocity));
+			if (DataBus.VehicleInfo.VehicleStopped) {
+				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			} else {
+				Gear = _strategy.Engage(absTime, dt, outTorque, VectoMath.Min(PreviousState.OutAngularVelocity, outAngularVelocity));
+			}
+
 			if (!DataBus.VehicleInfo.VehicleStopped) {
 				if (Gear > lastGear) {
 					LastUpshift = absTime;

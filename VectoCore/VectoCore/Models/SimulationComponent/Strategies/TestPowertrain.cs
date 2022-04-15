@@ -221,6 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public MeterPerSquareSecond DriverAcceleration => realContainer?.DriverInfo.DriverAcceleration;
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 		#endregion
 
 		#region Overrides of VectoSimulationComponent

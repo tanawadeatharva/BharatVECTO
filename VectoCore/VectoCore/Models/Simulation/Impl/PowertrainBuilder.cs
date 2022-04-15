@@ -1459,6 +1459,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSquareSecond DriverAcceleration => 0.SI<MeterPerSquareSecond>();
 		public PCCStates PCCState => PCCStates.OutsideSegment;
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 
 		#endregion
 	}
