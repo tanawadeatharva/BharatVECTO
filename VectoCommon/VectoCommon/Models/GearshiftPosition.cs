@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			return  p2.TorqueConverterLocked.Value && !p1.TorqueConverterLocked.Value;
+			return p2.TorqueConverterLocked.Value && !p1.TorqueConverterLocked.Value;
 		}
 
 
@@ -82,79 +82,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	public class GearList :IEnumerable<GearshiftPosition>
+	public class GearList : IEnumerable<GearshiftPosition>
 	{
 		protected GearshiftPosition[] Entries;
 
-		public GearList(GearshiftPosition[] gearList)
-		{
-			Entries = gearList;
-		}
+		public GearList(GearshiftPosition[] gearList) => Entries = gearList;
 
-		public bool HasPredecessor(GearshiftPosition cur)
-		{
-			var idx = Array.IndexOf(Entries, cur);
-			return idx > 0;
-		}
-
-
+		public bool HasPredecessor(GearshiftPosition cur) => cur != Entries[0];
+		
 		public GearshiftPosition Predecessor(GearshiftPosition cur)
 		{
 			var idx = Array.IndexOf(Entries, cur);
-			
 			return idx <= 0 ? null : Entries[idx - 1];
 		}
 
-		public bool HasSuccessor(GearshiftPosition cur)
-        {
-			var idx = Array.IndexOf(Entries, cur);
-			return idx < Entries.Length - 1;
-		}
+		public bool HasSuccessor(GearshiftPosition cur) => cur != Entries[Entries.Length-1];
 
 		public GearshiftPosition Successor(GearshiftPosition cur)
 		{
 			var idx = Array.IndexOf(Entries, cur);
-
 			return idx < 0 || idx >= Entries.Length - 1 ? null : Entries[idx + 1];
 		}
 
 		public GearshiftPosition Successor(GearshiftPosition cur, uint numUp)
 		{
 			var idx = Array.IndexOf(Entries, cur);
-
 			if (idx < 0) {
 				return null;
 			}
-
 			var next = idx + numUp;
-
 			return next >= Entries.Length ? Entries.Last() : Entries[next];
 		}
 
 		public GearshiftPosition Predecessor(GearshiftPosition cur, uint numDown)
 		{
 			var idx = Array.IndexOf(Entries, cur);
-
 			if (idx < 0) {
 				return null;
 			}
-
 			var next = idx - numDown;
-
 			return next < 0 ? Entries.First() : Entries[next];
 		}
 
-		public IEnumerator<GearshiftPosition> GetEnumerator()
-		{
-			foreach (var entry in Entries) {
-				yield return entry;
-			}
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+		public IEnumerator<GearshiftPosition> GetEnumerator() => Entries.AsEnumerable().GetEnumerator();
+		
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		public int Distance(GearshiftPosition from, GearshiftPosition to)
 		{
