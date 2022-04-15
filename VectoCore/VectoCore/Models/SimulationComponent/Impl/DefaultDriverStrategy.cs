@@ -987,6 +987,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					third = Driver.DrivingActionRoll(absTime, ds, velocityWithOverspeed, gradient);
 					debug.Add(new { a = "[HRE-4] second: GearShift -> Roll", third });
 					switch (third) {
+						case ResponseOverload _:
+							third = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+							debug.Add(new { a = "[HRE-5] third:Overload -> try again Coast", third });
+							break;
 						case ResponseUnderload _:
 							// underload may happen if driver limits acceleration when rolling downhill
 							third = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
