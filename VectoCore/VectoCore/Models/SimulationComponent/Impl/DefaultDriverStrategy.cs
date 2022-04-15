@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDataBus DataBus => Driver?.DataBus;
 
-		protected internal DrivingBehaviorEntry BrakeTrigger { get; set; }
+		public DrivingBehaviorEntry BrakeTrigger { get; protected internal set; }
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{

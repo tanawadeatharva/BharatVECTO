@@ -1097,7 +1097,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 				if (engineSpeedTooLow && DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-					endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+					endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
 					var response = ResponseEmOff;
 					response.Gear = new GearshiftPosition(0);
 					response.Setting.GearboxEngaged = false;
@@ -1152,7 +1152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							firstEntry.IgnoreReason.EngineSpeedTooLow()) && !reEngaged) {
 							// ICE torque below FLD is OK as EM may regenerate and shift ICE operating point on drag line
 							// for negative torques the shift line is vertical anyway ;-)
-							var best = FindBestGearForBraking(nextGear, firstResponse, DataBus.DrivingCycleInfo.TargetSpeed);
+							var best = FindBestGearForBraking(nextGear, firstResponse);
 							if (!best.Equals(currentGear)) {
 								// downshift required!
 								var downshift = ResponseEmOff;
@@ -1354,18 +1354,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 				return firstResponse.Engine.EngineOn
 					? firstResponse.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)
-					: firstResponse.Gearbox.InputSpeed?.IsSmaller(ModelData.EngineData.IdleSpeed) ??
-					false;
+					: (firstResponse.Gearbox.InputSpeed?.IsSmaller(ModelData.EngineData.IdleSpeed) ?? false);
 			}
 			return firstResponse.Clutch.OutputSpeed.IsSmaller(ModelData.EngineData.IdleSpeed); //  firstResponse.Gearbox.InputSpeed.IsSmaller(ModelData.EngineData.IdleSpeed));
 		}
 
-		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse, MeterPerSecond targetSpeed)
+		private GearshiftPosition FindBestGearForBraking(GearshiftPosition nextGear, IResponse firstResponse)
 		{
-			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
+			var endSpeed = DataBus.VehicleInfo.VehicleSpeed + 
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
-			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() && targetSpeed.IsEqual(0) &&
-				endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
+			
+			// only disengage if we are actually braking for halting (meaning: next brake trigger speed is 0).
+			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() 
+				&& DataBus.DriverInfo.NextBrakeTriggerSpeed.IsEqual(0)
+				&& endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 				return new GearshiftPosition(0);
 			}
 
