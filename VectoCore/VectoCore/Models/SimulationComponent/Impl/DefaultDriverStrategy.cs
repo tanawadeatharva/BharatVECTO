@@ -1303,15 +1303,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 								debug.Add(new { a = "(8) Accelerate", response });
 							} else {
-								//try {
-									response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-									debug.Add(new { a = "(9) Roll", response });
-								//} catch (VectoException e) {
-								//	debug.Add(new { a = "(10) Exception", e });
-								//	Log.Info("Got a VectoException {e}", e);
-								//	response = Driver.DrivingActionCoast(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-								//	debug.Add(new { a = "(11) Coast", response });
-								//}
+								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+								debug.Add(new { a = "(9) Roll", response });
 							}
 
 							switch (response) {
