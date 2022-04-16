@@ -970,6 +970,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 					}
 
 					powertrain
+						.AddComponent(new AxleGear(container, runData.AxleGearData))
 						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(new PEVGearbox(container, strategy))
