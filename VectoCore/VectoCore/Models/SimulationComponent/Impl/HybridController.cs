@@ -147,8 +147,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				DebugData.Add("HC.R", new {
-					DrivingAction = DataBus.DriverInfo.DrivingAction,
+				DebugData.Add($"HC.R-{retryCount}", new {
+					DataBus.DriverInfo.DrivingAction,
 					StrategySettings = strategySettings,
 					Response = retVal,
 					DryRun = dryRun

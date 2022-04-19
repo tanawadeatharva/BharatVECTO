@@ -42,11 +42,12 @@ namespace TUGraz.VectoCore.Utils
 		private static readonly ThreadLocal<Queue<dynamic>> _data = new ThreadLocal<Queue<dynamic>>(
 			() => new Queue<dynamic>(Capacity));
 
-		private readonly Queue<dynamic> _localData = new Queue<dynamic>();
-
 		private readonly bool _globalDebug;
 
-		internal Queue<dynamic> Data => _globalDebug ? _data.Value : _localData;
+		internal Queue<dynamic> Data => _globalDebug ? GlobalData : LocalData;
+
+		internal static Queue<dynamic> GlobalData => _data.Value;
+		internal Queue<dynamic> LocalData { get; } = new Queue<dynamic>();
 
 		public DebugData(bool globalDebug = true) => _globalDebug = globalDebug;
 
