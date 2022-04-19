@@ -1068,11 +1068,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 
-				var nextGear = !DataBus.GearboxInfo.GearEngaged(absTime)
-					? new GearshiftPosition(0)
-					: PreviousState.GearboxEngaged
-						? DataBus.GearboxInfo.Gear
-						: Controller.ShiftStrategy.NextGear;
+				GearshiftPosition nextGear;
+				if (!DataBus.GearboxInfo.GearEngaged(absTime)) {
+					nextGear = new GearshiftPosition(0);
+				}
+				else if (PreviousState.GearboxEngaged) {
+					nextGear = DataBus.GearboxInfo.Gear;
+				} else {
+					nextGear = Controller.ShiftStrategy.NextGear;
+				}
 
 				if (!nextGear.IsLockedGear()) {
 					eval.Add(ResponseEmOff);
@@ -1094,7 +1098,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					MechanicalAssistPower = ElectricMotorsOff
 				};
 				var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-				debug.Add("[AHS.HBA-0] DryRun", firstResponse);
+				debug.Add($"[AHS.HBA-0] DryRun Gear={nextGear}", firstResponse);
 				var engineSpeedTooLow = EngineSpeedTooLow(firstResponse);
 
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
@@ -1128,7 +1132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					do {
 						nextGear = GearList.Predecessor(nextGear);
 						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-						debug.Add("[AHS.HBA-1] DryRun", firstResponse);
+						debug.Add($"[AHS.HBA-1] DryRun Gear={nextGear}", firstResponse);
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
 				}
 

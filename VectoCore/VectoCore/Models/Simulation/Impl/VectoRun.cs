@@ -101,11 +101,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Initialize();
 			IResponse response;
+			var iterationCount = 0;
 			try {
 				
 				do {
 					response = DoSimulationStep();
-					debug.Add("---- [VR.R] ----", response);
+					debug.Add($"[VR.R] ---- ITERATION {iterationCount++} ---- ", response);
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
