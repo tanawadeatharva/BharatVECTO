@@ -1045,6 +1045,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return;
 			}
 
+			var debug = new DebugData();
+
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
 			var disengageSpeedThreshold = ModelData.GearboxData.DisengageWhenHaltingSpeed;
 			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
@@ -1091,7 +1093,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					MechanicalAssistPower = ElectricMotorsOff
 				};
 				var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-
+				debug.Add("[HBA-0] DryRun", firstResponse);
 				var engineSpeedTooLow = EngineSpeedTooLow(firstResponse);
 
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
@@ -1122,6 +1124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					do {
 						nextGear = GearList.Predecessor(nextGear);
 						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
+						debug.Add("[HBA-1] DryRun", firstResponse);
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
 				}
 
@@ -1219,9 +1222,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						{ emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, VectoMath.Max(firstResponse.ElectricMotor.MaxRecuperationTorque, 0.SI<NewtonMeter>())) }
 					}
 				};
-				var maxRecuperationResponse = RequestDryRun(
-					absTime, dt, outTorque, outAngularVelocity, nextGear, maxRecuperation);
-
+				var maxRecuperationResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, maxRecuperation);
+				debug.Add("[HBA-2] DryRun maxRecuperationResponse", maxRecuperationResponse);
 				var deltaDragTqMaxRecuperation = disengaged
 					? (maxRecuperationResponse as ResponseDryRun).DeltaDragLoadTorque
 					: maxRecuperationResponse.Engine.TotalTorqueDemand - maxRecuperationResponse.Engine.DragTorque;

@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}
-				debug.Add(new {Response = response});
+				debug.Add(response);
 			} while (!(response is ResponseSuccess || response is ResponseCycleFinished || response is ResponseBatteryEmpty));
 
 			IterationStatistics.Increment(this, "Distance", Container.MileageCounter.Distance.Value());

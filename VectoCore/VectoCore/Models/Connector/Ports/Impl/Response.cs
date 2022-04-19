@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -38,8 +39,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
-	
-
 	public abstract class AbstractResponse : IResponse
 	{
 		public AbstractResponse(object source)
@@ -105,18 +104,18 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public IElectricSystemResponse ElectricSystem { get; set; }
 
 		public HybridControllerResponse HybridController { get; set; }
-
-
-		public override string ToString()
-		{
-			var t = GetType();
-			return $"{t.Name}{{{t.GetProperties().Select(p => $"{p.Name}: {p.GetValue(this)}").Join()}}}";
-		}
+		
+		//public override string ToString()
+		//{
+		//	var t = GetType();
+		//	return $"{t.Name}{{{t.GetProperties().Select(p => $"{p.Name}: {p.GetValue(this)}").Join()}}}";
+		//}
 	}
 
 	/// <summary>
 	/// Response when the Cycle is finished.
 	/// </summary>
+	[DebuggerDisplay("CycleFinished")]
 	public class ResponseCycleFinished : AbstractResponse {
 		public ResponseCycleFinished(object source) : base(source) { }
 	}
@@ -124,10 +123,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
+	[DebuggerDisplay("Success({AbsTime,nq}, {Driver.OperatingPoint,nq})")]
 	public class ResponseSuccess : AbstractResponse {
 		public ResponseSuccess(object source) : base(source) { }
 	}
 
+	[DebuggerDisplay("BatteryEmpty")]
 	public class ResponseBatteryEmpty : AbstractResponse
 	{
 		public ResponseBatteryEmpty(object source, IElectricSystemResponse electricSupplyResponse) : base(source) { }
@@ -136,6 +137,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 
 	/// </summary>
+	[DebuggerDisplay("Overload({Delta,nq})")]
 	public class ResponseOverload : AbstractResponse
 	{
 		public Watt Delta { get; set; }
@@ -145,6 +147,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the request resulted in an engine under-load. 
 	/// </summary>
+	[DebuggerDisplay("Underload({Delta,nq})")]
 	public class ResponseUnderload : AbstractResponse
 	{
 		public Watt Delta { get; set; }
@@ -154,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the Speed Limit was exceeded.
 	/// </summary>
+	[DebuggerDisplay("SpeedLimitExceeded")]
 	public class ResponseSpeedLimitExceeded : AbstractResponse
 	{
 		public ResponseSpeedLimitExceeded(object source) : base(source) { }
@@ -162,6 +166,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the request should have another time interval.
 	/// </summary>
+	[DebuggerDisplay("FailTimeInterval({DeltaT,nq})")]
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
 		public ResponseFailTimeInterval(object source) : base(source) { }
@@ -169,12 +174,14 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Second DeltaT { get; set; }
 	}
 
+	[DebuggerDisplay("DistanceExceeded({MaxDistance,nq})")]
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
 		public ResponseDrivingCycleDistanceExceeded(object source) : base(source) { }
 		public Meter MaxDistance { get; set; }
 	}
 
+	[DebuggerDisplay("DryRun({DeltaFullLoad,nq}, {DeltaDragLoad,nq}, {DeltaEngineSpeed,nq})")]
 	public class ResponseDryRun : AbstractResponse
 	{
 		public ResponseDryRun(object source) : base(source) { }
@@ -191,6 +198,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 
+	[DebuggerDisplay("GearShift")]
 	internal class ResponseGearShift : AbstractResponse
 	{
 		public ResponseGearShift(object source) : base(source) { }
@@ -198,20 +206,23 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ResponseGearShift(object source, IResponse subResponse) : base(source, subResponse) { }
 	}
 
+	[DebuggerDisplay("DifferentGearEngaged")]
 	internal class ResponseDifferentGearEngaged : AbstractResponse
 	{
 		public ResponseDifferentGearEngaged(object source) : base(source) { }
 	}
 
+	[DebuggerDisplay("InvalidOperatingPoint")]
 	internal class ResponseInvalidOperatingPoint : AbstractResponse
 	{
 		public ResponseInvalidOperatingPoint(object source) : base(source) { }
 	}
 
-/*
-	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
-*/
+	/*
+		internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
+	*/
 
+	[DebuggerDisplay("EngineSpeedTooHigh({DeltaEngineSpeed,nq})")]
 	internal class ResponseEngineSpeedTooHigh : AbstractResponse
 	{
 		public ResponseEngineSpeedTooHigh(object source) : base(source) { }

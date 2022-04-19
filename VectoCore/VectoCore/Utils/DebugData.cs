@@ -31,34 +31,38 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
 	public class DebugData
 	{
-		internal readonly List<dynamic> Data;
+		internal readonly Queue<dynamic> Data;
+		private const int defaultCapacity = 16;
 
 		public DebugData()
 		{
 #if DEBUG
-			Data = new List<dynamic>();
+			Data = new Queue<dynamic>(defaultCapacity);
+#else
+			Data = new Queue<dynamic>(0);
 #endif
 		}
 
 		[Conditional("DEBUG")]
-		public void Add(dynamic value)
+		public void Trim(int maxCount = defaultCapacity)
 		{
-			Data.Add(value);
+			while (Data.Count > maxCount) {
+				Data.Dequeue();
+			}
 		}
+		
+		[Conditional("DEBUG")]
+		public void Add(object value) => Data.Enqueue(value);
 
-		public override string ToString()
-		{
-#if DEBUG
-			return Data.Join("\n");
-#else
-				return "-";
-			#endif
-		}
+		[Conditional("DEBUG")]
+		public void Add(object value1, object value2) => Data.Enqueue((value1, value2));
+
+		[Conditional("DEBUG")]
+		public void Add(object value1, object value2, object value3) => Data.Enqueue((value1, value2, value3));
 	}
 }
