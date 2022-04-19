@@ -404,7 +404,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
 							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-					var powertrainPosition = electricMachines.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
+					var powertrainPosition = electricMachines.FirstOrDefault(e => e.Item1 != PowertrainPosition.GEN)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 					
 					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
 						? VectoSimulationJobType.ParallelHybridVehicle
