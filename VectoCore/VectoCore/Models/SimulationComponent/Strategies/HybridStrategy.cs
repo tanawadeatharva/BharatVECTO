@@ -747,7 +747,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				CurrentState.GearshiftTriggerTstmp = absTime;
 			}
 
-			DebugData.Add(new { DrivingAction = DataBus.DriverInfo.DrivingAction, Evaluations = eval, Best = best, RetVal = retVal, DryRun = dryRun });
+			DebugData.Add("AHS.R", new { DataBus.DriverInfo.DrivingAction, Evaluations = eval, 
+				Best = best, RetVal = retVal, DryRun = dryRun });
 			return retVal;
 		}
 
@@ -1093,13 +1094,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					MechanicalAssistPower = ElectricMotorsOff
 				};
 				var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-				debug.Add("[HBA-0] DryRun", firstResponse);
+				debug.Add("[AHS.HBA-0] DryRun", firstResponse);
 				var engineSpeedTooLow = EngineSpeedTooLow(firstResponse);
 
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
-				if (engineSpeedTooLow && DataBus.GearboxInfo.GearboxType.ManualTransmission() &&
-					endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
+				if (engineSpeedTooLow 
+					&& DataBus.GearboxInfo.GearboxType.ManualTransmission() 
+					&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
 					var response = ResponseEmOff;
 					response.Gear = new GearshiftPosition(0);
 					response.Setting.GearboxEngaged = false;
@@ -1108,7 +1110,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return;
 				}
 
-				if (GearList.HasPredecessor(nextGear) && engineSpeedTooLow && (!vehiclespeedBelowThreshold || AllowEmergencyShift)) {
+				if (GearList.HasPredecessor(nextGear) 
+					&& engineSpeedTooLow 
+					&& (!vehiclespeedBelowThreshold || AllowEmergencyShift)) {
 					// engine speed would fall below idling speed - consider downshift
 					var estimatedVelocityPostShift = VelocityDropData.Valid
 						? VelocityDropData.Interpolate(DataBus.VehicleInfo.VehicleSpeed,
@@ -1124,7 +1128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					do {
 						nextGear = GearList.Predecessor(nextGear);
 						firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
-						debug.Add("[HBA-1] DryRun", firstResponse);
+						debug.Add("[AHS.HBA-1] DryRun", firstResponse);
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
 				}
 
@@ -1223,7 +1227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				};
 				var maxRecuperationResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, maxRecuperation);
-				debug.Add("[HBA-2] DryRun maxRecuperationResponse", maxRecuperationResponse);
+				debug.Add("[AHS.HBA-2] DryRun maxRecuperationResponse", maxRecuperationResponse);
 				var deltaDragTqMaxRecuperation = disengaged
 					? (maxRecuperationResponse as ResponseDryRun).DeltaDragLoadTorque
 					: maxRecuperationResponse.Engine.TotalTorqueDemand - maxRecuperationResponse.Engine.DragTorque;

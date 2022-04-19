@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Utils
 
 			var intervalFactor = 1.0;
 			var origY = y;
-			var debug = new DebugData();
+			var debug = new DebugData(false);
 			debug.Add(new { x = x.Value(), y = y.Value() });
 			log.Debug("Log Disabled during LineSearch.");
 			LogManager.DisableLogging();
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Debug("Log Disabled during InterpolateSearch.");
 			LogManager.DisableLogging();
 
-			var debug = new DebugData();
+			var debug = new DebugData(false);
 			debug.Add(new { x = x1, y = y1 });
 
 			try {

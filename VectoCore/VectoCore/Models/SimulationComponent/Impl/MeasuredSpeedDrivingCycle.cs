@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var responseCount = 0;
 			do {
 				response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
-				debug.Add(response);
+				debug.Add("MSDC.R-0", response);
 
 				switch (response) {
 					case ResponseGearShift _:
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.SimulationInterval = dt;
 			response.Driver.Acceleration = acceleration;
-			debug.Add(response);
+			debug.Add("MSDC.R-1", response);
 
 			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + DataBus.VehicleInfo.VehicleSpeed * dt;
 			if (CurrentState.SimulationDistance.IsSmaller(0)) {

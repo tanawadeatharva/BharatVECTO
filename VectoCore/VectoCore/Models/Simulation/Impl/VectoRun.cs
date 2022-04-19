@@ -105,8 +105,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				
 				do {
 					response = DoSimulationStep();
-					debug.Trim();
-					debug.Add(response);
+					debug.Add("---- [VR.R] ----", response);
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;

@@ -31,38 +31,41 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace TUGraz.VectoCore.Utils
 {
 	public class DebugData
 	{
-		internal readonly Queue<dynamic> Data;
-		private const int defaultCapacity = 16;
+		private const int Capacity = 128;
 
-		public DebugData()
-		{
-#if DEBUG
-			Data = new Queue<dynamic>(defaultCapacity);
-#else
-			Data = new Queue<dynamic>(0);
-#endif
-		}
+		private static readonly ThreadLocal<Queue<dynamic>> _data = new ThreadLocal<Queue<dynamic>>(
+			() => new Queue<dynamic>(Capacity));
+
+		private readonly Queue<dynamic> _localData = new Queue<dynamic>();
+
+		private readonly bool _globalDebug;
+
+		internal Queue<dynamic> Data => _globalDebug ? _data.Value : _localData;
+
+		public DebugData(bool globalDebug = true) => _globalDebug = globalDebug;
 
 		[Conditional("DEBUG")]
-		public void Trim(int maxCount = defaultCapacity)
+		public void Add(dynamic value)
 		{
-			while (Data.Count > maxCount) {
+			while (Data.Count >= Capacity) {
 				Data.Dequeue();
 			}
+			Data.Enqueue(value);
 		}
-		
-		[Conditional("DEBUG")]
-		public void Add(object value) => Data.Enqueue(value);
 
 		[Conditional("DEBUG")]
-		public void Add(object value1, object value2) => Data.Enqueue((value1, value2));
+		public void Add(dynamic a, dynamic b) => Add(new { a, b });
 
 		[Conditional("DEBUG")]
-		public void Add(object value1, object value2, object value3) => Data.Enqueue((value1, value2, value3));
+		public void Add(dynamic a, dynamic b, dynamic c) => Add(new { a, b, c });
+
+		[Conditional("DEBUG")]
+		public void Add(dynamic a, dynamic b, dynamic c, dynamic d) => Add(new { a, b, c, d });
 	}
 }
