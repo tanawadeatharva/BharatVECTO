@@ -52,6 +52,9 @@ namespace TUGraz.VectoCore.Utils
 		public DebugData(bool globalDebug = true) => _globalDebug = globalDebug;
 
 		[Conditional("DEBUG")]
+		public static void Clear() => GlobalData.Clear();
+		
+		[Conditional("DEBUG")]
 		public void Add(dynamic value)
 		{
 			while (Data.Count >= Capacity) {

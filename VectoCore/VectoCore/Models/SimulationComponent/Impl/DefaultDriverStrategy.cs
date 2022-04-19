@@ -1263,7 +1263,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.Brakes.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
-					debug.Add("[DMB-DB-4] Brake", response);
+					debug.Add($"[DMB-DB-4-{i}] Brake", response);
 				}
 
 				if (response == null) {
