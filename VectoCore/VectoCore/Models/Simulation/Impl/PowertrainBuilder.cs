@@ -470,6 +470,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddAuxiliaries(container, data);
 
 			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				// this has to be done _after_ the powertrain is connected together so that the cluch already has its nextComponent set (necessary in the idle controlelr)
 				if (gearbox is ATGearbox atGbx) {
 					atGbx.IdleController = idleController;
 				} else {
@@ -964,14 +965,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var ctl = new SimpleHybridController(container, es) { Gearbox = gbx, Engine = engine };
 			var idleController = GetIdleController(data.PTO, engine, container);
 			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
-			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
-				if (gearbox is ATGearbox atGbx) {
-					atGbx.IdleController = idleController;
-					new ATClutchInfo(container);
-				} else {
-					clutch.IdleController = idleController;
-				}
-			}
+
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 
@@ -1004,6 +998,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
+
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+				// this has to be done _after_ the powertrain is connected together so that the cluch already has its nextComponent set (necessary in the idle controlelr)
+				if (gearbox is ATGearbox atGbx) {
+					atGbx.IdleController = idleController;
+					new ATClutchInfo(container);
+				} else {
+					clutch.IdleController = idleController;
+				}
+			}
 
 			if (data.BusAuxiliaries != null) {
 				if (!(container.BusAux is BusAuxiliariesAdapter busAux)) {
