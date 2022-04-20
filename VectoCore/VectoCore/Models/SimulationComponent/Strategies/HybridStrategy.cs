@@ -1106,11 +1106,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				if (engineSpeedTooLow 
 					&& DataBus.GearboxInfo.GearboxType.ManualTransmission() 
 					&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
-					var response = ResponseEmOff;
-					response.Gear = new GearshiftPosition(0);
-					response.Setting.GearboxEngaged = false;
-					response.Setting.GearboxInNeutral = true;
-					eval.Add(response);
+					var responseEmOff = ResponseEmOff;
+					responseEmOff.Gear = new GearshiftPosition(0);
+					responseEmOff.Setting.GearboxEngaged = false;
+					responseEmOff.Setting.GearboxInNeutral = true;
+					eval.Add(responseEmOff);
 					return;
 				}
 
@@ -1138,11 +1138,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 				if (nextGear.Equals(GearList.First()) && engineSpeedTooLow) {
 					// disengage gearbox...
-					var response = ResponseEmOff;
-					response.Gear = new GearshiftPosition(0);
-					response.Setting.GearboxEngaged = false;
-					response.Setting.GearboxInNeutral = true;
-					eval.Add(response);
+					var responseEmOff = ResponseEmOff;
+					responseEmOff.Gear = new GearshiftPosition(0);
+					responseEmOff.Setting.GearboxEngaged = false;
+					responseEmOff.Setting.GearboxInNeutral = true;
+					eval.Add(responseEmOff);
 					return;
 				}
 
@@ -1275,13 +1275,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					maxRecuperationResponse.ElectricMotor.ElectricMotorPowerMech /
 					maxRecuperationResponse.ElectricMotor.AngularVelocity,
 					maxRecuperationResponse.Engine.TorqueOutDemand, maxRecuperationResponse.ElectricMotor.MaxRecuperationTorque * 0.1,
-					getYValue: r => {
-						var response = r as IResponse;
+					getYValue: resp => {
+						var r = resp as IResponse;
 						var deltaDragLoad = disengaged
-							? (response as ResponseDryRun).DeltaDragLoadTorque
-							: response.Engine.TotalTorqueDemand - response.Engine.DragTorque;
-						if (!response.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
-							deltaDragLoad = response.Gearbox.InputTorque;
+							? (r as ResponseDryRun).DeltaDragLoadTorque
+							: r.Engine.TotalTorqueDemand - r.Engine.DragTorque;
+						if (!r.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+							deltaDragLoad = r.Gearbox.InputTorque;
 						}
 						return deltaDragLoad;
 					},
@@ -1296,13 +1296,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						};
 						return RequestDryRun(absTime, dt, outTorque, outAngularVelocity, DataBus.GearboxInfo.GearEngaged(absTime) ? nextGear : new GearshiftPosition(0), cfg);
 					},
-					criterion: r => {
-						var response = r as IResponse;
+					criterion: resp => {
+						var r = resp as IResponse;
 						var deltaDragLoad = disengaged
-							? (response as ResponseDryRun).DeltaDragLoadTorque
-							: response.Engine.TotalTorqueDemand - response.Engine.DragTorque;
-						if (!response.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
-							deltaDragLoad = response.Gearbox.InputTorque;
+							? (r as ResponseDryRun).DeltaDragLoadTorque
+							: r.Engine.TotalTorqueDemand - r.Engine.DragTorque;
+						if (!r.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+							deltaDragLoad = r.Gearbox.InputTorque;
 						}
 						return deltaDragLoad.Value();
 					},
