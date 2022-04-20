@@ -18,6 +18,7 @@ namespace TUGraz.VectoCommon.Models {
 		public GearboxResponse GearboxResponse { get; set; }
 	}
 
+	[DebuggerDisplay("HybridStrategyResponse(Gear: {NextGear})")]
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
 		public Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> MechanicalAssistPower;

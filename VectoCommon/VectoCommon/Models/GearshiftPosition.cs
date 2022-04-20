@@ -18,28 +18,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverterLocked = torqueConverterLocked;
 		}
 
-		public override string ToString()
-		{
-			return Name;
-		}
+		public override string ToString() => Name;
 
-		public string Name => $"{Gear}{(Gear == 0 ? "" : (TorqueConverterLocked.HasValue ? (TorqueConverterLocked.Value ? "L" : "C") : ""))}";
+		public string Name => 
+			$"{Gear}{(Gear == 0 || TorqueConverterLocked is null ? "" : (TorqueConverterLocked.Value ? "L" : "C"))}";
 
 		public bool Engaged => Gear != 0;
 
-		public override bool Equals(object x)
-		{
-			var other = x as GearshiftPosition;
-			if (other == null)
-				return false;
+		public override bool Equals(object x) =>
+			x is GearshiftPosition other && other.Gear == Gear && other.TorqueConverterLocked == TorqueConverterLocked;
 
-			return other.Gear == Gear && other.TorqueConverterLocked == TorqueConverterLocked;
-		}
-
-		public override int GetHashCode()
-		{
-			return Name.GetHashCode();
-		}
+		public override int GetHashCode() => Name.GetHashCode();
 
 		public static bool operator >(GearshiftPosition p1, GearshiftPosition p2)
 		{
@@ -76,10 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public bool IsLockedGear()
-		{
-			return !TorqueConverterLocked.HasValue || TorqueConverterLocked.Value;
-		}
+		public bool IsLockedGear() => !TorqueConverterLocked.HasValue || TorqueConverterLocked.Value;
 	}
 
 	public class GearList : IEnumerable<GearshiftPosition>

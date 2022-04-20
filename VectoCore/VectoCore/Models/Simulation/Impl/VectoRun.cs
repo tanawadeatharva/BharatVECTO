@@ -101,11 +101,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Initialize();
 			IResponse response;
+			var iterationCount = 0;
+
 			try {
-				
 				do {
 					response = DoSimulationStep();
-					debug.Add(response);
+					debug.Add($"[VR.R] ---- ITERATION {iterationCount++} ---- ", response);
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
@@ -164,11 +165,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw ex;
 			}
 
-			Container.RunStatus = Container.RunData.Exempted || Container.RunData.MultistageRun
-				? Status.Success
-				: CyclePort.Progress < 1
-					? (response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted)
-					: Status.Success;
+			if (Container.RunData.Exempted || Container.RunData.MultistageRun)
+				Container.RunStatus = Status.Success;
+			else if (CyclePort.Progress < 1)
+				Container.RunStatus = response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted;
+			else
+				Container.RunStatus = Status.Success;
 			Container.FinishSimulationRun();
 			WritingResultsDone = true;
 			if (Progress.IsSmaller(1, 1e-9) && !(response is ResponseBatteryEmpty)) {

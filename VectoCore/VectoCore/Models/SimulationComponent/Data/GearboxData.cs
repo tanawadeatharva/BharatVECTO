@@ -89,18 +89,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public MeterPerSecond DisengageWhenHaltingSpeed
 		{
-			get
-			{
-				return _disengageWhenHaltingSpeed != null
-					? _disengageWhenHaltingSpeed
-					: (Type.AutomaticTransmission()
-						? Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed
-						: Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
+			get {
+				if (_disengageWhenHaltingSpeed != null)
+					return _disengageWhenHaltingSpeed;
+				else if (Type.AutomaticTransmission())
+					return Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed;
+				else
+					return Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
 			}
-			internal set
-			{
-				_disengageWhenHaltingSpeed = value;
-			}
+			internal set => _disengageWhenHaltingSpeed = value;
 		}
 
 		private GearList CreateGearList()

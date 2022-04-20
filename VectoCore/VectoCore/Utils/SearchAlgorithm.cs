@@ -58,7 +58,8 @@ namespace TUGraz.VectoCore.Utils
 			Func<object, double> criterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch, searcher);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount,
+				forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -72,10 +73,12 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false, object searcher = null) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false,
+			object searcher = null) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch, searcher);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount,
+				forceLineSearch, searcher);
 		}
 
 		/// <summary>
@@ -95,14 +98,17 @@ namespace TUGraz.VectoCore.Utils
 			T result;
 			try {
 				if (forceLineSearch) {
-					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
+					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
+						ref iterationCount, searcher);
 				} else {
-					result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
+					result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
+						ref iterationCount, searcher);
 				}
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 				log.Debug("Falling back to LineSearch. Reverse InterpolationSearch failed: " + ex.Message);
-				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, searcher);
+				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
+					ref iterationCount, searcher);
 			}
 			return result;
 		}
@@ -113,12 +119,10 @@ namespace TUGraz.VectoCore.Utils
 		/// Phase 2: Binary Sectioning: Binary search in the area of interest.
 		/// </summary>
 		private static T LineSearch<T>(T xStart, SI yStart, T intervalStart, Func<object, SI> getYValue,
-			Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount,
-			object searcher) where T : SIBase<T>
+			Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,
+			ref int iterationCount, object searcher) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-
 			var x = xStart;
 			var y = yStart;
 			var interval = intervalStart;
@@ -126,7 +130,7 @@ namespace TUGraz.VectoCore.Utils
 			var intervalFactor = 1.0;
 			var origY = y;
 			var debug = new DebugData();
-			debug.Add(new { x = x.Value(), y = y.Value() });
+			debug.Add($"[SA.LS-1-{iterationCount}]", new { x = x.Value(), y = y.Value() });
 			log.Debug("Log Disabled during LineSearch.");
 			LogManager.DisableLogging();
 			try {
@@ -139,13 +143,24 @@ namespace TUGraz.VectoCore.Utils
 					x += interval * -y.Sign();
 					var result = evaluateFunction(x);
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
+						debug.Add($"[SA.LS-2-{iterationCount}] - aborted", new {
+							x = x.Value(),
+							y = y.Value(),
+							delta = criterion(result),
+							result
+						});
 						LogManager.EnableLogging();
 						log.Debug("LineSearch aborted due to abortCriterion: {0}", result);
 						LogManager.DisableLogging();
 						throw new VectoSearchAbortedException("LineSearch");
 					}
 					y = getYValue(result);
-					debug.Add(new { x = x.Value(), y = y.Value(), delta = criterion(result), result });
+					debug.Add($"[SA.LS-3-{iterationCount}]", new {
+						x = x.Value(),
+						y = y.Value(),
+						delta = criterion(result),
+						result
+					});
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance / 2)) {
 						LogManager.EnableLogging();
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
@@ -172,16 +187,16 @@ namespace TUGraz.VectoCore.Utils
 		[Conditional("TRACE")]
 		private static void AppendDebug(DebugData debug)
 		{
-			var xmin = debug.Data.Min(d => d.x);
-			var xmax = debug.Data.Max(d => d.x);
-			var ymin = debug.Data.Min(d => d.y);
-			var ymax = debug.Data.Max(d => d.y);
+			var xmin = debug.LocalData.Min(d => d.x);
+			var xmax = debug.LocalData.Max(d => d.x);
+			var ymin = debug.LocalData.Min(d => d.y);
+			var ymax = debug.LocalData.Max(d => d.y);
 
 			var rand = new Random().Next();
 			using (
 				var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
 						FileMode.Append))) {
-				foreach (var d in debug.Data) {
+				foreach (var d in debug.LocalData) {
 					f.WriteLine($"{rand}, " +
 								$"{(d.x - xmin) / (xmax - xmin)}, " +
 								$"{(d.y - ymin) / (ymax - ymin)}, " +
@@ -209,7 +224,7 @@ namespace TUGraz.VectoCore.Utils
 			LogManager.DisableLogging();
 
 			var debug = new DebugData();
-			debug.Add(new { x = x1, y = y1 });
+			debug.Add($"[SA.IS-1-{iterationCount}]", new { x = x1, y = y1 });
 
 			try {
 				var x2 = x1 + interval;
@@ -231,7 +246,7 @@ namespace TUGraz.VectoCore.Utils
 
 				for (var count = 2; count < 30; count++, iterationCount++) {
 					var y2 = getYValue(result).Value();
-					debug.Add(new { x = x2, y = y2, delta = criterion(result), result });
+					debug.Add($"[SA.IS-2-{iterationCount}]", new { x = x2, y = y2, delta = criterion(result), result });
 
 					var k = (y2 - y1) / (x2 - x1);
 					if (count == 2 && k.IsEqual(0)) {
@@ -243,7 +258,8 @@ namespace TUGraz.VectoCore.Utils
 						x2 = -d / k;
 					}
 					if (double.IsInfinity(x2) || double.IsNaN(x2)) {
-						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
+						debug.Add($"[SA.IS-3-{iterationCount}] - infinity or NaN",
+							new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
@@ -253,13 +269,16 @@ namespace TUGraz.VectoCore.Utils
 
 					result = evaluateFunction(x2.SI<T>());
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
+						debug.Add($"[SA.IS-4-{iterationCount}] - abort",
+							new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch aborted due to abortCriterion: {0}", result);
 						LogManager.DisableLogging();
 						throw new VectoSearchAbortedException("InterpolateLinearSearch: AbortCriterion true");
 					}
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
-						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
+						debug.Add($"[SA.IS-5-{iterationCount}] - success",
+							new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
@@ -293,7 +312,7 @@ namespace TUGraz.VectoCore.Utils
 			table.Columns.Add("engineSpeed", typeof(double));
 			table.Columns.Add("enginePower", typeof(double));
 
-			foreach (var entry in debug.Data.Skip(1)) {
+			foreach (var entry in debug.LocalData.Skip(1)) {
 				var response = entry.result as ResponseDryRun;
 				if (response == null) {
 					continue;

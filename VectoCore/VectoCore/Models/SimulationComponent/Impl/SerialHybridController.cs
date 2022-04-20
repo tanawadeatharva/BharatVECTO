@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var gear = DataBus.GearboxInfo.Gear;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				DebugData.Add(new {
+				DebugData.Add("SHC.R", new {
 					DrivingAction = DataBus.DriverInfo.DrivingAction,
 					StrategySettings = strategySettings,
 					Response = retVal,
