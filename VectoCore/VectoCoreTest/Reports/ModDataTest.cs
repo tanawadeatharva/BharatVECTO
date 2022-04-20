@@ -596,8 +596,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 					? 0.SI<Watt>()
 					: (Watt)row[ModalResultField.P_angle_loss.GetName()];
 				var pAxleIn = (Watt)row[ModalResultField.P_axle_in.GetName()];
-				var pLossRet = (Watt)row[ModalResultField.P_ret_loss.GetName()];
-				var pRetIn = (Watt)row[ModalResultField.P_retarder_in.GetName()];
+				var pLossRet = row[ModalResultField.P_ret_loss.GetName()] is DBNull ? 0.SI<Watt>() : (Watt)row[ModalResultField.P_ret_loss.GetName()];
+				var pRetIn = row[ModalResultField.P_retarder_in.GetName()] is DBNull ? pAxleIn : (Watt)row[ModalResultField.P_retarder_in.GetName()];
 				var pGbxInertia = (Watt)row[ModalResultField.P_gbx_inertia.GetName()];
 				var pShiftLoss = row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
 					? 0.SI<Watt>()
@@ -929,8 +929,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 					? 0.SI<Watt>()
 					: (Watt)row[ModalResultField.P_angle_loss.GetName()];
 				var pAxleIn = (Watt)row[ModalResultField.P_axle_in.GetName()];
-				var pLossRet = (Watt)row[ModalResultField.P_ret_loss.GetName()];
-				var pRetIn = (Watt)row[ModalResultField.P_retarder_in.GetName()];
+				var pLossRet = row[ModalResultField.P_ret_loss.GetName()] is DBNull ? 0.SI<Watt>() : (Watt)row[ModalResultField.P_ret_loss.GetName()];
+				var pRetIn = row[ModalResultField.P_retarder_in.GetName()] is DBNull ? pAxleIn : (Watt)row[ModalResultField.P_retarder_in.GetName()];
 				var pGbxInertia = (Watt)row[ModalResultField.P_gbx_inertia.GetName()];
 				var pShiftLoss = row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
 					? 0.SI<Watt>()
