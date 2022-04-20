@@ -1099,11 +1099,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				};
 				var firstResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, tmp);
 				debug.Add($"[AHS.HBA-0] DryRun Gear={nextGear}", firstResponse);
-				var engineSpeedTooLow = EngineSpeedTooLow(firstResponse);
 
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
-				if (engineSpeedTooLow 
+				if (EngineSpeedTooLow(firstResponse)
 					&& DataBus.GearboxInfo.GearboxType.ManualTransmission() 
 					&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
 					var responseEmOff = ResponseEmOff;
@@ -1115,7 +1114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 
 				if (GearList.HasPredecessor(nextGear) 
-					&& engineSpeedTooLow 
+					&& EngineSpeedTooLow(firstResponse)
 					&& (!vehiclespeedBelowThreshold || AllowEmergencyShift)) {
 					// engine speed would fall below idling speed - consider downshift
 					var estimatedVelocityPostShift = VelocityDropData.Valid
@@ -1136,7 +1135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					} while (GearList.HasPredecessor(nextGear) && firstResponse == null);
 				}
 
-				if (nextGear.Equals(GearList.First()) && engineSpeedTooLow) {
+				if (nextGear.Equals(GearList.First()) && EngineSpeedTooLow(firstResponse)) {
 					// disengage gearbox...
 					var responseEmOff = ResponseEmOff;
 					responseEmOff.Gear = new GearshiftPosition(0);
