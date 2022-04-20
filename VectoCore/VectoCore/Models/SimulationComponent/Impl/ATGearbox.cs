@@ -84,8 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public bool ShiftToLocked =>
-			PreviousState.Gear.Gear == Gear.Gear && !PreviousState.Gear.TorqueConverterLocked.Value &&
-			Gear.TorqueConverterLocked.Value;
+			PreviousState.Gear.Gear == Gear.Gear 
+			&& !PreviousState.Gear.TorqueConverterLocked.Value 
+			&& Gear.TorqueConverterLocked.Value;
 
 		public bool Disengaged
 		{
@@ -128,18 +129,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public override bool GearEngaged(Second absTime)
-		{
-			return absTime.IsGreater(DataBus.AbsTime) ||
-					!(CurrentState.Disengaged || (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
+		public override bool GearEngaged(Second absTime) {
+			if (absTime.IsGreater(DataBus.AbsTime)) {
+				//todo mk20220420 why is this condition needed?
+				return true;
+			}
+
+			var isHalted = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted;
+			var isDisengaged = CurrentState.Disengaged;
+			var isDisengaging = DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch;
+
+			return !isHalted && !isDisengaged && !isDisengaging;
 		}
 
 		public override bool DisengageGearbox { get; set; }
-		public override void TriggerGearshift(Second absTime, Second dt)
-		{
-			//throw new System.NotImplementedException();
-			RequestAfterGearshift = true;
-		}
+
+		public override void TriggerGearshift(Second absTime, Second dt) => RequestAfterGearshift = true;
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
