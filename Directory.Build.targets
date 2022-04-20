@@ -50,24 +50,24 @@
 		<Copy SourceFiles="@(Net48VECTO)" DestinationFolder="$(DeployPath)net48"/>
 
 		<ItemGroup>
-			<!-- All files for net5.0 -->
-			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net5.0-windows\VECTO.*" Exclude="*.dev.json"/>
-			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net5.0-windows\*.dll"/>
-			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net5.0-windows\runtimes\**\*.*"/>
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\vectocmd.*" Exclude="*.dev.json"/>
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\*.dll"/>
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net5.0\runtimes\**\*.*"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\hashingcmd.*" Exclude="*.dev.json"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\*.dll"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net5.0\runtimes\**\*.*"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net5.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net5.0-windows\*.dll"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net5.0-windows\runtimes\**\*.*"/>
+			<!-- All files for net6.0 -->
+			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
+			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\*.dll"/>
+			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\runtimes\**\*.*"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\vectocmd.*" Exclude="*.dev.json"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\*.dll"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\runtimes\**\*.*"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\*.dll"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
-		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net50"/>
-		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net50"/>
-		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net50"/>
-		<Copy SourceFiles="@(Vecto)" DestinationFolder="$(DeployPath)net50"/>
+		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net6"/>
+		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net6"/>
+		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net6"/>
+		<Copy SourceFiles="@(Vecto)" DestinationFolder="$(DeployPath)net6"/>
 
 		<ItemGroup>
 			<!-- All files for the VECTO starters -->
