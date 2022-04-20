@@ -391,15 +391,30 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		[TestCase]
 		public void Class5_PCC12_CaseJ_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
-			(500, 3559, OutsideSegment, Accelerate),        // len: 3559m
+			(0, 3559, OutsideSegment, Accelerate),        // len: 3559m
 			(3559, 4563, WithinSegment, Accelerate),      // len: 1004m
-			(5146, 5342, WithinSegment, Accelerate),      // len: 196m
-			(5342, 5669, UseCase2, Coast),                // len: 327m
-			(5669, 5740, WithinSegment, Coast),           // len: 71m
-			(5740, 6113, WithinSegment, Brake),           // len: 373m
-			(6113, 6125, WithinSegment, Coast),           // len: 12m
-			(6125, 6398, OutsideSegment, Coast),          // len: 273m
-			(6398, 1e6, OutsideSegment, Accelerate));
+			(4563, 4582, WithinSegment, Roll),            // len: 19m
+			(4582, 4709, WithinSegment, Accelerate),      // len: 127m
+			(4709, 4723, WithinSegment, Roll),            // len: 14m
+			(4723, 4789, WithinSegment, Accelerate),      // len: 66m
+			(4789, 4800, WithinSegment, Roll),            // len: 11m
+			(4800, 4861, WithinSegment, Accelerate),      // len: 61m
+			(4861, 4870, WithinSegment, Roll),            // len: 9m
+			(4870, 4931, WithinSegment, Accelerate),      // len: 61m
+			(4931, 4940, WithinSegment, Roll),            // len: 9m
+			(4940, 5028, WithinSegment, Accelerate),      // len: 88m
+			(5028, 5040, WithinSegment, Roll),            // len: 12m
+			(5040, 5079, WithinSegment, Accelerate),      // len: 39m
+			(5079, 5093, WithinSegment, Roll),            // len: 14m
+			(5093, 5131, WithinSegment, Accelerate),      // len: 38m
+			(5131, 5147, WithinSegment, Roll),            // len: 16m
+			(5147, 5344, WithinSegment, Accelerate),      // len: 197m
+			(5344, 5671, UseCase2, Coast),                // len: 327m
+			(5671, 5730, WithinSegment, Coast),           // len: 59m
+			(5730, 6115, WithinSegment, Brake),           // len: 385m
+			(6115, 6400, OutsideSegment, Coast),          // len: 285m
+			(6400, 1e6, OutsideSegment, Accelerate));
+
 
 		[TestCase]
 		public void Class5_PCC12_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
