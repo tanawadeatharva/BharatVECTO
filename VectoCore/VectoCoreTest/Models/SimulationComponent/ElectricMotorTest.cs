@@ -440,9 +440,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var i = 0;
 
-			var t1 = 21;
-			var t2 = 14;
+			var t1 = 20;
+			var t2 = 9;
 			var t3 = 20;
+
+			Assert.AreEqual(19008.29074, data.First().Item2.Overload.OverloadBuffer.Value(), 1e-3);
+			Assert.AreEqual(100, data.First().Item2.Overload.ContinuousTorque.Value(), 1e-3);
+			Assert.AreEqual(3687.46233, data.First().Item2.Overload.ContinuousPowerLoss.Value(), 1e-3);
 
 			try {
 				// energy buffer is empty - overload is available
@@ -451,7 +455,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, torque, speed);
-					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();
@@ -465,7 +469,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, continuousTorque, speed);
-					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();
@@ -478,7 +482,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, torque * 0.5, speed);
-					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();
