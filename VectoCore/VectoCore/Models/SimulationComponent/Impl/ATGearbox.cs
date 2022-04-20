@@ -103,14 +103,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override Second LastUpshift
 		{
 			get => -double.MaxValue.SI<Second>();
-			//throw new System.NotImplementedException();
 			protected internal set => throw new System.NotImplementedException();
 		}
 
 		public override Second LastDownshift
 		{
 			get => -double.MaxValue.SI<Second>();
-			//throw new System.NotImplementedException();
 			protected internal set => throw new System.NotImplementedException();
 		}
 
