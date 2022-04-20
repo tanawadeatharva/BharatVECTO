@@ -100,6 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				DebugData.Add($"[HC-R-0-{retryCount}]", strategyResponse);
 				if (strategyResponse is HybridStrategyLimitedResponse ovl) {
 					if (dryRun) {
 						return new ResponseDryRun(this) {
@@ -147,7 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				CurrentStrategySettings = strategySettings;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				DebugData.Add($"HC.R-{retryCount}", new {
+				DebugData.Add($"HC.R-1-{retryCount}", new {
 					DataBus.DriverInfo.DrivingAction,
 					StrategySettings = strategySettings,
 					Response = retVal,
