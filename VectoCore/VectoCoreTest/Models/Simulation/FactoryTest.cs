@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var run = factory.SimulationRuns().First();
 			var vehicleContainer = (VehicleContainer)run.GetContainer();
 
-			Assert.AreEqual(11, vehicleContainer.SimulationComponents().Count);
+			Assert.AreEqual(10, vehicleContainer.SimulationComponents().Count);
 
 			Assert.IsInstanceOf<Gearbox>(vehicleContainer.GearboxInfo, "gearbox not installed");
 			Assert.IsInstanceOf<CombustionEngine>(vehicleContainer.EngineInfo, "engine not installed");
