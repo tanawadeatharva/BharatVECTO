@@ -1050,7 +1050,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
 			var disengageSpeedThreshold = ModelData.GearboxData.DisengageWhenHaltingSpeed;
-			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold);
+
+			// hint: only check for halting speed if vehicle is actually braking to halt.
+			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold) 
+											&& DataBus.DriverInfo.NextBrakeTriggerSpeed.IsEqual(0);
 
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
