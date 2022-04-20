@@ -187,16 +187,16 @@ namespace TUGraz.VectoCore.Utils
 		[Conditional("TRACE")]
 		private static void AppendDebug(DebugData debug)
 		{
-			var xmin = debug.Data.Min(d => d.x);
-			var xmax = debug.Data.Max(d => d.x);
-			var ymin = debug.Data.Min(d => d.y);
-			var ymax = debug.Data.Max(d => d.y);
+			var xmin = debug.LocalData.Min(d => d.x);
+			var xmax = debug.LocalData.Max(d => d.x);
+			var ymin = debug.LocalData.Min(d => d.y);
+			var ymax = debug.LocalData.Max(d => d.y);
 
 			var rand = new Random().Next();
 			using (
 				var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
 						FileMode.Append))) {
-				foreach (var d in debug.Data) {
+				foreach (var d in debug.LocalData) {
 					f.WriteLine($"{rand}, " +
 								$"{(d.x - xmin) / (xmax - xmin)}, " +
 								$"{(d.y - ymin) / (ymax - ymin)}, " +
@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.Utils
 			table.Columns.Add("engineSpeed", typeof(double));
 			table.Columns.Add("enginePower", typeof(double));
 
-			foreach (var entry in debug.Data.Skip(1)) {
+			foreach (var entry in debug.LocalData.Skip(1)) {
 				var response = entry.result as ResponseDryRun;
 				if (response == null) {
 					continue;

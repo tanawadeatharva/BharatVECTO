@@ -42,14 +42,9 @@ namespace TUGraz.VectoCore.Utils
 		private static readonly ThreadLocal<Queue<dynamic>> _data = new ThreadLocal<Queue<dynamic>>(
 			() => new Queue<dynamic>(Capacity));
 
-		private readonly bool _globalDebug;
-
-		internal Queue<dynamic> Data => _globalDebug ? GlobalData : LocalData;
-
 		internal static Queue<dynamic> GlobalData => _data.Value;
-		internal Queue<dynamic> LocalData { get; } = new Queue<dynamic>();
 
-		public DebugData(bool globalDebug = true) => _globalDebug = globalDebug;
+		internal Queue<dynamic> LocalData { get; } = new Queue<dynamic>();
 
 		[Conditional("DEBUG")]
 		public static void Clear() => GlobalData.Clear();
@@ -57,10 +52,12 @@ namespace TUGraz.VectoCore.Utils
 		[Conditional("DEBUG")]
 		public void Add(dynamic value)
 		{
-			while (Data.Count >= Capacity) {
-				Data.Dequeue();
+			while (GlobalData.Count >= Capacity) {
+				GlobalData.Dequeue();
 			}
-			Data.Enqueue(value);
+			GlobalData.Enqueue(value);
+
+			LocalData.Enqueue(value);
 		}
 
 		[Conditional("DEBUG")]
