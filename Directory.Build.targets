@@ -64,10 +64,10 @@
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\*.dll"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
-		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net6"/>
-		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net6"/>
-		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net6"/>
-		<Copy SourceFiles="@(Vecto)" DestinationFolder="$(DeployPath)net6"/>
+		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net60"/>
+		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net60"/>
+		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net60"/>
+		<Copy SourceFiles="@(Vecto)" DestinationFolder="$(DeployPath)net60"/>
 
 		<ItemGroup>
 			<!-- All files for the VECTO starters -->
