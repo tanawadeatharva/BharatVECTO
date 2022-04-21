@@ -71,6 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public bool IsBelowDownshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
+			if (!Downshift.Any()) {
+				return false;}
 			var section = Downshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
 				return false;
@@ -99,6 +101,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public bool IsAboveUpshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
+			if (!Upshift.Any()) {
+				return false;
+			}
 			var section = Upshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
 
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
