@@ -1053,7 +1053,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			// hint: only check for halting speed if vehicle is actually braking to halt.
 			var vehiclespeedBelowThreshold = DataBus.VehicleInfo.VehicleSpeed.IsSmaller(disengageSpeedThreshold) 
-											&& DataBus.DriverInfo.NextBrakeTriggerSpeed.IsEqual(0);
+											&& (DataBus.DriverInfo.NextBrakeTriggerSpeed?.IsEqual(0) ?? false); 
 
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
@@ -1378,7 +1378,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			
 			// only disengage if we are actually braking for halting (meaning: next brake trigger speed is 0).
 			if (DataBus.GearboxInfo.GearboxType.ManualTransmission() 
-				&& DataBus.DriverInfo.NextBrakeTriggerSpeed.IsEqual(0)
+				&& (DataBus.DriverInfo.NextBrakeTriggerSpeed?.IsEqual(0) ?? false)
 				&& endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 				return new GearshiftPosition(0);
 			}
