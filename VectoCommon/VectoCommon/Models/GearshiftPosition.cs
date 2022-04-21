@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearList(GearshiftPosition[] gearList) => Entries = gearList;
 
-		public bool HasPredecessor(GearshiftPosition cur) => cur.Gear != 0 && cur != Entries[0];
+		public bool HasPredecessor(GearshiftPosition cur) => cur.Gear != 0 && !Entries[0].Equals(cur);
 		
 		public GearshiftPosition Predecessor(GearshiftPosition cur)
 		{
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return idx <= 0 ? null : Entries[idx - 1];
 		}
 
-		public bool HasSuccessor(GearshiftPosition cur) => cur.Gear != 0 && cur != Entries[Entries.Length-1];
+		public bool HasSuccessor(GearshiftPosition cur) => cur.Gear != 0 && !Entries[Entries.Length-1].Equals(cur);
 
 		public GearshiftPosition Successor(GearshiftPosition cur)
 		{
