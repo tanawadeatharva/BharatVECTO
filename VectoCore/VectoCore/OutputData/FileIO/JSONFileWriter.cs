@@ -18,19 +18,24 @@ public class JSONFileWriter : IOutputFileWriter
 
 	public const int GearboxFormatVersion = 6;
 
+	#region Vehicle File Version Numbers
+
 	public const int VehicleFormatVersion = 8;
-
 	public const int BusVehicleFormatVersion = 9;
-
 	public const int HEV_BEVVehicleFormatVersion = 10;
 
-	private const int VectoJobFormatVersion = 5;
+	#endregion
 
-	private const int HEVVectoJobFormatVersion = 8;
-
-	private const int BEVVectoJobFormatVersion = 9;
+	#region Job File Version Numbers
 
 	private const int VectoVTPJobFormatVersion = 4;
+	private const int VectoJobFormatVersion = 5;
+	private const int PHEVVectoJobFormatVersion = 8;
+	private const int BEVVectoJobFormatVersion = 9;
+	private const int SHEVVectoJobFormatVersion = 11;
+
+	#endregion
+
 
 	private const int ElectricMotorFormatVersion = 5;
 
@@ -545,10 +550,10 @@ public class JSONFileWriter : IOutputFileWriter
 				SaveConventionalJob(input, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.SerialHybridVehicle:
-				SaveHybridJob(input, filename, DeclMode);
+				SaveSerialHybridJob(input, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.ParallelHybridVehicle:
-				SaveHybridJob(input, filename, DeclMode);
+				SaveParallelHybridJob(input, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.BatteryElectricVehicle:
 				SaveBatteryElectricJob(input, filename, DeclMode);
@@ -561,10 +566,10 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 	}
 
-	private void SaveHybridJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	private void SaveParallelHybridJob(IEngineeringInputDataProvider input, string filename, bool declMode)
 	{
 		var basePath = Path.GetDirectoryName(filename);
-		var header = GetHeader(HEVVectoJobFormatVersion);
+		var header = GetHeader(PHEVVectoJobFormatVersion);
 		var body = new Dictionary<string, object>();
 		// SavedInDeclMode = Cfg.DeclMode
 		var job = input.JobInputData;
@@ -609,6 +614,83 @@ public class JSONFileWriter : IOutputFileWriter
 			body.Add("Aux", auxList);
 		}
 
+		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
+			var aux = engVehicle.Components.AuxiliaryInputData;
+			if (aux.BusAuxiliariesData != null) {
+				body.Add("BusAux",
+					GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile,
+						basePath));
+			}
+			body.Add("Padd", aux.Auxiliaries.ConstantPowerDemand.Value());
+			body.Add("Paux_ICEOff_Driving", aux.Auxiliaries.PowerDemandICEOffDriving.Value());
+			body.Add("Paux_ICEOff_Standstill", aux.Auxiliaries.PowerDemandICEOffStandstill.Value());
+			body.Add("Padd_electric", aux.Auxiliaries.ElectricPowerDemand.Value());
+		}
+
+		var driver = input.DriverInputData;
+
+		if (!job.SavedInDeclarationMode) {
+			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath));
+			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value());
+			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value());
+			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactorStandstill);
+			body.Add("EngineStopStartUtilityFactorDriving", driver.EngineStopStartData.UtilityFactorDriving);
+			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph);
+			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value());
+			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph);
+			body.Add("EcoRollMaxAcceleration", driver.EcoRollData.AccelerationUpperLimit.Value());
+			body.Add("PCCEnableSpeed", driver.PCCData.PCCEnabledSpeed.AsKmph);
+			body.Add("PCCMinSpeed", driver.PCCData.MinSpeed.AsKmph);
+			body.Add("PCCUnderspeed", driver.PCCData.Underspeed.AsKmph);
+			body.Add("PCCOverSpeed", driver.PCCData.OverspeedUseCase3.AsKmph);
+			body.Add("PCCPreviewDistanceUC1", driver.PCCData.PreviewDistanceUseCase1.Value());
+			body.Add("PCCPreviewDistanceUC2", driver.PCCData.PreviewDistanceUseCase2.Value());
+		}
+
+		// body.Add("StartStop", New Dictionary(Of String, Object) From {
+		// {"Enabled", driver.StartStop.Enabled},
+		// {"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
+		// {"MinTime", driver.StartStop.MinTime.Value()},
+		// {"Delay", driver.StartStop.Delay.Value()}})
+		if (!job.SavedInDeclarationMode) {
+			var dfTargetSpeed =
+				driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup != null &&
+				File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source)
+					? GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath)
+					: "";
+			var dfVelocityDrop =
+				driver.Lookahead.CoastingDecisionFactorVelocityDropLookup != null &&
+				File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source)
+					? GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath)
+					: "";
+			body.Add(
+				"LAC",
+				new Dictionary<string, object> {
+					{ "Enabled", driver.Lookahead.Enabled },
+					{ "PreviewDistanceFactor", driver.Lookahead.LookaheadDistanceFactor },
+					{ "DF_offset", driver.Lookahead.CoastingDecisionFactorOffset },
+					{ "DF_scaling", driver.Lookahead.CoastingDecisionFactorScaling },
+					{ "DF_targetSpeedLookup", dfTargetSpeed },
+					{ "Df_velocityDropLookup", dfVelocityDrop },
+					{ "MinSpeed", driver.Lookahead.MinSpeed.AsKmph }
+				});
+		}
+
+		// Overspeed / EcoRoll
+		var overspeedDic = new Dictionary<string, object> {
+			{ "Mode", driver.OverSpeedData.Enabled ? "Overspeed" : "Off" },
+			{ "MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph },
+			{ "OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph }
+		};
+
+		body.Add("OverSpeedEcoRoll", overspeedDic);
+
+		// Cycles
+		if (!job.SavedInDeclarationMode)
+			body.Add("Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
+
+		WriteFile(header, body, filename);
+	}
 
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
@@ -690,6 +772,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 		WriteFile(header, body, filename);
 	}
+
+
 
 	public void SaveBatteryElectricJob(IEngineeringInputDataProvider input, string filename, bool DeclMode)
 	{
