@@ -1459,6 +1459,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public PCCStates PCCState => DriverStrategy.PCCState;
 
-		public MeterPerSecond NextBrakeTriggerSpeed => DriverStrategy.BrakeTrigger.NextTargetSpeed;
+		public MeterPerSecond NextBrakeTriggerSpeed => DriverStrategy.BrakeTrigger?.NextTargetSpeed;
 	}
 }
