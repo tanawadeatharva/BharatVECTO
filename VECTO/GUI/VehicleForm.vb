@@ -527,8 +527,8 @@ Public Class VehicleForm
 				lblTitle.Text = "Conventional Vehicle"
 				gbRetarderLosses.Enabled = True
 				tpElectricComponents.Enabled = False
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetName,
-					Function(t) t = PowertrainPosition.HybridPositionNotSet)
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
+					(Function(t) t.GetLabel(), Function(t) t = PowertrainPosition.HybridPositionNotSet)
 				cbEngineStopStart.Enabled = True
 				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
 				cbEcoRoll.Enabled = True
@@ -537,16 +537,16 @@ Public Class VehicleForm
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				gbRetarderLosses.Enabled = True
 				lblTitle.Text = "Parallel Hybrid Vehicle"
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
-					Function(x) x.IsParallelHybrid() Or x = PowertrainPosition.HybridPositionNotSet)
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
+					(Function(t) t.GetLabel(), Function(x) x.IsParallelHybrid())
 				gbEMTorqueLimits.Enabled = True
 				cbEcoRoll.Enabled = True
 				tpGensetComponents.Visible = False
 			Case VectoSimulationJobType.SerialHybridVehicle
 				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Serial Hybrid Vehicle"
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
-					Function(x) x.IsSerialHybrid() Or x = PowertrainPosition.HybridPositionNotSet)
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
+					(Function(t) t.GetLabel(), Function(x) x.IsSerialHybrid())
 				tpTorqueLimits.Enabled = False
 				cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = False
@@ -561,8 +561,8 @@ Public Class VehicleForm
 				gbTankSystem.Enabled = False
 				gbAngledrive.Enabled = False
 				tpTorqueLimits.Enabled = False
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel,
-					Function(x) x.IsBatteryElectric() Or x = PowertrainPosition.HybridPositionNotSet)
+				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
+					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric())
 				cbEngineStopStart.Checked = False
 				cbEngineStopStart.Enabled = False
 				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
