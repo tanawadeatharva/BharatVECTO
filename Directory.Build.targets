@@ -13,9 +13,9 @@
 		<Exec Command="cscript &quot;$(solutiondir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
-			<DeployPath>$(SolutionDir)Deploy\</DeployPath>
+			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
 		</PropertyGroup>
-  	<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
+  		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<MakeDir Directories="$(DeployPath)"/>
 
 		<ItemGroup>
@@ -112,7 +112,7 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
-		<ZipDirectory SourceDirectory="$(DeployPath)" DestinationFile="$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip" Overwrite="true"/>
+		<ZipDirectory SourceDirectory="$(SolutionDir)Deploy\" DestinationFile="$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip" Overwrite="true"/>
 	</Target>
 
 	<Target Name="CleanVectoDeploy" AfterTargets="Clean">
