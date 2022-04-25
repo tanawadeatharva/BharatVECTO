@@ -117,6 +117,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					GearboxData gearboxData = null;
 					ShiftStrategyParameters gearshiftParams = null;
 					var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
+					if (electricMachinesData == null || electricMachinesData.Count == 0)
+						throw new ArgumentNullException("Electric machines are missing in vehicle.");
+					
 					if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
 						// gearbox required!
 						gearshiftParams = dao.CreateGearshiftData(
