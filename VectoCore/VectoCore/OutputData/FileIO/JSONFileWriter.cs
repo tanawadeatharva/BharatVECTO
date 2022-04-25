@@ -692,6 +692,55 @@ public class JSONFileWriter : IOutputFileWriter
 		WriteFile(header, body, filename);
 	}
 
+	private void SaveSerialHybridJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	{
+		var basePath = Path.GetDirectoryName(filename);
+		var header = GetHeader(SHEVVectoJobFormatVersion);
+		var body = new Dictionary<string, object>();
+		// SavedInDeclMode = Cfg.DeclMode
+		var job = input.JobInputData;
+
+		body.Add("SavedInDeclMode", job.SavedInDeclarationMode);
+		body.Add("EngineOnlyMode", job.JobType == VectoSimulationJobType.EngineOnlySimulation);
+
+		// Main Files
+		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath));
+		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath));
+
+		if (input.JobInputData.Vehicle.Components.GearboxInputData != null) {
+			body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
+		}
+
+		if (!job.SavedInDeclarationMode && input.DriverInputData.GearshiftInputData != null) {
+			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+
+		}
+		body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
+
+		var auxList = new List<object>();
+		if (job.SavedInDeclarationMode && job.Vehicle is IVehicleDeclarationInputData declVehicle) {
+			var aux = declVehicle.Components.AuxiliaryInputData;
+			foreach (var auxEntry in aux.Auxiliaries) {
+
+				var auxOut = new Dictionary<string, object>();
+				var engineeringAuxEntry = auxEntry;
+				if (!job.SavedInDeclarationMode) {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", new string[] { });
+				} else {
+					auxOut.Add("Type", auxEntry.Type.Name());
+					auxOut.Add("Technology", engineeringAuxEntry.Technology);
+				}
+
+				auxList.Add(auxOut);
+			}
+			if (declVehicle.Components.BusAuxiliaries != null) {
+				body.Add("BusAux", GetRelativePath(job.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData.DataSource.SourceFile, basePath));
+			}
+			body.Add("Aux", auxList);
+		}
+
+
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
 			var aux = engVehicle.Components.AuxiliaryInputData;
