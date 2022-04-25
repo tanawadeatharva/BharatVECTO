@@ -1297,6 +1297,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							} else {
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 								debug.Add("[DMB-DB-9] Roll", response);
+								if (!(response is ResponseSuccess) && DataBus.HybridControllerCtl != null) {
+									response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+									debug.Add("[DMB-DB-10] Roll", response);
+								}
 							}
 
 							switch (response) {

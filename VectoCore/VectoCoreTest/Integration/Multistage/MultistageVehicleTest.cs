@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			Assert.AreEqual(LegislativeClass.M3, data.Vehicle.LegislativeClass);
 			Assert.AreEqual(500, data.Vehicle.CurbMassChassis.Value());
 			Assert.AreEqual(3500, data.Vehicle.GrossVehicleMassRating.Value());
-			Assert.AreEqual(true, data.Vehicle.AirdragModifiedMultistep);
+			Assert.AreEqual(null, data.Vehicle.AirdragModifiedMultistep);
 			Assert.AreEqual(TankSystem.Compressed, data.Vehicle.TankSystem);
 			Assert.AreEqual(RegistrationClass.II_III, data.Vehicle.RegisteredClass);
 			Assert.AreEqual(1, data.Vehicle.NumberPassengerSeatsLowerDeck);
