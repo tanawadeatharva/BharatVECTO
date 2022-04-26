@@ -1674,6 +1674,7 @@ lbFound:
         JobEditorBatteryElectricVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
         JobEditorParallelHybridVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
         JobEditorEngineOnlyModeToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorSerialHybridVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
     End Sub
 
 
