@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private GearList GearList;
 		private Dictionary<uint, ShiftPolygon> DeRatedShiftpolygons;
 		private SimpleCharger TestContainerElectricSystemCharger;
+		private double EMRatio;
 
 
 		public static string Name => "AMT - EffShift (BEV)";
@@ -91,7 +92,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
-			DeRatedShiftpolygons = CalculateDeratedShiftLines(runData.ElectricMachinesData.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2,
+
+			var em = runData.ElectricMachinesData.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2;
+			EMRatio = em.RatioADC;
+			DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
 				runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
 				runData.AxleGearData.AxleGear.Ratio, runData.GearboxData.Type);
 		}
@@ -557,7 +561,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 
-			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent, true);
+			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, true);
 			if (fcCurRes.Extrapolated) {
 				Log.Warn(
 					"EffShift Strategy: Extrapolation of power consumption for current gear! n: {0}, Tq: {1}",

@@ -1459,7 +1459,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleRollAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			eval.Add(ResponseEmOff);
+			var tmp = ResponseEmOff;
+			if (AllowEmergencyShift) {
+				tmp.Setting.GearboxInNeutral = true;
+			}
+			eval.Add(tmp);
 
 			// in case of P3 or P4 the EM could propell/recuperate during roll acttion. but as we have no information
 			// what the real vehicle does lets skip this
