@@ -1242,7 +1242,7 @@ Public Class VehicleForm
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
 		Dim selectedValue = CbRtType.SelectedValue
 
-		If PowertrainPosition.BatteryElectricE4.Equals(cbEmPos.SelectedValue) OrElse PowertrainPosition.BatteryElectricE2.Equals(cbEmPos.SelectedValue) Then
+		If PowertrainPosition.BatteryElectricE4.Equals(cbEmPos.SelectedValue) Then
 			gbRetarderLosses.Enabled = False
 			TbRtRatio.Text = ""
 			TbRtPath.Text = ""
@@ -1259,6 +1259,7 @@ Public Class VehicleForm
 		If (selectedValue IsNot Nothing) Then
 			If Not selectedValue.Equals(CbRtType.SelectedValue) Then
 				MsgBox("Retarder has changed due to change of electric motor position. Please check.", MsgBoxStyle.Information)
+				CbRtType.SelectedIndex = 0
 			End If
 		End If
 	End Sub
