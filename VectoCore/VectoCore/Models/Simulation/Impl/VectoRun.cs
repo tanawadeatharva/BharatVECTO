@@ -173,10 +173,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Success;
 			Container.FinishSimulationRun();
 			WritingResultsDone = true;
-			if (Progress.IsSmaller(1, 1e-9) && !(response is ResponseBatteryEmpty)) {
-				throw new VectoSimulationException("{5} ({6} {7}) Progress: {8} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}",
-					AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed, 
-					TryCatch(() => Container.GearboxInfo.Gear), RunIdentifier, CycleName, RunSuffix, Progress);
+			if (Progress.IsSmaller(1, 1e-9)) {
+				if (response is ResponseBatteryEmpty) {
+					throw new VectoSimulationException("{3} ({4} {5}) REESS was empty before cycle could be finished. Progress: {6:P1} - absTime: {0:F1}, distance: {1:F1}, dt: {2:F1}",
+						AbsTime, Container.MileageCounter.Distance, dt, RunIdentifier, CycleName, RunSuffix, Progress);
+
+				} else {
+					throw new VectoSimulationException("{5} ({6} {7}) Driving Cycle could not be finished. Progress: {8:P1} - absTime: {0:F1}, distance: {1:F1}, dt: {2:F1}, v: {3:F1}, Gear: {4}",
+						AbsTime, Container.MileageCounter.Distance, dt, Container.VehicleInfo.VehicleSpeed,
+						TryCatch(() => Container.GearboxInfo.Gear), RunIdentifier, CycleName, RunSuffix, Progress);
+				}
 			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
 			Log.Info("VectoJob finished.");
