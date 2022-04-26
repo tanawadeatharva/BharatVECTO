@@ -462,6 +462,7 @@ Public Class VehicleForm
 									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
 			tbRatioEm.Text = em.RatioADC.ToGUIFormat()
 			cbEmPos.SelectedValue = em.Position
+			UpdateRetarderPosition(em.Position)
 
 			If (em.Position = PowertrainPosition.HybridP2_5) AndAlso Not em.RatioPerGear Is Nothing Then
 				lvRatioPerGear.Items.Clear()
@@ -1234,21 +1235,23 @@ Public Class VehicleForm
 
 	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
+		UpdateRetarderPosition(CType(cbEmPos.SelectedValue, PowertrainPosition))
+	End Sub
 
+
+	Private Sub UpdateRetarderPosition(pos As PowertrainPosition)
 		Dim selectedValue = CbRtType.SelectedValue
-		CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 
-		If PowertrainPosition.BatteryElectricE4.Equals(cbEmPos.SelectedValue) Then
+		If PowertrainPosition.BatteryElectricE4.Equals(pos) OrElse PowertrainPosition.BatteryElectricE2.Equals(pos) Then
 			gbRetarderLosses.Enabled = False
 			TbRtRatio.Text = ""
 			TbRtPath.Text = ""
-			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)})"
-
-		ElseIf PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue) Then
+			CbRtType.SelectedIndex = 0
+			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
+		ElseIf PowertrainPosition.BatteryElectricE3.Equals(pos) Then
 			gbRetarderLosses.Enabled = True
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)}, {CInt(RetarderType.AxlegearInputRetarder)})"
-
-		ElseIf PowertrainPosition.BatteryElectricE2.Equals(cbEmPos.SelectedValue) Then
+		Else
 			gbRetarderLosses.Enabled = True
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 		End If
@@ -1256,7 +1259,6 @@ Public Class VehicleForm
 		If (selectedValue IsNot Nothing) Then
 			If Not selectedValue.Equals(CbRtType.SelectedValue) Then
 				MsgBox("Retarder has changed due to change of electric motor position. Please check.", MsgBoxStyle.Information)
-				CbRtType.SelectedValue = selectedValue
 			End If
 		End If
 	End Sub
