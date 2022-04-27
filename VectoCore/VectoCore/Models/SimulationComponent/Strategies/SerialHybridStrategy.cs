@@ -188,7 +188,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 				Controller.PreviousState.OutAngularVelocity);
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			var testResponse =
+            if (TestPowertrain.Gearbox != null) {
+                TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
+                    (DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
+            }
+            var testResponse =
 				TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse() {
