@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity, false);
 				CurrentState.InAngularVelocity = angularVelocity;
 				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
-				debug.Add(response);
+				debug.Add("PDC.DHR-0", response);
 				switch (response) {
 					case ResponseGearShift _:
 						response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity, false);
@@ -127,7 +127,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
-							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
+							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value(),
+							searcher: this);
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity, false);
 						CurrentState.InTorque = torque;
 						break;
@@ -135,7 +136,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var torque2 = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, 50.SI<NewtonMeter>(),
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
-							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value(),
+							searcher: this);
 						response = NextComponent.Request(absTime, dt, torque2, angularVelocity, false);
 						CurrentState.InAngularVelocity = angularVelocity;
 						CurrentState.InTorque = torque2;
@@ -145,7 +147,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							1.RPMtoRad(),
 							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
 							evaluateFunction: x => NextComponent.Request(absTime, dt, CurrentState.InTorque, x, true),
-							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
+							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value(),
+							searcher: this);
 						break;
 					case ResponseFailTimeInterval r:
 						dt = r.DeltaT;
@@ -159,7 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			AbsTime = absTime + dt;
 			response.SimulationInterval = dt;
-			debug.Add(response);
+			debug.Add("PDC.DHR-1", response);
 			return response;
 		}
 

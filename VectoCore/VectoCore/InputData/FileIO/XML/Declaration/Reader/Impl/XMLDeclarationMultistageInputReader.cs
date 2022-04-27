@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -13,7 +11,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 using TUGraz.VectoCore.Utils;
 
@@ -99,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				if (_manufacturingNodeStages.IsNullOrEmpty())
+				if (_manufacturingNodeStages is null || _manufacturingNodeStages.Count == 0)
 					return null;
 
 				return _manufacturingStages ?? (_manufacturingStages = ManufacturingStagesCreator());
@@ -143,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get
 			{
-				if (ManufacturingStages.IsNullOrEmpty()) {
+				if (ManufacturingStages is null || ManufacturingStages.Count == 0) {
 					_invalidEntries.Add("no manufacturing stages");
 					return false;
 				}

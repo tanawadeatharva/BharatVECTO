@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -257,6 +256,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
 
+		int? NumSteeredAxles { get; }
+
 		XmlNode XMLSource { get; }
 	}
 
@@ -304,7 +305,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public static string GetName(this PredictiveCruiseControlType pcc)
 		{
-			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, "&");
+			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, " & ");
 		}
 	}
 
@@ -370,6 +371,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum TankSystem
 	{
+		None,
 		Liquefied,
 		Compressed
 	}
@@ -460,9 +462,9 @@ namespace TUGraz.VectoCommon.InputData
 		ITyreDeclarationInputData Tyre { get; }
 
 		DataSource DataSource { get; }
-		
-		bool Steered { get; }
-	}
+
+        bool Steered { get; }
+    }
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{

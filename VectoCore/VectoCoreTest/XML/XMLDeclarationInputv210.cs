@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.10\Distributed\";
+		private const string BASE_DIR = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
 
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase(@"ExemptedVehicles\exempted_mediumLorry.xml"),
 		TestCase(@"ExemptedVehicles\exempted_primaryBus.xml"),
 		]
-		public void TestReadingJobVersion_V210(string jobFile)
+		public void TestReadingJobVersion_V24(string jobFile)
 		{
 			ReadDeclarationJob(jobFile);
 		}
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase(@"CompletedBus\IEPC_completedBus_1.xml"),
 		TestCase(@"CompletedBus\PEV_completedBus_1.xml"),
 		]
-		public void TestReadingCompletedBus_V210(string jobfile)
+		public void TestReadingCompletedBus_V24(string jobfile)
 		{
 			var filename = Path.Combine(BASE_DIR, jobfile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));

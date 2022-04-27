@@ -391,15 +391,30 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		[TestCase]
 		public void Class5_PCC12_CaseJ_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
-			(500, 3559, OutsideSegment, Accelerate),        // len: 3559m
+			(0, 3559, OutsideSegment, Accelerate),        // len: 3559m
 			(3559, 4563, WithinSegment, Accelerate),      // len: 1004m
-			(5146, 5342, WithinSegment, Accelerate),      // len: 196m
-			(5342, 5669, UseCase2, Coast),                // len: 327m
-			(5669, 5740, WithinSegment, Coast),           // len: 71m
-			(5740, 6113, WithinSegment, Brake),           // len: 373m
-			(6113, 6125, WithinSegment, Coast),           // len: 12m
-			(6125, 6398, OutsideSegment, Coast),          // len: 273m
-			(6398, 1e6, OutsideSegment, Accelerate));
+			(4563, 4582, WithinSegment, Roll),            // len: 19m
+			(4582, 4709, WithinSegment, Accelerate),      // len: 127m
+			(4709, 4723, WithinSegment, Roll),            // len: 14m
+			(4723, 4789, WithinSegment, Accelerate),      // len: 66m
+			(4789, 4800, WithinSegment, Roll),            // len: 11m
+			(4800, 4861, WithinSegment, Accelerate),      // len: 61m
+			(4861, 4870, WithinSegment, Roll),            // len: 9m
+			(4870, 4931, WithinSegment, Accelerate),      // len: 61m
+			(4931, 4940, WithinSegment, Roll),            // len: 9m
+			(4940, 5028, WithinSegment, Accelerate),      // len: 88m
+			(5028, 5040, WithinSegment, Roll),            // len: 12m
+			(5040, 5079, WithinSegment, Accelerate),      // len: 39m
+			(5079, 5093, WithinSegment, Roll),            // len: 14m
+			(5093, 5131, WithinSegment, Accelerate),      // len: 38m
+			(5131, 5147, WithinSegment, Roll),            // len: 16m
+			(5147, 5344, WithinSegment, Accelerate),      // len: 197m
+			(5344, 5671, UseCase2, Coast),                // len: 327m
+			(5671, 5730, WithinSegment, Coast),           // len: 59m
+			(5730, 6115, WithinSegment, Brake),           // len: 385m
+			(6115, 6400, OutsideSegment, Coast),          // len: 285m
+			(6400, 1e6, OutsideSegment, Accelerate));
+
 
 		[TestCase]
 		public void Class5_PCC12_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
@@ -603,13 +618,30 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		public void Class5_P3_PCC123EcoRollEngineStop_CaseJ_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 3559, OutsideSegment, Accelerate),        // len: 3559m
 			(3559, 4563, WithinSegment, Accelerate),      // len: 1004m
-			(5158, 5371, WithinSegment, Accelerate),      // len: 213m
-			(5371, 5698, UseCase2, Coast),                // len: 327m
-			(5698, 6002, WithinSegment, Coast),           // len: 304m
-			(6002, 6101, WithinSegment, Brake),           // len: 99m
-			(6101, 6126, WithinSegment, Coast),           // len: 25m
-			(6126, 6501, OutsideSegment, Coast),          // len: 375m
-			(6501, 1e6, OutsideSegment, Accelerate));
+			(4563, 4582, WithinSegment, Roll),            // len: 19m
+			(4582, 4700, WithinSegment, Accelerate),      // len: 118m
+			(4700, 4715, WithinSegment, Roll),            // len: 15m
+			(4715, 4774, WithinSegment, Accelerate),      // len: 59m
+			(4774, 4785, WithinSegment, Roll),            // len: 11m
+			(4785, 4826, WithinSegment, Accelerate),      // len: 41m
+			(4826, 4834, WithinSegment, Roll),            // len: 8m
+			(4834, 4873, WithinSegment, Accelerate),      // len: 39m
+			(4873, 4879, WithinSegment, Roll),            // len: 6m
+			(4879, 4923, WithinSegment, Accelerate),      // len: 44m
+			(4923, 4929, WithinSegment, Roll),            // len: 6m
+			(4929, 5005, WithinSegment, Accelerate),      // len: 76m
+			(5005, 5014, WithinSegment, Roll),            // len: 9m
+			(5014, 5056, WithinSegment, Accelerate),      // len: 42m
+			(5056, 5068, WithinSegment, Roll),            // len: 12m
+			(5068, 5100, WithinSegment, Accelerate),      // len: 32m
+			(5100, 5114, WithinSegment, Roll),            // len: 14m
+			(5114, 5151, WithinSegment, Accelerate),      // len: 37m
+			(5151, 5167, WithinSegment, Roll),            // len: 16m
+			(5167, 5371, WithinSegment, Accelerate),      // len: 204m
+			(5371, 5708, UseCase2, Coast),                // len: 337m
+			(5708, 6123, WithinSegment, Coast),           // len: 415m
+			(6123, 6510, OutsideSegment, Coast),          // len: 387m
+			(6510, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_P3_PCC123EcoRollEngineStop_CrestCoast1_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
@@ -815,11 +847,22 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		public void Class5_P25_PCC123EcoRollEngineStop_CaseJ_HEV() => TestPCC(MethodBase.GetCurrentMethod().Name,
 			(0, 3559, OutsideSegment, Accelerate),        // len: 3559m
 			(3559, 4519, WithinSegment, Accelerate),      // len: 960m
-			(5057, 5312, WithinSegment, Accelerate),      // len: 255m
-			(5312, 5673, UseCase2, Coast),                // len: 361m
-			(5673, 6123, WithinSegment, Coast),           // len: 450m
-			(6123, 6448, OutsideSegment, Coast),          // len: 325m
-			(6448, 1e6, OutsideSegment, Accelerate));
+			(4519, 4538, WithinSegment, Roll),            // len: 19m
+			(4538, 4735, WithinSegment, Accelerate),      // len: 197m
+			(4735, 4748, WithinSegment, Roll),            // len: 13m
+			(4748, 4780, WithinSegment, Accelerate),      // len: 32m
+			(4780, 4791, WithinSegment, Roll),            // len: 11m
+			(4791, 4994, WithinSegment, Accelerate),      // len: 203m
+			(4994, 5006, WithinSegment, Roll),            // len: 12m
+			(5006, 5037, WithinSegment, Accelerate),      // len: 31m
+			(5037, 5050, WithinSegment, Roll),            // len: 13m
+			(5050, 5085, WithinSegment, Accelerate),      // len: 35m
+			(5085, 5100, WithinSegment, Roll),            // len: 15m
+			(5100, 5329, WithinSegment, Accelerate),      // len: 229m
+			(5329, 5679, UseCase2, Coast),                // len: 350m
+			(5679, 6117, WithinSegment, Coast),           // len: 438m
+			(6117, 6455, OutsideSegment, Coast),          // len: 338m
+			(6455, 1e6, OutsideSegment, Accelerate));
 
 
 		[TestCase]
@@ -1337,7 +1380,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			var pccStates = pccCol.Values<PCCStates>();
 			var driverAction = driverActionCol.Values<DrivingAction>();
 			var distances = sCol.Values<Meter>();
-			var sections = GetDistancesOfStateChanges(pccStates.Zip(driverAction), distances).ToArray();
+			var sections = GetDistancesOfStateChanges(pccStates.ZipAll(driverAction), distances).ToArray();
 
 			Console.WriteLine("Start-End Segments:");
 			if (sections.Any()) {

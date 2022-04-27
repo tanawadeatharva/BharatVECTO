@@ -55,13 +55,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var emModelData = data.First().Item2;
 
 			Assert.AreEqual(0.15 * count, emModelData.Inertia.Value(), 1e-3);
 
 			//Assert.AreEqual(2000, emModelData.ContinuousTorqueSpeed.AsRPM, 1e-3);
-			Assert.AreEqual(238.7323 * count, emModelData.ContinuousTorque.Value(), 1e-3);
+			Assert.AreEqual(238.7323 * count, emModelData.Overload.ContinuousTorque.Value(), 1e-3);
 
 			Assert.AreEqual(334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullLoadDriveTorque(2000.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(-334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullGenerationTorque(2000.RPMtoRad()).Value(), 1e-3);
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var battery = new MockBattery();
@@ -288,7 +288,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var batInput = JSONInputDataFactory.ReadREESSData(BatFile, false);
@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var tmp = new MockBatteryInputData()
@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					}
 				}
 			};
-			var data = dao.CreateElectricMachines(electricMachine, null);
+			var data = dao.CreateElectricMachines(electricMachine, null, null);
 			var strategy = new MockHybridControl();
 
 			var tmp = new MockBatteryInputData()
@@ -440,9 +440,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var i = 0;
 
-			var t1 = 21;
-			var t2 = 14;
+			var t1 = 20;
+			var t2 = 9;
 			var t3 = 20;
+
+			Assert.AreEqual(19008.29074, data.First().Item2.Overload.OverloadBuffer.Value(), 1e-3);
+			Assert.AreEqual(100, data.First().Item2.Overload.ContinuousTorque.Value(), 1e-3);
+			Assert.AreEqual(3687.46233, data.First().Item2.Overload.ContinuousPowerLoss.Value(), 1e-3);
 
 			try {
 				// energy buffer is empty - overload is available
@@ -451,7 +455,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, torque, speed);
-					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();
@@ -465,7 +469,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, continuousTorque, speed);
-					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-100, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();
@@ -478,7 +482,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					var absTime = i * dt;
 
 					var response = motor.Request(absTime, dt, torque * 0.5, speed);
-					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2);
+					Assert.AreEqual(-334.23, response.ElectricMotor.MaxDriveTorque.Value(), 1e-2, $"{i}");
 					motor.CommitSimulationStep(absTime, dt, modData);
 					modData[ModalResultField.time] = absTime;
 					modData.CommitSimulationStep();

@@ -18,12 +18,11 @@ Public Class ElectricMachine
 
     public VoltageLevelLow As Double
     Private ReadOnly _fullLoadCurvePathLow As SubPath
-    Private ReadOnly _dragCurvePathLow As SubPath
+    Private ReadOnly _dragCurvePath As SubPath
     Private ReadOnly _efficiencyMapLow As SubPath
 
     public VoltageLevelHigh as Double
     Private ReadOnly _fullLoadCurvePathHi As SubPath
-    Private ReadOnly _dragCurvePathHi As SubPath
     Private ReadOnly _efficiencyMapHi As SubPath
 
     ''' <summary>
@@ -61,11 +60,10 @@ Public Class ElectricMachine
         _filePath = ""
 
         _fullLoadCurvePathLow = New SubPath
-        _dragCurvePathLow = New SubPath()
+        _dragCurvePath = New SubPath()
         _efficiencyMapLow = New SubPath()
 
         _fullLoadCurvePathHi = New SubPath
-        _dragCurvePathHi = New SubPath()
         _efficiencyMapHi = New SubPath()
 
         SetDefault()
@@ -220,11 +218,11 @@ Public Class ElectricMachine
             Return VectoCSVFile.Read(_fullLoadCurvePathLow.FullPath)
         End Get
     End Property
-    protected ReadOnly Property DragCurvLow As TableData 
+    public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
         Get
-            If Not File.Exists(_dragCurvePathLow.FullPath) Then _
+            If Not File.Exists(_dragCurvePath.FullPath) Then _
                 Throw New VectoException("Drag Curve is missing or invalid")
-            Return VectoCSVFile.Read(_dragCurvePathLow.FullPath)
+            Return VectoCSVFile.Read(_dragCurvePath.FullPath)
         End Get
     End Property
     protected ReadOnly Property EfficiencyMapLow As TableData
@@ -241,14 +239,8 @@ Public Class ElectricMachine
             Return VectoCSVFile.Read(_fullLoadCurvePathHi.FullPath)
         End Get
                     End Property
-    protected ReadOnly Property DragCurvHi As TableData 
-        Get
-            If Not File.Exists(_dragCurvePathHi.FullPath) Then _
-                Throw New VectoException("Drag Curve is missing or invalid")
-            Return VectoCSVFile.Read(_dragCurvePathHi.FullPath)
-        End Get
-    End Property
-    protected ReadOnly Property EfficiencyMapHi As TableData
+   
+    protected ReadOnly Property PowerMapHi As TableData
         Get
             If Not File.Exists(_efficiencyMapHi.FullPath) Then _
                 Throw New VectoException("Drag Curve is missing or invalid")
@@ -327,8 +319,6 @@ Public Class ElectricMachine
     '    End Get
     'End Property
 
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
-
     Public Property PathMaxTorqueLow(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
@@ -342,16 +332,16 @@ Public Class ElectricMachine
         End Set
     End Property
 
-    Public Property PathDragLow(Optional ByVal original As Boolean = False) As String
+    Public Property PathDrag(Optional ByVal original As Boolean = False) As String
         Get
             If original Then
-                Return _dragCurvePathLow.OriginalPath
+                Return _dragCurvePath.OriginalPath
             Else
-                Return _dragCurvePathLow.FullPath
+                Return _dragCurvePath.FullPath
             End If
         End Get
         Set(ByVal value As String)
-            _dragCurvePathLow.Init(_myPath, value)
+            _dragCurvePath.Init(_myPath, value)
         End Set
     End Property
 
@@ -381,18 +371,6 @@ Public Class ElectricMachine
         End Set
     End Property
 
-    Public Property PathDragHi(Optional ByVal original As Boolean = False) As String
-        Get
-            If original Then
-                Return _dragCurvePathHi.OriginalPath
-            Else
-                Return _dragCurvePathHi.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            _dragCurvePathHi.Init(_myPath, value)
-        End Set
-    End Property
 
     Public Property PathMapHi(Optional ByVal original As Boolean = False) As String
         Get

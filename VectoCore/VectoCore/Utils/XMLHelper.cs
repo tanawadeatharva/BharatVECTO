@@ -36,7 +36,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -332,7 +331,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static void AddIfContentNotNull(this XElement xElement, XElement xElementToAdd)
 		{
-			if (!xElementToAdd.Value.IsNullOrEmpty()){
+			if (!string.IsNullOrEmpty(xElementToAdd.Value)){
 				xElement.Add(xElementToAdd);
 			}
 		}

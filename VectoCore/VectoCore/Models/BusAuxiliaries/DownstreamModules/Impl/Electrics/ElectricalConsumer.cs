@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Ampere NominalCurrent(MissionType mission)
 		{
-			return _missions.GetValueOrDefault(mission, 0.SI<Ampere>());
+			return _missions.GetVECTOValueOrDefault(mission, 0.SI<Ampere>());
 		}
 
 		public Ampere this[MissionType mission]

@@ -6,6 +6,16 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
+	<!--
+Changelog:
+	03.02.2022: First version uploaded to CITnet
+	14.03.2022: Correcting ElectricMotorTorqueLimits 
+                   before: ElectricMotorTorqueLimits element was allowed two times for HEV-S, and each element allowed to specify multiple electric machines
+                   now: ElectricMotorTorqueLimits is allowed only once, torque limits can be defined for up to 2 EM in case of HEV-S
+    12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
+                Remove BoostingLimitations for HEV-IEPC-S
+	14.04.2022: Added new RetarderTypeType definition to cover AxlegearInputRetarder (used only for E3, S3, S-IEPC, E-IEPC)
+-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
@@ -90,6 +100,11 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsDeclarationType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="AbstractPTODataType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.0:AbstractPTODataType"/>
@@ -1374,11 +1389,40 @@
 			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ElectricMachineTorqueLimitsSerialHybridType">
+		<xs:complexContent>
+			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType">
+				<xs:sequence>
+					<xs:element name="ElectricMachine" maxOccurs="2">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
+								<xs:element name="VoltageLevel" minOccurs="2" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Voltage">
+												<xs:simpleType>
+													<xs:restriction base="xs:int">
+														<xs:minExclusive value="0"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="MaxTorqueCurve" type="v2.3:ElectricMachineSystemMaxTorqueCurveType"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ElectricMachineTorqueLimitsType">
 		<xs:complexContent>
 			<xs:extension base="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType">
 				<xs:sequence>
-					<xs:element name="ElectricMachine" maxOccurs="unbounded">
+					<xs:element name="ElectricMachine">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="Position" type="v2.4:PowertrainPositionType"/>
@@ -1904,9 +1948,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1930,9 +1972,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -1966,9 +2006,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2080,8 +2118,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2105,8 +2142,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2140,8 +2176,7 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0" maxOccurs="2"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2308,7 +2343,6 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2328,7 +2362,6 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_LorryDeclarationType"/>
 				</xs:sequence>
@@ -2358,7 +2391,6 @@
 					</xs:element>
 					<xs:group ref="v2.4:Vehicle_xEV-Parameters_SequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
 				</xs:sequence>
@@ -2895,6 +2927,25 @@
 	<xs:simpleType name="VehicleTypeApprovalNumberType">
 		<xs:restriction base="xs:token">
 			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RetarderTypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">052</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P052 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Losses included in Gearbox"/>
+			<xs:enumeration value="Engine Retarder"/>
+			<xs:enumeration value="Transmission Input Retarder"/>
+			<xs:enumeration value="Transmission Output Retarder"/>
+			<xs:enumeration value="Axlegear Input Retarder"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:group name="BusAuxElectricSystemLightsGroup">
@@ -3739,7 +3790,7 @@
 	</xs:group>
 	<xs:group name="Vehicle_RetarderSequenceGroup">
 		<xs:sequence>
-			<xs:element name="RetarderType" type="v1.0:RetarderTypeType">
+			<xs:element name="RetarderType" type="v2.4:RetarderTypeType">
 				<xs:annotation>
 					<xs:documentation>P052 - enum</xs:documentation>
 				</xs:annotation>

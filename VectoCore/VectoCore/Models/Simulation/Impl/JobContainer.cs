@@ -37,7 +37,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -109,6 +108,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 					followUpSimulatorFactoryFetched = true;
 					return _simulatorFactory.FollowUpSimulatorFactory;
+				} catch (Exception e){
+					LogManager.GetLogger(typeof(JobContainer).FullName).Error(e);
+					throw;
 				}finally {
 
 				}

@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				new JSONComponentInputData(@"TestData\Hybrids\ElectricMotor\GenericEMotorV3.vem", null,
 					false);
 			var daa = new EngineeringDataAdapter();
-			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null).First().Item2;
+			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null, null).First().Item2;
 
 
 			Assert.AreEqual(26, emData.DragCurve.Lookup(2000.RPMtoRad()).Value());
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements.First().REESSPack as IBatteryPackEngineeringInputData;
-			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve);
+			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, false);
 			var imax = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap);
 			
 			Assert.NotNull(bat);

@@ -39,6 +39,7 @@ using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
@@ -52,11 +53,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[DebuggerDisplay("GearboxData({Type}, #Gears: {Gears.Count}, ...)")]
 	public class GearboxData : SimulationComponentData
 	{
+		public GearboxData() {}
+
 		public GearboxType Type { get; internal set; }
 
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 		
 		private GearList _gearlist;
+		private MeterPerSecond _disengageWhenHaltingSpeed;
 
 		public TorqueConverterData TorqueConverterData { get; internal set; } 
 
@@ -82,6 +86,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[JsonIgnore]
 		public GearList GearList => _gearlist ?? (_gearlist = CreateGearList());
+
+		public MeterPerSecond DisengageWhenHaltingSpeed
+		{
+			get {
+				if (_disengageWhenHaltingSpeed != null)
+					return _disengageWhenHaltingSpeed;
+				else if (Type.AutomaticTransmission())
+					return Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed;
+				else
+					return Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed;
+			}
+			internal set => _disengageWhenHaltingSpeed = value;
+		}
 
 		private GearList CreateGearList()
 		{
@@ -114,15 +131,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var result = new List<ValidationResult>();
 
 			if (gearboxData.Gears.Any(g => g.Value.HasTorqueConverter)) {
-				if (!gearboxData.Type.AutomaticTransmission()) {
+				if (!gearboxData.Type.AutomaticTransmission() || gearboxData.Type == GearboxType.APTN) {
 					return new ValidationResult("Torque Converter can only be used with AT gearbox model");
 				}
 			} else {
-				if (gearboxData.Type.AutomaticTransmission()) {
+				if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN) {
 					return new ValidationResult("AT gearbox model requires torque converter");
 				}
 			}
-			if (gearboxData.Type.AutomaticTransmission()) {
+			if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
 					Math.Round(gearboxData.Gears[1].TorqueConverterRatio / gearboxData.Gears[1].Ratio, 4) * 0.95;
 				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, jobType, emPos, gearboxData.Type, emsMission));

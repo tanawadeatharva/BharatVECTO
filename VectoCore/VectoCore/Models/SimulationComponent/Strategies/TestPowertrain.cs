@@ -11,7 +11,35 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies 
+{
+
+	public class TestGenset
+	{
+
+		public SimplePowertrainContainer Container;
+		public StopStartCombustionEngine CombustionEngine;
+		public ElectricMotor ElectricMotor;
+		public GensetMotorController ElectricMotorCtl;
+
+		public Battery Battery;
+		public BatterySystem BatterySystem;
+		public SuperCap SuperCap;
+
+		public TestGenset(SimplePowertrainContainer container, IDataBus realContainer)
+		{
+			Container = container;
+			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
+			ElectricMotor = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ElectricMotor;
+			ElectricMotorCtl = ElectricMotor.Control as GensetMotorController;
+
+			Battery = Container.BatteryInfo as Battery;
+			BatterySystem = container.BatteryInfo as BatterySystem;
+
+			SuperCap = Container.BatteryInfo as SuperCap;
+		}
+	}
+
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;
@@ -26,9 +54,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 
 		public StopStartCombustionEngine CombustionEngine;
 		public ElectricMotor ElectricMotor;
+		public GensetChargerAdapter Charger;
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission = new Dictionary<PowertrainPosition, ElectricMotor>();
 		public TorqueConverter TorqueConverter;
 		public DCDCConverter DCDCConverter;
+		public WHRCharger WHRCharger;
 
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
@@ -43,16 +73,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			Clutch = Container.ClutchInfo as Clutch;
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
+			Charger = ((ElectricMotor?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
 					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as ElectricMotor;
 				}
 			}
-			if (Gearbox == null) {
-			}
-
-			if (Gearbox.GearboxType.AutomaticTransmission()) {
+			
+			if (Gearbox != null && Gearbox.GearboxType.AutomaticTransmission() && Gearbox.GearboxType != GearboxType.APTN) {
 				TorqueConverter = Container.TorqueConverterInfo as TorqueConverter;
 				if (TorqueConverter == null) {
 					throw new VectoException("Torque converter missing for automatic transmission: {0}", Container.TorqueConverterInfo?.GetType().FullName);
@@ -66,6 +95,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 			var busAux = container.RunData.BusAuxiliaries;
 			if (busAux != null && busAux.ElectricalUserInputsConfig.ConnectESToREESS) {
 				DCDCConverter = container.DCDCConverter as DCDCConverter;
+			}
+
+			var whrCharger = container.SimulationComponents().FirstOrDefault(x => x is WHRCharger);
+			if (whrCharger != null) {
+				WHRCharger = whrCharger as WHRCharger;
 			}
 			var driver = new MockDriver(container, realContainer);
 			var cycle = new MockDrivingCycle(container, realContainer);
@@ -187,6 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies {
 		public MeterPerSquareSecond DriverAcceleration => realContainer?.DriverInfo.DriverAcceleration;
 		public PCCStates PCCState => PCCStates.OutsideSegment;
 
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 		#endregion
 
 		#region Overrides of VectoSimulationComponent

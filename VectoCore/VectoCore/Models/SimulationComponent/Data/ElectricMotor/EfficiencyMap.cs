@@ -161,7 +161,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 					criterion: x => {
 						var myX = (EfficiencyResult)x;
 						return (myX.ElectricalPower - batPower).Value();
-					});
+					},
+					searcher: this);
 				var tmp = LookupElectricPower(avgSpeed, retVal, true);
 				if ((tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					// searched operating point is not accurate enough...
@@ -176,7 +177,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 						criterion: x => {
 							var myX = (EfficiencyResult)x;
 							return (myX.ElectricalPower - batPower).Value() * 1e3;
-						});
+						},
+						searcher: this);
 				}
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {

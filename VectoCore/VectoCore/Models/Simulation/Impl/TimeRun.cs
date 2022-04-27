@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IResponse response;
 			do {
 				response = CyclePort.Request(AbsTime, dt);
-				debug.Add(response);
+				debug.Add("[TR.DST]", response);
 				switch (response) {
 					case ResponseSuccess r:
 						dt = r.SimulationInterval;

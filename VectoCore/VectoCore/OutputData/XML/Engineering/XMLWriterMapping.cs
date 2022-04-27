@@ -160,10 +160,10 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering {
 			public string FilenameTemplate { get; set; }
 		}
 
-		public static Type GetWriterType(Type inputType) => mapping.GetValueOrDefault(inputType)?.WriterType;
+		public static Type GetWriterType(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.WriterType;
 
-		public static string GetXMLTag(Type inputType) => mapping.GetValueOrDefault(inputType)?.XMLTag;
+		public static string GetXMLTag(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.XMLTag;
 
-		public static string GetFilenameTemplate(Type inputType) => mapping.GetValueOrDefault(inputType)?.FilenameTemplate ?? "{0}_{1}.xml";
+		public static string GetFilenameTemplate(Type inputType) => mapping.GetVECTOValueOrDefault(inputType)?.FilenameTemplate ?? "{0}_{1}.xml";
 	}
 }

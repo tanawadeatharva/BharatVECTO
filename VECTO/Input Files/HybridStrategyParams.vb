@@ -104,6 +104,8 @@ Public Class HybridStrategyParams
 
     Public Property ICEStartPenaltyFactor As Double Implements IHybridStrategyParameters.ICEStartPenaltyFactor
     Public Property CostFactorSOCExpponent As Double Implements IHybridStrategyParameters.CostFactorSOCExpponent
+    Public Property GensetMinOptPowerFactor As Double Implements IHybridStrategyParameters.GensetMinOptPowerFactor
+       
 
     Public Property AuxiliaryBufferTime As Double
 

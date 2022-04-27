@@ -1,20 +1,20 @@
-##Electric Motor Editor
+## Electric Motor Editor
 
 ![](pics/VECTO_ElectricMotor.png)
 
 
-###Description
+### Description
 
 The electric motor file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
 
-###Relative File Paths
+### Relative File Paths
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
 
 VECTO automatically uses relative paths if the input file (e.g. elctric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
 
 
-###Main Parameters
+### Main Parameters
 
 Make and Model
 :   Free text defining the gearbox model, type, etc.
@@ -54,12 +54,12 @@ Voltage Level Low/High
 
 
 
-###Chart Area
+### Chart Area
 
 The Chart Area displays the electric machine's max. drive curve and max. generation curve (blue), the drag curve (green) and the entries provided in the electric power consumption map (red).
 
 
-###Controls
+### Controls
 
 
 

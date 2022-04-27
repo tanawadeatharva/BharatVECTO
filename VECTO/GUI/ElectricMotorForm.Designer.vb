@@ -60,10 +60,6 @@ Partial Class ElectricMotorForm
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnInertia = New System.Windows.Forms.Panel()
-        Me.tbDragTorqueHi = New System.Windows.Forms.TextBox()
-        Me.lblDragTorqueHi = New System.Windows.Forms.Label()
-        Me.btnBrowseDragCurveHi = New System.Windows.Forms.Button()
-        Me.btnDragCurveOpenHi = New System.Windows.Forms.Button()
         Me.btnEmMapOpenHi = New System.Windows.Forms.Button()
         Me.btnBrowseEmMapHi = New System.Windows.Forms.Button()
         Me.lblPowerMapHi = New System.Windows.Forms.Label()
@@ -105,10 +101,10 @@ Partial Class ElectricMotorForm
         Me.lblVoltageLowUnit = New System.Windows.Forms.Label()
         Me.tbVoltageLow = New System.Windows.Forms.TextBox()
         Me.lblMaxTorqueLow = New System.Windows.Forms.Label()
-        Me.tbDragTorqueLow = New System.Windows.Forms.TextBox()
-        Me.lblDragTorqueLow = New System.Windows.Forms.Label()
-        Me.btnBrowseDragCurveLow = New System.Windows.Forms.Button()
-        Me.btnDragCurveOpenLow = New System.Windows.Forms.Button()
+        Me.tbDragTorque = New System.Windows.Forms.TextBox()
+        Me.lblDragTorque = New System.Windows.Forms.Label()
+        Me.btnBrowseDragCurve = New System.Windows.Forms.Button()
+        Me.btnDragCurveOpen = New System.Windows.Forms.Button()
         Me.tbMapLow = New System.Windows.Forms.TextBox()
         Me.lblPowerMapLow = New System.Windows.Forms.Label()
         Me.btnBrowseEmMapLow = New System.Windows.Forms.Button()
@@ -193,7 +189,7 @@ Partial Class ElectricMotorForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(1281, 637)
+        Me.ButCancel.Location = New System.Drawing.Point(1281, 648)
         Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(112, 35)
@@ -204,7 +200,7 @@ Partial Class ElectricMotorForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(1160, 637)
+        Me.ButOK.Location = New System.Drawing.Point(1160, 648)
         Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(112, 35)
@@ -297,7 +293,7 @@ Partial Class ElectricMotorForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 677)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 688)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(2, 0, 21, 0)
         Me.StatusStrip1.Size = New System.Drawing.Size(1412, 32)
@@ -370,50 +366,10 @@ Partial Class ElectricMotorForm
         Me.pnInertia.Size = New System.Drawing.Size(332, 46)
         Me.pnInertia.TabIndex = 3
         '
-        'tbDragTorqueHi
-        '
-        Me.tbDragTorqueHi.Location = New System.Drawing.Point(7, 141)
-        Me.tbDragTorqueHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbDragTorqueHi.Name = "tbDragTorqueHi"
-        Me.tbDragTorqueHi.Size = New System.Drawing.Size(607, 26)
-        Me.tbDragTorqueHi.TabIndex = 5
-        '
-        'lblDragTorqueHi
-        '
-        Me.lblDragTorqueHi.AutoSize = true
-        Me.lblDragTorqueHi.Location = New System.Drawing.Point(7, 117)
-        Me.lblDragTorqueHi.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblDragTorqueHi.Name = "lblDragTorqueHi"
-        Me.lblDragTorqueHi.Size = New System.Drawing.Size(143, 20)
-        Me.lblDragTorqueHi.TabIndex = 38
-        Me.lblDragTorqueHi.Text = "Drag Torque Curve"
-        '
-        'btnBrowseDragCurveHi
-        '
-        Me.btnBrowseDragCurveHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseDragCurveHi.Location = New System.Drawing.Point(628, 137)
-        Me.btnBrowseDragCurveHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnBrowseDragCurveHi.Name = "btnBrowseDragCurveHi"
-        Me.btnBrowseDragCurveHi.Size = New System.Drawing.Size(36, 37)
-        Me.btnBrowseDragCurveHi.TabIndex = 6
-        Me.btnBrowseDragCurveHi.TabStop = false
-        Me.btnBrowseDragCurveHi.UseVisualStyleBackColor = true
-        '
-        'btnDragCurveOpenHi
-        '
-        Me.btnDragCurveOpenHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnDragCurveOpenHi.Location = New System.Drawing.Point(662, 137)
-        Me.btnDragCurveOpenHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnDragCurveOpenHi.Name = "btnDragCurveOpenHi"
-        Me.btnDragCurveOpenHi.Size = New System.Drawing.Size(36, 37)
-        Me.btnDragCurveOpenHi.TabIndex = 7
-        Me.btnDragCurveOpenHi.TabStop = false
-        Me.btnDragCurveOpenHi.UseVisualStyleBackColor = true
-        '
         'btnEmMapOpenHi
         '
         Me.btnEmMapOpenHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnEmMapOpenHi.Location = New System.Drawing.Point(662, 200)
+        Me.btnEmMapOpenHi.Location = New System.Drawing.Point(662, 134)
         Me.btnEmMapOpenHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnEmMapOpenHi.Name = "btnEmMapOpenHi"
         Me.btnEmMapOpenHi.Size = New System.Drawing.Size(36, 37)
@@ -424,7 +380,7 @@ Partial Class ElectricMotorForm
         'btnBrowseEmMapHi
         '
         Me.btnBrowseEmMapHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseEmMapHi.Location = New System.Drawing.Point(628, 200)
+        Me.btnBrowseEmMapHi.Location = New System.Drawing.Point(628, 134)
         Me.btnBrowseEmMapHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnBrowseEmMapHi.Name = "btnBrowseEmMapHi"
         Me.btnBrowseEmMapHi.Size = New System.Drawing.Size(36, 37)
@@ -435,7 +391,7 @@ Partial Class ElectricMotorForm
         'lblPowerMapHi
         '
         Me.lblPowerMapHi.AutoSize = true
-        Me.lblPowerMapHi.Location = New System.Drawing.Point(7, 180)
+        Me.lblPowerMapHi.Location = New System.Drawing.Point(7, 114)
         Me.lblPowerMapHi.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblPowerMapHi.Name = "lblPowerMapHi"
         Me.lblPowerMapHi.Size = New System.Drawing.Size(242, 20)
@@ -444,7 +400,7 @@ Partial Class ElectricMotorForm
         '
         'tbMapHi
         '
-        Me.tbMapHi.Location = New System.Drawing.Point(7, 205)
+        Me.tbMapHi.Location = New System.Drawing.Point(7, 139)
         Me.tbMapHi.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbMapHi.Name = "tbMapHi"
         Me.tbMapHi.Size = New System.Drawing.Size(607, 26)
@@ -518,7 +474,7 @@ Partial Class ElectricMotorForm
         Me.Panel1.Controls.Add(Me.lblContTq)
         Me.Panel1.Controls.Add(Me.lblContTqUnit)
         Me.Panel1.Controls.Add(Me.tbContTqLo)
-        Me.Panel1.Location = New System.Drawing.Point(7, 249)
+        Me.Panel1.Location = New System.Drawing.Point(7, 184)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(332, 46)
@@ -557,7 +513,7 @@ Partial Class ElectricMotorForm
         Me.Panel2.Controls.Add(Me.lblOvlTime)
         Me.Panel2.Controls.Add(Me.lblOvltimeUnit)
         Me.Panel2.Controls.Add(Me.tbOvlTimeLo)
-        Me.Panel2.Location = New System.Drawing.Point(7, 344)
+        Me.Panel2.Location = New System.Drawing.Point(7, 279)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(332, 46)
@@ -635,7 +591,7 @@ Partial Class ElectricMotorForm
         Me.Panel4.Controls.Add(Me.lblRatedSpeed)
         Me.Panel4.Controls.Add(Me.lblRatedSpeedUnit)
         Me.Panel4.Controls.Add(Me.tbRatedSpeedLo)
-        Me.Panel4.Location = New System.Drawing.Point(339, 249)
+        Me.Panel4.Location = New System.Drawing.Point(339, 184)
         Me.Panel4.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(392, 46)
@@ -674,7 +630,7 @@ Partial Class ElectricMotorForm
         Me.pnOverloadTq.Controls.Add(Me.lblOverloadTq)
         Me.pnOverloadTq.Controls.Add(Me.lblOverloadTqUnit)
         Me.pnOverloadTq.Controls.Add(Me.tbOverloadTqLo)
-        Me.pnOverloadTq.Location = New System.Drawing.Point(7, 296)
+        Me.pnOverloadTq.Location = New System.Drawing.Point(7, 231)
         Me.pnOverloadTq.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.pnOverloadTq.Name = "pnOverloadTq"
         Me.pnOverloadTq.Size = New System.Drawing.Size(332, 46)
@@ -713,7 +669,7 @@ Partial Class ElectricMotorForm
         Me.Panel6.Controls.Add(Me.lblOverloadSpeed)
         Me.Panel6.Controls.Add(Me.lblOverloadSpeedUnit)
         Me.Panel6.Controls.Add(Me.tbOvlSpeedLo)
-        Me.Panel6.Location = New System.Drawing.Point(339, 296)
+        Me.Panel6.Location = New System.Drawing.Point(339, 231)
         Me.Panel6.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel6.Name = "Panel6"
         Me.Panel6.Size = New System.Drawing.Size(392, 46)
@@ -813,49 +769,49 @@ Partial Class ElectricMotorForm
         Me.lblMaxTorqueLow.TabIndex = 47
         Me.lblMaxTorqueLow.Text = "Max Drive and Max Generation Torque Curve"
         '
-        'tbDragTorqueLow
+        'tbDragTorque
         '
-        Me.tbDragTorqueLow.Location = New System.Drawing.Point(7, 140)
-        Me.tbDragTorqueLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.tbDragTorqueLow.Name = "tbDragTorqueLow"
-        Me.tbDragTorqueLow.Size = New System.Drawing.Size(607, 26)
-        Me.tbDragTorqueLow.TabIndex = 5
+        Me.tbDragTorque.Location = New System.Drawing.Point(26, 247)
+        Me.tbDragTorque.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.tbDragTorque.Name = "tbDragTorque"
+        Me.tbDragTorque.Size = New System.Drawing.Size(607, 26)
+        Me.tbDragTorque.TabIndex = 5
         '
-        'lblDragTorqueLow
+        'lblDragTorque
         '
-        Me.lblDragTorqueLow.AutoSize = true
-        Me.lblDragTorqueLow.Location = New System.Drawing.Point(7, 116)
-        Me.lblDragTorqueLow.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblDragTorqueLow.Name = "lblDragTorqueLow"
-        Me.lblDragTorqueLow.Size = New System.Drawing.Size(143, 20)
-        Me.lblDragTorqueLow.TabIndex = 38
-        Me.lblDragTorqueLow.Text = "Drag Torque Curve"
+        Me.lblDragTorque.AutoSize = true
+        Me.lblDragTorque.Location = New System.Drawing.Point(26, 223)
+        Me.lblDragTorque.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblDragTorque.Name = "lblDragTorque"
+        Me.lblDragTorque.Size = New System.Drawing.Size(143, 20)
+        Me.lblDragTorque.TabIndex = 38
+        Me.lblDragTorque.Text = "Drag Torque Curve"
         '
-        'btnBrowseDragCurveLow
+        'btnBrowseDragCurve
         '
-        Me.btnBrowseDragCurveLow.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseDragCurveLow.Location = New System.Drawing.Point(628, 136)
-        Me.btnBrowseDragCurveLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnBrowseDragCurveLow.Name = "btnBrowseDragCurveLow"
-        Me.btnBrowseDragCurveLow.Size = New System.Drawing.Size(36, 37)
-        Me.btnBrowseDragCurveLow.TabIndex = 6
-        Me.btnBrowseDragCurveLow.TabStop = false
-        Me.btnBrowseDragCurveLow.UseVisualStyleBackColor = true
+        Me.btnBrowseDragCurve.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btnBrowseDragCurve.Location = New System.Drawing.Point(647, 243)
+        Me.btnBrowseDragCurve.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnBrowseDragCurve.Name = "btnBrowseDragCurve"
+        Me.btnBrowseDragCurve.Size = New System.Drawing.Size(36, 37)
+        Me.btnBrowseDragCurve.TabIndex = 6
+        Me.btnBrowseDragCurve.TabStop = false
+        Me.btnBrowseDragCurve.UseVisualStyleBackColor = true
         '
-        'btnDragCurveOpenLow
+        'btnDragCurveOpen
         '
-        Me.btnDragCurveOpenLow.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnDragCurveOpenLow.Location = New System.Drawing.Point(662, 136)
-        Me.btnDragCurveOpenLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnDragCurveOpenLow.Name = "btnDragCurveOpenLow"
-        Me.btnDragCurveOpenLow.Size = New System.Drawing.Size(36, 37)
-        Me.btnDragCurveOpenLow.TabIndex = 7
-        Me.btnDragCurveOpenLow.TabStop = false
-        Me.btnDragCurveOpenLow.UseVisualStyleBackColor = true
+        Me.btnDragCurveOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.btnDragCurveOpen.Location = New System.Drawing.Point(681, 243)
+        Me.btnDragCurveOpen.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnDragCurveOpen.Name = "btnDragCurveOpen"
+        Me.btnDragCurveOpen.Size = New System.Drawing.Size(36, 37)
+        Me.btnDragCurveOpen.TabIndex = 7
+        Me.btnDragCurveOpen.TabStop = false
+        Me.btnDragCurveOpen.UseVisualStyleBackColor = true
         '
         'tbMapLow
         '
-        Me.tbMapLow.Location = New System.Drawing.Point(7, 204)
+        Me.tbMapLow.Location = New System.Drawing.Point(7, 139)
         Me.tbMapLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbMapLow.Name = "tbMapLow"
         Me.tbMapLow.Size = New System.Drawing.Size(607, 26)
@@ -864,7 +820,7 @@ Partial Class ElectricMotorForm
         'lblPowerMapLow
         '
         Me.lblPowerMapLow.AutoSize = true
-        Me.lblPowerMapLow.Location = New System.Drawing.Point(7, 179)
+        Me.lblPowerMapLow.Location = New System.Drawing.Point(7, 114)
         Me.lblPowerMapLow.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblPowerMapLow.Name = "lblPowerMapLow"
         Me.lblPowerMapLow.Size = New System.Drawing.Size(242, 20)
@@ -874,7 +830,7 @@ Partial Class ElectricMotorForm
         'btnBrowseEmMapLow
         '
         Me.btnBrowseEmMapLow.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseEmMapLow.Location = New System.Drawing.Point(628, 199)
+        Me.btnBrowseEmMapLow.Location = New System.Drawing.Point(628, 134)
         Me.btnBrowseEmMapLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnBrowseEmMapLow.Name = "btnBrowseEmMapLow"
         Me.btnBrowseEmMapLow.Size = New System.Drawing.Size(36, 37)
@@ -885,7 +841,7 @@ Partial Class ElectricMotorForm
         'btnEmMapOpenLow
         '
         Me.btnEmMapOpenLow.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnEmMapOpenLow.Location = New System.Drawing.Point(662, 199)
+        Me.btnEmMapOpenLow.Location = New System.Drawing.Point(662, 134)
         Me.btnEmMapOpenLow.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnEmMapOpenLow.Name = "btnEmMapOpenLow"
         Me.btnEmMapOpenLow.Size = New System.Drawing.Size(36, 37)
@@ -927,10 +883,10 @@ Partial Class ElectricMotorForm
         '
         Me.tcVoltageLevels.Controls.Add(Me.tpVoltageLow)
         Me.tcVoltageLevels.Controls.Add(Me.tpVoltageHigh)
-        Me.tcVoltageLevels.Location = New System.Drawing.Point(18, 220)
+        Me.tcVoltageLevels.Location = New System.Drawing.Point(18, 291)
         Me.tcVoltageLevels.Name = "tcVoltageLevels"
         Me.tcVoltageLevels.SelectedIndex = 0
-        Me.tcVoltageLevels.Size = New System.Drawing.Size(751, 443)
+        Me.tcVoltageLevels.Size = New System.Drawing.Size(751, 379)
         Me.tcVoltageLevels.TabIndex = 52
         '
         'tpVoltageLow
@@ -945,20 +901,16 @@ Partial Class ElectricMotorForm
         Me.tpVoltageLow.Controls.Add(Me.lblMaxTorqueLow)
         Me.tpVoltageLow.Controls.Add(Me.Panel4)
         Me.tpVoltageLow.Controls.Add(Me.tbMaxTorqueLow)
-        Me.tpVoltageLow.Controls.Add(Me.tbDragTorqueLow)
         Me.tpVoltageLow.Controls.Add(Me.Panel2)
         Me.tpVoltageLow.Controls.Add(Me.btnEmMapOpenLow)
         Me.tpVoltageLow.Controls.Add(Me.Panel1)
-        Me.tpVoltageLow.Controls.Add(Me.lblDragTorqueLow)
         Me.tpVoltageLow.Controls.Add(Me.btnBrowseEmMapLow)
-        Me.tpVoltageLow.Controls.Add(Me.btnBrowseDragCurveLow)
         Me.tpVoltageLow.Controls.Add(Me.lblPowerMapLow)
-        Me.tpVoltageLow.Controls.Add(Me.btnDragCurveOpenLow)
         Me.tpVoltageLow.Controls.Add(Me.tbMapLow)
         Me.tpVoltageLow.Location = New System.Drawing.Point(4, 29)
         Me.tpVoltageLow.Name = "tpVoltageLow"
         Me.tpVoltageLow.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpVoltageLow.Size = New System.Drawing.Size(743, 580)
+        Me.tpVoltageLow.Size = New System.Drawing.Size(743, 346)
         Me.tpVoltageLow.TabIndex = 0
         Me.tpVoltageLow.Text = "Voltage Level Low"
         Me.tpVoltageLow.UseVisualStyleBackColor = true
@@ -978,17 +930,13 @@ Partial Class ElectricMotorForm
         Me.tpVoltageHigh.Controls.Add(Me.btnMaxTorqueCurveOpenHi)
         Me.tpVoltageHigh.Controls.Add(Me.lblMaxTorqueHi)
         Me.tpVoltageHigh.Controls.Add(Me.btnEmMapOpenHi)
-        Me.tpVoltageHigh.Controls.Add(Me.tbDragTorqueHi)
         Me.tpVoltageHigh.Controls.Add(Me.btnBrowseEmMapHi)
-        Me.tpVoltageHigh.Controls.Add(Me.lblDragTorqueHi)
         Me.tpVoltageHigh.Controls.Add(Me.lblPowerMapHi)
-        Me.tpVoltageHigh.Controls.Add(Me.btnBrowseDragCurveHi)
         Me.tpVoltageHigh.Controls.Add(Me.tbMapHi)
-        Me.tpVoltageHigh.Controls.Add(Me.btnDragCurveOpenHi)
         Me.tpVoltageHigh.Location = New System.Drawing.Point(4, 29)
         Me.tpVoltageHigh.Name = "tpVoltageHigh"
         Me.tpVoltageHigh.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpVoltageHigh.Size = New System.Drawing.Size(743, 410)
+        Me.tpVoltageHigh.Size = New System.Drawing.Size(743, 346)
         Me.tpVoltageHigh.TabIndex = 1
         Me.tpVoltageHigh.Text = "Voltage Level High"
         Me.tpVoltageHigh.UseVisualStyleBackColor = true
@@ -998,7 +946,7 @@ Partial Class ElectricMotorForm
         Me.Panel5.Controls.Add(Me.Label1)
         Me.Panel5.Controls.Add(Me.Label2)
         Me.Panel5.Controls.Add(Me.tbOvlSpeedHi)
-        Me.Panel5.Location = New System.Drawing.Point(339, 297)
+        Me.Panel5.Location = New System.Drawing.Point(339, 231)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(392, 46)
@@ -1037,7 +985,7 @@ Partial Class ElectricMotorForm
         Me.Panel7.Controls.Add(Me.Label3)
         Me.Panel7.Controls.Add(Me.Label4)
         Me.Panel7.Controls.Add(Me.tbOverloadTqHi)
-        Me.Panel7.Location = New System.Drawing.Point(7, 297)
+        Me.Panel7.Location = New System.Drawing.Point(7, 231)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(332, 46)
@@ -1076,7 +1024,7 @@ Partial Class ElectricMotorForm
         Me.Panel8.Controls.Add(Me.Label5)
         Me.Panel8.Controls.Add(Me.Label6)
         Me.Panel8.Controls.Add(Me.tbRatedSpeedHi)
-        Me.Panel8.Location = New System.Drawing.Point(339, 250)
+        Me.Panel8.Location = New System.Drawing.Point(339, 184)
         Me.Panel8.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel8.Name = "Panel8"
         Me.Panel8.Size = New System.Drawing.Size(392, 46)
@@ -1115,7 +1063,7 @@ Partial Class ElectricMotorForm
         Me.Panel9.Controls.Add(Me.Label7)
         Me.Panel9.Controls.Add(Me.Label8)
         Me.Panel9.Controls.Add(Me.tbOvlTimeHi)
-        Me.Panel9.Location = New System.Drawing.Point(7, 345)
+        Me.Panel9.Location = New System.Drawing.Point(7, 279)
         Me.Panel9.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel9.Name = "Panel9"
         Me.Panel9.Size = New System.Drawing.Size(332, 46)
@@ -1154,7 +1102,7 @@ Partial Class ElectricMotorForm
         Me.Panel10.Controls.Add(Me.Label9)
         Me.Panel10.Controls.Add(Me.Label10)
         Me.Panel10.Controls.Add(Me.tbContTqHi)
-        Me.Panel10.Location = New System.Drawing.Point(7, 250)
+        Me.Panel10.Location = New System.Drawing.Point(7, 184)
         Me.Panel10.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Panel10.Name = "Panel10"
         Me.Panel10.Size = New System.Drawing.Size(332, 46)
@@ -1194,7 +1142,7 @@ Partial Class ElectricMotorForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9!, 20!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1412, 709)
+        Me.ClientSize = New System.Drawing.Size(1412, 720)
         Me.Controls.Add(Me.tcVoltageLevels)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.PicBox)
@@ -1204,9 +1152,13 @@ Partial Class ElectricMotorForm
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.ButCancel)
+        Me.Controls.Add(Me.tbDragTorque)
         Me.Controls.Add(Me.ButOK)
         Me.Controls.Add(Me.lblMakeModel)
         Me.Controls.Add(Me.tbMakeModel)
+        Me.Controls.Add(Me.lblDragTorque)
+        Me.Controls.Add(Me.btnDragCurveOpen)
+        Me.Controls.Add(Me.btnBrowseDragCurve)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -1278,10 +1230,6 @@ End Sub
     Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents pnInertia As Panel
-    Friend WithEvents tbDragTorqueHi As TextBox
-    Friend WithEvents lblDragTorqueHi As Label
-    Friend WithEvents btnBrowseDragCurveHi As Button
-    Friend WithEvents btnDragCurveOpenHi As Button
     Friend WithEvents btnEmMapOpenHi As Button
     Friend WithEvents btnBrowseEmMapHi As Button
     Friend WithEvents lblPowerMapHi As Label
@@ -1323,10 +1271,10 @@ End Sub
     Friend WithEvents lblVoltageLowUnit As Label
     Friend WithEvents tbVoltageLow As TextBox
     Friend WithEvents lblMaxTorqueLow As Label
-    Friend WithEvents tbDragTorqueLow As TextBox
-    Friend WithEvents lblDragTorqueLow As Label
-    Friend WithEvents btnBrowseDragCurveLow As Button
-    Friend WithEvents btnDragCurveOpenLow As Button
+    Friend WithEvents tbDragTorque As TextBox
+    Friend WithEvents lblDragTorque As Label
+    Friend WithEvents btnBrowseDragCurve As Button
+    Friend WithEvents btnDragCurveOpen As Button
     Friend WithEvents tbMapLow As TextBox
     Friend WithEvents lblPowerMapLow As Label
     Friend WithEvents btnBrowseEmMapLow As Button

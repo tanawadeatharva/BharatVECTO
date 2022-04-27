@@ -49,5 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		void WriteModalResults(IModalDataContainer container);
 
 		void CommitSimulationStep();
+
+		DrivingBehaviorEntry BrakeTrigger { get; }
 	}
 }

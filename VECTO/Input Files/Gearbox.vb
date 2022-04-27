@@ -265,8 +265,9 @@ Public Class Gearbox
                                                        .IEngineeringJobInputData_Vehicle =
                                                        New MockEngineeringVehicle() _
                                                        With { .GearboxInputData = gearbox,
-                                                       .TorqueConverterInputData = gearbox}}                                    
-                                                       },
+                                                       .TorqueConverterInputData = gearbox,
+                                                       .VehicleType = jobType }
+                                                       }},
                                                     New VectoRunData() _
                                                        With {.AxleGearData = axlegearData, .EngineData = engine,
                                                        .VehicleData =
@@ -853,7 +854,7 @@ Public Class MockEngineeringVehicle
         Implements IVehicleDeclarationInputData.ADAS
 
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+    Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
     Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
     Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
 

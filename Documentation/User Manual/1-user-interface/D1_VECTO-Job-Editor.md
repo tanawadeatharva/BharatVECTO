@@ -1,10 +1,10 @@
-##Job Editor
+## Job Editor
 
 
 ![](pics/VECTO_JobEditor_ParHyb_General.png)
 
 
-###Description
+### Description
 
 The [job file (.vecto)](#job-file) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
 
@@ -17,14 +17,14 @@ The [job file (.vecto)](#job-file) includes all informations to run a VECTO calc
 -   Driving Cycles (only in Engineering Mode)
 
 
-###Relative File Paths
+### Relative File Paths
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.
 
 VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (*Note:* The Job File must be saved before browsing for input files.)
 
 
-###General Settings
+### General Settings
 
 ![](pics/checkbox.png) Engine Only Mode
 
@@ -49,7 +49,7 @@ Filepath ot the Hybrid Strategy Parameters File(.vhctl)
 :	Files can be created and edited using the [Hybrid Strategy Parameters Editor](#hybrid-strategy-parameters-editor).
 
 
-###Auxiliaries Tab
+### Auxiliaries Tab
 
 ![](pics/VECTO_JobEditor_ParHyb_Aux.png)
 
@@ -76,7 +76,7 @@ The third option is to use the bus-auxiliaries model. For details see the [Bus A
 See [Auxiliaries](#auxiliaries) for details.
 
 
-###Cycles Tab
+### Cycles Tab
 
 ![](pics/VECTO_JobEditor_Cycles.png)
 
@@ -98,7 +98,7 @@ In Engineering Mode the cycles can be freely selected. All declaration cycles ar
 : ![remcycle](pics/minus-circle-icon.png) Remove the selected cycle from the list
 
 
-###Driver Assist Tab
+### Driver Assist Tab
 
 ![](pics/JobForm_DriverModel.png)
 
@@ -115,7 +115,7 @@ Acceleration Limiting
 :	See [Acceleration Limiting](#driver-acceleration-limiting) for details.
 
 
-###ADAS Parameters
+### ADAS Parameters
 
 ![](pics/JobForm_ADASParams.png)
 
@@ -123,11 +123,11 @@ In this tab certain general parameters for the advanced driver assistant system 
 
 For details on the individual parameters see the corresponding section [Engine Stop/Start](#advanced-driver-assistant-systems-engine-stopstart), [Eco-Roll](#advanced-driver-assistant-systems-eco-roll), [Predictive Cruise Control](#advanced-driver-assistant-systems-predictive-cruise-control)
 
-###Chart Area
+### Chart Area
 
 The chart area on the right shows the main vehicle parameters like HDV group and axle configuration if a valid [Vehicle File](#vehicle-editor-general-tab), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
-###Controls
+### Controls
 
 ![new](pics/blue-document-icon.png) New Job File
 :	Create a new empty .vecto file

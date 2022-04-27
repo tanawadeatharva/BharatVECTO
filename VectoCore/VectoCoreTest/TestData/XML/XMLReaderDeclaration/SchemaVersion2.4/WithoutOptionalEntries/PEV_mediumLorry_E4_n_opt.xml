@@ -22,10 +22,6 @@
 		<ADAS xsi:type="v2.4:ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
-			<!-- optional -->
-			<v2.0:Entry gear="9" maxTorque="2000"/>
-		</TorqueLimits>
 		<Components xsi:type="Components_PEV-E4_LorryType">
 			<ElectricMachine>
 				<PowertrainPosition>4</PowertrainPosition>

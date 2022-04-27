@@ -66,11 +66,11 @@ namespace TUGraz.VectoCommon.Models
 
 		[DebuggerStepThrough]
 		public static bool AutomaticTransmission(this GearboxType type) =>
-			type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
+			type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial || type == GearboxType.APTN;
 
 		[DebuggerStepThrough]
 		public static bool ManualTransmission(this GearboxType type) =>
-			type == GearboxType.MT || type == GearboxType.AMT || type == GearboxType.APTN;
+			type == GearboxType.MT || type == GearboxType.AMT;
 
 		public static Second TractionInterruption(this GearboxType type)
 		{

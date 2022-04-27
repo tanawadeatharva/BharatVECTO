@@ -299,15 +299,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 
+				var tqdrag = fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed);
+				var tqmax = fld[next.Gear].FullLoadStationaryTorque(response.Engine.EngineSpeed);
+				if (tqmax.IsSmallerOrEqual(tqdrag) || response.Engine.EngineSpeed.IsGreaterOrEqual(DataBus.EngineInfo.EngineN95hSpeed)) {
+					// engine speed is to high or
+					// extrapolation of max torque curve for high engine speeds may leads to negative max torque 
+					continue;
+				}
+
 				if (double.IsNaN(fcCurrent)) {
 					//var responseCurrent = RequestDryRunWithGear(
 					//	absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, current);
 					//var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
 					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, current);
-					var tqCurrent = responseCurrent.Engine.TorqueOutDemand.LimitTo(
-						fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
-						fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
-					fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
+					if (responseCurrent.Engine.EngineSpeed.IsGreaterOrEqual(DataBus.EngineInfo.EngineN95hSpeed)) {
+						fcCurrent = double.MaxValue;
+					} else {
+						var tqCurrent = responseCurrent.Engine.TorqueOutDemand.LimitTo(
+							fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+							fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
+						fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
+					}
 				}
 				var tqNext = response.Engine.TorqueOutDemand.LimitTo(
 					fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed),

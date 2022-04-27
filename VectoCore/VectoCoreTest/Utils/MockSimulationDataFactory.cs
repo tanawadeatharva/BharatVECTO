@@ -151,6 +151,26 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return engineData;
 		}
 
+		public static CombustionEngineData CreateEngineDataFromFile(string engineFile, int numGears, NewtonMeter topTorque)
+		{
+			var dao = new EngineeringDataAdapter();
+			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
+			var vehicleInput = new MockEngineeringVehicleInputData() {
+				EngineInputData = engineInput,
+			};
+			var engineData = dao.CreateEngineData(vehicleInput, engineInput.EngineModes.First());
+			for (uint i = 1; i <= numGears; i++) {
+				if (i < numGears) {
+					engineData.FullLoadCurves[i] =
+						AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineData.FullLoadCurves[0], topTorque);
+				} else {
+					engineData.FullLoadCurves[i] = engineData.FullLoadCurves[0];
+				}
+			}
+
+			return engineData;
+		}
+
 		public static VehicleData CreateVehicleDataFromFile(string vehicleDataFile)
 		{
 			var dao = new EngineeringDataAdapter();
@@ -190,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
 					}
 				}
-			}, null);
+			}, null, null);
 		}
 	
 
@@ -199,6 +219,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var inputData = JSONInputDataFactory.ReadREESSData(file, false);
 			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {REESSPack = inputData}, initialSoC);
 		}
+
+		
 	}
 
 	public class MockComponentsTest : IVehicleComponentsDeclaration

@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override bool CombustionEngineOn { get; set; }
-
+		
 		#region Overrides of CombustionEngine
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
@@ -223,6 +224,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			container[ModalResultField.P_WHR_el_map] = 0.SI<Watt>();
 			container[ModalResultField.P_WHR_el_corr] = 0.SI<Watt>();
+
+			WHRCharger?.GeneratedEnergy(0.SI<WattSecond>());
 
 			container[ModalResultField.P_WHR_mech_map] = 0.SI<Watt>();
 			container[ModalResultField.P_WHR_mech_corr] = 0.SI<Watt>();

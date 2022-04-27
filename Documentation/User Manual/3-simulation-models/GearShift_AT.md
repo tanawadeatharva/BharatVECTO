@@ -1,4 +1,4 @@
-##Shift Strategy: APT Gearshift Rules
+## Shift Strategy: APT Gearshift Rules
 
 For APT gearboxes gear skipping is only allowed for transmissions with more than 6 gears. Otherwise, the gears are shifted strictly sequentially:
 
@@ -51,7 +51,7 @@ and
    * $P_{acc} = P_{eng,max} - P_{Gb_loss} - P_{Axle_loss} - P_{Air drag_loss} - P_{RR} - P_{slope}$
 
 
-###Emergency shifts
+### Emergency shifts
 
 The Emergency shift strategy for APT transmission looks as follows.
 
@@ -67,7 +67,7 @@ Upshift (all conditions are met):
   * TC = locked
   * Gear + 1 is above downshift line 
 
-###Polygon shifts
+### Polygon shifts
 
 The Polygon shift rule for APT works on the same principle as for AMT. But, as already mentioned above the calculation of the upshift line is based on the post-shift engine speed. If the general requirements are fulfilled and it is not an emergency shift, the algorithm of the EffShift model uses the polygon shift rule. In this regard, two different cases related to a downshift are distinguished.
 
@@ -92,7 +92,7 @@ Conditions for an upshift:
 	$a_{estimated} > min(\textrm{CLUpshiftMinAcceleration}, \textrm{DriverAcceleration})$  (if TC is unlocked)
 
 
-###Efficiency shifts
+### Efficiency shifts
 
 The efficiency shift algorithm for APT works similar to the AMT algorithm in case of locked gears. In order to depict differences in gear selection which result from the different shifting sequences (APT: powershift, AMT: traction interruption) the operation points used for rating of fuel efficiency and for checking the power requirements in a candidate gear are calculated differently. More specifically, this assessment looks 0.8 seconds into the future, so that a relevant operating point after the shift is considered.
 

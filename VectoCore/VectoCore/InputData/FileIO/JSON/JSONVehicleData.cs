@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override double InitialSOC => Body.GetEx<double>("InitialSoC") / 100.0;
 
-		protected override IRetarderInputData GetRetarder => _retarderInputData ?? (_retarderInputData = new JSONRetarderInputDataBEV(this));
+		protected override IRetarderInputData GetRetarder => _retarderInputData ?? (_retarderInputData = new JSONRetarderInputData(this));
 
 		protected override IElectricMachinesEngineeringInputData GetElectricMachines()
 		{
@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				switch (Body.GetEx<String>("PowertrainConfiguration")) {
 					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
 					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}
@@ -308,6 +309,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
+		public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }

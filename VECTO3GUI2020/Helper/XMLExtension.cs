@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Castle.Core.Resource;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;

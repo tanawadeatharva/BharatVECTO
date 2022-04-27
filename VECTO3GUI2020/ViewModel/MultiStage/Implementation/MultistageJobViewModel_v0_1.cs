@@ -1,43 +1,29 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Navigation;
-using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Helper.Converter;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Util;
-using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces;
-using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using INotifyPropertyChanged = System.ComponentModel.INotifyPropertyChanged;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
@@ -157,7 +143,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 							var auxiliariesErrorInfo =
 								vehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
-							if (auxiliariesErrorInfo != null && !auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
+							if (auxiliariesErrorInfo != null && !string.IsNullOrEmpty(auxiliariesErrorInfo.Error)) {
 								errorMessage += "Auxiliaries\n";
 								errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 							}
@@ -363,12 +349,10 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _selected, value);
 		}
 
-		public bool CanBeSimulated
-		{
-			get
-			{
-				return (InputComplete && _inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleDeclarationType ==
-					VehicleDeclarationType.final) || (InputComplete && Exempted);
+		public bool CanBeSimulated {
+			get {
+				var declType = _inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleDeclarationType;
+				return InputComplete && (declType == VehicleDeclarationType.final || Exempted);
 			}
 			set => throw new NotImplementedException();
 		}

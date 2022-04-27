@@ -433,7 +433,7 @@ Public Class BatteryForm
         Try
             Dim riFile As String =
                     If(Not String.IsNullOrWhiteSpace(_batteryFile), Path.Combine(Path.GetDirectoryName(_batteryFile), tbRiCurve.Text), tbRiCurve.Text)
-            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile))
+            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile), false)
         Catch ex As Exception
         End Try
 

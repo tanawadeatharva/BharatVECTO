@@ -1,23 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Windows.Forms;
-using System.Windows.Input;
 using System.Xml;
-using Castle.Core.Internal;
-using Microsoft.Toolkit.Mvvm.Input;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -673,15 +665,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 		}
 
-		public bool HasErrors
-		{
-			get
-			{
-				var auxVmHasErrors = !Error.IsNullOrEmpty();
-
-				return auxVmHasErrors;
-			}
-		}
+		public bool HasErrors => !string.IsNullOrEmpty(Error);
 
 		public Dictionary<string, MultistageParameterViewModel> ParameterViewModels
 		{

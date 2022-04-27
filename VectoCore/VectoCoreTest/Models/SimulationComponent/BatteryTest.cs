@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using TUGraz.VECTO;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -226,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
@@ -298,6 +296,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
+
+		[TestCase(0.5, 0.5, 5000)]
+		public void BatteryTimeDependentInternalResistanceTest_120s(double initialSoC, double dt,
+			double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+			var r4 = 0.15;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create(
+								$"SoC, Ri-2, Ri-10, Ri-20, Ri-120\n0, {r1}, {r2}, {r3},{r4}\n100, {r1}, {r2}, {r3}, {r4}".ToStream(),
+								false),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
+		}
+
 		[TestCase(0.5, 0.5, 5000),
 		TestCase(0.5, 0.5, -5000)]
 		public void BatteryTimeDependentInternalResistanceTest_LoadChanges(double initialSoC, double dt, double powerDemand)
@@ -314,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
@@ -411,7 +437,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -421,7 +447,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -431,7 +457,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -441,7 +467,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
@@ -529,7 +555,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -539,7 +565,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -549,7 +575,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -559,7 +585,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})

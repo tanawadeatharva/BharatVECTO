@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -302,7 +301,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 					_inputData.ADAS.PredictiveCruiseControl.ToXMLFormat()));
 				aDASElement.Add(new XElement(adasNamespace + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, _inputData.ADAS?.ATEcoRollReleaseLockupClutch ));
 			}
-			_Xelement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+			_Xelement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
 
 			if (_inputData.Components != null) {
 				var componentElement = new XElement(

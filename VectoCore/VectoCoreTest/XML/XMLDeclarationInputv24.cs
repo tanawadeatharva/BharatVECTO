@@ -159,13 +159,14 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.AngledriveInputData);//optional
 				Assert.IsNull(vehicle.Components.RetarderInputData);//optional
 				Assert.IsNull(vehicle.Components.AirdragInputData);//optional
-				Assert.IsNull(vehicle.TorqueLimits);//optional
+				Assert.IsEmpty(vehicle.TorqueLimits);//optional
 			} else {
 				Assert.IsNotNull(vehicle.TankSystem);
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);//optional
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);//optional
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);//optional
 				Assert.IsNotNull(vehicle.TorqueLimits);//optional
+				Assert.IsNotEmpty(vehicle.TorqueLimits);//optional
 			}
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
 			Assert.IsNotNull(vehicle.Components.AxleWheels);
@@ -220,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 			}
 			else {
 				Assert.IsNotNull(vehicle.TankSystem);
@@ -229,6 +230,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.AreEqual(20.300.SI<CubicMeter>(), vehicle.CargoVolume);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 			}
 
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
@@ -266,12 +268,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			if (testDir == Optional_TESTS_DIR) {
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 			}
 			else {
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 			}
 
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
@@ -316,7 +319,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 				Assert.IsNull(vehicle.BoostingLimitations);
 			}
@@ -328,6 +331,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 				TestElectricMotorTorqueLimits(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				TestBoostingLimitations(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 			}
@@ -693,7 +697,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 			}
@@ -703,8 +707,9 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
-				Assert.AreEqual(20.300.SI<CubicMeter>(), vehicle.CargoVolume); 
+				Assert.AreEqual(20.300.SI<CubicMeter>(), vehicle.CargoVolume);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNotNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 			}
@@ -744,7 +749,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			{
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 			}
@@ -753,6 +758,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 				Assert.IsNotNull(vehicle.BoostingLimitations);//Vehicle Max Prop. Limit
 			}
@@ -805,7 +811,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
-				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);//Vehicle EM Drive Limits
 			}
 
@@ -1001,7 +1007,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.Components.RetarderInputData);
 				Assert.IsNull(vehicle.Components.AirdragInputData);
 				Assert.IsNull(vehicle.CargoVolume);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
@@ -1011,7 +1017,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.Components.AirdragInputData);
 				Assert.IsNotNull(vehicle.CargoVolume);
-				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			Assert.IsNotNull(vehicle.Components.AxleGearInputData);
@@ -1149,14 +1155,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			{
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
 			{
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
-				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			}
 
@@ -1765,7 +1771,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			{
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsNull(vehicle.TorqueLimits);
+				Assert.IsEmpty(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
@@ -1773,6 +1779,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsNotNull(vehicle.TorqueLimits);
+				Assert.IsNotEmpty(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			}
 

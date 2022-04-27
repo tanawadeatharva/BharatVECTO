@@ -1,4 +1,4 @@
-##Electric Motor
+## Electric Motor
 
 The electric motor is modeled by basically 4 map files:
 
@@ -24,7 +24,7 @@ The follwing picture shows the signals used in VECTO and provided in the .vmod f
 
 ![](pics/electric_motor_map.png)
 
-###Electric Motor Model
+### Electric Motor Model
 
 The VECTO component for the electric motor contains the electric motor itself which is connected via a transmission stage to the drivetrain. The ratio and efficiency of the transmission stage can be defined in the vehicle model.
 
@@ -47,7 +47,7 @@ P_X-em_el = PowerMap(n_X-em, T_X-em_map)
 P_X_loss = P_X_mech - P_X-em_el
 
 
-###Electric Power Map Interpolation
+### Electric Power Map Interpolation
 
 The electric power demand of the electric machine is not directly interpolated in the provided power map. Due to the characteristic of the map (increasing electric power with both, torque and speed) the resulting delaunay map may cause deviations from the assumed electric power demand depending on how the triangles are actually added to the delaunay map.
 
@@ -59,25 +59,27 @@ From the tuple $(n_\textrm{em}, T\textrm{em}, T_\textrm{loss,em-map})$ a Delauna
 
 $P_\textrm{el}(n_\textrm{em}, T_\textrm{em}) = \textrm{Delaunay}_\textrm{EM-Map}(n_\textrm{em}, T_\textrm{em}) \cdot n_\textrm{em} + n_\textrm{em} \cdot T_\textrm{em}$
 
-###Thermal De-Rating
+### Thermal De-Rating
 
 The electric machine can be overloaded for a certain period. In addition to the maximum drive and generation torque (which already is in overload condition) the mechanical power the electric machine can generate is required.
 
-The basic principal of the thermal de-rating is as follows: based on the continuous power and the angular velocity for the continuous power as well as the maximum overload time a thermal energy buffer is calculated. During the simulation the difference between the current losses in the electric machine and the losses at the continuous power operating point are integrated over time. If this value reaches the capacity of the thermal energy buffer the electric machine can only deliver the specified continuous power until the thermal energy buffer goes below a certain threshold.
+The basic principal of the thermal de-rating is as follows: based on the continuous power and the angular velocity for the continuous power as well as the maximum overload time a thermal energy buffer is calculated. During the simulation the difference between the current losses in the electric machine and the losses at the continuous power operating point are integrated over time. If this value reaches the capacity of the thermal energy buffer the electric machine can only deliver the specified continuous torque until the thermal energy buffer goes below a certain threshold.
 
 
 $E_\textrm{th,buf} = (P_\textrm{loss,ovl} - P_\textrm{loss,cont}) \cdot t_\textrm{ovl}$
 
-$P_\textrm{loss,ovl} = n_\textrm{T,ovl} \cdot T_\textrm{ovl} - P_\textrm{map, el}(T_\textrm{ovl}, n_\textrm{T, ovl})$
+$P_\textrm{loss,ovl} = P_\textrm{map, el}(T_\textrm{ovl}, n_\textrm{T, ovl}) - n_\textrm{T,ovl} \cdot T_\textrm{ovl}$
 
-$P_\textrm{loss,cont} = n_\textrm{T,cont} \cdot T_\textrm{cont} - P_\textrm{map, el}(T_\textrm{cont}, n_\textrm{T, cont})$
+$P_\textrm{loss,cont} = P_\textrm{map, el}(T_\textrm{cont}, n_\textrm{T, cont}) - n_\textrm{T,cont} \cdot T_\textrm{cont}$
+
+The overload buffer is calculated for both voltage levels of the electric motor. Both, the overload buffer and continuous losses used in the simulation are interpolated with the voltage level of the REESS at average usable SoC level.
 
 In every simulation step the losses of the electric machine are accumulated:
 
 $E_{\textrm{ovl,} i + 1} = E_{\textrm{ovl,} i} + (P_\textrm{loss, i} - P_\textrm{loss,cont}) \cdot dt$
 
-$P_\textrm{loss, i} = T_\textrm{em, mech} \cdot n_\textrm{em} - P_\textrm{map, el}(T_\textrm{em, mech}, n_\textrm{em})$
+$P_\textrm{loss, i} = P_\textrm{map, el}(T_\textrm{em, mech}, n_\textrm{em}) - n_\textrm{em} \cdot T_\textrm{em, mech}$
 
 
-If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous power until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by the thermal overload recovery factor. Then the maximum torque is available again.
+If $E_\textrm{ovl, i}$ reaches the overload capacity $E_\textrm{th,buf}$ the power of the electric machine is limited to the continuous torque until $E_\textrm{ovl,i}$ goes below the overload capacity multiplied by the thermal overload recovery factor. Then the maximum torque is available again.
 

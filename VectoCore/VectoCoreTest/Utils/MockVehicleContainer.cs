@@ -109,6 +109,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
+		public IElectricSystemInfo ElectricSystemInfo { get; }
+
 		public ITorqueConverterInfo TorqueConverterInfo => null;
 
 		public ITorqueConverterControl TorqueConverterCtl => null;
@@ -119,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
+		public WHRCharger WHRCharger { get; }
 
 		public bool IsTestPowertrain => false;
 
@@ -233,6 +236,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
 		public PCCStates PCCState => PCCStates.OutsideSegment;
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 
 		public CycleData CycleData { get; set; }
 
@@ -330,6 +334,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool HasElectricMotor { get; set; }
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
+		public VectoSimulationJobType VehicleArchitecutre { get; }
 
 		#endregion
 	}

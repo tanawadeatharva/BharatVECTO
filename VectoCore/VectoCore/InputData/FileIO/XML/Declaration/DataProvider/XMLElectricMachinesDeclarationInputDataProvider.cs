@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -59,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			var gearRatios = GetNode(XMLNames.ElectricMachine_P2_5GearRatios, null, false);
 			if (gearRatios != null) {
 				var gears = GetNodes(XMLNames.GearRatio_Ratio, gearRatios);
-				if (gears.IsNullOrEmpty())
+				if (gears is null || gears.Count == 0)
 					return;
 				
 				machineEntry.RatioPerGear = new double[gears.Count];

@@ -26,10 +26,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public VoltageLevelData EfficiencyData { get; internal set; }
 
-		// not read direcly from input but calculated in a pre-processing step
-		public NewtonMeter ContinuousTorque { get; internal set; }
-
 		public DragCurve DragCurve { get; internal set; }
+
+		// not read direcly from input but calculated in a pre-processing step
+		public OverloadData Overload { get; internal set; }
 	}
 
 	public class VoltageLevelData
@@ -46,15 +46,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		
 		public NewtonMeter EfficiencyMapLookupTorque(Volt voltage, Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque)
 		{
-			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreater(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
 			var (a, b) = GetSection(voltage);
 			var r1 = a.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 			var r2 = b.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 
-			if (r1 == null && r2 == null) {
+			if (r1 is null && r2 is null) {
 				return null;
+			}
+
+			// if one of the values is limited by EM, but the other is not (is null): use maxEmTorque instead
+			if (r1 is null) {
+				r1 = maxEmTorque;
+			}
+			if (r2 is null) {
+				r2 = maxEmTorque;
 			}
 
 			var retVal = VectoMath.Interpolate(a.Voltage, b.Voltage,
@@ -68,7 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				interval: 10.SI<NewtonMeter>(),
 				getYValue: x => (Watt)x - electricPower,
 				evaluateFunction: x => LookupElectricPower(voltage, avgSpeed, x, true).ElectricalPower,
-				criterion: x => ((Watt)x - electricPower).Value()
+				criterion: x => ((Watt)x - electricPower).Value(),
+				searcher: this
 			);
 
 			return searchResult;
@@ -137,23 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		[SIRange(0, double.MaxValue)]
 		public Volt Voltage { get; internal set; }
-
-		[SIRange(double.MinValue, double.MaxValue)]
-		public NewtonMeter ContinuousTorque { get; internal set; }
-
-		[SIRange(0, double.MaxValue)]
-		public PerSecond ContinuousTorqueSpeed { get; internal set; }
-
-		[SIRange(double.MinValue, double.MaxValue)]
-		public NewtonMeter OverloadTorque { get; set; }
-
-		[SIRange(0, double.MaxValue)]
-		public PerSecond OverloadTestSpeed { get; set; }
-
-
-		[SIRange(0, double.MaxValue)]
-		public Second OverloadTime { get; internal set; }
-
+		
 		[ValidateObject]
 		public ElectricMotorFullLoadCurve FullLoadCurve { get; internal set; }
 
@@ -161,5 +154,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public EfficiencyMap EfficiencyMap { get; internal set; }
 
 
+	}
+
+	public class OverloadData
+	{
+		public NewtonMeter ContinuousTorque { get; internal set; }
+
+		public Joule OverloadBuffer { get; internal set; }
+
+		public Watt ContinuousPowerLoss { get; internal set; }
 	}
 }

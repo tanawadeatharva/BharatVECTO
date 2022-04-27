@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
-using Castle.Core.Internal;
+
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -122,7 +120,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 				dataElement.Add(hvacElement);
 			}
 
-			dataElement.DescendantsAndSelf().Where(e => e.Value.IsNullOrEmpty()).Remove();
+			dataElement.DescendantsAndSelf().Where(e => string.IsNullOrEmpty(e.Value)).Remove();
 		}
 
 		private void CreateElementsWithGroupWriters()

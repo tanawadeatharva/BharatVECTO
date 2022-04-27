@@ -110,9 +110,13 @@
 					</Conditioning>
 				</v2.3:Data>
 				<v2.3:Signature>
-					<di:Reference>
-						<di:DigestMethod Algorithm=""/>
-						<di:DigestValue/>
+					<di:Reference URI="#IEPC-asdf">
+						<di:Transforms>
+							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+						</di:Transforms>
+						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+						<di:DigestValue>/+OkpqMJNrSUR2r8zwuvw+IJOEP3c9lDM+Buo32YxO0=</di:DigestValue>
 					</di:Reference>
 				</v2.3:Signature>
 			</IEPC>
@@ -120,7 +124,7 @@
 				<Battery>
 					<StringID>0</StringID>
 					<REESS>
-						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf1" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -146,9 +150,13 @@
 							</CurrentLimits>
 						</v2.4:Data>
 						<Signature>
-							<di:Reference>
-								<di:DigestMethod Algorithm=""/>
-								<di:DigestValue/>
+							<di:Reference URI="#BAT-asdf1">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>rMNU7I17SCZSC0o8+zVwZ5I1dpSvJK8uuZQ8SmduVak=</di:DigestValue>
 							</di:Reference>
 						</Signature>
 					</REESS>
@@ -158,7 +166,7 @@
 				<Battery>
 					<StringID>1</StringID>
 					<REESS>
-						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+						<v2.4:Data id="BAT-asdf2" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
 							<Model>a</Model>
 							<CertificationNumber>token</CertificationNumber>
@@ -184,9 +192,13 @@
 							</CurrentLimits>
 						</v2.4:Data>
 						<Signature>
-							<di:Reference>
-								<di:DigestMethod Algorithm=""/>
-								<di:DigestValue/>
+							<di:Reference URI="#BAT-asdf2">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>oa0mdxJCVb7SnL4wavYaEjqdmrHntwVj9Poo6taL9u4=</di:DigestValue>
 							</di:Reference>
 						</Signature>
 					</REESS>
@@ -213,7 +225,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
+						<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Retarder>
@@ -244,7 +256,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
+						<di:DigestValue>Ux2vo+s07pGr9XCbvNs/YbJcFaZClORRGXpP6Eyeze8=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</Axlegear>
@@ -273,7 +285,7 @@
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										<di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -300,7 +312,7 @@
 											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
+										<di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -343,7 +355,7 @@
 							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
+						<di:DigestValue>NroIsfnT7+1zYG5CTHxpclh0ZaRZvGyrfFPmWdKbFbg=</di:DigestValue>
 					</di:Reference>
 				</v2.0:Signature>
 			</AirDrag>

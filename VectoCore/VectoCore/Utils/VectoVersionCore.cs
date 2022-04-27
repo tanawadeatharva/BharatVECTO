@@ -33,36 +33,16 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class VectoSimulationCore
 	{
-
 #if CERTIFICATION_RELEASE
 		private const string SUFFIX = "";
-#else
-#if RELEASE_CANDIDATE
+#elif RELEASE_CANDIDATE
 		private const string SUFFIX = "-RC";
 #else
 		private const string SUFFIX = "-DEV";
 #endif
-#endif
 
-		public static string VersionNumber
-		{
-			get {
-				return "0.7.7.2547" + SUFFIX;
-			}
-		}
+		public static string VersionNumber => typeof(VectoSimulationCore).Assembly.GetName().Version + SUFFIX;
 
-		public static string BranchSuffix
-		{
-			get {
-				return "-DEV";
-			}
-		}
-
-		public static string FullVersion
-		{
-			get {
-				return string.Format("VectoCore{1} {0}", VersionNumber, BranchSuffix);
-			}
-		}
+		public static string BranchSuffix => SUFFIX;
 	}
 }

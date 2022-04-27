@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											(ICEAvailable && inAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed))) &&
 											(DataBus.Brakes.BrakePower.IsGreater(0) || inTorque.IsSmaller(0));
 			var vehicleSpeedBelowThreshold =
-				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
+				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(ModelData.DisengageWhenHaltingSpeed);
 			if (halted || (driverDeceleratingNegTorque && vehicleSpeedBelowThreshold)) {
 				EngageTime = VectoMath.Max(EngageTime, absTime + dt);
 				_strategy?.Disengage(absTime, dt, outTorque, outAngularVelocity);
@@ -479,10 +479,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Disengaged = false;
 			var lastGear = Gear;
-			Gear = DataBus.VehicleInfo.VehicleStopped
-				? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
-				: _strategy.Engage(absTime, dt, outTorque,
-					VectoMath.Min(PreviousState.OutAngularVelocity, outAngularVelocity));
+			if (DataBus.VehicleInfo.VehicleStopped) {
+				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			} else {
+				Gear = _strategy.Engage(absTime, dt, outTorque, VectoMath.Min(PreviousState.OutAngularVelocity, outAngularVelocity));
+			}
+
 			if (!DataBus.VehicleInfo.VehicleStopped) {
 				if (Gear > lastGear) {
 					LastUpshift = absTime;

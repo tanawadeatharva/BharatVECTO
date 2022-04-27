@@ -6,7 +6,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
-using Castle.Core.Internal;
 using Microsoft.Toolkit.Mvvm.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
@@ -159,10 +158,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
 
 
-				var auxiliariesErrorInfo =
-					VehicleViewModel.MultistageAuxiliariesViewModel as IDataErrorInfo;
-				if (auxiliariesErrorInfo != null &&
-					!auxiliariesErrorInfo.Error.IsNullOrEmpty()) {
+				if (VehicleViewModel.MultistageAuxiliariesViewModel is IDataErrorInfo auxiliariesErrorInfo &&
+					!string.IsNullOrEmpty(auxiliariesErrorInfo.Error)) {
 					errorMessage += "\nAuxiliaries:\n";
 					errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 				}

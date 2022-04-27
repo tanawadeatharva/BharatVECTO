@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TUGraz.VectoCommon.BusAuxiliaries {
+﻿namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public enum FloorType
 	{
 		Unknown = 0,

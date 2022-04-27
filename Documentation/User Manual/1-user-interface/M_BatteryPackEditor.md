@@ -1,24 +1,24 @@
 
-##Rechargeable Electric Energy Storage Editor
+## Rechargeable Electric Energy Storage Editor
 
 Two types of rechargeable electric energy storage can be configured in VECTO: either a battery pack or a super capacitor.
 
-###Battery Pack
+### Battery Pack
 
 ![](pics/VECTO_Battery.png)
 
-####Description
+#### Description
 
 The electric energy storage editor allows to edit all model parameters relevant for the electric energy storage.
 
-####Relative File Paths
+#### Relative File Paths
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
 
 VECTO automatically uses relative paths if the input file (e.g. SoC) is in the same directory as the Battery file. (The Battery File must be saved before browsing for input files.)
 
 
-####Main Parameters
+#### Main Parameters
 
 Make and Model
 :   Free text defining the model, type, etc.
@@ -42,16 +42,16 @@ Internal Resistance Curve
 :   Defines the battery's internal resistance depending on its state of charge. The file must cover the SOC range from 0 to 100%! (see [Battery Internal Resistance File (.vbatr)](#battery-internal-resistance-file-.vbatr))
 
 
-####Chart Area
+#### Chart Area
 
 The Chart Area displays the battery's internal voltage (blue) and the internal resistance (red) over its state of charge.
 
 
-###SuperCap
+### SuperCap
 
 ![](pics/VECTO_SuperCap.png)
 
-####Main Parameters
+#### Main Parameters
 
 Make and Model
 :   Free text defining the model, type, etc.
@@ -69,7 +69,7 @@ Internal Resistance
 :   Defines the capacitor's internal resistance 
 
 
-###Controls
+### Controls
 
 
 

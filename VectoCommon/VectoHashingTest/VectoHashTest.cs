@@ -32,7 +32,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -146,10 +145,10 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, existingHash);
 		}
 
-		[TestCase]
-		public void TestReadTyres1Index()
+		[TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
+		public void TestReadTyres1Index(string file)
 		{
-			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml";
 			var h = VectoHash.Load(file);
 			var expectedHash = new[] {
 				"5074334bb2c090c5e258e9a664f5d19689a3f13d",
@@ -185,10 +184,10 @@ namespace VectoHashingTest
 				"index exceeds number of components found! index: 3, #components: 3");
 		}
 
-		[TestCase]
-		public void TestComputeTyres1Index()
+		[TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1_unsortedAxle.xml")]
+		public void TestComputeTyres1Index(string file)
 		{
-			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml";
 			var h = VectoHash.Load(file);
 
 			var hash1 = h.ComputeHash(VectoComponents.Tyre, 1);

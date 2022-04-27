@@ -33,8 +33,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
 			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
-			if ((PreviousState.ConsumedEnergy / Efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
-				return PreviousState.ConsumedEnergy / dt / Efficiency;
+			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency;
+			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
+				return PreviousState.ConsumedEnergy / dt * efficiency;
 			}
 
 			// write in mod-file for post-processing correction

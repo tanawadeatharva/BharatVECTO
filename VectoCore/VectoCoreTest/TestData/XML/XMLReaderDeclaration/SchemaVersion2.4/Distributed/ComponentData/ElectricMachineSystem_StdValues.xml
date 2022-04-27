@@ -24,10 +24,10 @@
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
 				<PowerMap>
-					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
-					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 				</PowerMap>
 			</VoltageLevel>
 			<DragCurve>
@@ -42,7 +42,7 @@
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>ZDzYMLXTbvq6O8mR3OE8ii2v4SHgJ6nieqw6XXINaF0=</di:DigestValue>
+				<di:DigestValue>CunnDxsiE9kciX+v9oeEGADZpEc88NtfMtmrHyJkCQ0=</di:DigestValue>
 			</di:Reference>
 		</v2.3:Signature>
 	</tns:ElectricMachineSystem>

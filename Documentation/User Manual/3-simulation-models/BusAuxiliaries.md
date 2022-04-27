@@ -1,4 +1,4 @@
-##Bus Auxiliaries
+## Bus Auxiliaries
 
 <div class="declaration">
 
@@ -7,25 +7,25 @@
 The general approach for bus auxiliaries is that depending on the simulated driving cycle, number of passengers and selected auxiliary technologies the average power demand is calculated and applied during simulation. 
 In case of smart auxiliaries (smart air compressor or smart alternator) the smart systems are only active during braking events if there is enough exessive power to provide the increased power demand for the smart systems. This reduces the amount of mechanical braking power required. Thus, during braking events the smart air compressor may produce more compressed air than required on average and the smart alternator may generate more electric power than required on average. The final fuel consumption is corrected for the excessive compressed air volume and electric energy in a [post processing step](#engine-fuel-consumption-correction).
 
-###Engine Cooling Fan
+### Engine Cooling Fan
 
 The power demand for the engine cooling fan depends on the selected technology of the cooling fan.
 
-###Steering Pump
+### Steering Pump
 
 The power demand of the steering pump can either be electrical or mechanical. The actual demand depends on the selected technology, vehicle dimensions and number of steered axles.
 
-###Pneumatic System
+### Pneumatic System
 
 The air demand depends on the one hand on the cycle (number of braking events, number of stops, number of kneeling events, etc) and the vehicle configuration. Depending on the compressor technology a generic compressor map is used to calculate the power demand for a certain air demand.
 
-###Electric System
+### Electric System
 
 Depending on the vehicle group and mission profile a generic electric load is applied. Certain technologies can be selected in the input (LED lamps).
 
-###HVAC
+### HVAC
 
-####Model Parameters:
+#### Model Parameters:
 
   - Bus body
   	 + Length $l_\textrm{Bus}$
@@ -41,7 +41,7 @@ Depending on the vehicle group and mission profile a generic electric load is ap
 
 The environmental conditions map contains a list of environmental conditions (environmental temperature, solar factor) and a weighting factor. The power demand for the HVAC system (separated into mechanical and electrical power demand) is calculated for every environmental contition in the map and summed up with the according weighting factor.
 
-####Calculation of HVAC Power Demand
+#### Calculation of HVAC Power Demand
 
 ---
 classoption: fleqn
@@ -204,7 +204,7 @@ $P_\textrm{additionalHeating}(T, S, T_\textrm{calc}, P_\textrm{wasteHeat}) = \le
 
 In Engineering Mode the electrical and mechanical power demand for the electric system, the pneumatic system and the HVAC can be provided.
 
-####Electric System
+#### Electric System
 
 Current Demand Engine On
 :   Demand of the electric system when the ICE is on. The current is multiplied with the nominal voltage of 28.3V.
@@ -233,7 +233,7 @@ Electric Storage Efficiency
 ESS supply from HEV REESS
 :   If selected, the low-voltage electric auxiliaries can be supplied from the high voltage REESS via the DC/DC converter. Needs to be selected in case "no alternator" is chosen as alternator technology. In case of a smart alternator, the low-voltage battery is used first and if empty the energy is drawn from the high voltage system.
 
-####Pneumatic System
+#### Pneumatic System
 
 Compressor Map
 :   [Compressor map file](#advanced-compressor-map-.acmp) defining the mechanical power demand and the air flow depending on the compressor speed.
@@ -247,7 +247,7 @@ Compressor Ratio
 Smart Air Compressor
 :    If enabled, the air compressor may generate excessive air during braking events. The air consumed and generated are [corrected in post processing](#engine-fuel-consumption-correction).
 
-####HVAC System
+#### HVAC System
 
 Mechanical Power Demand
 :   Power demand of the HVAC system directly applied at the crank shaft

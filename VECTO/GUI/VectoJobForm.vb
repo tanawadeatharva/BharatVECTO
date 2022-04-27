@@ -101,6 +101,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Parallel Hybrid Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = True
+            case VectoSimulationJobType.SerialHybridVehicle
+                lblTitle.Text = prefix + "Serial Hybrid Vehicle"
+                gbElectricAux.Enabled = true
+                GrAuxMech.Enabled = true
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = prefix + "Battery Electric Vehicle"
                 gbElectricAux.Enabled = True
@@ -460,20 +464,24 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
-            TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
-        End If
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle OrElse not IsNothing(inputData.JobInputData.Vehicle.Components.GearboxInputData)) Then
-            TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
-        End If
-        If (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
-            TbShiftStrategyParams.Text = ""
-        Else
-            TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
-        End If
-        If (JobType = VectoSimulationJobType.ParallelHybridVehicle) Then
-            tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
-        End If
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
+		Else
+			TbENG.Text = ""
+		End If
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
+		Else
+			TbGBX.Text = ""
+		End If
+		If (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
+			TbShiftStrategyParams.Text = ""
+		Else
+			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
+		End If
+		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle) Then
+			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
+		End If
 
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData

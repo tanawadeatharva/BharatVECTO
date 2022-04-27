@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					? new XElement(v24 + XMLNames.TPMLM, _vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				_vehicleInputData.AirdragModifiedMultistep != null ?
 					new XElement(v24 + XMLNames.Bus_AirdragModifiedMultistep, _vehicleInputData.AirdragModifiedMultistep) : null,
-				_vehicleInputData.RegisteredClass != null
+				_vehicleInputData.RegisteredClass != null && _vehicleInputData.RegisteredClass != RegistrationClass.unknown
 					? new XElement(v24 + XMLNames.Vehicle_RegisteredClass, _vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 				_vehicleInputData.NumberPassengerSeatsLowerDeck != null
 					? new XElement(v24 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, _vehicleInputData.NumberPassengerSeatsLowerDeck) : null,
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					? new XElement(v24 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, _vehicleInputData.NumberPassengerSeatsUpperDeck) : null,
 				_vehicleInputData.NumberPassengersStandingUpperDeck != null
 					? new XElement(v24 + XMLNames.Bus_NumberPassengersStandingUpperDeck, _vehicleInputData.NumberPassengersStandingUpperDeck) : null,
-				_vehicleInputData.VehicleCode != null
+				_vehicleInputData.VehicleCode != null && _vehicleInputData.VehicleCode != VehicleCode.NOT_APPLICABLE
 					? new XElement(v24 + XMLNames.Vehicle_BodyworkCode, _vehicleInputData.VehicleCode.ToXMLFormat()) : null,
 				_vehicleInputData.LowEntry != null
 					? new XElement(v24 + XMLNames.Bus_LowEntry, _vehicleInputData.LowEntry) : null,

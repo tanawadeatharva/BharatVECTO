@@ -79,9 +79,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IRESSInfo BatteryInfo { get; protected set; }
 		public ITorqueConverterInfo TorqueConverterInfo { get; protected set; }
 
-		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; protected set; }
 
-		public IDCDCConverter DCDCConverter { get; private set; }
+		public IDCDCConverter DCDCConverter { get; protected set; }
+
+		public WHRCharger WHRCharger { get; protected set; }
+
+		public IElectricSystemInfo ElectricSystemInfo { get; protected set; }
 
 		public virtual bool IsTestPowertrain => false;
 
@@ -118,7 +122,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors.GetValueOrDefault(pos);
+			return ElectricMotors.GetVECTOValueOrDefault(pos);
 		}
 
 
@@ -150,6 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IRESSInfo c14) { BatteryInfo = c14; }
 			if (component is BusAuxiliariesAdapter c15) { BusAux = c15; }
 			if (component is IDCDCConverter c16) { DCDCConverter = c16; }
+			if (component is IElectricSystemInfo c24) { ElectricSystemInfo = c24; }
 			
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
@@ -183,6 +188,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				ElectricMotors[c23.Position] = c23;
 				HasElectricMotor = true;
+			}
+
+			if (component is WHRCharger c25) {
+				WHRCharger = c25;
 			}
 			
 			_components.Add(Tuple.Create(commitPriority, component));
@@ -245,6 +254,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual bool HasElectricMotor { get; private set; }
 
 		public PowertrainPosition[] ElectricMotorPositions => ElectricMotors.Keys.ToArray();
+
+		public VectoSimulationJobType VehicleArchitecutre => RunData.JobType;
 
 		public virtual bool HasCombustionEngine { get; private set; }
 

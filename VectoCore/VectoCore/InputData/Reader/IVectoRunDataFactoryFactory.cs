@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData
@@ -19,7 +13,7 @@ namespace TUGraz.VectoCore.InputData
 		/// <param name="inputDataProvider"></param>
 		/// <param name="report"></param>
 		/// <returns></returns>
-		IVectoRunDataFactory CreateDeclarationRunDataFactory([NotNull] IInputDataProvider inputDataProvider,
+		IVectoRunDataFactory CreateDeclarationRunDataFactory(IInputDataProvider inputDataProvider,
 			IDeclarationReport report, IVTPReport vtpReport);
 	}
 }
