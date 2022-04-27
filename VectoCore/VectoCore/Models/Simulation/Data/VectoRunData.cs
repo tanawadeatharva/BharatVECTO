@@ -235,6 +235,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
+			if (runData.ElectricMachinesData?.Any(e => e.Item1 == PowertrainPosition.HybridP0) ?? false){
+				return new ValidationResult("PowertrainPosition P0 is currently not supported.");
+			}
+
 			return ValidationResult.Success;
 		}
 
