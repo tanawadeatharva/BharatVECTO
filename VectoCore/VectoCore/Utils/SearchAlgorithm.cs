@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("debug: {0}", debug);
 
 			WriteSearch(debug, "LineSearch.csv");
-			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
+			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug.LocalData.Select(d => d.b).Join());
 		}
 
 		[Conditional("TRACE")]
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("debug: {0}", debug);
 #endif
 			WriteSearch(debug, "InterpolateSearch.csv");
-			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
+			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug.LocalData.Select(d => d.b).Join());
 		}
 
 		[Conditional("TRACE")]
