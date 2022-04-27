@@ -121,7 +121,8 @@ Public Class VehicleForm
 
 		_changed = False
 
-		cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel())
+		cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel(),
+																				Function(x) x <> PowertrainPosition.GEN)
 
 		NewVehicle()
 	End Sub
@@ -460,6 +461,7 @@ Public Class VehicleForm
 			tbEmADCLossMap.Text = If(em.MechanicalTransmissionLossMap Is Nothing, em.MechanicalTransmissionEfficiency.ToGUIFormat(),
 									 GetRelativePath(em.MechanicalTransmissionLossMap.Source, basePath))
 			tbRatioEm.Text = em.RatioADC.ToGUIFormat()
+
 			cbEmPos.SelectedValue = em.Position
 
 			If (em.Position = PowertrainPosition.HybridP2_5) AndAlso Not em.RatioPerGear Is Nothing Then
@@ -521,19 +523,19 @@ Public Class VehicleForm
 		gbVehicleIdlingSpeed.Enabled = True
 		gbTankSystem.Enabled = True
 		gbAngledrive.Enabled = True
+		tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+		tcVehicleComponents.TabPages.Remove(tpElectricComponents)
 
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
 				gbRetarderLosses.Enabled = True
-				tpElectricComponents.Enabled = False
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
 					(Function(t) t.GetLabel(), Function(t) t = PowertrainPosition.HybridPositionNotSet)
 				cbEngineStopStart.Enabled = True
 				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
 				cbEcoRoll.Enabled = True
 				gbEMTorqueLimits.Enabled = False
-				tpGensetComponents.Visible = False
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				gbRetarderLosses.Enabled = True
 				lblTitle.Text = "Parallel Hybrid Vehicle"
@@ -541,7 +543,10 @@ Public Class VehicleForm
 					(Function(t) t.GetLabel(), Function(x) x.IsParallelHybrid())
 				gbEMTorqueLimits.Enabled = True
 				cbEcoRoll.Enabled = True
-				tpGensetComponents.Visible = False
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
+					tpElectricComponents.BindingContext = BindingContext
+				End If
 			Case VectoSimulationJobType.SerialHybridVehicle
 				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Serial Hybrid Vehicle"
@@ -553,7 +558,13 @@ Public Class VehicleForm
 				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
 				cbEcoRoll.Enabled = False
 				gbEMTorqueLimits.Enabled = False
-				tpGensetComponents.Visible = True
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
+					tpElectricComponents.BindingContext = BindingContext
+				End If
+				If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
+					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+				End If
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Battery Electric Vehicle"
@@ -568,7 +579,20 @@ Public Class VehicleForm
 				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
 				cbEcoRoll.Enabled = False
 				gbEMTorqueLimits.Enabled = False
-				tpGensetComponents.Visible = False
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
+					tpElectricComponents.BindingContext = BindingContext
+				End If
+			Case Else
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
+					tpElectricComponents.BindingContext = BindingContext
+				End If
+				If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
+					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+					tpGensetComponents.BindingContext = BindingContext
+				End If
+
 		End Select
 	End Sub
 
@@ -1216,21 +1240,18 @@ Public Class VehicleForm
 
 	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
-
 		Dim selectedValue = CbRtType.SelectedValue
-		CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 
 		If PowertrainPosition.BatteryElectricE4.Equals(cbEmPos.SelectedValue) Then
 			gbRetarderLosses.Enabled = False
 			TbRtRatio.Text = ""
 			TbRtPath.Text = ""
-			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)})"
-
+			CbRtType.SelectedIndex = 0
+			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 		ElseIf PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue) Then
 			gbRetarderLosses.Enabled = True
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)}, {CInt(RetarderType.AxlegearInputRetarder)})"
-
-		ElseIf PowertrainPosition.BatteryElectricE2.Equals(cbEmPos.SelectedValue) Then
+		Else
 			gbRetarderLosses.Enabled = True
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 		End If
@@ -1238,7 +1259,7 @@ Public Class VehicleForm
 		If (selectedValue IsNot Nothing) Then
 			If Not selectedValue.Equals(CbRtType.SelectedValue) Then
 				MsgBox("Retarder has changed due to change of electric motor position. Please check.", MsgBoxStyle.Information)
-				CbRtType.SelectedValue = selectedValue
+				CbRtType.SelectedIndex = 0
 			End If
 		End If
 	End Sub

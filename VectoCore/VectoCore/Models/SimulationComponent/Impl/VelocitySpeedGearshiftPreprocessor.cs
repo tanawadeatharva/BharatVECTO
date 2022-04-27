@@ -105,9 +105,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					gearbox.Disengaged = true;
 					gearbox.EngageTime = 100.SI<Second>();
 					gearbox._nextGear = gearForSpeed;
+
 					var vehicleSpeed = SimulateRollingVehicle(vehicle, gradient, container);
 					modData?.Reset();
-					tmp.Add(new Entry() { StartVelocity = speed, Gradient = gradient, EndVelocity = vehicleSpeed });
+					tmp.Add(new Entry { StartVelocity = speed, Gradient = gradient, EndVelocity = vehicleSpeed });
 				}
 			}
 

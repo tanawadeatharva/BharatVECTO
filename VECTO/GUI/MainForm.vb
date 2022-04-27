@@ -182,7 +182,7 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
         ElectricMotorFileBrowser.Extensions = New String() {"vem"}
-        REESSFileBrowser.Extensions = New String() {"vreess"}
+        REESSFileBrowser.Extensions = New String() {"vreess", "vbat"}
         EmADCLossMapFileBrowser.Extensions = New String() {"vtlm"}
 
         ElectricMachineDragTorqueFileBrowser.Extensions = New String() {"vemd"}
