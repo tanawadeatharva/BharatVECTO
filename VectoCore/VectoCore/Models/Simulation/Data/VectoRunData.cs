@@ -235,6 +235,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
+			if (runData.ElectricMachinesData?.Any(e => e.Item1 == PowertrainPosition.HybridP0) ?? false){
+				return new ValidationResult("P0 Hybrids are modeled as SmartAlternator in the BusAuxiliary model.");
+			}
+
 			return ValidationResult.Success;
 		}
 

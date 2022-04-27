@@ -122,7 +122,8 @@ Public Class VehicleForm
 		_changed = False
 
 		cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition)(Function(t) t.GetLabel(),
-																				Function(x) x <> PowertrainPosition.GEN)
+																				Function(x) x <> PowertrainPosition.GEN _
+																					AndAlso x <> PowertrainPosition.HybridP0)
 
 		NewVehicle()
 	End Sub
