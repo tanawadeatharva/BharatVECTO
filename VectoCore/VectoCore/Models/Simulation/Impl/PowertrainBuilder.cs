@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("ParallelHybrid needs exactly one electric motor.");
 			}
 			if (data.ElectricMachinesData.Any(e => e.Item1 == PowertrainPosition.HybridP0)) {
-				throw new VectoException("PowertrainPosition P0 is currently not supported.");
+				throw new VectoException("P0 Hybrids are modeled as SmartAlternator in the BusAuxiliary model.");
 			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
