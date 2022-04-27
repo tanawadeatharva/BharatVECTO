@@ -4,6 +4,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium.Windows;
 using System.Reflection;
+using VECTO3GUI2020.Properties;
 
 namespace Vecto3GUI2020Test.UI
 {

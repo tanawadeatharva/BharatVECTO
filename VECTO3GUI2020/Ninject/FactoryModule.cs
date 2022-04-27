@@ -1,4 +1,9 @@
-﻿using Ninject.Extensions.Factory;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.Util.XML.Interfaces;

@@ -1,4 +1,11 @@
-﻿namespace TUGraz.VectoCore.InputData.Reader.Impl {
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCore.InputData.Reader.Impl {
 	//public class CombinedBusAuxiliaries : IBusAuxiliariesDeclarationData, IElectricSupplyDeclarationData, IPneumaticSupplyDeclarationData, IElectricConsumersDeclarationData, IPneumaticConsumersDeclarationData, IHVACBusAuxiliariesDeclarationData
 	//{
 	//	private IBusAuxiliariesDeclarationData CompletedAux;

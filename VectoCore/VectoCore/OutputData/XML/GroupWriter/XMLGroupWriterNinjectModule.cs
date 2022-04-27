@@ -1,5 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Ninject.Extensions.Factory;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.CompletedBus;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries;

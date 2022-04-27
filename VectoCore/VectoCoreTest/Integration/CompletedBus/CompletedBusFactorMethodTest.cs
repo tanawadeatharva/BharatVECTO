@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Ninject;
+using NLog.LayoutRenderers;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;

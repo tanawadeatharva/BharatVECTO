@@ -1,10 +1,25 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.Linq;
 using System.Resources;
+using System.Security.RightsManagement;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using InteractiveDataDisplay.WPF;
 using TUGraz.VectoCommon.Utils;
 using VECTO3GUI2020.Properties;
+using Color = System.Drawing.Color;
 
 namespace VECTO3GUI2020.Views.CustomControls
 {

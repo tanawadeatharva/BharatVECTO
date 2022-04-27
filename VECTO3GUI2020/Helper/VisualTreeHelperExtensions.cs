@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
+using TUGraz.VectoCommon.Models;
 
 namespace VECTO3GUI2020.Helper
 {

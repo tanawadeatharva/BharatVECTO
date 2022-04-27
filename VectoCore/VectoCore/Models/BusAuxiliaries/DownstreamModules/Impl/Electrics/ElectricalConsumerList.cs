@@ -11,6 +11,7 @@
 
 
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {

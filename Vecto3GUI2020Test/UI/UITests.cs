@@ -1,6 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Appium.Android;
+using OpenQA.Selenium.Appium.Windows;
+using OpenQA.Selenium.Interactions;
 using Vecto3GUI2020Test.UI;
 
 namespace Vecto3GUI2020Test

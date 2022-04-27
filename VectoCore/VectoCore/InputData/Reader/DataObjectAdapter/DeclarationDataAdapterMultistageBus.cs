@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.BusAuxiliaries;
+﻿using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;

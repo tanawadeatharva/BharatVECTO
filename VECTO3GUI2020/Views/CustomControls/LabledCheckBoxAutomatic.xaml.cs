@@ -1,4 +1,5 @@
-﻿using System.Resources;
+﻿using System.Diagnostics;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using VECTO3GUI2020.Properties;

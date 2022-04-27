@@ -4,6 +4,7 @@ using System.Reflection;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Factory.Factory;
 using Ninject.Parameters;
+using Ninject.Planning.Bindings;
 using TUGraz.VectoCommon.Exceptions;
 
 namespace VECTO3GUI2020.Ninject.Util

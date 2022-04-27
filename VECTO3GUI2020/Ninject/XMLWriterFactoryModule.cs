@@ -1,5 +1,8 @@
 ﻿using System;
+using Ninject.Extensions.Factory;
 using Ninject.Modules;
+using VECTO3GUI2020.Ninject.Util;
+using VECTO3GUI2020.Util.XML.Implementation;
 using VECTO3GUI2020.Util.XML.Implementation.ComponentWriter;
 using VECTO3GUI2020.Util.XML.Implementation.DocumentWriter;
 using VECTO3GUI2020.Util.XML.Interfaces;
