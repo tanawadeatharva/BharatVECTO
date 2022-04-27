@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter

@@ -30,7 +30,6 @@
 */
 
 using System;
-using Microsoft.Win32.SafeHandles;
 
 namespace TUGraz.VectoCommon.Models
 {

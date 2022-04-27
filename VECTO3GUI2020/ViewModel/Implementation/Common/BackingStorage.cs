@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using TUGraz.VectoCommon.Utils;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Common
 {

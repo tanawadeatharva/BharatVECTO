@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;

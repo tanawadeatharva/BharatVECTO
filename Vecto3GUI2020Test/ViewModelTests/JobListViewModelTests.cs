@@ -2,12 +2,10 @@
 using System.Threading.Tasks;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using VECTO3GUI2020.ViewModel;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using Vecto3GUI2020Test.BugReports;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {

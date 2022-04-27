@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using Ninject;
 using TUGraz.VectoCommon.InputData;

@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using Ninject.Modules;
+﻿using Ninject.Modules;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Model.Implementation;
 using VECTO3GUI2020.Model.Interfaces;

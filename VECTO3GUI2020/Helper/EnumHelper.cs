@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using TUGraz.VectoCommon.Models;
-using VECTO3GUI2020.Annotations;
 
 namespace VECTO3GUI2020.Helper
 {
-	using System.Runtime.CompilerServices;
-
-	
-
 	internal static class EnumHelper
 	{
 		private static ObservableCollection<T> GetValuesAsObservableCollection<T, TInput>(bool exclude,

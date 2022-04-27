@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation.Common;

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using TUGraz.VectoCore;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 
 namespace VECTO3GUI2020.Model.Multistage

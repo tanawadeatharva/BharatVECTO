@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using TUGraz.VectoCommon.Exceptions;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.Views.Multistage;
-using VECTO3GUI2020.Views.Multistage.CustomControls;
 
 namespace VECTO3GUI2020.Helper.TemplateSelector
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
