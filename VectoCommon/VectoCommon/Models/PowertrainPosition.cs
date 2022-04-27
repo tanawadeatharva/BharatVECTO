@@ -85,7 +85,7 @@ namespace TUGraz.VectoCommon.InputData
 		public static bool IsParallelHybrid(this PowertrainPosition pos)
 		{
 			switch (pos) {
-				//case PowertrainPosition.HybridP0: // special case, currently not considered in VECTO
+				//case PowertrainPosition.HybridP0: // special case currently modelled in BusAuxiliary as SmartAlternator.
 				case PowertrainPosition.HybridP1:
 				case PowertrainPosition.HybridP2:
 				case PowertrainPosition.HybridP2_5:
