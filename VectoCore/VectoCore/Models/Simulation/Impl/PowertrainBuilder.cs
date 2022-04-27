@@ -412,6 +412,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Count != 1) {
 				throw new VectoException("ParallelHybrid needs exactly one electric motor.");
 			}
+			if (data.ElectricMachinesData.Any(e => e.Item1 == PowertrainPosition.HybridP0)) {
+				throw new VectoException("PowertrainPosition P0 is currently not supported.");
+			}
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
@@ -665,7 +668,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.ElectricMachinesData.Count != 1) {
 				throw new VectoException("Battery electric vehicle needs exactly one electric motor.");
 			}
-
+			
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 
