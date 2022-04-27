@@ -53,21 +53,25 @@
 			<!-- All files for net6.0 -->
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\*.dll"/>
-			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\runtimes\**\*.*"/>
+			<VectoRuntimes Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\vectocmd.*" Exclude="*.dev.json"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\*.dll"/>
-			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\runtimes\**\*.*"/>
+			<VectoCommandLineRuntimes Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\runtimes\**\*.*"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
-			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
+			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\*.dll"/>
-			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
+			<VectoMultistageRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(Vecto)" DestinationFolder="$(DeployPath)net60"/>
+		<Copy SourceFiles="@(HashingToolRuntimes)" DestinationFiles="@(HashingToolRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
+		<Copy SourceFiles="@(VectoMultistageRuntimes)" DestinationFiles="@(VectoMultistageRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
+		<Copy SourceFiles="@(VectoCommandLineRuntimes)" DestinationFiles="@(VectoCommandLineRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
+		<Copy SourceFiles="@(VectoRuntimes)" DestinationFiles="@(VectoRuntimes->'$(DeployPath)net60\runtimes\%(RecursiveDir)%(Filename)%(Extension)')"/>
 
 		<ItemGroup>
 			<!-- All files for the VECTO starters -->
