@@ -1017,13 +1017,10 @@ Public Class VectoJobForm
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
-        lblESSUtilityFactorDriving.Enabled  = false
-        tbESSUtilityFactorDriving.Enabled = false
+        gbEngineStopStart.Enabled = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
-                lblESSUtilityFactorDriving.Enabled  = true
-                tbESSUtilityFactorDriving.Enabled = true
             Case VectoSimulationJobType.EngineOnlySimulation
                 pnVehicle.Enabled = False
                 pnGearbox.Enabled = False
@@ -1031,15 +1028,19 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
-                ' empty line - do not fall-through
-                pnHybridStrategy.Enabled = True
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
+            Case VectoSimulationJobType.SerialHybridVehicle
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = true
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Enabled = False
         End Select
     End Sub
 

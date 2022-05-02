@@ -555,10 +555,9 @@ Public Class VehicleForm
 				gbEMTorqueLimits.Enabled = False
 
 				'ADAS ---------------------------------------------------------------------
-				cbEngineStopStart.Enabled = True
-				cbAtEcoRollReleaseLockupClutch.Enabled = True
-				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
-				cbEcoRoll.Enabled = True
+				cbEngineStopStart.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = True
+				pnEcoRoll.Visible = True
 
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
@@ -580,10 +579,10 @@ Public Class VehicleForm
 				gbEMTorqueLimits.Enabled = True
 
 				'ADAS ---------------------------------------------------------------------
-				cbEngineStopStart.Enabled = True
-				cbAtEcoRollReleaseLockupClutch.Enabled = False
-				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
-				cbEcoRoll.Enabled = True
+				cbEngineStopStart.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
 
 			Case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
@@ -606,10 +605,10 @@ Public Class VehicleForm
 				tpTorqueLimits.Enabled = False
 
 				'ADAS ---------------------------------------------------------------------
-				cbEngineStopStart.Enabled = False
-				cbAtEcoRollReleaseLockupClutch.Enabled = False
-				cbEcoRoll.Enabled = False
-				cbEcoRoll.SelectedIndex = -1
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
 
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
@@ -632,10 +631,10 @@ Public Class VehicleForm
 				tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
 
 				'ADAS ---------------------------------------------------------------------
-				cbEngineStopStart.Enabled = False
-				cbAtEcoRollReleaseLockupClutch.Enabled = False
-				cbEcoRoll.Enabled = False
-				cbEcoRoll.SelectedIndex = -1
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
@@ -646,7 +645,9 @@ Public Class VehicleForm
 					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
 					tpGensetComponents.BindingContext = BindingContext
 				End If
-
+				pnEcoRoll.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = True
+				cbEngineStopStart.Visible = True
 		End Select
 
 	End Sub
