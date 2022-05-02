@@ -1192,15 +1192,15 @@ Partial Class VehicleForm
 		'
 		'tbVehIdlingSpeed
 		'
-		Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(173, 3)
+		Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(205, 4)
 		Me.tbVehIdlingSpeed.Name = "tbVehIdlingSpeed"
-		Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(57, 20)
+		Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(56, 20)
 		Me.tbVehIdlingSpeed.TabIndex = 0
 		'
 		'Label18
 		'
 		Me.Label18.AutoSize = True
-		Me.Label18.Location = New System.Drawing.Point(233, 6)
+		Me.Label18.Location = New System.Drawing.Point(264, 7)
 		Me.Label18.Name = "Label18"
 		Me.Label18.Size = New System.Drawing.Size(30, 13)
 		Me.Label18.TabIndex = 24
@@ -1209,7 +1209,7 @@ Partial Class VehicleForm
 		'Label19
 		'
 		Me.Label19.AutoSize = True
-		Me.Label19.Location = New System.Drawing.Point(73, 6)
+		Me.Label19.Location = New System.Drawing.Point(104, 7)
 		Me.Label19.Name = "Label19"
 		Me.Label19.Size = New System.Drawing.Size(94, 13)
 		Me.Label19.TabIndex = 8
@@ -1320,7 +1320,7 @@ Partial Class VehicleForm
 		'lblEditReessPack
 		'
 		Me.lblEditReessPack.AutoSize = True
-		Me.lblEditReessPack.Location = New System.Drawing.Point(451, 159)
+		Me.lblEditReessPack.Location = New System.Drawing.Point(452, 148)
 		Me.lblEditReessPack.Name = "lblEditReessPack"
 		Me.lblEditReessPack.Size = New System.Drawing.Size(106, 13)
 		Me.lblEditReessPack.TabIndex = 30
@@ -1455,7 +1455,7 @@ Partial Class VehicleForm
 		'Label29
 		'
 		Me.Label29.AutoSize = True
-		Me.Label29.Location = New System.Drawing.Point(71, 121)
+		Me.Label29.Location = New System.Drawing.Point(71, 111)
 		Me.Label29.Name = "Label29"
 		Me.Label29.Size = New System.Drawing.Size(106, 13)
 		Me.Label29.TabIndex = 6
@@ -1601,6 +1601,7 @@ Partial Class VehicleForm
 		'Label30
 		'
 		Me.Label30.AutoSize = True
+		Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.Label30.Location = New System.Drawing.Point(13, 153)
 		Me.Label30.Name = "Label30"
 		Me.Label30.Size = New System.Drawing.Size(429, 13)
@@ -1738,9 +1739,9 @@ Partial Class VehicleForm
 		'
 		Me.tbGenSetEM.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbGenSetEM.Location = New System.Drawing.Point(109, 4)
+		Me.tbGenSetEM.Location = New System.Drawing.Point(104, 4)
 		Me.tbGenSetEM.Name = "tbGenSetEM"
-		Me.tbGenSetEM.Size = New System.Drawing.Size(296, 20)
+		Me.tbGenSetEM.Size = New System.Drawing.Size(301, 20)
 		Me.tbGenSetEM.TabIndex = 1
 		'
 		'tpTorqueLimits
