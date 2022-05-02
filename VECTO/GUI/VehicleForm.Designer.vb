@@ -1909,27 +1909,27 @@ Partial Class VehicleForm
 		Me.gbADAS.Controls.Add(Me.lblPCC)
 		Me.gbADAS.Location = New System.Drawing.Point(6, 6)
 		Me.gbADAS.Name = "gbADAS"
-		Me.gbADAS.Size = New System.Drawing.Size(636, 143)
+		Me.gbADAS.Size = New System.Drawing.Size(636, 161)
 		Me.gbADAS.TabIndex = 0
-		Me.gbADAS.TabStop = false
+		Me.gbADAS.TabStop = False
 		Me.gbADAS.Text = "ADAS Options"
 		'
 		'cbAtEcoRollReleaseLockupClutch
 		'
-		Me.cbAtEcoRollReleaseLockupClutch.AutoSize = true
-		Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(138, 42)
+		Me.cbAtEcoRollReleaseLockupClutch.AutoSize = True
+		Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(238, 21)
 		Me.cbAtEcoRollReleaseLockupClutch.Name = "cbAtEcoRollReleaseLockupClutch"
 		Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(243, 17)
 		Me.cbAtEcoRollReleaseLockupClutch.TabIndex = 3
 		Me.cbAtEcoRollReleaseLockupClutch.Text = "AT Gearbox: Eco-Roll Release Lockup Clutch"
-		Me.cbAtEcoRollReleaseLockupClutch.UseVisualStyleBackColor = true
+		Me.cbAtEcoRollReleaseLockupClutch.UseVisualStyleBackColor = True
 		'
 		'cbPcc
 		'
 		Me.cbPcc.DisplayMember = "Value"
 		Me.cbPcc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.cbPcc.FormattingEnabled = true
-		Me.cbPcc.Location = New System.Drawing.Point(138, 99)
+		Me.cbPcc.FormattingEnabled = True
+		Me.cbPcc.Location = New System.Drawing.Point(10, 124)
 		Me.cbPcc.Name = "cbPcc"
 		Me.cbPcc.Size = New System.Drawing.Size(266, 21)
 		Me.cbPcc.TabIndex = 2
@@ -1939,8 +1939,8 @@ Partial Class VehicleForm
 		'
 		Me.cbEcoRoll.DisplayMember = "Value"
 		Me.cbEcoRoll.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.cbEcoRoll.FormattingEnabled = true
-		Me.cbEcoRoll.Location = New System.Drawing.Point(138, 72)
+		Me.cbEcoRoll.FormattingEnabled = True
+		Me.cbEcoRoll.Location = New System.Drawing.Point(10, 67)
 		Me.cbEcoRoll.Name = "cbEcoRoll"
 		Me.cbEcoRoll.Size = New System.Drawing.Size(266, 21)
 		Me.cbEcoRoll.TabIndex = 1
@@ -1948,8 +1948,8 @@ Partial Class VehicleForm
 		'
 		'Label22
 		'
-		Me.Label22.AutoSize = true
-		Me.Label22.Location = New System.Drawing.Point(82, 75)
+		Me.Label22.AutoSize = True
+		Me.Label22.Location = New System.Drawing.Point(7, 51)
 		Me.Label22.Name = "Label22"
 		Me.Label22.Size = New System.Drawing.Size(50, 13)
 		Me.Label22.TabIndex = 6
@@ -1957,18 +1957,18 @@ Partial Class VehicleForm
 		'
 		'cbEngineStopStart
 		'
-		Me.cbEngineStopStart.AutoSize = true
-		Me.cbEngineStopStart.Location = New System.Drawing.Point(138, 19)
+		Me.cbEngineStopStart.AutoSize = True
+		Me.cbEngineStopStart.Location = New System.Drawing.Point(10, 21)
 		Me.cbEngineStopStart.Name = "cbEngineStopStart"
 		Me.cbEngineStopStart.Size = New System.Drawing.Size(203, 17)
 		Me.cbEngineStopStart.TabIndex = 0
 		Me.cbEngineStopStart.Text = "Engine Stop/Start during vehicle stop"
-		Me.cbEngineStopStart.UseVisualStyleBackColor = true
+		Me.cbEngineStopStart.UseVisualStyleBackColor = True
 		'
 		'lblPCC
 		'
-		Me.lblPCC.AutoSize = true
-		Me.lblPCC.Location = New System.Drawing.Point(7, 102)
+		Me.lblPCC.AutoSize = True
+		Me.lblPCC.Location = New System.Drawing.Point(7, 108)
 		Me.lblPCC.Name = "lblPCC"
 		Me.lblPCC.Size = New System.Drawing.Size(125, 13)
 		Me.lblPCC.TabIndex = 3
