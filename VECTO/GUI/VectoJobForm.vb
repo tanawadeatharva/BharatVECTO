@@ -1018,6 +1018,8 @@ Public Class VectoJobForm
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
         gbEngineStopStart.Enabled = True
+        lblESSUtilityFactorDriving.Enabled = True
+        tbESSUtilityFactorDriving.Enabled = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
@@ -1031,7 +1033,8 @@ Public Class VectoJobForm
                 gbEngineStopStart.Enabled = False
             Case VectoSimulationJobType.ParallelHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
-                gbEngineStopStart.Enabled = False
+                lblESSUtilityFactorDriving.Enabled = False
+                tbESSUtilityFactorDriving.Enabled = False
             Case VectoSimulationJobType.SerialHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
                 gbEngineStopStart.Enabled = False
@@ -1433,6 +1436,7 @@ Public Class VectoJobForm
 
         'Thus Veh-file is returned
         HybridStrategyParamsForm.JobDir = GetPath(VectoFile)
+        HybridStrategyParamsForm.JobType = JobType
         HybridStrategyParamsForm.AutoSendTo = True
 
         If Not Trim(f) = "" Then
