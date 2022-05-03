@@ -14,7 +14,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 ''' <summary>
-''' Engine Editor. Open and save .VENG files.
+''' HybridStrategyParams Editor. Open and save .VENG files.
 ''' </summary>
 Public Class HybridStrategyParamsForm
 
@@ -34,12 +34,8 @@ Public Class HybridStrategyParamsForm
         End If
     End Sub
 
-    Private Sub EngineFormLoad(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub HybridStrategyParamsFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         NewHybStrategyParams()
-    End Sub
-
-    Private Sub DeclInit()
-        If Not Cfg.DeclMode Then Exit Sub
     End Sub
 
 
@@ -50,11 +46,11 @@ Public Class HybridStrategyParamsForm
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If EngineFileBrowser.OpenDialog(_strategyParamsFile) Then
+        If HCUFileBrowser.OpenDialog(_strategyParamsFile) Then
             Try
-                OpenHybridStrategyParametersFile(EngineFileBrowser.Files(0))
+                OpenHybridStrategyParametersFile(HCUFileBrowser.Files(0))
             Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading HybridStrategyParams File")
             End Try
         End If
     End Sub
@@ -92,7 +88,7 @@ Public Class HybridStrategyParamsForm
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
+            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#hybrid-strategy-parameters-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -102,8 +98,14 @@ Public Class HybridStrategyParamsForm
 
     Private Sub NewHybStrategyParams()
         If ChangeCheckCancel() Then Exit Sub
-        DeclInit()
         UpdateForm(JobType)
+        _changed = False
+    End Sub
+
+    Private Sub UpdateForm(vectoSimulationJobType As VectoSimulationJobType)
+        _strategyParamsFile = ""
+        Text = "Hybrid Strategy Parameters Editor"
+        LbStatus.Text = ""
 
         tbEquivalenceFactorDischarge.ResetText()
         tbEquivalenceFactorCharge.ResetText()
@@ -117,14 +119,6 @@ Public Class HybridStrategyParamsForm
         tbCostFactorSoCExponent.ResetText()
         tbGensetMinOptPowerFactor.ResetText()
 
-        _strategyParamsFile = ""
-        Text = "Hybrid Strategy Parameters Editor"
-        LbStatus.Text = ""
-
-        _changed = False
-    End Sub
-
-    Private Sub UpdateForm(vectoSimulationJobType As VectoSimulationJobType)
         Select Case vectoSimulationJobType
             Case VectoSimulationJobType.ParallelHybridVehicle
                 pnEquivFactor.Enabled = True
@@ -167,7 +161,6 @@ Public Class HybridStrategyParamsForm
 
     Public Sub OpenHybridStrategyParametersFile(file As String)
         If ChangeCheckCancel() Then Exit Sub
-        DeclInit()
 
         If Cfg.DeclMode Then
             Select Case WrongMode()
@@ -198,22 +191,11 @@ Public Class HybridStrategyParamsForm
 
                 tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
                 tbCostFactorSoCExponent.Text = If(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
-                tbGensetMinOptPowerFactor.ResetText()
 
             Case VectoSimulationJobType.SerialHybridVehicle
-                tbEquivalenceFactorDischarge.ResetText()
-                tbEquivalenceFactorCharge.ResetText()
                 tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
-                tbMaxSoC.ResetText()
                 tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
 
-                tbMinICEOnTime.ResetText()
-                tbauxBufferTime.ResetText()
-                tbAuxBufferChargeTime.ResetText()
-
-                tbICEStartPenaltyFactor.ResetText()
-                tbCostFactorSoCExponent.ResetText()
-                tbGensetMinOptPowerFactor.ResetText()
             Case Else
                 tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
                 tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
@@ -256,17 +238,17 @@ Public Class HybridStrategyParamsForm
     Private Function SaveParamsToFile(file As String) As Boolean
         Dim strategyParams = New HybridStrategyParams With {
                 .FilePath = file,
-                .EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(-1),
-                .EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(-1),
-                .MinSoC = tbMinSoC.Text.ToDouble(-1) / 100,
-                .MaxSoC = tbMaxSoC.Text.ToDouble(-1) / 100,
-                .TargetSoC = tbTargetSoC.Text.ToDouble(-1) / 100,
-                .MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(-1),
-                .AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(-1),
-                .AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(-1),
-                .ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble(-1),
-                .CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(-1),
-                .GensetMinOptPowerFactor = tbGensetMinOptPowerFactor.Text.ToDouble(-1)
+                .EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(0),
+                .EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(0),
+                .MinSoC = tbMinSoC.Text.ToDouble(0) / 100,
+                .MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100,
+                .TargetSoC = tbTargetSoC.Text.ToDouble(0) / 100,
+                .MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0),
+                .AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0),
+                .AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0),
+                .ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble(0),
+                .CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(0),
+                .GensetMinOptPowerFactor = tbGensetMinOptPowerFactor.Text.ToDouble(0)
                 }
 
         If Not strategyParams.SaveFile Then
