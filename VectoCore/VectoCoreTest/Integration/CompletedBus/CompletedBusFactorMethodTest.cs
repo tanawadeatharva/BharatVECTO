@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var jobContainer = new JobContainer(sumContainer);
 
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			Assert.IsTrue(runs.Count == 8 || runs.Count == 12);
 
 			var relatedRuns = SetRelatedVehicleParts(runs);
@@ -1039,7 +1039,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//	Validate = false
 			//};
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			return runs;
 		}
 
@@ -1202,7 +1202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//	Validate = false
 			//};
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 			
 			Assert.NotNull(run.VehicleData.PassengerCount);
@@ -1239,7 +1239,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//	//ActualModalData = true,
 			//	Validate = false
 			//};
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 
 			Assert.NotNull(run.VehicleData.PassengerCount);

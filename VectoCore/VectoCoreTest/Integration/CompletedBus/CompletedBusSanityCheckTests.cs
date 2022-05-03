@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			factory.Validate = false;
 
 			AssertHelper.Exception<VectoException>(() => {
-				var runs = factory.DataReader.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
+				var runs = factory.RunDataFactory.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
         [
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			factory.Validate = false;
 
 			//AssertHelper.Exception<VectoException>(() => {
-                var runs = factory.DataReader.NextRun().ToList();
+                var runs = factory.RunDataFactory.NextRun().ToList();
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 

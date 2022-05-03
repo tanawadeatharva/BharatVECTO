@@ -69,6 +69,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		protected bool _simulate = true;
 
+		//TODO: set with preprocessor directive remove from interface
+		public bool MockUpRun { get; set; } = true;
+
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
@@ -133,7 +136,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		public bool Validate { get; set; }
 
-		public IVectoRunDataFactory DataReader { get; protected set; }
+		public IVectoRunDataFactory RunDataFactory { get; protected set; }
 
 		public SummaryDataContainer SumData { get; set; }
 
@@ -158,7 +161,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			if (!_simulate) {
 				yield break;
 			}
-			foreach (var data in DataReader.NextRun()) {
+			foreach (var data in RunDataFactory.NextRun()) {
 				var current = i++;
 				var d = data;
 				data.JobRunId = current;

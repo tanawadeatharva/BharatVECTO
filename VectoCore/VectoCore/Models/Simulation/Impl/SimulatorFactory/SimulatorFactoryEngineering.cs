@@ -17,16 +17,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			switch (dataProvider) {
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
-					DataReader = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
+					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 					return;
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
-					DataReader = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
-					DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
+					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider:
-					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
+					RunDataFactory = new EngineeringModeVectoRunDataFactory(engDataProvider);
 					return;
 				default:
 					throw new VectoException("Unknown InputData for Engineering Mode!");
