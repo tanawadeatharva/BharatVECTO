@@ -714,7 +714,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override VectoSimulationJobType VehicleType
 		{
-			get => throw new NotImplementedException();
+			get => throw new NotImplementedException($"not implemented in {this.GetType()}");
 		}
 
 		#endregion
