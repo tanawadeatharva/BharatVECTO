@@ -43,11 +43,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
 			InputDataProvider = dataProvider;
-			
-			if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle)){
-				throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
-			}
-			Report = report;
+
+
+            //if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
+            //{
+            //    throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
+            //}
+            Report = report;
 
 			_allowVocational = true;
 			//try {
