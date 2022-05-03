@@ -8,10 +8,8 @@
     <OptionStrict>On</OptionStrict>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworks>net45;net48;net6.0-windows</TargetFrameworks>
-    <!-- The GUI Editor of Visual Studio 2019 has problems with multitargets.
-         If you want to change GUI stuff, then only use one target (uncomment the following line): -->
-    <!--<TargetFrameworks>net45</TargetFrameworks>-->
+    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
     <DefineTrace>false</DefineTrace>
     <DefineConstants />
   </PropertyGroup>
