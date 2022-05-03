@@ -83,8 +83,8 @@ Public Class VectoJobForm
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		gbEcoRoll.Enabled = not Cfg.DeclMode
-		gbEngineStopStart.Enabled = not cfg.DeclMode
-		gbPCC.Enabled = Not Cfg.DeclMode
+        gbEngineStopStart.Visible = Not Cfg.DeclMode
+        gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
 
@@ -1017,9 +1017,10 @@ Public Class VectoJobForm
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
-        gbEngineStopStart.Enabled = True
-        lblESSUtilityFactorDriving.Enabled = True
-        tbESSUtilityFactorDriving.Enabled = True
+        gbEngineStopStart.Visible = True
+        lblESSUtilityFactorDriving.Visible = True
+        tbESSUtilityFactorDriving.Visible = True
+        lblESSUtilityFactorDrivingUnit.Visible = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
@@ -1030,20 +1031,21 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
-                gbEngineStopStart.Enabled = False
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.ParallelHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
-                lblESSUtilityFactorDriving.Enabled = False
-                tbESSUtilityFactorDriving.Enabled = False
+                lblESSUtilityFactorDriving.Visible = False
+                tbESSUtilityFactorDriving.Visible = False
+                lblESSUtilityFactorDrivingUnit.Visible = False
             Case VectoSimulationJobType.SerialHybridVehicle
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
-                gbEngineStopStart.Enabled = False
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True
-                gbEngineStopStart.Enabled = False
+                gbEngineStopStart.Visible = False
         End Select
     End Sub
 
