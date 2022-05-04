@@ -49,9 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreater(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
-			var (a, b) = GetSection(voltage);
-			var r1 = a.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
-			var r2 = b.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			var (vLow, vHigh) = GetSection(voltage);
+			var r1 = vLow.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			var r2 = vHigh.EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 
 			if (r1 is null && r2 is null) {
 				return null;
@@ -65,8 +65,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				r2 = maxEmTorque;
 			}
 
-			var retVal = VectoMath.Interpolate(a.Voltage, b.Voltage,
-				r1, r2, voltage);
+			var retVal = vLow.Voltage.IsEqual(vHigh.Voltage)
+				? r1
+				: VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage,
+					r1, r2, voltage);
 			var elPwr = LookupElectricPower(voltage, avgSpeed, retVal, true);
 			if (elPwr.ElectricalPower != null && electricPower.IsEqual(elPwr.ElectricalPower, 1e-3.SI<Watt>())) {
 				return retVal;
@@ -87,10 +89,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public EfficiencyMap.EfficiencyResult LookupElectricPower(Volt voltage, PerSecond avgSpeed, NewtonMeter torque, bool allowExtrapolation = false)
 		{
-			var tuple = GetSection(voltage);
+			var (vLow, vHigh) = GetSection(voltage);
 
-			var r1 = tuple.Item1.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
-			var r2 = tuple.Item2.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
+			var r1 = vLow.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
+			var r2 = vHigh.EfficiencyMap.LookupElectricPower(avgSpeed, torque, allowExtrapolation);
 
 			if (r1 == null || r2 == null || r1.ElectricalPower == null || r2.ElectricalPower == null) {
 				return new EfficiencyMap.EfficiencyResult() {
@@ -100,8 +102,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				};
 			}
 
-			var pwr = VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage, r1.ElectricalPower,
-				r2.ElectricalPower, voltage);
+			var pwr = vLow.Voltage.IsEqual(vHigh.Voltage)
+				? r1.ElectricalPower
+				: VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage, r1.ElectricalPower,
+					r2.ElectricalPower, voltage);
 
 			return new EfficiencyMap.EfficiencyResult() {
 				ElectricalPower = pwr,
@@ -113,20 +117,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			var tuple = GetSection(voltage);
+			var (vLow, vHigh) = GetSection(voltage);
 
-			return VectoMath.Interpolate(tuple.Item1.Voltage, tuple.Item2.Voltage,
-				tuple.Item1.FullLoadCurve.FullGenerationTorque(avgSpeed),
-				tuple.Item2.FullLoadCurve.FullGenerationTorque(avgSpeed), voltage);
+			if (vLow.Voltage.IsEqual(vHigh.Voltage)) {
+				return vLow.FullLoadCurve.FullGenerationTorque(avgSpeed);
+			}
+
+			return VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage,
+				vLow.FullLoadCurve.FullGenerationTorque(avgSpeed),
+				vHigh.FullLoadCurve.FullGenerationTorque(avgSpeed), voltage);
 		}
 
 		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed)
 		{
-			var (electricMotorVoltageLevelData, item2) = GetSection(voltage);
+			var (vLow, vHigh) = GetSection(voltage);
 
-			return VectoMath.Interpolate(electricMotorVoltageLevelData.Voltage, item2.Voltage,
-				electricMotorVoltageLevelData.FullLoadCurve.FullLoadDriveTorque(avgSpeed),
-				item2.FullLoadCurve.FullLoadDriveTorque(avgSpeed), voltage);
+			if (vLow.Voltage.IsEqual(vHigh.Voltage)) {
+				return vLow.FullLoadCurve.FullLoadDriveTorque(avgSpeed);
+			}
+
+			return VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage,
+				vLow.FullLoadCurve.FullLoadDriveTorque(avgSpeed),
+				vHigh.FullLoadCurve.FullLoadDriveTorque(avgSpeed), voltage);
 		}
 
 		protected (ElectricMotorVoltageLevelData, ElectricMotorVoltageLevelData) GetSection(Volt voltage)

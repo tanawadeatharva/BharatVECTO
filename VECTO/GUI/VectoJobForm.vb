@@ -83,8 +83,8 @@ Public Class VectoJobForm
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		gbEcoRoll.Enabled = not Cfg.DeclMode
-		gbEngineStopStart.Enabled = not cfg.DeclMode
-		gbPCC.Enabled = Not Cfg.DeclMode
+        gbEngineStopStart.Visible = Not Cfg.DeclMode
+        gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
 
@@ -1017,13 +1017,13 @@ Public Class VectoJobForm
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
-        lblESSUtilityFactorDriving.Enabled  = false
-        tbESSUtilityFactorDriving.Enabled = false
+        gbEngineStopStart.Visible = True
+        lblESSUtilityFactorDriving.Visible = True
+        tbESSUtilityFactorDriving.Visible = True
+        lblESSUtilityFactorDrivingUnit.Visible = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
-                lblESSUtilityFactorDriving.Enabled  = true
-                tbESSUtilityFactorDriving.Enabled = true
             Case VectoSimulationJobType.EngineOnlySimulation
                 pnVehicle.Enabled = False
                 pnGearbox.Enabled = False
@@ -1031,15 +1031,21 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.ParallelHybridVehicle
-                ' empty line - do not fall-through
-                pnHybridStrategy.Enabled = True
                 pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                lblESSUtilityFactorDriving.Visible = False
+                tbESSUtilityFactorDriving.Visible = False
+                lblESSUtilityFactorDrivingUnit.Visible = False
+            Case VectoSimulationJobType.SerialHybridVehicle
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = true
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
         End Select
     End Sub
 
@@ -1432,6 +1438,7 @@ Public Class VectoJobForm
 
         'Thus Veh-file is returned
         HybridStrategyParamsForm.JobDir = GetPath(VectoFile)
+        HybridStrategyParamsForm.JobType = JobType
         HybridStrategyParamsForm.AutoSendTo = True
 
         If Not Trim(f) = "" Then

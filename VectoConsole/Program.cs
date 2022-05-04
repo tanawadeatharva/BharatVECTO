@@ -146,7 +146,7 @@ Examples:
 
 				var config = LogManager.Configuration;
 				if (config is null) {
-					// in .net5.0 the app is exported as dll, therefore the default config lookup of nlog doesn't work.
+					// in .net6.0 the app is exported as dll, therefore the default config lookup of nlog doesn't work.
 					LogManager.LoadConfiguration($"{Assembly.GetExecutingAssembly().GetName().Name}.dll.config");
 					config = LogManager.Configuration;
 				}
