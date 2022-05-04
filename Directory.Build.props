@@ -8,7 +8,7 @@
     <!--<DefineConstants>CERTIFICATION_RELEASE</DefineConstants>-->
 
     <!-- Global VECTO Version -->
-    <MainProductVersion>0.7.7</MainProductVersion>
+    <MainProductVersion>0.7.8</MainProductVersion>
     <VersionSuffix>DEV</VersionSuffix>
 
     <!-- The following settings are used as default values for ALL projects -->
@@ -40,5 +40,14 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Deploy'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
 </Project>

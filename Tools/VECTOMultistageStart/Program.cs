@@ -17,14 +17,14 @@ namespace TUGraz.VECTO
 
 		private static string GetHighestNETVersion()
 		{
-			if (SupportsNet50()) {
-				return "net50";
+			if (SupportsNet60()) {
+				return "net60";
 			}
 
 			return "net48";
 		}
 
-		private static bool SupportsNet50()
+		private static bool SupportsNet60()
 		{
 			try {
 				var p = Process.Start(new ProcessStartInfo("dotnet", "--list-runtimes") {
@@ -36,7 +36,7 @@ namespace TUGraz.VECTO
 
 				p.WaitForExit();
 				var output = p.StandardOutput.ReadToEnd();
-				return output.Contains("Microsoft.WindowsDesktop.App 5.0");
+				return output.Contains("Microsoft.WindowsDesktop.App 6");
 			} catch (Exception e) {
 				Console.WriteLine(e);
 			}

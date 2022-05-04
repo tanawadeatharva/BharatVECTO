@@ -41,7 +41,7 @@ Public Class HybridStrategyParams
         End If
 
         Try
-            Dim writer As JSONFileWriter = New JSONFileWriter()
+            Dim writer = New JSONFileWriter()
             writer.SaveStrategyParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception

@@ -1446,13 +1446,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var result = ResponseEmOff;
 			if (DataBus.DriverInfo.PCCState.IsOneOf(PCCStates.UseCase1, PCCStates.UseCase2)) {
 				result.ICEOff = AllowICEOff(absTime);
-				result.Setting.CombustionEngineOn = !result.ICEOff;
 
 				if (DataBus.PowertrainInfo.ElectricMotorPositions.Contains(PowertrainPosition.HybridP1)) {
 					// special logic for HybridP1 (VECTO-1493)
 					result.Setting.GearboxInNeutral = true;
 					result.ICEOff &= ModelData.VehicleData.ADAS.EngineStopStart;
 				}
+				result.Setting.CombustionEngineOn = !result.ICEOff;
 			}
 			eval.Add(result);
 		}

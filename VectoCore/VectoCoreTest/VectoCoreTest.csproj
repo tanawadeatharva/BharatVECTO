@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
 

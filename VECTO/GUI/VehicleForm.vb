@@ -521,69 +521,121 @@ Public Class VehicleForm
 	Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
 
-		gbVehicleIdlingSpeed.Enabled = True
-		gbTankSystem.Enabled = True
-		gbAngledrive.Enabled = True
-		tcVehicleComponents.TabPages.Remove(tpGensetComponents)
-		tcVehicleComponents.TabPages.Remove(tpElectricComponents)
+		If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
+			tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
+			tpElectricComponents.BindingContext = BindingContext
+		End If
+		If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
+			tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+			tpGensetComponents.BindingContext = BindingContext
+		End If
+		If Not tcVehicleComponents.TabPages.Contains(tpTorqueLimits) Then
+			tcVehicleComponents.TabPages.Insert(4, tpTorqueLimits)
+			tpTorqueLimits.BindingContext = BindingContext
+		End If
+
 
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
+
+				'Powertrain ---------------------------------------------------------------
+				gbVehicleIdlingSpeed.Enabled = True
+				gbTankSystem.Enabled = True
 				gbRetarderLosses.Enabled = True
-				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
-					(Function(t) t.GetLabel(), Function(t) t = PowertrainPosition.HybridPositionNotSet)
-				cbEngineStopStart.Enabled = True
-				cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
-				cbEcoRoll.Enabled = True
+				gbAngledrive.Enabled = True
+
+				'Electric Powertrain Components -------------------------------------------
+				tcVehicleComponents.TabPages.Remove(tpElectricComponents)
+
+				'GenSet Components --------------------------------------------------------
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+
+				'Torque Limits ------------------------------------------------------------
 				gbEMTorqueLimits.Enabled = False
+
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = True
+				pnEcoRoll.Visible = True
+
 			Case VectoSimulationJobType.ParallelHybridVehicle
-				gbRetarderLosses.Enabled = True
 				lblTitle.Text = "Parallel Hybrid Vehicle"
+
+				'Powertrain ---------------------------------------------------------------
+				gbVehicleIdlingSpeed.Enabled = True
+				gbTankSystem.Enabled = True
+				gbRetarderLosses.Enabled = True
+				gbAngledrive.Enabled = True
+
+				'Electric Powertrain Components -------------------------------------------
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
 					(Function(t) t.GetLabel(), Function(x) x.IsParallelHybrid())
+
+				'GenSet Components --------------------------------------------------------
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+
+				'Torque Limits ------------------------------------------------------------
 				gbEMTorqueLimits.Enabled = True
-				cbEcoRoll.Enabled = True
-				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-					tpElectricComponents.BindingContext = BindingContext
-				End If
+
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
 			Case VectoSimulationJobType.SerialHybridVehicle
-				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Serial Hybrid Vehicle"
+
+				'Powertrain ---------------------------------------------------------------
+				gbVehicleIdlingSpeed.Enabled = True
+				gbTankSystem.Enabled = True
+				gbRetarderLosses.Enabled = False
+				gbAngledrive.Enabled = True
+
+				'Electric Powertrain Components -------------------------------------------
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
 					(Function(t) t.GetLabel(), Function(x) x.IsSerialHybrid())
-				tpTorqueLimits.Enabled = False
-				cbEngineStopStart.Checked = False
-				cbEngineStopStart.Enabled = False
-				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
-				cbEcoRoll.Enabled = False
+
+				'GenSet Components --------------------------------------------------------
+				'-
+
+				'Torque Limits ------------------------------------------------------------
 				gbEMTorqueLimits.Enabled = False
-				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-					tpElectricComponents.BindingContext = BindingContext
-				End If
-				If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
-					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
-				End If
+				tpTorqueLimits.Enabled = False
+
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
 			Case VectoSimulationJobType.BatteryElectricVehicle
-				gbRetarderLosses.Enabled = False
 				lblTitle.Text = "Battery Electric Vehicle"
+
+				'Powertrain ---------------------------------------------------------------
 				gbVehicleIdlingSpeed.Enabled = False
 				gbTankSystem.Enabled = False
+				gbRetarderLosses.Enabled = False
 				gbAngledrive.Enabled = False
-				tpTorqueLimits.Enabled = False
+
+				'Electric Powertrain Components -------------------------------------------
 				cbEmPos.DataSource = EnumHelper.GetKeyValuePairs(Of PowertrainPosition) _
 					(Function(t) t.GetLabel(), Function(x) x.IsBatteryElectric())
-				cbEngineStopStart.Checked = False
-				cbEngineStopStart.Enabled = False
-				cbEcoRoll.DataSource = {New With {.Key = EcoRollType.None, .Value = EcoRollType.None.GetName()}}
-				cbEcoRoll.Enabled = False
+
+				'GenSet Components --------------------------------------------------------
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+
+				'Torque Limits ------------------------------------------------------------
 				gbEMTorqueLimits.Enabled = False
-				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-					tpElectricComponents.BindingContext = BindingContext
-				End If
+				tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
+
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
 					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
@@ -593,8 +645,11 @@ Public Class VehicleForm
 					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
 					tpGensetComponents.BindingContext = BindingContext
 				End If
-
+				pnEcoRoll.Visible = True
+				cbAtEcoRollReleaseLockupClutch.Visible = True
+				cbEngineStopStart.Visible = True
 		End Select
+
 	End Sub
 
 	Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
@@ -1247,7 +1302,7 @@ Public Class VehicleForm
 			gbRetarderLosses.Enabled = False
 			TbRtRatio.Text = ""
 			TbRtPath.Text = ""
-			CbRtType.SelectedIndex = 0
+			CbRtType.SelectedIndex = -1
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
 		ElseIf PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue) Then
 			gbRetarderLosses.Enabled = True

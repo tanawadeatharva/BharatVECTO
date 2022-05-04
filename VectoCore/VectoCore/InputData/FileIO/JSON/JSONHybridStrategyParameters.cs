@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Second AuxBufferChargeTime => null;
 		public double ICEStartPenaltyFactor => double.NaN;
 		public double CostFactorSOCExpponent => double.NaN;
-		public double GensetMinOptPowerFactor => Body.GetEx<double>("GensetMinOptPowerFactor");
+		public double GensetMinOptPowerFactor => 0; //Body.GetEx<double>("GensetMinOptPowerFactor");
 		
 		#endregion
 	}
