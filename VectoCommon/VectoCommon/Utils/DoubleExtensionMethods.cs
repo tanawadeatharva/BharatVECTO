@@ -278,9 +278,9 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static string ToGUIFormat(this double self)
+		public static string ToGUIFormat(this double self, int decimals = 12)
 		{
-			return self.ToString(CultureInfo.InvariantCulture);
+			return Math.Round(self, decimals).ToString(CultureInfo.InvariantCulture);
 		}
 
 		[DebuggerStepThrough]
