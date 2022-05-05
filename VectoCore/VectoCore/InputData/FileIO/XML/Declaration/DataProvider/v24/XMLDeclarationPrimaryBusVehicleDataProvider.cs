@@ -114,6 +114,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.ParallelHybridVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -134,6 +139,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			: base(jobData, xmlNode, sourceFile) { }
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.SerialHybridVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -158,6 +168,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		#endregion
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.BatteryElectricVehicle;
+		}
 	}
 
 
@@ -180,6 +194,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
 		#endregion
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.BatteryElectricVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -205,6 +223,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 
 		#endregion
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.SerialHybridVehicle;
+		}
 	}
 
 
