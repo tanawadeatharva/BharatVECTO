@@ -83,6 +83,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.ConventionalVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
