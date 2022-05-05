@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumWriter);
 
 			_simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, true);
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 			_simulatorFactory.MockUpRun = true;
 
 			jobContainer.AddRuns(_simulatorFactory);

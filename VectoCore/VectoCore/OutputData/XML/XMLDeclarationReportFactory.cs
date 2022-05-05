@@ -7,13 +7,24 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
     class XMLDeclarationReportFactory : IXMLDeclarationReportFactory
     {
+		private readonly IManufacturerReportFactory _mrfFactory;
+		private readonly ICustomerInformationFileFactory _cifFactory;
+
 		#region Implementation of IXMLDeclarationReportFactory
 
+		
+		public XMLDeclarationReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory)
+		{
+			_mrfFactory = mrfFactory;
+			_cifFactory = cifFactory;
+		}
 		public IDeclarationReport CreateReport(IInputDataProvider input, IOutputDataWriter outputWriter)
 		{
 			switch (input) {
@@ -71,7 +82,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicleCategory = declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory;
 			if (vehicleCategory.IsLorry())
 			{
-				return new XMLDeclarationReport(outputDataWriter);
+				return new XMLDeclarationReport09(outputDataWriter, _mrfFactory, _cifFactory);
 			}
 
 			if (vehicleCategory.IsBus())

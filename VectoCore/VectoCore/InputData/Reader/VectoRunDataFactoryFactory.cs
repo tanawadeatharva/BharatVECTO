@@ -3,6 +3,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
 			if (vehicleCategory.IsLorry())
 			{
-				return new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
+				return new DeclarationModeMockupTruckVectoRunDataFactory(declDataProvider, report);
 			}
 
 			if (vehicleCategory.IsBus())

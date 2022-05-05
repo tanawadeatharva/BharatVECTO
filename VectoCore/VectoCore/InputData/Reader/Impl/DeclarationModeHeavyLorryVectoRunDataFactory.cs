@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		DeclarationDataAdapterHeavyLorry _dao = new DeclarationDataAdapterHeavyLorry();
 
 		internal DeclarationModeTruckVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report) : base(dataProvider, report)
+			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true) : base(dataProvider, report, checkJobType)
 		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory

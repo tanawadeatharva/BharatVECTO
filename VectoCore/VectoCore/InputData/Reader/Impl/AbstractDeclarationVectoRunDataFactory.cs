@@ -40,15 +40,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected ShiftStrategyParameters _gearshiftData;
 
 		protected AbstractDeclarationVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
+			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true)
 		{
 			InputDataProvider = dataProvider;
 
-
-            //if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
-            //{
-            //    throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
-            //}
+			if (checkJobType) {
+				if (dataProvider.JobInputData.JobType.IsOneOf(BatteryElectricVehicle, ParallelHybridVehicle, SerialHybridVehicle))
+				{
+					throw new VectoSimulationException("Electric and Hybrid Vehicles are not supported in Declaration Mode. Aborting Simulation.");
+				}
+			}
+           
             Report = report;
 
 			_allowVocational = true;
