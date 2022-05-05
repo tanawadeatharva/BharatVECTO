@@ -22,15 +22,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		private IMainViewModel _currentViewModelTop;
 		#endregion
 
-		public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel, IOutputViewModel outputViewModel, AboutViewModel aboutVm)
+		public MainWindowViewModel(IWindowHelper windowHelper, ISettingsViewModel settingsViewModel, IJobListViewModel jobListViewModel, AboutViewModel aboutVm)
 		{
 			_windowHelper = windowHelper;
 			_settingsViewModel = settingsViewModel;
 			_jobListVm = jobListViewModel;
 			_aboutViewModel = aboutVm;
 			_currentViewModelTop = _jobListVm;
-			_bottomView = outputViewModel;
-			
+
 			//_bottomView = new TestViewModel();
             _viewModels.Add("Jobs", _jobListVm);
             _viewModels.Add("Settings", _settingsViewModel);
@@ -63,13 +62,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 				}
 			}
 		}
-
-        public IMainViewModel CurrentViewModelBottom
-        {
-            get { return _bottomView; }
-            set { _bottomView = value; }
-        }
-
 		public IJobListViewModel JobListVm
 		{
 			get => _jobListVm;
