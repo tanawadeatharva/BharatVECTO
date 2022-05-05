@@ -88,17 +88,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected bool ValidateAndPrint(XDocument document)
 		{
 			var error = false;
-			var schemas = XmlSchemaSet(
-				(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
-					(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9"));
-			document.Validate(schemas, (sender, args) => {
-				error = true;
 
-				TestContext.WriteLine(sender.ToString());
-				TestContext.WriteLine(args.Message);
-			});
-			TestContext.WriteLine(document);
+			try {
+				var schemas = XmlSchemaSet(
+					(Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd"),
+						"urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
+					(Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd"),
+						"urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9"));
 
+
+				document.Validate(schemas, (sender, args) => {
+					error = true;
+
+					TestContext.WriteLine(sender.ToString());
+					TestContext.WriteLine(args.Message);
+				});
+			} finally {
+				TestContext.WriteLine(document);
+			}
 			return !error;
 		}
 
