@@ -28,7 +28,6 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using static System.Formats.Asn1.AsnWriter;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net48</TargetFramework>
     <DefineConstants />
   </PropertyGroup>
 
@@ -22,6 +22,13 @@
 
   <ItemGroup>
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
   </ItemGroup>
 
 </Project>

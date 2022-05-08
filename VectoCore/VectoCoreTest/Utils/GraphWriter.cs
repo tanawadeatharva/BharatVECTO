@@ -387,8 +387,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 				.ToArray();
 		}
 
-		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping) =>
-			modDataV3.Rows.Cast<DataRow>().Select(x => mapping.GetValueOrDefault(((string)x[field]), double.NaN)).ToArray();
+		//private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping) =>
+		//	modDataV3.Rows.Cast<DataRow>().Select(x => mapping.GetValueOrDefault(((string)x[field]), double.NaN)).ToArray();
+		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping)
+		{
+			return (from x in modDataV3.Rows.Cast<DataRow>()
+				let val = x.Field<string>(field)
+				select mapping.ContainsKey(val) ? mapping[val] : double.NaN).ToArray();
+		}
 
 		private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
 		{
