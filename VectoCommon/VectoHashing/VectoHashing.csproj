@@ -6,7 +6,7 @@
 
     <RootNamespace>TUGraz.VectoHashing</RootNamespace>
     <AssemblyName>VectoHashing</AssemblyName>
-    <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net45;net48</TargetFrameworks>
     <DefineConstants />
   </PropertyGroup>
 

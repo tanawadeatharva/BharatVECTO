@@ -484,6 +484,12 @@ namespace TUGraz.VectoCommon.InputData
 		new IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
 	}
 
+
+	public interface IIEPCEngineeringInputData : IIEPCDeclarationInputData
+	{
+		double OverloadRecoveryFactor { get; }
+	}
+
 	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
 	{
 
