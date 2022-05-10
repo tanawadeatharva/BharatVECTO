@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
 								.ToList();
 			}
-			Report.InitializeReport(powertrainConfig, fuels, InputDataProvider);
+			Report.InitializeReport(powertrainConfig, fuels);
 		}
 
 		protected virtual PTOData CreateDefaultPTOData()
