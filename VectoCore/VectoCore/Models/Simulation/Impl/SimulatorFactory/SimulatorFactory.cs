@@ -38,6 +38,7 @@ using System.Threading;
 using System.Xml;
 using Newtonsoft.Json;
 using Ninject;
+using NLog.LayoutRenderers;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -49,6 +50,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl.Mockup;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -165,9 +167,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				var current = i++;
 				var d = data;
 				data.JobRunId = current;
-				yield return data.Exempted || data.MultistageRun ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
+				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
 			}
 		}
+
 
 		private IVectoRun GetExemptedRun(VectoRunData data)
 		{
@@ -184,6 +187,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
 		{
 			var addReportResult = PrepareReport(data);
+			if (MockUpRun) {
+				return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
+					new ModalDataContainer(data, ReportWriter, addReportResult)) {RunData = data});
+			}
 			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
