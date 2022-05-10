@@ -254,6 +254,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const string HybridStrategyParameters = ".vhctl";
 
 			public const string Json = ".json";
+
+			public const string IEPCDataFile = ".viepc";
 		}
 
 		public static class SimulationSettings

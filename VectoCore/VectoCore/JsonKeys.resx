@@ -375,9 +375,9 @@
   <data name="Vehicle_PTO_CycleDriving" xml:space="preserve">
     <value>CycleDriving</value>
   </data>
-	<data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
-		<value>MaxDrivetrainPower</value>
-	</data>
+  <data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
+    <value>MaxDrivetrainPower</value>
+  </data>
   <data name="PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
@@ -386,5 +386,62 @@
   </data>
   <data name="Completed" xml:space="preserve">
     <value>Completed</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>AppVersion</value>
+  </data>
+  <data name="Component_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Gearbox_Gear_MaxOutShaftSpeed" xml:space="preserve">
+    <value>MaxOutShaftSpeed</value>
+  </data>
+  <data name="Gearbox_Gear_MaxOutShaftTorque" xml:space="preserve">
+    <value>MaxOutShaftTorque</value>
+  </data>
+  <data name="IEPC_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="IEPC_ContinuousTorqueSpeed" xml:space="preserve">
+    <value>ContinuousTorqueSpeed</value>
+  </data>
+  <data name="IEPC_DesignTypeWheelMotor" xml:space="preserve">
+    <value>DesignTypeWheelMotor</value>
+  </data>
+  <data name="IEPC_DifferentialIncluded" xml:space="preserve">
+    <value>DifferentialIncluded</value>
+  </data>
+  <data name="IEPC_DragCurves" xml:space="preserve">
+    <value>DragCurves</value>
+  </data>
+  <data name="IEPC_FullLoadCurve" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+  <data name="IEPC_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+  <data name="IEPC_NrOfDesignTypeWheelMotorMeasured" xml:space="preserve">
+    <value>NrOfDesignTypeWheelMotorMeasured</value>
+  </data>
+  <data name="IEPC_OverloadTime" xml:space="preserve">
+    <value>OverloadTime</value>
+  </data>
+  <data name="IEPC_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="IEPC_OverloadTorqueSpeed" xml:space="preserve">
+    <value>OverloadTorqueSpeed</value>
+  </data>
+  <data name="IEPC_PowerMaps" xml:space="preserve">
+    <value>PowerMaps</value>
+  </data>
+  <data name="IEPC_ThermalOverloadRecoveryFactor" xml:space="preserve">
+    <value>ThermalOverloadRecoveryFactor</value>
+  </data>
+  <data name="IEPC_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="IEPC_VoltageLevels" xml:space="preserve">
+    <value>VoltageLevels</value>
   </data>
 </root>

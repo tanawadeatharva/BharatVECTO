@@ -61,11 +61,29 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AppVersion.
+        /// </summary>
+        internal static string AppVersion {
+            get {
+                return ResourceManager.GetString("AppVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         internal static string Completed {
             get {
                 return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model.
+        /// </summary>
+        internal static string Component_Model {
+            get {
+                return ResourceManager.GetString("Component_Model", resourceCulture);
             }
         }
         
@@ -322,6 +340,24 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MaxOutShaftSpeed.
+        /// </summary>
+        internal static string Gearbox_Gear_MaxOutShaftSpeed {
+            get {
+                return ResourceManager.GetString("Gearbox_Gear_MaxOutShaftSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxOutShaftTorque.
+        /// </summary>
+        internal static string Gearbox_Gear_MaxOutShaftTorque {
+            get {
+                return ResourceManager.GetString("Gearbox_Gear_MaxOutShaftTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
         internal static string Gearbox_Gear_Ratio {
@@ -489,6 +525,141 @@ namespace TUGraz.VectoCore {
         internal static string HEV_Vehicle_MaxDrivetrainPower {
             get {
                 return ResourceManager.GetString("HEV_Vehicle_MaxDrivetrainPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ContinuousTorque.
+        /// </summary>
+        internal static string IEPC_ContinuousTorque {
+            get {
+                return ResourceManager.GetString("IEPC_ContinuousTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ContinuousTorqueSpeed.
+        /// </summary>
+        internal static string IEPC_ContinuousTorqueSpeed {
+            get {
+                return ResourceManager.GetString("IEPC_ContinuousTorqueSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DesignTypeWheelMotor.
+        /// </summary>
+        internal static string IEPC_DesignTypeWheelMotor {
+            get {
+                return ResourceManager.GetString("IEPC_DesignTypeWheelMotor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DifferentialIncluded.
+        /// </summary>
+        internal static string IEPC_DifferentialIncluded {
+            get {
+                return ResourceManager.GetString("IEPC_DifferentialIncluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DragCurves.
+        /// </summary>
+        internal static string IEPC_DragCurves {
+            get {
+                return ResourceManager.GetString("IEPC_DragCurves", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullLoadCurve.
+        /// </summary>
+        internal static string IEPC_FullLoadCurve {
+            get {
+                return ResourceManager.GetString("IEPC_FullLoadCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inertia.
+        /// </summary>
+        internal static string IEPC_Inertia {
+            get {
+                return ResourceManager.GetString("IEPC_Inertia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NrOfDesignTypeWheelMotorMeasured.
+        /// </summary>
+        internal static string IEPC_NrOfDesignTypeWheelMotorMeasured {
+            get {
+                return ResourceManager.GetString("IEPC_NrOfDesignTypeWheelMotorMeasured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTime.
+        /// </summary>
+        internal static string IEPC_OverloadTime {
+            get {
+                return ResourceManager.GetString("IEPC_OverloadTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTorque.
+        /// </summary>
+        internal static string IEPC_OverloadTorque {
+            get {
+                return ResourceManager.GetString("IEPC_OverloadTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTorqueSpeed.
+        /// </summary>
+        internal static string IEPC_OverloadTorqueSpeed {
+            get {
+                return ResourceManager.GetString("IEPC_OverloadTorqueSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PowerMaps.
+        /// </summary>
+        internal static string IEPC_PowerMaps {
+            get {
+                return ResourceManager.GetString("IEPC_PowerMaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ThermalOverloadRecoveryFactor.
+        /// </summary>
+        internal static string IEPC_ThermalOverloadRecoveryFactor {
+            get {
+                return ResourceManager.GetString("IEPC_ThermalOverloadRecoveryFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voltage.
+        /// </summary>
+        internal static string IEPC_Voltage {
+            get {
+                return ResourceManager.GetString("IEPC_Voltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VoltageLevels.
+        /// </summary>
+        internal static string IEPC_VoltageLevels {
+            get {
+                return ResourceManager.GetString("IEPC_VoltageLevels", resourceCulture);
             }
         }
         
