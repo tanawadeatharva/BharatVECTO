@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
-			throw new NotImplementedException();
+			InitializeVehicleData(modelData.InputData);
 		}
 
 		public XDocument Report { get; protected set; }
