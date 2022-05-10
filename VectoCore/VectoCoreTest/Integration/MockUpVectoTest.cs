@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		}
 
-		public IOutputDataWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
+		public FileOutputWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
 		{
 			var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), Path.GetFileName(originalFilePath));
 			return new FileOutputWriter(path);
@@ -122,8 +122,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			_simulatorFactory.MockUpRun = true;
 
 			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(true);
+			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
+			if(!File.Exists(fileWriter.XMLCustomerReportName))
+			{
+				TestContext.WriteLine(fileWriter.XMLCustomerReportName);
+				Assert.Fail();
+			}
 
 
 
