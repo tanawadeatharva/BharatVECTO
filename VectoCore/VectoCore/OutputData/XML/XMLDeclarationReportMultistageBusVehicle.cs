@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -19,7 +20,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			//_multistageBusReport = new XMLMultistageBusReport();
 		}
 		
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
+			IDeclarationInputDataProvider inputData = null)
 		{
 			_multistageBusReport =
 				modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();

@@ -68,7 +68,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
+			IDeclarationInputDataProvider inputData = null)
 		{
 
 		}
@@ -92,7 +93,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
+			IDeclarationInputDataProvider inputData = null)
 		{
 
 		}
