@@ -985,15 +985,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var overloadTestSpeed = voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad();
 
 
-			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, true)
+			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, 0, true)
 				.ElectricalPower;
 			var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
 			
 			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								-continuousTorque).ElectricalPower ??
+								-continuousTorque, 0).ElectricalPower ??
 							voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
 								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
-								true).ElectricalPower;
+								0, true).ElectricalPower;
 			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
 			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
 			return new OverloadData() {

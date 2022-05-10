@@ -419,7 +419,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					genSetOperatingPoint = MaxGensetPower(absTime, dt, drivetrainDemand, maxPowerGenset, gensetState);
 					emTorque = TestPowertrain.ElectricMotor.GetTorqueForElectricPower(
 						DataBus.BatteryInfo.InternalVoltage, drivetrainDemand.Response.ElectricSystem.MaxPowerDrive,
-						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt);
+						drivetrainDemand.Response.ElectricMotor.AngularVelocity, dt, DataBus.GearboxInfo?.Gear.Gear ?? 0);
 					if (emTorque == null) {
 						emTorque = -emResponse.MaxDriveTorque;
 					} else {

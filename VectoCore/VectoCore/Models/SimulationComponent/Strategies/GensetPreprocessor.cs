@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 					try {
 						Genset.ElectricMotor.Initialize(0.SI<NewtonMeter>(), speed);
-						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt);
+						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt, 0);
 
 						if (tq == null || tq.IsSmallerOrEqual(0)) {
 							continue;
