@@ -81,6 +81,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IVehicleContainer GetContainer() => Container;
 
+		public virtual bool CalculateAggregateValues()
+		{
+			return !(GetContainer().RunData.Exempted || GetContainer().RunData.MultistageRun);
+		}
 		public void Run()
 		{
 			if (Container.RunStatus != Status.Pending) {
@@ -119,7 +123,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						Container.AbsTime = AbsTime;
 					}
 				} while (response is ResponseSuccess);
-				if (!(GetContainer().RunData.Exempted || GetContainer().RunData.MultistageRun)) {
+				if (CalculateAggregateValues()) {
 					//foreach (var fuel in GetContainer().RunData.EngineData.Fuels) {
 						// calculate vehicleline correction here in local thread context because writing sum-data and
 						// report afterwards is synchronized
@@ -165,12 +169,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw ex;
 			}
 
-			if (Container.RunData.Exempted || Container.RunData.MultistageRun)
+			if (CheckCyclePortProgress()) {
+				if (CyclePort.Progress < 1) {
+					Container.RunStatus = response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted;
+				} else {
+					Container.RunStatus = Status.Success;
+				}
+			} else {
 				Container.RunStatus = Status.Success;
-			else if (CyclePort.Progress < 1)
-				Container.RunStatus = response is ResponseBatteryEmpty ? Status.REESSEmpty : Status.Aborted;
-			else
-				Container.RunStatus = Status.Success;
+			}
+
 			Container.FinishSimulationRun();
 			WritingResultsDone = true;
 			if (Progress.IsSmaller(1, 1e-9)) {
@@ -186,6 +194,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
 			Log.Info("VectoJob finished.");
+		}
+
+		protected virtual bool CheckCyclePortProgress()
+		{
+			return !Container.RunData.Exempted && !Container.RunData.MultistageRun;
 		}
 
 		public bool PostProcessingDone { get; protected set; }
