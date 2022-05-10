@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		PerSecond MaxSpeed { get; }
 		Watt DragPower(Volt volt, PerSecond electricMotorSpeed);
 		Watt MaxPowerDrive(Volt volt, PerSecond inAngularVelocity);
-		NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt);
+		NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, uint gear);
 
 		bool DeRatingActive { get; }
 	}

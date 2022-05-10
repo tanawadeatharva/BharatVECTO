@@ -65,12 +65,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.EfficiencyData.FullLoadDriveTorque(volt, electricMotorSpeed) * electricMotorSpeed;
 		}
 
-		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt)
+		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, uint gear)
 		{
 			var maxTorque = electricPower > 0
-				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed)
-				: GetMaxDriveTorque(volt, dt, avgEmSpeed);
-			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque);
+				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
+				: GetMaxDriveTorque(volt, dt, avgEmSpeed, gear);
+			var tqEmMap = ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, electricPower, avgEmSpeed, maxTorque, gear);
 			if (tqEmMap == null) {
 				return null;
 			}
@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
+			var gear = DataBus.GearboxInfo.Gear;
 			var voltage = DataBus.BatteryInfo.InternalVoltage;
 
 			var iceOn =  Position == PowertrainPosition.HybridP1 &&
@@ -159,8 +160,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(avgEmSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 
-			var maxDriveTorqueEmMap = GetMaxDriveTorque(voltage, dt, avgEmSpeed);
-			var maxRecuperationTorqueEmMap = GetMaxRecuperationTorque(voltage, dt, avgEmSpeed);
+			var maxDriveTorqueEmMap = GetMaxDriveTorque(voltage, dt, avgEmSpeed, gear.Gear);
+			var maxRecuperationTorqueEmMap = GetMaxRecuperationTorque(voltage, dt, avgEmSpeed, gear.Gear);
 
 			// inertia has to be added here. drive torque is negative, when accelerating inertia is positive and thus 'reduces' drive torque, i.e 'less negative'
 			var maxDriveTorqueEm = maxDriveTorqueEmMap == null ? null : maxDriveTorqueEmMap + inertiaTorqueEm;
@@ -254,10 +255,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorqueMap = null;
 			}
 
+			
 			var electricPower = emOff || (ModelData.DragCurve.Lookup(avgEmSpeed) + inertiaTorqueEm).IsEqual(emTorque, 1e-3.SI<NewtonMeter>())
 				? 0.SI<Watt>()
 				: ModelData.EfficiencyData
-					.LookupElectricPower(voltage, avgEmSpeed, emTorqueMap, DataBus.ExecutionMode != ExecutionMode.Declaration)
+					.LookupElectricPower(voltage, avgEmSpeed, emTorqueMap, gear.Gear, DataBus.ExecutionMode != ExecutionMode.Declaration)
 					.ElectricalPower;
 
 			var electricSupplyResponse =
@@ -379,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private NewtonMeter GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed)
+		private NewtonMeter GetMaxRecuperationTorque(Volt volt, Second dt, PerSecond avgSpeed, uint gear)
 		{
 			var tqContinuousPwr = DeRatingActive ? ModelData.Overload.ContinuousTorque : null;
 			
@@ -394,20 +396,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var maxBatRecuperationTorque = maxBatPower.IsEqual(0, 1e-3)
 				? ModelData.DragCurve.Lookup(avgSpeed)
-				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
+				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque, gear);
 			var maxTorqueRecuperate = VectoMath.Min(maxEmTorque, maxBatRecuperationTorque);
 			if (maxTorqueRecuperate < 0) {
 				return null;
 			}
 
-			var elPower = ModelData.EfficiencyData.LookupElectricPower(volt, avgSpeed, maxTorqueRecuperate);
+			var elPower = ModelData.EfficiencyData.LookupElectricPower(volt, avgSpeed, maxTorqueRecuperate, gear);
 			if (elPower.ElectricalPower?.IsSmallerOrEqual(0) ?? true) {
 				return null;
 			}
 			return maxTorqueRecuperate;
 		}
 
-		private NewtonMeter GetMaxDriveTorque(Volt volt, Second dt, PerSecond avgSpeed)
+		private NewtonMeter GetMaxDriveTorque(Volt volt, Second dt, PerSecond avgSpeed, uint gear)
 		{
 			var tqContinuousPwr = DeRatingActive ? -ModelData.Overload.ContinuousTorque : null;
 			
@@ -422,7 +424,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var maxBatDriveTorque = maxBatPower.IsEqual(0, 1e-3)
 				? ModelData.DragCurve.Lookup(avgSpeed)
-				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque);
+				: ModelData.EfficiencyData.EfficiencyMapLookupTorque(volt, maxBatPower, avgSpeed, maxEmTorque, gear);
 			
 			var maxTorqueDrive = VectoMath.Max(maxEmTorque, maxBatDriveTorque);
 			return maxTorqueDrive > 0 ? null : maxTorqueDrive;

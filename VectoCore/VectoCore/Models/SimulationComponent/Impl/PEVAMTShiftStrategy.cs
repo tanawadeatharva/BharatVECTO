@@ -561,7 +561,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 
-			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, true);
+			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, currentGear.Gear, true);
 			if (fcCurRes.Extrapolated) {
 				Log.Warn(
 					"EffShift Strategy: Extrapolation of power consumption for current gear! n: {0}, Tq: {1}",

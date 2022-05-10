@@ -69,8 +69,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(30 * count, emModelData.DragCurve.Lookup(2500.RPMtoRad()).Value(), 1e-3);
 
 			Assert.AreEqual(-14579 * count,
-				emModelData.EfficiencyData.VoltageLevels.First().EfficiencyMap
-					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), false).ElectricalPower.Value(),
+				emModelData.EfficiencyData.VoltageLevels.First()
+					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), 0, false).ElectricalPower.Value(),
 				1e-3);
 
 
