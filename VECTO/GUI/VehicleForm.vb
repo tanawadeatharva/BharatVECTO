@@ -521,16 +521,22 @@ Public Class VehicleForm
 	Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
 
-		If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-			tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-			tpElectricComponents.BindingContext = BindingContext
+		If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
+		    tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
+			tpElectricMachine.BindingContext = BindingContext
 		End If
+		
+		If Not tcVehicleComponents.TabPages.Contains(tpReess) then
+			tcVehicleComponents.TabPages.Insert(3, tpReess)
+		    tpReess.BindingContext = BindingContext
+		End If
+		
 		If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
-			tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+			tcVehicleComponents.TabPages.Insert(4, tpGensetComponents)
 			tpGensetComponents.BindingContext = BindingContext
 		End If
 		If Not tcVehicleComponents.TabPages.Contains(tpTorqueLimits) Then
-			tcVehicleComponents.TabPages.Insert(4, tpTorqueLimits)
+			tcVehicleComponents.TabPages.Insert(5, tpTorqueLimits)
 			tpTorqueLimits.BindingContext = BindingContext
 		End If
 
@@ -546,7 +552,8 @@ Public Class VehicleForm
 				gbAngledrive.Enabled = True
 
 				'Electric Powertrain Components -------------------------------------------
-				tcVehicleComponents.TabPages.Remove(tpElectricComponents)
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpReess)
 
 				'GenSet Components --------------------------------------------------------
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
@@ -636,13 +643,22 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
+		    Case VectoSimulationJobType.IEPC_E
+		        lblTitle.Text = "IEPC Vehicle"
+
 			Case Else
-				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-					tpElectricComponents.BindingContext = BindingContext
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
+					tpElectricMachine.BindingContext = BindingContext
 				End If
+
+				If Not tcVehicleComponents.TabPages.Contains(tpReess) Then
+					tcVehicleComponents.TabPages.Insert(3, tpReess)
+					tpReess.BindingContext = BindingContext
+				End If
+
 				If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
-					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+					tcVehicleComponents.TabPages.Insert(4, tpGensetComponents)
 					tpGensetComponents.BindingContext = BindingContext
 				End If
 				pnEcoRoll.Visible = True
@@ -745,22 +761,26 @@ Public Class VehicleForm
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
 
 			If tbElectricMotor.Text = "" Then
-				MsgBox("Electric Motor File is required.")
-				tcVehicleComponents.SelectedTab = tpElectricComponents
-				tbElectricMotor.Focus()
-				Return False
+			    MsgBox("Electric Motor File is required.")
+				tcVehicleComponents.SelectedTab = tpElectricMachine
+			    tbElectricMotor.Focus()
+			    Return False
 			End If
-			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
+
+		    veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt(1)
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble(1)
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+
 			If tbEmADCLossMap.Text = "" Then
-				MsgBox("Loss Map EM ADC is required.")
-				tcVehicleComponents.SelectedTab = tpElectricComponents
-				tbEmADCLossMap.Focus()
-				Return False
+			    MsgBox("Loss Map EM ADC is required.")
+			    tcVehicleComponents.SelectedTab = tpElectricMachine
+                tbEmADCLossMap.Focus()
+                Return False
 			End If
+
+
 			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
 			If (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) Then
 				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(Function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
@@ -1229,15 +1249,14 @@ Public Class VehicleForm
 
 	End Sub
 
-	Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click
+	Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click 
 		If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
 			tbElectricMotor.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
 		End If
-
 	End Sub
 
 
-	Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click
+	Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click 
 		Dim f As String
 		f = FileRepl(tbElectricMotor.Text, GetPath(_vehFile))
 
@@ -1283,7 +1302,7 @@ Public Class VehicleForm
 
 	End Sub
 
-	Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click
+	Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click 
 		If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbEmADCLossMap.Text, GetPath(_vehFile))) Then _
 			tbEmADCLossMap.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
@@ -1294,7 +1313,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
+	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged 
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
 		Dim selectedValue = CbRtType.SelectedValue
 
@@ -1320,7 +1339,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click 
 		_emRatioPerGearDlog.Clear()
 		If _emRatioPerGearDlog.ShowDialog() = DialogResult.OK Then
 			Dim gear As Integer = _emRatioPerGearDlog.tbGear.Text.ToInt(0)
@@ -1339,7 +1358,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnRemoveEMRatio.Click
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnRemoveEMRatio.Click 
 		If lvRatioPerGear.SelectedItems.Count = 0 Then
 			If lvRatioPerGear.Items.Count = 0 Then
 				Exit Sub
@@ -1351,7 +1370,7 @@ Public Class VehicleForm
 		lvRatioPerGear.SelectedItems(0).Remove()
 	End Sub
 
-	Private Sub lvRatioPerGear_DoubleClick(sender As Object, e As EventArgs) Handles lvRatioPerGear.DoubleClick
+	Private Sub lvRatioPerGear_DoubleClick(sender As Object, e As EventArgs) Handles lvRatioPerGear.DoubleClick 
 		If lvRatioPerGear.SelectedItems.Count = 0 Then Exit Sub
 
 		Dim entry As ListViewItem = lvRatioPerGear.SelectedItems(0)
@@ -1365,7 +1384,7 @@ Public Class VehicleForm
 		_emRatioPerGearDlog.tbGear.ReadOnly = False
 	End Sub
 
-	Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
+	Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick 
 		If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
 
 		Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
@@ -1381,7 +1400,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
+	Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click 
 		_reessPackDlg.Clear()
 		_reessPackDlg._vehFile = _vehFile
 		If _reessPackDlg.ShowDialog() = DialogResult.OK Then
@@ -1393,7 +1412,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click
+	Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click 
 		If lvREESSPacks.SelectedItems.Count = 0 Then
 			If lvREESSPacks.Items.Count = 0 Then
 				Exit Sub
@@ -1466,5 +1485,6 @@ Public Class VehicleForm
 	Private Sub cbEngineStopStart_CheckedChanged(sender As Object, e As EventArgs) Handles cbEngineStopStart.CheckedChanged
 		Change()
 	End Sub
+
 End Class
 
