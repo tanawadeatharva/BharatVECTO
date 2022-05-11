@@ -11,6 +11,7 @@
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.acmp" />
+    <None Remove="Resources\MockupResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
     <None Remove="Resources\XSD\VectoOutputPrimaryBus.xsd" />
   </ItemGroup>
@@ -70,6 +71,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MockupResults.xml" />
   </ItemGroup>
 
   <ItemGroup>

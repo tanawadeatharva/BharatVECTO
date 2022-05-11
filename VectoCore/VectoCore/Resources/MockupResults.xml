@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<MockupResults>
+	<ConventionalLorryManufacturerOutputDataType>
+		<Mission>Long Haul</Mission>
+		<Load></Load>
+		<TotalVehicleMassInSimulation></TotalVehicleMassInSimulation>
+		<Simulation>
+			<AverageSpeed></AverageSpeed>
+		</Simulation>
+		<FuelAndEnergyConsumption>
+
+		</FuelAndEnergyConsumption>
+	</ConventionalLorryManufacturerOutputDataType>
+
+	<ConventionalLorryOutputType>
+		
+	</ConventionalLorryOutputType>
+</MockupResults>
