@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
@@ -22,7 +23,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
 		public DeclarationModeMockupTruckVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report) : base(dataProvider, report, false)
 		{
-			
+			if (report is IMockupReport mockupReport) {
+				mockupReport.Mockup = true;
+			}
 		}
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
