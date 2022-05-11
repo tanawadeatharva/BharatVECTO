@@ -12,59 +12,58 @@
     "DifferentialIncluded": false,
     "DesignTypeWheelMotor": false,
     "NrOfDesignTypeWheelMotorMeasured": 1,
-    "ThermalOverloadRecoveryFactor": 0.9
+    "ThermalOverloadRecoveryFactor": 0.9,
     "Gears": [
-        {
+      {
         "Ratio": 3.2,
         "MaxOutShaftTorque": 10000,
         "MaxOutShaftSpeed": 5000
-        },
-        {
+      },
+      {
         "Ratio": 1.6,
         "MaxOutShaftTorque": 10000,
         "MaxOutShaftSpeed": 5000
-        }
-        {
+      },
+      {
         "Ratio": 1.6,
         "MaxOutShaftTorque": 10000,
         "MaxOutShaftSpeed": 5000
-        }
-    ]
-    "VoltageLevels" [
-     {
+      }
+    ],
+    "VoltageLevels": [
+      {
         "Voltage": 400,
         "ContinuousTorque": 200,
-        "ContinuoursTorqueSpeed": 2000
+        "ContinuousTorqueSpeed": 2000,
         "OverloadTorque": 500,
         "OverloadTorqueSpeed": 2000,
         "OverloadTime": 60,
-        "FullLoadCurve": "GenericIEPC.viepcp"
+        "FullLoadCurve": "GenericFld.viepcp",
         "PowerMaps": {
-            "1": "PowerMap1.viepco",
-            "2": "PowerMap1.viepco",
-            "3": "PowerMap1.viepco",
+          "1": "GenericPowerMap.viepco",
+          "2": "GenericPowerMap.viepco",
+          "3": "GenericPowerMap.viepco"
         }
-     },
-     {
+      },
+      {
         "Voltage": 800,
         "ContinuousTorque": 200,
-        "ContinuoursTorqueSpeed": 2000
+        "ContinuousTorqueSpeed": 2000,
         "OverloadTorque": 500,
         "OverloadTorqueSpeed": 2000,
         "OverloadTime": 60,
-        "FullLoadCurve": "GenericIEPC.viepcp"
+        "FullLoadCurve": "GenericFld.viepcp",
         "PowerMaps": {
-            "1": "PowerMap1.viepco",
-            "2": "PowerMap1.viepco",
-            "3": "PowerMap1.viepco",
+          "1": "GenericPowerMap.viepco",
+          "2": "GenericPowerMap.viepco",
+          "3": "GenericPowerMap.viepco"
         }
-     }
-    ]
-    
-    "DragCurves":  {
-        "1": "GenericDrag.viepcd",
-        "2": "GenericDrag.viepcd",
-        "3": "GenericDrag.viepcd",
-    },
+      }
+    ],
+    "DragCurves": {
+      "1": "GenericDrag.viepcd",
+      "2": "GenericDrag.viepcd",
+      "3": "GenericDrag.viepcd"
+    }
   }
 }

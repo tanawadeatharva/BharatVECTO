@@ -239,5 +239,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					throw new VectoException("Engineering BusAuxiliaries: Unsupported FileVersion. Got {0}", version);
 			}
 		}
+
+		public static IIEPCEngineeringInputData ReadIEPCEngineeringInputData(string filename,
+			bool tolerateMissing = false)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version) {
+				case 1:
+					return new JSONIEPCData(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
+			}
+		}
 	}
 }
