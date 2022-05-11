@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestCase()]
 		public void JSON_Read_IEPC()
 		{
-			var inputProvider = new JSONComponentInputData(@"TestData\Hybrids\IEPC\GenericIEPC.viepc", null);
+			var inputProvider = new JSONComponentInputData(@"TestData\BatteryElectric\IEPC\GenericIEPC.viepc", null);
 			var iepcData = (IIEPCEngineeringInputData)inputProvider.IEPC;
 
 			Assert.AreEqual("3", iepcData.AppVersion);
