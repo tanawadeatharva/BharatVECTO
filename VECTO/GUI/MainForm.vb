@@ -138,6 +138,7 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
+        IEPCFileBrowser = New FileBrowser("viepc")
         REESSFileBrowser = New FileBrowser("vreess")
         EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
@@ -2179,5 +2180,8 @@ lbFound:
 
     Private Sub JobEditorSerialHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorSerialHybridVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.SerialHybridVehicle)
+    End Sub
+    Private Sub JobEditorIEPC_E_VehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_E_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
     End Sub
 End Class

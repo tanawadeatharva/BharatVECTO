@@ -69,4 +69,5 @@ Public Module FileBrowserModule
     Public REESSFileBrowser As FileBrowser
 
 	public EmADCLossMapFileBrowser As FileBrowser
+	Public IEPCFileBrowser As FileBrowser
 End Module

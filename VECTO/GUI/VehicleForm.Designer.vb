@@ -172,6 +172,15 @@ Partial Class VehicleForm
         Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
         Me.tbInitialSoC = New System.Windows.Forms.TextBox()
         Me.lblInitialSoC = New System.Windows.Forms.Label()
+        Me.tpIEPC = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.tbNumberOfIEPC = New System.Windows.Forms.TextBox()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.btnIEPC = New System.Windows.Forms.Button()
+        Me.tbIEPCFilePath = New System.Windows.Forms.TextBox()
+        Me.btIEPCFilePath = New System.Windows.Forms.Button()
+        Me.Label54 = New System.Windows.Forms.Label()
         Me.tpGensetComponents = New System.Windows.Forms.TabPage()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.gbGenSet = New System.Windows.Forms.GroupBox()
@@ -259,6 +268,9 @@ Partial Class VehicleForm
         Me.pnElectricMotor.SuspendLayout
         Me.tpReess.SuspendLayout
         Me.gbBattery.SuspendLayout
+        Me.tpIEPC.SuspendLayout
+        Me.TableLayoutPanel1.SuspendLayout
+        Me.FlowLayoutPanel1.SuspendLayout
         Me.tpGensetComponents.SuspendLayout
         Me.gbGenSet.SuspendLayout
         Me.pnGenSetEM.SuspendLayout
@@ -1133,6 +1145,7 @@ Partial Class VehicleForm
         Me.tcVehicleComponents.Controls.Add(Me.tpPowertrain)
         Me.tcVehicleComponents.Controls.Add(Me.tpElectricMachine)
         Me.tcVehicleComponents.Controls.Add(Me.tpReess)
+        Me.tcVehicleComponents.Controls.Add(Me.tpIEPC)
         Me.tcVehicleComponents.Controls.Add(Me.tpGensetComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpTorqueLimits)
         Me.tcVehicleComponents.Controls.Add(Me.tpADAS)
@@ -1598,6 +1611,101 @@ Partial Class VehicleForm
         Me.lblInitialSoC.Size = New System.Drawing.Size(54, 13)
         Me.lblInitialSoC.TabIndex = 25
         Me.lblInitialSoC.Text = "Initial SoC"
+        '
+        'tpIEPC
+        '
+        Me.tpIEPC.Controls.Add(Me.TableLayoutPanel1)
+        Me.tpIEPC.Location = New System.Drawing.Point(4, 22)
+        Me.tpIEPC.Name = "tpIEPC"
+        Me.tpIEPC.Size = New System.Drawing.Size(648, 374)
+        Me.tpIEPC.TabIndex = 8
+        Me.tpIEPC.Text = "IEPC"
+        Me.tpIEPC.UseVisualStyleBackColor = true
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.43387!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.56612!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35!))
+        Me.TableLayoutPanel1.Controls.Add(Me.FlowLayoutPanel1, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.btnIEPC, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.tbIEPCFilePath, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.btIEPCFilePath, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label54, 0, 1)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(14, 16)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(470, 62)
+        Me.TableLayoutPanel1.TabIndex = 59
+        '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Controls.Add(Me.tbNumberOfIEPC)
+        Me.FlowLayoutPanel1.Controls.Add(Me.Label53)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(104, 34)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(200, 25)
+        Me.FlowLayoutPanel1.TabIndex = 61
+        '
+        'tbNumberOfIEPC
+        '
+        Me.tbNumberOfIEPC.Anchor = System.Windows.Forms.AnchorStyles.Left
+        Me.tbNumberOfIEPC.Location = New System.Drawing.Point(3, 3)
+        Me.tbNumberOfIEPC.Name = "tbNumberOfIEPC"
+        Me.tbNumberOfIEPC.Size = New System.Drawing.Size(91, 20)
+        Me.tbNumberOfIEPC.TabIndex = 30
+        '
+        'Label53
+        '
+        Me.Label53.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label53.AutoSize = true
+        Me.Label53.Location = New System.Drawing.Point(100, 6)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(16, 13)
+        Me.Label53.TabIndex = 32
+        Me.Label53.Text = "[-]"
+        '
+        'btnIEPC
+        '
+        Me.btnIEPC.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnIEPC.Location = New System.Drawing.Point(3, 5)
+        Me.btnIEPC.Name = "btnIEPC"
+        Me.btnIEPC.Size = New System.Drawing.Size(94, 21)
+        Me.btnIEPC.TabIndex = 27
+        Me.btnIEPC.Text = "IEPC"
+        Me.btnIEPC.UseVisualStyleBackColor = true
+        '
+        'tbIEPCFilePath
+        '
+        Me.tbIEPCFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbIEPCFilePath.Location = New System.Drawing.Point(106, 5)
+        Me.tbIEPCFilePath.Margin = New System.Windows.Forms.Padding(5, 3, 3, 3)
+        Me.tbIEPCFilePath.Name = "tbIEPCFilePath"
+        Me.tbIEPCFilePath.Size = New System.Drawing.Size(325, 20)
+        Me.tbIEPCFilePath.TabIndex = 28
+        '
+        'btIEPCFilePath
+        '
+        Me.btIEPCFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btIEPCFilePath.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btIEPCFilePath.Location = New System.Drawing.Point(440, 5)
+        Me.btIEPCFilePath.Name = "btIEPCFilePath"
+        Me.btIEPCFilePath.Size = New System.Drawing.Size(24, 21)
+        Me.btIEPCFilePath.TabIndex = 58
+        Me.btIEPCFilePath.UseVisualStyleBackColor = true
+        '
+        'Label54
+        '
+        Me.Label54.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.Label54.AutoSize = true
+        Me.Label54.Location = New System.Drawing.Point(5, 40)
+        Me.Label54.Name = "Label54"
+        Me.Label54.Size = New System.Drawing.Size(91, 13)
+        Me.Label54.TabIndex = 31
+        Me.Label54.Text = "Number of IEPCs:"
         '
         'tpGensetComponents
         '
@@ -2263,6 +2371,11 @@ Partial Class VehicleForm
         Me.tpReess.ResumeLayout(false)
         Me.gbBattery.ResumeLayout(false)
         Me.gbBattery.PerformLayout
+        Me.tpIEPC.ResumeLayout(false)
+        Me.TableLayoutPanel1.ResumeLayout(false)
+        Me.TableLayoutPanel1.PerformLayout
+        Me.FlowLayoutPanel1.ResumeLayout(false)
+        Me.FlowLayoutPanel1.PerformLayout
         Me.tpGensetComponents.ResumeLayout(false)
         Me.tpGensetComponents.PerformLayout
         Me.gbGenSet.ResumeLayout(false)
@@ -2503,5 +2616,14 @@ End Sub
     Friend WithEvents lblInitialSoCUnit As Label
     Friend WithEvents tbInitialSoC As TextBox
     Friend WithEvents lblInitialSoC As Label
+    Friend WithEvents tpIEPC As TabPage
+    Friend WithEvents btIEPCFilePath As Button
+    Friend WithEvents btnIEPC As Button
+    Friend WithEvents tbIEPCFilePath As TextBox
+    Friend WithEvents Label53 As Label
+    Friend WithEvents tbNumberOfIEPC As TextBox
+    Friend WithEvents Label54 As Label
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
     '>>>>>>> VECTO_CERT/master
 End Class
