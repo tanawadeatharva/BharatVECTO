@@ -550,6 +550,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.7.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.8.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputCustomer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.0.5.xsd" HomeFolder="Yes"/>
