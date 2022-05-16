@@ -1920,4 +1920,34 @@
 <data name="CIF_OutputDataType_ConventionalLorryOutputType" xml:space="preserve">
 	<value>ConventionalLorryOutputType</value>
 </data>
+<data name="MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-Px_IHPCLorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S2_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S2_LorryOutputType" xml:space="preserve">
+	<value>HEV_S2_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S3_LorryOutputType" xml:space="preserve">
+	<value>HEV_S3_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S4_LorryOutputType" xml:space="preserve">
+	<value>HEV_S4_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_IEPC_S_LorryOutputType" xml:space="preserve">
+	<value>HEV_IEPC_S_LorryOutputType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S3_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S4_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-IEPC-S_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_Px_LorryOutputType" xml:space="preserve">
+	<value>HEV_Px_LorryOutputType</value>
+</data>
 </root>
