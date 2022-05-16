@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					return GetBatteryElectricVehicleRunData();
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return GetSerialHybridRunData();
-				case VectoSimulationJobType.IEPCVehicle:
+				case VectoSimulationJobType.IEPC_E:
 					return GetIEPCRunData();
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
@@ -342,12 +343,35 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> GetIEPCRunData()
 		{
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			var iepcInput = vehicle.Components.IEPCEngineeringInputData;
+			var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+			if (axleGearRequired && vehicle.Components.AxleGearInputData == null) {
+				throw new VectoException(
+					$"Axlegear reqhired for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+			}
+
+			var numGearsPowermap = iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
+			var gearCount = iepcInput.Gears.Count;
+			var numGearsDrag = iepcInput.DragCurves.Count;
+			if (gearCount < 2) {
+				throw new VectoSimulationException("At least two Gear-Entries must be defined in IEPC!");
+			}
+			if (numGearsPowermap.Any(x => x.Item2 != gearCount)) {
+				throw new VectoException(
+					$"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
+			}
+
+			if (numGearsDrag > 1 && numGearsDrag != gearCount) {
+				throw new VectoException(
+					$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
+			}
+
 			foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 				var dao = new EngineeringDataAdapter();
 				var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
-				var vehicle = InputDataProvider.JobInputData.Vehicle;
 
-				var axlegearData = vehicle.Components.AxleGearInputData != null
+				var axlegearData = axleGearRequired && vehicle.Components.AxleGearInputData != null
 					? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
 					: null;
 
@@ -355,44 +379,30 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var supercapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 
 				var averageVoltage = batteryData != null ? CalculateAverageVoltage(batteryData) : null;
-				var electricMachinesData = dao.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, averageVoltage);
+				var electricMachinesData = dao.CreateIEPCElectricMachines(vehicle.Components.IEPCEngineeringInputData, averageVoltage);
 				var powertrainPosition = electricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
-				GearboxData gearboxData = null;
-				ShiftStrategyParameters gearshiftParams = null;
-				var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-				if (electricMachinesData.Any(x => x.Item1 == PowertrainPosition.BatteryElectricE2)) {
-					// gearbox required!
-					gearshiftParams = dao.CreateGearshiftData(
-						InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
-					var tmpRunData = new VectoRunData() {
+
+				var gearshiftParams = dao.CreateGearshiftData(GearboxType.APTN,
+						InputDataProvider.DriverInputData.GearshiftInputData,
+						axlegearData?.AxleGear.Ratio ?? 1.0, null);
+				var tmpRunData = new VectoRunData() {
+					JobType = VectoSimulationJobType.BatteryElectricVehicle,
+					GearboxData = new GearboxData() {
+						Type = GearboxType.APTN,
+					},
+					GearshiftParameters = gearshiftParams,
+					ElectricMachinesData = electricMachinesData,
+					//VehicleData = dao.CreateVehicleData(vehicle)
+				};
+				var tempVehicle = dao.CreateVehicleData(vehicle);
+				var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
+				var gearboxData = dao.CreateIEPCGearboxData(
+					InputDataProvider, new VectoRunData() {
 						JobType = VectoSimulationJobType.BatteryElectricVehicle,
-						GearboxData = new GearboxData() {
-							Type = vehicle.Components.GearboxInputData.Type,
-						},
-						GearshiftParameters = gearshiftParams,
-						ElectricMachinesData = electricMachinesData,
-						//VehicleData = dao.CreateVehicleData(vehicle)
-					};
-					var tempVehicle = dao.CreateVehicleData(vehicle);
-					var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-					gearboxData = dao.CreateGearboxData(
-						InputDataProvider, new VectoRunData() {
-							JobType = VectoSimulationJobType.BatteryElectricVehicle,
-							VehicleData = tempVehicle,
-							AxleGearData = axlegearData,
-							ElectricMachinesData = electricMachinesData
-						}, tmpStrategy);
-					angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
-
-				}
-
-				if (gearshiftParams == null) {
-					gearshiftParams = new ShiftStrategyParameters() {
-						StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
-						StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
-					};
-				}
+						VehicleData = tempVehicle,
+						AxleGearData = axlegearData,
+						ElectricMachinesData = electricMachinesData
+					}, tmpStrategy);
 
 				var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 										CrossWindCorrectionMode.VAirBetaLookupTable;
@@ -406,7 +416,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					JobType = VectoSimulationJobType.BatteryElectricVehicle,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
-					AngledriveData = angledriveData,
+					AngledriveData = null,
 					VehicleData = vehicleData,
 					AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 					DriverData = driver,

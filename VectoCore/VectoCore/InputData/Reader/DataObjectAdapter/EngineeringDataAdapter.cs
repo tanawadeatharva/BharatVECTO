@@ -38,6 +38,8 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -49,6 +51,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -283,9 +286,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
-			//IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
-			//double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			//ITorqueConverterEngineeringInputData torqueConverter, IShiftPolygonCalculator shiftPolygonCalc, IAdvancedDriverAssistantSystemDeclarationInputData adas)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 			var gearbox = vehicle.Components.GearboxInputData;
@@ -942,7 +942,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
-				DragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
+				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
 				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
 				RatioADC = ratio,
@@ -976,24 +976,49 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private OverloadData CalculateOverloadBuffer(IElectricMotorVoltageLevel voltageEntry,
-			int count, VoltageLevelData voltageLevels)
+		private OverloadData CalculateOverloadData(IIEPCEngineeringInputData iepc, int count,
+			VoltageLevelData voltageLevels, Volt averageVoltage, Tuple<uint, double> gearRatioUsedForMeasurement)
 		{
-			var continuousTorque = voltageEntry.ContinuousTorque * count;
-			var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed;
-			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count;
-			var overloadTestSpeed = voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad();
+			// if average voltage is outside of the voltage-level range, do not extrapolate but take the min voltage entry, or max voltage entry
+			if (averageVoltage < iepc.VoltageLevels.Min(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(iepc.VoltageLevels.First(), count, voltageLevels, gearRatioUsedForMeasurement);
+			}
+			if (averageVoltage > iepc.VoltageLevels.Max(x => x.VoltageLevel)) {
+				return CalculateOverloadBuffer(iepc.VoltageLevels.Last(), count, voltageLevels, gearRatioUsedForMeasurement);
+			}
+
+			var (vLow, vHigh) = iepc.VoltageLevels.OrderBy(x => x.VoltageLevel).GetSection(x => x.VoltageLevel < averageVoltage);
+			var ovlLo = CalculateOverloadBuffer(vLow, count, voltageLevels, gearRatioUsedForMeasurement);
+			var ovlHi = CalculateOverloadBuffer(vHigh, count, voltageLevels, gearRatioUsedForMeasurement);
+
+			var retVal = new OverloadData() {
+				OverloadBuffer = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.OverloadBuffer, ovlHi.OverloadBuffer, averageVoltage),
+				ContinuousTorque = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousTorque, ovlHi.ContinuousTorque, averageVoltage),
+				ContinuousPowerLoss = VectoMath.Interpolate(vLow.VoltageLevel, vHigh.VoltageLevel, ovlLo.ContinuousPowerLoss, ovlHi.ContinuousPowerLoss, averageVoltage)
+			};
+			return retVal;
+		}
+
+		private OverloadData CalculateOverloadBuffer(IElectricMotorVoltageLevel voltageEntry,
+			int count, VoltageLevelData voltageLevels, Tuple<uint, double> gearUsedForMeasurement = null)
+		{
+			var gearRatioUsedForMeasurement = gearUsedForMeasurement?.Item2 ?? 1.0;
+			var gear = new GearshiftPosition(gearUsedForMeasurement?.Item1 ?? 0);
+			var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
+			var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed * gearRatioUsedForMeasurement;
+			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
+			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
 
 
-			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, 0, true)
+			var peakElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, overloadTestSpeed, -overloadTorque, gear, true)
 				.ElectricalPower;
 			var peakPwrLoss = -peakElPwr - overloadTorque * overloadTestSpeed; // losses need to be positive
 			
 			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								-continuousTorque, 0).ElectricalPower ??
+								-continuousTorque, gear).ElectricalPower ??
 							voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
-								0, true).ElectricalPower;
+								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear),
+								gear, true).ElectricalPower;
 			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
 			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
 			return new OverloadData() {
@@ -1097,5 +1122,176 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return retVal;
 		}
+
+		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCEngineeringInputData iepc, Volt averageVoltage)
+		{
+			if (iepc == null) {
+				return null;
+			}
+
+			var pos = PowertrainPosition.BatteryElectricE2;
+			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+
+			// the full-load curve is measured in the gear with the ratio closest to 1,
+			// in case two gears have the same difference, the higher one is used
+			var gearRatioUsedForMeasurement = iepc.Gears
+				.Select(x => new { x.GearNumber, x.Ratio, Diff = Math.Round(Math.Abs(x.Ratio - 1), 6) }).GroupBy(x => x.Diff)
+				.OrderBy(x => x.Key).First().OrderBy(x => x.Ratio).Reverse().First();
+			
+
+			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
+			foreach (var entry in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
+				var effMap = new Dictionary<uint, EfficiencyMap>();
+				for (var i = 0u; i < entry.PowerMap.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					effMap.Add(i + 1, IEPCMapReader.Create(entry.PowerMap[(int)i].PowerMap, count, ratio));
+					//fullLoadCurves.Add(i + 1, IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, ratio));
+				}
+				voltageLevels.Add(new IEPCVoltageLevelData() {
+					Voltage = entry.VoltageLevel,
+					FullLoadCurve = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio),
+					IEPCEfficiencyMap = effMap,
+				});
+			}
+
+			var dragCurves = new Dictionary<uint, DragCurve>();
+			if (iepc.DragCurves.Count > 1) {
+				for (var i = 0u; i < dragCurves.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(iepc.DragCurves[(int)i].DragCurve, count, ratio));
+				}
+			} else {
+				var dragCurve = iepc.DragCurves.First().DragCurve;
+				for (var i = 0u; i < iepc.Gears.Count; i++) {
+					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
+					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(dragCurve, count, ratio));
+				}
+			}
+
+			var retVal = new IEPCElectricMotorData() {
+				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
+				IEPCDragCurves = dragCurves,
+				Inertia = iepc.Inertia * count,
+				OverloadRegenerationFactor = iepc.OverloadRecoveryFactor,
+				RatioADC = 1,
+				RatioPerGear = null,
+				TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff"),
+				
+			};
+			retVal.Overload = CalculateOverloadData(iepc, count, retVal.EfficiencyData, averageVoltage,
+				Tuple.Create((uint)gearRatioUsedForMeasurement.GearNumber, gearRatioUsedForMeasurement.Ratio));
+			;
+			return new List<Tuple<PowertrainPosition, ElectricMotorData>>() { Tuple.Create<PowertrainPosition, ElectricMotorData>(pos, retVal) };
+		}
+
+
+
+
+		public GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+		{
+			var vehicle = inputData.JobInputData.Vehicle;
+
+			var iepc = vehicle.Components.IEPCEngineeringInputData;
+
+			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
+
+
+			var retVal = new GearboxData() {
+				Type = GearboxType.APTN,
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 0.SI<Second>(),
+				InputData = new IEPCGearboxInputData(iepc),
+			};
+
+			var gearInput = iepc.Gears.Select((x, idx) => new TransmissionInputData() { Gear = idx + 1, Ratio = x.Ratio }).Cast<ITransmissionInputData>().ToList();
+			var gears = new Dictionary<uint, GearData>();
+			for (uint i = 0; i < iepc.Gears.Count; i++) {
+				var gear = iepc.Gears[(int)i];
+				var lossMap = TransmissionLossMapReader.Create(1, gear.Ratio, $"Gear{i+1}");
+
+				ShiftPolygon shiftPolygon;
+				if (shiftPolygonCalc != null) {
+					shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(GearboxType.APTN, (int)i,
+						null, gearInput, null, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				} else {
+					shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.APTN, (int)i,
+						null, gearInput, null, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				}
+
+				var gearData = new GearData {
+					ShiftPolygon = shiftPolygon,
+					MaxSpeed = gear.MaxOutputShaftSpeed == null ? null : gear.MaxOutputShaftSpeed * gear.Ratio,
+					MaxTorque = gear.MaxOutputShaftTorque == null ? null : gear.MaxOutputShaftTorque / gear.Ratio,
+					Ratio = gear.Ratio,
+					LossMap = lossMap,
+				};
+
+				gears.Add(i + 1, gearData);
+			}
+
+			retVal.Gears = gears;
+
+			// update disengageWhenHaltingSpeed
+			var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+			if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
+				var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+					.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+				var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+											dynamicTyreRadius;
+				retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+			}
+
+			return retVal;
+		}
+
+	}
+
+	public class IEPCGearboxInputData : IGearboxDeclarationInputData
+	{
+		protected readonly IIEPCEngineeringInputData _iepc;
+		private IList<ITransmissionInputData> _gears;
+
+		public IEPCGearboxInputData(IIEPCEngineeringInputData iepc)
+		{
+			_iepc = iepc;
+		}
+
+		#region Implementation of IComponentInputData
+
+		public DataSource DataSource => _iepc.DataSource;
+		public bool SavedInDeclarationMode => _iepc.SavedInDeclarationMode;
+		public string Manufacturer => _iepc.Manufacturer;
+		public string Model => _iepc.Model;
+		public DateTime Date => _iepc.Date;
+		public string AppVersion => _iepc.AppVersion;
+		public CertificationMethod CertificationMethod => _iepc.CertificationMethod;
+		public string CertificationNumber => _iepc.CertificationNumber;
+		public DigestData DigestValue => _iepc.DigestValue;
+
+		#endregion
+
+		#region Implementation of IGearboxDeclarationInputData
+
+		public GearboxType Type => GearboxType.APTN;
+		public IList<ITransmissionInputData> Gears => _gears ?? (_gears = ConvertGears());
+
+		public bool DifferentialIncluded => false;
+		public double AxlegearRatio => double.NaN;
+
+		#endregion
+		protected virtual IList<ITransmissionInputData> ConvertGears()
+		{
+			return _iepc.Gears.Select(x => new TransmissionInputData() {
+				Gear = x.GearNumber,
+				Ratio = x.Ratio,
+				MaxInputSpeed = x.MaxOutputShaftSpeed == null ? null : x.MaxOutputShaftSpeed * x.Ratio,
+				MaxTorque = x.MaxOutputShaftTorque == null ? null : x.MaxOutputShaftTorque / x.Ratio,
+			}).Cast<ITransmissionInputData>().ToList();
+		}
+
+
 	}
 }

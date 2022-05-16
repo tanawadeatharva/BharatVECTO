@@ -59,7 +59,8 @@ namespace TUGraz.VectoCommon.InputData
 		SerialHybridVehicle,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
-		IEPCVehicle
+		IEPC_E,
+		IEPC_S
 	}
 
 	public interface IHybridStrategyParameters
@@ -162,6 +163,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricStorageSystemEngineeringInputData ElectricStorage { get; }
 
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
+
+		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData

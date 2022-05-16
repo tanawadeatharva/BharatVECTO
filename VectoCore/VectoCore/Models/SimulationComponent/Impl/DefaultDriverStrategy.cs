@@ -736,7 +736,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions)
 				sum += db.ElectricMotorInfo(pos).DragPower(
 					db.BatteryInfo.InternalVoltage,
-					db.ElectricMotorInfo(pos).ElectricMotorSpeed);
+					db.ElectricMotorInfo(pos).ElectricMotorSpeed, db.GearboxInfo.Gear);
 			return sum;
 		}
 

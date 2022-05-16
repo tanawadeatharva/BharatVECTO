@@ -1142,6 +1142,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// --------------------------
 
+	public class JSONInputDataV12_IEPC : AbstractJSONInputData
+	{
+		public JSONInputDataV12_IEPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+			
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null) {
+				AxleGear = ReadGearbox() as IAxleGearInputData;
+			}
+		}
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.IEPC_E;
+	}
+
+	// --------------------------
+
 	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;

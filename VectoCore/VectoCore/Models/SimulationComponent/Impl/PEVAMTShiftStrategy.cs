@@ -161,30 +161,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IList<ITransmissionInputData> gearData, Meter rDyn, double axleGearRatio, GearboxType gearboxType)
 		{
 			var retVal = new Dictionary<uint, ShiftPolygon>();
-			var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-			var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
-				new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					MotorSpeed = 0.RPMtoRad(),
-					FullDriveTorque = -em.Overload.ContinuousTorque,
-					FullGenerationTorque = em.Overload.ContinuousTorque
-				},
-				new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					MotorSpeed = 1.1 * emFld.MaxSpeed,
-					FullDriveTorque = -em.Overload.ContinuousTorque,
-					FullGenerationTorque = em.Overload.ContinuousTorque
-				}
-			});
-			var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
-			var limitedEm = new ElectricMotorData() {
-				EfficiencyData = new VoltageLevelData() {
-					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-						new ElectricMotorVoltageLevelData() {
-							FullLoadCurve = limitedFld
+			for (var i = 0u; i < gearData.Count; i++) {
+				var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+				var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 0.RPMtoRad(),
+						FullDriveTorque = -em.Overload.ContinuousTorque,
+						FullGenerationTorque = em.Overload.ContinuousTorque
+					},
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 1.1 * emFld.MaxSpeed,
+						FullDriveTorque = -em.Overload.ContinuousTorque,
+						FullGenerationTorque = em.Overload.ContinuousTorque
+					}
+				});
+				var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
+				var limitedEm = new ElectricMotorData() {
+					EfficiencyData = new VoltageLevelData() {
+						VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+							new ElectricMotorVoltageLevelData() {
+								FullLoadCurve = limitedFld
+							}
 						}
 					}
-				}
-			};
-			for (var i = 0u; i < gearData.Count; i++) {
+				};
+
 				var shiftPolygon = ComputeDeclarationShiftPolygon((int)i,
 					gearData, axleGearRatio,
 					rDyn, limitedEm, shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
@@ -561,7 +562,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 
-			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, currentGear.Gear, true);
+			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, currentGear, true);
 			if (fcCurRes.Extrapolated) {
 				Log.Warn(
 					"EffShift Strategy: Extrapolation of power consumption for current gear! n: {0}, Tq: {1}",
