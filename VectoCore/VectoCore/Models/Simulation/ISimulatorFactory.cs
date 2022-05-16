@@ -52,7 +52,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 		bool CreateFollowUpSimulatorFactory { get; set; }
 
 
-		bool MockUpRun { get; set; }
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.

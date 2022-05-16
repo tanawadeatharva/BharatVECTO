@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected bool _simulate = true;
 
 		//TODO: set with preprocessor directive remove from interface
-		public bool MockUpRun { get; set; } = true;
+		public static bool MockUpRun { get; set; } = false;
 
 
 		public ISimulatorFactory FollowUpSimulatorFactory
