@@ -19,7 +19,7 @@ namespace TUGraz.VectoCommon.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class XMLNames {
@@ -1470,6 +1470,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string ChassisConfiguration {
             get {
                 return ResourceManager.GetString("ChassisConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalLorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_ConventionalLorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_ConventionalLorryOutputType", resourceCulture);
             }
         }
         
@@ -3360,6 +3369,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Missions_Cycle {
             get {
                 return ResourceManager.GetString("Missions_Cycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalLorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalPrimaryBusManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
             }
         }
         
