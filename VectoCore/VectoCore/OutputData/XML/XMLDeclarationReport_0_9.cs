@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			if (Mockup) {
 				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
 			} else {
 				ManufacturerRpt.WriteResult(result);
 				CustomerRpt.WriteResult(result);

@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
 
-		public abstract string XmlOutputType { get; } //also used as name for the mockup result element
+		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
 		protected AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory)
 		{
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
 
-			Results.Add(MockupResultReader.GetMockupResult(XmlOutputType, resultValue, Mrf + "Result"));
+			Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Result"));
 
 
 
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Report = new XDocument(new XElement(Mrf + "VectoOutput",
 					new XAttribute("xmlns", Mrf),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-					new XAttribute(xsi + "type", $"{XmlOutputType}"),
+					new XAttribute(xsi + "type", $"{OutputDataType}"),
 					Vehicle,
 					Results));
 			

@@ -8,14 +8,21 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
-	public abstract class AbstractCustomerReport : IXMLCustomerReport
+	public abstract class AbstractCustomerReport : IXMLCustomerReport, IXMLMockupReport
     {
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 		protected XElement Vehicle { get; set; }
+		protected XElement Results { get; set; }
+
+		protected abstract string OutputDataType { get; }
 
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
 		{
@@ -30,17 +37,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			InitializeVehicleData(modelData.InputData);
+			Results = new XElement(Cif + "Results");
 		}
 
 		public XDocument Report { get; protected set; }
+
+		private List<XMLDeclarationReport.ResultEntry> results = new List<XMLDeclarationReport.ResultEntry>();
 		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
-			throw new NotImplementedException();
+			results.Add(resultValue);
+
 		}
 
 		public void GenerateReport(XElement resultSignature)
 		{
-			throw new NotImplementedException();
+			Report = new XDocument(new XElement(Cif + "VectoOutput",
+				new XAttribute("xmlns", Cif),
+				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
+				new XAttribute(XNamespace.Xmlns + "mrf", LorryManufacturerReportBase.Mrf),
+				new XAttribute(xsi + "type", $"{OutputDataType}"),
+				Vehicle,
+				Results));
+		}
+
+		#endregion
+
+		#region Implementation of IXMLMockupReport
+
+		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		{
+			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Result"));
 		}
 
 		#endregion

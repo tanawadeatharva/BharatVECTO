@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

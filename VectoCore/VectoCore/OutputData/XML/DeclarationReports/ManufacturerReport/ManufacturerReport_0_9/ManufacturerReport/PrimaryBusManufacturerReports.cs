@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
@@ -27,13 +28,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_PrimaryBusVehicleType().GetElement(inputData);
-
-			GenerateReport("ConventionalPrimaryBusManufacturerOutputDataType");
+			
 		}
 
 		#endregion
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string XmlOutputType { get; }
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
