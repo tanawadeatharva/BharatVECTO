@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
@@ -14,6 +15,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
@@ -93,56 +95,83 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.NotNull(_inputDataReader);
 		}
 
+		[SetUp]
 		public void Setup()
 		{
-			
+			SimulatorFactory.MockUpRun = true;
 
 		}
 
 		public FileOutputWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
 		{
+			Directory.CreateDirectory(Path.GetFullPath(subDirectory));
 			var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), Path.GetFileName(originalFilePath));
 			return new FileOutputWriter(path);
 		}
 
+
+	
 		
 
-		
-
-		[TestCase(ConventionalHeavyLorry)]
-		public void ConventionalHeavyLorryMockupTest(string fileName)
+		[TestCase(ConventionalHeavyLorry, TestName="ConventionalHeavyLorry")]
+		[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
+		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
+		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
+		[TestCase(HEV_S4_HeavyLorry, TestName = "HEV_S4_HeavyLorry")]
+		[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry")]
+		[TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry")]
+		[TestCase(PEV_E2_HeavyLorry, false, TestName = "PEV_E2_HeavyLorryNoMockup")]
+		[TestCase(PEV_E3_HeavyLorry, TestName = "PEV_E3_HeavyLorry")]
+		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
+		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
+		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
+		[NonParallelizable]
+		public void HeavyLorryMockupTest(string fileName, bool mockup = true)
 		{
+			SimulatorFactory.MockUpRun = mockup;
 			var inputProvider = _inputDataReader.Create(fileName);
-			var fileWriter = GetOutputFileWriter(nameof(ConventionalHeavyLorryMockupTest), fileName);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
-			_simulatorFactory.MockUpRun = true;
 
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			if(!File.Exists(fileWriter.XMLCustomerReportName))
-			{
-				TestContext.WriteLine(fileWriter.XMLCustomerReportName);
-				Assert.Fail();
-			}
+			CheckFileExists(fileWriter);
+		}
 
+		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
+		public void PrimaryBusMockupTest(string fileName)
+		{
+			var inputProvider = _inputDataReader.Create(fileName);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
 
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 
-
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+			CheckFileExists(fileWriter);
 		}
 
 
-
-
-
-
-
-
-
-
+		private static void CheckFileExists(FileOutputWriter fileWriter)
+		{
+			if (!File.Exists(fileWriter.XMLCustomerReportName)) {
+				TestContext.WriteLine(fileWriter.XMLCustomerReportName);
+				Assert.Fail();
+			}
+			if (!File.Exists(fileWriter.XMLFullReportName))
+			{
+				TestContext.WriteLine(fileWriter.XMLFullReportName);
+				Assert.Fail();
+			}
+		}
 	}
 }
