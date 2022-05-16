@@ -1149,7 +1149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			VehicleData = ReadVehicle();
 			
-			if (Body[JsonKeys.Vehicle_GearboxFile] != null) {
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
 				AxleGear = ReadGearbox() as IAxleGearInputData;
 			}
 		}

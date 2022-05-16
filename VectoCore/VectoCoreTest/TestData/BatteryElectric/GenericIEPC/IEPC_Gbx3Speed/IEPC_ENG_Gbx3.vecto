@@ -8,12 +8,12 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "IEPCVehicle_Gbx3Axl.vveh",
-    "GearboxFile": "",
-    "TCU": "ShiftParameters.vtcu",
+    "VehicleFile": "IEPCVehicle_Gbx3.vveh",
+    "GearboxFile": "Axlegear.vgbx",
+    "TCU": "../Common/ShiftParameters.vtcu",
     "Padd_electric": 3540.0,
 
-    "VACC": "Truck.vacc",
+    "VACC": "../Common/Truck.vacc",
 
     "LAC": {
       "Enabled": true,

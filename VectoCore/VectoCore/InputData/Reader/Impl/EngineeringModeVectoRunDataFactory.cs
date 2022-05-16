@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -373,7 +374,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				var axlegearData = axleGearRequired && vehicle.Components.AxleGearInputData != null
 					? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
-					: null;
+					: new AxleGearData() {
+						AxleGear = new TransmissionData() {
+							Ratio = 1.0,
+							LossMap = TransmissionLossMapReader.Create(1.0, 1.0, "DummyAxleGearIEPC")
+						}
+					};
 
 				var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 				var supercapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
@@ -384,7 +390,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				var gearshiftParams = dao.CreateGearshiftData(GearboxType.APTN,
 						InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData?.AxleGear.Ratio ?? 1.0, null);
+						axlegearData.AxleGear.Ratio, null);
 				var tmpRunData = new VectoRunData() {
 					JobType = VectoSimulationJobType.BatteryElectricVehicle,
 					GearboxData = new GearboxData() {

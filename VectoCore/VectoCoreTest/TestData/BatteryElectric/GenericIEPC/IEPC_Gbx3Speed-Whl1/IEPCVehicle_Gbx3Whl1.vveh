@@ -17,16 +17,16 @@
 		"PowertrainConfiguration": "IEPC",
 		"CdCorrMode": "CdofVdecl",
 		"CdCorrFile": "",
-		"IEPC": "GenericIEPC_Gbx3Axl.viepc",
+		"IEPC": "GenericIEPC_Gbx3Whl1.viepc",
 		"Batteries": [
 			{
 				"NumPacks": 1,
-				"BatteryFile": "GenericBattery_243kWh_750V.vbat",
+				"BatteryFile": "../Common/GenericBattery_243kWh_750V.vbat",
 				"StreamId": 0
 			},
       {
         "NumPacks": 1,
-        "BatteryFile": "GenericBattery_243kWh_750V.vbat",
+        "BatteryFile": "../Common/GenericBattery_243kWh_750V.vbat",
         "StreamId": 1
       }
 		],
