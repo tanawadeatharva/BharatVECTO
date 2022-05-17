@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
-using RuntimeArgumentHandle = System.RuntimeArgumentHandle;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -41,14 +36,31 @@ namespace TUGraz.VectoCore.Utils
 				XMLNames.CIF_OutputDataType_ConventionalLorryOutputType,
 			};
 
-			private static HashSet<string> hev = new HashSet<string>() { };
+			private static HashSet<string> hev = new HashSet<string>() {
+				//MRF
+				XMLNames.MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType,
+				//CIF
+				XMLNames.CIF_OutputDataType_HEV_S2_LorryOutputType,
+				XMLNames.CIF_OutputDataType_HEV_S3_LorryOutputType,
+				XMLNames.CIF_OutputDataType_HEV_S4_LorryOutputType,
+				XMLNames.CIF_OutputDataType_HEV_IEPC_S_LorryOutputType,
+				XMLNames.CIF_OutputDataType_HEV_Px_LorryOutputType,
+			};
 			private static HashSet<string> pev = new HashSet<string>() { };
-			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type)
+			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, bool ovc)
 			{
-				var arch = GetArch(xmlName, false);
-				var reportType = type == ResultType.MRF ? "MRF" : "CIF";
-				var vehicleType = result.VehicleClass.IsBus() ? "Bus" : "Lorry";
-				return $"{mockupResourcePrefix}.{reportType}_MockupResults_{arch}_{vehicleType}.xml";
+				//if (result.Status == VectoRun.Status.Success) {
+					var arch = GetArch(xmlName, ovc);
+					var reportType = type == ResultType.MRF ? "MRF" : "CIF";
+					var vehicleType = result.VehicleClass.IsBus() ? "Bus" : "Lorry";
+					return $"{mockupResourcePrefix}.{reportType}_MockupResults_{arch}_{vehicleType}.xml";
+				//}
+
+				throw new NotImplementedException("Error result not implemented\n");
 			}
 
 			private static string GetArch(string xmlName, bool ocv)
@@ -58,12 +70,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 
 				if (hev.Contains(xmlName)) {
-					if (ocv) {
-						return "OCV-HEV";
-					} else {
-						return "non-OCV-HEV";
-					}
-					
+					return ocv ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
 				if (pev.Contains(xmlName)) {
@@ -76,9 +83,9 @@ namespace TUGraz.VectoCore.Utils
 
 		}
         
-		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName)
+		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, bool ovc)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, ovc));
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
 			
@@ -87,9 +94,11 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 
-		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName)
+
+		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, bool ovc)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, ovc));
+			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
 
@@ -99,7 +108,8 @@ namespace TUGraz.VectoCore.Utils
 		private static XElement GetResultElement(XName resultElementName, string resourceName)
 		{
 			var xDoc = XDocument.Load(RessourceHelper.ReadStream(resourceName));
-			var results = xDoc.XPathSelectElements($"//*[name()='Result']");
+			
+			var results = xDoc.XPathSelectElements($"//*[name()='{resultElementName.LocalName}']");
 			
 			return results.First();
 		}
@@ -107,24 +117,47 @@ namespace TUGraz.VectoCore.Utils
 		
 		private static void ReplaceMission(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
-			resultElement.Elements().Single(x => x.Name.LocalName == XMLNames.Report_Result_Mission).Value =
-				result.Mission.ToXMLFormat();
+			var mission = resultElement.Elements()
+				.FirstOrDefault(x => x.Name.LocalName == XMLNames.Report_Result_Mission);
+			if (mission != null) {
+				mission.Value = result.Mission.ToXMLFormat();
+			}
+				
 		}
 
 		private static void SetFuels(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
-			var fuelElement = resultElement.XPathSelectElements("//*[name()='Fuel']").First();
-			var insertAfter = fuelElement.PreviousNode;         //FuelElements added after this element
-			fuelElement.Remove();
-			
-			foreach (var fuelProperties in result.FuelData) {
-				
-				var fuelElementToAdd = new XElement(fuelElement); //deep copy of fuel element;
-				fuelElementToAdd.SetAttributeValue(XMLNames.Report_Results_Fuel_Type_Attr, fuelProperties.FuelType.ToXMLFormat());
-				ClearFuelConsumptionEntries(fuelProperties.FuelType, fuelElementToAdd, result.VehicleClass);
+			//var tmpResultElement = new XElement(resultElement);
+			var fuelElements = resultElement.XPathSelectElements("//*[name()='Fuel']").ToList();
+			foreach (var fuelElement in fuelElements) {
+				XElement lastAdded = null;
+				foreach (var fuelProperties in result.FuelData)
+				{
+					Action<XElement> insertAction = (element) => {
+						//FuelElements added after this element
+						if (lastAdded != null) {
+							fuelElement.AddAfterSelf(element);
+							
+						} else if (fuelElement.PreviousNode != null) {
+							fuelElement.AddAfterSelf(element);
+							
+						} else {
+							fuelElement.Parent.AddFirst(element);
+						}
+						lastAdded = element;
+						fuelElement.Remove();
+					};
 
-				insertAfter.AddAfterSelf(fuelElementToAdd);
-				insertAfter = fuelElementToAdd;
+					var fuelElementToAdd = new XElement(fuelElement); //deep copy of fuel element;
+					fuelElementToAdd.SetAttributeValue(XMLNames.Report_Results_Fuel_Type_Attr, fuelProperties.FuelType.ToXMLFormat());
+					ClearFuelConsumptionEntries(fuelProperties.FuelType, fuelElementToAdd, result.VehicleClass);
+
+
+
+					insertAction(fuelElementToAdd);
+
+
+				}
 			}
 		}
 

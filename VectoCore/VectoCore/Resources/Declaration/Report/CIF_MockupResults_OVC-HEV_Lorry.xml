@@ -85,7 +85,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 		</Result>
 		<!-- END OCV HEV (and OCV FCV in future) Lorry -->
 		<Summary xsi:type="ResultSummaryOCVHEVType">
-			<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
+			<!-- repeat for every fuel used -->
+			<Fuel type="Diesel CI">
 				<FuelConsumption unit="g/km">6.1</FuelConsumption>
 				<FuelConsumption unit="g/t-km">6.20</FuelConsumption>
 				<FuelConsumption unit="g/m³-km">6.220</FuelConsumption>
