@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
+				//_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetHEV_S2_LorryComponentsType().GetElement(inputData));
 		}
 
