@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
-			var gear = DataBus.GearboxInfo.Gear;
+			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(0);
 			var voltage = DataBus.BatteryInfo.InternalVoltage;
 
 			var iceOn =  Position == PowertrainPosition.HybridP1 &&
