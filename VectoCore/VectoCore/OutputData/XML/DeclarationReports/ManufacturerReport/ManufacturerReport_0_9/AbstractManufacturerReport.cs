@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
@@ -18,6 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	internal interface IXMLMockupReport
 	{
 		void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue);
 	}
 	internal abstract class AbstractManufacturerReport : IXMLManufacturerReport, IXMLMockupReport
     {
@@ -26,6 +28,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
+
+		private bool _ovc = false;
 
 		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
@@ -44,6 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			InitializeVehicleData(modelData.InputData);
+			_ovc = modelData.VehicleData.Ocv;
 			Results = new XElement(Mrf + XMLNames.Report_Results);
 		}
 
@@ -59,11 +64,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
+			
+			Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Result", _ovc));
 
-			Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Result"));
 
 
+		}
 
+		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		{
+			Results.AddFirst(new XElement(Mrf + "Status", "success"));
+			Results.AddFirst(new XComment("Always prints success at the moment"));
+			//Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Summary", _ovc));
 		}
 
 		
@@ -76,7 +88,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XAttribute(xsi + "type", $"{OutputDataType}"),
 					Vehicle,
 					Results));
-			
 		}
 
 		#endregion
