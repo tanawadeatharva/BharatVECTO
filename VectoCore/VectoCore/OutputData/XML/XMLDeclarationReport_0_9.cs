@@ -75,16 +75,31 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 
 			if (Mockup) {
+				
 				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
 				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+				
+				
 			} else {
 				ManufacturerRpt.WriteResult(result);
 				CustomerRpt.WriteResult(result);
 			}
-	
 		}
 
 		#endregion
+
+		#endregion
+
+		#region Overrides of XMLDeclarationReport
+
+		protected override void GenerateReports()
+		{
+			if (Mockup) {
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+				(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			}
+			base.GenerateReports();
+		}
 
 		#endregion
 
