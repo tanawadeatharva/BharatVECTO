@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Ninject;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.XML.Reports;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -42,6 +44,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
 		protected const string HEV_S3_HeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml";
+		protected const string HEV_S3_HeavyLorry_ovc =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml";
 		protected const string HEV_S4_HeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml";
 		protected const string HEV_IEPC_S_HeavyLorry =
@@ -104,6 +108,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public FileOutputWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
 		{
+			subDirectory = Path.Combine("MockupReports",subDirectory);
 			Directory.CreateDirectory(Path.GetFullPath(subDirectory));
 			var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), Path.GetFileName(originalFilePath));
 			return new FileOutputWriter(path);
@@ -114,13 +119,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 		
 
 		[TestCase(ConventionalHeavyLorry, TestName="ConventionalHeavyLorry")]
-		[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
+		//[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
 		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
 		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
+		[TestCase(HEV_S3_HeavyLorry_ovc, TestName="HEV_S3_HeavyLorry_ovc")]
 		[TestCase(HEV_S4_HeavyLorry, TestName = "HEV_S4_HeavyLorry")]
 		[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry")]
 		[TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry")]
-		[TestCase(PEV_E2_HeavyLorry, false, TestName = "PEV_E2_HeavyLorryNoMockup")]
+		//[TestCase(PEV_E2_HeavyLorry, false, TestName = "PEV_E2_HeavyLorryNoMockup")]
 		[TestCase(PEV_E3_HeavyLorry, TestName = "PEV_E3_HeavyLorry")]
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
@@ -140,12 +146,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
+			
 			CheckFileExists(fileWriter);
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName)), "MRF invalid");
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName)), "CIF invalid");
 		}
 
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
-		public void PrimaryBusMockupTest(string fileName)
+		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
+			SimulatorFactory.MockUpRun = mockup;
 			var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
