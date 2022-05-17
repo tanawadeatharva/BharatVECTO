@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-						modelData.EngineData.RatedPowerDeclared);
+						modelData.EngineData?.RatedPowerDeclared ?? Watt.Create(0));
 			}
 
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
