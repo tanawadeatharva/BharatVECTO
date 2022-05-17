@@ -15,6 +15,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
+			if (inputData.JobInputData.Vehicle.TorqueLimits == null) {
+
+				return null;
+			}
 			var torqueLimitsElement = new XElement(_mrf + "EngineTorqueLimitations");
 
 			var maxEngineTorque = inputData.JobInputData.Vehicle.Components.EngineInputData.MaxTorqueDeclared;
