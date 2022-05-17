@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 
 
-		protected bool ValidateAndPrint(XDocument document)
+		public static bool ValidateAndPrint(XDocument document)
 		{
 			var error = false;
 
