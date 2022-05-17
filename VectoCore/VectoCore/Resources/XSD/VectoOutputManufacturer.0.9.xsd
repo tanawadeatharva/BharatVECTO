@@ -1866,13 +1866,13 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="GearshiftCount" type="xs:int">
+			<xs:element name="GearshiftCount" type="xs:int" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.2.2.7 / #66</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="EngineSpeedDriving" type="mrf:EngineSpeedDrivingType"/>
-			<xs:element name="AverageGearboxEfficiency">
+			<xs:element name="AverageGearboxEfficiency" minOccurs="0">
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -1881,7 +1881,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="AverageAxlegearEfficiency">
+			<xs:element name="AverageAxlegearEfficiency" minOccurs="0">
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
