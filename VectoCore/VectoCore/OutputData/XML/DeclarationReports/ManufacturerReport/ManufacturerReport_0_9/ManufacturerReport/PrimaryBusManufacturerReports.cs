@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
@@ -27,11 +28,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType;
+
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_PrimaryBusVehicleType().GetElement(inputData);
-
-			GenerateReport("ConventionalPrimaryBusManufacturerOutputDataType");
+			
 		}
 
 		#endregion
@@ -42,6 +44,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public HEV_Px_IHPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -61,6 +65,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
+		public override string OutputDataType { get; }
+
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_S2_PrimaryBusVehicleType().GetElement(inputData);
@@ -77,6 +83,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
+		public override string OutputDataType { get; }
+
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_S3_PrimaryBusVehicleType().GetElement(inputData);
@@ -91,6 +99,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public HEV_S4_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -108,6 +118,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
+		public override string OutputDataType { get; }
+
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_IEPC_S_PrimaryBusVehicleType().GetElement(inputData);
@@ -122,6 +134,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public PEV_E2_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -138,6 +152,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public PEV_E3_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -159,6 +175,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
+		public override string OutputDataType { get; }
+
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetPEV_E4_PrimaryBusVehicleType().GetElement(inputData);
@@ -174,6 +192,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public PEV_IEPC_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType { get; }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

@@ -157,6 +157,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[JsonIgnore]
 		public IMultistageVIFInputData MultistageVIFInputData { get; internal set; }
 
+		[JsonIgnore]
+		public IDeclarationInputDataProvider InputData { get; internal set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming

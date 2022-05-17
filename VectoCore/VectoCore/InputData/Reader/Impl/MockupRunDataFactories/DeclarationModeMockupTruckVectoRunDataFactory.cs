@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
@@ -22,7 +23,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
 		public DeclarationModeMockupTruckVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report) : base(dataProvider, report, false)
 		{
-			
+			if (report is IMockupReport mockupReport) {
+				mockupReport.Mockup = true;
+			}
 		}
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -40,9 +43,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
 		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
+			VectoRunData runData;
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle)
 			{
-				return new VectoRunData
+				runData = new VectoRunData
 				{
 					Exempted = true,
 					Report = Report,
@@ -50,22 +54,28 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.MockupRunDataFactories
 					VehicleData = CreateMockupVehicleData(vehicle),
 					InputDataHash = InputDataProvider.XMLHash
 				};
+			} else {
+				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+				runData = new VectoRunData()
+				{
+					Loading = loading.Key,
+					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+					ExecutionMode = ExecutionMode.Declaration,
+					Report = Report,
+					Mission = mission,
+					SimulationType = SimulationType.DistanceCycle,
+					VehicleData = CreateMockupVehicleData(vehicle),
+					EngineData = CreateMockupEngineData(vehicle, modeIdx),
+
+				};
 			}
 
-			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+			runData.InputData = InputDataProvider;
+
+			return runData;
 
 
-			return new VectoRunData() {
-				Loading = loading.Key,
-				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-				ExecutionMode = ExecutionMode.Declaration,
-				Report = Report,
-				Mission = mission,
-				SimulationType = SimulationType.DistanceCycle, 
-				VehicleData = CreateMockupVehicleData(vehicle),
-				EngineData = CreateMockupEngineData(vehicle, modeIdx),
-				
-			};
+
 		}
 
 

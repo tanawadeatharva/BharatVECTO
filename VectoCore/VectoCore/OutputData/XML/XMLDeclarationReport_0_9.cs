@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
@@ -13,7 +14,11 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public class XMLDeclarationReport09 : XMLDeclarationReport
+	public interface IMockupReport
+	{ 
+		bool Mockup { set; }
+	}
+	public class XMLDeclarationReport09 : XMLDeclarationReport, IMockupReport
 	{
 		private readonly IReportWriter _writer;
 		private readonly IManufacturerReportFactory _mrfFactory;
@@ -50,18 +55,45 @@ namespace TUGraz.VectoCore.OutputData.XML
 				ihpc);
 		}
 
+
 		#region Overrides of XMLDeclarationReport
 
-		protected override void InitializeReports(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes, IDeclarationInputDataProvider inputData)
+		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			var customerReport = CustomerRpt as AbstractCustomerReport;
-			var manufacturerReport = ManufacturerRpt as AbstractManufacturerReport;
-			customerReport.InitializeVehicleData(inputData);
-			manufacturerReport.InitializeVehicleData(inputData);
+			if (!Mockup) {
+				base.DoStoreResult(entry, runData, modData);
+				return;
+			}
+		}
+
+		protected override void WriteResult(ResultEntry result)
+		{
+			var sumWeightinFactors = _weightingFactors.Values.Sum(x => x);
+			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1))
+			{
+				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
+			}
+
+			if (Mockup) {
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+			} else {
+				ManufacturerRpt.WriteResult(result);
+				CustomerRpt.WriteResult(result);
+			}
+	
 		}
 
 		#endregion
 
 		#endregion
+
+
+		#region Implementation of IMockupReport
+
+		public bool Mockup { private get; set; }
+
+		#endregion
 	}
+
 }

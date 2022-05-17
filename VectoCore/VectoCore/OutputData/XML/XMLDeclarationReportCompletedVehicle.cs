@@ -37,8 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				};
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
-			IDeclarationInputDataProvider inputData = null)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			_weightingFactors = EqualWeighting;
 

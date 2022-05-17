@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
@@ -41,8 +40,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
-			IDeclarationInputDataProvider inputData = null)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			base.InitializeReport(modelData, fuelModes);
 			PrimaryReport.Initialize(modelData,fuelModes);

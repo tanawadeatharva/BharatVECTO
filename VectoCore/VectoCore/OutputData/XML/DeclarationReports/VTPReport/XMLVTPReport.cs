@@ -345,8 +345,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes,
-			IDeclarationInputDataProvider inputData = null)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehicleClass = modelData.VehicleData.VehicleClass;
 			if (VehicleClass.IsBus()) {

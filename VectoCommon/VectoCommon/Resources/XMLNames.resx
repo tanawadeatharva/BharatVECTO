@@ -1911,4 +1911,13 @@
   <data name="REESS" xml:space="preserve">
     <value>ElectricEnergyStorage</value>
   </data>
+<data name="MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType" xml:space="preserve">
+	<value>ConventionalLorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType" xml:space="preserve">
+	<value>ConventionalPrimaryBusManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_ConventionalLorryOutputType" xml:space="preserve">
+	<value>ConventionalLorryOutputType</value>
+</data>
 </root>
