@@ -764,7 +764,7 @@ Changelog:
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="v2.4:AuxPSTechnology_PEV_LorryType">
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_LorryType">
 												<xs:attribute name="axleNumber" use="required">
 													<xs:simpleType>
 														<xs:restriction base="xs:int">
