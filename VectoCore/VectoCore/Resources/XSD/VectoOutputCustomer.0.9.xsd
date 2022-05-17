@@ -346,7 +346,11 @@
 			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
 			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
 				<xs:complexType>
-					<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
