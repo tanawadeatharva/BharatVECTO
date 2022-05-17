@@ -522,15 +522,15 @@ Public Class VehicleForm
 		VehicleType = vehType
 
 		If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
-		    tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
+			tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
 			tpElectricMachine.BindingContext = BindingContext
 		End If
-		
-		If Not tcVehicleComponents.TabPages.Contains(tpReess) then
+
+		If Not tcVehicleComponents.TabPages.Contains(tpReess) Then
 			tcVehicleComponents.TabPages.Insert(3, tpReess)
-		    tpReess.BindingContext = BindingContext
+			tpReess.BindingContext = BindingContext
 		End If
-		
+
 		If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
 			tcVehicleComponents.TabPages.Insert(4, tpGensetComponents)
 			tpGensetComponents.BindingContext = BindingContext
@@ -643,8 +643,8 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
-		    Case VectoSimulationJobType.IEPC_E
-		        lblTitle.Text = "IEPC Vehicle"
+			Case VectoSimulationJobType.IEPC_E
+				lblTitle.Text = "IEPC Vehicle"
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
@@ -761,23 +761,23 @@ Public Class VehicleForm
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
 
 			If tbElectricMotor.Text = "" Then
-			    MsgBox("Electric Motor File is required.")
+				MsgBox("Electric Motor File is required.")
 				tcVehicleComponents.SelectedTab = tpElectricMachine
-			    tbElectricMotor.Focus()
-			    Return False
+				tbElectricMotor.Focus()
+				Return False
 			End If
 
-		    veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
+			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt(1)
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble(1)
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
 
 			If tbEmADCLossMap.Text = "" Then
-			    MsgBox("Loss Map EM ADC is required.")
-			    tcVehicleComponents.SelectedTab = tpElectricMachine
-                tbEmADCLossMap.Focus()
-                Return False
+				MsgBox("Loss Map EM ADC is required.")
+				tcVehicleComponents.SelectedTab = tpElectricMachine
+				tbEmADCLossMap.Focus()
+				Return False
 			End If
 
 
@@ -1249,14 +1249,14 @@ Public Class VehicleForm
 
 	End Sub
 
-	Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click 
+	Private Sub btnBrowseElectricMotor_Click(sender As Object, e As EventArgs) Handles btnBrowseElectricMotor.Click
 		If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
 			tbElectricMotor.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
 
-	Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click 
+	Private Sub btnOpenElectricMotor_Click(sender As Object, e As EventArgs) Handles btnOpenElectricMotor.Click
 		Dim f As String
 		f = FileRepl(tbElectricMotor.Text, GetPath(_vehFile))
 
@@ -1302,7 +1302,7 @@ Public Class VehicleForm
 
 	End Sub
 
-	Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click 
+	Private Sub btnEmADCLossMap_Click(sender As Object, e As EventArgs) Handles btnEmADCLossMap.Click
 		If EmADCLossMapFileBrowser.OpenDialog(FileRepl(tbEmADCLossMap.Text, GetPath(_vehFile))) Then _
 			tbEmADCLossMap.Text = GetFilenameWithoutDirectory(EmADCLossMapFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
@@ -1313,7 +1313,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged 
+	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
 		Dim selectedValue = CbRtType.SelectedValue
 
@@ -1339,7 +1339,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click 
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnAddEMRatio.Click
 		_emRatioPerGearDlog.Clear()
 		If _emRatioPerGearDlog.ShowDialog() = DialogResult.OK Then
 			Dim gear As Integer = _emRatioPerGearDlog.tbGear.Text.ToInt(0)
@@ -1358,7 +1358,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnRemoveEMRatio.Click 
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnRemoveEMRatio.Click
 		If lvRatioPerGear.SelectedItems.Count = 0 Then
 			If lvRatioPerGear.Items.Count = 0 Then
 				Exit Sub
@@ -1370,7 +1370,7 @@ Public Class VehicleForm
 		lvRatioPerGear.SelectedItems(0).Remove()
 	End Sub
 
-	Private Sub lvRatioPerGear_DoubleClick(sender As Object, e As EventArgs) Handles lvRatioPerGear.DoubleClick 
+	Private Sub lvRatioPerGear_DoubleClick(sender As Object, e As EventArgs) Handles lvRatioPerGear.DoubleClick
 		If lvRatioPerGear.SelectedItems.Count = 0 Then Exit Sub
 
 		Dim entry As ListViewItem = lvRatioPerGear.SelectedItems(0)
@@ -1384,7 +1384,7 @@ Public Class VehicleForm
 		_emRatioPerGearDlog.tbGear.ReadOnly = False
 	End Sub
 
-	Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick 
+	Private Sub lvREESSPacks_DoubleClick(sender As Object, e As EventArgs) Handles lvREESSPacks.DoubleClick
 		If lvREESSPacks.SelectedItems.Count = 0 Then Exit Sub
 
 		Dim entry As ListViewItem = lvREESSPacks.SelectedItems(0)
@@ -1400,7 +1400,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click 
+	Private Sub btnAddReessPack_Click(sender As Object, e As EventArgs) Handles btnAddReessPack.Click
 		_reessPackDlg.Clear()
 		_reessPackDlg._vehFile = _vehFile
 		If _reessPackDlg.ShowDialog() = DialogResult.OK Then
@@ -1412,7 +1412,7 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-	Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click 
+	Private Sub btnRemoveReessPack_Click(sender As Object, e As EventArgs) Handles btnRemoveReessPack.Click
 		If lvREESSPacks.SelectedItems.Count = 0 Then
 			If lvREESSPacks.Items.Count = 0 Then
 				Exit Sub
@@ -1487,67 +1487,68 @@ Public Class VehicleForm
 	End Sub
 
 
-    Private Sub btIEPCFilePath_Click(sender As Object, e As EventArgs) Handles btIEPCFilePath.Click
-        If IEPCFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
-            tbIEPCFilePath.Text = GetFilenameWithoutDirectory(IEPCFileBrowser.Files(0), GetPath(_vehFile))
-        End If
-    End Sub
+	Private Sub btIEPCFilePath_Click(sender As Object, e As EventArgs) Handles btIEPCFilePath.Click
+		If IEPCFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
+			tbIEPCFilePath.Text = GetFilenameWithoutDirectory(IEPCFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
 
-    Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
-        Dim f As String
-        f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
-		
-        
-        IEPCForm.IEPCFilePath = GetPath(_vehFile)
+	Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
+		Dim f As String
+		f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
 
 
-        If Not IEPCForm.Visible Then
-            IEPCForm.Show()
-        Else
-            If IEPCForm.WindowState = FormWindowState.Minimized Then IEPCForm.WindowState = FormWindowState.Normal
-            IEPCForm.BringToFront()
-        End If
-		f = "E:\VECTO_DEV\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
-        If Not Trim(f) = "" Then
-            Try
-				
+		IEPCForm.IEPCFilePath = GetPath(_vehFile)
 
-                IEPCForm.ReadIEPCFile(f)
-            Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")
-            End Try
-        End If
 
-        ''Thus Veh-file is returned
-        'ElectricMotorForm.JobDir = GetPath(_vehFile)
-        'ElectricMotorForm.AutoSendTo = Sub(file, vehicleForm)
-        '    If UCase(FileRepl(vehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
-        '        vehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
-        '    VectoJobForm.UpdatePic()
-        'End Sub
+		If Not IEPCForm.Visible Then
+			IEPCForm.Show()
+		Else
+			If IEPCForm.WindowState = FormWindowState.Minimized Then IEPCForm.WindowState = FormWindowState.Normal
+			IEPCForm.BringToFront()
+		End If
+		f = "G:\_Work\VECTO\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
+		'f = "E:\VECTO_DEV\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
+		If Not Trim(f) = "" Then
+			Try
 
-        'If Not Trim(f) = "" Then
-        '    If Not File.Exists(f) Then
-        '        MsgBox("File not found!")
-        '        Exit Sub
-        '    End If
-        'End If
 
-        'If Not ElectricMotorForm.Visible Then
-        '    ElectricMotorForm.Show()
-        'Else
-        '    If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
-        '    ElectricMotorForm.BringToFront()
-        'End If
+				IEPCForm.ReadIEPCFile(f)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")
+			End Try
+		End If
 
-        'If Not Trim(f) = "" Then
-        '    Try
-        '        ElectricMotorForm.OpenElectricMachineFile(f)
-        '    Catch ex As Exception
-        '        MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
-        '    End Try
-        'End If
-    End Sub
+		''Thus Veh-file is returned
+		'ElectricMotorForm.JobDir = GetPath(_vehFile)
+		'ElectricMotorForm.AutoSendTo = Sub(file, vehicleForm)
+		'    If UCase(FileRepl(vehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
+		'        vehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
+		'    VectoJobForm.UpdatePic()
+		'End Sub
+
+		'If Not Trim(f) = "" Then
+		'    If Not File.Exists(f) Then
+		'        MsgBox("File not found!")
+		'        Exit Sub
+		'    End If
+		'End If
+
+		'If Not ElectricMotorForm.Visible Then
+		'    ElectricMotorForm.Show()
+		'Else
+		'    If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
+		'    ElectricMotorForm.BringToFront()
+		'End If
+
+		'If Not Trim(f) = "" Then
+		'    Try
+		'        ElectricMotorForm.OpenElectricMachineFile(f)
+		'    Catch ex As Exception
+		'        MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+		'    End Try
+		'End If
+	End Sub
 
 End Class
 

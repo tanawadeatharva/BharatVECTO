@@ -1,552 +1,1422 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class IEPCForm
-    Inherits System.Windows.Forms.Form
+	Inherits System.Windows.Forms.Form
 
-    'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-        Try
-            If disposing AndAlso components IsNot Nothing Then
-                components.Dispose()
-            End If
-        Finally
-            MyBase.Dispose(disposing)
-        End Try
-    End Sub
+	'Form overrides dispose to clean up the component list.
+	<System.Diagnostics.DebuggerNonUserCode()>
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing AndAlso components IsNot Nothing Then
+				components.Dispose()
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
 
-    'Required by the Windows Form Designer
-    Private components As System.ComponentModel.IContainer
+	'Required by the Windows Form Designer
+	Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IEPCForm))
-        Me.Button4 = New System.Windows.Forms.Button()
-        Me.TextBox4 = New System.Windows.Forms.TextBox()
-        Me.Label52 = New System.Windows.Forms.Label()
-        Me.Label48 = New System.Windows.Forms.Label()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.Label51 = New System.Windows.Forms.Label()
-        Me.tbInertia = New System.Windows.Forms.TextBox()
-        Me.Label49 = New System.Windows.Forms.Label()
-        Me.tbModel = New System.Windows.Forms.TextBox()
-        Me.tcVoltageLevels = New System.Windows.Forms.TabControl()
-        Me.tpFirstVoltageLevel = New System.Windows.Forms.TabPage()
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.ListView1 = New System.Windows.Forms.ListView()
-        Me.ColumnHeader13 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader14 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Label47 = New System.Windows.Forms.Label()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.tbFLCurve = New System.Windows.Forms.TextBox()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.tpVoltageLevel = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Label37 = New System.Windows.Forms.Label()
-        Me.tbVoltage = New System.Windows.Forms.TextBox()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.tbContinousTorque = New System.Windows.Forms.TextBox()
-        Me.tbContinousTorqueSpeed = New System.Windows.Forms.TextBox()
-        Me.tbOverloadTorque = New System.Windows.Forms.TextBox()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.Label41 = New System.Windows.Forms.Label()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.cbDesignTypeWheelMotor = New System.Windows.Forms.CheckBox()
-        Me.cbDifferentialIncluded = New System.Windows.Forms.CheckBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.tcVoltageLevels.SuspendLayout
-        Me.tpFirstVoltageLevel.SuspendLayout
-        Me.GroupBox2.SuspendLayout
-        Me.TableLayoutPanel1.SuspendLayout
-        Me.TableLayoutPanel2.SuspendLayout
-        Me.SuspendLayout
-        '
-        'Button4
-        '
-        Me.Button4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Button4.Image = CType(resources.GetObject("Button4.Image"),System.Drawing.Image)
-        Me.Button4.Location = New System.Drawing.Point(495, 141)
-        Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(24, 24)
-        Me.Button4.TabIndex = 29
-        Me.Button4.UseVisualStyleBackColor = true
-        '
-        'TextBox4
-        '
-        Me.TextBox4.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.TextBox4.Location = New System.Drawing.Point(217, 138)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.Size = New System.Drawing.Size(57, 20)
-        Me.TextBox4.TabIndex = 51
-        '
-        'Label52
-        '
-        Me.Label52.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label52.AutoSize = true
-        Me.Label52.Location = New System.Drawing.Point(38, 142)
-        Me.Label52.Name = "Label52"
-        Me.Label52.Size = New System.Drawing.Size(173, 13)
-        Me.Label52.TabIndex = 50
-        Me.Label52.Text = "Thermal Overload Recovery Factor"
-        '
-        'Label48
-        '
-        Me.Label48.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label48.AutoSize = true
-        Me.Label48.Location = New System.Drawing.Point(4, 115)
-        Me.Label48.Name = "Label48"
-        Me.Label48.Size = New System.Drawing.Size(207, 13)
-        Me.Label48.TabIndex = 48
-        Me.Label48.Text = "Nr of Design Type Wheel Motor Measured"
-        '
-        'TextBox3
-        '
-        Me.TextBox3.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.TextBox3.Location = New System.Drawing.Point(217, 111)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(57, 20)
-        Me.TextBox3.TabIndex = 49
-        '
-        'Label51
-        '
-        Me.Label51.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label51.AutoSize = true
-        Me.Label51.Location = New System.Drawing.Point(175, 34)
-        Me.Label51.Name = "Label51"
-        Me.Label51.Size = New System.Drawing.Size(36, 13)
-        Me.Label51.TabIndex = 45
-        Me.Label51.Text = "Inertia"
-        '
-        'tbInertia
-        '
-        Me.tbInertia.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbInertia.Location = New System.Drawing.Point(217, 30)
-        Me.tbInertia.Name = "tbInertia"
-        Me.tbInertia.Size = New System.Drawing.Size(57, 20)
-        Me.tbInertia.TabIndex = 46
-        '
-        'Label49
-        '
-        Me.Label49.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label49.AutoSize = true
-        Me.Label49.Location = New System.Drawing.Point(175, 7)
-        Me.Label49.Name = "Label49"
-        Me.Label49.Size = New System.Drawing.Size(36, 13)
-        Me.Label49.TabIndex = 43
-        Me.Label49.Text = "Model"
-        '
-        'tbModel
-        '
-        Me.tbModel.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbModel.Location = New System.Drawing.Point(217, 3)
-        Me.tbModel.Name = "tbModel"
-        Me.tbModel.Size = New System.Drawing.Size(57, 20)
-        Me.tbModel.TabIndex = 44
-        '
-        'tcVoltageLevels
-        '
-        Me.tcVoltageLevels.Controls.Add(Me.tpFirstVoltageLevel)
-        Me.tcVoltageLevels.Controls.Add(Me.tpVoltageLevel)
-        Me.tcVoltageLevels.Location = New System.Drawing.Point(12, 220)
-        Me.tcVoltageLevels.Name = "tcVoltageLevels"
-        Me.tcVoltageLevels.SelectedIndex = 0
-        Me.tcVoltageLevels.Size = New System.Drawing.Size(532, 394)
-        Me.tcVoltageLevels.TabIndex = 41
-        '
-        'tpFirstVoltageLevel
-        '
-        Me.tpFirstVoltageLevel.Controls.Add(Me.GroupBox2)
-        Me.tpFirstVoltageLevel.Controls.Add(Me.Button4)
-        Me.tpFirstVoltageLevel.Controls.Add(Me.tbFLCurve)
-        Me.tpFirstVoltageLevel.Controls.Add(Me.Label44)
-        Me.tpFirstVoltageLevel.Location = New System.Drawing.Point(4, 22)
-        Me.tpFirstVoltageLevel.Name = "tpFirstVoltageLevel"
-        Me.tpFirstVoltageLevel.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpFirstVoltageLevel.Size = New System.Drawing.Size(524, 368)
-        Me.tpFirstVoltageLevel.TabIndex = 0
-        Me.tpFirstVoltageLevel.Text = "First Voltage Level"
-        Me.tpFirstVoltageLevel.UseVisualStyleBackColor = true
-        '
-        'GroupBox2
-        '
-        Me.GroupBox2.Controls.Add(Me.ListView1)
-        Me.GroupBox2.Controls.Add(Me.Button1)
-        Me.GroupBox2.Controls.Add(Me.Label47)
-        Me.GroupBox2.Controls.Add(Me.Button2)
-        Me.GroupBox2.Location = New System.Drawing.Point(16, 175)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(249, 125)
-        Me.GroupBox2.TabIndex = 60
-        Me.GroupBox2.TabStop = false
-        Me.GroupBox2.Text = "Power Map Per Gear"
-        '
-        'ListView1
-        '
-        Me.ListView1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader14})
-        Me.ListView1.FullRowSelect = true
-        Me.ListView1.GridLines = true
-        Me.ListView1.HideSelection = false
-        Me.ListView1.Location = New System.Drawing.Point(6, 16)
-        Me.ListView1.MultiSelect = false
-        Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(237, 72)
-        Me.ListView1.TabIndex = 7
-        Me.ListView1.TabStop = false
-        Me.ListView1.UseCompatibleStateImageBehavior = false
-        Me.ListView1.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader13
-        '
-        Me.ColumnHeader13.Text = "Gear #"
-        Me.ColumnHeader13.Width = 59
-        '
-        'ColumnHeader14
-        '
-        Me.ColumnHeader14.Text = "Power Map File"
-        Me.ColumnHeader14.Width = 172
-        '
-        'Button1
-        '
-        Me.Button1.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.Button1.Location = New System.Drawing.Point(6, 94)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(24, 24)
-        Me.Button1.TabIndex = 4
-        Me.Button1.UseVisualStyleBackColor = true
-        '
-        'Label47
-        '
-        Me.Label47.AutoSize = true
-        Me.Label47.Location = New System.Drawing.Point(137, 91)
-        Me.Label47.Name = "Label47"
-        Me.Label47.Size = New System.Drawing.Size(106, 13)
-        Me.Label47.TabIndex = 6
-        Me.Label47.Text = "(Double-Click to Edit)"
-        '
-        'Button2
-        '
-        Me.Button2.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.Button2.Location = New System.Drawing.Point(36, 94)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(24, 24)
-        Me.Button2.TabIndex = 5
-        Me.Button2.UseVisualStyleBackColor = true
-        '
-        'tbFLCurve
-        '
-        Me.tbFLCurve.Location = New System.Drawing.Point(13, 144)
-        Me.tbFLCurve.Name = "tbFLCurve"
-        Me.tbFLCurve.Size = New System.Drawing.Size(384, 20)
-        Me.tbFLCurve.TabIndex = 57
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = true
-        Me.Label44.Location = New System.Drawing.Point(13, 128)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(115, 13)
-        Me.Label44.TabIndex = 59
-        Me.Label44.Text = "Fuel Consumption Map"
-        '
-        'tpVoltageLevel
-        '
-        Me.tpVoltageLevel.Location = New System.Drawing.Point(4, 22)
-        Me.tpVoltageLevel.Name = "tpVoltageLevel"
-        Me.tpVoltageLevel.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpVoltageLevel.Size = New System.Drawing.Size(524, 368)
-        Me.tpVoltageLevel.TabIndex = 1
-        Me.tpVoltageLevel.Text = "Secondary Voltage Level"
-        Me.tpVoltageLevel.UseVisualStyleBackColor = true
-        '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.ColumnCount = 6
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.83851!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 26!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 101!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Label4, 2, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label37, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbVoltage, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label39, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorque, 1, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorqueSpeed, 1, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbOverloadTorque, 4, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox1, 4, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox2, 4, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label41, 3, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label42, 3, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label43, 3, 2)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(318, 58)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 3
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(439, 82)
-        Me.TableLayoutPanel1.TabIndex = 61
-        '
-        'Label37
-        '
-        Me.Label37.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label37.AutoSize = true
-        Me.Label37.Location = New System.Drawing.Point(94, 7)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(43, 13)
-        Me.Label37.TabIndex = 1
-        Me.Label37.Text = "Voltage"
-        '
-        'tbVoltage
-        '
-        Me.tbVoltage.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbVoltage.Location = New System.Drawing.Point(144, 3)
-        Me.tbVoltage.Name = "tbVoltage"
-        Me.tbVoltage.Size = New System.Drawing.Size(57, 20)
-        Me.tbVoltage.TabIndex = 2
-        '
-        'Label39
-        '
-        Me.Label39.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label39.AutoSize = true
-        Me.Label39.Location = New System.Drawing.Point(40, 34)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(97, 13)
-        Me.Label39.TabIndex = 3
-        Me.Label39.Text = "Continuous Torque"
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(6, 61)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(131, 13)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Continuous Torque Speed"
-        '
-        'tbContinousTorque
-        '
-        Me.tbContinousTorque.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque.Location = New System.Drawing.Point(144, 30)
-        Me.tbContinousTorque.Name = "tbContinousTorque"
-        Me.tbContinousTorque.Size = New System.Drawing.Size(57, 20)
-        Me.tbContinousTorque.TabIndex = 4
-        '
-        'tbContinousTorqueSpeed
-        '
-        Me.tbContinousTorqueSpeed.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed.Location = New System.Drawing.Point(144, 58)
-        Me.tbContinousTorqueSpeed.Name = "tbContinousTorqueSpeed"
-        Me.tbContinousTorqueSpeed.Size = New System.Drawing.Size(57, 20)
-        Me.tbContinousTorqueSpeed.TabIndex = 6
-        '
-        'tbOverloadTorque
-        '
-        Me.tbOverloadTorque.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTorque.Location = New System.Drawing.Point(347, 3)
-        Me.tbOverloadTorque.Name = "tbOverloadTorque"
-        Me.tbOverloadTorque.Size = New System.Drawing.Size(57, 20)
-        Me.tbOverloadTorque.TabIndex = 8
-        '
-        'TextBox1
-        '
-        Me.TextBox1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.TextBox1.Location = New System.Drawing.Point(347, 30)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(57, 20)
-        Me.TextBox1.TabIndex = 10
-        '
-        'TextBox2
-        '
-        Me.TextBox2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.TextBox2.Location = New System.Drawing.Point(347, 58)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(57, 20)
-        Me.TextBox2.TabIndex = 12
-        '
-        'Label41
-        '
-        Me.Label41.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label41.AutoSize = true
-        Me.Label41.Location = New System.Drawing.Point(242, 7)
-        Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(87, 13)
-        Me.Label41.TabIndex = 7
-        Me.Label41.Text = "Overload Torque"
-        '
-        'Label42
-        '
-        Me.Label42.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label42.AutoSize = true
-        Me.Label42.Location = New System.Drawing.Point(239, 27)
-        Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(90, 26)
-        Me.Label42.TabIndex = 9
-        Me.Label42.Text = "Overload Torque Speed"
-        '
-        'Label43
-        '
-        Me.Label43.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label43.AutoSize = true
-        Me.Label43.Location = New System.Drawing.Point(253, 61)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(76, 13)
-        Me.Label43.TabIndex = 11
-        Me.Label43.Text = "Overload Time"
-        '
-        'TableLayoutPanel2
-        '
-        Me.TableLayoutPanel2.ColumnCount = 2
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 214!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 306!))
-        Me.TableLayoutPanel2.Controls.Add(Me.Label3, 0, 3)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label52, 0, 5)
-        Me.TableLayoutPanel2.Controls.Add(Me.TextBox4, 1, 5)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label48, 0, 4)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label2, 0, 2)
-        Me.TableLayoutPanel2.Controls.Add(Me.cbDesignTypeWheelMotor, 1, 3)
-        Me.TableLayoutPanel2.Controls.Add(Me.tbModel, 1, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.TextBox3, 1, 4)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label49, 0, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.tbInertia, 1, 1)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label51, 0, 1)
-        Me.TableLayoutPanel2.Controls.Add(Me.cbDifferentialIncluded, 1, 2)
-        Me.TableLayoutPanel2.Location = New System.Drawing.Point(12, 12)
-        Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
-        Me.TableLayoutPanel2.RowCount = 6
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(280, 162)
-        Me.TableLayoutPanel2.TabIndex = 52
-        '
-        'Label3
-        '
-        Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(30, 88)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(181, 13)
-        Me.Label3.TabIndex = 54
-        Me.Label3.Text = "Design Type Wheel Motor Measured"
-        '
-        'Label2
-        '
-        Me.Label2.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(110, 61)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(101, 13)
-        Me.Label2.TabIndex = 53
-        Me.Label2.Text = "Differential Included"
-        '
-        'cbDesignTypeWheelMotor
-        '
-        Me.cbDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.cbDesignTypeWheelMotor.AutoSize = true
-        Me.cbDesignTypeWheelMotor.Location = New System.Drawing.Point(217, 87)
-        Me.cbDesignTypeWheelMotor.Name = "cbDesignTypeWheelMotor"
-        Me.cbDesignTypeWheelMotor.Size = New System.Drawing.Size(15, 14)
-        Me.cbDesignTypeWheelMotor.TabIndex = 53
-        Me.cbDesignTypeWheelMotor.UseVisualStyleBackColor = true
-        '
-        'cbDifferentialIncluded
-        '
-        Me.cbDifferentialIncluded.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.cbDifferentialIncluded.AutoSize = true
-        Me.cbDifferentialIncluded.Location = New System.Drawing.Point(217, 60)
-        Me.cbDifferentialIncluded.Name = "cbDifferentialIncluded"
-        Me.cbDifferentialIncluded.Size = New System.Drawing.Size(15, 14)
-        Me.cbDifferentialIncluded.TabIndex = 47
-        Me.cbDifferentialIncluded.UseVisualStyleBackColor = true
-        '
-        'Label4
-        '
-        Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(208, 7)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(20, 13)
-        Me.Label4.TabIndex = 62
-        Me.Label4.Text = "[V]"
-        '
-        'IEPCForm
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 626)
-        Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.Controls.Add(Me.TableLayoutPanel2)
-        Me.Controls.Add(Me.tcVoltageLevels)
-        Me.Name = "IEPCForm"
-        Me.Text = "IEPCForm"
-        Me.tcVoltageLevels.ResumeLayout(false)
-        Me.tpFirstVoltageLevel.ResumeLayout(false)
-        Me.tpFirstVoltageLevel.PerformLayout
-        Me.GroupBox2.ResumeLayout(false)
-        Me.GroupBox2.PerformLayout
-        Me.TableLayoutPanel1.ResumeLayout(false)
-        Me.TableLayoutPanel1.PerformLayout
-        Me.TableLayoutPanel2.ResumeLayout(false)
-        Me.TableLayoutPanel2.PerformLayout
-        Me.ResumeLayout(false)
+	'NOTE: The following procedure is required by the Windows Form Designer
+	'It can be modified using the Windows Form Designer.  
+	'Do not modify it using the code editor.
+	<System.Diagnostics.DebuggerStepThrough()>
+	Private Sub InitializeComponent()
+		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IEPCForm))
+		Me.btFLCurveFile1 = New System.Windows.Forms.Button()
+		Me.tbThermalOverload = New System.Windows.Forms.TextBox()
+		Me.Label52 = New System.Windows.Forms.Label()
+		Me.Label48 = New System.Windows.Forms.Label()
+		Me.tbNumberOfDesignTypeWheelMotor = New System.Windows.Forms.TextBox()
+		Me.Label51 = New System.Windows.Forms.Label()
+		Me.tbInertia = New System.Windows.Forms.TextBox()
+		Me.Label49 = New System.Windows.Forms.Label()
+		Me.tbModel = New System.Windows.Forms.TextBox()
+		Me.tcVoltageLevels = New System.Windows.Forms.TabControl()
+		Me.tpFirstVoltageLevel = New System.Windows.Forms.TabPage()
+		Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label44 = New System.Windows.Forms.Label()
+		Me.tbFLCurve1 = New System.Windows.Forms.TextBox()
+		Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.Label4 = New System.Windows.Forms.Label()
+		Me.Label13 = New System.Windows.Forms.Label()
+		Me.Label43 = New System.Windows.Forms.Label()
+		Me.Label37 = New System.Windows.Forms.Label()
+		Me.tbOverloadTime1 = New System.Windows.Forms.TextBox()
+		Me.tbVoltage1 = New System.Windows.Forms.TextBox()
+		Me.Label39 = New System.Windows.Forms.Label()
+		Me.Label1 = New System.Windows.Forms.Label()
+		Me.tbContinousTorque1 = New System.Windows.Forms.TextBox()
+		Me.tbContinousTorqueSpeed1 = New System.Windows.Forms.TextBox()
+		Me.Label15 = New System.Windows.Forms.Label()
+		Me.Label42 = New System.Windows.Forms.Label()
+		Me.Label14 = New System.Windows.Forms.Label()
+		Me.tboverloadTorqueSpeed1 = New System.Windows.Forms.TextBox()
+		Me.Label41 = New System.Windows.Forms.Label()
+		Me.tbOverloadTorque1 = New System.Windows.Forms.TextBox()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+		Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label47 = New System.Windows.Forms.Label()
+		Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+		Me.btAddPowerMap1 = New System.Windows.Forms.Button()
+		Me.btRemovePowerMap1 = New System.Windows.Forms.Button()
+		Me.lvPowerMap1 = New System.Windows.Forms.ListView()
+		Me.ColumnHeader13 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader14 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.tpVoltageLevel = New System.Windows.Forms.TabPage()
+		Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+		Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label31 = New System.Windows.Forms.Label()
+		Me.FlowLayoutPanel4 = New System.Windows.Forms.FlowLayoutPanel()
+		Me.btAddPowerMap2 = New System.Windows.Forms.Button()
+		Me.btRemovePowerMap2 = New System.Windows.Forms.Button()
+		Me.lvPowerMap2 = New System.Windows.Forms.ListView()
+		Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+		Me.tbFLCurve2 = New System.Windows.Forms.TextBox()
+		Me.btFLCurveFile2 = New System.Windows.Forms.Button()
+		Me.Label28 = New System.Windows.Forms.Label()
+		Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label17 = New System.Windows.Forms.Label()
+		Me.Label18 = New System.Windows.Forms.Label()
+		Me.Label26 = New System.Windows.Forms.Label()
+		Me.Label19 = New System.Windows.Forms.Label()
+		Me.tbOverloadTime2 = New System.Windows.Forms.TextBox()
+		Me.Label24 = New System.Windows.Forms.Label()
+		Me.tbVoltage2 = New System.Windows.Forms.TextBox()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.Label21 = New System.Windows.Forms.Label()
+		Me.tbContinousTorque2 = New System.Windows.Forms.TextBox()
+		Me.tbContinousTorqueSpeed2 = New System.Windows.Forms.TextBox()
+		Me.Label27 = New System.Windows.Forms.Label()
+		Me.Label23 = New System.Windows.Forms.Label()
+		Me.tbOverloadTorqueSpeed2 = New System.Windows.Forms.TextBox()
+		Me.Label25 = New System.Windows.Forms.Label()
+		Me.Label22 = New System.Windows.Forms.Label()
+		Me.tbOverloadTorque2 = New System.Windows.Forms.TextBox()
+		Me.Label16 = New System.Windows.Forms.Label()
+		Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+		Me.Label6 = New System.Windows.Forms.Label()
+		Me.Label5 = New System.Windows.Forms.Label()
+		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label3 = New System.Windows.Forms.Label()
+		Me.cbDifferentialIncluded = New System.Windows.Forms.CheckBox()
+		Me.cbDesignTypeWheelMotor = New System.Windows.Forms.CheckBox()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.Label8 = New System.Windows.Forms.Label()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.Label10 = New System.Windows.Forms.Label()
+		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
+		Me.lvGear = New System.Windows.Forms.ListView()
+		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.Label30 = New System.Windows.Forms.Label()
+		Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+		Me.btAddGear = New System.Windows.Forms.Button()
+		Me.btRemoveGear = New System.Windows.Forms.Button()
+		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+		Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
+		Me.lvDragCurve = New System.Windows.Forms.ListView()
+		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.Label29 = New System.Windows.Forms.Label()
+		Me.FlowLayoutPanel3 = New System.Windows.Forms.FlowLayoutPanel()
+		Me.btAddDragCurve = New System.Windows.Forms.Button()
+		Me.btRemoveDragCurve = New System.Windows.Forms.Button()
+		Me.tcVoltageLevels.SuspendLayout()
+		Me.tpFirstVoltageLevel.SuspendLayout()
+		Me.TableLayoutPanel7.SuspendLayout()
+		Me.TableLayoutPanel1.SuspendLayout()
+		Me.GroupBox2.SuspendLayout()
+		Me.TableLayoutPanel6.SuspendLayout()
+		Me.FlowLayoutPanel1.SuspendLayout()
+		Me.tpVoltageLevel.SuspendLayout()
+		Me.GroupBox4.SuspendLayout()
+		Me.TableLayoutPanel9.SuspendLayout()
+		Me.FlowLayoutPanel4.SuspendLayout()
+		Me.TableLayoutPanel5.SuspendLayout()
+		Me.TableLayoutPanel4.SuspendLayout()
+		Me.TableLayoutPanel2.SuspendLayout()
+		Me.GroupBox1.SuspendLayout()
+		Me.TableLayoutPanel3.SuspendLayout()
+		Me.FlowLayoutPanel2.SuspendLayout()
+		Me.GroupBox3.SuspendLayout()
+		Me.TableLayoutPanel8.SuspendLayout()
+		Me.FlowLayoutPanel3.SuspendLayout()
+		Me.SuspendLayout()
+		'
+		'btFLCurveFile1
+		'
+		Me.btFLCurveFile1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.btFLCurveFile1.Image = CType(resources.GetObject("btFLCurveFile1.Image"), System.Drawing.Image)
+		Me.btFLCurveFile1.Location = New System.Drawing.Point(295, 24)
+		Me.btFLCurveFile1.Name = "btFLCurveFile1"
+		Me.btFLCurveFile1.Size = New System.Drawing.Size(24, 24)
+		Me.btFLCurveFile1.TabIndex = 29
+		Me.btFLCurveFile1.UseVisualStyleBackColor = True
+		'
+		'tbThermalOverload
+		'
+		Me.tbThermalOverload.Anchor = System.Windows.Forms.AnchorStyles.Left
+		Me.tbThermalOverload.Location = New System.Drawing.Point(674, 30)
+		Me.tbThermalOverload.Name = "tbThermalOverload"
+		Me.tbThermalOverload.Size = New System.Drawing.Size(57, 20)
+		Me.tbThermalOverload.TabIndex = 51
+		'
+		'Label52
+		'
+		Me.Label52.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label52.AutoSize = True
+		Me.Label52.Location = New System.Drawing.Point(495, 34)
+		Me.Label52.Name = "Label52"
+		Me.Label52.Size = New System.Drawing.Size(173, 13)
+		Me.Label52.TabIndex = 50
+		Me.Label52.Text = "Thermal Overload Recovery Factor"
+		'
+		'Label48
+		'
+		Me.Label48.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label48.AutoSize = True
+		Me.Label48.Location = New System.Drawing.Point(461, 7)
+		Me.Label48.Name = "Label48"
+		Me.Label48.Size = New System.Drawing.Size(207, 13)
+		Me.Label48.TabIndex = 48
+		Me.Label48.Text = "Nr of Design Type Wheel Motor Measured"
+		'
+		'tbNumberOfDesignTypeWheelMotor
+		'
+		Me.tbNumberOfDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Left
+		Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(674, 3)
+		Me.tbNumberOfDesignTypeWheelMotor.Name = "tbNumberOfDesignTypeWheelMotor"
+		Me.tbNumberOfDesignTypeWheelMotor.Size = New System.Drawing.Size(57, 20)
+		Me.tbNumberOfDesignTypeWheelMotor.TabIndex = 49
+		'
+		'Label51
+		'
+		Me.Label51.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label51.AutoSize = True
+		Me.Label51.Location = New System.Drawing.Point(13, 34)
+		Me.Label51.Name = "Label51"
+		Me.Label51.Size = New System.Drawing.Size(36, 13)
+		Me.Label51.TabIndex = 45
+		Me.Label51.Text = "Inertia"
+		'
+		'tbInertia
+		'
+		Me.tbInertia.Anchor = System.Windows.Forms.AnchorStyles.Left
+		Me.tbInertia.Location = New System.Drawing.Point(55, 30)
+		Me.tbInertia.Name = "tbInertia"
+		Me.tbInertia.Size = New System.Drawing.Size(57, 20)
+		Me.tbInertia.TabIndex = 46
+		'
+		'Label49
+		'
+		Me.Label49.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label49.AutoSize = True
+		Me.Label49.Location = New System.Drawing.Point(13, 7)
+		Me.Label49.Name = "Label49"
+		Me.Label49.Size = New System.Drawing.Size(36, 13)
+		Me.Label49.TabIndex = 43
+		Me.Label49.Text = "Model"
+		'
+		'tbModel
+		'
+		Me.tbModel.Anchor = System.Windows.Forms.AnchorStyles.Left
+		Me.tbModel.Location = New System.Drawing.Point(55, 3)
+		Me.tbModel.Name = "tbModel"
+		Me.tbModel.Size = New System.Drawing.Size(57, 20)
+		Me.tbModel.TabIndex = 44
+		'
+		'tcVoltageLevels
+		'
+		Me.tcVoltageLevels.Controls.Add(Me.tpFirstVoltageLevel)
+		Me.tcVoltageLevels.Controls.Add(Me.tpVoltageLevel)
+		Me.tcVoltageLevels.Location = New System.Drawing.Point(352, 86)
+		Me.tcVoltageLevels.Name = "tcVoltageLevels"
+		Me.tcVoltageLevels.SelectedIndex = 0
+		Me.tcVoltageLevels.Size = New System.Drawing.Size(517, 394)
+		Me.tcVoltageLevels.TabIndex = 41
+		'
+		'tpFirstVoltageLevel
+		'
+		Me.tpFirstVoltageLevel.Controls.Add(Me.TableLayoutPanel7)
+		Me.tpFirstVoltageLevel.Controls.Add(Me.TableLayoutPanel1)
+		Me.tpFirstVoltageLevel.Controls.Add(Me.GroupBox2)
+		Me.tpFirstVoltageLevel.Location = New System.Drawing.Point(4, 22)
+		Me.tpFirstVoltageLevel.Name = "tpFirstVoltageLevel"
+		Me.tpFirstVoltageLevel.Padding = New System.Windows.Forms.Padding(3)
+		Me.tpFirstVoltageLevel.Size = New System.Drawing.Size(509, 368)
+		Me.tpFirstVoltageLevel.TabIndex = 0
+		Me.tpFirstVoltageLevel.Text = "First Voltage Level"
+		Me.tpFirstVoltageLevel.UseVisualStyleBackColor = True
+		'
+		'TableLayoutPanel7
+		'
+		Me.TableLayoutPanel7.ColumnCount = 2
+		Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 292.0!))
+		Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 31.0!))
+		Me.TableLayoutPanel7.Controls.Add(Me.Label44, 0, 0)
+		Me.TableLayoutPanel7.Controls.Add(Me.btFLCurveFile1, 1, 1)
+		Me.TableLayoutPanel7.Controls.Add(Me.tbFLCurve1, 0, 1)
+		Me.TableLayoutPanel7.Location = New System.Drawing.Point(12, 108)
+		Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
+		Me.TableLayoutPanel7.RowCount = 2
+		Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.71429!))
+		Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 64.28571!))
+		Me.TableLayoutPanel7.Size = New System.Drawing.Size(323, 54)
+		Me.TableLayoutPanel7.TabIndex = 53
+		'
+		'Label44
+		'
+		Me.Label44.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label44.AutoSize = True
+		Me.Label44.Location = New System.Drawing.Point(3, 6)
+		Me.Label44.Name = "Label44"
+		Me.Label44.Size = New System.Drawing.Size(125, 13)
+		Me.Label44.TabIndex = 59
+		Me.Label44.Text = "Full Load Curve (.viepcp)"
+		'
+		'tbFLCurve1
+		'
+		Me.tbFLCurve1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbFLCurve1.Location = New System.Drawing.Point(3, 26)
+		Me.tbFLCurve1.Name = "tbFLCurve1"
+		Me.tbFLCurve1.Size = New System.Drawing.Size(286, 20)
+		Me.tbFLCurve1.TabIndex = 60
+		'
+		'TableLayoutPanel1
+		'
+		Me.TableLayoutPanel1.ColumnCount = 6
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
+		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 46.0!))
+		Me.TableLayoutPanel1.Controls.Add(Me.Label11, 2, 1)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label4, 2, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label13, 5, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label43, 3, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label37, 0, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.tbOverloadTime1, 4, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.tbVoltage1, 1, 0)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label39, 0, 1)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorque1, 1, 1)
+		Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorqueSpeed1, 1, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label15, 2, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label42, 3, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label14, 5, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.tboverloadTorqueSpeed1, 4, 2)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label41, 3, 1)
+		Me.TableLayoutPanel1.Controls.Add(Me.tbOverloadTorque1, 4, 1)
+		Me.TableLayoutPanel1.Controls.Add(Me.Label12, 5, 1)
+		Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 20)
+		Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+		Me.TableLayoutPanel1.RowCount = 3
+		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel1.Size = New System.Drawing.Size(496, 82)
+		Me.TableLayoutPanel1.TabIndex = 61
+		'
+		'Label11
+		'
+		Me.Label11.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label11.AutoSize = True
+		Me.Label11.Location = New System.Drawing.Point(210, 34)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(29, 13)
+		Me.Label11.TabIndex = 63
+		Me.Label11.Text = "[Nm]"
+		'
+		'Label4
+		'
+		Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label4.AutoSize = True
+		Me.Label4.Location = New System.Drawing.Point(215, 7)
+		Me.Label4.Name = "Label4"
+		Me.Label4.Size = New System.Drawing.Size(20, 13)
+		Me.Label4.TabIndex = 62
+		Me.Label4.Text = "[V]"
+		'
+		'Label13
+		'
+		Me.Label13.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label13.AutoSize = True
+		Me.Label13.Location = New System.Drawing.Point(458, 7)
+		Me.Label13.Name = "Label13"
+		Me.Label13.Size = New System.Drawing.Size(30, 13)
+		Me.Label13.TabIndex = 65
+		Me.Label13.Text = "[sec]"
+		'
+		'Label43
+		'
+		Me.Label43.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label43.AutoSize = True
+		Me.Label43.Location = New System.Drawing.Point(306, 7)
+		Me.Label43.Name = "Label43"
+		Me.Label43.Size = New System.Drawing.Size(76, 13)
+		Me.Label43.TabIndex = 11
+		Me.Label43.Text = "Overload Time"
+		'
+		'Label37
+		'
+		Me.Label37.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label37.AutoSize = True
+		Me.Label37.Location = New System.Drawing.Point(94, 7)
+		Me.Label37.Name = "Label37"
+		Me.Label37.Size = New System.Drawing.Size(43, 13)
+		Me.Label37.TabIndex = 1
+		Me.Label37.Text = "Voltage"
+		'
+		'tbOverloadTime1
+		'
+		Me.tbOverloadTime1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbOverloadTime1.Location = New System.Drawing.Point(389, 3)
+		Me.tbOverloadTime1.Name = "tbOverloadTime1"
+		Me.tbOverloadTime1.Size = New System.Drawing.Size(57, 20)
+		Me.tbOverloadTime1.TabIndex = 12
+		'
+		'tbVoltage1
+		'
+		Me.tbVoltage1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbVoltage1.Location = New System.Drawing.Point(144, 3)
+		Me.tbVoltage1.Name = "tbVoltage1"
+		Me.tbVoltage1.Size = New System.Drawing.Size(57, 20)
+		Me.tbVoltage1.TabIndex = 2
+		'
+		'Label39
+		'
+		Me.Label39.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label39.AutoSize = True
+		Me.Label39.Location = New System.Drawing.Point(40, 34)
+		Me.Label39.Name = "Label39"
+		Me.Label39.Size = New System.Drawing.Size(97, 13)
+		Me.Label39.TabIndex = 3
+		Me.Label39.Text = "Continuous Torque"
+		'
+		'Label1
+		'
+		Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label1.AutoSize = True
+		Me.Label1.Location = New System.Drawing.Point(6, 61)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(131, 13)
+		Me.Label1.TabIndex = 6
+		Me.Label1.Text = "Continuous Torque Speed"
+		'
+		'tbContinousTorque1
+		'
+		Me.tbContinousTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbContinousTorque1.Location = New System.Drawing.Point(144, 30)
+		Me.tbContinousTorque1.Name = "tbContinousTorque1"
+		Me.tbContinousTorque1.Size = New System.Drawing.Size(57, 20)
+		Me.tbContinousTorque1.TabIndex = 4
+		'
+		'tbContinousTorqueSpeed1
+		'
+		Me.tbContinousTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(144, 58)
+		Me.tbContinousTorqueSpeed1.Name = "tbContinousTorqueSpeed1"
+		Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(57, 20)
+		Me.tbContinousTorqueSpeed1.TabIndex = 6
+		'
+		'Label15
+		'
+		Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label15.AutoSize = True
+		Me.Label15.Location = New System.Drawing.Point(210, 61)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(30, 13)
+		Me.Label15.TabIndex = 67
+		Me.Label15.Text = "[rpm]"
+		'
+		'Label42
+		'
+		Me.Label42.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label42.AutoSize = True
+		Me.Label42.Location = New System.Drawing.Point(261, 61)
+		Me.Label42.Name = "Label42"
+		Me.Label42.Size = New System.Drawing.Size(121, 13)
+		Me.Label42.TabIndex = 9
+		Me.Label42.Text = "Overload Torque Speed"
+		'
+		'Label14
+		'
+		Me.Label14.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label14.AutoSize = True
+		Me.Label14.Location = New System.Drawing.Point(458, 61)
+		Me.Label14.Name = "Label14"
+		Me.Label14.Size = New System.Drawing.Size(30, 13)
+		Me.Label14.TabIndex = 66
+		Me.Label14.Text = "[rpm]"
+		'
+		'tboverloadTorqueSpeed1
+		'
+		Me.tboverloadTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tboverloadTorqueSpeed1.Location = New System.Drawing.Point(389, 58)
+		Me.tboverloadTorqueSpeed1.Name = "tboverloadTorqueSpeed1"
+		Me.tboverloadTorqueSpeed1.Size = New System.Drawing.Size(57, 20)
+		Me.tboverloadTorqueSpeed1.TabIndex = 10
+		'
+		'Label41
+		'
+		Me.Label41.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label41.AutoSize = True
+		Me.Label41.Location = New System.Drawing.Point(295, 34)
+		Me.Label41.Name = "Label41"
+		Me.Label41.Size = New System.Drawing.Size(87, 13)
+		Me.Label41.TabIndex = 7
+		Me.Label41.Text = "Overload Torque"
+		'
+		'tbOverloadTorque1
+		'
+		Me.tbOverloadTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbOverloadTorque1.Location = New System.Drawing.Point(389, 30)
+		Me.tbOverloadTorque1.Name = "tbOverloadTorque1"
+		Me.tbOverloadTorque1.Size = New System.Drawing.Size(57, 20)
+		Me.tbOverloadTorque1.TabIndex = 8
+		'
+		'Label12
+		'
+		Me.Label12.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(458, 34)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(29, 13)
+		Me.Label12.TabIndex = 64
+		Me.Label12.Text = "[Nm]"
+		'
+		'GroupBox2
+		'
+		Me.GroupBox2.Controls.Add(Me.TableLayoutPanel6)
+		Me.GroupBox2.Location = New System.Drawing.Point(6, 163)
+		Me.GroupBox2.Name = "GroupBox2"
+		Me.GroupBox2.Size = New System.Drawing.Size(329, 199)
+		Me.GroupBox2.TabIndex = 60
+		Me.GroupBox2.TabStop = False
+		Me.GroupBox2.Text = "Power Map Per Gear"
+		'
+		'TableLayoutPanel6
+		'
+		Me.TableLayoutPanel6.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.TableLayoutPanel6.ColumnCount = 2
+		Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129.0!))
+		Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 164.0!))
+		Me.TableLayoutPanel6.Controls.Add(Me.Label47, 1, 1)
+		Me.TableLayoutPanel6.Controls.Add(Me.FlowLayoutPanel1, 0, 1)
+		Me.TableLayoutPanel6.Controls.Add(Me.lvPowerMap1, 0, 0)
+		Me.TableLayoutPanel6.Location = New System.Drawing.Point(6, 19)
+		Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
+		Me.TableLayoutPanel6.RowCount = 2
+		Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.5!))
+		Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.5!))
+		Me.TableLayoutPanel6.Size = New System.Drawing.Size(293, 160)
+		Me.TableLayoutPanel6.TabIndex = 53
+		'
+		'Label47
+		'
+		Me.Label47.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label47.AutoSize = True
+		Me.Label47.Location = New System.Drawing.Point(184, 124)
+		Me.Label47.Name = "Label47"
+		Me.Label47.Size = New System.Drawing.Size(106, 13)
+		Me.Label47.TabIndex = 6
+		Me.Label47.Text = "(Double-Click to Edit)"
+		'
+		'FlowLayoutPanel1
+		'
+		Me.FlowLayoutPanel1.Controls.Add(Me.btAddPowerMap1)
+		Me.FlowLayoutPanel1.Controls.Add(Me.btRemovePowerMap1)
+		Me.FlowLayoutPanel1.Location = New System.Drawing.Point(3, 127)
+		Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+		Me.FlowLayoutPanel1.Size = New System.Drawing.Size(61, 30)
+		Me.FlowLayoutPanel1.TabIndex = 54
+		'
+		'btAddPowerMap1
+		'
+		Me.btAddPowerMap1.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+		Me.btAddPowerMap1.Location = New System.Drawing.Point(3, 3)
+		Me.btAddPowerMap1.Name = "btAddPowerMap1"
+		Me.btAddPowerMap1.Size = New System.Drawing.Size(24, 24)
+		Me.btAddPowerMap1.TabIndex = 4
+		Me.btAddPowerMap1.UseVisualStyleBackColor = True
+		'
+		'btRemovePowerMap1
+		'
+		Me.btRemovePowerMap1.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+		Me.btRemovePowerMap1.Location = New System.Drawing.Point(33, 3)
+		Me.btRemovePowerMap1.Name = "btRemovePowerMap1"
+		Me.btRemovePowerMap1.Size = New System.Drawing.Size(24, 24)
+		Me.btRemovePowerMap1.TabIndex = 5
+		Me.btRemovePowerMap1.UseVisualStyleBackColor = True
+		'
+		'lvPowerMap1
+		'
+		Me.lvPowerMap1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvPowerMap1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader14})
+		Me.TableLayoutPanel6.SetColumnSpan(Me.lvPowerMap1, 2)
+		Me.lvPowerMap1.FullRowSelect = True
+		Me.lvPowerMap1.GridLines = True
+		Me.lvPowerMap1.HideSelection = False
+		Me.lvPowerMap1.Location = New System.Drawing.Point(3, 3)
+		Me.lvPowerMap1.MultiSelect = False
+		Me.lvPowerMap1.Name = "lvPowerMap1"
+		Me.lvPowerMap1.Size = New System.Drawing.Size(287, 118)
+		Me.lvPowerMap1.TabIndex = 7
+		Me.lvPowerMap1.TabStop = False
+		Me.lvPowerMap1.UseCompatibleStateImageBehavior = False
+		Me.lvPowerMap1.View = System.Windows.Forms.View.Details
+		'
+		'ColumnHeader13
+		'
+		Me.ColumnHeader13.Text = "Gear #"
+		Me.ColumnHeader13.Width = 59
+		'
+		'ColumnHeader14
+		'
+		Me.ColumnHeader14.Text = "Power Map Filename"
+		Me.ColumnHeader14.Width = 223
+		'
+		'tpVoltageLevel
+		'
+		Me.tpVoltageLevel.Controls.Add(Me.GroupBox4)
+		Me.tpVoltageLevel.Controls.Add(Me.TableLayoutPanel5)
+		Me.tpVoltageLevel.Controls.Add(Me.TableLayoutPanel4)
+		Me.tpVoltageLevel.Location = New System.Drawing.Point(4, 22)
+		Me.tpVoltageLevel.Name = "tpVoltageLevel"
+		Me.tpVoltageLevel.Padding = New System.Windows.Forms.Padding(3)
+		Me.tpVoltageLevel.Size = New System.Drawing.Size(509, 368)
+		Me.tpVoltageLevel.TabIndex = 1
+		Me.tpVoltageLevel.Text = "Secondary Voltage Level"
+		Me.tpVoltageLevel.UseVisualStyleBackColor = True
+		'
+		'GroupBox4
+		'
+		Me.GroupBox4.Controls.Add(Me.TableLayoutPanel9)
+		Me.GroupBox4.Location = New System.Drawing.Point(7, 169)
+		Me.GroupBox4.Name = "GroupBox4"
+		Me.GroupBox4.Size = New System.Drawing.Size(329, 199)
+		Me.GroupBox4.TabIndex = 64
+		Me.GroupBox4.TabStop = False
+		Me.GroupBox4.Text = "Power Map Per Gear"
+		'
+		'TableLayoutPanel9
+		'
+		Me.TableLayoutPanel9.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.TableLayoutPanel9.ColumnCount = 2
+		Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129.0!))
+		Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 164.0!))
+		Me.TableLayoutPanel9.Controls.Add(Me.Label31, 1, 1)
+		Me.TableLayoutPanel9.Controls.Add(Me.FlowLayoutPanel4, 0, 1)
+		Me.TableLayoutPanel9.Controls.Add(Me.lvPowerMap2, 0, 0)
+		Me.TableLayoutPanel9.Location = New System.Drawing.Point(6, 19)
+		Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
+		Me.TableLayoutPanel9.RowCount = 2
+		Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.5!))
+		Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.5!))
+		Me.TableLayoutPanel9.Size = New System.Drawing.Size(293, 160)
+		Me.TableLayoutPanel9.TabIndex = 53
+		'
+		'Label31
+		'
+		Me.Label31.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label31.AutoSize = True
+		Me.Label31.Location = New System.Drawing.Point(184, 124)
+		Me.Label31.Name = "Label31"
+		Me.Label31.Size = New System.Drawing.Size(106, 13)
+		Me.Label31.TabIndex = 6
+		Me.Label31.Text = "(Double-Click to Edit)"
+		'
+		'FlowLayoutPanel4
+		'
+		Me.FlowLayoutPanel4.Controls.Add(Me.btAddPowerMap2)
+		Me.FlowLayoutPanel4.Controls.Add(Me.btRemovePowerMap2)
+		Me.FlowLayoutPanel4.Location = New System.Drawing.Point(3, 127)
+		Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
+		Me.FlowLayoutPanel4.Size = New System.Drawing.Size(61, 30)
+		Me.FlowLayoutPanel4.TabIndex = 54
+		'
+		'btAddPowerMap2
+		'
+		Me.btAddPowerMap2.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+		Me.btAddPowerMap2.Location = New System.Drawing.Point(3, 3)
+		Me.btAddPowerMap2.Name = "btAddPowerMap2"
+		Me.btAddPowerMap2.Size = New System.Drawing.Size(24, 24)
+		Me.btAddPowerMap2.TabIndex = 4
+		Me.btAddPowerMap2.UseVisualStyleBackColor = True
+		'
+		'btRemovePowerMap2
+		'
+		Me.btRemovePowerMap2.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+		Me.btRemovePowerMap2.Location = New System.Drawing.Point(33, 3)
+		Me.btRemovePowerMap2.Name = "btRemovePowerMap2"
+		Me.btRemovePowerMap2.Size = New System.Drawing.Size(24, 24)
+		Me.btRemovePowerMap2.TabIndex = 5
+		Me.btRemovePowerMap2.UseVisualStyleBackColor = True
+		'
+		'lvPowerMap2
+		'
+		Me.lvPowerMap2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvPowerMap2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader6, Me.ColumnHeader7})
+		Me.TableLayoutPanel9.SetColumnSpan(Me.lvPowerMap2, 2)
+		Me.lvPowerMap2.FullRowSelect = True
+		Me.lvPowerMap2.GridLines = True
+		Me.lvPowerMap2.HideSelection = False
+		Me.lvPowerMap2.Location = New System.Drawing.Point(3, 3)
+		Me.lvPowerMap2.MultiSelect = False
+		Me.lvPowerMap2.Name = "lvPowerMap2"
+		Me.lvPowerMap2.Size = New System.Drawing.Size(287, 118)
+		Me.lvPowerMap2.TabIndex = 7
+		Me.lvPowerMap2.TabStop = False
+		Me.lvPowerMap2.UseCompatibleStateImageBehavior = False
+		Me.lvPowerMap2.View = System.Windows.Forms.View.Details
+		'
+		'ColumnHeader6
+		'
+		Me.ColumnHeader6.Text = "Gear #"
+		Me.ColumnHeader6.Width = 59
+		'
+		'ColumnHeader7
+		'
+		Me.ColumnHeader7.Text = "Power Map Filename"
+		Me.ColumnHeader7.Width = 223
+		'
+		'TableLayoutPanel5
+		'
+		Me.TableLayoutPanel5.ColumnCount = 2
+		Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 297.0!))
+		Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67.0!))
+		Me.TableLayoutPanel5.Controls.Add(Me.tbFLCurve2, 0, 1)
+		Me.TableLayoutPanel5.Controls.Add(Me.btFLCurveFile2, 1, 1)
+		Me.TableLayoutPanel5.Controls.Add(Me.Label28, 0, 0)
+		Me.TableLayoutPanel5.Location = New System.Drawing.Point(6, 113)
+		Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+		Me.TableLayoutPanel5.RowCount = 2
+		Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+		Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
+		Me.TableLayoutPanel5.Size = New System.Drawing.Size(329, 49)
+		Me.TableLayoutPanel5.TabIndex = 63
+		'
+		'tbFLCurve2
+		'
+		Me.tbFLCurve2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbFLCurve2.Location = New System.Drawing.Point(3, 24)
+		Me.tbFLCurve2.Name = "tbFLCurve2"
+		Me.tbFLCurve2.Size = New System.Drawing.Size(291, 20)
+		Me.tbFLCurve2.TabIndex = 57
+		'
+		'btFLCurveFile2
+		'
+		Me.btFLCurveFile2.Image = CType(resources.GetObject("btFLCurveFile2.Image"), System.Drawing.Image)
+		Me.btFLCurveFile2.Location = New System.Drawing.Point(300, 23)
+		Me.btFLCurveFile2.Name = "btFLCurveFile2"
+		Me.btFLCurveFile2.Size = New System.Drawing.Size(24, 23)
+		Me.btFLCurveFile2.TabIndex = 29
+		Me.btFLCurveFile2.UseVisualStyleBackColor = True
+		'
+		'Label28
+		'
+		Me.Label28.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label28.AutoSize = True
+		Me.Label28.Location = New System.Drawing.Point(3, 7)
+		Me.Label28.Name = "Label28"
+		Me.Label28.Size = New System.Drawing.Size(125, 13)
+		Me.Label28.TabIndex = 59
+		Me.Label28.Text = "Full Load Curve (.viepcp)"
+		'
+		'TableLayoutPanel4
+		'
+		Me.TableLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.TableLayoutPanel4.ColumnCount = 6
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
+		Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 46.0!))
+		Me.TableLayoutPanel4.Controls.Add(Me.Label17, 2, 1)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label18, 2, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label26, 5, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label19, 0, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbOverloadTime2, 4, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label24, 3, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbVoltage2, 1, 0)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label20, 0, 1)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label21, 0, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbContinousTorque2, 1, 1)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbContinousTorqueSpeed2, 1, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label27, 2, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label23, 3, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbOverloadTorqueSpeed2, 4, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label25, 5, 2)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label22, 3, 1)
+		Me.TableLayoutPanel4.Controls.Add(Me.tbOverloadTorque2, 4, 1)
+		Me.TableLayoutPanel4.Controls.Add(Me.Label16, 5, 1)
+		Me.TableLayoutPanel4.Location = New System.Drawing.Point(6, 25)
+		Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
+		Me.TableLayoutPanel4.RowCount = 3
+		Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel4.Size = New System.Drawing.Size(496, 82)
+		Me.TableLayoutPanel4.TabIndex = 62
+		'
+		'Label17
+		'
+		Me.Label17.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label17.AutoSize = True
+		Me.Label17.Location = New System.Drawing.Point(210, 34)
+		Me.Label17.Name = "Label17"
+		Me.Label17.Size = New System.Drawing.Size(29, 13)
+		Me.Label17.TabIndex = 63
+		Me.Label17.Text = "[Nm]"
+		'
+		'Label18
+		'
+		Me.Label18.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label18.AutoSize = True
+		Me.Label18.Location = New System.Drawing.Point(215, 7)
+		Me.Label18.Name = "Label18"
+		Me.Label18.Size = New System.Drawing.Size(20, 13)
+		Me.Label18.TabIndex = 62
+		Me.Label18.Text = "[V]"
+		'
+		'Label26
+		'
+		Me.Label26.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label26.AutoSize = True
+		Me.Label26.Location = New System.Drawing.Point(458, 7)
+		Me.Label26.Name = "Label26"
+		Me.Label26.Size = New System.Drawing.Size(30, 13)
+		Me.Label26.TabIndex = 65
+		Me.Label26.Text = "[sec]"
+		'
+		'Label19
+		'
+		Me.Label19.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(94, 7)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(43, 13)
+		Me.Label19.TabIndex = 1
+		Me.Label19.Text = "Voltage"
+		'
+		'tbOverloadTime2
+		'
+		Me.tbOverloadTime2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbOverloadTime2.Location = New System.Drawing.Point(389, 3)
+		Me.tbOverloadTime2.Name = "tbOverloadTime2"
+		Me.tbOverloadTime2.Size = New System.Drawing.Size(57, 20)
+		Me.tbOverloadTime2.TabIndex = 12
+		'
+		'Label24
+		'
+		Me.Label24.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label24.AutoSize = True
+		Me.Label24.Location = New System.Drawing.Point(306, 7)
+		Me.Label24.Name = "Label24"
+		Me.Label24.Size = New System.Drawing.Size(76, 13)
+		Me.Label24.TabIndex = 11
+		Me.Label24.Text = "Overload Time"
+		'
+		'tbVoltage2
+		'
+		Me.tbVoltage2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbVoltage2.Location = New System.Drawing.Point(144, 3)
+		Me.tbVoltage2.Name = "tbVoltage2"
+		Me.tbVoltage2.Size = New System.Drawing.Size(57, 20)
+		Me.tbVoltage2.TabIndex = 2
+		'
+		'Label20
+		'
+		Me.Label20.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label20.AutoSize = True
+		Me.Label20.Location = New System.Drawing.Point(40, 34)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(97, 13)
+		Me.Label20.TabIndex = 3
+		Me.Label20.Text = "Continuous Torque"
+		'
+		'Label21
+		'
+		Me.Label21.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label21.AutoSize = True
+		Me.Label21.Location = New System.Drawing.Point(6, 61)
+		Me.Label21.Name = "Label21"
+		Me.Label21.Size = New System.Drawing.Size(131, 13)
+		Me.Label21.TabIndex = 6
+		Me.Label21.Text = "Continuous Torque Speed"
+		'
+		'tbContinousTorque2
+		'
+		Me.tbContinousTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbContinousTorque2.Location = New System.Drawing.Point(144, 30)
+		Me.tbContinousTorque2.Name = "tbContinousTorque2"
+		Me.tbContinousTorque2.Size = New System.Drawing.Size(57, 20)
+		Me.tbContinousTorque2.TabIndex = 4
+		'
+		'tbContinousTorqueSpeed2
+		'
+		Me.tbContinousTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(144, 58)
+		Me.tbContinousTorqueSpeed2.Name = "tbContinousTorqueSpeed2"
+		Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(57, 20)
+		Me.tbContinousTorqueSpeed2.TabIndex = 6
+		'
+		'Label27
+		'
+		Me.Label27.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label27.AutoSize = True
+		Me.Label27.Location = New System.Drawing.Point(210, 61)
+		Me.Label27.Name = "Label27"
+		Me.Label27.Size = New System.Drawing.Size(30, 13)
+		Me.Label27.TabIndex = 67
+		Me.Label27.Text = "[rpm]"
+		'
+		'Label23
+		'
+		Me.Label23.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label23.AutoSize = True
+		Me.Label23.Location = New System.Drawing.Point(261, 61)
+		Me.Label23.Name = "Label23"
+		Me.Label23.Size = New System.Drawing.Size(121, 13)
+		Me.Label23.TabIndex = 9
+		Me.Label23.Text = "Overload Torque Speed"
+		'
+		'tbOverloadTorqueSpeed2
+		'
+		Me.tbOverloadTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbOverloadTorqueSpeed2.Location = New System.Drawing.Point(389, 58)
+		Me.tbOverloadTorqueSpeed2.Name = "tbOverloadTorqueSpeed2"
+		Me.tbOverloadTorqueSpeed2.Size = New System.Drawing.Size(57, 20)
+		Me.tbOverloadTorqueSpeed2.TabIndex = 10
+		'
+		'Label25
+		'
+		Me.Label25.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label25.AutoSize = True
+		Me.Label25.Location = New System.Drawing.Point(458, 61)
+		Me.Label25.Name = "Label25"
+		Me.Label25.Size = New System.Drawing.Size(30, 13)
+		Me.Label25.TabIndex = 66
+		Me.Label25.Text = "[rpm]"
+		'
+		'Label22
+		'
+		Me.Label22.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label22.AutoSize = True
+		Me.Label22.Location = New System.Drawing.Point(295, 34)
+		Me.Label22.Name = "Label22"
+		Me.Label22.Size = New System.Drawing.Size(87, 13)
+		Me.Label22.TabIndex = 7
+		Me.Label22.Text = "Overload Torque"
+		'
+		'tbOverloadTorque2
+		'
+		Me.tbOverloadTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.tbOverloadTorque2.Location = New System.Drawing.Point(389, 30)
+		Me.tbOverloadTorque2.Name = "tbOverloadTorque2"
+		Me.tbOverloadTorque2.Size = New System.Drawing.Size(57, 20)
+		Me.tbOverloadTorque2.TabIndex = 8
+		'
+		'Label16
+		'
+		Me.Label16.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label16.AutoSize = True
+		Me.Label16.Location = New System.Drawing.Point(458, 34)
+		Me.Label16.Name = "Label16"
+		Me.Label16.Size = New System.Drawing.Size(29, 13)
+		Me.Label16.TabIndex = 64
+		Me.Label16.Text = "[Nm]"
+		'
+		'TableLayoutPanel2
+		'
+		Me.TableLayoutPanel2.ColumnCount = 10
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 49.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 235.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
+		Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123.0!))
+		Me.TableLayoutPanel2.Controls.Add(Me.Label6, 2, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label5, 2, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.tbModel, 1, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label49, 0, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.tbInertia, 1, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label51, 0, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label2, 3, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label3, 3, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.cbDifferentialIncluded, 4, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.cbDesignTypeWheelMotor, 4, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label48, 6, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label52, 6, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label7, 5, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label8, 5, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.tbNumberOfDesignTypeWheelMotor, 7, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.tbThermalOverload, 7, 1)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label9, 8, 0)
+		Me.TableLayoutPanel2.Controls.Add(Me.Label10, 8, 1)
+		Me.TableLayoutPanel2.Location = New System.Drawing.Point(12, 12)
+		Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
+		Me.TableLayoutPanel2.RowCount = 3
+		Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+		Me.TableLayoutPanel2.Size = New System.Drawing.Size(820, 57)
+		Me.TableLayoutPanel2.TabIndex = 52
+		'
+		'Label6
+		'
+		Me.Label6.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label6.AutoSize = True
+		Me.Label6.Location = New System.Drawing.Point(138, 34)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(16, 13)
+		Me.Label6.TabIndex = 63
+		Me.Label6.Text = "[-]"
+		'
+		'Label5
+		'
+		Me.Label5.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label5.AutoSize = True
+		Me.Label5.Location = New System.Drawing.Point(138, 7)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(16, 13)
+		Me.Label5.TabIndex = 63
+		Me.Label5.Text = "[-]"
+		'
+		'Label2
+		'
+		Me.Label2.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label2.AutoSize = True
+		Me.Label2.Location = New System.Drawing.Point(253, 7)
+		Me.Label2.Name = "Label2"
+		Me.Label2.Size = New System.Drawing.Size(101, 13)
+		Me.Label2.TabIndex = 53
+		Me.Label2.Text = "Differential Included"
+		'
+		'Label3
+		'
+		Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.Right
+		Me.Label3.AutoSize = True
+		Me.Label3.Location = New System.Drawing.Point(173, 34)
+		Me.Label3.Name = "Label3"
+		Me.Label3.Size = New System.Drawing.Size(181, 13)
+		Me.Label3.TabIndex = 54
+		Me.Label3.Text = "Design Type Wheel Motor Measured"
+		'
+		'cbDifferentialIncluded
+		'
+		Me.cbDifferentialIncluded.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.cbDifferentialIncluded.AutoSize = True
+		Me.cbDifferentialIncluded.Location = New System.Drawing.Point(364, 6)
+		Me.cbDifferentialIncluded.Name = "cbDifferentialIncluded"
+		Me.cbDifferentialIncluded.Size = New System.Drawing.Size(15, 14)
+		Me.cbDifferentialIncluded.TabIndex = 47
+		Me.cbDifferentialIncluded.UseVisualStyleBackColor = True
+		'
+		'cbDesignTypeWheelMotor
+		'
+		Me.cbDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Left
+		Me.cbDesignTypeWheelMotor.AutoSize = True
+		Me.cbDesignTypeWheelMotor.Location = New System.Drawing.Point(360, 33)
+		Me.cbDesignTypeWheelMotor.Name = "cbDesignTypeWheelMotor"
+		Me.cbDesignTypeWheelMotor.Size = New System.Drawing.Size(15, 14)
+		Me.cbDesignTypeWheelMotor.TabIndex = 53
+		Me.cbDesignTypeWheelMotor.UseVisualStyleBackColor = True
+		'
+		'Label7
+		'
+		Me.Label7.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(403, 7)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(16, 13)
+		Me.Label7.TabIndex = 68
+		Me.Label7.Text = "[-]"
+		'
+		'Label8
+		'
+		Me.Label8.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(403, 34)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(16, 13)
+		Me.Label8.TabIndex = 65
+		Me.Label8.Text = "[-]"
+		'
+		'Label9
+		'
+		Me.Label9.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label9.AutoSize = True
+		Me.Label9.Location = New System.Drawing.Point(768, 7)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(16, 13)
+		Me.Label9.TabIndex = 66
+		Me.Label9.Text = "[-]"
+		'
+		'Label10
+		'
+		Me.Label10.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.Label10.AutoSize = True
+		Me.Label10.Location = New System.Drawing.Point(768, 34)
+		Me.Label10.Name = "Label10"
+		Me.Label10.Size = New System.Drawing.Size(16, 13)
+		Me.Label10.TabIndex = 67
+		Me.Label10.Text = "[-]"
+		'
+		'GroupBox1
+		'
+		Me.GroupBox1.Controls.Add(Me.TableLayoutPanel3)
+		Me.GroupBox1.Location = New System.Drawing.Point(15, 103)
+		Me.GroupBox1.Name = "GroupBox1"
+		Me.GroupBox1.Size = New System.Drawing.Size(314, 187)
+		Me.GroupBox1.TabIndex = 61
+		Me.GroupBox1.TabStop = False
+		Me.GroupBox1.Text = "Gears"
+		'
+		'TableLayoutPanel3
+		'
+		Me.TableLayoutPanel3.ColumnCount = 2
+		Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 199.0!))
+		Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160.0!))
+		Me.TableLayoutPanel3.Controls.Add(Me.lvGear, 0, 0)
+		Me.TableLayoutPanel3.Controls.Add(Me.Label30, 0, 1)
+		Me.TableLayoutPanel3.Controls.Add(Me.FlowLayoutPanel2, 0, 1)
+		Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top
+		Me.TableLayoutPanel3.Location = New System.Drawing.Point(3, 16)
+		Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
+		Me.TableLayoutPanel3.RowCount = 2
+		Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.5!))
+		Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.5!))
+		Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+		Me.TableLayoutPanel3.Size = New System.Drawing.Size(308, 160)
+		Me.TableLayoutPanel3.TabIndex = 53
+		'
+		'lvGear
+		'
+		Me.lvGear.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvGear.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
+		Me.TableLayoutPanel3.SetColumnSpan(Me.lvGear, 2)
+		Me.lvGear.FullRowSelect = True
+		Me.lvGear.GridLines = True
+		Me.lvGear.HideSelection = False
+		Me.lvGear.Location = New System.Drawing.Point(3, 3)
+		Me.lvGear.MultiSelect = False
+		Me.lvGear.Name = "lvGear"
+		Me.lvGear.Size = New System.Drawing.Size(353, 118)
+		Me.lvGear.TabIndex = 7
+		Me.lvGear.TabStop = False
+		Me.lvGear.UseCompatibleStateImageBehavior = False
+		Me.lvGear.View = System.Windows.Forms.View.Details
+		'
+		'ColumnHeader1
+		'
+		Me.ColumnHeader1.Text = "Gear #"
+		Me.ColumnHeader1.Width = 59
+		'
+		'ColumnHeader2
+		'
+		Me.ColumnHeader2.Text = "Max Out Shaft Speed"
+		Me.ColumnHeader2.Width = 120
+		'
+		'ColumnHeader3
+		'
+		Me.ColumnHeader3.Text = "Max Out Shaft Speed"
+		Me.ColumnHeader3.Width = 120
+		'
+		'Label30
+		'
+		Me.Label30.AutoSize = True
+		Me.Label30.Location = New System.Drawing.Point(202, 124)
+		Me.Label30.Name = "Label30"
+		Me.Label30.Size = New System.Drawing.Size(106, 13)
+		Me.Label30.TabIndex = 55
+		Me.Label30.Text = "(Double-Click to Edit)"
+		'
+		'FlowLayoutPanel2
+		'
+		Me.FlowLayoutPanel2.Controls.Add(Me.btAddGear)
+		Me.FlowLayoutPanel2.Controls.Add(Me.btRemoveGear)
+		Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 127)
+		Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+		Me.FlowLayoutPanel2.Size = New System.Drawing.Size(61, 30)
+		Me.FlowLayoutPanel2.TabIndex = 54
+		'
+		'btAddGear
+		'
+		Me.btAddGear.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+		Me.btAddGear.Location = New System.Drawing.Point(3, 3)
+		Me.btAddGear.Name = "btAddGear"
+		Me.btAddGear.Size = New System.Drawing.Size(24, 24)
+		Me.btAddGear.TabIndex = 4
+		Me.btAddGear.UseVisualStyleBackColor = True
+		'
+		'btRemoveGear
+		'
+		Me.btRemoveGear.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+		Me.btRemoveGear.Location = New System.Drawing.Point(33, 3)
+		Me.btRemoveGear.Name = "btRemoveGear"
+		Me.btRemoveGear.Size = New System.Drawing.Size(24, 24)
+		Me.btRemoveGear.TabIndex = 5
+		Me.btRemoveGear.UseVisualStyleBackColor = True
+		'
+		'GroupBox3
+		'
+		Me.GroupBox3.Controls.Add(Me.TableLayoutPanel8)
+		Me.GroupBox3.Location = New System.Drawing.Point(15, 296)
+		Me.GroupBox3.Name = "GroupBox3"
+		Me.GroupBox3.Size = New System.Drawing.Size(314, 184)
+		Me.GroupBox3.TabIndex = 62
+		Me.GroupBox3.TabStop = False
+		Me.GroupBox3.Text = "Drag Curves"
+		'
+		'TableLayoutPanel8
+		'
+		Me.TableLayoutPanel8.ColumnCount = 2
+		Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 199.0!))
+		Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160.0!))
+		Me.TableLayoutPanel8.Controls.Add(Me.lvDragCurve, 0, 0)
+		Me.TableLayoutPanel8.Controls.Add(Me.Label29, 0, 1)
+		Me.TableLayoutPanel8.Controls.Add(Me.FlowLayoutPanel3, 0, 1)
+		Me.TableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top
+		Me.TableLayoutPanel8.Location = New System.Drawing.Point(3, 16)
+		Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
+		Me.TableLayoutPanel8.RowCount = 2
+		Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 77.5!))
+		Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22.5!))
+		Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+		Me.TableLayoutPanel8.Size = New System.Drawing.Size(308, 160)
+		Me.TableLayoutPanel8.TabIndex = 53
+		'
+		'lvDragCurve
+		'
+		Me.lvDragCurve.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lvDragCurve.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader5})
+		Me.TableLayoutPanel8.SetColumnSpan(Me.lvDragCurve, 2)
+		Me.lvDragCurve.FullRowSelect = True
+		Me.lvDragCurve.GridLines = True
+		Me.lvDragCurve.HideSelection = False
+		Me.lvDragCurve.Location = New System.Drawing.Point(3, 3)
+		Me.lvDragCurve.MultiSelect = False
+		Me.lvDragCurve.Name = "lvDragCurve"
+		Me.lvDragCurve.Size = New System.Drawing.Size(353, 118)
+		Me.lvDragCurve.TabIndex = 7
+		Me.lvDragCurve.TabStop = False
+		Me.lvDragCurve.UseCompatibleStateImageBehavior = False
+		Me.lvDragCurve.View = System.Windows.Forms.View.Details
+		'
+		'ColumnHeader4
+		'
+		Me.ColumnHeader4.Text = "Gear #"
+		Me.ColumnHeader4.Width = 59
+		'
+		'ColumnHeader5
+		'
+		Me.ColumnHeader5.Text = "Drag Curve Filename"
+		Me.ColumnHeader5.Width = 240
+		'
+		'Label29
+		'
+		Me.Label29.AutoSize = True
+		Me.Label29.Location = New System.Drawing.Point(202, 124)
+		Me.Label29.Name = "Label29"
+		Me.Label29.Size = New System.Drawing.Size(106, 13)
+		Me.Label29.TabIndex = 55
+		Me.Label29.Text = "(Double-Click to Edit)"
+		'
+		'FlowLayoutPanel3
+		'
+		Me.FlowLayoutPanel3.Controls.Add(Me.btAddDragCurve)
+		Me.FlowLayoutPanel3.Controls.Add(Me.btRemoveDragCurve)
+		Me.FlowLayoutPanel3.Location = New System.Drawing.Point(3, 127)
+		Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
+		Me.FlowLayoutPanel3.Size = New System.Drawing.Size(61, 30)
+		Me.FlowLayoutPanel3.TabIndex = 54
+		'
+		'btAddDragCurve
+		'
+		Me.btAddDragCurve.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+		Me.btAddDragCurve.Location = New System.Drawing.Point(3, 3)
+		Me.btAddDragCurve.Name = "btAddDragCurve"
+		Me.btAddDragCurve.Size = New System.Drawing.Size(24, 24)
+		Me.btAddDragCurve.TabIndex = 4
+		Me.btAddDragCurve.UseVisualStyleBackColor = True
+		'
+		'btRemoveDragCurve
+		'
+		Me.btRemoveDragCurve.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+		Me.btRemoveDragCurve.Location = New System.Drawing.Point(33, 3)
+		Me.btRemoveDragCurve.Name = "btRemoveDragCurve"
+		Me.btRemoveDragCurve.Size = New System.Drawing.Size(24, 24)
+		Me.btRemoveDragCurve.TabIndex = 5
+		Me.btRemoveDragCurve.UseVisualStyleBackColor = True
+		'
+		'IEPCForm
+		'
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+		Me.ClientSize = New System.Drawing.Size(1090, 635)
+		Me.Controls.Add(Me.GroupBox3)
+		Me.Controls.Add(Me.GroupBox1)
+		Me.Controls.Add(Me.TableLayoutPanel2)
+		Me.Controls.Add(Me.tcVoltageLevels)
+		Me.Name = "IEPCForm"
+		Me.Text = "0,0"
+		Me.tcVoltageLevels.ResumeLayout(False)
+		Me.tpFirstVoltageLevel.ResumeLayout(False)
+		Me.TableLayoutPanel7.ResumeLayout(False)
+		Me.TableLayoutPanel7.PerformLayout()
+		Me.TableLayoutPanel1.ResumeLayout(False)
+		Me.TableLayoutPanel1.PerformLayout()
+		Me.GroupBox2.ResumeLayout(False)
+		Me.TableLayoutPanel6.ResumeLayout(False)
+		Me.TableLayoutPanel6.PerformLayout()
+		Me.FlowLayoutPanel1.ResumeLayout(False)
+		Me.tpVoltageLevel.ResumeLayout(False)
+		Me.GroupBox4.ResumeLayout(False)
+		Me.TableLayoutPanel9.ResumeLayout(False)
+		Me.TableLayoutPanel9.PerformLayout()
+		Me.FlowLayoutPanel4.ResumeLayout(False)
+		Me.TableLayoutPanel5.ResumeLayout(False)
+		Me.TableLayoutPanel5.PerformLayout()
+		Me.TableLayoutPanel4.ResumeLayout(False)
+		Me.TableLayoutPanel4.PerformLayout()
+		Me.TableLayoutPanel2.ResumeLayout(False)
+		Me.TableLayoutPanel2.PerformLayout()
+		Me.GroupBox1.ResumeLayout(False)
+		Me.TableLayoutPanel3.ResumeLayout(False)
+		Me.TableLayoutPanel3.PerformLayout()
+		Me.FlowLayoutPanel2.ResumeLayout(False)
+		Me.GroupBox3.ResumeLayout(False)
+		Me.TableLayoutPanel8.ResumeLayout(False)
+		Me.TableLayoutPanel8.PerformLayout()
+		Me.FlowLayoutPanel3.ResumeLayout(False)
+		Me.ResumeLayout(False)
 
-End Sub
-    Friend WithEvents Button4 As Button
-    Friend WithEvents TextBox4 As TextBox
-    Friend WithEvents Label52 As Label
-    Friend WithEvents Label48 As Label
-    Friend WithEvents TextBox3 As TextBox
-    Friend WithEvents Label51 As Label
-    Friend WithEvents tbInertia As TextBox
-    Friend WithEvents Label49 As Label
-    Friend WithEvents tbModel As TextBox
-    Friend WithEvents tcVoltageLevels As TabControl
-    Friend WithEvents tpFirstVoltageLevel As TabPage
-    Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents ListView1 As ListView
-    Friend WithEvents ColumnHeader13 As ColumnHeader
-    Friend WithEvents ColumnHeader14 As ColumnHeader
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Label47 As Label
-    Friend WithEvents Button2 As Button
-    Friend WithEvents tbFLCurve As TextBox
-    Friend WithEvents Label44 As Label
-    Friend WithEvents Label43 As Label
-    Friend WithEvents TextBox2 As TextBox
-    Friend WithEvents Label42 As Label
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents Label41 As Label
-    Friend WithEvents tbOverloadTorque As TextBox
-    Friend WithEvents tbContinousTorqueSpeed As TextBox
-    Friend WithEvents Label39 As Label
-    Friend WithEvents tbContinousTorque As TextBox
-    Friend WithEvents Label37 As Label
-    Friend WithEvents tbVoltage As TextBox
-    Friend WithEvents tpVoltageLevel As TabPage
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
-    Friend WithEvents Label2 As Label
-    Friend WithEvents cbDesignTypeWheelMotor As CheckBox
-    Friend WithEvents cbDifferentialIncluded As CheckBox
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label4 As Label
+	End Sub
+	Friend WithEvents btFLCurveFile1 As Button
+	Friend WithEvents tbThermalOverload As TextBox
+	Friend WithEvents Label52 As Label
+	Friend WithEvents Label48 As Label
+	Friend WithEvents tbNumberOfDesignTypeWheelMotor As TextBox
+	Friend WithEvents Label51 As Label
+	Friend WithEvents tbInertia As TextBox
+	Friend WithEvents Label49 As Label
+	Friend WithEvents tbModel As TextBox
+	Friend WithEvents tcVoltageLevels As TabControl
+	Friend WithEvents tpFirstVoltageLevel As TabPage
+	Friend WithEvents GroupBox2 As GroupBox
+	Friend WithEvents lvPowerMap1 As ListView
+	Friend WithEvents ColumnHeader13 As ColumnHeader
+	Friend WithEvents ColumnHeader14 As ColumnHeader
+	Friend WithEvents btAddPowerMap1 As Button
+	Friend WithEvents Label47 As Label
+	Friend WithEvents btRemovePowerMap1 As Button
+	Friend WithEvents Label44 As Label
+	Friend WithEvents Label43 As Label
+	Friend WithEvents tbOverloadTime1 As TextBox
+	Friend WithEvents Label42 As Label
+	Friend WithEvents tboverloadTorqueSpeed1 As TextBox
+	Friend WithEvents Label41 As Label
+	Friend WithEvents tbOverloadTorque1 As TextBox
+	Friend WithEvents tbContinousTorqueSpeed1 As TextBox
+	Friend WithEvents Label39 As Label
+	Friend WithEvents tbContinousTorque1 As TextBox
+	Friend WithEvents Label37 As Label
+	Friend WithEvents tbVoltage1 As TextBox
+	Friend WithEvents tpVoltageLevel As TabPage
+	Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+	Friend WithEvents Label1 As Label
+	Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+	Friend WithEvents Label2 As Label
+	Friend WithEvents cbDesignTypeWheelMotor As CheckBox
+	Friend WithEvents cbDifferentialIncluded As CheckBox
+	Friend WithEvents Label3 As Label
+	Friend WithEvents Label4 As Label
+	Friend WithEvents Label5 As Label
+	Friend WithEvents Label6 As Label
+	Friend WithEvents Label10 As Label
+	Friend WithEvents Label9 As Label
+	Friend WithEvents Label8 As Label
+	Friend WithEvents Label12 As Label
+	Friend WithEvents Label11 As Label
+	Friend WithEvents Label14 As Label
+	Friend WithEvents Label13 As Label
+	Friend WithEvents Label15 As Label
+	Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
+	Friend WithEvents Label16 As Label
+	Friend WithEvents Label17 As Label
+	Friend WithEvents Label18 As Label
+	Friend WithEvents Label19 As Label
+	Friend WithEvents tbVoltage2 As TextBox
+	Friend WithEvents Label20 As Label
+	Friend WithEvents Label21 As Label
+	Friend WithEvents tbContinousTorque2 As TextBox
+	Friend WithEvents tbContinousTorqueSpeed2 As TextBox
+	Friend WithEvents tbOverloadTorque2 As TextBox
+	Friend WithEvents tbOverloadTorqueSpeed2 As TextBox
+	Friend WithEvents tbOverloadTime2 As TextBox
+	Friend WithEvents Label22 As Label
+	Friend WithEvents Label23 As Label
+	Friend WithEvents Label24 As Label
+	Friend WithEvents Label25 As Label
+	Friend WithEvents Label26 As Label
+	Friend WithEvents Label27 As Label
+	Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
+	Friend WithEvents tbFLCurve2 As TextBox
+	Friend WithEvents btFLCurveFile2 As Button
+	Friend WithEvents Label28 As Label
+	Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
+	Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+	Friend WithEvents TableLayoutPanel7 As TableLayoutPanel
+	Friend WithEvents tbFLCurve1 As TextBox
+	Friend WithEvents GroupBox1 As GroupBox
+	Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
+	Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
+	Friend WithEvents btAddGear As Button
+	Friend WithEvents btRemoveGear As Button
+	Friend WithEvents lvGear As ListView
+	Friend WithEvents ColumnHeader1 As ColumnHeader
+	Friend WithEvents ColumnHeader2 As ColumnHeader
+	Friend WithEvents ColumnHeader3 As ColumnHeader
+	Friend WithEvents Label30 As Label
+	Friend WithEvents GroupBox3 As GroupBox
+	Friend WithEvents TableLayoutPanel8 As TableLayoutPanel
+	Friend WithEvents lvDragCurve As ListView
+	Friend WithEvents ColumnHeader4 As ColumnHeader
+	Friend WithEvents ColumnHeader5 As ColumnHeader
+	Friend WithEvents Label29 As Label
+	Friend WithEvents FlowLayoutPanel3 As FlowLayoutPanel
+	Friend WithEvents btAddDragCurve As Button
+	Friend WithEvents btRemoveDragCurve As Button
+	Friend WithEvents GroupBox4 As GroupBox
+	Friend WithEvents TableLayoutPanel9 As TableLayoutPanel
+	Friend WithEvents Label31 As Label
+	Friend WithEvents FlowLayoutPanel4 As FlowLayoutPanel
+	Friend WithEvents btAddPowerMap2 As Button
+	Friend WithEvents btRemovePowerMap2 As Button
+	Friend WithEvents lvPowerMap2 As ListView
+	Friend WithEvents ColumnHeader6 As ColumnHeader
+	Friend WithEvents ColumnHeader7 As ColumnHeader
+	Friend WithEvents Label7 As Label
 End Class
