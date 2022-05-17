@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "HEV-Px_IHPCLorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "HEV-S2_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S3_LorryManufacturerReport : LorryManufacturerReportBase
 	{
-		public override string OutputDataType => "HEV-S3_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType;
 
 		public HEV_S3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory)
 		{
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "HEV-S4_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "HEV-IEPC-S_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

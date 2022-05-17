@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		protected abstract string OutputDataType { get; }
 
+		private bool _ovc = false;
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
 		{
 			_cifFactory = cifFactory;
@@ -37,6 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			InitializeVehicleData(modelData.InputData);
+			_ovc = modelData.VehicleData.Ocv;
 			Results = new XElement(Cif + "Results");
 		}
 
@@ -66,7 +68,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
-			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Result"));
+			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Result", _ovc));
+		}
+
+		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		{
+			Results.AddFirst(new XElement(Cif + "Status", "success"));
+			Results.AddFirst(new XComment("Always prints success at the moment"));
+			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Summary", _ovc));
 		}
 
 		#endregion

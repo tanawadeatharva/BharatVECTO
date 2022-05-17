@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_PxLorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "HEV_Px_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_Px_LorryOutputType;
 		public HEV_PxLorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S2_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "HEV_S2_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S2_LorryOutputType;
 		public HEV_S2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S3_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "HEV_S3_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S3_LorryOutputType;
 		public HEV_S3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S4_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "HEV_S4_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S4_LorryOutputType;
 		public HEV_S4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "HEV_IEPC_S_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_IEPC_S_LorryOutputType;
 		public HEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
