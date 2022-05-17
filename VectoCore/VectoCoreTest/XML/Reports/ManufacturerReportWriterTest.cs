@@ -24,6 +24,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
 {
@@ -88,19 +89,44 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected bool ValidateAndPrint(XDocument document)
 		{
 			var error = false;
-			var schemas = XmlSchemaSet(
-				(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9"),
-					(Path.GetFullPath("../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd"), "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9"));
-			document.Validate(schemas, (sender, args) => {
-				error = true;
 
-				TestContext.WriteLine(sender.ToString());
-				TestContext.WriteLine(args.Message);
-			});
-			TestContext.WriteLine(document);
+			try {
 
+				var schemaSet = new XmlSchemaSet() {
+					XmlResolver = new XmlUrlResolver()
+				};
+
+				XmlSchema schema;
+				using (var reader = XmlReader.Create(
+							Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd")))
+				{
+					schema = XmlSchema.Read(reader, null);
+				}
+
+				schemaSet.Add(schema);
+
+				using (var reader = XmlReader.Create(
+							Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd")))
+				{
+					schema = XmlSchema.Read(reader, null);
+				}
+
+				schemaSet.Add(schema);
+				
+
+
+                document.Validate(schemaSet, (sender, args) => {
+					error = true;
+
+					TestContext.WriteLine(sender?.ToString());
+					TestContext.WriteLine(args.Message);
+				});
+			} finally {
+				TestContext.WriteLine(document);
+			}
 			return !error;
 		}
+
 
 		private static XmlSchemaSet XmlSchemaSet(params (string path, string targetNamespace)[] paths)
 		{

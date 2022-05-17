@@ -1483,6 +1483,51 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HEV_IEPC_S_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_IEPC_S_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_S_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_Px_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_Px_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_Px_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S2_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S2_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S2_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S3_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S3_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S3_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S4_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S4_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S4_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ADC.
         /// </summary>
         public static string Component_ADC {
@@ -3387,6 +3432,51 @@ namespace TUGraz.VectoCommon.Resources {
         public static string MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType {
             get {
                 return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-IEPC-S_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-Px_IHPCLorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S2_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S3_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S4_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
         
