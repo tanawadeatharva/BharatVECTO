@@ -74,16 +74,5 @@ namespace TUGraz.VectoCommon.Models
 		{
 			return ftype.GetLabel();
 		}
-
-		public static bool IsGaseous(this FuelType ftype)
-		{
-			switch (ftype) {
-				case (FuelType.NGPI):
-				case (FuelType.NGCI):
-					return true;
-				default:
-					return false;
-			}
-		}
 	}
 }
