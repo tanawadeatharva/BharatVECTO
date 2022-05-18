@@ -1950,4 +1950,28 @@
 <data name="CIF_OutputDataType_HEV_Px_LorryOutputType" xml:space="preserve">
 	<value>HEV_Px_LorryOutputType</value>
 </data>
+<data name="MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E2_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E3_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E4_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-IEPC_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E2_LorryOutputType" xml:space="preserve">
+	<value>PEV_E2_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E3_LorryOutputType" xml:space="preserve">
+	<value>PEV_E3_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E4_LorryOutputType" xml:space="preserve">
+	<value>PEV_E4_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_IEPC_LorryOutputType" xml:space="preserve">
+	<value>PEV_IEPC_LorryOutputType</value>
+</data>
 </root>
