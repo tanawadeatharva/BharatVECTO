@@ -68,8 +68,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				gearData.Add(new GearEntry {
 					GearNumber = gearNumber,
 					Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-					MaxOutputShaftTorque = gear.GetEx<double>(JsonKeys.Gearbox_Gear_MaxOutShaftTorque).SI<NewtonMeter>(),
-					MaxOutputShaftSpeed = gear.GetEx<double>(JsonKeys.Gearbox_Gear_MaxOutShaftSpeed).SI<PerSecond>()
+					MaxOutputShaftTorque = gear[JsonKeys.Gearbox_Gear_MaxOutShaftTorque] == null 
+						? null : gear.GetEx<double>(JsonKeys.Gearbox_Gear_MaxOutShaftTorque).SI<NewtonMeter>(),
+					MaxOutputShaftSpeed = gear[JsonKeys.Gearbox_Gear_MaxOutShaftSpeed] == null 
+						? null : gear.GetEx<double>(JsonKeys.Gearbox_Gear_MaxOutShaftSpeed).SI<PerSecond>()
 				});
 
 				gearNumber++;

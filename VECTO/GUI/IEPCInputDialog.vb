@@ -8,6 +8,8 @@ End Enum
 Public Class IEPCInputDialog
 
 	Private _dialogType As IEPCDialogType
+	Private _dragCurveFilePath As String
+	Private _powerMapFilePath As String
 
 	Public Sub New(dialogType As IEPCDialogType)
 
@@ -23,7 +25,7 @@ Public Class IEPCInputDialog
 	Public Sub Clear()
 		_tbGear.Text = ""
 		_tbInputFile.Text = ""
-		_tbGear.Focus()
+		tbGear.Focus()
 	End Sub
 
 
@@ -60,11 +62,22 @@ Public Class IEPCInputDialog
 	End Sub
 
 	Private Sub btAddFilePath_Click(sender As Object, e As EventArgs) Handles btAddFilePath.Click
-
+	    Select Case _dialogType
+	        Case IEPCDialogType.DragCurveDialog
+	            SelectInputFileDialog(IEPCDragFileBrowser, _dragCurveFilePath)
+	        Case IEPCDialogType.PowerMapDialog
+	            SelectInputFileDialog(IEPCDragFileBrowser, _powerMapFilePath)
+	    End Select
 	End Sub
 
 #End Region
 
+	Private Sub SelectInputFileDialog(fileBrowser As FileBrowser, filePath As String )
+		If fileBrowser.OpenDialog(FileRepl(tbInputFile.Text, GetPath(filePath))) Then
+		    tbInputFile.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), GetPath(filePath))
+	    End If
+	End Sub
+	
 	Private Sub SetDialogTitle(dialogType As IEPCDialogType)
 		Select Case dialogType
 			Case IEPCDialogType.DragCurveDialog
@@ -74,7 +87,4 @@ Public Class IEPCInputDialog
 		End Select
 	End Sub
 
-	Private Sub IEPCInputDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		_tbGear.Focus()
-	End Sub
 End Class

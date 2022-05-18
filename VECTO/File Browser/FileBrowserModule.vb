@@ -70,4 +70,7 @@ Public Module FileBrowserModule
 
 	public EmADCLossMapFileBrowser As FileBrowser
 	Public IEPCFileBrowser As FileBrowser
+	Public IEPCFLCFileBrowser As FileBrowser
+	Public IEPCDragFileBrowser As FileBrowser
+	Public IEPCPowerMapFileBrowser As FileBrowser
 End Module

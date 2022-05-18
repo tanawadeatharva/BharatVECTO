@@ -1488,17 +1488,15 @@ Public Class VehicleForm
 
 
 	Private Sub btIEPCFilePath_Click(sender As Object, e As EventArgs) Handles btIEPCFilePath.Click
-		If IEPCFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
+		If IEPCFileBrowser.OpenDialog(FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))) Then
 			tbIEPCFilePath.Text = GetFilenameWithoutDirectory(IEPCFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
 	Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
-		Dim f As String
-		f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
 
-
-		IEPCForm.IEPCFilePath = GetPath(_vehFile)
+		Dim f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
+		'IEPCForm.IEPCFilePath = GetPath(_vehFile)
 
 
 		If Not IEPCForm.Visible Then
@@ -1507,12 +1505,10 @@ Public Class VehicleForm
 			If IEPCForm.WindowState = FormWindowState.Minimized Then IEPCForm.WindowState = FormWindowState.Normal
 			IEPCForm.BringToFront()
 		End If
-		f = "G:\_Work\VECTO\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
-		'f = "E:\VECTO_DEV\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
+		'f = "G:\_Work\VECTO\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
+		f = "E:\VECTO_DEV\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
 		If Not Trim(f) = "" Then
 			Try
-
-
 				IEPCForm.ReadIEPCFile(f)
 			Catch ex As Exception
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")

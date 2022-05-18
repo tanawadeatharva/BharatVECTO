@@ -1,14 +1,20 @@
-﻿Imports TUGraz.VectoCommon.InputData
+﻿Imports System.IO
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Impl
 
 Public Class IEPCForm
-    Public IEPCFilePath As String = ""
+
+    Public JobDir As String = ""
+    Private _iepcFilePath as String = ""
     Private _powerMapDlg As IEPCInputDialog
     Private _dragCurveDlg As IEPCInputDialog
     Private _gearDlg As IEPCGearInputDialog
-
-
+    Private _flcFilePath1 as String
+    Private _flcFilePath2 as String
+    Private _changed as Boolean
+    
     Private Sub IEPCForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _powerMapDlg = New IEPCInputDialog(IEPCDialogType.PowerMapDialog)
         _dragCurveDlg = New IEPCInputDialog(IEPCDialogType.DragCurveDialog)
@@ -31,6 +37,8 @@ Public Class IEPCForm
         SetSecondaryVoltageLevel(voltageLevel)
         SetGearEntries(inputData.Gears)
         SetDragEntries(inputData.DragCurves)
+        _iepcFilePath = file
+
     End Sub
 
     Private Sub SetFirstVoltageLevel(voltageLevel As IElectricMotorVoltageLevel)
@@ -57,7 +65,7 @@ Public Class IEPCForm
 
     Private Sub SetGearEntries(entries As IList(Of IGearEntry))
         For Each entry As IGearEntry In entries
-            Dim listEntry = CreateListViewItem(entry.GearNumber, entry.Ratio, entry.MaxOutputShaftTorque, entry.MaxOutputShaftSpeed)
+            Dim listEntry = CreateListViewItem(entry.Ratio, entry.MaxOutputShaftTorque, entry.MaxOutputShaftSpeed)
             _lvGear.Items.Add(listEntry)
         Next
     End Sub
@@ -87,13 +95,12 @@ Public Class IEPCForm
 
     End Function
 
-    Private Function CreateListViewItem(gearNumber As Integer, ratio As Double, outputShaftTorque As NewtonMeter, outputShaftSpeed As PerSecond) As ListViewItem
+    Private Function CreateListViewItem(ratio As Double, outputShaftTorque As NewtonMeter, outputShaftSpeed As PerSecond) As ListViewItem
 
         Dim retVal As New ListViewItem
-        retVal.SubItems(0).Text = gearNumber.ToGUIFormat()
-        retVal.SubItems.Add(ratio.ToGUIFormat())
-        retVal.SubItems.Add(outputShaftTorque.ToGUIFormat())
-        retVal.SubItems.Add(outputShaftSpeed.ToGUIFormat())
+        retVal.SubItems(0).Text = ratio.ToGUIFormat()
+        retVal.SubItems.Add(outputShaftTorque?.ToGUIFormat())
+        retVal.SubItems.Add(outputShaftSpeed?.ToGUIFormat())
         Return retVal
 
     End Function
@@ -130,6 +137,7 @@ Public Class IEPCForm
             Dim gear = Convert.ToInt32(dialog.tbGear.Text)
             Dim filePath = dialog.tbInputFile.Text
             listView.Items.Add(CreateListViewItem(gear, filePath))
+            
             dialog.Clear()
         End If
     End Sub
@@ -141,6 +149,7 @@ Public Class IEPCForm
     Private Sub btRemoveDragCurve_Click(sender As Object, e As EventArgs) Handles btRemoveDragCurve.Click
         RemoveListEntry(_lvDragCurve)
     End Sub
+    
     Private Sub btRemoveGear_Click(sender As Object, e As EventArgs) Handles btRemoveGear.Click
         RemoveListEntry(_lvGear)
     End Sub
@@ -201,7 +210,6 @@ Public Class IEPCForm
 
     Private Sub lvDragCurve_DoubleClick(sender As Object, e As EventArgs) Handles lvDragCurve.DoubleClick
         EditEntry(_dragCurveDlg, lvDragCurve)
-
     End Sub
 
     Private Sub lvPowerMap1_DoubleClick(sender As Object, e As EventArgs) Handles lvPowerMap1.DoubleClick
@@ -225,6 +233,201 @@ Public Class IEPCForm
             entry.SubItems(0).Text = dialog.tbGear.Text
             entry.SubItems(1).Text = dialog.tbInputFile.Text
         End If
+
+    End Sub
+
+    Private Sub btFLCurveFile1_Click(sender As Object, e As EventArgs) Handles btFLCurveFile1.Click
+        If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve1.Text, GetPath(_flcFilePath1))) Then
+            tbFLCurve1.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_flcFilePath1))
+        End If
+    End Sub
+
+    Private Sub btFLCurveFile2_Click(sender As Object, e As EventArgs) Handles btFLCurveFile2.Click
+        If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve2.Text, GetPath(_flcFilePath2))) Then
+            tbFLCurve2.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_flcFilePath2))
+        End If
+    End Sub
+
+    Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
+        NewIEPC()
+    End Sub
+
+    Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
+        If IEPCFileBrowser.OpenDialog(_iepcFilePath) Then
+            Try
+                ReadIEPCFile(IEPCFileBrowser.Files(0))
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+            End Try
+        End If
+    End Sub
+    
+    #Region "Toolbar"
+
+    Private Sub NewIEPC()
+        tbModel.Text = ""
+        tbInertia.Text = ""
+        cbDifferentialIncluded.Checked = False
+        cbDifferentialIncluded.Checked = False
+        tbNumberOfDesignTypeWheelMotor.Text = ""
+        tbThermalOverload.Text = ""
+
+        tbVoltage1.Text = ""
+        tbContinousTorque1.Text = ""
+        tbContinousTorqueSpeed1.Text = ""
+        tbOverloadTime1.Text = ""
+        tbOverloadTorque1.Text = ""
+        tboverloadTorqueSpeed1.Text = ""
+        tbFLCurve1.Text = ""
+        _flcFilePath1 = ""
+        RemoveAllListViewItems(lvPowerMap1)
+        
+        tbVoltage2.Text = ""
+        tbContinousTorque2.Text = ""
+        tbContinousTorqueSpeed2.Text = ""
+        tbOverloadTime2.Text = ""
+        tbOverloadTorque2.Text = ""
+        tboverloadTorqueSpeed2.Text = ""
+        tbFLCurve2.Text = ""
+        _flcFilePath2 = ""
+        RemoveAllListViewItems(lvPowerMap2)
+        
+        RemoveAllListViewItems(lvDragCurve)
+        RemoveAllListViewItems(lvGear)
+
+        _changed = False
+    End Sub
+
+    Private Sub RemoveAllListViewItems(listView As ListView)
+        If listView.Items.Count = 0 Then
+            Exit Sub
+        Else
+            For Each listItem As ListViewItem In listView.Items
+                listItem.Remove()
+            Next
+        End If
+    End Sub
+
+    Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
+        SaveOrSaveAs(False)
+    End Sub
+
+    Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
+        SaveOrSaveAs(True)
+    End Sub
+
+    Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
+        If ChangeCheckCancel() Then Exit Sub
+
+        If _iepcFilePath = "" Then
+            If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                If Not SaveOrSaveAs(True) Then Exit Sub
+            Else
+                Exit Sub
+            End If
+        End If
+
+        If Not VectoJobForm.Visible Then
+            JobDir = ""
+            VectoJobForm.Show()
+            VectoJobForm.VectoNew()
+        Else
+            VectoJobForm.WindowState = FormWindowState.Normal
+        End If
+
+        VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_iepcFilePath, JobDir)
+    End Sub
+
+    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
+            Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+            Process.Start(defaultBrowserPath,
+                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
+    
+    Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
+        If _iepcFilePath = "" Or saveAs Then
+            If IEPCFileBrowser.SaveDialog(_iepcFilePath) Then
+                _iepcFilePath = IEPCFileBrowser.Files(0)
+            Else
+                Return False
+            End If
+        End If
+        Return SaveIEPCToFile(_iepcFilePath)
+    End Function
+    
+    Private Function SaveIEPCToFile(ByVal file As String) As Boolean
+
+        Dim iepc  = new IEPCInputData
+        iepc.FilePath = file
+        iepc.ModelName = tbModel.Text
+        iepc.InertiaValue = tbInertia.Text.ToDouble().SI(of KilogramSquareMeter)
+        iepc.DifferentialIncludedValue = cbDifferentialIncluded.Checked
+        iepc.DesignTypeWheelMotorValue = cbDesignTypeWheelMotor.Checked
+        If tbNumberOfDesignTypeWheelMotor.Text = "" Then
+            iepc.NrOfDesignTypeWheelMotorMeasuredValue = Nothing
+        Else if IsNumeric(tbNumberOfDesignTypeWheelMotor.Text)
+            iepc.NrOfDesignTypeWheelMotorMeasuredValue = tbNumberOfDesignTypeWheelMotor.Text.ToInt()
+        End If
+        iepc.OverloadRecoveryFactorValue = tbThermalOverload.Text.ToDouble()
+
+
+        If Not iepc.SaveFile Then
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
+        End If
+
+
+        _changed = False
+
+        Return True
+    End Function
+
+    Private Function GetFirstVoltageLevel() As IElectricMotorVoltageLevel
+        Dim voltageLevel = new ElectricMotorVoltageLevel()
+
+        voltageLevel.VoltageLevel = tbVoltage1.Text.ToDouble().SI(Of Volt)
+        voltageLevel.ContinuousTorque = tbContinousTorque1.Text.ToDouble().SI(of NewtonMeter)
+        voltageLevel.ContinuousTorqueSpeed = tbContinousTorque1.Text.ToDouble().RPMtoRad()
+        voltageLevel.OverloadTime = tbOverloadTime1.Text.ToDouble().SI(Of Second)
+        voltageLevel.OverloadTorque = tbOverloadTorque1.Text.ToDouble().SI(of NewtonMeter)
+        voltageLevel.OverloadTestSpeed = tboverloadTorqueSpeed1.Text.ToDouble().RPMtoRad()
+
+        Return Nothing
+        
+    End Function
+
+    
+#End Region
+
+
+    Private Function ChangeCheckCancel() As Boolean
+
+        If _changed Then
+            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+                Case MsgBoxResult.Yes
+                    'Return Not SaveOrSaveAs(False)
+                Case MsgBoxResult.Cancel
+                    Return True
+                Case Else
+                    _changed = False
+                    Return False
+            End Select
+        Else
+            Return False
+        End If
+
+    End Function
+
+
+    Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
+
+    End Sub
+
+    Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
 
     End Sub
 End Class
