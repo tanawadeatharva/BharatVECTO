@@ -293,11 +293,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private static Action<ModalDataContainer> PrepareReport(VectoRunData data)
 		{
 			if (data.Report != null) {
-				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData.FuelMode, data);
+				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
 			}
 			Action<ModalDataContainer> addReportResult = modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data.EngineData.FuelMode, data, modData);
+					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
 				}
 			};
 			return addReportResult;
