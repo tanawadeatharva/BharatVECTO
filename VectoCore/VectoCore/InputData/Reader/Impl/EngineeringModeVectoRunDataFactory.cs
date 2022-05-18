@@ -355,9 +355,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var numGearsPowermap = iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
 			var gearCount = iepcInput.Gears.Count;
 			var numGearsDrag = iepcInput.DragCurves.Count;
-			if (gearCount < 2) {
-				throw new VectoSimulationException("At least two Gear-Entries must be defined in IEPC!");
-			}
+			
 			if (numGearsPowermap.Any(x => x.Item2 != gearCount)) {
 				throw new VectoException(
 					$"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
@@ -392,7 +390,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						InputDataProvider.DriverInputData.GearshiftInputData,
 						axlegearData.AxleGear.Ratio, null);
 				var tmpRunData = new VectoRunData() {
-					JobType = VectoSimulationJobType.BatteryElectricVehicle,
+					JobType = VectoSimulationJobType.IEPC_E,
 					GearboxData = new GearboxData() {
 						Type = GearboxType.APTN,
 					},
@@ -404,7 +402,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
 				var gearboxData = dao.CreateIEPCGearboxData(
 					InputDataProvider, new VectoRunData() {
-						JobType = VectoSimulationJobType.BatteryElectricVehicle,
+						JobType = VectoSimulationJobType.IEPC_E,
 						VehicleData = tempVehicle,
 						AxleGearData = axlegearData,
 						ElectricMachinesData = electricMachinesData
@@ -419,7 +417,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var vehicleData = dao.CreateVehicleData(vehicle);
 				yield return new VectoRunData {
 					JobName = InputDataProvider.JobInputData.JobName,
-					JobType = VectoSimulationJobType.BatteryElectricVehicle,
+					JobType = VectoSimulationJobType.IEPC_E,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
 					AngledriveData = null,

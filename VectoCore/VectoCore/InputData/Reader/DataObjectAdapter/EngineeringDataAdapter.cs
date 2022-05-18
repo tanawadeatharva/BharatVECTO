@@ -1156,7 +1156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var dragCurves = new Dictionary<uint, DragCurve>();
 			if (iepc.DragCurves.Count > 1) {
-				for (var i = 0u; i < dragCurves.Count; i++) {
+				for (var i = 0u; i < iepc.DragCurves.Count; i++) {
 					var ratio = iepc.Gears.First(x => x.GearNumber == i + 1).Ratio;
 					dragCurves.Add(i + 1, IEPCDragCurveReader.Create(iepc.DragCurves[(int)i].DragCurve, count, ratio));
 				}
@@ -1210,17 +1210,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gear = iepc.Gears[(int)i];
 				var lossMap = TransmissionLossMapReader.Create(1, gear.Ratio, $"Gear{i+1}");
 
-				ShiftPolygon shiftPolygon;
-				if (shiftPolygonCalc != null) {
-					shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(GearboxType.APTN, (int)i,
-						null, gearInput, null, axlegearRatio,
-						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
-				} else {
-					shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.APTN, (int)i,
-						null, gearInput, null, axlegearRatio,
-						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+				ShiftPolygon shiftPolygon = null;
+				if (iepc.Gears.Count > 1) {
+					if (shiftPolygonCalc != null) {
+						shiftPolygon = shiftPolygonCalc.ComputeDeclarationShiftPolygon(GearboxType.APTN, (int)i,
+							null, gearInput, null, axlegearRatio,
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+					} else {
+						shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.APTN, (int)i,
+							null, gearInput, null, axlegearRatio,
+							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
+					}
 				}
-
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxOutputShaftSpeed == null ? null : gear.MaxOutputShaftSpeed * gear.Ratio,
@@ -1236,7 +1237,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			// update disengageWhenHaltingSpeed
 			var firstGear = retVal.GearList.First(x => x.IsLockedGear());
-			if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
+			if (iepc.Gears.Count > 1 && retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
 				var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
 					.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
 				var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *

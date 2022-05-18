@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Request(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			bool dryRun = false)
+			bool dryRun)
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			retVal.Axlegear.PowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;

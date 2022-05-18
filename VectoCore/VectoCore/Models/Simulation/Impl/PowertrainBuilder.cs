@@ -80,6 +80,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data);
 						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
 						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
+						case VectoSimulationJobType.IEPC_E: return BuildIEPCPowertrain(data);
 						default: throw new ArgumentOutOfRangeException($"Powertrain Builder cannot build Powertrain for JobType: {data.JobType}");
 					}
 				case CycleType.EngineOnly: return BuildEngineOnly(data);
@@ -786,6 +787,94 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		/// <summary>
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
+		/// <code>
+		/// DistanceBasedDrivingCycle
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | ├Singlespeed Gearbox
+		///      | └Engine Ex
+		///      └ APTNGearbox
+		///       └Engine E2
+		/// </code>
+		/// </summary>
+		private IVehicleContainer BuildIEPCPowertrain(VectoRunData data)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.GEN)) {
+				throw new VectoException("IEPC vehicle does not support GEN set.");
+			}
+			if (data.ElectricMachinesData.Count != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one electric motor.");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var es = ConnectREESS(data, container);
+
+			var ctl = new BatteryElectricMotorController(container, es);
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First().Item1;
+			IElectricMotor em;
+			switch (pos) {
+				case PowertrainPosition.BatteryElectricE2:
+					//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
+					var gearbox = data.GearboxData.Gears.Count > 1
+						? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+						: new SingleSpeedGearbox(container, data.GearboxData);
+					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
+					powertrain
+						.AddComponent(new AxleGear(container, data.AxleGearData))
+						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
+						.AddComponent(gearbox)
+						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(em);
+
+					new ATClutchInfo(container);
+					break;
+
+				default:
+					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
+			}
+
+			new DummyEngineInfo(container);
+
+			if (data.BusAuxiliaries != null) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
+				var electricStorage = new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				busAux.DCDCConverter = dcdc;
+				es.Connect(dcdc);
+				em.BusAux = busAux;
+			}
+
+			return container;
+		}
+
+		/// <summary>
 		/// Builds a simple conventional powertrain.
 		/// <code>
 		///(MeasuredSpeedDrivingCycle)
@@ -1282,6 +1371,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ParallelHybridVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.IEPC_E:
+						case VectoSimulationJobType.IEPC_S:
 							runData.ShiftStrategy = APTNShiftStrategy.Name;
 							return new APTNShiftStrategy(container);
 						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:

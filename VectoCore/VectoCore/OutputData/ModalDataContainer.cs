@@ -142,7 +142,8 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults(false);
 			CurrentRow = Data.NewRow();
 
-			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle) {
+			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle ||
+				runData.JobType == VectoSimulationJobType.IEPC_E) {
 				PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
 				return;
 			}
@@ -263,7 +264,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public bool HasCombustionEngine => _runData.JobType != VectoSimulationJobType.BatteryElectricVehicle;
+		public bool HasCombustionEngine => !(_runData.JobType == VectoSimulationJobType.BatteryElectricVehicle || _runData.JobType == VectoSimulationJobType.IEPC_E);
 
 		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
 		{

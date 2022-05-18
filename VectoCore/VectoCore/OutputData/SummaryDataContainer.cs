@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void WriteGearshiftStats(IModalDataContainer modData, Dictionary<string, object> row, uint gearCount)
 		{
-			row[Fields.NUM_GEARSHIFTS] = (ConvertedSI)modData.GearshiftCount();
+			row[Fields.NUM_GEARSHIFTS] = gearCount == 1 ? 0.SI<Scalar>() : (ConvertedSI)modData.GearshiftCount();
 			var timeSharePerGear = modData.TimeSharePerGear(gearCount);
 
 			for (uint i = 0; i <= gearCount; i++) {
