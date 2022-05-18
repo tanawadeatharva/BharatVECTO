@@ -372,12 +372,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				var axlegearData = axleGearRequired && vehicle.Components.AxleGearInputData != null
 					? dao.CreateAxleGearData(vehicle.Components.AxleGearInputData)
-					: new AxleGearData() {
-						AxleGear = new TransmissionData() {
-							Ratio = 1.0,
-							LossMap = TransmissionLossMapReader.Create(1.0, 1.0, "DummyAxleGearIEPC")
-						}
-					};
+					: null;
+					//new AxleGearData() {
+					//	AxleGear = new TransmissionData() {
+					//		Ratio = 1.0,
+					//		LossMap = TransmissionLossMapReader.Create(1.0, 1.0, "DummyAxleGearIEPC")
+					//	}
+					//};
 
 				var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
 				var supercapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
@@ -385,10 +386,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var averageVoltage = batteryData != null ? CalculateAverageVoltage(batteryData) : null;
 				var electricMachinesData = dao.CreateIEPCElectricMachines(vehicle.Components.IEPCEngineeringInputData, averageVoltage);
 				var powertrainPosition = electricMachinesData.First(e => e.Item1 != PowertrainPosition.GEN).Item1;
+				var retarderData = axleGearRequired
+					? dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition)
+					: new RetarderData() {
+						Type = RetarderType.LossesIncludedInTransmission
+					};
 
 				var gearshiftParams = dao.CreateGearshiftData(GearboxType.APTN,
 						InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData.AxleGear.Ratio, null);
+						axlegearData?.AxleGear.Ratio ?? 1.0, null);
 				var tmpRunData = new VectoRunData() {
 					JobType = VectoSimulationJobType.IEPC_E,
 					GearboxData = new GearboxData() {
@@ -426,7 +432,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 					BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
-					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition),
+					Retarder = retarderData,
 					//PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,

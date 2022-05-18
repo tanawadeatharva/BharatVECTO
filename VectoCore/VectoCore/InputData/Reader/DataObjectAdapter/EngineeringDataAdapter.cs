@@ -1193,7 +1193,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var iepc = vehicle.Components.IEPCEngineeringInputData;
 
-			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0; 
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
 

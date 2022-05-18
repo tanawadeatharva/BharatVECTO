@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		[TestCase(IEPC_Gbx3Speed, 0, TestName = "IEPC Gbx 3speed Job LH"),
 		TestCase(IEPC_Gbx3Speed, 1, TestName = "IEPC Gbx 3speed Job Coach"),
-		TestCase(IEPC_Gbx3Speed, 2, TestName = "IEPC Gbx 3speed Job LO"),
+		TestCase(IEPC_Gbx3Speed, 2, TestName = "IEPC Gbx 3speed Job CO"),
 		TestCase(IEPC_Gbx3Speed, 3, TestName = "IEPC Gbx 3speed Job HU"),
 		TestCase(IEPC_Gbx3Speed, 4, TestName = "IEPC Gbx 3speed Job IU"),
 		TestCase(IEPC_Gbx3Speed, 5, TestName = "IEPC Gbx 3speed Job RD"),
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx3Speed_drag, 0, TestName = "IEPC Gbx 3speed sep dragCurves Job LH"),
 		TestCase(IEPC_Gbx3Speed_drag, 1, TestName = "IEPC Gbx 3speed sep dragCurves Job Coach"),
-		TestCase(IEPC_Gbx3Speed_drag, 2, TestName = "IEPC Gbx 3speed sep dragCurves Job LO"),
+		TestCase(IEPC_Gbx3Speed_drag, 2, TestName = "IEPC Gbx 3speed sep dragCurves Job CO"),
 		TestCase(IEPC_Gbx3Speed_drag, 3, TestName = "IEPC Gbx 3speed sep dragCurves Job HU"),
 		TestCase(IEPC_Gbx3Speed_drag, 4, TestName = "IEPC Gbx 3speed sep dragCurves Job IU"),
 		TestCase(IEPC_Gbx3Speed_drag, 5, TestName = "IEPC Gbx 3speed sep dragCurves Job RD"),
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx3SpeedAxle, 0, TestName = "IEPC Gbx 3speed + Axle Job LH"),
 		TestCase(IEPC_Gbx3SpeedAxle, 1, TestName = "IEPC Gbx 3speed + Axle Job Coach"),
-		TestCase(IEPC_Gbx3SpeedAxle, 2, TestName = "IEPC Gbx 3speed + Axle Job LO"),
+		TestCase(IEPC_Gbx3SpeedAxle, 2, TestName = "IEPC Gbx 3speed + Axle Job CO"),
 		TestCase(IEPC_Gbx3SpeedAxle, 3, TestName = "IEPC Gbx 3speed + Axle Job HU"),
 		TestCase(IEPC_Gbx3SpeedAxle, 4, TestName = "IEPC Gbx 3speed + Axle Job IU"),
 		TestCase(IEPC_Gbx3SpeedAxle, 5, TestName = "IEPC Gbx 3speed + Axle Job RD"),
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx3SpeedWhl1, 0, TestName = "IEPC Gbx 3speed DTWheel-1 Job LH"),
 		TestCase(IEPC_Gbx3SpeedWhl1, 1, TestName = "IEPC Gbx 3speed DTWheel-1 Job Coach"),
-		TestCase(IEPC_Gbx3SpeedWhl1, 2, TestName = "IEPC Gbx 3speed DTWheel-1 Job LO"),
+		TestCase(IEPC_Gbx3SpeedWhl1, 2, TestName = "IEPC Gbx 3speed DTWheel-1 Job CO"),
 		TestCase(IEPC_Gbx3SpeedWhl1, 3, TestName = "IEPC Gbx 3speed DTWheel-1 Job HU"),
 		TestCase(IEPC_Gbx3SpeedWhl1, 4, TestName = "IEPC Gbx 3speed DTWheel-1 Job IU"),
 		TestCase(IEPC_Gbx3SpeedWhl1, 5, TestName = "IEPC Gbx 3speed DTWheel-1 Job RD"),
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx3SpeedWhl2, 0, TestName = "IEPC Gbx 3speed DTWheel-2 Job LH"),
 		TestCase(IEPC_Gbx3SpeedWhl2, 1, TestName = "IEPC Gbx 3speed DTWheel-2 Job Coach"),
-		TestCase(IEPC_Gbx3SpeedWhl2, 2, TestName = "IEPC Gbx 3speed DTWheel-2 Job LO"),
+		TestCase(IEPC_Gbx3SpeedWhl2, 2, TestName = "IEPC Gbx 3speed DTWheel-2 Job CO"),
 		TestCase(IEPC_Gbx3SpeedWhl2, 3, TestName = "IEPC Gbx 3speed DTWheel-2 Job HU"),
 		TestCase(IEPC_Gbx3SpeedWhl2, 4, TestName = "IEPC Gbx 3speed DTWheel-2 Job IU"),
 		TestCase(IEPC_Gbx3SpeedWhl2, 5, TestName = "IEPC Gbx 3speed DTWheel-2 Job RD"),
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx1Speed, 0, TestName = "IEPC Gbx 1speed Job LH"),
 		TestCase(IEPC_Gbx1Speed, 1, TestName = "IEPC Gbx 1speed Job Coach"),
-		TestCase(IEPC_Gbx1Speed, 2, TestName = "IEPC Gbx 1speed Job LO"),
+		TestCase(IEPC_Gbx1Speed, 2, TestName = "IEPC Gbx 1speed Job CO"),
 		TestCase(IEPC_Gbx1Speed, 3, TestName = "IEPC Gbx 1speed Job HU"),
 		TestCase(IEPC_Gbx1Speed, 4, TestName = "IEPC Gbx 1speed Job IU"),
 		TestCase(IEPC_Gbx1Speed, 5, TestName = "IEPC Gbx 1speed Job RD"),
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx1SpeedAxl, 0, TestName = "IEPC Gbx 1speed + Axle Job LH"),
 		TestCase(IEPC_Gbx1SpeedAxl, 1, TestName = "IEPC Gbx 1speed + Axle Job Coach"),
-		TestCase(IEPC_Gbx1SpeedAxl, 2, TestName = "IEPC Gbx 1speed + Axle Job LO"),
+		TestCase(IEPC_Gbx1SpeedAxl, 2, TestName = "IEPC Gbx 1speed + Axle Job CO"),
 		TestCase(IEPC_Gbx1SpeedAxl, 3, TestName = "IEPC Gbx 1speed + Axle Job HU"),
 		TestCase(IEPC_Gbx1SpeedAxl, 4, TestName = "IEPC Gbx 1speed + Axle Job IU"),
 		TestCase(IEPC_Gbx1SpeedAxl, 5, TestName = "IEPC Gbx 1speed + Axle Job RD"),
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx1SpeedWhl1, 0, TestName = "IEPC Gbx 1speed DTWheel-1 Job LH"),
 		TestCase(IEPC_Gbx1SpeedWhl1, 1, TestName = "IEPC Gbx 1speed DTWheel-1 Job Coach"),
-		TestCase(IEPC_Gbx1SpeedWhl1, 2, TestName = "IEPC Gbx 1speed DTWheel-1 Job LO"),
+		TestCase(IEPC_Gbx1SpeedWhl1, 2, TestName = "IEPC Gbx 1speed DTWheel-1 Job CO"),
 		TestCase(IEPC_Gbx1SpeedWhl1, 3, TestName = "IEPC Gbx 1speed DTWheel-1 Job HU"),
 		TestCase(IEPC_Gbx1SpeedWhl1, 4, TestName = "IEPC Gbx 1speed DTWheel-1 Job IU"),
 		TestCase(IEPC_Gbx1SpeedWhl1, 5, TestName = "IEPC Gbx 1speed DTWheel-1 Job RD"),
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 		TestCase(IEPC_Gbx1SpeedWhl2, 0, TestName = "IEPC Gbx 1speed DTWheel-2 Job LH"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 1, TestName = "IEPC Gbx 1speed DTWheel-2 Job Coach"),
-		TestCase(IEPC_Gbx1SpeedWhl2, 2, TestName = "IEPC Gbx 1speed DTWheel-2 Job LO"),
+		TestCase(IEPC_Gbx1SpeedWhl2, 2, TestName = "IEPC Gbx 1speed DTWheel-2 Job CO"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 3, TestName = "IEPC Gbx 1speed DTWheel-2 Job HU"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 4, TestName = "IEPC Gbx 1speed DTWheel-2 Job IU"),
 		TestCase(IEPC_Gbx1SpeedWhl2, 5, TestName = "IEPC Gbx 1speed DTWheel-2 Job RD"),

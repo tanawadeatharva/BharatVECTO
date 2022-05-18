@@ -79,15 +79,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			VoltageLevels = runData.ElectricMachinesData
 				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyData;
 
-			
-
-			TransmissionRatio = runData.AxleGearData.AxleGear.Ratio *
+			TransmissionRatio = (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *  // axlegeardata may be null for certain IEPC configurations
 								(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 								runData.VehicleData.DynamicTyreRadius;
-			//var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
-			//    Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
-
-
 
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
@@ -97,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EMRatio = em.RatioADC;
 			DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
 				runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
-				runData.AxleGearData.AxleGear.Ratio, runData.GearboxData.Type);
+				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 		}
 
 		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)

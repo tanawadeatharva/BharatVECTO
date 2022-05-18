@@ -840,14 +840,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						: new SingleSpeedGearbox(container, data.GearboxData);
 					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
 					powertrain
-						.AddComponent(new AxleGear(container, data.AxleGearData))
-						.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
+						.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+						.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
-						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 						.AddComponent(em);
 
 					new ATClutchInfo(container);
+					if (data.AxleGearData == null) {
+						new DummyAxleGearInfo(container);
+					}
 					break;
 
 				default:
@@ -1163,6 +1164,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
 					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
+			}
 		}
 
 		private static ElectricSystem ConnectREESS(VectoRunData data, VehicleContainer container)

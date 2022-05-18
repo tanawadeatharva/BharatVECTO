@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var modData = container.ModalData as ModalDataContainer;
 			var runData = container.RunData;
 			var ratio = 1.0 / runData.VehicleData.DynamicTyreRadius *
-						runData.AxleGearData.AxleGear.Ratio *
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * // alxlegear may be null for certain IEPC configurations
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
