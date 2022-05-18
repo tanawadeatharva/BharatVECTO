@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_E2_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "PEV_E2_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E2_LorryOutputType;
 		public PEV_E2_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_E3_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "PEV_E3_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E3_LorryOutputType;
 		public PEV_E3_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_E4_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "PEV_E4_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E4_LorryOutputType;
 		public PEV_E4_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
-		protected override string OutputDataType => "PEV_IEPC_LorryOutputType";
+		protected override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_IEPC_LorryOutputType;
 		public PEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCustomerReport

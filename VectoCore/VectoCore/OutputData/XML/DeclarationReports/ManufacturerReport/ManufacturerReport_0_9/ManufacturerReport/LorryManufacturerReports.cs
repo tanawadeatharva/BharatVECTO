@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "PEV-E2_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "PEV-E3_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "PEV-E4_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "PEV-IEPC_LorryManufacturerOutputDataType";
+		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType;
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
