@@ -72,8 +72,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected bool _simulate = true;
 
 		//TODO: set with preprocessor directive remove from interface
+#if MOCKUPDEBUG
+		public static bool MockUpRun { get; set; } = true;
+#else
 		public static bool MockUpRun { get; set; } = false;
-
+#endif
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
@@ -96,7 +99,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected readonly ExecutionMode _mode;
 
 
-		#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
+#region Constructors and Factory Methods to instantiate Instances of SimulatorFactory without NInject (should only be used in Testcases that are not updated yet)
 
 		[Obsolete("Creation of new SimulatorFactories should be done with SimulatorFactoryFactory NInject Factory", false)]
 		public static ISimulatorFactory CreateSimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer, IDeclarationReport declarationReport = null, IVTPReport vtpReport=null, bool validate = true)
@@ -129,7 +132,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		}
 
 
-		#endregion
+#endregion
 
 
 
@@ -187,11 +190,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
 		{
 			var addReportResult = PrepareReport(data);
-			if (MockUpRun) {
-				return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-					new ModalDataContainer(data, ReportWriter, addReportResult)) {RunData = data});
-			}
-			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
+            if (MockUpRun)
+            {
+                return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
+                    new ModalDataContainer(data, ReportWriter, addReportResult))
+                { RunData = data });
+            }
+            if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
 			}

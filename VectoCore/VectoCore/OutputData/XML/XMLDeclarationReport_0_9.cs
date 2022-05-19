@@ -18,9 +18,78 @@ namespace TUGraz.VectoCore.OutputData.XML
 	{ 
 		bool Mockup { set; }
 	}
+	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle, IMockupReport
+	{
+		private readonly ICustomerInformationFileFactory _cifFactory;
+		private readonly IManufacturerReportFactory _mrfFactory;
+
+		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
+			IManufacturerReportFactory mrfFactory,
+			ICustomerInformationFileFactory cifFactory,
+			bool writePIF = false) : base(writer, writePIF)
+		{
+			_mrfFactory = mrfFactory;
+			_cifFactory = cifFactory;
+		}
+		
+		#region Implementation of IMockupReport
+
+		public bool Mockup { get; set; }
+
+		#endregion
+
+		protected override void InstantiateReports(VectoRunData modelData)
+		{
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components.IEPC != null;
+			var ihpc =
+				vehicleData.Components.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+		}
+
+		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+		{
+			if (!Mockup)
+			{
+				base.DoStoreResult(entry, runData, modData);
+				return;
+			}
+		}
+
+		protected override void WriteResult(ResultEntry result)
+		{
+
+			if (Mockup)
+			{
+
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+
+			}
+			else
+			{
+				base.WriteResult(result);
+			}
+		}
+
+
+	}
+
+
 	public class XMLDeclarationReport09 : XMLDeclarationReport, IMockupReport
 	{
-		private readonly IReportWriter _writer;
 		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly ICustomerInformationFileFactory _cifFactory;
 
@@ -29,7 +98,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
-			_writer = writer;
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;
 		}
@@ -58,21 +126,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#region Overrides of XMLDeclarationReport
 
-		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
-		{
-			if (!Mockup) {
-				base.DoStoreResult(entry, runData, modData);
-				return;
-			}
-		}
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			var sumWeightinFactors = _weightingFactors.Values.Sum(x => x);
-			if (!sumWeightinFactors.IsEqual(0) && !sumWeightinFactors.IsEqual(1))
-			{
-				throw new VectoException("Mission Profile Weighting factors do not sum up to 1!");
-			}
 
 			if (Mockup) {
 				
@@ -81,8 +137,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				
 				
 			} else {
-				ManufacturerRpt.WriteResult(result);
-				CustomerRpt.WriteResult(result);
+				base.WriteResult(result);
 			}
 		}
 
@@ -90,18 +145,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#endregion
 
-		#region Overrides of XMLDeclarationReport
-
-		protected override void GenerateReports()
-		{
-			if (Mockup) {
-				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-				(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-			}
-			base.GenerateReports();
-		}
-
-		#endregion
 
 
 		#region Implementation of IMockupReport

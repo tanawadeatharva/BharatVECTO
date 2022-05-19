@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -9,11 +11,10 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoMockup
 {
 
 
@@ -27,8 +28,8 @@ namespace TUGraz.VectoCore.Utils
 		private static class MockupResultHelper
 		{
 			private static string _convArch = "Conv";
-			private const string mockupResourcePrefix = "TUGraz.VectoCore.Resources.Declaration.Report";
-
+			private const string mockupResourcePrefix = "TUGraz.VectoMockup.MockupResults";
+			
 			
 			private static HashSet<string> conventional = new HashSet<string>() {
 				//MRF
@@ -70,6 +71,7 @@ namespace TUGraz.VectoCore.Utils
 
 			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, bool ovc)
 			{
+				var resNames = Assembly.GetAssembly(typeof(MockupResultReader)).GetManifestResourceNames();
 				//if (result.Status == VectoRun.Status.Success) {
 					var arch = GetArch(xmlName, ovc);
 					var reportType = type == ResultType.MRF ? "MRF" : "CIF";
@@ -113,9 +115,9 @@ namespace TUGraz.VectoCore.Utils
 
 
 
-		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, bool ovc)
+		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, ovc));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData.VehicleData.Ocv));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
@@ -125,14 +127,24 @@ namespace TUGraz.VectoCore.Utils
 
 		private static XElement GetResultElement(XName resultElementName, string resourceName)
 		{
-			var xDoc = XDocument.Load(RessourceHelper.ReadStream(resourceName));
+			var xDoc = XDocument.Load(ReadStream(resourceName));
 			
 			var results = xDoc.XPathSelectElements($"//*[name()='{resultElementName.LocalName}']");
 			
 			return results.First();
 		}
+		public static Stream ReadStream(string resourceName)
+		{
+			var assembly = Assembly.GetAssembly(typeof(MockupResultReader));
+			var resource = assembly.GetManifestResourceStream(resourceName);
+			if (resource == null)
+			{
+				throw new VectoException("Resource file not found: " + resourceName);
+			}
+			return resource;
+		}
 
-		
+
 		private static void ReplaceMission(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
 			var mission = resultElement.Elements()

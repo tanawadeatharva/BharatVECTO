@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.OutputData.Mockup
+namespace TUGraz.VectoMockup
 {
 
 	//public void Run()

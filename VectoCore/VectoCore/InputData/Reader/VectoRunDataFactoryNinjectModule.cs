@@ -7,7 +7,7 @@ using Ninject.Modules;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
-    class VectoRunDataFactoryNinjectModule : NinjectModule
+    public class VectoRunDataFactoryNinjectModule : NinjectModule
     {
 		#region Overrides of NinjectModule
 

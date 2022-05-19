@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue);
 		void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue);
 	}
-	internal abstract class AbstractManufacturerReport : IXMLManufacturerReport, IXMLMockupReport
+	internal abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
         protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		public static XNamespace Mrf => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
 
+		private VectoRunData _modelData;
 		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
 		protected AbstractManufacturerReport(IManufacturerReportFactory MRFReportFactory)
@@ -49,6 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.Ocv;
+			_modelData = modelData;
 			Results = new XElement(Mrf + XMLNames.Report_Results);
 		}
 
@@ -61,22 +63,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		}
 
+		
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			
-			Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Result", _ovc));
-
-
-
-		}
-
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			Results.AddFirst(new XElement(Mrf + "Status", "success"));
-			Results.AddFirst(new XComment("Always prints success at the moment"));
-			//Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Summary", _ovc));
-		}
 
 		
 

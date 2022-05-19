@@ -14,15 +14,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
-	public abstract class AbstractCustomerReport : IXMLCustomerReport, IXMLMockupReport
-    {
+	public abstract class AbstractCustomerReport : IXMLCustomerReport
+	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 		protected XElement Vehicle { get; set; }
 		protected XElement Results { get; set; }
 
-		protected abstract string OutputDataType { get; }
+		public abstract string OutputDataType { get; }
 
 		private bool _ovc = false;
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
@@ -64,20 +64,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#endregion
 
-		#region Implementation of IXMLMockupReport
 
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Result", _ovc));
-		}
-
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			Results.AddFirst(new XElement(Cif + "Status", "success"));
-			Results.AddFirst(new XComment("Always prints success at the moment"));
-			Results.Add(MockupResultReader.GetCIFMockupResult(OutputDataType, resultValue, Cif + "Summary", _ovc));
-		}
-
-		#endregion
 	}
 }
