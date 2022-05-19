@@ -1129,7 +1129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return null;
 			}
 
-			var pos = PowertrainPosition.BatteryElectricE2;
+			var pos = PowertrainPosition.IEPC;
 			var count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
 
 			// the full-load curve is measured in the gear with the ratio closest to 1,

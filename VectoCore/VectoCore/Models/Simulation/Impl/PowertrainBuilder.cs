@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data);
 						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
 						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
-						case VectoSimulationJobType.IEPC_E: return BuildIEPCPowertrain(data);
+						case VectoSimulationJobType.IEPC_E: return BuildFullPowertrainIEPCE(data);
 						default: throw new ArgumentOutOfRangeException($"Powertrain Builder cannot build Powertrain for JobType: {data.JobType}");
 					}
 				case CycleType.EngineOnly: return BuildEngineOnly(data);
@@ -781,7 +781,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			container.ModData?.AddElectricMotor(pos);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl, pos)
+				: new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);
 			return motor;
 		}
@@ -802,7 +804,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └Engine E2
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildIEPCPowertrain(VectoRunData data)
+		private IVehicleContainer BuildFullPowertrainIEPCE(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -832,29 +834,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var pos = data.ElectricMachinesData.First().Item1;
 			IElectricMotor em;
-			switch (pos) {
-				case PowertrainPosition.BatteryElectricE2:
-					//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
-					var gearbox = data.GearboxData.Gears.Count > 1
-						? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
-						: new SingleSpeedGearbox(container, data.GearboxData);
-					em = GetElectricMachine(PowertrainPosition.BatteryElectricE2, data.ElectricMachinesData, container, es, ctl);
-					powertrain
-						.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
-						.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
-						.AddComponent(gearbox)
-						.AddComponent(em);
-
-					new ATClutchInfo(container);
-					if (data.AxleGearData == null) {
-						new DummyAxleGearInfo(container);
-					}
-					break;
-
-				default:
-					throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
+			if (pos != PowertrainPosition.IEPC) {
+				throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
 			}
+			
+			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
 
+			new ATClutchInfo(container);
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container);
+			}
 			new DummyEngineInfo(container);
 
 			if (data.BusAuxiliaries != null) {

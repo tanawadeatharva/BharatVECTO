@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
 		{
 			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
 		{
 			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}

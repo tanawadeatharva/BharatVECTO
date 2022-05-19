@@ -394,7 +394,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "EM_OVL-{0}-em [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
 		[ModalResultField(typeof(SI), caption: "EM_{0}_off")] EM_Off_,
-		[ModalResultField(typeof(SI), caption: "EM_E2_off")] EM_E2_Off_,
+
+		[ModalResultField(typeof(SI), caption: "n_{0}_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_IEPC_,
+		[ModalResultField(typeof(SI), caption: "T_{0} [Nm]")] T_IEPC_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_map [Nm]")] T_IEPC_map_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_drive_max [Nm]")] T_IEPC_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_gen_max [Nm]")] T_IEPC_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_gen_max [kW]", outputFactor: 1e-3)] P_IEPC_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_drive_max [kW]", outputFactor: 1e-3)] P_IEPC_drive_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorInertiaLoss_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_mech_map [kW]", outputFactor: 1e-3)] P_IEPC_mech_map_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_el [kW]", outputFactor: 1e-3)] P_IEPC_el_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_out [kW]", outputFactor: 1e-3)] P_IEPC_out_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorLoss_,
+		[ModalResultField(typeof(SI), caption: "{0}_off")] IEPC_Off_,
+		[ModalResultField(typeof(SI), caption: "{0}_OVL [%]", outputFactor: 100)] IEPC_OvlBuffer_,
+
+
 
 
 		// only for graphDrawing Testcase

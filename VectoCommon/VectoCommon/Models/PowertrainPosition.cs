@@ -19,6 +19,8 @@ namespace TUGraz.VectoCommon.InputData
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
+
+		IEPC
 	}
 
 	public static class PowertrainPositionHelper

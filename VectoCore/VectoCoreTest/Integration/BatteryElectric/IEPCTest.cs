@@ -165,12 +165,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
 			factory.Validate = false;
 			factory.WriteModalResults = true;
+			
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
 
 			factory.SumData = sumContainer;
-
+			
 			var run = factory.SimulationRuns().ToArray()[cycleIdx];
 
 			Assert.NotNull(run);
