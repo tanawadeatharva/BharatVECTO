@@ -78,6 +78,7 @@ namespace TUGraz.VectoCommon.InputData
 				case PowertrainPosition.BatteryElectricE2:
 				case PowertrainPosition.BatteryElectricE3:
 				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.IEPC:
 					return true;
 				default:
 					return false;
