@@ -1148,7 +1148,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			tolerateMissing)
 		{
 			VehicleData = ReadVehicle();
-			
+			if (Body[JsonKeys.Vehicle_EngineFile] != null) {
+				Engine = ReadEngine();
+			}
+
 			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
 				AxleGear = ReadGearbox() as IAxleGearInputData;
 			}
@@ -1159,7 +1162,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 
-		public override VectoSimulationJobType JobType => VectoSimulationJobType.IEPC_E;
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
 	}
 
 	// --------------------------

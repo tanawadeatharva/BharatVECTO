@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
 						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
 						case VectoSimulationJobType.IEPC_E: return BuildFullPowertrainIEPCE(data);
+						case VectoSimulationJobType.IEPC_S: return BuildFullPowertrainIEPCSerial(data);
 						default: throw new ArgumentOutOfRangeException($"Powertrain Builder cannot build Powertrain for JobType: {data.JobType}");
 					}
 				case CycleType.EngineOnly: return BuildEngineOnly(data);
@@ -763,7 +764,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			container.ModData?.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos)
+				: new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			if (pos == PowertrainPosition.GEN) {
 				es.Connect(new GensetChargerAdapter(motor));
 			} else {
@@ -799,9 +802,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     └AxleGear
 		///      │ ├(AxlegearInputRetarder)
 		///      | ├Singlespeed Gearbox
-		///      | └Engine Ex
+		///      | └Engine IEPC
 		///      └ APTNGearbox
-		///       └Engine E2
+		///       └Engine IEPC
 		/// </code>
 		/// </summary>
 		private IVehicleContainer BuildFullPowertrainIEPCE(VectoRunData data)
@@ -869,6 +872,101 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				es.Connect(dcdc);
 				em.BusAux = busAux;
 			}
+
+			return container;
+		}
+
+		/// <summary>
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
+		/// <code>
+		/// DistanceBasedDrivingCycle
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | ├Singlespeed Gearbox
+		///      | └Engine IEPC
+		///      └ APTNGearbox
+		///       └Engine IEPC
+		/// </code>
+		/// </summary>
+		private IVehicleContainer BuildFullPowertrainIEPCSerial(VectoRunData data)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 == PowertrainPosition.GEN) != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one GEN set.");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 != PowertrainPosition.GEN) != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one electric motor.");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var es = ConnectREESS(data, container);
+
+			var strategy = new SerialHybridStrategy(data, container);
+			var ctl = new SerialHybridController(container, strategy, es);
+
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
+
+			var idleController = engine.IdleController;
+			ctl.Engine = engine;
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+			IElectricMotor em;
+			if (pos != PowertrainPosition.IEPC) {
+				throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
+			}
+
+			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
+
+			new ATClutchInfo(container);
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container);
+			}
+
+			if (data.BusAuxiliaries != null) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
+				var electricStorage = new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				busAux.DCDCConverter = dcdc;
+				es.Connect(dcdc);
+				em.BusAux = busAux;
+			}
+
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(engine, idleController)
+				.AddAuxiliaries(container, data);
 
 			return container;
 		}
@@ -1005,6 +1103,59 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		/// <summary>
+		/// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
+		/// <code>
+		/// Vehicle
+		/// └Wheels
+		///  └SimpleHybridController
+		///   └Brakes
+		///    │ └Engine E4
+		///    └AxleGear
+		///     │ ├(AxlegearInputRetarder)
+		///     │ └Engine E3
+		///     ├(AngleDrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └Gearbox or APTNGearbox
+		///      ├(TransmissionInputRetarder)
+		///      └Engine E2
+		/// </code>
+		/// </summary>
+		public void BuildSimpleIEPCHybridPowertrain(VectoRunData data, VehicleContainer container)
+		{
+			var es = ConnectREESS(data, container);
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+			es.Connect(new GensetChargerAdapter(null));
+
+			var ctl = new SimpleHybridController(container, es);
+
+			//Vehicle-->Wheels-->SimpleHybridController-->Brakes
+			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new APTNGearbox(container, ctl.ShiftStrategy)
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			var em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
+		}
+
+		/// <summary>
+		/// Builds a simple genset
+		/// <code>
+		/// Engine Gen
+		///  └CombustionEngine
+		/// </code>
+		/// </summary>
 		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);

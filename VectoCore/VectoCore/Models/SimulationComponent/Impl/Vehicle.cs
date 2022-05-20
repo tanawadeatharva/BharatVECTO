@@ -116,9 +116,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						ratio = DataBus.AxlegearInfo.Ratio;
 					}
 
-					if (pos == PowertrainPosition.BatteryElectricE2) {
+					if (pos == PowertrainPosition.BatteryElectricE2 || pos == PowertrainPosition.IEPC) {
 						ratio = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio *
-								DataBus.AxlegearInfo.Ratio *
+								(DataBus.AxlegearInfo?.Ratio ?? 1.0) *
 								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
