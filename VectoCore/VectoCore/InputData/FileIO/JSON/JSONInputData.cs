@@ -1159,7 +1159,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 
-		public override VectoSimulationJobType JobType => VectoSimulationJobType.IEPC_E;
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
 	}
 
 	// --------------------------
