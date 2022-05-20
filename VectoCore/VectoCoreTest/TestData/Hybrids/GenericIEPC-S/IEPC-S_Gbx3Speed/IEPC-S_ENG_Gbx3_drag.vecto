@@ -9,9 +9,10 @@
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
     "VehicleFile": "IEPC-S_Vehicle_Gbx3_drag.vveh",
-    "EngineFile": "../Common/209kW_7c7l.veng", 
+    "EngineFile": "../Common/209kW_7c7l.veng",
     "GearboxFile": "Axlegear.vgbx",
     "TCU": "../Common/ShiftParameters.vtcu",
+    "HybridStrategyParams": "../Common/Hybrid_Parameters.vhctl", 
     "Padd_electric": 3540.0,
 
     "VACC": "../Common/Truck.vacc",

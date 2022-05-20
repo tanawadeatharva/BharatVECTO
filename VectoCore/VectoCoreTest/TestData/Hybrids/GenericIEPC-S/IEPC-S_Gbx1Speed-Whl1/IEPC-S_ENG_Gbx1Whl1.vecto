@@ -12,6 +12,7 @@
     "EngineFile": "../Common/209kW_7c7l.veng",
     "GearboxFile": "",
     "TCU": "../Common/ShiftParameters.vtcu",
+    "HybridStrategyParams": "../Common/Hybrid_Parameters.vhctl", 
     "Padd_electric": 3540.0,
 
     "VACC": "../Common/Truck.vacc",

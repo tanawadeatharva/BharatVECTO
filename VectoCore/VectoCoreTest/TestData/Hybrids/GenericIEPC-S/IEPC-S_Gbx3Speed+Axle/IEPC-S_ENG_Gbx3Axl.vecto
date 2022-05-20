@@ -8,10 +8,11 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "IEP-S_CVehicle_Gbx3Axl.vveh",
-    "EngineFile": "../Common/209kW_7c7l.veng", 
+    "VehicleFile": "IEPC-S_Vehicle_Gbx3Axl.vveh",
+    "EngineFile": "../Common/209kW_7c7l.veng",
     "GearboxFile": "",
     "TCU": "../Common/ShiftParameters.vtcu",
+    "HybridStrategyParams": "../Common/Hybrid_Parameters.vhctl",
     "Padd_electric": 3540.0,
 
     "VACC": "../Common/Truck.vacc",
