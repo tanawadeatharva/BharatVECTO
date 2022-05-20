@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
@@ -154,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 					try {
 						Genset.ElectricMotor.Initialize(0.SI<NewtonMeter>(), speed);
-						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt, 0);
+						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt, new GearshiftPosition(0));
 
 						if (tq == null || tq.IsSmallerOrEqual(0)) {
 							continue;

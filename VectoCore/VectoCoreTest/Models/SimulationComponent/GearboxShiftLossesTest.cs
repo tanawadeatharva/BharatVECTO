@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 20.SI<Second>();
 			var dt = 0.5.SI<Second>();
 			var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
-			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad(), false);
 
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 20.SI<Second>();
 			var dt = 0.5.SI<Second>();
 			var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
-			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad(), false);
 
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			engine.CommitSimulationStep(absTime, dt, modData);
 			var shiftLoss1 = (Watt)modData[ModalResultField.P_gbx_shift_loss] * dt;
 			Assert.AreEqual(expectedShiftLossEnergy * splitFactor, shiftLoss1.Value(), 1e-3);
-			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad(), false);
 
 			absTime += dt;
 			dt = 0.5.SI<Second>();

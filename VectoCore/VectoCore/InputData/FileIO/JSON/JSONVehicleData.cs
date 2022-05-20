@@ -47,6 +47,19 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
+	{
+		public JSONVehicleDataV11_IEPC(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
+			base(data, fileName, job, tolerateMissing)
+		{ }
+
+		public override IIEPCEngineeringInputData IEPCEngineeringInputData => JSONInputDataFactory.ReadIEPCEngineeringInputData(
+			Path.Combine(BasePath, Body.GetEx<string>("IEPC")), false);
+
+		public override IIEPCDeclarationInputData IEPC => JSONInputDataFactory.ReadIEPCEngineeringInputData(
+			Path.Combine(BasePath, Body.GetEx<string>("IEPC")), false);
+	}
+
 	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleDataV9
 	{
 		private JSONElectricStorageSystemEngineeringInputData _batteries;
@@ -79,6 +92,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
 					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
 					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
+					case "IEPC": return VectoSimulationJobType.IEPC_E;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}
@@ -102,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							"EM ADC LossMap")
 						: null,
 					Count = entry.GetEx<int>("Count"),
-					ElectricMachine =
+					ElectricMachine = 
 						JSONInputDataFactory.ReadElectricMotorData(
 							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
 				};
@@ -424,7 +438,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
-		public IIEPCDeclarationInputData IEPC => null;
+		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => null;
+		public virtual IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()
 		{

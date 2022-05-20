@@ -20,6 +20,7 @@ namespace TUGraz.VectoCommon.InputData
 		BatteryElectricE3,
 		BatteryElectricE2,
 
+		IEPC
 	}
 
 	public static class PowertrainPositionHelper
@@ -43,6 +44,7 @@ namespace TUGraz.VectoCommon.InputData
 			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
 				return (BatteryElectricPrefix + pos).ParseEnum<PowertrainPosition>();
 			}
+
 			throw new VectoException("invalid powertrain position {0}", pos);
 		}
 

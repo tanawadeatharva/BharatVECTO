@@ -221,6 +221,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			});
 		} }
 
+		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
+
 		public IIEPCDeclarationInputData IEPC => IEPCData;
 
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 

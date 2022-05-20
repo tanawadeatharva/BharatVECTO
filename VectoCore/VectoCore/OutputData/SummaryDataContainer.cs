@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void WriteGearshiftStats(IModalDataContainer modData, Dictionary<string, object> row, uint gearCount)
 		{
-			row[Fields.NUM_GEARSHIFTS] = (ConvertedSI)modData.GearshiftCount();
+			row[Fields.NUM_GEARSHIFTS] = gearCount == 1 ? 0.SI<Scalar>() : (ConvertedSI)modData.GearshiftCount();
 			var timeSharePerGear = modData.TimeSharePerGear(gearCount);
 
 			for (uint i = 0; i <= gearCount; i++) {
@@ -735,31 +735,11 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.E_ICE_START] = modData.WorkEngineStart().ConvertToKiloWattHour();
 
 			foreach (var em in runData.ElectricMachinesData) {
-				var emColumns = new List<Tuple<string, ConvertedSI>>() {
-					Tuple.Create(Fields.EM_AVG_SPEED_FORMAT, modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
-
-					Tuple.Create(Fields.E_EM_Mot_DRIVE_FORMAT, modData.TotalElectricMotorMotWorkDrive(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_Mot_GENERATE_FORMAT, modData.TotalElectricMotorMotWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
-
-					Tuple.Create(Fields.ETA_EM_Mot_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorMotEfficiencyDrive(em.Item1), "")),
-					Tuple.Create(Fields.ETA_EM_Mot_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorMotEfficiencyGenerate(em.Item1), "")),
-
-
-					Tuple.Create(Fields.E_EM_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_GENERATE_FORMAT, modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
-
-					Tuple.Create(Fields.ETA_EM_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
-					Tuple.Create(Fields.ETA_EM_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
-
-					Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_LOSS_TRANSM_FORMAT, modData.ElectricMotorTransmissionLosses(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
-					Tuple.Create(Fields.E_EM_LOSS_FORMAT, modData.ElectricMotorLosses(em.Item1).ConvertToKiloWattHour()),
-
-					Tuple.Create(Fields.E_EM_OFF_TIME_SHARE, (ConvertedSI)modData.ElectricMotorOffTimeShare(em.Item1))
-				};
-				emColumns.Reverse();
-				foreach (var entry in emColumns) {
+				var fields = em.Item1 == PowertrainPosition.IEPC
+					? GetIEPCWorkEntries(modData, row, em)
+					: GetElectricMachineWorkEntries(modData, row, em);
+				fields.Reverse();
+				foreach (var entry in fields) {
 					var colName = string.Format(entry.Item1, em.Item1.GetName());
 					lock (Table) {
 						if (!Table.Columns.Contains(colName)) {
@@ -823,6 +803,77 @@ namespace TUGraz.VectoCore.OutputData
 				row[Fields.REESS_DeltaEnergy] = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName())
 					.ConvertToKiloWattHour();
 			}
+		}
+
+		private List<Tuple<string, ConvertedSI>> GetIEPCWorkEntries(IModalDataContainer modData, Dictionary<string, object> row, Tuple<PowertrainPosition, ElectricMotorData> em)
+		{
+			var emColumns = new List<Tuple<string, ConvertedSI>>() {
+				Tuple.Create(Fields.IEPC_AVG_SPEED_FORMAT,
+					modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
+
+				//Tuple.Create(Fields.E_EM_Mot_DRIVE_FORMAT,
+				//	modData.TotalElectricMotorMotWorkDrive(em.Item1).ConvertToKiloWattHour()),
+				//Tuple.Create(Fields.E_EM_Mot_GENERATE_FORMAT,
+				//	modData.TotalElectricMotorMotWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+
+				//Tuple.Create(Fields.ETA_EM_Mot_DRIVE_FORMAT,
+				//	new ConvertedSI(modData.ElectricMotorMotEfficiencyDrive(em.Item1), "")),
+				//Tuple.Create(Fields.ETA_EM_Mot_GEN_FORMAT,
+				//	new ConvertedSI(modData.ElectricMotorMotEfficiencyGenerate(em.Item1), "")),
+
+
+				Tuple.Create(Fields.E_IEPC_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_IEPC_GENERATE_FORMAT,
+					modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+
+				Tuple.Create(Fields.ETA_IEPC_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
+				Tuple.Create(Fields.ETA_IEPC_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
+
+				Tuple.Create(Fields.E_IEPC_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour()),
+				//Tuple.Create(Fields.E_EM_LOSS_TRANSM_FORMAT,
+				//	modData.ElectricMotorTransmissionLosses(em.Item1).ConvertToKiloWattHour()),
+				//Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_IEPC_LOSS_FORMAT, modData.ElectricMotorLosses(em.Item1).ConvertToKiloWattHour()),
+
+				Tuple.Create(Fields.E_IEPC_OFF_TIME_SHARE, (ConvertedSI)modData.ElectricMotorOffTimeShare(em.Item1))
+			};
+			return emColumns;
+		}
+
+		private List<Tuple<string, ConvertedSI>> GetElectricMachineWorkEntries(IModalDataContainer modData, Dictionary<string, object> row, Tuple<PowertrainPosition, ElectricMotorData> em)
+		{
+			var emColumns = new List<Tuple<string, ConvertedSI>>() {
+				Tuple.Create(Fields.EM_AVG_SPEED_FORMAT,
+					modData.ElectricMotorAverageSpeed(em.Item1).ConvertToRoundsPerMinute()),
+
+				Tuple.Create(Fields.E_EM_Mot_DRIVE_FORMAT,
+					modData.TotalElectricMotorMotWorkDrive(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_EM_Mot_GENERATE_FORMAT,
+					modData.TotalElectricMotorMotWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+
+				Tuple.Create(Fields.ETA_EM_Mot_DRIVE_FORMAT,
+					new ConvertedSI(modData.ElectricMotorMotEfficiencyDrive(em.Item1), "")),
+				Tuple.Create(Fields.ETA_EM_Mot_GEN_FORMAT,
+					new ConvertedSI(modData.ElectricMotorMotEfficiencyGenerate(em.Item1), "")),
+
+
+				Tuple.Create(Fields.E_EM_DRIVE_FORMAT, modData.TotalElectricMotorWorkDrive(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_EM_GENERATE_FORMAT,
+					modData.TotalElectricMotorWorkRecuperate(em.Item1).ConvertToKiloWattHour()),
+
+				Tuple.Create(Fields.ETA_EM_DRIVE_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyDrive(em.Item1), "")),
+				Tuple.Create(Fields.ETA_EM_GEN_FORMAT, new ConvertedSI(modData.ElectricMotorEfficiencyGenerate(em.Item1), "")),
+
+				Tuple.Create(Fields.E_EM_OFF_Loss_Format, modData.ElectricMotorOffLosses(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_EM_LOSS_TRANSM_FORMAT,
+					modData.ElectricMotorTransmissionLosses(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_EM_Mot_LOSS_FORMAT, modData.ElectricMotorMotLosses(em.Item1).ConvertToKiloWattHour()),
+				Tuple.Create(Fields.E_EM_LOSS_FORMAT, modData.ElectricMotorLosses(em.Item1).ConvertToKiloWattHour()),
+
+				Tuple.Create(Fields.E_EM_OFF_TIME_SHARE, (ConvertedSI)modData.ElectricMotorOffTimeShare(em.Item1))
+			};
+			return emColumns;
+			
 		}
 
 		private void WriteFullPowertrain(VectoRunData runData, Dictionary<string, object> row)
@@ -1380,6 +1431,18 @@ namespace TUGraz.VectoCore.OutputData
 			public const string E_REESS_T_dischg = "E_REESS_T_dischg [kWh]";
 			public const string E_REESS_int_chg = "E_REESS_int_chg [kWh]";
 			public const string E_REESS_int_dischg = "E_REESS_int_dischg [kWh]";
+
+			public const string IEPC_AVG_SPEED_FORMAT = "n_{0}-em_avg [rpm]";
+			public const string E_IEPC_DRIVE_FORMAT = "E_{0}_drive [kWh]";
+			public const string E_IEPC_GENERATE_FORMAT = "E_{0}_gen [kWh]";
+
+			public const string ETA_IEPC_DRIVE_FORMAT = "η_{0}_drive";
+			public const string ETA_IEPC_GEN_FORMAT = "η_{0}_gen";
+			public const string E_IEPC_OFF_Loss_Format = "E_{0}_off_loss [kWh]";
+			public const string E_IEPC_LOSS_FORMAT = "E_{0}_loss [kWh]";
+			public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
+
+
 		}
 	}
 }
