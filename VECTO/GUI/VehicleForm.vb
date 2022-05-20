@@ -644,7 +644,15 @@ Public Class VehicleForm
 				cbEcoRoll.SelectedIndex = 0
 
 			Case VectoSimulationJobType.IEPC_E
-				lblTitle.Text = "IEPC Vehicle"
+				lblTitle.Text = "IEPC-E Vehicle"
+				
+			    tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+			    tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+
+		    Case VectoSimulationJobType.IEPC_S
+		        lblTitle.Text = "IEPC-S Vehicle"
+
+		        tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
