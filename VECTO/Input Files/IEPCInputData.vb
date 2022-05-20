@@ -1,34 +1,138 @@
-﻿Imports TUGraz.VectoCommon.InputData
+﻿Imports System.IO
+Imports TUGraz.VectoCommon.Exceptions
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.Utils
 
 Public Class IEPCInputData 
     Implements IIEPCEngineeringInputData
-
-    Public FilePath As String
-    Public ModelName As String
-    Public InertiaValue As KilogramSquareMeter
-    Public DifferentialIncludedValue As Boolean
-    Public DesignTypeWheelMotorValue As Boolean
-    Public NrOfDesignTypeWheelMotorMeasuredValue As Integer?
-    Public OverloadRecoveryFactorValue As Double
-
-    Public GearValues As IList(Of IGearEntry)
-    Public VoltageLevelValues As IList(Of IElectricMotorVoltageLevel)
-    Public DragCurveValues As  IList(Of IDragCurve)
     
+    Private _model As String
+    Private _inertia As KilogramSquareMeter
+    Private _wheelMotorMeasured As Boolean
+    Private _nrDesignTypeWheelMotor As Integer?
+    Private _differentialIncluded As Boolean
+    Private _overloadRecoverFactor As Double
+    Private _gears As IList(Of IGearEntry)
+    Private _voltageLevels As IList(Of IElectricMotorVoltageLevel)
+    Private _dragCurves As  IList(Of IDragCurve)
+    private _filePath As String
 
-    public Function SaveFile() As Boolean
-        Return False
+    
+    public Sub New()
+        _voltageLevels = New List(Of IElectricMotorVoltageLevel)
+    End Sub
+    
+    Public Function SaveFile(filePath As String) As Boolean
+        _filePath = filePath
+
+        Try
+            Dim writer = New JSONFileWriter()
+            writer.SaveIEPC(Me, filePath, Cfg.DeclMode)
+        Catch ex As Exception
+            MsgBox("Failed to write IEPC file: " + ex.Message)
+            Return False
+        End Try
+
+        Return True
     End Function
 
+    Public Sub SetCommonEntries(model As String, inertia As String, designTypeWheelMotorMeasured As Boolean, 
+                                nrOfDesignTypeWheelMotorMeasured As string, differentialIncluded as Boolean,
+                                thermalOverloadRecoverFactor As String)
 
+        _model = model
+        _inertia = inertia.ToDouble().SI(Of KilogramSquareMeter)
+        _wheelMotorMeasured = designTypeWheelMotorMeasured
+        _nrDesignTypeWheelMotor = nrOfDesignTypeWheelMotorMeasured.ToInt(Nothing)
+        _differentialIncluded = differentialIncluded
+        _overloadRecoverFactor = thermalOverloadRecoverFactor.ToDouble()
+
+    End Sub
+    
+    Public Sub SetVoltageLevelEntries(voltage As String, continuousTorque As String, continuousTorqueSpeed As String,
+                                      overloadTime As String, overloadTorque As String, overloadTorqueSpeed As String, 
+                                      fullLoadCurve As string, powerMap As ListView)
+
+        Dim level =  New ElectricMotorVoltageLevel()
+        level.VoltageLevel = voltage.ToDouble().SI(Of Volt)
+        level.ContinuousTorque = continuousTorque.ToDouble().SI(Of NewtonMeter)
+        level.ContinuousTorqueSpeed = continuousTorqueSpeed.ToDouble().RPMtoRad()
+        level.OverloadTime = overloadTime.ToDouble().SI(Of Second)
+        level.OverloadTorque = overloadTorque.ToDouble().SI(Of NewtonMeter)
+        level.OverloadTestSpeed = overloadTorqueSpeed.ToDouble().RPMtoRad()
+        If Not File.Exists(fullLoadCurve) Then 
+            Throw New VectoException("Full-Load Curve is missing or invalid")
+        Else
+            level.FullLoadCurve = VectoCSVFile.Read(fullLoadCurve)
+        End If
+        level.PowerMap = GetPowerMap(powerMap)
+        
+        _voltageLevels.Add(level)
+    End Sub
+  
+    Private Function GetPowerMap(powerMap As ListView) As IList(of IElectricMotorPowerMap)
+        Dim powerMaps = new List(Of IElectricMotorPowerMap)
+        
+        For Each entry As ListViewItem In powerMap.Items
+            Dim currentEntry = New JSONElectricMotorPowerMap
+            currentEntry.Gear = entry.SubItems(0).Text.ToInt()
+            
+            If Not File.Exists(entry.SubItems(1).Text) Then
+                Throw New VectoException("Power Map is missing or invalid")
+            Else 
+                currentEntry.PowerMap = VectoCSVFile.Read(entry.SubItems(1).Text)
+            End If
+            powerMaps.Add(currentEntry)
+        Next
+        
+        Return powerMaps
+    End Function
+
+    Public Sub SetGearsEntries(gearsListView As ListView)
+        _gears = New List(Of IGearEntry)
+
+        Dim gearNumber = 1
+        For Each entry As  ListViewItem In gearsListView.Items
+            Dim currentEntry = new GearEntry
+
+            currentEntry.GearNumber = gearNumber
+            gearNumber += 1
+            
+            currentEntry.Ratio = entry.SubItems(0).Text.ToDouble()
+            If Not entry.SubItems(1).Text = Nothing Then _
+                currentEntry.MaxOutputShaftSpeed = entry.SubItems(1).Text.ToDouble().SI(Of PerSecond)
+            If Not entry.SubItems(2).Text = Nothing Then _
+                currentEntry.MaxOutputShaftTorque = entry.SubItems(2).Text.ToDouble().SI(Of NewtonMeter)
+            
+            _gears.Add(currentEntry)
+        Next
+    End Sub
+    
+    Public Sub SetDragCurveEntries(dragCurveListView As ListView)
+        _dragCurves = New List(Of IDragCurve)
+
+        For Each entry As ListViewItem In dragCurveListView.Items
+            Dim currentEntry = New DragCurveEntry
+            currentEntry.Gear = entry.SubItems(0).Text.ToInt()
+            
+            If Not File.Exists(entry.SubItems(1).Text) Then
+                Throw New VectoException("Drag Curve is missing or invalid")
+            Else 
+                currentEntry.DragCurve = VectoCSVFile.Read(entry.SubItems(1).Text)
+            End If
+            _dragCurves.Add(currentEntry)
+        Next
+    End Sub
     
     Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
         Get
             Dim retVal = New DataSource()
             retVal.SourceType = DataSourceType.JSONFile
-            retVal.SourceFile = FilePath
+            retVal.SourceFile = _filePath
             Return retVal
         End Get
     End Property
@@ -47,7 +151,7 @@ Public Class IEPCInputData
 
     Public ReadOnly Property Model As String Implements IComponentInputData.Model
         Get
-            Return ModelName
+            Return _model
         End Get
     End Property
 
@@ -95,43 +199,43 @@ Public Class IEPCInputData
 
     Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
         Get
-            Return InertiaValue
+            Return _inertia
         End Get
     End Property
 
     Public ReadOnly Property DifferentialIncluded As Boolean Implements IIEPCDeclarationInputData.DifferentialIncluded
         Get
-            Return DifferentialIncludedValue
+            Return _differentialIncluded
         End Get
     End Property
 
     Public ReadOnly Property DesignTypeWheelMotor As Boolean Implements IIEPCDeclarationInputData.DesignTypeWheelMotor
         Get
-            Return DesignTypeWheelMotorValue
+            Return _wheelMotorMeasured
         End Get
     End Property
 
     Public ReadOnly Property NrOfDesignTypeWheelMotorMeasured As Integer? Implements IIEPCDeclarationInputData.NrOfDesignTypeWheelMotorMeasured
         Get
-            Return NrOfDesignTypeWheelMotorMeasuredValue
+            Return _nrDesignTypeWheelMotor
         End Get
     End Property
 
     Public ReadOnly Property Gears As IList(Of IGearEntry) Implements IIEPCDeclarationInputData.Gears
         Get
-            Return GearValues
+            Return _gears
         End Get
     End Property
 
     Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IIEPCDeclarationInputData.VoltageLevels
         Get
-            Return VoltageLevelValues
+            Return _voltageLevels
         End Get
     End Property
 
     Public ReadOnly Property DragCurves As IList(Of IDragCurve) Implements IIEPCDeclarationInputData.DragCurves
         Get
-            Return DragCurveValues
+            Return _dragCurves
         End Get
     End Property
 
@@ -143,7 +247,8 @@ Public Class IEPCInputData
 
     Public ReadOnly Property OverloadRecoveryFactor As Double Implements IIEPCEngineeringInputData.OverloadRecoveryFactor
         Get
-            Return OverloadRecoveryFactorValue
+            Return _overloadRecoverFactor
         End Get
     End Property
+
 End Class
