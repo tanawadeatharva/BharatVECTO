@@ -1,4 +1,4 @@
-﻿Imports System.Globalization
+﻿Imports System.IO
 
 Public Enum IEPCDialogType
 	DragCurveDialog
@@ -7,7 +7,7 @@ End Enum
 
 Public Class IEPCInputDialog
 
-	Private _dialogType As IEPCDialogType
+	Private ReadOnly _dialogType As IEPCDialogType
 	Private _dragCurveFilePath As String
 	Private _powerMapFilePath As String
 
@@ -20,7 +20,7 @@ Public Class IEPCInputDialog
 		SetDialogTitle(dialogType)
 		_dialogType = dialogType
 
-	End Sub
+    End Sub
 
 	Public Sub Clear()
 		_tbGear.Text = ""
@@ -50,6 +50,26 @@ Public Class IEPCInputDialog
 			tbGear.Focus()
 			Return
 		End If
+
+	    If Not File.Exists(tbInputFile.Text) Then
+	        MsgBox("Invalid input no valid file path given")
+	        tbInputFile.Focus()
+			Return
+	    End If
+		
+		Dim fileExtension = new FileInfo(tbInputFile.Text).Extension
+        Select Case _dialogType
+            Case IEPCDialogType.DragCurveDialog
+				If Not IEPCDragFileBrowser.Extensions.First() = fileExtension Then
+				    MsgBox($"The Selected Drag Curve file(.{IEPCDragFileBrowser.Extensions.First()}) has the wrong file extension")
+				    Return		
+				End If
+			Case IEPCDialogType.PowerMapDialog
+			    If Not IEPCPowerMapFileBrowser.Extensions.First() = fileExtension Then
+			        MsgBox($"The Selected Power Map file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
+					Return
+			    End If
+        End Select
 
 		DialogResult = DialogResult.OK
 		Close()
