@@ -566,7 +566,10 @@ Public Class VehicleForm
 				cbAtEcoRollReleaseLockupClutch.Visible = True
 				pnEcoRoll.Visible = True
 
-			Case VectoSimulationJobType.ParallelHybridVehicle
+				'IEPC
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+            Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
 
 				'Powertrain ---------------------------------------------------------------
@@ -590,6 +593,9 @@ Public Class VehicleForm
 				cbAtEcoRollReleaseLockupClutch.Visible = False
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
+
+                'IEPC
+                tcVehicleComponents.TabPages.Remove(tpIEPC)
 
 			Case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
@@ -617,6 +623,9 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
+			    'IEPC
+			    tcVehicleComponents.TabPages.Remove(tpIEPC)
+
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
 
@@ -643,6 +652,9 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
+			    'IEPC
+			    tcVehicleComponents.TabPages.Remove(tpIEPC)
+
 			Case VectoSimulationJobType.IEPC_E
 				lblTitle.Text = "IEPC-E Vehicle"
 				
@@ -651,8 +663,7 @@ Public Class VehicleForm
 
 		    Case VectoSimulationJobType.IEPC_S
 		        lblTitle.Text = "IEPC-S Vehicle"
-
-		        tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
