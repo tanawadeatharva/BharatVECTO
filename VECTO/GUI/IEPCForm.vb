@@ -390,11 +390,11 @@ Public Class IEPCForm
         iepc.SetDragCurveEntries(lvDragCurve)
 
 
-        'If Not iepc.SaveFile(file) Then
-        '    MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
-        '    Return False
-        'End If
-        
+        If Not iepc.SaveFile(file) Then
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
+        End If
+
         _changed = False
         LbStatus.Text = ""
 

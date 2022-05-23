@@ -29,13 +29,13 @@ Public Class IEPCInputData
     Public Function SaveFile(filePath As String) As Boolean
         _filePath = filePath
 
-        'Try
-        '    Dim writer = New JSONFileWriter()
-        '    writer.SaveIEPC(Me, filePath, Cfg.DeclMode)
-        'Catch ex As Exception
-        '    MsgBox("Failed to write IEPC file: " + ex.Message)
-        '    Return False
-        'End Try
+        Try
+            Dim writer = New JSONFileWriter()
+            writer.SaveIEPC(Me, filePath, Cfg.DeclMode)
+        Catch ex As Exception
+            MsgBox("Failed to write IEPC file: " + ex.Message)
+            Return False
+        End Try
 
         Return True
     End Function
