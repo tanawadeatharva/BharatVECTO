@@ -1057,7 +1057,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
 
-				if (vehiclespeedBelowThreshold && emPos.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP1)) {
+				if (vehiclespeedBelowThreshold && emPos.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP1, PowertrainPosition.IHPC)) {
 					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
 						var firstgear = ResponseEmOff;
 						firstgear.Gear = GearList.First();

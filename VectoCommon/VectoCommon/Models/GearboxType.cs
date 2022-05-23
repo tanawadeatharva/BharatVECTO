@@ -42,6 +42,7 @@ namespace TUGraz.VectoCommon.Models
 		ATSerial, // Automatic Transmission
 		ATPowerSplit,
 		APTN, // Automatic Power Transmission - No Torque Converter
+		IHPC, // Integrated Hybrid Powertrain Component - Transmission part
 		DrivingCycle,
 		NoGearbox
 	}
@@ -90,6 +91,7 @@ namespace TUGraz.VectoCommon.Models
 				case GearboxType.ATSerial:     return "APT-S";
 				case GearboxType.ATPowerSplit: return "APT-P";
 				case GearboxType.APTN:         return "APT-N";
+				case GearboxType.IHPC:         return "IHPC";
 				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
 		}

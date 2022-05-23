@@ -108,6 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV11_SerialHybrid(json, filename, tolerateMissing);
 				case 12:
 					return new JSONInputDataV12_IEPC(json, filename, tolerateMissing);
+				case 13: 
+					return new JSONInputDataV13_IHPC(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}

@@ -100,6 +100,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
 					case "IEPC": return VectoSimulationJobType.IEPC_E;
 					case "IEPC-S": return VectoSimulationJobType.IEPC_S;
+					case "IHPC": return VectoSimulationJobType.IHPC;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}

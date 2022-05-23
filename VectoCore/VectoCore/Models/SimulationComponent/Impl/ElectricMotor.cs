@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			
-			if ((Position == PowertrainPosition.HybridP2 || Position == PowertrainPosition.HybridP2_5 ) && !DataBus.GearboxInfo.GearEngaged(absTime)) {
+			if ((Position == PowertrainPosition.HybridP2 || Position == PowertrainPosition.HybridP2_5 || Position == PowertrainPosition.IHPC) && !DataBus.GearboxInfo.GearEngaged(absTime)) {
 				// electric motor is between gearbox and clutch, but no gear is engaged...
 				if (emTorque != null) {
 					if (!DataBus.HybridControllerInfo.GearboxEngaged || (DataBus.HybridControllerInfo.GearboxEngaged && !DataBus.GearboxInfo.GearEngaged(absTime))) {
