@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.EfficiencyData.FullLoadDriveTorque(volt, electricMotorSpeed, gear) * electricMotorSpeed;
 		}
 
-		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, GearshiftPosition gear)
+		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, GearshiftPosition gear, bool allowExtrapolation)
 		{
 			var maxTorque = electricPower > 0
 				? GetMaxRecuperationTorque(volt, dt, avgEmSpeed, gear)
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var tqInertia = Formulas.InertiaPower(emSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 			var tqEm = tqEmMap + tqInertia;
-			var tqDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, tqEm);
+			var tqDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, tqEm, allowExtrapolation);
 			return tqDt;
 
 		}
@@ -174,8 +174,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxRecuperationTorqueEm = null;
 			}
 
-			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxDriveTorqueEm);
-			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxRecuperationTorqueEm);
+			var maxDriveTorqueDt = maxDriveTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxDriveTorqueEm, dryRun);
+			var maxRecuperationTorqueDt = maxRecuperationTorqueEm == null ? null : ConvertEmTorqueToDrivetrain(avgEmSpeed, maxRecuperationTorqueEm, dryRun);
 			
 			// control returns torque that shall be applied on the drivetrain. calculate backward to the EM
 			var emTorqueDt = Control.MechanicalAssistPower(absTime, dt, outTorque,
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if EM is off, calculate EM drag torque 'forward' to be applied on drivetrain
 				// add inertia, drag is positive
 				emTorque =  ModelData.DragCurveLookup(avgEmSpeed, gear) + inertiaTorqueEm;
-				emTorqueDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, emTorque);
+				emTorqueDt = ConvertEmTorqueToDrivetrain(avgEmSpeed, emTorque, dryRun);
 				emOff = true;
 			}
 
@@ -430,9 +430,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected internal NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque)
+		protected internal NewtonMeter ConvertEmTorqueToDrivetrain(PerSecond emSpeed, NewtonMeter emTorque, bool dryRun)
 		{
-			var dtTorque = ModelData.TransmissionLossMap.GetOutTorque(emSpeed, emTorque);
+			var dtTorque = ModelData.TransmissionLossMap.GetOutTorque(emSpeed, emTorque, DataBus.IsTestPowertrain || dryRun);
 
 			var dtSpeed = emSpeed / ModelData.RatioADC;
 			var emTorqueBwd = ConvertDrivetrainTorqueToEm(dtSpeed, dtTorque);

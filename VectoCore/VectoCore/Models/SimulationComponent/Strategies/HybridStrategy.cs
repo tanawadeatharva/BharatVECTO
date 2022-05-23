@@ -1975,7 +1975,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					//var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 					//							.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
 
-					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage, emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt, new GearshiftPosition(0));
+					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage, emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt, new GearshiftPosition(0), dryRun);
 					var emDragTorque = ModelData.ElectricMachinesData.First(x => x.Item1 == emPos).Item2
 												.DragCurveLookup(firstResponse.ElectricMotor.AngularVelocity, nextGear);
 					if (emDriveTorque != null &&

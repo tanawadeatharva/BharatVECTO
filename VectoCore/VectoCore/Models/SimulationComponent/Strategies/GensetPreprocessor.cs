@@ -55,17 +55,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				.FullLoadEntries.Select(x =>
 					new ElectricMotorFullLoadCurve.FullLoadEntry() {
 						FullGenerationTorque =
-							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Min(continuousTq ,x.FullGenerationTorque)),
+							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Min(continuousTq ,x.FullGenerationTorque), false),
 						FullDriveTorque =
-							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Max(-continuousTq, x.FullDriveTorque)),
+							Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(x.MotorSpeed, VectoMath.Max(-continuousTq, x.FullDriveTorque), false),
 						MotorSpeed = Genset.ElectricMotor.ConvertEmSpeedToDrivetrain(x.MotorSpeed)
 					}).Where(x => x.MotorSpeed.IsSmallerOrEqual(maxSpeed)).ToList());
 			if (!emFldDrivetrain.FullLoadEntries.Any(x => x.MotorSpeed.IsEqual(maxSpeed))) {
 				emFldDrivetrain.FullLoadEntries.Add(new ElectricMotorFullLoadCurve.FullLoadEntry() {
 					FullGenerationTorque =
-						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Min(continuousTq, emFldDrivetrain.FullGenerationTorque(maxSpeed))),
+						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Min(continuousTq, emFldDrivetrain.FullGenerationTorque(maxSpeed)), false),
 					FullDriveTorque =
-						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Max(-continuousTq, emFldDrivetrain.FullLoadDriveTorque(maxSpeed))),
+						Genset.ElectricMotor.ConvertEmTorqueToDrivetrain(maxSpeed, VectoMath.Max(-continuousTq, emFldDrivetrain.FullLoadDriveTorque(maxSpeed)), false),
 					MotorSpeed = maxSpeed
 				});
 			}
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 					try {
 						Genset.ElectricMotor.Initialize(0.SI<NewtonMeter>(), speed);
-						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt, new GearshiftPosition(0));
+						var tq = Genset.ElectricMotor.GetTorqueForElectricPower(voltage, pwr, speed * EmData.RatioADC, dt, new GearshiftPosition(0), false);
 
 						if (tq == null || tq.IsSmallerOrEqual(0)) {
 							continue;
