@@ -46,6 +46,7 @@
 3-simulation-models/PwheelInput.md
 3-simulation-models/PTO.md
 3-simulation-models/Electric_Motor.md
+3-simulation-models/IEPC.md
 3-simulation-models/Electric_Storage.md
 3-simulation-models/HybridControlStrategy.md
 5-input-and-output-files/input-output.md
@@ -63,6 +64,7 @@
 5-input-and-output-files/VFLD.md
 5-input-and-output-files/VMAP.md
 5-input-and-output-files/VEMx.md
+5-input-and-output-files/VIEPCx.md
 5-input-and-output-files/VTQP.md
 5-input-and-output-files/VBATx.md
 5-input-and-output-files/VGBX.md
