@@ -3,7 +3,6 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
-
 Public Class IEPCForm
 
     Public JobDir As String = ""
@@ -39,6 +38,8 @@ Public Class IEPCForm
         SetDragEntries(inputData.DragCurves)
         _iepcFilePath = file
 
+        LbStatus.Text = ""
+        _changed = False
     End Sub
 
     Private Sub SetFirstVoltageLevel(voltageLevel As IElectricMotorVoltageLevel)
@@ -78,38 +79,32 @@ Public Class IEPCForm
     End Sub
 
     Private Sub SetPowerMapEntries(powerMapListView As ListView, entries As IList(Of IElectricMotorPowerMap))
-
         For Each entry As IElectricMotorPowerMap In entries
             Dim listEntry = CreateListViewItem(entry.Gear, entry.PowerMap.Source)
             powerMapListView.Items.Add(listEntry)
         Next
-
     End Sub
 
     Private Function CreateListViewItem(axleNumber As Integer, filepath As String) As ListViewItem
-
         Dim retVal As New ListViewItem
         retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
         retVal.SubItems.Add(filepath)
         Return retVal
-
     End Function
 
     Private Function CreateListViewItem(ratio As Double, outputShaftTorque As NewtonMeter, outputShaftSpeed As PerSecond) As ListViewItem
-
         Dim retVal As New ListViewItem
         retVal.SubItems(0).Text = ratio.ToGUIFormat()
         retVal.SubItems.Add(outputShaftTorque?.ToGUIFormat())
         retVal.SubItems.Add(outputShaftSpeed?.ToGUIFormat())
         Return retVal
-
     End Function
 
     Private Function CreateListViewItem(ratio As Double, outputShaftTorque As Double?, outputShaftSpeed As Double?) As ListViewItem
 
         Dim retVal As New ListViewItem
         retVal.SubItems(0).Text = ratio.ToGUIFormat()
-        If outputShaftSpeed.HasValue Then
+        If outputShaftTorque.HasValue Then
             retVal.SubItems.Add(outputShaftTorque.Value.ToGUIFormat())
         End If
         If outputShaftSpeed.HasValue Then
@@ -124,13 +119,11 @@ Public Class IEPCForm
     End Sub
 
     Private Sub AddListViewItem(dialog As IEPCInputDialog, listView As ListView)
-
-        If (dialog.ShowDialog() = DialogResult.OK) Then
+        If dialog.ShowDialog() = DialogResult.OK Then
             Dim gear = Convert.ToInt32(dialog.tbGear.Text)
             Dim filePath = dialog.tbInputFile.Text
             listView.Items.Add(CreateListViewItem(gear, filePath))
-            
-            dialog.Clear()
+            Change()
         End If
     End Sub
 
@@ -149,28 +142,31 @@ Public Class IEPCForm
             Exit Sub
         Else
             listView.Items(listView.Items.Count - 1).Remove()
+            Change()
         End If
     End Sub
 
     Private Sub btAddGear_Click(sender As Object, e As EventArgs) Handles btAddGear.Click
+        _gearDlg.Clear()
 
         If (_gearDlg.ShowDialog() = DialogResult.OK) Then
             Dim ratio = Convert.ToDouble(_gearDlg.tbRatio.Text)
             Dim outputShaftTorque As Double?
             Dim outputShaftSpeed As Double?
             If _gearDlg.tbMaxOutShaftTorque.Text.Length > 0 Then
-                outputShaftTorque = Convert.ToDouble(_gearDlg.tbMaxOutShaftTorque.Text)
+                outputShaftTorque = _gearDlg.tbMaxOutShaftTorque.Text.ToDouble(0)
             End If
             If _gearDlg.tbMaxOutShaftSpeed.Text.Length > 0 Then
-                outputShaftSpeed = Convert.ToDouble(_gearDlg.tbMaxOutShaftSpeed.Text)
+                outputShaftSpeed = _gearDlg.tbMaxOutShaftTorque.Text.ToDouble(0)
             End If
+
             Dim entry = CreateListViewItem(ratio, outputShaftTorque, outputShaftSpeed)
             _lvGear.Items.Add(entry)
             AddPowerMapEntry(lvPowerMap1, _lvGear.Items.Count)
             AddPowerMapEntry(lvPowerMap2, _lvGear.Items.Count)
-            _gearDlg.Clear()
+        
+            Change()
         End If
-
     End Sub
 
     Private Sub AddPowerMapEntry(powerMapListView As ListView, gearIndex As Integer)
@@ -178,9 +174,7 @@ Public Class IEPCForm
         retVal.SubItems(0).Text = gearIndex.ToString()
         powerMapListView.Items.Add(retVal)
     End Sub
-
-
-
+    
     Private Sub lvGear_DoubleClick(sender As Object, e As EventArgs) Handles lvGear.DoubleClick
 
         If lvGear.SelectedItems.Count = 0 Then Exit Sub
@@ -199,8 +193,8 @@ Public Class IEPCForm
         End If
 
     End Sub
-
-    Private Sub lvDragCurve_DoubleClick(sender As Object, e As EventArgs) Handles lvDragCurve.DoubleClick
+    
+    Private Sub lvDragCurve_DoubleClick(sender As Object, e As EventArgs) Handles lvDragCurve.DoubleClick 
         EditEntry(_dragCurveDlg, lvDragCurve)
     End Sub
 
@@ -208,7 +202,7 @@ Public Class IEPCForm
         EditEntry(_powerMapDlg, lvPowerMap1)
     End Sub
 
-    Private Sub lvPowerMap2_DoubleClick(sender As Object, e As EventArgs) Handles lvPowerMap2.DoubleClick
+    Private Sub lvPowerMap2_DoubleClick(sender As Object, e As EventArgs) Handles lvPowerMap2.DoubleClick 
         EditEntry(_powerMapDlg, lvPowerMap2)
     End Sub
 
@@ -258,7 +252,7 @@ Public Class IEPCForm
     
     #Region "Toolbar"
 
-    Private Sub NewIEPC()
+    Public Sub NewIEPC()
         tbModel.Text = ""
         tbInertia.Text = ""
         cbDifferentialIncluded.Checked = False
@@ -288,6 +282,7 @@ Public Class IEPCForm
         
         RemoveAllListViewItems(lvDragCurve)
         RemoveAllListViewItems(lvGear)
+        LbStatus.Text = ""
 
         _changed = False
     End Sub
@@ -342,9 +337,31 @@ Public Class IEPCForm
         End If
     End Sub
     
+    #End Region
+    
+    #Region "Save Methods"
+    
+    Private Function ChangeCheckCancel() As Boolean
+        If _changed Then
+            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+                Case MsgBoxResult.Yes
+                    Return Not SaveOrSaveAs(False)
+                Case MsgBoxResult.Cancel
+                    Return True
+                Case Else
+                    _changed = False
+                    Return False
+            End Select
+        Else
+            Return False
+        End If
+    End Function
+    
     Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
+        If ValidateData() = False Then _
+            Return False
+
         If _iepcFilePath = "" Or saveAs Then
-            
             If IEPCFileBrowser.SaveDialog(_iepcFilePath) Then
                 _iepcFilePath = IEPCFileBrowser.Files(0)
             Else
@@ -352,37 +369,6 @@ Public Class IEPCForm
             End If
         End If
         Return SaveIEPCToFile(_iepcFilePath)
-    End Function
-    
-    Private Function ValidateData() As IEPCInputData
-
-        If ValidateModel() = False Then Return Nothing
-        If ValidateInertia() = False Then Return Nothing
-        If ValidateNrDesignTypeWheelMotorMeasured() = False Then Return Nothing
-        If ValidateOverloadRecoveryFactor() = False Then Return Nothing
-
-        If ValidateVoltage(tbVoltage1) = False Then Return Nothing
-        If ValidateContinuousTorque(tbContinousTorque1) = False Then Return Nothing
-        If ValidateContinuousTorqueSpeed(tbContinousTorqueSpeed1) = False Then Return Nothing
-        If ValidateOverloadTime(tbOverloadTime1) = False Then Return Nothing
-        If ValidateOverloadTorque(tbOverloadTorque1) = False Then Return Nothing
-        If ValidateOverloadTorqueSpeed(tboverloadTorqueSpeed1) = False Then Return Nothing
-        
-        If ValidateVoltage(tbVoltage2) = False Then Return Nothing
-        If ValidateContinuousTorque(tbContinousTorque2) = False Then Return Nothing
-        If ValidateContinuousTorqueSpeed(tbContinousTorqueSpeed2) = False Then Return Nothing
-        If ValidateOverloadTime(tbOverloadTime2) = False Then Return Nothing
-        If ValidateOverloadTorque(tbOverloadTorque2) = False Then Return Nothing
-        If ValidateOverloadTorqueSpeed(tboverloadTorqueSpeed2) = False Then Return Nothing
-
-        If ValidateAmountOfEntries() = False Then Return Nothing
-        If ValidateFullLoadCurve1() = False Then Return Nothing
-        If ValidateFullLoadCurve2() = False Then Return Nothing
-
-        If ValidatePowerMapEntries(_lvPowerMap1) = False Then Return Nothing
-        If ValidatePowerMapEntries(_lvPowerMap2) = False Then Return Nothing
-
-        Return Nothing
     End Function
     
     Private Function SaveIEPCToFile(ByVal file As String) As Boolean
@@ -404,67 +390,64 @@ Public Class IEPCForm
         iepc.SetDragCurveEntries(lvDragCurve)
 
 
-        If Not iepc.SaveFile(file) Then
-            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
-            Return False
-        End If
+        'If Not iepc.SaveFile(file) Then
+        '    MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+        '    Return False
+        'End If
         
         _changed = False
+        LbStatus.Text = ""
 
         Return True
     End Function
 
-    Private Sub ShowErrorMessageBox(variableName As string, textbox As TextBox)
-        If Not variableName = Nothing Then
-            MsgBox($"Invalid input for {variableName}")
-            textbox.Focus()
-            Return
-        End If
-    End Sub
 
-    Private Sub ShowErrorMessageBox(variableName As string)
-        If Not variableName = Nothing Then
-            MsgBox($"Invalid input for {variableName}")
-            Return
-        End If
-    End Sub
-    
-#End Region
+    #End Region
 
-
-    Private Function ChangeCheckCancel() As Boolean
-
-        If _changed Then
-            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
-                Case MsgBoxResult.Yes
-                    'Return Not SaveOrSaveAs(False)
-                Case MsgBoxResult.Cancel
-                    Return True
-                Case Else
-                    _changed = False
-                    Return False
-            End Select
-        Else
-            Return False
-        End If
-
-    End Function
 
 
     Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
-        'ValidateData()
         SaveOrSaveAs(true)
-
     End Sub
 
     Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
         Close()
-        _changed = False
     End Sub
 
 
     #Region "Validate Input"
-     
+
+    Private Function ValidateData() As Boolean
+
+        If ValidateModel() = False Then Return False
+        If ValidateInertia() = False Then Return False
+        If ValidateNrDesignTypeWheelMotorMeasured() = False Then Return False
+        If ValidateOverloadRecoveryFactor() = False Then Return False
+
+        If ValidateVoltage(tbVoltage1) = False Then Return False
+        If ValidateContinuousTorque(tbContinousTorque1) = False Then Return False
+        If ValidateContinuousTorqueSpeed(tbContinousTorqueSpeed1) = False Then Return False
+        If ValidateOverloadTime(tbOverloadTime1) = False Then Return False
+        If ValidateOverloadTorque(tbOverloadTorque1) = False Then Return False
+        If ValidateOverloadTorqueSpeed(tboverloadTorqueSpeed1) = False Then Return False
+        
+        If ValidateVoltage(tbVoltage2) = False Then Return False
+        If ValidateContinuousTorque(tbContinousTorque2) = False Then Return False
+        If ValidateContinuousTorqueSpeed(tbContinousTorqueSpeed2) = False Then Return False
+        If ValidateOverloadTime(tbOverloadTime2) = False Then Return False
+        If ValidateOverloadTorque(tbOverloadTorque2) = False Then Return False
+        If ValidateOverloadTorqueSpeed(tboverloadTorqueSpeed2) = False Then Return False
+
+        If ValidateAmountOfEntries() = False Then Return False
+        If ValidateFullLoadCurve1() = False Then Return False
+        If ValidateFullLoadCurve2() = False Then Return False
+
+        If ValidatePowerMapEntries(_lvPowerMap1) = False Then Return False
+        If ValidatePowerMapEntries(_lvPowerMap2) = False Then Return False
+
+        Return True
+    End Function
+    
     Private Function ValidateModel() As Boolean
         If String.IsNullOrEmpty(tbModel.Text) Then
             ShowErrorMessageBox("Model", tbModel)
@@ -552,12 +535,12 @@ Public Class IEPCForm
         End If
 
         If Not _lvPowerMap1.Items.Count = _lvGear.Items.Count Then
-            ShowErrorMessageBox("Invalid number of Power Map entries at First Voltage Level")
+            ShowErrorMessageBox("Invalid number of Power Map entries at Voltage Level Low")
             Return False
         End If
         
         If Not _lvPowerMap2.Items.Count = _lvGear.Items.Count Then
-            ShowErrorMessageBox("Invalid number of Power Map entries at Secondary Voltage Level")
+            ShowErrorMessageBox("Invalid number of Power Map entries at Voltage Level High")
             Return False
         End If
 
@@ -576,14 +559,14 @@ Public Class IEPCForm
 
     Private Function ValidateFullLoadCurve1() As Boolean
         If Not File.Exists(tbFLCurve1.Text) Then
-            ShowErrorMessageBox("Invalid input no valid file path given", tbFLCurve1)
+            ShowErrorMessageBox("No valid file path given", tbFLCurve1, False)
             Return False
         End If
 		
         Dim fileExtension = new FileInfo(tbFLCurve1.Text).Extension
-        If Not IEPCFLCFileBrowser.Extensions.First() = fileExtension Then
+        If Not $".{IEPCFLCFileBrowser.Extensions.First()}" = fileExtension Then
             ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong extension",
-                                tbFLCurve1)
+                                tbFLCurve1, False)
             Return False		
         End If
         Return True
@@ -591,14 +574,14 @@ Public Class IEPCForm
 
     Private Function ValidateFullLoadCurve2() As Boolean
         If Not File.Exists(tbFLCurve2.Text) Then
-            ShowErrorMessageBox("Invalid input no valid file path given", tbFLCurve2)
+            ShowErrorMessageBox("Invalid input no valid file path given", tbFLCurve2, False)
             Return False
         End If
 		
         Dim fileExtension = new FileInfo(tbFLCurve2.Text).Extension
-        If Not IEPCFLCFileBrowser.Extensions.First() = fileExtension Then
+        If Not $".{IEPCFLCFileBrowser.Extensions.First()}" = fileExtension Then
             ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong file extension",
-                                tbFLCurve2)
+                                tbFLCurve2, False)
             Return False		
         End If
         Return True
@@ -608,13 +591,13 @@ Public Class IEPCForm
 
         For Each entry As ListViewItem In powerMap.Items
             If entry.SubItems.Count = 1 Then
-                MsgBox("Invalid input missing Power Map files")
-                Return false
+                ShowErrorMessageBox("Invalid input missing Power Map files")
+                Return False
             End If
 
             If entry.SubItems.Count = 2 Then
                 Dim fileExtension = new FileInfo(entry.SubItems(1).Text).Extension
-                If Not IEPCPowerMapFileBrowser.Extensions.First() = fileExtension
+                If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension
                     ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
                     Return false
                 End If
@@ -624,7 +607,24 @@ Public Class IEPCForm
 
     End Function
 
+    Private Sub ShowErrorMessageBox(message As string, textbox As TextBox, Optional defaultMessage As Boolean = True)
+        If Not message = Nothing And defaultMessage Then
+            MsgBox($"Invalid input for {message}")
+            textbox.Focus()
+            Return
+        Else 
+            MsgBox($"{message}")
+            textbox.Focus()
+            Return
+        End If
+    End Sub
 
+    Private Sub ShowErrorMessageBox(message As string)
+        If Not message = Nothing Then
+            MsgBox($"{message}")
+            Return
+        End If
+    End Sub
     
     Private Function ValidDoubleValue(value As string) As Boolean
         If String.IsNullOrEmpty(value)
@@ -634,11 +634,105 @@ Public Class IEPCForm
     End Function
    
 #End Region
+    
+#Region "Track changes"
+
+    Private Sub Change()
+        If Not _changed Then
+            LbStatus.Text = "Unsaved changes in current file"
+            _changed = True
+        End If
+    End Sub
+
+    Private Sub tbModel_TextChanged(sender As Object, e As EventArgs) Handles tbModel.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbInertia_TextChanged(sender As Object, e As EventArgs) Handles tbInertia.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbThermalOverload_TextChanged(sender As Object, e As EventArgs) Handles tbThermalOverload.TextChanged
+        Change()
+    End Sub
+
+    Private Sub cbDifferentialIncluded_CheckedChanged(sender As Object, e As EventArgs) Handles cbDifferentialIncluded.CheckedChanged
+        Change()
+    End Sub
 
     Private Sub cbDesignTypeWheelMotor_CheckedChanged(sender As Object, e As EventArgs) Handles cbDesignTypeWheelMotor.CheckedChanged
         tbNumberOfDesignTypeWheelMotor.Enabled = cbDesignTypeWheelMotor.Checked
         If tbNumberOfDesignTypeWheelMotor.Enabled = False Then _
-            tbNumberOfDesignTypeWheelMotor.Text = ""
+            tbNumberOfDesignTypeWheelMotor.Text = "0"
+        Change()
+    End Sub
+
+    Private Sub tbNumberOfDesignTypeWheelMotor_TextChanged(sender As Object, e As EventArgs) Handles tbNumberOfDesignTypeWheelMotor.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbVoltage1_TextChanged(sender As Object, e As EventArgs) Handles tbVoltage1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbContinousTorque1_TextChanged(sender As Object, e As EventArgs) Handles tbContinousTorque1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbContinousTorqueSpeed1_TextChanged(sender As Object, e As EventArgs) Handles tbContinousTorqueSpeed1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbOverloadTime1_TextChanged(sender As Object, e As EventArgs) Handles tbOverloadTime1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbOverloadTorque1_TextChanged(sender As Object, e As EventArgs) Handles tbOverloadTorque1.TextChanged
+        Change()
     End Sub
     
+    Private Sub tboverloadTorqueSpeed1_TextChanged(sender As Object, e As EventArgs) Handles tboverloadTorqueSpeed1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbFLCurve1_TextChanged(sender As Object, e As EventArgs) Handles tbFLCurve1.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbVoltage2_TextChanged(sender As Object, e As EventArgs) Handles tbVoltage2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbContinousTorque2_TextChanged(sender As Object, e As EventArgs) Handles tbContinousTorque2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbContinousTorqueSpeed2_TextChanged(sender As Object, e As EventArgs) Handles tbContinousTorqueSpeed2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbOverloadTime2_TextChanged(sender As Object, e As EventArgs) Handles tbOverloadTime2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbOverloadTorque2_TextChanged(sender As Object, e As EventArgs) Handles tbOverloadTorque2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbOverloadTorqueSpeed2_TextChanged(sender As Object, e As EventArgs) Handles tbOverloadTorqueSpeed2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub tbFLCurve2_TextChanged(sender As Object, e As EventArgs) Handles tbFLCurve2.TextChanged
+        Change()
+    End Sub
+
+    Private Sub IEPCForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
+            e.Cancel = ChangeCheckCancel()
+        End If
+    End Sub
+
+#End Region
+
 End Class

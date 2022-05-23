@@ -25,7 +25,7 @@ Public Class IEPCInputDialog
 	Public Sub Clear()
 		_tbGear.Text = ""
 		_tbInputFile.Text = ""
-		tbGear.Focus()
+		_tbGear.Focus()
 	End Sub
 
 
@@ -35,37 +35,37 @@ Public Class IEPCInputDialog
 		Dim gear As Integer
 		If Not Integer.TryParse(tbGear.Text, gear) Then
 			MsgBox("Invalid input for Gear")
-			tbGear.Focus()
+			_tbGear.Focus()
 			Return
 		End If
 
 		If gear < 0 Then
 			MsgBox("Invalid input for Gear")
-			tbGear.Focus()
+			_tbGear.Focus()
 			Return
 		End If
 
 		If tbInputFile.Text.Length = 0 Then
 			MsgBox("Invalid input no file path given")
-			tbGear.Focus()
+			_tbGear.Focus()
 			Return
 		End If
 
 	    If Not File.Exists(tbInputFile.Text) Then
 	        MsgBox("Invalid input no valid file path given")
-	        tbInputFile.Focus()
+	        _tbInputFile.Focus()
 			Return
 	    End If
 		
 		Dim fileExtension = new FileInfo(tbInputFile.Text).Extension
         Select Case _dialogType
             Case IEPCDialogType.DragCurveDialog
-				If Not IEPCDragFileBrowser.Extensions.First() = fileExtension Then
+				If Not $".{IEPCDragFileBrowser.Extensions.First()}"= fileExtension Then
 				    MsgBox($"The Selected Drag Curve file(.{IEPCDragFileBrowser.Extensions.First()}) has the wrong file extension")
 				    Return		
 				End If
 			Case IEPCDialogType.PowerMapDialog
-			    If Not IEPCPowerMapFileBrowser.Extensions.First() = fileExtension Then
+			    If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension Then
 			        MsgBox($"The Selected Power Map file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
 					Return
 			    End If
@@ -106,5 +106,10 @@ Public Class IEPCInputDialog
 				Text = "Power Map"
 		End Select
 	End Sub
+
+    Private Sub IEPCInputDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		Show()
+        _tbGear.Focus()
+    End Sub
 
 End Class

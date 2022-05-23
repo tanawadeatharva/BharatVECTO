@@ -72,6 +72,7 @@ Partial Class IEPCGearInputDialog
         Me.Label5.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label5.AutoSize = true
         Me.Label5.Location = New System.Drawing.Point(241, 8)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(16, 13)
         Me.Label5.TabIndex = 64
@@ -82,6 +83,7 @@ Partial Class IEPCGearInputDialog
         Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label4.AutoSize = true
         Me.Label4.Location = New System.Drawing.Point(234, 38)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(29, 13)
         Me.Label4.TabIndex = 64
@@ -92,6 +94,7 @@ Partial Class IEPCGearInputDialog
         Me.Label6.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label6.AutoSize = true
         Me.Label6.Location = New System.Drawing.Point(234, 69)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(30, 13)
         Me.Label6.TabIndex = 65
@@ -104,7 +107,6 @@ Partial Class IEPCGearInputDialog
         Me.tbRatio.Name = "tbRatio"
         Me.tbRatio.Size = New System.Drawing.Size(77, 20)
         Me.tbRatio.TabIndex = 8
-        Me.tbRatio.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbMaxOutShaftTorque
         '
@@ -113,7 +115,6 @@ Partial Class IEPCGearInputDialog
         Me.tbMaxOutShaftTorque.Name = "tbMaxOutShaftTorque"
         Me.tbMaxOutShaftTorque.Size = New System.Drawing.Size(77, 20)
         Me.tbMaxOutShaftTorque.TabIndex = 8
-        Me.tbMaxOutShaftTorque.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbMaxOutShaftSpeed
         '
@@ -122,7 +123,6 @@ Partial Class IEPCGearInputDialog
         Me.tbMaxOutShaftSpeed.Name = "tbMaxOutShaftSpeed"
         Me.tbMaxOutShaftSpeed.Size = New System.Drawing.Size(77, 20)
         Me.tbMaxOutShaftSpeed.TabIndex = 8
-        Me.tbMaxOutShaftSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label3
         '
@@ -197,12 +197,13 @@ Partial Class IEPCGearInputDialog
         Me.ClientSize = New System.Drawing.Size(295, 140)
         Me.Controls.Add(Me.TableLayoutPanel5)
         Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = false
         Me.MinimizeBox = false
         Me.Name = "IEPCGearInputDialog"
         Me.ShowInTaskbar = false
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "IEPCGearInputDialog"
+        Me.Text = "Gear"
         Me.TableLayoutPanel1.ResumeLayout(false)
         Me.TableLayoutPanel1.PerformLayout
         Me.TableLayoutPanel5.ResumeLayout(false)
