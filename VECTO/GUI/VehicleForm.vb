@@ -1513,19 +1513,16 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
-
 		Dim f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
-		'IEPCForm.IEPCFilePath = GetPath(_vehFile)
 
-
-		If Not IEPCForm.Visible Then
-			IEPCForm.Show()
+	    If Not IEPCForm.Visible Then
+			IEPCForm.NewIEPC()
+	        IEPCForm.Show()
 		Else
 			If IEPCForm.WindowState = FormWindowState.Minimized Then IEPCForm.WindowState = FormWindowState.Normal
 			IEPCForm.BringToFront()
 		End If
-		'f = "G:\_Work\VECTO\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
-		f = "E:\VECTO_DEV\EU_Code\fk_vecto-dev\VectoCore\VectoCoreTest\TestData\BatteryElectric\IEPC\GenericIEPC.viepc"
+
 		If Not Trim(f) = "" Then
 			Try
 				IEPCForm.ReadIEPCFile(f)
@@ -1533,36 +1530,6 @@ Public Class VehicleForm
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")
 			End Try
 		End If
-
-		''Thus Veh-file is returned
-		'ElectricMotorForm.JobDir = GetPath(_vehFile)
-		'ElectricMotorForm.AutoSendTo = Sub(file, vehicleForm)
-		'    If UCase(FileRepl(vehicleForm.tbElectricMotor.Text, JobDir)) <> UCase(file) Then _
-		'        vehicleForm.tbElectricMotor.Text = GetFilenameWithoutDirectory(file, JobDir)
-		'    VectoJobForm.UpdatePic()
-		'End Sub
-
-		'If Not Trim(f) = "" Then
-		'    If Not File.Exists(f) Then
-		'        MsgBox("File not found!")
-		'        Exit Sub
-		'    End If
-		'End If
-
-		'If Not ElectricMotorForm.Visible Then
-		'    ElectricMotorForm.Show()
-		'Else
-		'    If ElectricMotorForm.WindowState = FormWindowState.Minimized Then ElectricMotorForm.WindowState = FormWindowState.Normal
-		'    ElectricMotorForm.BringToFront()
-		'End If
-
-		'If Not Trim(f) = "" Then
-		'    Try
-		'        ElectricMotorForm.OpenElectricMachineFile(f)
-		'    Catch ex As Exception
-		'        MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
-		'    End Try
-		'End If
 	End Sub
 
 End Class

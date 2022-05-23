@@ -36,6 +36,7 @@
 	End Sub
 
 	Private Sub IEPCGearInputDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		Show()
 		_tbRatio.Focus()
 	End Sub
 End Class
