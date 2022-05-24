@@ -8,7 +8,7 @@
 
 	Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
 		If Not IsNumeric(_tbRatio.Text) Then
-			MsgBox("Invalid input for Gear")
+			MsgBox("Invalid input for Ratio")
 			_tbRatio.Focus()
 			Return
 		End If
