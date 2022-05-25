@@ -1,4 +1,4 @@
-﻿{
+{
   "Header": {
     "CreatedBy": " ()",
     "Date": "2016-10-13T08:55:18.2100810Z",
@@ -11,7 +11,7 @@
     "VehicleFile": "BatteryElectricVehicle.vveh",
     "GearboxFile": "Transmission\\AMT_12.vgbx",
     "TCU": "Transmission\\AMT_12.vgbx",
-    "Padd_electric": 0.0,
+    "Padd_electric": 3540.0,
 
     "VACC": "Truck.vacc",
 
@@ -30,7 +30,9 @@
       "UnderSpeed": 5.0
     },
     "Cycles": [
-      "LongHaul"
+      "MeasuredSpeed.vdri",
+	  "MeasuredSpeedGear.vdri",
+	  "PWheel.vdri"
     ]
   }
 }
