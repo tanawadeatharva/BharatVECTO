@@ -51,22 +51,8 @@
         "MaxSpeed": ""
       },
       {
-        "Ratio": 0.96,
+        "Ratio": 0.95,
         "LossMap": "Gear_6.vtlm",
-        "ShiftPolygon": "",
-        "MaxTorque": "",
-        "MaxSpeed": ""
-      },
-      {
-        "Ratio": 3.39,
-        "LossMap": "Gear_7.vtlm",
-        "ShiftPolygon": "",
-        "MaxTorque": "",
-        "MaxSpeed": ""
-      },
-      {
-        "Ratio": 2.65,
-        "LossMap": "Gear_8.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": "",
         "MaxSpeed": ""

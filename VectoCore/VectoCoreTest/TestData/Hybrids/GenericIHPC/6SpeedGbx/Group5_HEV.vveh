@@ -98,7 +98,7 @@
         "Ratio": 1.0,
         "MechanicalEfficiency": 1.0,
         "Position": "IHPC",
-        "MotorFile": "GenericIHPC_140kW_936Nm.vem"
+        "MotorFile": "IHPC-EM_6spd.vem"
       }
     ],
     "Battery": {
