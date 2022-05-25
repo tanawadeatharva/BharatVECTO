@@ -22,7 +22,7 @@ public class IHPCTest
 		//InitGraphWriter();
 	}
 
-	public const string IHPCTEst = @"TestData\Hybrids\GenericIHPC\IHPC Group 5.vecto";
+	public const string IHPCTEst = @"TestData\Hybrids\GenericIHPC\12SpeedGbx\IHPC Group 5.vecto";
 
 	[
 		TestCase(IHPCTEst, 0, TestName = "IHPC Group 5 DriveCycle LongHaul"),
