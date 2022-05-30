@@ -1,107 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using Ninject;
+﻿using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
-using TUGraz.VectoMockup.Factories;
 using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Ninject
 {
-	// ReSharper disable once InconsistentNaming
-	public class CIFMockupModule : AbstractNinjectModule
+    // ReSharper disable once InconsistentNaming
+    public class CIFMockupModule : AbstractNinjectModule
     {
         #region Overrides of NinjectModule
 
         public override void Load()
         {
 			Kernel.Bind<ICustomerInformationFileFactory>().To<MockupCustomerInformationFileFactory>()
-                .WhenInjectedExactlyInto<XMLDeclarationMockupReportFactory>().InSingletonScope();
+                .WhenInjectedExactlyInto<MockupReportFactory>().InSingletonScope();
 
         }
 
         #endregion
     }
 
-    public class MockupCustomerReport : IXMLCustomerReport, IXMLMockupReport
-    {
-        private readonly AbstractCustomerReport _originalCustomerReport;
-		private XNamespace Cif = AbstractCustomerReport.Cif;
-        public MockupCustomerReport(IXMLCustomerReport originalReport)
-        {
-            _originalCustomerReport = originalReport as AbstractCustomerReport;
-			_outputData = _originalCustomerReport.OutputDataType;
-            Results	= new XElement(Cif + XMLNames.Report_Results);
-        }
-
-		private XElement Results;
-		private readonly string _outputData;
-		private VectoRunData _modelData;
-
-		#region Implementation of IXMLCustomerReport
-
-        public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
-		{
-			_modelData = modelData;
-            _originalCustomerReport.Initialize(modelData, fuelModes);
-        }
-
-        public XDocument Report
-		{
-			get
-			{
-				var report = _originalCustomerReport.Report;
-				report.XPathSelectElements($"//*[name()='{XMLNames.Report_Results}']").Single().ReplaceWith(Results);
-
-				return report;
-
-
-            }
-		}
-
-		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
-        {
-            _originalCustomerReport.WriteResult(resultValue);
-        }
-
-        public void GenerateReport(XElement resultSignature)
-        {
-            _originalCustomerReport.GenerateReport(resultSignature);
-        }
-
-        #endregion
-
-		#region Implementation of IXMLMockupReport
-
-		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			Results.Add(MockupResultReader.GetCIFMockupResult(_outputData, resultValue, Cif + "Result", _modelData));
-		}
-
-		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
-		{
-			Results.AddFirst(new XElement(Cif + "Status", "success"));
-			Results.AddFirst(new XComment("Always prints success at the moment"));
-			Results.Add(MockupResultReader.GetCIFMockupResult(_outputData, resultValue, Cif + "Summary", _modelData));
-		}
-
-		#endregion
-    }
-
-    public class MockupCustomerInformationFileFactory : ICustomerInformationFileFactory
+	public class MockupCustomerInformationFileFactory : ICustomerInformationFileFactory
     {
         private readonly ICustomerInformationFileFactory _cifFactory;
 

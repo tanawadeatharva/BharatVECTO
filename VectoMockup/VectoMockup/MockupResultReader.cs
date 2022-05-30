@@ -38,6 +38,10 @@ namespace TUGraz.VectoMockup
 
 				//CIF
 				XMLNames.CIF_OutputDataType_ConventionalLorryOutputType,
+				
+
+				//VIF //TODO: seperate namespaces
+				"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1",
 			};
 
 			private static HashSet<string> hev = new HashSet<string>() {

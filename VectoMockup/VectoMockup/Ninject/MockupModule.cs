@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject.Modules;
-using TUGraz.VectoMockup.Factories;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoMockup.Reports;
+using TUGraz.VectoMockup.Simulation.RundataFactories;
 
 namespace TUGraz.VectoMockup.Ninject
 {
@@ -18,7 +19,7 @@ namespace TUGraz.VectoMockup.Ninject
 		public override void Load()
 		{
 			Rebind<IVectoRunDataFactoryFactory>().To<VectoMockUpRunDataFactoryFactory>();
-			Rebind<IXMLDeclarationReportFactory>().To<XMLDeclarationMockupReportFactory>();
+			Rebind<IXMLDeclarationReportFactory>().To<MockupReportFactory>();
 		}
 
 		#endregion

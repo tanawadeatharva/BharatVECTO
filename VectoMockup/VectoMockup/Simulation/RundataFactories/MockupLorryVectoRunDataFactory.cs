@@ -1,41 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 
-namespace TUGraz.VectoMockup.RunData
+namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
-    public class DeclarationModeMockupPrimaryBusVectoRunDataFactory : DeclarationModePrimaryBusVectoRunDataFactory
+    public class MockupLorryVectoRunDataFactory : DeclarationModeTruckVectoRunDataFactory
     {
-        public DeclarationModeMockupPrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
-            IDeclarationReport report) :
-            base(dataProvider, report)
-        {
-            if (report is IMockupReport mockupReport)
-            {
-                mockupReport.Mockup = true;
-            }
-        }
-    }
-    public class DeclarationModeMockupTruckVectoRunDataFactory : DeclarationModeTruckVectoRunDataFactory
-    {
-        public DeclarationModeMockupTruckVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
+        public MockupLorryVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report) : base(dataProvider, report, false)
         {
-            if (report is IMockupReport mockupReport)
-            {
-                mockupReport.Mockup = true;
-            }
+
         }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -73,7 +60,6 @@ namespace TUGraz.VectoMockup.RunData
                 fuels = null;
             }
             Report.InitializeReport(powertrainConfig, fuels);
-
         }
 
         protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
@@ -111,6 +97,7 @@ namespace TUGraz.VectoMockup.RunData
                     EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     GearboxData = CreateMockupGearboxData(vehicle),
                     AxleGearData = CreateMockupAxleGearData(vehicle),
+
                     JobType = InputDataProvider.JobInputData.JobType,
 
                 };
