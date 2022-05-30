@@ -74,6 +74,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			switch(InputDataProvider.JobInputData.JobType) {
 				case VectoSimulationJobType.ConventionalVehicle:
 				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.EngineOnlySimulation:
 					return GetConventionalVehicleRunData();
 				case VectoSimulationJobType.BatteryElectricVehicle:
@@ -520,6 +521,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var axlegearData = dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 					var tmpRunData = new VectoRunData() {
+						JobType = InputDataProvider.JobInputData.JobType,
 						GearboxData = new GearboxData() {
 							Type = vehicle.Components.GearboxInputData.Type,
 						}
@@ -567,7 +569,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var electricMachines =
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
-							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
+							vehicle.ElectricMotorTorqueLimits, averageVoltage, gearboxData.GearList) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var powertrainPosition = electricMachines.FirstOrDefault(e => e.Item1 != PowertrainPosition.GEN)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 					

@@ -60,7 +60,8 @@ namespace TUGraz.VectoCommon.InputData
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
 		IEPC_E,
-		IEPC_S
+		IEPC_S,
+		IHPC
 	}
 
 	public interface IHybridStrategyParameters

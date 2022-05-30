@@ -96,8 +96,10 @@ Partial Class MainForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripDrDnBtTools = New System.Windows.Forms.ToolStripDropDownButton()
         Me.GENEditorToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorParallelHybridVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.JobEditorIHPCVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobEditorEngineOnlyModeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EPTPJobEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VEHEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -120,7 +122,6 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
@@ -373,8 +374,8 @@ Partial Class MainForm
         Me.TabPgOptions.Controls.Add(Me.PanelOptAllg)
         Me.TabPgOptions.Location = New System.Drawing.Point(4, 22)
         Me.TabPgOptions.Name = "TabPgOptions"
-        Me.TabPgOptions.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
-        Me.TabPgOptions.Size = New System.Drawing.Size(1035, 302)
+        Me.TabPgOptions.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPgOptions.Size = New System.Drawing.Size(1034, 301)
         Me.TabPgOptions.TabIndex = 2
         Me.TabPgOptions.Text = "Options"
         Me.TabPgOptions.UseVisualStyleBackColor = true
@@ -720,7 +721,7 @@ Partial Class MainForm
         '
         'ToolStripDrDnBtTools
         '
-        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.JobEditorSerialHybridVehicleToolStripMenuItem, Me.JobEditorParallelHybridVehicleToolStripMenuItem, Me.JobEditorBatteryElectricVehicleToolStripMenuItem, Me.JobEditorEngineOnlyModeToolStripMenuItem, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.JobEditorSerialHybridVehicleToolStripMenuItem, Me.JobEditorParallelHybridVehicleToolStripMenuItem, Me.JobEditorBatteryElectricVehicleToolStripMenuItem, Me.JobEditorIHPCVehicleToolStripMenuItem, Me.JobEditorEngineOnlyModeToolStripMenuItem, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
         Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -733,6 +734,13 @@ Partial Class MainForm
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
         Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(262, 30)
         Me.GENEditorToolStripMenuItem1.Text = "Job Editor - Conventional Vehicle"
+        '
+        'JobEditorSerialHybridVehicleToolStripMenuItem
+        '
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Name = "JobEditorSerialHybridVehicleToolStripMenuItem"
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(262, 30)
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Text = "Job Editor - Serial Hybrid Vehicle"
         '
         'JobEditorParallelHybridVehicleToolStripMenuItem
         '
@@ -747,6 +755,13 @@ Partial Class MainForm
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Name = "JobEditorBatteryElectricVehicleToolStripMenuItem"
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Size = New System.Drawing.Size(262, 30)
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Text = "JobEditor - Battery Electric Vehicle"
+        '
+        'JobEditorIHPCVehicleToolStripMenuItem
+        '
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Name = "JobEditorIHPCVehicleToolStripMenuItem"
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Size = New System.Drawing.Size(262, 30)
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Text = "JobEditor - IHPC Vehicle"
         '
         'JobEditorEngineOnlyModeToolStripMenuItem
         '
@@ -881,13 +896,6 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-        '
-        'JobEditorSerialHybridVehicleToolStripMenuItem
-        '
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Name = "JobEditorSerialHybridVehicleToolStripMenuItem"
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(262, 30)
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Text = "Job Editor - Serial Hybrid Vehicle"
         '
         'MainForm
         '
@@ -1027,4 +1035,5 @@ End Sub
     Friend WithEvents JobEditorBatteryElectricVehicleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents JobEditorEngineOnlyModeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents JobEditorSerialHybridVehicleToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents JobEditorIHPCVehicleToolStripMenuItem As ToolStripMenuItem
 End Class

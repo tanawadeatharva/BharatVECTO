@@ -444,4 +444,43 @@
   <data name="IEPC_VoltageLevels" xml:space="preserve">
     <value>VoltageLevels</value>
   </data>
+  <data name="EM_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="EM_ContinuousTorqueSpeed" xml:space="preserve">
+    <value>ContinuousTorqueSpeed</value>
+  </data>
+  <data name="EM_DragCurve" xml:space="preserve">
+    <value>DragCurve</value>
+  </data>
+  <data name="EM_EfficiencyMap" xml:space="preserve">
+    <value>EfficiencyMap</value>
+  </data>
+  <data name="EM_FullLoadCurve" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+  <data name="EM_OverloadTime" xml:space="preserve">
+    <value>OverloadTime</value>
+  </data>
+  <data name="EM_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="EM_OverloadTorqueSpeed" xml:space="preserve">
+    <value>OverloadTorqueSpeed</value>
+  </data>
+  <data name="EM_ThermalOverloadRecoveryFactor" xml:space="preserve">
+    <value>ThermalOverloadRecoveryFactor</value>
+  </data>
+  <data name="EM_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="EM_VoltageLevels" xml:space="preserve">
+    <value>VoltageLevels</value>
+  </data>
+  <data name="JsonHeader_CreatedBy" xml:space="preserve">
+    <value>CreatedBy</value>
+  </data>
+  <data name="JsonHeader_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
 </root>

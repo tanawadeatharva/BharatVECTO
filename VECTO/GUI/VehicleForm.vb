@@ -1466,5 +1466,27 @@ Public Class VehicleForm
 	Private Sub cbEngineStopStart_CheckedChanged(sender As Object, e As EventArgs) Handles cbEngineStopStart.CheckedChanged
 		Change()
 	End Sub
+
+    Private Sub btIHPC_Click(sender As Object, e As EventArgs) Handles btIHPC.Click
+        Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
+
+        If Not IHPCForm.Visible Then
+            IHPCForm.ClearIHPC()
+            IHPCForm.Show()
+        Else
+            If IHPCForm.WindowState = FormWindowState.Minimized Then IHPCForm.WindowState = FormWindowState.Normal
+            IHPCForm.BringToFront()
+        End If
+
+        If Not Trim(f) = "" Then
+            Try
+                IHPCForm.ReadIHPCFile(f)
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")
+            End Try
+        End If
+
+
+    End Sub
 End Class
 

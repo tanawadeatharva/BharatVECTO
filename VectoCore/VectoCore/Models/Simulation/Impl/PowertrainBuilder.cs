@@ -426,13 +426,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			HybridController ctl;
 			SwitchableClutch clutch = null;
-			if (data.GearboxData.Type.ManualTransmission()) {
-				ctl = new HybridController(container, new HybridStrategy(data, container), es);
+			
+			if (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) {
+				ctl = new HybridController(container,new HybridStrategy(data, container), es);
 				clutch = new SwitchableClutch(container, data.EngineData);
 			} else {
 				ctl = new HybridController(container, new HybridStrategyAT(data, container), es);
 				new ATClutchInfo(container);
 			}
+		
 
 			// add engine before gearbox in the container, that gearbox can obtain it
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -469,6 +471,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
@@ -1206,7 +1209,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			var ctl = new SimpleHybridController(container, es) { Gearbox = gbx, Engine = engine };
 			var idleController = GetIdleController(data.PTO, engine, container);
-			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
+			var clutch = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) ? new SwitchableClutch(container, data.EngineData) : null;
 
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
@@ -1236,6 +1239,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
@@ -1475,6 +1479,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return new ATGearbox(container, strategy);
 				case GearboxType.APTN:
 					return new APTNGearbox(container, strategy);
+				case GearboxType.IHPC:
+					return new APTNGearbox(container, strategy);
 				default:
 					throw new ArgumentOutOfRangeException("Unknown Gearbox Type", container.RunData.GearboxData.Type.ToString());
 			}
@@ -1533,7 +1539,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						default: 
 							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
 					}
-
+				case GearboxType.IHPC:
+					switch (runData.JobType) {
+						case VectoSimulationJobType.IHPC:
+							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+							return new AMTShiftStrategyOptimized(container);
+						default:
+							throw new ArgumentException("IHPC Gearbox is only applicable on hybrid vehicle of type IHPC.");
+					}
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "VECTO can not automatically derive shift strategy for GearboxType.");
 			}
