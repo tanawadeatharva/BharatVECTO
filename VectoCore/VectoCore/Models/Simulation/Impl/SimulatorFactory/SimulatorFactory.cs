@@ -72,11 +72,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected bool _simulate = true;
 
 		//TODO: set with preprocessor directive remove from interface
-#if MOCKUPDEBUG
-		public static bool MockUpRun { get; set; } = true;
-#else
-		public static bool MockUpRun { get; set; } = false;
-#endif
+//#if MOCKUPDEBUG
+//		public static bool MockUpRun { get; set; } = true;
+//#else
+//		public static bool MockUpRun { get; set; } = false;
+//#endif
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		}
 
 
-		private IVectoRun GetExemptedRun(VectoRunData data)
+		protected virtual IVectoRun GetExemptedRun(VectoRunData data)
 		{
 			if (data.Report != null) {
 				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
@@ -187,15 +187,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			});
 		}
 
-		private IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
+		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
 		{
 			var addReportResult = PrepareReport(data);
-            if (MockUpRun)
-            {
-                return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-                    new ModalDataContainer(data, ReportWriter, addReportResult))
-                { RunData = data });
-            }
+            //if (MockUpRun)
+            //{
+            //    return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
+            //        new ModalDataContainer(data, ReportWriter, addReportResult))
+            //    { RunData = data });
+            //}
             if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			return run;
 		}
 
-		private static Action<ModalDataContainer> PrepareReport(VectoRunData data)
+		protected static Action<ModalDataContainer> PrepareReport(VectoRunData data)
 		{
 			if (data.Report != null) {
 				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);

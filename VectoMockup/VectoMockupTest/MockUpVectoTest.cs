@@ -1,10 +1,13 @@
 ﻿using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -75,6 +78,10 @@ namespace VectoMockupTest
 		protected const string PEV_IEPC_PrimaryBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\IEPC_primaryBus.xml";
 
+		protected const string Conventional_InterimBus =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml";
+
+
 
 		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
 
@@ -97,7 +104,7 @@ namespace VectoMockupTest
 		[SetUp]
 		public void Setup()
 		{
-			SimulatorFactory.MockUpRun = true;
+			//SimulatorFactory.MockUpRun = true;
 
 		}
 
@@ -126,10 +133,10 @@ namespace VectoMockupTest
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
 		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
-		[NonParallelizable]
+		//[NonParallelizable]
 		public void HeavyLorryMockupTest(string fileName, bool mockup = true)
 		{
-			SimulatorFactory.MockUpRun = mockup;
+			
 			var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -150,7 +157,6 @@ namespace VectoMockupTest
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
 		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
-			SimulatorFactory.MockUpRun = mockup;
 			var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
@@ -162,19 +168,70 @@ namespace VectoMockupTest
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter);
+			CheckFileExists(fileWriter, checkCif:false, checkVif:true);
+		}
+
+		[TestCase(Conventional_InterimBus, TestName = "ConventionalInterimBus")]
+		public void InterimBusMockupTest(string fileName)
+		{
+			//SimulatorFactory.MockUpRun = mockup;
+			var inputProvider = _inputDataReader.Create(fileName);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+			CheckFileExists(fileWriter, checkCif: false, checkVif: true);
+
+
 		}
 
 
-		private static void CheckFileExists(FileOutputWriter fileWriter)
+		[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
+		public void CompletedBusMockupTest(string fileName)
 		{
-			if (!File.Exists(fileWriter.XMLCustomerReportName)) {
+			//SimulatorFactory.MockUpRun = mockup;
+			XMLDeclarationVIFInputData input = null;
+			var fileWriter = new FileOutputWriter(fileName);
+			using (var reader = XmlReader.Create(fileName))
+			{
+				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistageBusInputDataProvider, null);
+				fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
+			}
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+			CheckFileExists(fileWriter, checkCif: false, checkVif: true);
+
+
+		}
+
+
+		private static void CheckFileExists(FileOutputWriter fileWriter, bool checkMrf = true, bool checkCif = true, bool checkVif = false)
+		{
+			if (checkCif && !File.Exists(fileWriter.XMLCustomerReportName)) {
 				TestContext.WriteLine(fileWriter.XMLCustomerReportName);
 				Assert.Fail();
 			}
-			if (!File.Exists(fileWriter.XMLFullReportName))
+			if (checkMrf && !File.Exists(fileWriter.XMLFullReportName))
 			{
 				TestContext.WriteLine(fileWriter.XMLFullReportName);
+				Assert.Fail();
+			}
+
+			if (checkVif && !File.Exists(fileWriter.XMLPrimaryVehicleReportName)) {
+				TestContext.WriteLine(fileWriter.XMLPrimaryVehicleReportName);
 				Assert.Fail();
 			}
 		}
