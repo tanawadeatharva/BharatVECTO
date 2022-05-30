@@ -12,13 +12,16 @@ Public Class IHPCForm
     Private _flCurveFilePath1 as String
     Private _flCurveFilePath2 as String
 
-
 #Region "Set JSON Data"
 
     Public Sub ReadIHPCFile(file As String)
 
         Dim inputProvider = New JSONComponentInputData(file, Nothing)
         Dim ihpcData = inputProvider.ElectricMachines.Entries.First().ElectricMachine
+
+        If IsNothing(ihpcData) Then
+            Return
+        End If
 
         tbModel.Text = ihpcData.Model
         tbInertia.Text = ihpcData.Inertia.ToGUIFormat()
@@ -360,7 +363,7 @@ Public Class IHPCForm
             Return False
         End If
 
-        Dim fileExtension = new FileInfo(tbFLCurve1.Text).Extension
+        Dim fileExtension = new FileInfo(tbDragCurve.Text).Extension
         If Not $".{IHPCDragCurveFileBrowser.Extensions.First()}" = fileExtension Then
             ShowErrorMessageBox($"The selected Drag Curve file(.{IHPCDragCurveFileBrowser.Extensions.First()}) has the wrong extension",
                                 tbDragCurve, False)

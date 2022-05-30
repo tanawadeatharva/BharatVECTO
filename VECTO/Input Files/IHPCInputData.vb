@@ -17,6 +17,10 @@ Public Class IHPCInputData
     Private _overloadRecoveryFactor As Double
     private _filePath As String
 
+    Public Sub New ()
+        _voltageLevels = New List(Of IElectricMotorVoltageLevel)()
+    End Sub
+
     Public Function SaveFile(filePath As String) As Boolean
         _filePath = filePath
 
