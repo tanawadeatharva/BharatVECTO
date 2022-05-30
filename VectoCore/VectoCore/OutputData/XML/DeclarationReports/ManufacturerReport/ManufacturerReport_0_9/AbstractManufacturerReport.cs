@@ -16,11 +16,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9
 {
 
-	internal interface IXMLMockupReport
-	{
-		void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue);
-		void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue);
-	}
+
 	internal abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
         protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
