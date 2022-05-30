@@ -161,6 +161,9 @@ Public Class MainForm
         PropulsionTorqueLimitFileBrowser = New FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
+        IHPCPowerMapFileBrowser = new FileBrowser("vemo")
+        IHPCFullLoadCurveFileBrowser = new FileBrowser("vemp")
+        IHPCDragCurveFileBrowser = new FileBrowser("vemd")
 
         '-------------------------------------------------------
         TextFileBrowser.Extensions = New String() {"txt"}
@@ -202,6 +205,10 @@ Public Class MainForm
         PropulsionTorqueLimitFileBrowser.Extensions = New String() {"vtqp"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
+
+        IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
+        IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
+        IHPCDragCurveFileBrowser.Extensions = New String(){"vemd"}
         
         IEPCFileBrowser.Extensions = New String () {"viepc"}
         IEPCFLCFileBrowser.Extensions = New String() {"viepcp"}
@@ -2191,6 +2198,10 @@ lbFound:
     End Sub
     Private Sub JobEditorIEPC_E_VehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_E_VehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
+    End Sub
+
+    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_S_VehicleToolStripMenuItem.Click

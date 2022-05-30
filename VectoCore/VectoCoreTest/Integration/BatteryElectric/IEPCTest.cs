@@ -172,16 +172,24 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 			factory.SumData = sumContainer;
 			
-			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+			if (cycleIdx < 0) {
+				jobContainer.AddRuns(factory);
+				jobContainer.Execute();
+				jobContainer.WaitFinished();
+				Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+			} else {
+				var run = factory.SimulationRuns().ToArray()[cycleIdx];
 
-			Assert.NotNull(run);
+				Assert.NotNull(run);
 
-			var pt = run.GetContainer();
+				var pt = run.GetContainer();
 
-			Assert.NotNull(pt);
+				Assert.NotNull(pt);
 
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
+				run.Run();
+				Assert.IsTrue(run.FinishedWithoutErrors);
+
+			}
 		}
 
 	}

@@ -73,35 +73,62 @@ public class JSONFileWriter : IOutputFileWriter
 		var header = GetHeader(ElectricMotorFormatVersion);
 
 		var body = new Dictionary<string, object> {
-			{ "SavedInDeclMode", declMode },
-			{ "Model", electricMachine.Model },
-			{ "Inertia", electricMachine.Inertia.Value() },
-			{ "ThermalOverloadRecoveryFactor", electricMachine.OverloadRecoveryFactor }
+			{ JsonKeys.SavedInDeclMode, declMode },
+			{ JsonKeys.Component_Model, electricMachine.Model },
+			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
 		};
 
-		var vlevels = new List<Dictionary<string, object>>();
-		foreach (var entry in electricMachine.VoltageLevels) {
-			var vlevel = new Dictionary<string, object> {
-				{ "Voltage", entry.VoltageLevel.Value() },
-				{ "ContinuousTorque", entry.ContinuousTorque.Value() },
-				{ "ContinuousTorqueSpeed", entry.ContinuousTorqueSpeed.AsRPM },
-				{ "OverloadTorque", entry.OverloadTorque.Value() },
-				{ "OverloadTorqueSpeed", entry.OverloadTestSpeed.AsRPM },
-				{ "OverloadTime", entry.OverloadTime.Value() },
-				{ "FullLoadCurve", GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)) }
-			};
-			var powerMaps = new Dictionary<int, object>();
-			foreach (var pMap in entry.PowerMap) {
-				powerMaps.Add(pMap.Gear, GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
-			}
-			vlevel.Add("EfficiencyMap", powerMaps); //PowerMap
-			vlevels.Add(vlevel);
-		}
-		body.Add("DragCurve", GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
+		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
+		body.Add(JsonKeys.EM_DragCurve, GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename)));
 
-		body.Add("VoltageLevels", vlevels);
+		body.Add(JsonKeys.EM_VoltageLevels, vlevels);
 		WriteFile(header, body, filename);
 	}
+	
+	public void SaveIHPC(IElectricMotorEngineeringInputData electricMachine, string filename, bool declMode)
+	{
+		var header = GetHeader(ElectricMotorFormatVersion);
+		
+		var body = new Dictionary<string, object> {
+			{ JsonKeys.SavedInDeclMode, declMode },
+			{ JsonKeys.Component_Model, electricMachine.Model },
+			{ JsonKeys.EM_DragCurve,  GetRelativePath(electricMachine.DragCurve.Source, Path.GetDirectoryName(filename))},
+			{ JsonKeys.Engine_Inertia, electricMachine.Inertia.Value() },
+			{ JsonKeys.EM_ThermalOverloadRecoveryFactor, electricMachine.OverloadRecoveryFactor }
+		};
+		
+		var vlevels = GetVoltageLevelEntries(electricMachine.VoltageLevels, filename);
+		body.Add(JsonKeys.EM_VoltageLevels, vlevels);
+		WriteFile(header, body, filename);
+	}
+	
+	private List<Dictionary<string, object>> GetVoltageLevelEntries(IList<IElectricMotorVoltageLevel> voltageLevels, string filename)
+	{
+		var vlevels = new List<Dictionary<string, object>>();
+		foreach (var entry in voltageLevels)
+		{
+			var vlevel = new Dictionary<string, object> {
+				{ JsonKeys.EM_Voltage, entry.VoltageLevel.Value() },
+				{ JsonKeys.EM_ContinuousTorque, entry.ContinuousTorque.Value() },
+				{ JsonKeys.EM_ContinuousTorqueSpeed, entry.ContinuousTorqueSpeed.AsRPM },
+				{ JsonKeys.EM_OverloadTorque, entry.OverloadTorque.Value() },
+				{ JsonKeys.EM_OverloadTorqueSpeed, entry.OverloadTestSpeed.AsRPM },
+				{ JsonKeys.EM_OverloadTime, entry.OverloadTime.Value() },
+				{ JsonKeys.EM_FullLoadCurve, GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)) }
+			};
+			var powerMaps = new Dictionary<int, object>();
+			foreach (var pMap in entry.PowerMap)
+			{
+				powerMaps.Add(pMap.Gear, GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
+			}
+			vlevel.Add(JsonKeys.EM_EfficiencyMap, powerMaps); //PowerMap
+			vlevels.Add(vlevel);
+		}
+		
+		return vlevels;
+	}
+
 
 	public void SaveIEPC(IIEPCEngineeringInputData iepc, string filename, bool declMode)
 	{
@@ -276,10 +303,10 @@ public class JSONFileWriter : IOutputFileWriter
 
 	protected Dictionary<string, object> GetHeader(int fileVersion) =>
 		new Dictionary<string, object> {
-			{ "CreatedBy", "" },
-			{ "Date", DateTime.Now.ToUniversalTime().ToString("o") },
-			{ "AppVersion", VECTOvers },
-			{ "FileVersion", fileVersion }
+			{ JsonKeys.JsonHeader_CreatedBy, "" },
+			{ JsonKeys.JsonHeader_Date , DateTime.Now.ToUniversalTime().ToString("o") },
+			{ JsonKeys.AppVersion, VECTOvers },
+			{ JsonKeys.JsonHeader_FileVersion, fileVersion }
 		};
 
 	public void SaveGearbox(IGearboxEngineeringInputData gbx, IAxleGearInputData axl,

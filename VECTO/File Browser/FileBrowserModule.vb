@@ -73,4 +73,9 @@ Public Module FileBrowserModule
 	Public IEPCFLCFileBrowser As FileBrowser
 	Public IEPCDragFileBrowser As FileBrowser
 	Public IEPCPowerMapFileBrowser As FileBrowser
+
+	Public IHPCPowerMapFileBrowser As FileBrowser
+	Public IHPCFullLoadCurveFileBrowser As FileBrowser
+	public IHPCDragCurveFileBrowser As FileBrowser
+
 End Module

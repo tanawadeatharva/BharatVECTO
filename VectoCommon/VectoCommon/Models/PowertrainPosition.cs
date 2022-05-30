@@ -20,7 +20,8 @@ namespace TUGraz.VectoCommon.InputData
 		BatteryElectricE3,
 		BatteryElectricE2,
 
-		IEPC
+		IEPC,
+		IHPC
 	}
 
 	public static class PowertrainPositionHelper
@@ -30,7 +31,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public static PowertrainPosition Parse(string pos)
 		{
-			if (pos.EndsWith(nameof(PowertrainPosition.GEN))) {
+			if (pos.Equals(nameof(PowertrainPosition.GEN))) {
 				return PowertrainPosition.GEN;
 			}
 
@@ -43,6 +44,10 @@ namespace TUGraz.VectoCommon.InputData
 			}
 			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
 				return (BatteryElectricPrefix + pos).ParseEnum<PowertrainPosition>();
+			}
+
+			if (pos.Equals(nameof(PowertrainPosition.IHPC), StringComparison.InvariantCultureIgnoreCase)) {
+				return PowertrainPosition.IHPC;
 			}
 
 			throw new VectoException("invalid powertrain position {0}", pos);
@@ -78,6 +83,7 @@ namespace TUGraz.VectoCommon.InputData
 				case PowertrainPosition.BatteryElectricE2:
 				case PowertrainPosition.BatteryElectricE3:
 				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.IEPC:
 					return true;
 				default:
 					return false;

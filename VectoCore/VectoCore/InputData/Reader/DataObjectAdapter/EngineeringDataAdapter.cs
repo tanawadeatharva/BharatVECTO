@@ -887,7 +887,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 			IElectricMachinesEngineeringInputData electricMachines,
-			Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage)
+			Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			GearList gearlist = null)
 		{
 			if (electricMachines == null) {
 				return null;
@@ -903,13 +904,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return electricMachines.Entries
 				.Select(x => Tuple.Create(x.Position,
-					CreateElectricMachine(x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
-						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value, averageVoltage))).ToList();
+					CreateElectricMachine(x.Position, x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
+						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value, averageVoltage, gearlist))).ToList();
 		}
 
-		private ElectricMotorData CreateElectricMachine(IElectricMotorEngineeringInputData motorData, int count,
+		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
+			IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
-			List<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage)
+			List<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
 		{
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
@@ -922,13 +924,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				var fullLoadCurveCombined = IntersectEMFullLoadCurves(fullLoadCurve, maxTorqueCurve);
 
-				voltageLevels.Add(new ElectricMotorVoltageLevelData() {
-					Voltage = entry.VoltageLevel,
-					
-					FullLoadCurve = fullLoadCurveCombined,
-					// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
-					EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
-				});
+				var vLevelData = powertrainPosition == PowertrainPosition.IHPC
+					? CreateIHPCVoltageLevelData(count, entry, fullLoadCurveCombined, gearList)
+					: CreateEmVoltageLevelData(count, entry, fullLoadCurveCombined);
+				voltageLevels.Add(vLevelData);
+				
 			}
 
 			if (averageVoltage == null) {
@@ -951,6 +951,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 			retVal.Overload = CalculateOverloadData(motorData, count, retVal.EfficiencyData, averageVoltage);
 			return retVal;
+		}
+
+		private ElectricMotorVoltageLevelData CreateIHPCVoltageLevelData(int count, IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined, GearList gearList)
+		{
+			if (gearList == null) {
+				throw new VectoException("no gears provided for IHPC EM");
+			}
+
+			if (gearList.Count() != entry.PowerMap.Count) {
+				throw new VectoException(
+					$"number of gears in transmission does not match gears in electric motor (IHPC) - {gearList.Count()}/{entry.PowerMap.Count}");
+			}
+			var effMap = new Dictionary<uint, EfficiencyMap>();
+			foreach (var gear in gearList) {
+				effMap.Add(gear.Gear, ElectricMotorMapReader.Create(entry.PowerMap[(int)gear.Gear - 1].PowerMap, count));
+			}
+			return new IEPCVoltageLevelData() {
+				Voltage = entry.VoltageLevel,
+				FullLoadCurve = fullLoadCurveCombined,
+				EfficiencyMaps = effMap,
+			};
+		}
+
+		private static ElectricMotorVoltageLevelData CreateEmVoltageLevelData(int count, IElectricMotorVoltageLevel entry, ElectricMotorFullLoadCurve fullLoadCurveCombined)
+		{
+			return new ElectricMotorVoltageLevelData() {
+				Voltage = entry.VoltageLevel,
+					
+				FullLoadCurve = fullLoadCurveCombined,
+				// DragCurve = ElectricMotorDragCurveReader.Create(entry.DragCurve, count),
+				EfficiencyMap = ElectricMotorMapReader.Create(entry.PowerMap.First().PowerMap, count), //PowerMap
+			};
 		}
 
 		private OverloadData CalculateOverloadData(IElectricMotorEngineeringInputData motorData, int count, VoltageLevelData voltageLevels, Volt averageVoltage)
@@ -1003,7 +1035,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			int count, VoltageLevelData voltageLevels, Tuple<uint, double> gearUsedForMeasurement = null)
 		{
 			var gearRatioUsedForMeasurement = gearUsedForMeasurement?.Item2 ?? 1.0;
-			var gear = new GearshiftPosition(gearUsedForMeasurement?.Item1 ?? 0);
+			var gear = new GearshiftPosition(gearUsedForMeasurement?.Item1 ?? 1);
 			var continuousTorque = voltageEntry.ContinuousTorque * count / gearRatioUsedForMeasurement;
 			var continuousTorqueSpeed = voltageEntry.ContinuousTorqueSpeed * gearRatioUsedForMeasurement;
 			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
@@ -1017,7 +1049,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var contElPwr = voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
 								-continuousTorque, gear).ElectricalPower ??
 							voltageLevels.LookupElectricPower(voltageEntry.VoltageLevel, continuousTorqueSpeed,
-								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed, gear),
+								voltageLevels.FullLoadDriveTorque(voltageEntry.VoltageLevel, continuousTorqueSpeed),
 								gear, true).ElectricalPower;
 			var continuousPowerLoss = -contElPwr - continuousTorque * continuousTorqueSpeed; // loss needs to be positive
 			var overloadBuffer = (peakPwrLoss - continuousPowerLoss) * voltageEntry.OverloadTime;
@@ -1150,7 +1182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				voltageLevels.Add(new IEPCVoltageLevelData() {
 					Voltage = entry.VoltageLevel,
 					FullLoadCurve = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count, gearRatioUsedForMeasurement.Ratio),
-					IEPCEfficiencyMap = effMap,
+					EfficiencyMaps = effMap,
 				});
 			}
 
