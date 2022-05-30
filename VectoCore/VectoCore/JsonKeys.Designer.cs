@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class JsonKeys {
@@ -219,6 +219,105 @@ namespace TUGraz.VectoCore {
         internal static string DriverData_StartStop_MinTime {
             get {
                 return ResourceManager.GetString("DriverData_StartStop_MinTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ContinuousTorque.
+        /// </summary>
+        internal static string EM_ContinuousTorque {
+            get {
+                return ResourceManager.GetString("EM_ContinuousTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ContinuousTorqueSpeed.
+        /// </summary>
+        internal static string EM_ContinuousTorqueSpeed {
+            get {
+                return ResourceManager.GetString("EM_ContinuousTorqueSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DragCurve.
+        /// </summary>
+        internal static string EM_DragCurve {
+            get {
+                return ResourceManager.GetString("EM_DragCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EfficiencyMap.
+        /// </summary>
+        internal static string EM_EfficiencyMap {
+            get {
+                return ResourceManager.GetString("EM_EfficiencyMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullLoadCurve.
+        /// </summary>
+        internal static string EM_FullLoadCurve {
+            get {
+                return ResourceManager.GetString("EM_FullLoadCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTime.
+        /// </summary>
+        internal static string EM_OverloadTime {
+            get {
+                return ResourceManager.GetString("EM_OverloadTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTorque.
+        /// </summary>
+        internal static string EM_OverloadTorque {
+            get {
+                return ResourceManager.GetString("EM_OverloadTorque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverloadTorqueSpeed.
+        /// </summary>
+        internal static string EM_OverloadTorqueSpeed {
+            get {
+                return ResourceManager.GetString("EM_OverloadTorqueSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ThermalOverloadRecoveryFactor.
+        /// </summary>
+        internal static string EM_ThermalOverloadRecoveryFactor {
+            get {
+                return ResourceManager.GetString("EM_ThermalOverloadRecoveryFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voltage.
+        /// </summary>
+        internal static string EM_Voltage {
+            get {
+                return ResourceManager.GetString("EM_Voltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VoltageLevels.
+        /// </summary>
+        internal static string EM_VoltageLevels {
+            get {
+                return ResourceManager.GetString("EM_VoltageLevels", resourceCulture);
             }
         }
         
@@ -705,6 +804,24 @@ namespace TUGraz.VectoCore {
         internal static string JsonHeader {
             get {
                 return ResourceManager.GetString("JsonHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreatedBy.
+        /// </summary>
+        internal static string JsonHeader_CreatedBy {
+            get {
+                return ResourceManager.GetString("JsonHeader_CreatedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        internal static string JsonHeader_Date {
+            get {
+                return ResourceManager.GetString("JsonHeader_Date", resourceCulture);
             }
         }
         

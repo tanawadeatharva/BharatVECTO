@@ -69,4 +69,9 @@ Public Module FileBrowserModule
     Public REESSFileBrowser As FileBrowser
 
 	public EmADCLossMapFileBrowser As FileBrowser
+
+	Public IHPCPowerMapFileBrowser As FileBrowser
+	Public IHPCFullLoadCurveFileBrowser As FileBrowser
+	public IHPCDragCurveFileBrowser As FileBrowser
+
 End Module

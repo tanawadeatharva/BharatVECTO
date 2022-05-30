@@ -8,7 +8,6 @@
   "Body": {
     "SavedInDeclMode": false,
     "Model": "Generic IHPC",
-    "FullLoadCurve": "GenericEMotor_140kW_900Nm.vemp",
     "DragCurve": "GenericIHPCDrag.vemd",
     "Inertia": 0.5,
     "ThermalOverloadRecoveryFactor": 0.9,
