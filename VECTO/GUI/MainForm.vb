@@ -157,6 +157,7 @@ Public Class MainForm
         PropulsionTorqueLimitFileBrowser = New FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
+        IHPCFileBrowser = new FileBrowser("vem")
         IHPCPowerMapFileBrowser = new FileBrowser("vemo")
         IHPCFullLoadCurveFileBrowser = new FileBrowser("vemp")
         IHPCDragCurveFileBrowser = new FileBrowser("vemd")
@@ -202,6 +203,7 @@ Public Class MainForm
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
 
+        IHPCFileBrowser.Extensions = New String(){"vem"}
         IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
         IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
         IHPCDragCurveFileBrowser.Extensions = New String(){"vemd"}

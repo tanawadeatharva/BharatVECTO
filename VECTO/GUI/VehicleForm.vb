@@ -635,6 +635,9 @@ Public Class VehicleForm
 				cbAtEcoRollReleaseLockupClutch.Visible = False
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
+		    Case VectoSimulationJobType.IHPC
+		        lblTitle.Text = "IHPC Vehicle"
+
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
@@ -1470,6 +1473,7 @@ Public Class VehicleForm
     Private Sub btIHPC_Click(sender As Object, e As EventArgs) Handles btIHPC.Click
         Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
 
+		IHPCForm.JobDir = GetPath(_vehFile)
         If Not IHPCForm.Visible Then
             IHPCForm.ClearIHPC()
             IHPCForm.Show()
@@ -1487,6 +1491,12 @@ Public Class VehicleForm
         End If
 
 
+    End Sub
+
+    Private Sub btIHPCFile_Click(sender As Object, e As EventArgs) Handles btIHPCFile.Click
+		If IHPCFileBrowser.OpenDialog(FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))) Then
+		    tbIHPCFilePath.Text = GetFilenameWithoutDirectory(IHPCFileBrowser.Files(0), GetPath(_vehFile))
+		End If
     End Sub
 End Class
 

@@ -226,14 +226,14 @@ Partial Class VehicleForm
         Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.gbPTO = New System.Windows.Forms.GroupBox()
-        Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.lblTitle = New System.Windows.Forms.Label()
         Me.tbIHPC = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.btIHPC = New System.Windows.Forms.Button()
         Me.btIHPCFile = New System.Windows.Forms.Button()
         Me.tbIHPCFilePath = New System.Windows.Forms.TextBox()
+        Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.lblTitle = New System.Windows.Forms.Label()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.gbRetarderLosses.SuspendLayout
@@ -1136,12 +1136,12 @@ Partial Class VehicleForm
         '
         Me.tcVehicleComponents.Controls.Add(Me.tpGeneral)
         Me.tcVehicleComponents.Controls.Add(Me.tpPowertrain)
+        Me.tcVehicleComponents.Controls.Add(Me.tbIHPC)
         Me.tcVehicleComponents.Controls.Add(Me.tpElectricComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpGensetComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpTorqueLimits)
         Me.tcVehicleComponents.Controls.Add(Me.tpADAS)
         Me.tcVehicleComponents.Controls.Add(Me.tpRoadSweeper)
-        Me.tcVehicleComponents.Controls.Add(Me.tbIHPC)
         Me.tcVehicleComponents.Location = New System.Drawing.Point(5, 173)
         Me.tcVehicleComponents.Name = "tcVehicleComponents"
         Me.tcVehicleComponents.SelectedIndex = 0
@@ -2152,37 +2152,6 @@ Partial Class VehicleForm
         Me.gbPTO.TabStop = false
         Me.gbPTO.Text = "PTO Design Variant"
         '
-        'cbLegislativeClass
-        '
-        Me.cbLegislativeClass.DisplayMember = "Value"
-        Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbLegislativeClass.FormattingEnabled = true
-        Me.cbLegislativeClass.Location = New System.Drawing.Point(220, 140)
-        Me.cbLegislativeClass.Name = "cbLegislativeClass"
-        Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
-        Me.cbLegislativeClass.TabIndex = 4
-        Me.cbLegislativeClass.ValueMember = "Key"
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(32, 123)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(112, 13)
-        Me.Label21.TabIndex = 42
-        Me.Label21.Text = "Maximum Laden Mass"
-        '
-        'lblTitle
-        '
-        Me.lblTitle.AutoSize = true
-        Me.lblTitle.BackColor = System.Drawing.Color.White
-        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(117, 34)
-        Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(166, 29)
-        Me.lblTitle.TabIndex = 43
-        Me.lblTitle.Text = "Vehicle TITLE"
-        '
         'tbIHPC
         '
         Me.tbIHPC.Controls.Add(Me.Panel2)
@@ -2231,6 +2200,37 @@ Partial Class VehicleForm
         Me.tbIHPCFilePath.Name = "tbIHPCFilePath"
         Me.tbIHPCFilePath.Size = New System.Drawing.Size(300, 20)
         Me.tbIHPCFilePath.TabIndex = 1
+        '
+        'cbLegislativeClass
+        '
+        Me.cbLegislativeClass.DisplayMember = "Value"
+        Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbLegislativeClass.FormattingEnabled = true
+        Me.cbLegislativeClass.Location = New System.Drawing.Point(220, 140)
+        Me.cbLegislativeClass.Name = "cbLegislativeClass"
+        Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
+        Me.cbLegislativeClass.TabIndex = 4
+        Me.cbLegislativeClass.ValueMember = "Key"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = true
+        Me.Label21.Location = New System.Drawing.Point(32, 123)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(112, 13)
+        Me.Label21.TabIndex = 42
+        Me.Label21.Text = "Maximum Laden Mass"
+        '
+        'lblTitle
+        '
+        Me.lblTitle.AutoSize = true
+        Me.lblTitle.BackColor = System.Drawing.Color.White
+        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblTitle.Location = New System.Drawing.Point(117, 34)
+        Me.lblTitle.Name = "lblTitle"
+        Me.lblTitle.Size = New System.Drawing.Size(166, 29)
+        Me.lblTitle.TabIndex = 43
+        Me.lblTitle.Text = "Vehicle TITLE"
         '
         'VehicleForm
         '

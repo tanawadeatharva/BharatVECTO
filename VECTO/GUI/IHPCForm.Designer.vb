@@ -63,12 +63,12 @@ Partial Class IHPCForm
         Me.tbVoltage1 = New System.Windows.Forms.TextBox()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.tbContinousTorque1 = New System.Windows.Forms.TextBox()
-        Me.tbContinousTorqueSpeed1 = New System.Windows.Forms.TextBox()
+        Me.tbContinuousTorque1 = New System.Windows.Forms.TextBox()
+        Me.tbContinuousTorqueSpeed1 = New System.Windows.Forms.TextBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.tboverloadTorqueSpeed1 = New System.Windows.Forms.TextBox()
+        Me.tbOverloadTorqueSpeed1 = New System.Windows.Forms.TextBox()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.tbOverloadTorque1 = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -96,8 +96,8 @@ Partial Class IHPCForm
         Me.tbVoltage2 = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.tbContinousTorque2 = New System.Windows.Forms.TextBox()
-        Me.tbContinousTorqueSpeed2 = New System.Windows.Forms.TextBox()
+        Me.tbContinuousTorque2 = New System.Windows.Forms.TextBox()
+        Me.tbContinuousTorqueSpeed2 = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.tbOverloadTorqueSpeed2 = New System.Windows.Forms.TextBox()
@@ -177,7 +177,7 @@ Partial Class IHPCForm
         Me.FlowLayoutPanel6.Controls.Add(Me.lblinertiaUnit)
         Me.FlowLayoutPanel6.Location = New System.Drawing.Point(12, 106)
         Me.FlowLayoutPanel6.Name = "FlowLayoutPanel6"
-        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(158, 26)
+        Me.FlowLayoutPanel6.Size = New System.Drawing.Size(147, 26)
         Me.FlowLayoutPanel6.TabIndex = 72
         '
         'Label51
@@ -213,7 +213,7 @@ Partial Class IHPCForm
         Me.FlowLayoutPanel8.Controls.Add(Me.Label52)
         Me.FlowLayoutPanel8.Controls.Add(Me.tbThermalOverload)
         Me.FlowLayoutPanel8.Controls.Add(Me.Label10)
-        Me.FlowLayoutPanel8.Location = New System.Drawing.Point(176, 106)
+        Me.FlowLayoutPanel8.Location = New System.Drawing.Point(162, 106)
         Me.FlowLayoutPanel8.Name = "FlowLayoutPanel8"
         Me.FlowLayoutPanel8.Size = New System.Drawing.Size(305, 26)
         Me.FlowLayoutPanel8.TabIndex = 74
@@ -223,7 +223,7 @@ Partial Class IHPCForm
         Me.Label52.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label52.AutoSize = true
         Me.Label52.Location = New System.Drawing.Point(3, 6)
-        Me.Label52.Margin = New System.Windows.Forms.Padding(3, 0, 10, 0)
+        Me.Label52.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.Label52.Name = "Label52"
         Me.Label52.Size = New System.Drawing.Size(173, 13)
         Me.Label52.TabIndex = 50
@@ -232,8 +232,8 @@ Partial Class IHPCForm
         'tbThermalOverload
         '
         Me.tbThermalOverload.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbThermalOverload.Location = New System.Drawing.Point(216, 3)
-        Me.tbThermalOverload.Margin = New System.Windows.Forms.Padding(30, 3, 3, 3)
+        Me.tbThermalOverload.Location = New System.Drawing.Point(181, 3)
+        Me.tbThermalOverload.Margin = New System.Windows.Forms.Padding(5, 3, 3, 3)
         Me.tbThermalOverload.Name = "tbThermalOverload"
         Me.tbThermalOverload.Size = New System.Drawing.Size(56, 20)
         Me.tbThermalOverload.TabIndex = 51
@@ -242,7 +242,8 @@ Partial Class IHPCForm
         '
         Me.Label10.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label10.AutoSize = true
-        Me.Label10.Location = New System.Drawing.Point(278, 6)
+        Me.Label10.Location = New System.Drawing.Point(242, 6)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(2, 0, 3, 0)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(16, 13)
         Me.Label10.TabIndex = 67
@@ -468,12 +469,12 @@ Partial Class IHPCForm
         Me.TableLayoutPanel1.Controls.Add(Me.tbVoltage1, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label39, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorque1, 1, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbContinousTorqueSpeed1, 1, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.tbContinuousTorque1, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.tbContinuousTorqueSpeed1, 1, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Label15, 2, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Label42, 3, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Label14, 5, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.tboverloadTorqueSpeed1, 4, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.tbOverloadTorqueSpeed1, 4, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Label41, 3, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.tbOverloadTorque1, 4, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label12, 5, 1)
@@ -577,23 +578,23 @@ Partial Class IHPCForm
         Me.Label3.TabIndex = 6
         Me.Label3.Text = "Continuous Torque Speed"
         '
-        'tbContinousTorque1
+        'tbContinuousTorque1
         '
-        Me.tbContinousTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque1.Location = New System.Drawing.Point(143, 30)
-        Me.tbContinousTorque1.Margin = New System.Windows.Forms.Padding(0)
-        Me.tbContinousTorque1.Name = "tbContinousTorque1"
-        Me.tbContinousTorque1.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorque1.TabIndex = 4
+        Me.tbContinuousTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbContinuousTorque1.Location = New System.Drawing.Point(143, 30)
+        Me.tbContinuousTorque1.Margin = New System.Windows.Forms.Padding(0)
+        Me.tbContinuousTorque1.Name = "tbContinuousTorque1"
+        Me.tbContinuousTorque1.Size = New System.Drawing.Size(56, 20)
+        Me.tbContinuousTorque1.TabIndex = 4
         '
-        'tbContinousTorqueSpeed1
+        'tbContinuousTorqueSpeed1
         '
-        Me.tbContinousTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(143, 58)
-        Me.tbContinousTorqueSpeed1.Margin = New System.Windows.Forms.Padding(0)
-        Me.tbContinousTorqueSpeed1.Name = "tbContinousTorqueSpeed1"
-        Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorqueSpeed1.TabIndex = 6
+        Me.tbContinuousTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbContinuousTorqueSpeed1.Location = New System.Drawing.Point(143, 58)
+        Me.tbContinuousTorqueSpeed1.Margin = New System.Windows.Forms.Padding(0)
+        Me.tbContinuousTorqueSpeed1.Name = "tbContinuousTorqueSpeed1"
+        Me.tbContinuousTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
+        Me.tbContinuousTorqueSpeed1.TabIndex = 6
         '
         'Label15
         '
@@ -627,13 +628,13 @@ Partial Class IHPCForm
         Me.Label14.TabIndex = 66
         Me.Label14.Text = "[rpm]"
         '
-        'tboverloadTorqueSpeed1
+        'tbOverloadTorqueSpeed1
         '
-        Me.tboverloadTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tboverloadTorqueSpeed1.Location = New System.Drawing.Point(363, 58)
-        Me.tboverloadTorqueSpeed1.Name = "tboverloadTorqueSpeed1"
-        Me.tboverloadTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
-        Me.tboverloadTorqueSpeed1.TabIndex = 10
+        Me.tbOverloadTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbOverloadTorqueSpeed1.Location = New System.Drawing.Point(363, 58)
+        Me.tbOverloadTorqueSpeed1.Name = "tbOverloadTorqueSpeed1"
+        Me.tbOverloadTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
+        Me.tbOverloadTorqueSpeed1.TabIndex = 10
         '
         'Label41
         '
@@ -832,8 +833,8 @@ Partial Class IHPCForm
         Me.TableLayoutPanel4.Controls.Add(Me.tbVoltage2, 1, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label20, 0, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label21, 0, 2)
-        Me.TableLayoutPanel4.Controls.Add(Me.tbContinousTorque2, 1, 1)
-        Me.TableLayoutPanel4.Controls.Add(Me.tbContinousTorqueSpeed2, 1, 2)
+        Me.TableLayoutPanel4.Controls.Add(Me.tbContinuousTorque2, 1, 1)
+        Me.TableLayoutPanel4.Controls.Add(Me.tbContinuousTorqueSpeed2, 1, 2)
         Me.TableLayoutPanel4.Controls.Add(Me.Label27, 2, 2)
         Me.TableLayoutPanel4.Controls.Add(Me.Label23, 3, 2)
         Me.TableLayoutPanel4.Controls.Add(Me.tbOverloadTorqueSpeed2, 4, 2)
@@ -939,21 +940,21 @@ Partial Class IHPCForm
         Me.Label21.TabIndex = 6
         Me.Label21.Text = "Continuous Torque Speed"
         '
-        'tbContinousTorque2
+        'tbContinuousTorque2
         '
-        Me.tbContinousTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque2.Location = New System.Drawing.Point(143, 30)
-        Me.tbContinousTorque2.Name = "tbContinousTorque2"
-        Me.tbContinousTorque2.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorque2.TabIndex = 4
+        Me.tbContinuousTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbContinuousTorque2.Location = New System.Drawing.Point(143, 30)
+        Me.tbContinuousTorque2.Name = "tbContinuousTorque2"
+        Me.tbContinuousTorque2.Size = New System.Drawing.Size(56, 20)
+        Me.tbContinuousTorque2.TabIndex = 4
         '
-        'tbContinousTorqueSpeed2
+        'tbContinuousTorqueSpeed2
         '
-        Me.tbContinousTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(143, 58)
-        Me.tbContinousTorqueSpeed2.Name = "tbContinousTorqueSpeed2"
-        Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorqueSpeed2.TabIndex = 6
+        Me.tbContinuousTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbContinuousTorqueSpeed2.Location = New System.Drawing.Point(143, 58)
+        Me.tbContinuousTorqueSpeed2.Name = "tbContinuousTorqueSpeed2"
+        Me.tbContinuousTorqueSpeed2.Size = New System.Drawing.Size(56, 20)
+        Me.tbContinuousTorqueSpeed2.TabIndex = 6
         '
         'Label27
         '
@@ -1253,12 +1254,12 @@ End Sub
     Friend WithEvents tbVoltage1 As TextBox
     Friend WithEvents Label39 As Label
     Friend WithEvents Label3 As Label
-    Friend WithEvents tbContinousTorque1 As TextBox
-    Friend WithEvents tbContinousTorqueSpeed1 As TextBox
+    Friend WithEvents tbContinuousTorque1 As TextBox
+    Friend WithEvents tbContinuousTorqueSpeed1 As TextBox
     Friend WithEvents Label15 As Label
     Friend WithEvents Label42 As Label
     Friend WithEvents Label14 As Label
-    Friend WithEvents tboverloadTorqueSpeed1 As TextBox
+    Friend WithEvents tbOverloadTorqueSpeed1 As TextBox
     Friend WithEvents Label41 As Label
     Friend WithEvents tbOverloadTorque1 As TextBox
     Friend WithEvents Label12 As Label
@@ -1277,8 +1278,8 @@ End Sub
     Friend WithEvents tbVoltage2 As TextBox
     Friend WithEvents Label20 As Label
     Friend WithEvents Label21 As Label
-    Friend WithEvents tbContinousTorque2 As TextBox
-    Friend WithEvents tbContinousTorqueSpeed2 As TextBox
+    Friend WithEvents tbContinuousTorque2 As TextBox
+    Friend WithEvents tbContinuousTorqueSpeed2 As TextBox
     Friend WithEvents Label27 As Label
     Friend WithEvents Label23 As Label
     Friend WithEvents tbOverloadTorqueSpeed2 As TextBox

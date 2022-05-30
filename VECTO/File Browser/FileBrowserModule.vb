@@ -70,6 +70,7 @@ Public Module FileBrowserModule
 
 	public EmADCLossMapFileBrowser As FileBrowser
 
+	Public IHPCFileBrowser As FileBrowser
 	Public IHPCPowerMapFileBrowser As FileBrowser
 	Public IHPCFullLoadCurveFileBrowser As FileBrowser
 	public IHPCDragCurveFileBrowser As FileBrowser
