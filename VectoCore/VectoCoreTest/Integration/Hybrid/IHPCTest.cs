@@ -22,19 +22,32 @@ public class IHPCTest
 		//InitGraphWriter();
 	}
 
-	public const string IHPCTEst = @"TestData\Hybrids\GenericIHPC\IHPC Group 5.vecto";
+	public const string IHPCTEst_12speed = @"TestData\Hybrids\GenericIHPC\12SpeedGbx\IHPC Group 5.vecto";
+
+	public const string IHPCTEst_6speed = @"TestData\Hybrids\GenericIHPC\6SpeedGbx\IHPC Group 5.vecto";
 
 	[
-		TestCase(IHPCTEst, 0, TestName = "IHPC Group 5 DriveCycle LongHaul"),
-		TestCase(IHPCTEst, 1, TestName = "IHPC Group 5 DriveCycle Coach"),
-		TestCase(IHPCTEst, 2, TestName = "IHPC Group 5 DriveCycle Construction"),
-		TestCase(IHPCTEst, 3, TestName = "IHPC Group 5 DriveCycle HeavyUrban"),
-		TestCase(IHPCTEst, 4, TestName = "IHPC Group 5 DriveCycle Interurban"),
-		TestCase(IHPCTEst, 5, TestName = "IHPC Group 5 DriveCycle MunicipalUtility"),
-		TestCase(IHPCTEst, 6, TestName = "IHPC Group 5 DriveCycle RegionalDelivery"),
-		TestCase(IHPCTEst, 7, TestName = "IHPC Group 5 DriveCycle Suburban"),
-		TestCase(IHPCTEst, 8, TestName = "IHPC Group 5 DriveCycle Urban"),
-		TestCase(IHPCTEst, 9, TestName = "IHPC Group 5 DriveCycle UrbanDelivery"),
+		TestCase(IHPCTEst_12speed, 0, TestName = "IHPC 12spd Group 5 DriveCycle LongHaul"),
+		TestCase(IHPCTEst_12speed, 1, TestName = "IHPC 12spd Group 5 DriveCycle Coach"),
+		TestCase(IHPCTEst_12speed, 2, TestName = "IHPC 12spd Group 5 DriveCycle Construction"),
+		TestCase(IHPCTEst_12speed, 3, TestName = "IHPC 12spd Group 5 DriveCycle HeavyUrban"),
+		TestCase(IHPCTEst_12speed, 4, TestName = "IHPC 12spd Group 5 DriveCycle Interurban"),
+		TestCase(IHPCTEst_12speed, 5, TestName = "IHPC 12spd Group 5 DriveCycle MunicipalUtility"),
+		TestCase(IHPCTEst_12speed, 6, TestName = "IHPC 12spd Group 5 DriveCycle RegionalDelivery"),
+		TestCase(IHPCTEst_12speed, 7, TestName = "IHPC 12spd Group 5 DriveCycle Suburban"),
+		TestCase(IHPCTEst_12speed, 8, TestName = "IHPC 12spd Group 5 DriveCycle Urban"),
+		TestCase(IHPCTEst_12speed, 9, TestName = "IHPC 12spd Group 5 DriveCycle UrbanDelivery"),
+
+		TestCase(IHPCTEst_6speed, 0, TestName = "IHPC 6spd Group 5 DriveCycle LongHaul"),
+		TestCase(IHPCTEst_6speed, 1, TestName = "IHPC 6spd Group 5 DriveCycle Coach"),
+		TestCase(IHPCTEst_6speed, 2, TestName = "IHPC 6spd Group 5 DriveCycle Construction"),
+		TestCase(IHPCTEst_6speed, 3, TestName = "IHPC 6spd Group 5 DriveCycle HeavyUrban"),
+		TestCase(IHPCTEst_6speed, 4, TestName = "IHPC 6spd Group 5 DriveCycle Interurban"),
+		TestCase(IHPCTEst_6speed, 5, TestName = "IHPC 6spd Group 5 DriveCycle MunicipalUtility"),
+		TestCase(IHPCTEst_6speed, 6, TestName = "IHPC 6spd Group 5 DriveCycle RegionalDelivery"),
+		TestCase(IHPCTEst_6speed, 7, TestName = "IHPC 6spd Group 5 DriveCycle Suburban"),
+		TestCase(IHPCTEst_6speed, 8, TestName = "IHPC 6spd Group 5 DriveCycle Urban"),
+		TestCase(IHPCTEst_6speed, 9, TestName = "IHPC 6spd Group 5 DriveCycle UrbanDelivery"),
 	]
 	public void P2HybridGroup5DriveCycle(string jobFile, int cycleIdx)
 	{ RunHybridJob(jobFile, cycleIdx); }

@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt MaxPowerDrive(Volt volt, PerSecond electricMotorSpeed, GearshiftPosition gear)
 		{
-			return ModelData.EfficiencyData.FullLoadDriveTorque(volt, electricMotorSpeed, gear) * electricMotorSpeed;
+			return ModelData.EfficiencyData.FullLoadDriveTorque(volt, electricMotorSpeed) * electricMotorSpeed;
 		}
 
 		public NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, GearshiftPosition gear, bool allowExtrapolation)
@@ -143,7 +143,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun, double ratio)
 		{
-			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(0);
+			var gear = DataBus.GearboxInfo?.Gear ?? new GearshiftPosition(1);
+			if (gear.Gear == 0) {
+				gear = new GearshiftPosition(1);
+			}
+
 			var voltage = DataBus.BatteryInfo.InternalVoltage;
 
 			var iceOn =  Position == PowertrainPosition.HybridP1 &&
@@ -384,7 +388,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var tqContinuousPwr = DeRatingActive ? ModelData.Overload.ContinuousTorque : null;
 			
-			var maxEmTorque = VectoMath.Min(tqContinuousPwr, ModelData.EfficiencyData.FullGenerationTorque(volt, avgSpeed, gear));
+			var maxEmTorque = VectoMath.Min(tqContinuousPwr, ModelData.EfficiencyData.FullGenerationTorque(volt, avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrag;
 
@@ -412,7 +416,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var tqContinuousPwr = DeRatingActive ? -ModelData.Overload.ContinuousTorque : null;
 			
-			var maxEmTorque = VectoMath.Max(tqContinuousPwr ,ModelData.EfficiencyData.FullLoadDriveTorque(volt, avgSpeed, gear));
+			var maxEmTorque = VectoMath.Max(tqContinuousPwr ,ModelData.EfficiencyData.FullLoadDriveTorque(volt, avgSpeed));
 			var electricSystemResponse = ElectricPower.Request(0.SI<Second>(), dt, 0.SI<Watt>(), true);
 			var maxBatPower = electricSystemResponse.MaxPowerDrive;
 

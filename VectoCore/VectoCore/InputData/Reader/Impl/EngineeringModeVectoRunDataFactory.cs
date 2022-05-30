@@ -569,7 +569,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 					var electricMachines =
 						dao.CreateElectricMachines(vehicle.Components.ElectricMachines,
-							vehicle.ElectricMotorTorqueLimits, averageVoltage) ??
+							vehicle.ElectricMotorTorqueLimits, averageVoltage, gearboxData.GearList) ??
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var powertrainPosition = electricMachines.FirstOrDefault(e => e.Item1 != PowertrainPosition.GEN)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 					
