@@ -1515,6 +1515,7 @@ Public Class VehicleForm
 	Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
 		Dim f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
 
+		IEPCForm.JobDir = GetPath(_vehFile)
 	    If Not IEPCForm.Visible Then
 			IEPCForm.NewIEPC()
 	        IEPCForm.Show()

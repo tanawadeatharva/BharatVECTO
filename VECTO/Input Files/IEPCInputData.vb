@@ -57,7 +57,7 @@ Public Class IEPCInputData
                                       overloadTime As String, overloadTorque As String, overloadTorqueSpeed As String, 
                                       fullLoadCurve As string, powerMap As ListView)
 
-        Dim level =  New ElectricMotorVoltageLevel()
+        Dim level = New ElectricMotorVoltageLevel()
         level.VoltageLevel = voltage.ToDouble().SI(Of Volt)
         level.ContinuousTorque = continuousTorque.ToDouble().SI(Of NewtonMeter)
         level.ContinuousTorqueSpeed = continuousTorqueSpeed.ToDouble().RPMtoRad()

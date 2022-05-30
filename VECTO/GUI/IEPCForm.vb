@@ -190,6 +190,7 @@ Public Class IEPCForm
             entry.SubItems(0).Text = _gearDlg.tbRatio.Text
             entry.SubItems(1).Text = _gearDlg.tbMaxOutShaftSpeed.Text
             entry.SubItems(2).Text = _gearDlg.tbMaxOutShaftTorque.Text
+            Change()
         End If
 
     End Sub
@@ -245,7 +246,7 @@ Public Class IEPCForm
             Try
                 ReadIEPCFile(IEPCFileBrowser.Files(0))
             Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, $"Error loading IEPC(.{IEPCFileBrowser.Extensions}) File")
             End Try
         End If
     End Sub
@@ -565,7 +566,7 @@ Public Class IEPCForm
 		
         Dim fileExtension = new FileInfo(tbFLCurve1.Text).Extension
         If Not $".{IEPCFLCFileBrowser.Extensions.First()}" = fileExtension Then
-            ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong extension",
+            ShowErrorMessageBox($"The selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong extension",
                                 tbFLCurve1, False)
             Return False		
         End If
@@ -580,7 +581,7 @@ Public Class IEPCForm
 		
         Dim fileExtension = new FileInfo(tbFLCurve2.Text).Extension
         If Not $".{IEPCFLCFileBrowser.Extensions.First()}" = fileExtension Then
-            ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong file extension",
+            ShowErrorMessageBox($"The selected Full Load Curve file(.{IEPCFLCFileBrowser.Extensions.First()}) has the wrong file extension",
                                 tbFLCurve2, False)
             Return False		
         End If
@@ -598,7 +599,7 @@ Public Class IEPCForm
             If entry.SubItems.Count = 2 Then
                 Dim fileExtension = new FileInfo(entry.SubItems(1).Text).Extension
                 If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension
-                    ShowErrorMessageBox($"The Selected Full Load Curve file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
+                    ShowErrorMessageBox($"The selected Full Load Curve file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
                     Return false
                 End If
             End If
