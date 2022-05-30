@@ -138,6 +138,10 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
+        IEPCFileBrowser = New FileBrowser("viepc")
+        IEPCFLCFileBrowser = New FileBrowser("viepcp")
+        IEPCDragFileBrowser = new FileBrowser("viepcd")
+        IEPCPowerMapFileBrowser = New FileBrowser("viepco")
         REESSFileBrowser = New FileBrowser("vreess")
         EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
@@ -205,6 +209,11 @@ Public Class MainForm
         IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
         IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
         IHPCDragCurveFileBrowser.Extensions = New String(){"vemd"}
+        
+        IEPCFileBrowser.Extensions = New String () {"viepc"}
+        IEPCFLCFileBrowser.Extensions = New String() {"viepcp"}
+        IEPCDragFileBrowser.Extensions = New String() {"viepcd"}
+        IEPCPowerMapFileBrowser.Extensions = New String() {"viepco"}
     End Sub
 
     Private Sub FB_Close()
@@ -2187,8 +2196,15 @@ lbFound:
     Private Sub JobEditorSerialHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorSerialHybridVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.SerialHybridVehicle)
     End Sub
+    Private Sub JobEditorIEPC_E_VehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_E_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
+    End Sub
 
     Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_S_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
     End Sub
 End Class

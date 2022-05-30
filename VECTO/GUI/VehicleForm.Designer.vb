@@ -137,6 +137,7 @@ Partial Class VehicleForm
         Me.cbTankSystem = New System.Windows.Forms.ComboBox()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.tpElectricComponents = New System.Windows.Forms.TabPage()
+	    Me.tpElectricMachine = New System.Windows.Forms.TabPage()
         Me.gbBattery = New System.Windows.Forms.GroupBox()
         Me.lvREESSPacks = New System.Windows.Forms.ListView()
         Me.chReessPackPack = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
@@ -258,6 +259,7 @@ Partial Class VehicleForm
         Me.Panel1.SuspendLayout
         Me.gbTankSystem.SuspendLayout
         Me.tpElectricComponents.SuspendLayout
+	    Me.tpElectricMachine.SuspendLayout()
         Me.gbBattery.SuspendLayout
         Me.gpElectricMotor.SuspendLayout
         Me.gbRatiosPerGear.SuspendLayout
@@ -1136,7 +1138,7 @@ Partial Class VehicleForm
         '
         Me.tcVehicleComponents.Controls.Add(Me.tpGeneral)
         Me.tcVehicleComponents.Controls.Add(Me.tpPowertrain)
-        Me.tcVehicleComponents.Controls.Add(Me.tpElectricComponents)
+	    Me.tcVehicleComponents.Controls.Add(Me.tpElectricMachine)
         Me.tcVehicleComponents.Controls.Add(Me.tpGensetComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpTorqueLimits)
         Me.tcVehicleComponents.Controls.Add(Me.tpADAS)
@@ -1267,6 +1269,17 @@ Partial Class VehicleForm
         Me.tpElectricComponents.TabIndex = 4
         Me.tpElectricComponents.Text = "Electric Powertrain Components"
         Me.tpElectricComponents.UseVisualStyleBackColor = true
+	    '
+	    'tpElectricMachine
+	    '
+	    Me.tpElectricMachine.Controls.Add(Me.gpElectricMotor)
+	    Me.tpElectricMachine.Location = New System.Drawing.Point(4, 22)
+	    Me.tpElectricMachine.Name = "tpElectricMachine"
+	    Me.tpElectricMachine.Padding = New System.Windows.Forms.Padding(3)
+	    Me.tpElectricMachine.Size = New System.Drawing.Size(648, 374)
+	    Me.tpElectricMachine.TabIndex = 6
+	    Me.tpElectricMachine.Text = "Electric Machine"
+	    Me.tpElectricMachine.UseVisualStyleBackColor = True
         '
         'gbBattery
         '
@@ -2420,7 +2433,7 @@ End Sub
 	Friend WithEvents tbAngledriveLossMapPath As System.Windows.Forms.TextBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
-'<<<<<<< HEAD
+
 	Friend WithEvents Label7 As System.Windows.Forms.Label
 	Friend WithEvents tbPTOLossMap As System.Windows.Forms.TextBox
 	Friend WithEvents gbPTO As System.Windows.Forms.GroupBox
@@ -2434,11 +2447,6 @@ End Sub
 	Friend WithEvents tpGeneral As System.Windows.Forms.TabPage
 	Friend WithEvents tpPowertrain As System.Windows.Forms.TabPage
 	Friend WithEvents tpTorqueLimits As System.Windows.Forms.TabPage
-'=======
-'	Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-'	Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
-'	Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
-'	Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
 	Friend WithEvents Label17 As System.Windows.Forms.Label
 	Friend WithEvents btDelMaxTorqueEntry As System.Windows.Forms.Button
 	Friend WithEvents btAddMaxTorqueEntry As System.Windows.Forms.Button
@@ -2494,7 +2502,7 @@ End Sub
     Friend WithEvents btnPropulsionTorqueLimit As Button
     Friend WithEvents tbPropulsionTorqueLimit As TextBox
     Friend WithEvents btnEmADCLossMap As Button
-'=======
+
     Friend WithEvents tpRoadSweeper As TabPage
     Friend WithEvents gbPTODrive As GroupBox
     Friend WithEvents tbPtoGear As TextBox
@@ -2553,5 +2561,11 @@ End Sub
     Friend WithEvents btIHPC As Button
     Friend WithEvents btIHPCFile As Button
     Friend WithEvents tbIHPCFilePath As TextBox
-    '>>>>>>> VECTO_CERT/master
+    Friend WithEvents tpElectricMachine As TabPage
+    Friend WithEvents tpReess As TabPage
+    Friend WithEvents tpIEPC As TabPage
+    Friend WithEvents btIEPCFilePath As Button
+    Friend WithEvents btnIEPC As Button
+    Friend WithEvents tbIEPCFilePath As TextBox
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
 End Class
