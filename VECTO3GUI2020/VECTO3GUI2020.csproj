@@ -12,6 +12,13 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug</Configurations>
+</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +34,21 @@
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
+	
+  <Choose>
+	<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
+	  <ItemGroup>
+		<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+		
+	  </ItemGroup>
+		<PropertyGroup>
+			<DefineConstants>MOCKUP</DefineConstants>
+		</PropertyGroup>
+	</When>
+  </Choose>
+	
+
+
 
   <ItemGroup>
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
