@@ -8,16 +8,15 @@
   "Body": {
     "SavedInDeclMode": false,
     "Model": "Generic IHPC",
-    "FullLoadCurve": "GenericEMotor_140kW_900Nm.vemp",
-    "DragCurve": "GenericIHPCDrag.vemd",
+    "DragCurve": "IHPC-EM_Drag.vemd",
     "Inertia": 0.5,
     "ThermalOverloadRecoveryFactor": 0.9,
     "VoltageLevels": [
       {
         "Voltage": 500,
-        "ContinuousTorque": ,
+        "ContinuousTorque": 1722.91,
         "ContinuousTorqueSpeed": 1477,
-        "OverloadTorque": ,
+        "OverloadTorque": 1956.56,
         "OverloadTorqueSpeed": 1475,
         "OverloadTime": 200,
         "FullLoadCurve": "IHPC-EM_FLD_min.vemp",
@@ -32,9 +31,9 @@
       },
       {
         "Voltage": 900,
-        "ContinuousTorque": ,
+        "ContinuousTorque": 1736.79,
         "ContinuousTorqueSpeed": 1470,
-        "OverloadTorque": ,
+        "OverloadTorque": 2010.59,
         "OverloadTorqueSpeed": 1482,
         "OverloadTime": 230,
         "FullLoadCurve": "IHPC-EM_FLD_max.vemp",
