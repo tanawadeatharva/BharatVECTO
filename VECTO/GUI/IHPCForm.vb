@@ -12,6 +12,8 @@ Public Class IHPCForm
     Private _flCurveFilePath1 as String
     Private _flCurveFilePath2 as String
 
+    Private _contextMenuFiles As String()
+
 #Region "Set JSON Data"
 
     Public Sub ReadIHPCFile(file As String)
@@ -558,13 +560,67 @@ Public Class IHPCForm
         End If
     End Sub
 
+    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
+            Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+            Process.Start(defaultBrowserPath,
+                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#ihpc-editor")}""")
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
+    Private Sub btDragCurveOpen_Click(sender As Object, e As EventArgs) Handles btDragCurveOpen.Click
+        Dim theFile = FileRepl(tbDragCurve.Text, GetPath(_ihpcFilePath))
 
+        If theFile <> NoFile AndAlso File.Exists(theFile) Then
+            OpenFiles(theFile)
+        End If
+    End Sub
 
+    Private Sub btFLCurve1_Click(sender As Object, e As EventArgs) Handles btFLCurve1.Click
+        Dim theFile = FileRepl(tbFLCurve1.Text, GetPath(_ihpcFilePath))
 
+        If theFile <> NoFile AndAlso File.Exists(theFile) Then
+            OpenFiles(theFile)
+        End If
+    End Sub
+    
+    Private Sub btFLCurve2_Click(sender As Object, e As EventArgs) Handles btFLCurve2.Click
+        Dim theFile = FileRepl(tbFLCurve1.Text, GetPath(_ihpcFilePath))
 
+        If theFile <> NoFile AndAlso File.Exists(theFile) Then
+            OpenFiles(theFile)
+        End If
+    End Sub
+    
 
+    Private Sub OpenFiles(ParamArray files() As String)
 
+        If files.Length = 0 Then Exit Sub
 
+        _contextMenuFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Windows.Forms.Cursor.Position)
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+
+        If File.Exists(_contextMenuFiles(0)) Then
+            Try
+                Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
+            Catch ex As Exception
+                MsgBox("Failed to open file!")
+            End Try
+        Else
+            MsgBox("File not found!")
+        End If
+    End Sub
 
 #End Region
 End Class

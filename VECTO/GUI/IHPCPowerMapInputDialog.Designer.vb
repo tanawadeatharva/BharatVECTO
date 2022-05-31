@@ -162,7 +162,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.Name = "IHPCPowerMapInputDialog"
         Me.ShowInTaskbar = false
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "IHPCPowerMapInputDialog"
+        Me.Text = "Power Map"
         Me.FlowLayoutPanel1.ResumeLayout(false)
         Me.TableLayoutPanel4.ResumeLayout(false)
         Me.TableLayoutPanel4.PerformLayout
