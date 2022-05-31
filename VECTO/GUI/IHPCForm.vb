@@ -192,7 +192,7 @@ Public Class IHPCForm
     End Sub
     
     Private Sub btSave_Click(sender As Object, e As EventArgs) Handles btSave.Click
-        SaveOrSaveAs(true)
+        If SaveOrSaveAs(False) Then Close()
     End Sub
 
     Private Sub btCancel_Click(sender As Object, e As EventArgs) Handles btCancel.Click

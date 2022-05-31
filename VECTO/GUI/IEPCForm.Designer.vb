@@ -1090,7 +1090,7 @@ Partial Class IEPCForm
         '
         'ColumnHeader2
         '
-        Me.ColumnHeader2.Text = "Max Out Shaft Speed"
+        Me.ColumnHeader2.Text = "Max Out Shaft Torque"
         Me.ColumnHeader2.Width = 120
         '
         'ColumnHeader3

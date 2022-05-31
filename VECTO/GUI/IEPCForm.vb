@@ -98,8 +98,18 @@ Public Class IEPCForm
 	Private Function CreateListViewItem(ratio As Double, outputShaftTorque As NewtonMeter, outputShaftSpeed As PerSecond) As ListViewItem
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = ratio.ToGUIFormat()
-		retVal.SubItems.Add(outputShaftTorque?.ToGUIFormat())
-		retVal.SubItems.Add(outputShaftSpeed?.ToGUIFormat())
+		If Not outputShaftTorque = Nothing Then
+			retVal.SubItems.Add(outputShaftTorque.ToGUIFormat())
+		Else 
+			retVal.SubItems.Add(String.Empty)
+		End If
+
+		If Not outputShaftSpeed = Nothing Then
+			retVal.SubItems.Add(outputShaftSpeed.ToGUIFormat())
+		Else 
+			retVal.SubItems.Add(String.Empty)
+		End If
+		
 		Return retVal
 	End Function
 
@@ -107,11 +117,16 @@ Public Class IEPCForm
 
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = ratio.ToGUIFormat()
+
 		If outputShaftTorque.HasValue Then
 			retVal.SubItems.Add(outputShaftTorque.Value.ToGUIFormat())
+		Else
+			retVal.SubItems.Add(String.Empty)
 		End If
 		If outputShaftSpeed.HasValue Then
 			retVal.SubItems.Add(outputShaftSpeed.Value.ToGUIFormat())
+		Else
+			retVal.SubItems.Add(String.Empty)
 		End If
 		Return retVal
 
@@ -122,6 +137,7 @@ Public Class IEPCForm
 	End Sub
 
 	Private Sub AddListViewItem(dialog As IEPCInputDialog, listView As ListView)
+		dialog.Clear()
 		If dialog.ShowDialog() = DialogResult.OK Then
 			Dim gear = Convert.ToInt32(dialog.tbGear.Text)
 			Dim filePath = dialog.tbInputFile.Text
@@ -160,7 +176,7 @@ Public Class IEPCForm
 				outputShaftTorque = _gearDlg.tbMaxOutShaftTorque.Text.ToDouble(0)
 			End If
 			If _gearDlg.tbMaxOutShaftSpeed.Text.Length > 0 Then
-				outputShaftSpeed = _gearDlg.tbMaxOutShaftTorque.Text.ToDouble(0)
+				outputShaftSpeed = _gearDlg.tbMaxOutShaftSpeed.Text.ToDouble(0)
 			End If
 
 			Dim entry = CreateListViewItem(ratio, outputShaftTorque, outputShaftSpeed)
@@ -185,14 +201,15 @@ Public Class IEPCForm
 		Dim entry As ListViewItem = lvGear.SelectedItems(0)
 
 		_gearDlg.tbRatio.Text = entry.SubItems(0).Text
-		_gearDlg.tbMaxOutShaftSpeed.Text = entry.SubItems(1).Text
-		_gearDlg.tbMaxOutShaftTorque.Text = entry.SubItems(2).Text
+		
+		 _gearDlg.tbMaxOutShaftTorque.Text = entry.SubItems(1).Text
+		 _gearDlg.tbMaxOutShaftSpeed.Text = entry.SubItems(2).Text
 		_gearDlg.tbRatio.Focus()
 
 		If _gearDlg.ShowDialog() = DialogResult.OK Then
 			entry.SubItems(0).Text = _gearDlg.tbRatio.Text
-			entry.SubItems(1).Text = _gearDlg.tbMaxOutShaftSpeed.Text
-			entry.SubItems(2).Text = _gearDlg.tbMaxOutShaftTorque.Text
+			entry.SubItems(1).Text = _gearDlg.tbMaxOutShaftTorque.Text
+			entry.SubItems(2).Text = _gearDlg.tbMaxOutShaftSpeed.Text
 			Change()
 		End If
 
@@ -203,27 +220,33 @@ Public Class IEPCForm
 	End Sub
 
 	Private Sub lvPowerMap1_DoubleClick(sender As Object, e As EventArgs) Handles lvPowerMap1.DoubleClick
+	    _powerMapDlg.tbGear.Enabled = False
 		EditEntry(_powerMapDlg, lvPowerMap1)
 	End Sub
 
 	Private Sub lvPowerMap2_DoubleClick(sender As Object, e As EventArgs) Handles lvPowerMap2.DoubleClick 
+		_powerMapDlg.tbGear.Enabled = False
 		EditEntry(_powerMapDlg, lvPowerMap2)
 	End Sub
 
 	Private Sub EditEntry(dialog As IEPCInputDialog, listView As ListView)
-
+		
 		If listView.SelectedItems.Count = 0 Then Exit Sub
+		dialog.Clear()
 
 		Dim entry As ListViewItem = listView.SelectedItems(0)
 		dialog.tbGear.Text = entry.SubItems(0).Text
-		If entry.SubItems.Count = 2 Then
-			dialog.tbInputFile.Text = entry.SubItems(1).Text
-		End If
+
+		If entry.SubItems.Count = 2 Then dialog.tbInputFile.Text = entry.SubItems(1).Text
 		dialog.tbGear.Focus()
 
 		If dialog.ShowDialog() = DialogResult.OK Then
 			entry.SubItems(0).Text = dialog.tbGear.Text
-			entry.SubItems(1).Text = dialog.tbInputFile.Text
+			If entry.SubItems.Count = 1 Then
+				entry.SubItems.Add(dialog.tbInputFile.Text)
+			Else
+				entry.SubItems(1).Text = dialog.tbInputFile.Text
+			End If
 		End If
 
 	End Sub
@@ -411,7 +434,7 @@ Public Class IEPCForm
 
 
 	Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
-		SaveOrSaveAs(true)
+		If SaveOrSaveAs(False) Then Close()
 	End Sub
 
 	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
