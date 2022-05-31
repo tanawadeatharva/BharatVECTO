@@ -22,6 +22,7 @@ Partial Class IEPCForm
 	'Do not modify it using the code editor.
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(IEPCForm))
         Me.btFLCurveFile1 = New System.Windows.Forms.Button()
         Me.tbThermalOverload = New System.Windows.Forms.TextBox()
@@ -37,6 +38,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel9 = New System.Windows.Forms.FlowLayoutPanel()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.tbFLCurve1 = New System.Windows.Forms.TextBox()
+        Me.btShowFLCurve1 = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -73,6 +75,7 @@ Partial Class IEPCForm
         Me.Label28 = New System.Windows.Forms.Label()
         Me.tbFLCurve2 = New System.Windows.Forms.TextBox()
         Me.btFLCurveFile2 = New System.Windows.Forms.Button()
+        Me.btShowFLCurve2 = New System.Windows.Forms.Button()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label17 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
@@ -139,6 +142,9 @@ Partial Class IEPCForm
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tcVoltageLevels.SuspendLayout
         Me.tpFirstVoltageLevel.SuspendLayout
         Me.FlowLayoutPanel9.SuspendLayout
@@ -165,6 +171,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel7.SuspendLayout
         Me.FlowLayoutPanel8.SuspendLayout
         Me.StatusStrip1.SuspendLayout
+        Me.CmOpenFile.SuspendLayout
         Me.SuspendLayout
         '
         'btFLCurveFile1
@@ -284,6 +291,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel9.Controls.Add(Me.Label44)
         Me.FlowLayoutPanel9.Controls.Add(Me.tbFLCurve1)
         Me.FlowLayoutPanel9.Controls.Add(Me.btFLCurveFile1)
+        Me.FlowLayoutPanel9.Controls.Add(Me.btShowFLCurve1)
         Me.FlowLayoutPanel9.Location = New System.Drawing.Point(6, 94)
         Me.FlowLayoutPanel9.Name = "FlowLayoutPanel9"
         Me.FlowLayoutPanel9.Size = New System.Drawing.Size(496, 26)
@@ -308,6 +316,17 @@ Partial Class IEPCForm
         Me.tbFLCurve1.Name = "tbFLCurve1"
         Me.tbFLCurve1.Size = New System.Drawing.Size(277, 20)
         Me.tbFLCurve1.TabIndex = 60
+        '
+        'btShowFLCurve1
+        '
+        Me.btShowFLCurve1.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.btShowFLCurve1.Location = New System.Drawing.Point(449, 1)
+        Me.btShowFLCurve1.Margin = New System.Windows.Forms.Padding(0, 1, 0, 0)
+        Me.btShowFLCurve1.Name = "btShowFLCurve1"
+        Me.btShowFLCurve1.Size = New System.Drawing.Size(24, 24)
+        Me.btShowFLCurve1.TabIndex = 85
+        Me.btShowFLCurve1.TabStop = false
+        Me.btShowFLCurve1.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel1
         '
@@ -556,7 +575,7 @@ Partial Class IEPCForm
         '
         Me.Label47.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label47.AutoSize = true
-        Me.Label47.Location = New System.Drawing.Point(189, 126)
+        Me.Label47.Location = New System.Drawing.Point(189, 127)
         Me.Label47.Name = "Label47"
         Me.Label47.Size = New System.Drawing.Size(106, 13)
         Me.Label47.TabIndex = 6
@@ -575,7 +594,7 @@ Partial Class IEPCForm
         Me.lvPowerMap1.Location = New System.Drawing.Point(3, 3)
         Me.lvPowerMap1.MultiSelect = false
         Me.lvPowerMap1.Name = "lvPowerMap1"
-        Me.lvPowerMap1.Size = New System.Drawing.Size(292, 120)
+        Me.lvPowerMap1.Size = New System.Drawing.Size(292, 121)
         Me.lvPowerMap1.TabIndex = 7
         Me.lvPowerMap1.TabStop = false
         Me.lvPowerMap1.UseCompatibleStateImageBehavior = false
@@ -636,7 +655,7 @@ Partial Class IEPCForm
         '
         Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label5.AutoSize = true
-        Me.Label5.Location = New System.Drawing.Point(189, 126)
+        Me.Label5.Location = New System.Drawing.Point(189, 127)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(106, 13)
         Me.Label5.TabIndex = 6
@@ -655,7 +674,7 @@ Partial Class IEPCForm
         Me.lvPowerMap2.Location = New System.Drawing.Point(3, 3)
         Me.lvPowerMap2.MultiSelect = false
         Me.lvPowerMap2.Name = "lvPowerMap2"
-        Me.lvPowerMap2.Size = New System.Drawing.Size(292, 120)
+        Me.lvPowerMap2.Size = New System.Drawing.Size(292, 121)
         Me.lvPowerMap2.TabIndex = 7
         Me.lvPowerMap2.TabStop = false
         Me.lvPowerMap2.UseCompatibleStateImageBehavior = false
@@ -676,6 +695,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel10.Controls.Add(Me.Label28)
         Me.FlowLayoutPanel10.Controls.Add(Me.tbFLCurve2)
         Me.FlowLayoutPanel10.Controls.Add(Me.btFLCurveFile2)
+        Me.FlowLayoutPanel10.Controls.Add(Me.btShowFLCurve2)
         Me.FlowLayoutPanel10.Location = New System.Drawing.Point(6, 94)
         Me.FlowLayoutPanel10.Name = "FlowLayoutPanel10"
         Me.FlowLayoutPanel10.Size = New System.Drawing.Size(496, 26)
@@ -711,6 +731,17 @@ Partial Class IEPCForm
         Me.btFLCurveFile2.Size = New System.Drawing.Size(24, 24)
         Me.btFLCurveFile2.TabIndex = 29
         Me.btFLCurveFile2.UseVisualStyleBackColor = true
+        '
+        'btShowFLCurve2
+        '
+        Me.btShowFLCurve2.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.btShowFLCurve2.Location = New System.Drawing.Point(449, 1)
+        Me.btShowFLCurve2.Margin = New System.Windows.Forms.Padding(0, 1, 0, 0)
+        Me.btShowFLCurve2.Name = "btShowFLCurve2"
+        Me.btShowFLCurve2.Size = New System.Drawing.Size(24, 24)
+        Me.btShowFLCurve2.TabIndex = 85
+        Me.btShowFLCurve2.TabStop = false
+        Me.btShowFLCurve2.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel4
         '
@@ -1000,9 +1031,9 @@ Partial Class IEPCForm
         '
         Me.FlowLayoutPanel2.Controls.Add(Me.btAddGear)
         Me.FlowLayoutPanel2.Controls.Add(Me.btRemoveGear)
-        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 127)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 128)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(61, 29)
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(61, 28)
         Me.FlowLayoutPanel2.TabIndex = 54
         '
         'btAddGear
@@ -1027,7 +1058,7 @@ Partial Class IEPCForm
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(191, 124)
+        Me.Label6.Location = New System.Drawing.Point(191, 125)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(106, 13)
         Me.Label6.TabIndex = 6
@@ -1046,7 +1077,7 @@ Partial Class IEPCForm
         Me.lvGear.Location = New System.Drawing.Point(3, 3)
         Me.lvGear.MultiSelect = false
         Me.lvGear.Name = "lvGear"
-        Me.lvGear.Size = New System.Drawing.Size(294, 118)
+        Me.lvGear.Size = New System.Drawing.Size(294, 119)
         Me.lvGear.TabIndex = 7
         Me.lvGear.TabStop = false
         Me.lvGear.UseCompatibleStateImageBehavior = false
@@ -1108,7 +1139,7 @@ Partial Class IEPCForm
         Me.lvDragCurve.Location = New System.Drawing.Point(3, 3)
         Me.lvDragCurve.MultiSelect = false
         Me.lvDragCurve.Name = "lvDragCurve"
-        Me.lvDragCurve.Size = New System.Drawing.Size(294, 118)
+        Me.lvDragCurve.Size = New System.Drawing.Size(294, 119)
         Me.lvDragCurve.TabIndex = 77
         Me.lvDragCurve.TabStop = false
         Me.lvDragCurve.UseCompatibleStateImageBehavior = false
@@ -1128,9 +1159,9 @@ Partial Class IEPCForm
         '
         Me.FlowLayoutPanel11.Controls.Add(Me.btAddDragCurve)
         Me.FlowLayoutPanel11.Controls.Add(Me.btRemoveDragCurve)
-        Me.FlowLayoutPanel11.Location = New System.Drawing.Point(3, 127)
+        Me.FlowLayoutPanel11.Location = New System.Drawing.Point(3, 128)
         Me.FlowLayoutPanel11.Name = "FlowLayoutPanel11"
-        Me.FlowLayoutPanel11.Size = New System.Drawing.Size(61, 29)
+        Me.FlowLayoutPanel11.Size = New System.Drawing.Size(61, 28)
         Me.FlowLayoutPanel11.TabIndex = 54
         '
         'btAddDragCurve
@@ -1155,7 +1186,7 @@ Partial Class IEPCForm
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = true
-        Me.Label7.Location = New System.Drawing.Point(191, 124)
+        Me.Label7.Location = New System.Drawing.Point(191, 125)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(106, 13)
         Me.Label7.TabIndex = 6
@@ -1390,6 +1421,25 @@ Partial Class IEPCForm
         Me.LbStatus.Size = New System.Drawing.Size(39, 17)
         Me.LbStatus.Text = "Status"
         '
+        'CmOpenFile
+        '
+        Me.CmOpenFile.ImageScalingSize = New System.Drawing.Size(24, 24)
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
         'IEPCForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
@@ -1459,6 +1509,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel8.PerformLayout
         Me.StatusStrip1.ResumeLayout(false)
         Me.StatusStrip1.PerformLayout
+        Me.CmOpenFile.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1579,4 +1630,9 @@ End Sub
     Friend WithEvents ColumnHeader5 As ColumnHeader
     Friend WithEvents FlowLayoutPanel11 As FlowLayoutPanel
     Friend WithEvents Label7 As Label
+    Friend WithEvents btShowFLCurve1 As Button
+    Friend WithEvents btShowFLCurve2 As Button
+    Friend WithEvents CmOpenFile As ContextMenuStrip
+    Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
 End Class
