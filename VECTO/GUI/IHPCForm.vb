@@ -17,13 +17,7 @@ Public Class IHPCForm
 #Region "Set JSON Data"
 
     Public Sub ReadIHPCFile(file As String)
-
-        Dim inputProvider = New JSONComponentInputData(file, Nothing)
-        Dim ihpcData = inputProvider.ElectricMachines.Entries.First().ElectricMachine
-
-        If IsNothing(ihpcData) Then
-            Return
-        End If
+        Dim ihpcData = JSONInputDataFactory.ReadIHPCEngineeringInputData(file, True)
 
         tbModel.Text = ihpcData.Model
         tbInertia.Text = ihpcData.Inertia.ToGUIFormat()
