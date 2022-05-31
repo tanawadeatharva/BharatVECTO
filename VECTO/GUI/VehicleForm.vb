@@ -569,6 +569,9 @@ Public Class VehicleForm
 				'IEPC
 				tcVehicleComponents.TabPages.Remove(tpIEPC)
 
+				'IHPC 
+			    tcVehicleComponents.TabPages.Remove(tbIHPC)
+
             Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
 
@@ -596,6 +599,9 @@ Public Class VehicleForm
 
                 'IEPC
                 tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+                'IHPC 
+                tcVehicleComponents.TabPages.Remove(tbIHPC)
 
 			Case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
@@ -626,6 +632,9 @@ Public Class VehicleForm
 			    'IEPC
 			    tcVehicleComponents.TabPages.Remove(tpIEPC)
 
+			    'IHPC 
+			    tcVehicleComponents.TabPages.Remove(tbIHPC)
+
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
 
@@ -655,15 +664,29 @@ Public Class VehicleForm
 			    'IEPC
 			    tcVehicleComponents.TabPages.Remove(tpIEPC)
 
+			    'IHPC 
+			    tcVehicleComponents.TabPages.Remove(tbIHPC)
+
 			Case VectoSimulationJobType.IEPC_E
 				lblTitle.Text = "IEPC-E Vehicle"
 				
 			    tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 			    tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
 		    Case VectoSimulationJobType.IEPC_S
 		        lblTitle.Text = "IEPC-S Vehicle"
 				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+		        tcVehicleComponents.TabPages.Remove(tbIHPC)
+				
+		    Case VectoSimulationJobType.IHPC
+		        lblTitle.Text = "IHPC Vehicle"
+
+		        tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+		        tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+
+		        'IEPC
+		        tcVehicleComponents.TabPages.Remove(tpIEPC)
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
@@ -1532,5 +1555,30 @@ Public Class VehicleForm
 		End If
 	End Sub
 
-End Class
+	Private Sub btIHPCFile_Click(sender As Object, e As EventArgs) Handles btIHPCFile.Click
+        If IHPCFileBrowser.OpenDialog(FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))) Then
+            tbIHPCFilePath.Text = GetFilenameWithoutDirectory(IHPCFileBrowser.Files(0), GetPath(_vehFile))
+        End If
+    End Sub
 
+    Private Sub btIHPC_Click(sender As Object, e As EventArgs) Handles btIHPC.Click
+		Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
+
+		IHPCForm.JobDir = GetPath(_vehFile)
+        If Not IHPCForm.Visible Then
+            IHPCForm.ClearIHPC()
+            IHPCForm.Show()
+        Else
+            If IHPCForm.WindowState = FormWindowState.Minimized Then IHPCForm.WindowState = FormWindowState.Normal
+            IHPCForm.BringToFront()
+        End If
+
+        If Not Trim(f) = "" Then
+            Try
+                IHPCForm.ReadIHPCFile(f)
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IHPC File")
+            End Try
+        End If
+    End Sub
+End Class
