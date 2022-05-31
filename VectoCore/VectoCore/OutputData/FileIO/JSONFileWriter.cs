@@ -515,13 +515,13 @@ public class JSONFileWriter : IOutputFileWriter
 		var header = GetHeader(HEV_BEVVehicleFormatVersion);
 		var retarderOut = GetRetarderOut(retarder, basePath);
 
-		//var ptoOut = GetPTOOut(pto, basePath);
+        var ptoOut = GetPTOOut(pto, basePath);
 
-		//var angledriveOut = GetAngledriveOut(angledrive, basePath);
+        //var angledriveOut = GetAngledriveOut(angledrive, basePath);
 
-		//var torqueLimits = GetTorqueLimits(vehicle);
+        //var torqueLimits = GetTorqueLimits(vehicle);
 
-		var electricMotorsOut = GetElectricMotors(vehicle, basePath);
+        var electricMotorsOut = GetElectricMotors(vehicle, basePath);
 		var battery = GetBattery(vehicle, basePath);
 		var body = GetVehicle(vehicle, airdrag, DeclMode, basePath);
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
@@ -532,11 +532,11 @@ public class JSONFileWriter : IOutputFileWriter
 		//body.Add("IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM);
 		if (retarder.Type != RetarderType.None)
 			body.Add("Retarder", retarderOut);
-		//body.Add("Angledrive", angledriveOut);
-		//body.Add("PTO", ptoOut);
-		//body.Add("TorqueLimits", torqueLimits);
+        //body.Add("Angledrive", angledriveOut);
+        body.Add("PTO", ptoOut);
+        //body.Add("TorqueLimits", torqueLimits);
 
-		if ((vehicle.TankSystem.HasValue))
+        if ((vehicle.TankSystem.HasValue))
 			body["TankSystem"] = vehicle.TankSystem.Value.ToString();
 
 		WriteFile(header, body, filename);
