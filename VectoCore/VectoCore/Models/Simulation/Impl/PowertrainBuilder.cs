@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ConventionalVehicle: return BuildFullPowertrainConventional(data);
 						case VectoSimulationJobType.ParallelHybridVehicle: return BuildFullPowertrainParallelHybrid(data);
 						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data);
-						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
+						case VectoSimulationJobType.BatteryElectricVehicle: return BuildFulPowertrainBatteryElectric(data);
 						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
 						case VectoSimulationJobType.IEPC_E: return BuildFullPowertrainIEPCE(data);
 						case VectoSimulationJobType.IEPC_S: return BuildFullPowertrainIEPCSerial(data);
@@ -662,7 +662,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └Engine E2
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildBatteryElectricPowertrain(VectoRunData data)
+		private IVehicleContainer BuildFulPowertrainBatteryElectric(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -725,6 +725,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(data.PTO != null ? GetPEVPTO(container, data): null)
 						.AddComponent(em);
 
 					new ATClutchInfo(container);
@@ -752,6 +753,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			return container;
+		}
+
+		private IPowerTrainComponent GetPEVPTO(VehicleContainer container, VectoRunData data)
+		{
+			if (data.PTO == null) {
+				return null;
+			}
+			var pto = new PEVPTO(container);
+
+			RoadSweeperAuxiliary rdSwpAux = null;
+			PTODriveAuxiliary ptoDrive = null;
+			if (data.ExecutionMode == ExecutionMode.Engineering && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
+				if (data.DriverData.PTODriveMinSpeed == null) {
+					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
+				}
+				rdSwpAux = new RoadSweeperAuxiliary(container);
+				pto.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+			}
+
+			if (data.ExecutionMode == ExecutionMode.Engineering &&
+				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
+				if (data.PTOCycleWhileDrive == null) {
+					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
+				}
+
+				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
+				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+			}
+			if (data.PTO != null) {
+				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).TorqueLoss);
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+
+				pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+			}
+
+			return pto;
 		}
 
 		private static Retarder GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
