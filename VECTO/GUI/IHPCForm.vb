@@ -244,7 +244,7 @@ Public Class IHPCForm
             VectoJobForm.WindowState = FormWindowState.Normal
         End If
 
-        VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_ihpcFilePath, JobDir)
+        VehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(_ihpcFilePath, JobDir)
     End Sub
 
 

@@ -328,7 +328,7 @@ Public Class IEPCForm
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
 
-		VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_iepcFilePath, JobDir)
+		VehicleForm.tbIEPCFilePath.Text = GetFilenameWithoutDirectory(_iepcFilePath, JobDir)
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click

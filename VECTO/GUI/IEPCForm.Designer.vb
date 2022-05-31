@@ -1255,8 +1255,8 @@ Partial Class IEPCForm
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
         Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
-        Me.ToolStripBtSendTo.Text = "Send to Job Editor"
-        Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
+        Me.ToolStripBtSendTo.Text = "Send to Vehicle Editor"
+        Me.ToolStripBtSendTo.ToolTipText = "Send to Vehicle Editor"
         '
         'ToolStripSeparator1
         '
