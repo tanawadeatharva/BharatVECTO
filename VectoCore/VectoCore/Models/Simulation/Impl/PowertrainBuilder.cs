@@ -608,6 +608,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
@@ -637,7 +638,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, data);
+				.AddAuxiliariesSerialHybrid(container, data);
 
 			return container;
 		}
@@ -725,7 +726,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
-						.AddComponent(data.PTO != null ? GetPEVPTO(container, data): null)
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(em);
 
 					new ATClutchInfo(container);
@@ -1141,6 +1142,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					break;
@@ -1474,6 +1476,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
 				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+			}
+
+			return aux;
+		}
+
+		internal static EngineAuxiliary CreateAuxiliariesSerialHybrid(VectoRunData data,
+			IVehicleContainer container)
+		{
+			var aux = new EngineAuxiliary(container);
+			foreach (var auxData in data.Aux) {
+				// id's in upper case
+				var id = auxData.ID.ToUpper();
+
+				switch (auxData.DemandType) {
+					case AuxiliaryDemandType.Constant:
+						aux.AddConstant(id, auxData.PowerDemand);
+						break;
+					case AuxiliaryDemandType.Direct:
+						aux.AddCycle(id);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
+				}
+
+				container.ModalData?.AddAuxiliary(id);
 			}
 
 			return aux;
