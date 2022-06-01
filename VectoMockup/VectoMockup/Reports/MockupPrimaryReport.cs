@@ -50,7 +50,7 @@ namespace TUGraz.VectoMockup.Reports
 
 		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
-			var xElement = MockupResultReader.GetCIFMockupResult(Tns.NamespaceName, resultValue, Tns + "Result", _modelData);
+			var xElement = MockupResultReader.GetVIFMockupResult(Tns.NamespaceName, resultValue, Tns + "Result", _modelData);
 			Results.Add(xElement);
 		}
 
@@ -60,8 +60,9 @@ namespace TUGraz.VectoMockup.Reports
 			Results.AddFirst(new XComment("Always prints success at the moment"));
 		}
 
+
 		public void GenerateReport(XElement fullReportHash)
-		{
+		{ 
 			_primaryVehicleReportImplementation.GenerateReport(fullReportHash);
 		}
 
