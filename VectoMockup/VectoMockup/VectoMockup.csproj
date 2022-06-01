@@ -33,6 +33,7 @@
     <None Remove="MockupResults\MRF_MockupResults_OVC-HEV_Lorry.xml" />
     <None Remove="MockupResults\MRF_MockupResults_PEV_Bus.xml" />
     <None Remove="MockupResults\MRF_MockupResults_PEV_Lorry.xml" />
+    <None Remove="MockupResults\VIF_MockupResults_Conv_Bus.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MockupResults\CIF_MockupResults_Conv_Bus.xml" />
@@ -52,6 +53,7 @@
     <EmbeddedResource Include="MockupResults\MRF_MockupResults_OVC-HEV_Lorry.xml" />
     <EmbeddedResource Include="MockupResults\MRF_MockupResults_PEV_Bus.xml" />
     <EmbeddedResource Include="MockupResults\MRF_MockupResults_PEV_Lorry.xml" />
+    <EmbeddedResource Include="MockupResults\VIF_MockupResults_Conv_Bus.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
