@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
@@ -6,6 +8,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation;
@@ -33,7 +36,7 @@ namespace VectoMockupTest
 		private ISimulatorFactory _simulatorFactory;
 		private IXMLInputDataReader _inputDataReader;
 
-		#region TestFiles
+		#region Lorry Testfiles
 		protected const string ConventionalHeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml";
 		protected const string HEV_Px_HeavyLorry =
@@ -57,6 +60,10 @@ namespace VectoMockupTest
 		protected const string PEV_IEPC_HeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\IEPC_heavyLorry.xml";
 
+		#endregion
+
+		#region PrimaryBus
+
 		protected const string Conventional_PrimaryBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string HEV_Px_IHPC_PrimaryBus =
@@ -78,12 +85,34 @@ namespace VectoMockupTest
 		protected const string PEV_IEPC_PrimaryBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\IEPC_primaryBus.xml";
 
+		#endregion
+
+		#region interim bus
+
 		protected const string Conventional_InterimBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml";
+		#endregion
 
-
+		#region completed bus
 
 		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
+		#endregion
+
+		#region special cases multistage
+
+		private const string TestDataDir = "TestData\\";
+
+		private const string CompletedDiesel = TestDataDir + "Multistage\\newVifCompletedConventional.vecto";
+		private const string CompletedExempted = TestDataDir + "Multistage\\newVifExempted.vecto";
+		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "Multistage\\newVifExempted-noTPMLM.vecto";
+		private string CompletedWithoutADAS = TestDataDir + "Multistage\\newVifCompletedConventional-noADAS.vecto";
+
+
+
+
+		private const string InterimExempted = TestDataDir + "newVifExemptedIncomplete.vecto";
+		private const string InterimDiesel = TestDataDir + "newVifInterimDiesel.vecto";
+
 
 		#endregion
 
@@ -108,6 +137,19 @@ namespace VectoMockupTest
 
 		}
 
+		private void Clearfiles(FileOutputWriter fileWriter)
+		{
+			IList<string> filesToBeCleared = new List<string>() {
+				fileWriter.XMLPrimaryVehicleReportName,
+				fileWriter.XMLFullReportName,
+				fileWriter.XMLCustomerReportName
+			};
+			foreach (var fileName in filesToBeCleared) {
+				if (File.Exists(fileName)) {
+					File.Delete(fileName);
+				}
+			}
+		}
 		public FileOutputWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
 		{
 			subDirectory = Path.Combine("MockupReports",subDirectory);
@@ -165,10 +207,13 @@ namespace VectoMockupTest
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 
+			Clearfiles(fileWriter); //remove files from previous test runs
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
 			CheckFileExists(fileWriter, checkCif:false, checkVif:true);
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XsdPath), "VIF invalid" );
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XsdPath), "MRF invalid");
 		}
 
 		[TestCase(Conventional_InterimBus, TestName = "ConventionalInterimBus")]
@@ -197,7 +242,7 @@ namespace VectoMockupTest
 		{
 			//SimulatorFactory.MockUpRun = mockup;
 			XMLDeclarationVIFInputData input = null;
-			var fileWriter = new FileOutputWriter(fileName);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			using (var reader = XmlReader.Create(fileName))
 			{
 				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistageBusInputDataProvider, null);
@@ -212,10 +257,32 @@ namespace VectoMockupTest
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: false, checkVif: true);
+			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+		}
+
+		[TestCase(CompletedDiesel, TestName="CompletedDiesel")]
+		public void PrimaryAndCompletedTest(string fileName)
+		{
+
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var input = JSONInputDataFactory.ReadJsonJob(fileName);
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+
 
 
 		}
+
+
+
+
 
 
 		private static void CheckFileExists(FileOutputWriter fileWriter, bool checkMrf = true, bool checkCif = true, bool checkVif = false)
