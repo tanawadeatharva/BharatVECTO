@@ -32,10 +32,6 @@ namespace TUGraz.VectoMockup.Reports
 		{
 			var inputData = modelData.InputData as IXMLMultistageInputDataProvider;
 
-			var arch = inputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
-
-			inputData.JobInputData.PrimaryVehicle.Vehicle.VehicleCategory.GetVehicleType();// HEV/PEV - Sx/Px
-
 
 			var ihpc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
@@ -46,7 +42,13 @@ namespace TUGraz.VectoMockup.Reports
 				inputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
-
+			CustomerRpt = _cifFactory.GetCustomerReport(
+				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
+				inputData.JobInputData.JobType,
+				inputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID,
+				inputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
+				iepc,
+				ihpc);
 			//base.InstantiateReports(modelData);
 		}
 
