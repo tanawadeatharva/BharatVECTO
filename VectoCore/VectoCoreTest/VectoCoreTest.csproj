@@ -6,6 +6,9 @@
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.2" />
