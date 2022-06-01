@@ -15,12 +15,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 {
     public class SimulatorFactoryDeclaration : SimulatorFactory
     {
-		private readonly IXMLInputDataReader _xmlInputDataReader;
-		private readonly ISimulatorFactoryFactory _simFactoryFactory;
+		protected readonly IXMLInputDataReader _xmlInputDataReader;
+		protected readonly ISimulatorFactoryFactory _simFactoryFactory;
 		private IInputDataProvider _currentStageInputData;
 		private IDeclarationReport _currentStageDeclarationReport;
 		private IVTPReport _currentStageVTPReport;
-		private readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
+		protected readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
 
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
@@ -85,15 +85,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			ISimulatorFactoryFactory simulatorFactoryFactory, 
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
 			IVectoRunDataFactoryFactory runDataFactoryFactory) : this(
-			dataProvider: dataProvider, 
-			declarationReport: null,
-			writer: writer,
-			vtpReport: null, 
-			validate: validate,
-			xmlInputDataReader: xmlInputDataReader, 
-			simulatorFactoryFactory: simulatorFactoryFactory,
-			xmlDeclarationReportFactory: xmlDeclarationReportFactory,
-			runDataFactoryFactory: runDataFactoryFactory)
+				dataProvider: dataProvider, 
+				declarationReport: null,
+				writer: writer,
+				vtpReport: null, 
+				validate: validate,
+				xmlInputDataReader: xmlInputDataReader, 
+				simulatorFactoryFactory: simulatorFactoryFactory,
+				xmlDeclarationReportFactory: xmlDeclarationReportFactory,
+				runDataFactoryFactory: runDataFactoryFactory)
 		{
 
 		}
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			return true;
 		}
 
-		private IFollowUpSimulatorFactoryCreator CreateFollowUpFactoryCreator(IInputDataProvider currentStageInputData, IDeclarationReport currentStageDeclarationReport)
+		protected virtual IFollowUpSimulatorFactoryCreator CreateFollowUpFactoryCreator(IInputDataProvider currentStageInputData, IDeclarationReport currentStageDeclarationReport)
 		{
 			switch (currentStageInputData) {
 				case IMultistagePrimaryAndStageInputDataProvider multistagePrimaryAndStageInputDataProvider:
