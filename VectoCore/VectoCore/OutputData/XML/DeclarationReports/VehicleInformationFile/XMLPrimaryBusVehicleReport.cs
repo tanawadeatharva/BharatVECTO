@@ -27,6 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	public class XMLPrimaryBusVehicleReport : IXMLPrimaryVehicleReport
 	{
+		public XNamespace Tns => tns;
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
@@ -394,8 +395,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetAngledriveDescription(AngledriveData angledriveData)
 		{
-			if (angledriveData == null) 
+			if (angledriveData == null) {
 				return null;
+			} 
+				
 			
 			return WrapComponent(XMLNames.Component_Angledrive, "AngledriveDataPIFType",
 				GetCommonDescription(angledriveData),
@@ -432,6 +435,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
 		{
+			
 			var fuels = new List<XElement>();
 			foreach (var mode in engineData.InputData.EngineModes) {
 				fuels.Add(
@@ -486,7 +490,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					commonElements,
 					specificElements));
 		}
-
+	 
 
 		private object[] GetCommonDescription(CombustionEngineData data)
 		{
@@ -530,36 +534,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 
-			//if (resultEntry.Status == VectoRun.Status.Success) {
-			//	_weightedPayload += resultEntry.Payload * resultEntry.WeightingFactor;
-			//	_weightedCo2 += resultEntry.CO2Total / resultEntry.Distance * resultEntry.WeightingFactor;
-			//}
-			Results.Add(
-				new XElement(
-					tns + XMLNames.Report_Result_Result,
-					new XAttribute(
-						XMLNames.Report_Result_Status_Attr,
-						resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
-					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, resultEntry.VehicleClass.GetClassNumber()),
-					new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
-					new XElement(
-						tns + XMLNames.Report_ResultEntry_SimulationParameters,
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
-							XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
-						new XElement(
-							tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
-						new XElement(
-							tns + XMLNames.Report_ResultEntry_PassengerCount,
-							resultEntry.PassengerCount?.ToXMLFormat(2) ?? "NaN"),
-						new XElement(
-							tns + XMLNames.Report_Result_FuelMode,
-							resultEntry.FuelData.Count > 1
-								? XMLNames.Report_Result_FuelMode_Val_Dual
-								: XMLNames.Report_Result_FuelMode_Val_Single)
-					),
-					GetResults(resultEntry)));
-		}
+            //if (resultEntry.Status == VectoRun.Status.Success) {
+            //	_weightedPayload += resultEntry.Payload * resultEntry.WeightingFactor;
+            //	_weightedCo2 += resultEntry.CO2Total / resultEntry.Distance * resultEntry.WeightingFactor;
+            //}
+            Results.Add(
+                new XElement(
+                    tns + XMLNames.Report_Result_Result,
+                    new XAttribute(
+                        XMLNames.Report_Result_Status_Attr,
+                        resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
+                    new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, resultEntry.VehicleClass.GetClassNumber()),
+                    new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
+                    new XElement(
+                        tns + XMLNames.Report_ResultEntry_SimulationParameters,
+                        new XElement(
+                            tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
+                            XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
+                        new XElement(
+                            tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
+                        new XElement(
+                            tns + XMLNames.Report_ResultEntry_PassengerCount,
+                            resultEntry.PassengerCount?.ToXMLFormat(2) ?? "NaN"),
+                        new XElement(
+                            tns + XMLNames.Report_Result_FuelMode,
+                            resultEntry.FuelData.Count > 1
+                                ? XMLNames.Report_Result_FuelMode_Val_Dual
+                                : XMLNames.Report_Result_FuelMode_Val_Single)
+                    ),
+                    GetResults(resultEntry)));
+        }
 
 		private object[] GetResults(XMLDeclarationReport.ResultEntry resultEntry)
 		{

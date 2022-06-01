@@ -11,5 +11,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		void WriteResult(XMLDeclarationReport.ResultEntry result);
 		void GenerateReport(XElement fullReportHash);
 		XDocument Report { get; }
+		XNamespace Tns { get; }
 	}
 }
