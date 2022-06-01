@@ -97,16 +97,16 @@ Public Class IEPCInputData
 
         Dim gearNumber = 1
         For Each entry As  ListViewItem In gearsListView.Items
-            Dim currentEntry = new GearEntry
 
+            Dim currentEntry = new GearEntry
             currentEntry.GearNumber = gearNumber
             gearNumber += 1
             
             currentEntry.Ratio = entry.SubItems(0).Text.ToDouble()
             If Not entry.SubItems(1).Text = Nothing Then _
-                currentEntry.MaxOutputShaftSpeed = entry.SubItems(1).Text.ToDouble().SI(Of PerSecond)
+                currentEntry.MaxOutputShaftTorque = entry.SubItems(1).Text.ToDouble().SI(Of NewtonMeter)
             If Not entry.SubItems(2).Text = Nothing Then _
-                currentEntry.MaxOutputShaftTorque = entry.SubItems(2).Text.ToDouble().SI(Of NewtonMeter)
+                currentEntry.MaxOutputShaftSpeed = entry.SubItems(2).Text.ToDouble().SI(Of PerSecond)
             
             _gears.Add(currentEntry)
         Next

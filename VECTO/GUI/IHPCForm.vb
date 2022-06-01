@@ -91,7 +91,7 @@ Public Class IHPCForm
         tbContinuousTorqueSpeed2.Text = ""
         tbOverloadTime2.Text = ""
         tbOverloadTorque2.Text = ""
-        tbOverloadTorqueSpeed1.Text = ""
+        tbOverloadTorqueSpeed2.Text = ""
         tbFLCurve2.Text = ""
         RemoveAllListViewItems(_lvPowerMap2)
         
@@ -179,9 +179,7 @@ Public Class IHPCForm
         Dim entry As ListViewItem = listView.SelectedItems(0)
         
         IHPCPowerMapInputDialog.tbGear.Text = entry.SubItems(0).Text
-        If entry.SubItems.Count = 2 Then
-            IHPCPowerMapInputDialog.tbInputFile.Text = entry.SubItems(1).Text
-        End If
+        IHPCPowerMapInputDialog.tbInputFile.Text = entry.SubItems(1).Text
         IHPCPowerMapInputDialog.tbGear.Focus()
 
         If IHPCPowerMapInputDialog.ShowDialog() = DialogResult.OK Then

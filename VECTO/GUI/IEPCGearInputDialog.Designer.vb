@@ -106,7 +106,7 @@ Partial Class IEPCGearInputDialog
         Me.tbRatio.Location = New System.Drawing.Point(149, 5)
         Me.tbRatio.Name = "tbRatio"
         Me.tbRatio.Size = New System.Drawing.Size(77, 20)
-        Me.tbRatio.TabIndex = 8
+        Me.tbRatio.TabIndex = 1
         '
         'tbMaxOutShaftTorque
         '
@@ -114,7 +114,7 @@ Partial Class IEPCGearInputDialog
         Me.tbMaxOutShaftTorque.Location = New System.Drawing.Point(149, 35)
         Me.tbMaxOutShaftTorque.Name = "tbMaxOutShaftTorque"
         Me.tbMaxOutShaftTorque.Size = New System.Drawing.Size(77, 20)
-        Me.tbMaxOutShaftTorque.TabIndex = 8
+        Me.tbMaxOutShaftTorque.TabIndex = 2
         '
         'tbMaxOutShaftSpeed
         '
@@ -122,7 +122,7 @@ Partial Class IEPCGearInputDialog
         Me.tbMaxOutShaftSpeed.Location = New System.Drawing.Point(149, 65)
         Me.tbMaxOutShaftSpeed.Name = "tbMaxOutShaftSpeed"
         Me.tbMaxOutShaftSpeed.Size = New System.Drawing.Size(77, 20)
-        Me.tbMaxOutShaftSpeed.TabIndex = 8
+        Me.tbMaxOutShaftSpeed.TabIndex = 3
         '
         'Label3
         '
@@ -177,7 +177,7 @@ Partial Class IEPCGearInputDialog
         Me.btnOk.Location = New System.Drawing.Point(3, 3)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(67, 23)
-        Me.btnOk.TabIndex = 0
+        Me.btnOk.TabIndex = 4
         Me.btnOk.Text = "OK"
         '
         'btnCancel
@@ -187,7 +187,7 @@ Partial Class IEPCGearInputDialog
         Me.btnCancel.Location = New System.Drawing.Point(77, 3)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(67, 23)
-        Me.btnCancel.TabIndex = 1
+        Me.btnCancel.TabIndex = 5
         Me.btnCancel.Text = "Cancel"
         '
         'IEPCGearInputDialog

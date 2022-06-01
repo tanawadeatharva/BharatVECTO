@@ -23,6 +23,8 @@ Public Class IEPCForm
 		_gearDlg = New IEPCGearInputDialog()
 	End Sub
 
+#Region "Set IEPC Data"
+
 	Public Sub ReadIEPCFile(file As String)
 		Dim inputData = JSONInputDataFactory.ReadIEPCEngineeringInputData(file, True)
 
@@ -132,6 +134,8 @@ Public Class IEPCForm
 
 	End Function
 
+#End Region
+
 	Private Sub btAddDragCurve_Click(sender As Object, e As EventArgs) Handles btAddDragCurve.Click
 		AddListViewItem(_dragCurveDlg, _lvDragCurve)
 	End Sub
@@ -168,7 +172,7 @@ Public Class IEPCForm
 	Private Sub btAddGear_Click(sender As Object, e As EventArgs) Handles btAddGear.Click
 		_gearDlg.Clear()
 
-		If (_gearDlg.ShowDialog() = DialogResult.OK) Then
+		If _gearDlg.ShowDialog() = DialogResult.OK Then
 			Dim ratio = Convert.ToDouble(_gearDlg.tbRatio.Text)
 			Dim outputShaftTorque As Double?
 			Dim outputShaftSpeed As Double?
@@ -191,6 +195,7 @@ Public Class IEPCForm
 	Private Sub AddPowerMapEntry(powerMapListView As ListView, gearIndex As Integer)
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = gearIndex.ToString()
+		retVal.SubItems.Add(String.Empty)
 		powerMapListView.Items.Add(retVal)
 	End Sub
 	
@@ -201,7 +206,6 @@ Public Class IEPCForm
 		Dim entry As ListViewItem = lvGear.SelectedItems(0)
 
 		_gearDlg.tbRatio.Text = entry.SubItems(0).Text
-		
 		 _gearDlg.tbMaxOutShaftTorque.Text = entry.SubItems(1).Text
 		 _gearDlg.tbMaxOutShaftSpeed.Text = entry.SubItems(2).Text
 		_gearDlg.tbRatio.Focus()
@@ -236,17 +240,12 @@ Public Class IEPCForm
 
 		Dim entry As ListViewItem = listView.SelectedItems(0)
 		dialog.tbGear.Text = entry.SubItems(0).Text
-
-		If entry.SubItems.Count = 2 Then dialog.tbInputFile.Text = entry.SubItems(1).Text
+		dialog.tbInputFile.Text = entry.SubItems(1).Text
 		dialog.tbGear.Focus()
 
 		If dialog.ShowDialog() = DialogResult.OK Then
 			entry.SubItems(0).Text = dialog.tbGear.Text
-			If entry.SubItems.Count = 1 Then
-				entry.SubItems.Add(dialog.tbInputFile.Text)
-			Else
-				entry.SubItems(1).Text = dialog.tbInputFile.Text
-			End If
+		    entry.SubItems(1).Text = dialog.tbInputFile.Text
 		End If
 
 	End Sub
@@ -283,7 +282,7 @@ Public Class IEPCForm
 		tbModel.Text = ""
 		tbInertia.Text = ""
 		cbDifferentialIncluded.Checked = False
-		cbDifferentialIncluded.Checked = False
+		cbDesignTypeWheelMotor.Checked = False
 		tbNumberOfDesignTypeWheelMotor.Text = ""
 		tbThermalOverload.Text = ""
 
@@ -442,7 +441,7 @@ Public Class IEPCForm
 	End Sub
 
 
-	#Region "Validate Input"
+#Region "Validate Input"
 
 	Private Function ValidateData() As Boolean
 
@@ -623,10 +622,15 @@ Public Class IEPCForm
 			End If
 
 			If entry.SubItems.Count = 2 Then
-				Dim fileExtension = new FileInfo(entry.SubItems(1).Text).Extension
+				If  String.IsNullOrEmpty(entry.SubItems(1).Text)
+				    ShowErrorMessageBox($"Missing Power Map file entry at Gear {entry.SubItems(0).Text}")
+					Return False
+				End If
+			    
+			    Dim fileExtension = new FileInfo(entry.SubItems(1).Text).Extension
 				If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension
-					ShowErrorMessageBox($"The selected Full Load Curve file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
-					Return false
+					ShowErrorMessageBox($"The selected Power Map file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
+					Return False
 				End If
 			End If
 		Next

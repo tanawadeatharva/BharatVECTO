@@ -182,7 +182,7 @@ Partial Class IEPCForm
         Me.btFLCurveFile1.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile1.Name = "btFLCurveFile1"
         Me.btFLCurveFile1.Size = New System.Drawing.Size(24, 24)
-        Me.btFLCurveFile1.TabIndex = 29
+        Me.btFLCurveFile1.TabIndex = 15
         Me.btFLCurveFile1.UseVisualStyleBackColor = true
         '
         'tbThermalOverload
@@ -192,7 +192,7 @@ Partial Class IEPCForm
         Me.tbThermalOverload.Margin = New System.Windows.Forms.Padding(30, 3, 3, 3)
         Me.tbThermalOverload.Name = "tbThermalOverload"
         Me.tbThermalOverload.Size = New System.Drawing.Size(56, 20)
-        Me.tbThermalOverload.TabIndex = 51
+        Me.tbThermalOverload.TabIndex = 3
         '
         'Label52
         '
@@ -222,7 +222,7 @@ Partial Class IEPCForm
         Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(216, 3)
         Me.tbNumberOfDesignTypeWheelMotor.Name = "tbNumberOfDesignTypeWheelMotor"
         Me.tbNumberOfDesignTypeWheelMotor.Size = New System.Drawing.Size(30, 20)
-        Me.tbNumberOfDesignTypeWheelMotor.TabIndex = 49
+        Me.tbNumberOfDesignTypeWheelMotor.TabIndex = 5
         '
         'Label51
         '
@@ -240,7 +240,7 @@ Partial Class IEPCForm
         Me.tbInertia.Location = New System.Drawing.Point(45, 3)
         Me.tbInertia.Name = "tbInertia"
         Me.tbInertia.Size = New System.Drawing.Size(57, 20)
-        Me.tbInertia.TabIndex = 46
+        Me.tbInertia.TabIndex = 2
         '
         'Label49
         '
@@ -259,7 +259,7 @@ Partial Class IEPCForm
         Me.tbModel.Margin = New System.Windows.Forms.Padding(3, 3, 0, 3)
         Me.tbModel.Name = "tbModel"
         Me.tbModel.Size = New System.Drawing.Size(194, 20)
-        Me.tbModel.TabIndex = 44
+        Me.tbModel.TabIndex = 1
         '
         'tcVoltageLevels
         '
@@ -270,7 +270,7 @@ Partial Class IEPCForm
         Me.tcVoltageLevels.Name = "tcVoltageLevels"
         Me.tcVoltageLevels.SelectedIndex = 0
         Me.tcVoltageLevels.Size = New System.Drawing.Size(517, 322)
-        Me.tcVoltageLevels.TabIndex = 41
+        Me.tcVoltageLevels.TabIndex = 107
         '
         'tpFirstVoltageLevel
         '
@@ -295,7 +295,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel9.Location = New System.Drawing.Point(6, 94)
         Me.FlowLayoutPanel9.Name = "FlowLayoutPanel9"
         Me.FlowLayoutPanel9.Size = New System.Drawing.Size(496, 26)
-        Me.FlowLayoutPanel9.TabIndex = 74
+        Me.FlowLayoutPanel9.TabIndex = 108
         '
         'Label44
         '
@@ -315,7 +315,7 @@ Partial Class IEPCForm
         Me.tbFLCurve1.Margin = New System.Windows.Forms.Padding(3, 3, 6, 3)
         Me.tbFLCurve1.Name = "tbFLCurve1"
         Me.tbFLCurve1.Size = New System.Drawing.Size(277, 20)
-        Me.tbFLCurve1.TabIndex = 60
+        Me.tbFLCurve1.TabIndex = 14
         '
         'btShowFLCurve1
         '
@@ -363,7 +363,7 @@ Partial Class IEPCForm
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(496, 82)
-        Me.TableLayoutPanel1.TabIndex = 61
+        Me.TableLayoutPanel1.TabIndex = 107
         '
         'Label11
         '
@@ -425,7 +425,7 @@ Partial Class IEPCForm
         Me.tbOverloadTime1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbOverloadTime1.Name = "tbOverloadTime1"
         Me.tbOverloadTime1.Size = New System.Drawing.Size(56, 20)
-        Me.tbOverloadTime1.TabIndex = 12
+        Me.tbOverloadTime1.TabIndex = 11
         '
         'tbVoltage1
         '
@@ -434,7 +434,7 @@ Partial Class IEPCForm
         Me.tbVoltage1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbVoltage1.Name = "tbVoltage1"
         Me.tbVoltage1.Size = New System.Drawing.Size(56, 20)
-        Me.tbVoltage1.TabIndex = 2
+        Me.tbVoltage1.TabIndex = 8
         '
         'Label39
         '
@@ -463,7 +463,7 @@ Partial Class IEPCForm
         Me.tbContinousTorque1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorque1.Name = "tbContinousTorque1"
         Me.tbContinousTorque1.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorque1.TabIndex = 4
+        Me.tbContinousTorque1.TabIndex = 9
         '
         'tbContinousTorqueSpeed1
         '
@@ -472,7 +472,7 @@ Partial Class IEPCForm
         Me.tbContinousTorqueSpeed1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorqueSpeed1.Name = "tbContinousTorqueSpeed1"
         Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorqueSpeed1.TabIndex = 6
+        Me.tbContinousTorqueSpeed1.TabIndex = 10
         '
         'Label15
         '
@@ -512,7 +512,7 @@ Partial Class IEPCForm
         Me.tboverloadTorqueSpeed1.Location = New System.Drawing.Point(363, 58)
         Me.tboverloadTorqueSpeed1.Name = "tboverloadTorqueSpeed1"
         Me.tboverloadTorqueSpeed1.Size = New System.Drawing.Size(56, 20)
-        Me.tboverloadTorqueSpeed1.TabIndex = 10
+        Me.tboverloadTorqueSpeed1.TabIndex = 13
         '
         'Label41
         '
@@ -530,7 +530,7 @@ Partial Class IEPCForm
         Me.tbOverloadTorque1.Location = New System.Drawing.Point(363, 30)
         Me.tbOverloadTorque1.Name = "tbOverloadTorque1"
         Me.tbOverloadTorque1.Size = New System.Drawing.Size(56, 20)
-        Me.tbOverloadTorque1.TabIndex = 8
+        Me.tbOverloadTorque1.TabIndex = 12
         '
         'Label12
         '
@@ -595,7 +595,7 @@ Partial Class IEPCForm
         Me.lvPowerMap1.MultiSelect = false
         Me.lvPowerMap1.Name = "lvPowerMap1"
         Me.lvPowerMap1.Size = New System.Drawing.Size(292, 121)
-        Me.lvPowerMap1.TabIndex = 7
+        Me.lvPowerMap1.TabIndex = 108
         Me.lvPowerMap1.TabStop = false
         Me.lvPowerMap1.UseCompatibleStateImageBehavior = false
         Me.lvPowerMap1.View = System.Windows.Forms.View.Details
@@ -675,7 +675,7 @@ Partial Class IEPCForm
         Me.lvPowerMap2.MultiSelect = false
         Me.lvPowerMap2.Name = "lvPowerMap2"
         Me.lvPowerMap2.Size = New System.Drawing.Size(292, 121)
-        Me.lvPowerMap2.TabIndex = 7
+        Me.lvPowerMap2.TabIndex = 109
         Me.lvPowerMap2.TabStop = false
         Me.lvPowerMap2.UseCompatibleStateImageBehavior = false
         Me.lvPowerMap2.View = System.Windows.Forms.View.Details
@@ -699,7 +699,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel10.Location = New System.Drawing.Point(6, 94)
         Me.FlowLayoutPanel10.Name = "FlowLayoutPanel10"
         Me.FlowLayoutPanel10.Size = New System.Drawing.Size(496, 26)
-        Me.FlowLayoutPanel10.TabIndex = 74
+        Me.FlowLayoutPanel10.TabIndex = 110
         '
         'Label28
         '
@@ -719,7 +719,7 @@ Partial Class IEPCForm
         Me.tbFLCurve2.Margin = New System.Windows.Forms.Padding(3, 3, 6, 3)
         Me.tbFLCurve2.Name = "tbFLCurve2"
         Me.tbFLCurve2.Size = New System.Drawing.Size(277, 20)
-        Me.tbFLCurve2.TabIndex = 57
+        Me.tbFLCurve2.TabIndex = 23
         '
         'btFLCurveFile2
         '
@@ -729,7 +729,7 @@ Partial Class IEPCForm
         Me.btFLCurveFile2.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile2.Name = "btFLCurveFile2"
         Me.btFLCurveFile2.Size = New System.Drawing.Size(24, 24)
-        Me.btFLCurveFile2.TabIndex = 29
+        Me.btFLCurveFile2.TabIndex = 24
         Me.btFLCurveFile2.UseVisualStyleBackColor = true
         '
         'btShowFLCurve2
@@ -779,7 +779,7 @@ Partial Class IEPCForm
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(496, 82)
-        Me.TableLayoutPanel4.TabIndex = 62
+        Me.TableLayoutPanel4.TabIndex = 109
         '
         'Label17
         '
@@ -830,7 +830,7 @@ Partial Class IEPCForm
         Me.tbOverloadTime2.Location = New System.Drawing.Point(363, 3)
         Me.tbOverloadTime2.Name = "tbOverloadTime2"
         Me.tbOverloadTime2.Size = New System.Drawing.Size(56, 20)
-        Me.tbOverloadTime2.TabIndex = 12
+        Me.tbOverloadTime2.TabIndex = 20
         '
         'Label24
         '
@@ -848,7 +848,7 @@ Partial Class IEPCForm
         Me.tbVoltage2.Location = New System.Drawing.Point(143, 3)
         Me.tbVoltage2.Name = "tbVoltage2"
         Me.tbVoltage2.Size = New System.Drawing.Size(56, 20)
-        Me.tbVoltage2.TabIndex = 2
+        Me.tbVoltage2.TabIndex = 17
         '
         'Label20
         '
@@ -876,7 +876,7 @@ Partial Class IEPCForm
         Me.tbContinousTorque2.Location = New System.Drawing.Point(143, 30)
         Me.tbContinousTorque2.Name = "tbContinousTorque2"
         Me.tbContinousTorque2.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorque2.TabIndex = 4
+        Me.tbContinousTorque2.TabIndex = 18
         '
         'tbContinousTorqueSpeed2
         '
@@ -884,7 +884,7 @@ Partial Class IEPCForm
         Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(143, 58)
         Me.tbContinousTorqueSpeed2.Name = "tbContinousTorqueSpeed2"
         Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(56, 20)
-        Me.tbContinousTorqueSpeed2.TabIndex = 6
+        Me.tbContinousTorqueSpeed2.TabIndex = 19
         '
         'Label27
         '
@@ -913,7 +913,7 @@ Partial Class IEPCForm
         Me.tbOverloadTorqueSpeed2.Location = New System.Drawing.Point(363, 58)
         Me.tbOverloadTorqueSpeed2.Name = "tbOverloadTorqueSpeed2"
         Me.tbOverloadTorqueSpeed2.Size = New System.Drawing.Size(56, 20)
-        Me.tbOverloadTorqueSpeed2.TabIndex = 10
+        Me.tbOverloadTorqueSpeed2.TabIndex = 22
         '
         'Label25
         '
@@ -942,7 +942,7 @@ Partial Class IEPCForm
         Me.tbOverloadTorque2.Location = New System.Drawing.Point(363, 30)
         Me.tbOverloadTorque2.Name = "tbOverloadTorque2"
         Me.tbOverloadTorque2.Size = New System.Drawing.Size(56, 20)
-        Me.tbOverloadTorque2.TabIndex = 8
+        Me.tbOverloadTorque2.TabIndex = 21
         '
         'Label16
         '
@@ -974,7 +974,7 @@ Partial Class IEPCForm
         Me.cbDesignTypeWheelMotor.Margin = New System.Windows.Forms.Padding(0, 6, 3, 6)
         Me.cbDesignTypeWheelMotor.Name = "cbDesignTypeWheelMotor"
         Me.cbDesignTypeWheelMotor.Size = New System.Drawing.Size(15, 14)
-        Me.cbDesignTypeWheelMotor.TabIndex = 53
+        Me.cbDesignTypeWheelMotor.TabIndex = 4
         Me.cbDesignTypeWheelMotor.UseVisualStyleBackColor = true
         '
         'Label2
@@ -996,7 +996,7 @@ Partial Class IEPCForm
         Me.cbDifferentialIncluded.Margin = New System.Windows.Forms.Padding(80, 6, 3, 6)
         Me.cbDifferentialIncluded.Name = "cbDifferentialIncluded"
         Me.cbDifferentialIncluded.Size = New System.Drawing.Size(15, 14)
-        Me.cbDifferentialIncluded.TabIndex = 47
+        Me.cbDifferentialIncluded.TabIndex = 6
         Me.cbDifferentialIncluded.UseVisualStyleBackColor = true
         '
         'GroupBox1
@@ -1025,7 +1025,7 @@ Partial Class IEPCForm
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 78.61636!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.38365!))
         Me.TableLayoutPanel5.Size = New System.Drawing.Size(300, 159)
-        Me.TableLayoutPanel5.TabIndex = 75
+        Me.TableLayoutPanel5.TabIndex = 111
         '
         'FlowLayoutPanel2
         '
@@ -1034,7 +1034,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel2.Location = New System.Drawing.Point(3, 128)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
         Me.FlowLayoutPanel2.Size = New System.Drawing.Size(61, 28)
-        Me.FlowLayoutPanel2.TabIndex = 54
+        Me.FlowLayoutPanel2.TabIndex = 112
         '
         'btAddGear
         '
@@ -1042,7 +1042,7 @@ Partial Class IEPCForm
         Me.btAddGear.Location = New System.Drawing.Point(3, 3)
         Me.btAddGear.Name = "btAddGear"
         Me.btAddGear.Size = New System.Drawing.Size(24, 24)
-        Me.btAddGear.TabIndex = 4
+        Me.btAddGear.TabIndex = 25
         Me.btAddGear.UseVisualStyleBackColor = true
         '
         'btRemoveGear
@@ -1051,7 +1051,7 @@ Partial Class IEPCForm
         Me.btRemoveGear.Location = New System.Drawing.Point(33, 3)
         Me.btRemoveGear.Name = "btRemoveGear"
         Me.btRemoveGear.Size = New System.Drawing.Size(24, 24)
-        Me.btRemoveGear.TabIndex = 5
+        Me.btRemoveGear.TabIndex = 26
         Me.btRemoveGear.UseVisualStyleBackColor = true
         '
         'Label6
@@ -1078,7 +1078,7 @@ Partial Class IEPCForm
         Me.lvGear.MultiSelect = false
         Me.lvGear.Name = "lvGear"
         Me.lvGear.Size = New System.Drawing.Size(294, 119)
-        Me.lvGear.TabIndex = 7
+        Me.lvGear.TabIndex = 78
         Me.lvGear.TabStop = false
         Me.lvGear.UseCompatibleStateImageBehavior = false
         Me.lvGear.View = System.Windows.Forms.View.Details
@@ -1124,7 +1124,7 @@ Partial Class IEPCForm
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 78.61636!))
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.38365!))
         Me.TableLayoutPanel3.Size = New System.Drawing.Size(300, 159)
-        Me.TableLayoutPanel3.TabIndex = 76
+        Me.TableLayoutPanel3.TabIndex = 113
         '
         'lvDragCurve
         '
@@ -1140,7 +1140,7 @@ Partial Class IEPCForm
         Me.lvDragCurve.MultiSelect = false
         Me.lvDragCurve.Name = "lvDragCurve"
         Me.lvDragCurve.Size = New System.Drawing.Size(294, 119)
-        Me.lvDragCurve.TabIndex = 77
+        Me.lvDragCurve.TabIndex = 78
         Me.lvDragCurve.TabStop = false
         Me.lvDragCurve.UseCompatibleStateImageBehavior = false
         Me.lvDragCurve.View = System.Windows.Forms.View.Details
@@ -1162,7 +1162,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel11.Location = New System.Drawing.Point(3, 128)
         Me.FlowLayoutPanel11.Name = "FlowLayoutPanel11"
         Me.FlowLayoutPanel11.Size = New System.Drawing.Size(61, 28)
-        Me.FlowLayoutPanel11.TabIndex = 54
+        Me.FlowLayoutPanel11.TabIndex = 114
         '
         'btAddDragCurve
         '
@@ -1170,7 +1170,7 @@ Partial Class IEPCForm
         Me.btAddDragCurve.Location = New System.Drawing.Point(3, 3)
         Me.btAddDragCurve.Name = "btAddDragCurve"
         Me.btAddDragCurve.Size = New System.Drawing.Size(24, 24)
-        Me.btAddDragCurve.TabIndex = 4
+        Me.btAddDragCurve.TabIndex = 27
         Me.btAddDragCurve.UseVisualStyleBackColor = true
         '
         'btRemoveDragCurve
@@ -1179,7 +1179,7 @@ Partial Class IEPCForm
         Me.btRemoveDragCurve.Location = New System.Drawing.Point(33, 3)
         Me.btRemoveDragCurve.Name = "btRemoveDragCurve"
         Me.btRemoveDragCurve.Size = New System.Drawing.Size(24, 24)
-        Me.btRemoveDragCurve.TabIndex = 5
+        Me.btRemoveDragCurve.TabIndex = 28
         Me.btRemoveDragCurve.UseVisualStyleBackColor = true
         '
         'Label7
@@ -1323,7 +1323,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(12, 77)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(242, 26)
-        Me.FlowLayoutPanel1.TabIndex = 68
+        Me.FlowLayoutPanel1.TabIndex = 101
         '
         'FlowLayoutPanel4
         '
@@ -1333,7 +1333,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel4.Location = New System.Drawing.Point(12, 131)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
         Me.FlowLayoutPanel4.Size = New System.Drawing.Size(210, 26)
-        Me.FlowLayoutPanel4.TabIndex = 69
+        Me.FlowLayoutPanel4.TabIndex = 104
         '
         'FlowLayoutPanel5
         '
@@ -1343,7 +1343,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel5.Location = New System.Drawing.Point(227, 131)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(298, 26)
-        Me.FlowLayoutPanel5.TabIndex = 70
+        Me.FlowLayoutPanel5.TabIndex = 105
         '
         'Label9
         '
@@ -1363,7 +1363,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel6.Location = New System.Drawing.Point(12, 104)
         Me.FlowLayoutPanel6.Name = "FlowLayoutPanel6"
         Me.FlowLayoutPanel6.Size = New System.Drawing.Size(210, 26)
-        Me.FlowLayoutPanel6.TabIndex = 71
+        Me.FlowLayoutPanel6.TabIndex = 102
         '
         'lblinertiaUnit
         '
@@ -1382,7 +1382,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel7.Location = New System.Drawing.Point(12, 158)
         Me.FlowLayoutPanel7.Name = "FlowLayoutPanel7"
         Me.FlowLayoutPanel7.Size = New System.Drawing.Size(210, 26)
-        Me.FlowLayoutPanel7.TabIndex = 72
+        Me.FlowLayoutPanel7.TabIndex = 106
         '
         'FlowLayoutPanel8
         '
@@ -1392,7 +1392,7 @@ Partial Class IEPCForm
         Me.FlowLayoutPanel8.Location = New System.Drawing.Point(227, 104)
         Me.FlowLayoutPanel8.Name = "FlowLayoutPanel8"
         Me.FlowLayoutPanel8.Size = New System.Drawing.Size(298, 26)
-        Me.FlowLayoutPanel8.TabIndex = 73
+        Me.FlowLayoutPanel8.TabIndex = 103
         '
         'Label10
         '
