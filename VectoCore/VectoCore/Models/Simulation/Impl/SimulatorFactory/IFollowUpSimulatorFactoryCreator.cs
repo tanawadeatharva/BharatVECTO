@@ -46,9 +46,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 	public class InterimAfterPrimaryFactoryCreator : FollowUpSimulatorFactoryCreator
 	{
-		private readonly TempFileOutputWriter _currentStageOutputDataWriter = null;
+		protected readonly TempFileOutputWriter _currentStageOutputDataWriter = null;
 		private readonly IOutputDataWriter _originalReportWriter = null;
-		private readonly IDeclarationReport _currentStageDeclarationReport = null;
+		protected IDeclarationReport _currentStageDeclarationReport = null;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private readonly IMultistagePrimaryAndStageInputDataProvider _originalStageInputData;
 		private readonly IDeclarationReport _originalDeclarationReport;
