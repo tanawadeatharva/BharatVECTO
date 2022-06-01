@@ -29,7 +29,7 @@
           <v2.0:Entry gear="1" maxTorque="2500" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" />
           <v2.0:Entry gear="12" maxTorque="1900" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" />
         </tns:TorqueLimits>
-        <Components xsi:type="VehicleComponentsPIFType">
+        <Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
           <Engine>
             <Data xsi:type="EngineDataPIFType">
               <Manufacturer>Generic Engine Manufacturer</Manufacturer>

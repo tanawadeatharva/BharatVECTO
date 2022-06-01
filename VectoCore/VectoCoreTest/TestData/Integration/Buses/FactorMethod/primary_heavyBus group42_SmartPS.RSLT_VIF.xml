@@ -29,7 +29,7 @@
           <Entry gear="1" maxTorque="2500" />
           <Entry gear="12" maxTorque="1900" />
         </vif0.1:TorqueLimits>
-        <Components xsi:type="VehicleComponentsPIFType">
+        <Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
           <Engine>
             <Data xsi:type="EngineDataPIFType">
               <Manufacturer>Generic Engine Manufacturer Primary</Manufacturer>
