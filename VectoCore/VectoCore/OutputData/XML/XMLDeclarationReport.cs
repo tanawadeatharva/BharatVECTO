@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			InstantiateReports(modelData);
 
 			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt.Initialize(modelData, fuelModes);
+			CustomerRpt?.Initialize(modelData, fuelModes);
 		}
 
 		public WeightingGroup WeightingGroup { get; protected set; }
