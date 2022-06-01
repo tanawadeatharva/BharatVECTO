@@ -136,18 +136,7 @@ Partial Class VehicleForm
         Me.gbTankSystem = New System.Windows.Forms.GroupBox()
         Me.cbTankSystem = New System.Windows.Forms.ComboBox()
         Me.Label23 = New System.Windows.Forms.Label()
-        Me.tpElectricComponents = New System.Windows.Forms.TabPage()
-        Me.gbBattery = New System.Windows.Forms.GroupBox()
-        Me.lvREESSPacks = New System.Windows.Forms.ListView()
-        Me.chReessPackPack = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.chReessPackCount = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.chReessPackStringId = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.btnAddReessPack = New System.Windows.Forms.Button()
-        Me.lblEditReessPack = New System.Windows.Forms.Label()
-        Me.btnRemoveReessPack = New System.Windows.Forms.Button()
-        Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
-        Me.tbInitialSoC = New System.Windows.Forms.TextBox()
-        Me.lblInitialSoC = New System.Windows.Forms.Label()
+        Me.tpElectricMachine = New System.Windows.Forms.TabPage()
         Me.gpElectricMotor = New System.Windows.Forms.GroupBox()
         Me.Label33 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -171,6 +160,26 @@ Partial Class VehicleForm
         Me.btnOpenElectricMotor = New System.Windows.Forms.Button()
         Me.btnBrowseElectricMotor = New System.Windows.Forms.Button()
         Me.tbElectricMotor = New System.Windows.Forms.TextBox()
+        Me.tpIEPC = New System.Windows.Forms.TabPage()
+        Me.btIEPCFilePath = New System.Windows.Forms.Button()
+        Me.tbIEPCFilePath = New System.Windows.Forms.TextBox()
+        Me.btnIEPC = New System.Windows.Forms.Button()
+        Me.tbIHPC = New System.Windows.Forms.TabPage()
+        Me.btIHPC = New System.Windows.Forms.Button()
+        Me.btIHPCFile = New System.Windows.Forms.Button()
+        Me.tbIHPCFilePath = New System.Windows.Forms.TextBox()
+        Me.tpReess = New System.Windows.Forms.TabPage()
+        Me.gbBattery = New System.Windows.Forms.GroupBox()
+        Me.lvREESSPacks = New System.Windows.Forms.ListView()
+        Me.chReessPackPack = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.chReessPackCount = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.chReessPackStringId = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.btnAddReessPack = New System.Windows.Forms.Button()
+        Me.lblEditReessPack = New System.Windows.Forms.Label()
+        Me.btnRemoveReessPack = New System.Windows.Forms.Button()
+        Me.lblInitialSoCUnit = New System.Windows.Forms.Label()
+        Me.tbInitialSoC = New System.Windows.Forms.TextBox()
+        Me.lblInitialSoC = New System.Windows.Forms.Label()
         Me.tpGensetComponents = New System.Windows.Forms.TabPage()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.gbGenSet = New System.Windows.Forms.GroupBox()
@@ -229,11 +238,8 @@ Partial Class VehicleForm
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.tbIHPC = New System.Windows.Forms.TabPage()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.btIHPC = New System.Windows.Forms.Button()
-        Me.btIHPCFile = New System.Windows.Forms.Button()
-        Me.tbIHPCFilePath = New System.Windows.Forms.TextBox()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.gbRetarderLosses.SuspendLayout
@@ -257,11 +263,14 @@ Partial Class VehicleForm
         Me.gbVehicleIdlingSpeed.SuspendLayout
         Me.Panel1.SuspendLayout
         Me.gbTankSystem.SuspendLayout
-        Me.tpElectricComponents.SuspendLayout
-        Me.gbBattery.SuspendLayout
+        Me.tpElectricMachine.SuspendLayout
         Me.gpElectricMotor.SuspendLayout
         Me.gbRatiosPerGear.SuspendLayout
         Me.pnElectricMotor.SuspendLayout
+        Me.tpIEPC.SuspendLayout
+        Me.tbIHPC.SuspendLayout
+        Me.tpReess.SuspendLayout
+        Me.gbBattery.SuspendLayout
         Me.tpGensetComponents.SuspendLayout
         Me.gbGenSet.SuspendLayout
         Me.pnGenSetEM.SuspendLayout
@@ -276,8 +285,8 @@ Partial Class VehicleForm
         Me.pnPTO.SuspendLayout
         Me.gbPTODrive.SuspendLayout
         Me.gbPTO.SuspendLayout
-        Me.tbIHPC.SuspendLayout
-        Me.Panel2.SuspendLayout
+        Me.FlowLayoutPanel1.SuspendLayout
+        Me.FlowLayoutPanel2.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1136,12 +1145,14 @@ Partial Class VehicleForm
         '
         Me.tcVehicleComponents.Controls.Add(Me.tpGeneral)
         Me.tcVehicleComponents.Controls.Add(Me.tpPowertrain)
-        Me.tcVehicleComponents.Controls.Add(Me.tpElectricComponents)
+        Me.tcVehicleComponents.Controls.Add(Me.tpElectricMachine)
+        Me.tcVehicleComponents.Controls.Add(Me.tpIEPC)
+        Me.tcVehicleComponents.Controls.Add(Me.tbIHPC)
+        Me.tcVehicleComponents.Controls.Add(Me.tpReess)
         Me.tcVehicleComponents.Controls.Add(Me.tpGensetComponents)
         Me.tcVehicleComponents.Controls.Add(Me.tpTorqueLimits)
         Me.tcVehicleComponents.Controls.Add(Me.tpADAS)
         Me.tcVehicleComponents.Controls.Add(Me.tpRoadSweeper)
-        Me.tcVehicleComponents.Controls.Add(Me.tbIHPC)
         Me.tcVehicleComponents.Location = New System.Drawing.Point(5, 173)
         Me.tcVehicleComponents.Name = "tcVehicleComponents"
         Me.tcVehicleComponents.SelectedIndex = 0
@@ -1256,118 +1267,16 @@ Partial Class VehicleForm
         Me.Label23.TabIndex = 0
         Me.Label23.Text = "Only applicable for NG engines!"
         '
-        'tpElectricComponents
+        'tpElectricMachine
         '
-        Me.tpElectricComponents.Controls.Add(Me.gbBattery)
-        Me.tpElectricComponents.Controls.Add(Me.gpElectricMotor)
-        Me.tpElectricComponents.Location = New System.Drawing.Point(4, 22)
-        Me.tpElectricComponents.Name = "tpElectricComponents"
-        Me.tpElectricComponents.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpElectricComponents.Size = New System.Drawing.Size(648, 374)
-        Me.tpElectricComponents.TabIndex = 4
-        Me.tpElectricComponents.Text = "Electric Powertrain Components"
-        Me.tpElectricComponents.UseVisualStyleBackColor = true
-        '
-        'gbBattery
-        '
-        Me.gbBattery.Controls.Add(Me.lvREESSPacks)
-        Me.gbBattery.Controls.Add(Me.btnAddReessPack)
-        Me.gbBattery.Controls.Add(Me.lblEditReessPack)
-        Me.gbBattery.Controls.Add(Me.btnRemoveReessPack)
-        Me.gbBattery.Controls.Add(Me.lblInitialSoCUnit)
-        Me.gbBattery.Controls.Add(Me.tbInitialSoC)
-        Me.gbBattery.Controls.Add(Me.lblInitialSoC)
-        Me.gbBattery.Location = New System.Drawing.Point(6, 175)
-        Me.gbBattery.Name = "gbBattery"
-        Me.gbBattery.Size = New System.Drawing.Size(633, 187)
-        Me.gbBattery.TabIndex = 2
-        Me.gbBattery.TabStop = false
-        Me.gbBattery.Text = "Electric Energy Storage system"
-        '
-        'lvREESSPacks
-        '
-        Me.lvREESSPacks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.lvREESSPacks.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.chReessPackPack, Me.chReessPackCount, Me.chReessPackStringId})
-        Me.lvREESSPacks.FullRowSelect = true
-        Me.lvREESSPacks.GridLines = true
-        Me.lvREESSPacks.HideSelection = false
-        Me.lvREESSPacks.Location = New System.Drawing.Point(6, 45)
-        Me.lvREESSPacks.MultiSelect = false
-        Me.lvREESSPacks.Name = "lvREESSPacks"
-        Me.lvREESSPacks.Size = New System.Drawing.Size(553, 102)
-        Me.lvREESSPacks.TabIndex = 31
-        Me.lvREESSPacks.TabStop = false
-        Me.lvREESSPacks.UseCompatibleStateImageBehavior = false
-        Me.lvREESSPacks.View = System.Windows.Forms.View.Details
-        '
-        'chReessPackPack
-        '
-        Me.chReessPackPack.Text = "REESS Pack"
-        Me.chReessPackPack.Width = 350
-        '
-        'chReessPackCount
-        '
-        Me.chReessPackCount.Text = "Count"
-        Me.chReessPackCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'chReessPackStringId
-        '
-        Me.chReessPackStringId.Text = "Stream #"
-        Me.chReessPackStringId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'btnAddReessPack
-        '
-        Me.btnAddReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.btnAddReessPack.Location = New System.Drawing.Point(6, 153)
-        Me.btnAddReessPack.Name = "btnAddReessPack"
-        Me.btnAddReessPack.Size = New System.Drawing.Size(24, 24)
-        Me.btnAddReessPack.TabIndex = 1
-        Me.btnAddReessPack.UseVisualStyleBackColor = true
-        '
-        'lblEditReessPack
-        '
-        Me.lblEditReessPack.AutoSize = true
-        Me.lblEditReessPack.Location = New System.Drawing.Point(452, 148)
-        Me.lblEditReessPack.Name = "lblEditReessPack"
-        Me.lblEditReessPack.Size = New System.Drawing.Size(106, 13)
-        Me.lblEditReessPack.TabIndex = 30
-        Me.lblEditReessPack.Text = "(Double-Click to Edit)"
-        '
-        'btnRemoveReessPack
-        '
-        Me.btnRemoveReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.btnRemoveReessPack.Location = New System.Drawing.Point(33, 153)
-        Me.btnRemoveReessPack.Name = "btnRemoveReessPack"
-        Me.btnRemoveReessPack.Size = New System.Drawing.Size(24, 24)
-        Me.btnRemoveReessPack.TabIndex = 2
-        Me.btnRemoveReessPack.UseVisualStyleBackColor = true
-        '
-        'lblInitialSoCUnit
-        '
-        Me.lblInitialSoCUnit.AutoSize = true
-        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(265, 21)
-        Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
-        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(21, 13)
-        Me.lblInitialSoCUnit.TabIndex = 27
-        Me.lblInitialSoCUnit.Text = "[%]"
-        '
-        'tbInitialSoC
-        '
-        Me.tbInitialSoC.Location = New System.Drawing.Point(204, 19)
-        Me.tbInitialSoC.Name = "tbInitialSoC"
-        Me.tbInitialSoC.Size = New System.Drawing.Size(59, 20)
-        Me.tbInitialSoC.TabIndex = 0
-        '
-        'lblInitialSoC
-        '
-        Me.lblInitialSoC.AutoSize = true
-        Me.lblInitialSoC.Location = New System.Drawing.Point(7, 22)
-        Me.lblInitialSoC.Name = "lblInitialSoC"
-        Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblInitialSoC.Size = New System.Drawing.Size(54, 13)
-        Me.lblInitialSoC.TabIndex = 25
-        Me.lblInitialSoC.Text = "Initial SoC"
+        Me.tpElectricMachine.Controls.Add(Me.gpElectricMotor)
+        Me.tpElectricMachine.Location = New System.Drawing.Point(4, 22)
+        Me.tpElectricMachine.Name = "tpElectricMachine"
+        Me.tpElectricMachine.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpElectricMachine.Size = New System.Drawing.Size(648, 374)
+        Me.tpElectricMachine.TabIndex = 6
+        Me.tpElectricMachine.Text = "Electric Machine"
+        Me.tpElectricMachine.UseVisualStyleBackColor = true
         '
         'gpElectricMotor
         '
@@ -1387,7 +1296,7 @@ Partial Class VehicleForm
         Me.gpElectricMotor.Location = New System.Drawing.Point(6, 6)
         Me.gpElectricMotor.Name = "gpElectricMotor"
         Me.gpElectricMotor.Size = New System.Drawing.Size(633, 163)
-        Me.gpElectricMotor.TabIndex = 0
+        Me.gpElectricMotor.TabIndex = 1
         Me.gpElectricMotor.TabStop = false
         Me.gpElectricMotor.Text = "Electric Machine"
         '
@@ -1593,6 +1502,201 @@ Partial Class VehicleForm
         Me.tbElectricMotor.Name = "tbElectricMotor"
         Me.tbElectricMotor.Size = New System.Drawing.Size(300, 20)
         Me.tbElectricMotor.TabIndex = 1
+        '
+        'tpIEPC
+        '
+        Me.tpIEPC.Controls.Add(Me.FlowLayoutPanel1)
+        Me.tpIEPC.Location = New System.Drawing.Point(4, 22)
+        Me.tpIEPC.Name = "tpIEPC"
+        Me.tpIEPC.Size = New System.Drawing.Size(648, 374)
+        Me.tpIEPC.TabIndex = 8
+        Me.tpIEPC.Text = "IEPC"
+        Me.tpIEPC.UseVisualStyleBackColor = true
+        '
+        'btIEPCFilePath
+        '
+        Me.btIEPCFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btIEPCFilePath.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btIEPCFilePath.Location = New System.Drawing.Point(399, 1)
+        Me.btIEPCFilePath.Margin = New System.Windows.Forms.Padding(1)
+        Me.btIEPCFilePath.Name = "btIEPCFilePath"
+        Me.btIEPCFilePath.Size = New System.Drawing.Size(24, 24)
+        Me.btIEPCFilePath.TabIndex = 58
+        Me.btIEPCFilePath.UseVisualStyleBackColor = true
+        '
+        'tbIEPCFilePath
+        '
+        Me.tbIEPCFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbIEPCFilePath.Location = New System.Drawing.Point(97, 3)
+        Me.tbIEPCFilePath.Margin = New System.Windows.Forms.Padding(1)
+        Me.tbIEPCFilePath.Name = "tbIEPCFilePath"
+        Me.tbIEPCFilePath.Size = New System.Drawing.Size(300, 20)
+        Me.tbIEPCFilePath.TabIndex = 28
+        '
+        'btnIEPC
+        '
+        Me.btnIEPC.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnIEPC.Location = New System.Drawing.Point(1, 2)
+        Me.btnIEPC.Margin = New System.Windows.Forms.Padding(1)
+        Me.btnIEPC.Name = "btnIEPC"
+        Me.btnIEPC.Size = New System.Drawing.Size(94, 21)
+        Me.btnIEPC.TabIndex = 27
+        Me.btnIEPC.Text = "IEPC"
+        Me.btnIEPC.UseVisualStyleBackColor = true
+        '
+        'tbIHPC
+        '
+        Me.tbIHPC.Controls.Add(Me.FlowLayoutPanel2)
+        Me.tbIHPC.Location = New System.Drawing.Point(4, 22)
+        Me.tbIHPC.Name = "tbIHPC"
+        Me.tbIHPC.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbIHPC.Size = New System.Drawing.Size(648, 374)
+        Me.tbIHPC.TabIndex = 9
+        Me.tbIHPC.Text = "IHPC"
+        Me.tbIHPC.UseVisualStyleBackColor = true
+        '
+        'btIHPC
+        '
+        Me.btIHPC.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btIHPC.Location = New System.Drawing.Point(1, 2)
+        Me.btIHPC.Margin = New System.Windows.Forms.Padding(1)
+        Me.btIHPC.Name = "btIHPC"
+        Me.btIHPC.Size = New System.Drawing.Size(94, 21)
+        Me.btIHPC.TabIndex = 0
+        Me.btIHPC.Text = "IHPC"
+        Me.btIHPC.UseVisualStyleBackColor = true
+        '
+        'btIHPCFile
+        '
+        Me.btIHPCFile.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btIHPCFile.Image = CType(resources.GetObject("btIHPCFile.Image"),System.Drawing.Image)
+        Me.btIHPCFile.Location = New System.Drawing.Point(399, 1)
+        Me.btIHPCFile.Margin = New System.Windows.Forms.Padding(1)
+        Me.btIHPCFile.Name = "btIHPCFile"
+        Me.btIHPCFile.Size = New System.Drawing.Size(24, 24)
+        Me.btIHPCFile.TabIndex = 2
+        Me.btIHPCFile.UseVisualStyleBackColor = true
+        '
+        'tbIHPCFilePath
+        '
+        Me.tbIHPCFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbIHPCFilePath.Location = New System.Drawing.Point(97, 3)
+        Me.tbIHPCFilePath.Margin = New System.Windows.Forms.Padding(1)
+        Me.tbIHPCFilePath.Name = "tbIHPCFilePath"
+        Me.tbIHPCFilePath.Size = New System.Drawing.Size(300, 20)
+        Me.tbIHPCFilePath.TabIndex = 1
+        '
+        'tpReess
+        '
+        Me.tpReess.Controls.Add(Me.gbBattery)
+        Me.tpReess.Location = New System.Drawing.Point(4, 22)
+        Me.tpReess.Name = "tpReess"
+        Me.tpReess.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpReess.Size = New System.Drawing.Size(648, 374)
+        Me.tpReess.TabIndex = 7
+        Me.tpReess.Text = "REESS"
+        Me.tpReess.UseVisualStyleBackColor = true
+        '
+        'gbBattery
+        '
+        Me.gbBattery.Controls.Add(Me.lvREESSPacks)
+        Me.gbBattery.Controls.Add(Me.btnAddReessPack)
+        Me.gbBattery.Controls.Add(Me.lblEditReessPack)
+        Me.gbBattery.Controls.Add(Me.btnRemoveReessPack)
+        Me.gbBattery.Controls.Add(Me.lblInitialSoCUnit)
+        Me.gbBattery.Controls.Add(Me.tbInitialSoC)
+        Me.gbBattery.Controls.Add(Me.lblInitialSoC)
+        Me.gbBattery.Location = New System.Drawing.Point(6, 6)
+        Me.gbBattery.Name = "gbBattery"
+        Me.gbBattery.Size = New System.Drawing.Size(633, 187)
+        Me.gbBattery.TabIndex = 3
+        Me.gbBattery.TabStop = false
+        Me.gbBattery.Text = "Electric Energy Storage system"
+        '
+        'lvREESSPacks
+        '
+        Me.lvREESSPacks.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.lvREESSPacks.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.chReessPackPack, Me.chReessPackCount, Me.chReessPackStringId})
+        Me.lvREESSPacks.FullRowSelect = true
+        Me.lvREESSPacks.GridLines = true
+        Me.lvREESSPacks.HideSelection = false
+        Me.lvREESSPacks.Location = New System.Drawing.Point(6, 45)
+        Me.lvREESSPacks.MultiSelect = false
+        Me.lvREESSPacks.Name = "lvREESSPacks"
+        Me.lvREESSPacks.Size = New System.Drawing.Size(553, 102)
+        Me.lvREESSPacks.TabIndex = 31
+        Me.lvREESSPacks.TabStop = false
+        Me.lvREESSPacks.UseCompatibleStateImageBehavior = false
+        Me.lvREESSPacks.View = System.Windows.Forms.View.Details
+        '
+        'chReessPackPack
+        '
+        Me.chReessPackPack.Text = "REESS Pack"
+        Me.chReessPackPack.Width = 350
+        '
+        'chReessPackCount
+        '
+        Me.chReessPackCount.Text = "Count"
+        Me.chReessPackCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'chReessPackStringId
+        '
+        Me.chReessPackStringId.Text = "Stream #"
+        Me.chReessPackStringId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'btnAddReessPack
+        '
+        Me.btnAddReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.btnAddReessPack.Location = New System.Drawing.Point(6, 153)
+        Me.btnAddReessPack.Name = "btnAddReessPack"
+        Me.btnAddReessPack.Size = New System.Drawing.Size(24, 24)
+        Me.btnAddReessPack.TabIndex = 1
+        Me.btnAddReessPack.UseVisualStyleBackColor = true
+        '
+        'lblEditReessPack
+        '
+        Me.lblEditReessPack.AutoSize = true
+        Me.lblEditReessPack.Location = New System.Drawing.Point(452, 148)
+        Me.lblEditReessPack.Name = "lblEditReessPack"
+        Me.lblEditReessPack.Size = New System.Drawing.Size(106, 13)
+        Me.lblEditReessPack.TabIndex = 30
+        Me.lblEditReessPack.Text = "(Double-Click to Edit)"
+        '
+        'btnRemoveReessPack
+        '
+        Me.btnRemoveReessPack.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.btnRemoveReessPack.Location = New System.Drawing.Point(33, 153)
+        Me.btnRemoveReessPack.Name = "btnRemoveReessPack"
+        Me.btnRemoveReessPack.Size = New System.Drawing.Size(24, 24)
+        Me.btnRemoveReessPack.TabIndex = 2
+        Me.btnRemoveReessPack.UseVisualStyleBackColor = true
+        '
+        'lblInitialSoCUnit
+        '
+        Me.lblInitialSoCUnit.AutoSize = true
+        Me.lblInitialSoCUnit.Location = New System.Drawing.Point(265, 21)
+        Me.lblInitialSoCUnit.Name = "lblInitialSoCUnit"
+        Me.lblInitialSoCUnit.Size = New System.Drawing.Size(21, 13)
+        Me.lblInitialSoCUnit.TabIndex = 27
+        Me.lblInitialSoCUnit.Text = "[%]"
+        '
+        'tbInitialSoC
+        '
+        Me.tbInitialSoC.Location = New System.Drawing.Point(204, 19)
+        Me.tbInitialSoC.Name = "tbInitialSoC"
+        Me.tbInitialSoC.Size = New System.Drawing.Size(59, 20)
+        Me.tbInitialSoC.TabIndex = 0
+        '
+        'lblInitialSoC
+        '
+        Me.lblInitialSoC.AutoSize = true
+        Me.lblInitialSoC.Location = New System.Drawing.Point(7, 22)
+        Me.lblInitialSoC.Name = "lblInitialSoC"
+        Me.lblInitialSoC.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblInitialSoC.Size = New System.Drawing.Size(54, 13)
+        Me.lblInitialSoC.TabIndex = 25
+        Me.lblInitialSoC.Text = "Initial SoC"
         '
         'tpGensetComponents
         '
@@ -2183,54 +2287,25 @@ Partial Class VehicleForm
         Me.lblTitle.TabIndex = 43
         Me.lblTitle.Text = "Vehicle TITLE"
         '
-        'tbIHPC
+        'FlowLayoutPanel1
         '
-        Me.tbIHPC.Controls.Add(Me.Panel2)
-        Me.tbIHPC.Location = New System.Drawing.Point(4, 22)
-        Me.tbIHPC.Name = "tbIHPC"
-        Me.tbIHPC.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbIHPC.Size = New System.Drawing.Size(648, 374)
-        Me.tbIHPC.TabIndex = 6
-        Me.tbIHPC.Text = "IHPC"
-        Me.tbIHPC.UseVisualStyleBackColor = true
+        Me.FlowLayoutPanel1.Controls.Add(Me.btnIEPC)
+        Me.FlowLayoutPanel1.Controls.Add(Me.tbIEPCFilePath)
+        Me.FlowLayoutPanel1.Controls.Add(Me.btIEPCFilePath)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(25, 19)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(430, 27)
+        Me.FlowLayoutPanel1.TabIndex = 61
         '
-        'Panel2
+        'FlowLayoutPanel2
         '
-        Me.Panel2.Controls.Add(Me.btIHPC)
-        Me.Panel2.Controls.Add(Me.btIHPCFile)
-        Me.Panel2.Controls.Add(Me.tbIHPCFilePath)
-        Me.Panel2.Location = New System.Drawing.Point(16, 18)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(432, 27)
-        Me.Panel2.TabIndex = 1
-        '
-        'btIHPC
-        '
-        Me.btIHPC.Location = New System.Drawing.Point(4, 3)
-        Me.btIHPC.Name = "btIHPC"
-        Me.btIHPC.Size = New System.Drawing.Size(94, 21)
-        Me.btIHPC.TabIndex = 0
-        Me.btIHPC.Text = "IHPC"
-        Me.btIHPC.UseVisualStyleBackColor = true
-        '
-        'btIHPCFile
-        '
-        Me.btIHPCFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.btIHPCFile.Image = CType(resources.GetObject("btIHPCFile.Image"),System.Drawing.Image)
-        Me.btIHPCFile.Location = New System.Drawing.Point(406, 2)
-        Me.btIHPCFile.Name = "btIHPCFile"
-        Me.btIHPCFile.Size = New System.Drawing.Size(24, 24)
-        Me.btIHPCFile.TabIndex = 2
-        Me.btIHPCFile.UseVisualStyleBackColor = true
-        '
-        'tbIHPCFilePath
-        '
-        Me.tbIHPCFilePath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbIHPCFilePath.Location = New System.Drawing.Point(104, 4)
-        Me.tbIHPCFilePath.Name = "tbIHPCFilePath"
-        Me.tbIHPCFilePath.Size = New System.Drawing.Size(300, 20)
-        Me.tbIHPCFilePath.TabIndex = 1
+        Me.FlowLayoutPanel2.Controls.Add(Me.btIHPC)
+        Me.FlowLayoutPanel2.Controls.Add(Me.tbIHPCFilePath)
+        Me.FlowLayoutPanel2.Controls.Add(Me.btIHPCFile)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(25, 19)
+        Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(427, 27)
+        Me.FlowLayoutPanel2.TabIndex = 3
         '
         'VehicleForm
         '
@@ -2297,15 +2372,18 @@ Partial Class VehicleForm
         Me.Panel1.PerformLayout
         Me.gbTankSystem.ResumeLayout(false)
         Me.gbTankSystem.PerformLayout
-        Me.tpElectricComponents.ResumeLayout(false)
-        Me.gbBattery.ResumeLayout(false)
-        Me.gbBattery.PerformLayout
+        Me.tpElectricMachine.ResumeLayout(false)
         Me.gpElectricMotor.ResumeLayout(false)
         Me.gpElectricMotor.PerformLayout
         Me.gbRatiosPerGear.ResumeLayout(false)
         Me.gbRatiosPerGear.PerformLayout
         Me.pnElectricMotor.ResumeLayout(false)
         Me.pnElectricMotor.PerformLayout
+        Me.tpIEPC.ResumeLayout(false)
+        Me.tbIHPC.ResumeLayout(false)
+        Me.tpReess.ResumeLayout(false)
+        Me.gbBattery.ResumeLayout(false)
+        Me.gbBattery.PerformLayout
         Me.tpGensetComponents.ResumeLayout(false)
         Me.tpGensetComponents.PerformLayout
         Me.gbGenSet.ResumeLayout(false)
@@ -2330,9 +2408,10 @@ Partial Class VehicleForm
         Me.gbPTODrive.ResumeLayout(false)
         Me.gbPTODrive.PerformLayout
         Me.gbPTO.ResumeLayout(false)
-        Me.tbIHPC.ResumeLayout(false)
-        Me.Panel2.ResumeLayout(false)
-        Me.Panel2.PerformLayout
+        Me.FlowLayoutPanel1.ResumeLayout(false)
+        Me.FlowLayoutPanel1.PerformLayout
+        Me.FlowLayoutPanel2.ResumeLayout(false)
+        Me.FlowLayoutPanel2.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -2462,30 +2541,12 @@ End Sub
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
     Friend WithEvents cbAtEcoRollReleaseLockupClutch As CheckBox
-    Friend WithEvents tpElectricComponents As TabPage
-    Friend WithEvents gpElectricMotor As GroupBox
-    Friend WithEvents gbBattery As GroupBox
-    Friend WithEvents tbEmADCLossMap As TextBox
-    Friend WithEvents lblEmADCLossmap As Label
-    Friend WithEvents tbRatioEm As TextBox
-    Friend WithEvents lblRatioEm As Label
-    Friend WithEvents tbEmCount As TextBox
-    Friend WithEvents cbEmPos As ComboBox
-    Friend WithEvents lblEmCount As Label
-    Friend WithEvents lblEmPosition As Label
-    Friend WithEvents pnElectricMotor As Panel
-    Friend WithEvents btnOpenElectricMotor As Button
-    Friend WithEvents btnBrowseElectricMotor As Button
-    Friend WithEvents tbElectricMotor As TextBox
     Friend WithEvents lblTitle As Label
     Friend WithEvents gbVehicleIdlingSpeed As GroupBox
     Friend WithEvents Panel1 As Panel
     Friend WithEvents tbVehIdlingSpeed As TextBox
     Friend WithEvents Label18 As Label
     Friend WithEvents Label19 As Label
-    Friend WithEvents lblInitialSoCUnit As Label
-    Friend WithEvents tbInitialSoC As TextBox
-    Friend WithEvents lblInitialSoC As Label
     Friend WithEvents gbEMTorqueLimits As GroupBox
     Friend WithEvents btnEmTorqueLimits As Button
     Friend WithEvents tbEmTorqueLimits As TextBox
@@ -2493,7 +2554,6 @@ End Sub
     Friend WithEvents gbPropulsionTorque As GroupBox
     Friend WithEvents btnPropulsionTorqueLimit As Button
     Friend WithEvents tbPropulsionTorqueLimit As TextBox
-    Friend WithEvents btnEmADCLossMap As Button
 '=======
     Friend WithEvents tpRoadSweeper As TabPage
     Friend WithEvents gbPTODrive As GroupBox
@@ -2515,20 +2575,6 @@ End Sub
     Friend WithEvents btPTOCycleDrive As Button
     Friend WithEvents Label28 As Label
     Friend WithEvents tbPTODrive As TextBox
-    Friend WithEvents gbRatiosPerGear As GroupBox
-    Friend WithEvents lvRatioPerGear As ListView
-    Friend WithEvents ColumnHeader11 As ColumnHeader
-    Friend WithEvents ColumnHeader12 As ColumnHeader
-    Friend WithEvents btnAddEMRatio As Button
-    Friend WithEvents Label29 As Label
-    Friend WithEvents btnRemoveEMRatio As Button
-    Friend WithEvents lvREESSPacks As ListView
-    Friend WithEvents chReessPackPack As ColumnHeader
-    Friend WithEvents chReessPackCount As ColumnHeader
-    Friend WithEvents chReessPackStringId As ColumnHeader
-    Friend WithEvents btnAddReessPack As Button
-    Friend WithEvents lblEditReessPack As Label
-    Friend WithEvents btnRemoveReessPack As Button
     Friend WithEvents tpGensetComponents As TabPage
     Friend WithEvents gbGenSet As GroupBox
     Friend WithEvents btnGenSetLossMap As Button
@@ -2543,15 +2589,54 @@ End Sub
     Friend WithEvents btnBrowseGenSetEM As Button
     Friend WithEvents tbGenSetEM As TextBox
     Friend WithEvents Label30 As Label
-	Friend WithEvents Label33 As Label
-	Friend WithEvents Label32 As Label
 	Friend WithEvents Label36 As Label
 	Friend WithEvents Label34 As Label
 	Friend WithEvents pnEcoRoll As Panel
+    Friend WithEvents tpElectricMachine As TabPage
+    Friend WithEvents tpReess As TabPage
+    Friend WithEvents gpElectricMotor As GroupBox
+    Friend WithEvents Label33 As Label
+    Friend WithEvents Label32 As Label
+    Friend WithEvents gbRatiosPerGear As GroupBox
+    Friend WithEvents lvRatioPerGear As ListView
+    Friend WithEvents ColumnHeader11 As ColumnHeader
+    Friend WithEvents ColumnHeader12 As ColumnHeader
+    Friend WithEvents btnAddEMRatio As Button
+    Friend WithEvents Label29 As Label
+    Friend WithEvents btnRemoveEMRatio As Button
+    Friend WithEvents btnEmADCLossMap As Button
+    Friend WithEvents tbEmADCLossMap As TextBox
+    Friend WithEvents lblEmADCLossmap As Label
+    Friend WithEvents tbRatioEm As TextBox
+    Friend WithEvents lblRatioEm As Label
+    Friend WithEvents tbEmCount As TextBox
+    Friend WithEvents cbEmPos As ComboBox
+    Friend WithEvents lblEmCount As Label
+    Friend WithEvents lblEmPosition As Label
+    Friend WithEvents pnElectricMotor As Panel
+    Friend WithEvents btnOpenElectricMotor As Button
+    Friend WithEvents btnBrowseElectricMotor As Button
+    Friend WithEvents tbElectricMotor As TextBox
+    Friend WithEvents gbBattery As GroupBox
+    Friend WithEvents lvREESSPacks As ListView
+    Friend WithEvents chReessPackPack As ColumnHeader
+    Friend WithEvents chReessPackCount As ColumnHeader
+    Friend WithEvents chReessPackStringId As ColumnHeader
+    Friend WithEvents btnAddReessPack As Button
+    Friend WithEvents lblEditReessPack As Label
+    Friend WithEvents btnRemoveReessPack As Button
+    Friend WithEvents lblInitialSoCUnit As Label
+    Friend WithEvents tbInitialSoC As TextBox
+    Friend WithEvents lblInitialSoC As Label
+    Friend WithEvents tpIEPC As TabPage
+    Friend WithEvents btIEPCFilePath As Button
+    Friend WithEvents btnIEPC As Button
+    Friend WithEvents tbIEPCFilePath As TextBox
     Friend WithEvents tbIHPC As TabPage
-    Friend WithEvents Panel2 As Panel
     Friend WithEvents btIHPC As Button
     Friend WithEvents btIHPCFile As Button
     Friend WithEvents tbIHPCFilePath As TextBox
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents FlowLayoutPanel2 As FlowLayoutPanel
     '>>>>>>> VECTO_CERT/master
 End Class

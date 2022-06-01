@@ -115,6 +115,18 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = True
             Case VectoSimulationJobType.EngineOnlySimulation
                 lblTitle.Text = prefix + "Engine Only"
+            Case VectoSimulationJobType.IEPC_E
+                lblTitle.Text = prefix + "IEPC-E Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            case VectoSimulationJobType.IEPC_S
+                lblTitle.Text = prefix + "IEPC-S Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.IHPC
+                lblTitle.Text = prefix + "IHPC Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False      
         End Select
     End Sub
 
@@ -1046,6 +1058,25 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IHPC
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IEPC_E
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IEPC_S
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+
         End Select
     End Sub
 

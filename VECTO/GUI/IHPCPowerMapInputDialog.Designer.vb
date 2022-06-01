@@ -71,7 +71,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.tbGear.Location = New System.Drawing.Point(46, 4)
         Me.tbGear.Name = "tbGear"
         Me.tbGear.Size = New System.Drawing.Size(77, 20)
-        Me.tbGear.TabIndex = 9
+        Me.tbGear.TabIndex = 1
         '
         'Label3
         '
@@ -96,7 +96,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
         Me.TableLayoutPanel5.Size = New System.Drawing.Size(356, 39)
-        Me.TableLayoutPanel5.TabIndex = 8
+        Me.TableLayoutPanel5.TabIndex = 11
         '
         'btAddFilePath
         '
@@ -105,7 +105,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.btAddFilePath.Location = New System.Drawing.Point(324, 6)
         Me.btAddFilePath.Name = "btAddFilePath"
         Me.btAddFilePath.Size = New System.Drawing.Size(24, 26)
-        Me.btAddFilePath.TabIndex = 30
+        Me.btAddFilePath.TabIndex = 13
         Me.btAddFilePath.UseVisualStyleBackColor = true
         '
         'tbInputFile
@@ -114,7 +114,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.tbInputFile.Location = New System.Drawing.Point(3, 9)
         Me.tbInputFile.Name = "tbInputFile"
         Me.tbInputFile.Size = New System.Drawing.Size(310, 20)
-        Me.tbInputFile.TabIndex = 0
+        Me.tbInputFile.TabIndex = 12
         '
         'TableLayoutPanel1
         '
@@ -136,7 +136,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.btAddInput.Location = New System.Drawing.Point(3, 3)
         Me.btAddInput.Name = "btAddInput"
         Me.btAddInput.Size = New System.Drawing.Size(67, 23)
-        Me.btAddInput.TabIndex = 0
+        Me.btAddInput.TabIndex = 14
         Me.btAddInput.Text = "OK"
         '
         'btCancel
@@ -146,7 +146,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.btCancel.Location = New System.Drawing.Point(77, 3)
         Me.btCancel.Name = "btCancel"
         Me.btCancel.Size = New System.Drawing.Size(67, 23)
-        Me.btCancel.TabIndex = 1
+        Me.btCancel.TabIndex = 15
         Me.btCancel.Text = "Cancel"
         '
         'IHPCPowerMapInputDialog
@@ -162,7 +162,7 @@ Partial Class IHPCPowerMapInputDialog
         Me.Name = "IHPCPowerMapInputDialog"
         Me.ShowInTaskbar = false
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "IHPCPowerMapInputDialog"
+        Me.Text = "Power Map"
         Me.FlowLayoutPanel1.ResumeLayout(false)
         Me.TableLayoutPanel4.ResumeLayout(false)
         Me.TableLayoutPanel4.PerformLayout
