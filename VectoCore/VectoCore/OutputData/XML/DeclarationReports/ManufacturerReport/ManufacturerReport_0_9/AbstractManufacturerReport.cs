@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
 
+		protected XElement Signature { get; set; }
+
 		private VectoRunData _modelData;
 		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
@@ -73,6 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					Vehicle,
 					Results));
 		}
+
 
 		#endregion
 	}
