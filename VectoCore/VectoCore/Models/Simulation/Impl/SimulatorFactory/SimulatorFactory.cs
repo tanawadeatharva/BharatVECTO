@@ -50,7 +50,6 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl.Mockup;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -71,12 +70,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		protected bool _simulate = true;
 
-		//TODO: set with preprocessor directive remove from interface
-//#if MOCKUPDEBUG
-//		public static bool MockUpRun { get; set; } = true;
-//#else
-//		public static bool MockUpRun { get; set; } = false;
-//#endif
+
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
@@ -190,13 +184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
 		{
 			var addReportResult = PrepareReport(data);
-            //if (MockUpRun)
-            //{
-            //    return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-            //        new ModalDataContainer(data, ReportWriter, addReportResult))
-            //    { RunData = data });
-            //}
-            if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
+			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
 			}
