@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+
+namespace TUGraz.VectoMockup.Reports
+{
+    internal class XMLDeclarationMockupReport : XMLDeclarationReport09
+    {
+		public XMLDeclarationMockupReport(IReportWriter writer, IManufacturerReportFactory mrfFactory,
+			ICustomerInformationFileFactory cifFactory) :
+			base(writer, mrfFactory, cifFactory)
+		{
+
+		}
+
+		#region Overrides of XMLDeclarationReport09
+
+		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+		{
+			//Do nothing;
+		}
+
+		protected override void WriteResult(ResultEntry result)
+		{
+			(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+			(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+		}
+
+		protected override void GenerateReports()
+		{
+			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			base.GenerateReports();
+		}
+
+		#endregion
+	}
+}

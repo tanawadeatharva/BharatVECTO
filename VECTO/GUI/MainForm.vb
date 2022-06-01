@@ -321,6 +321,10 @@ Public Class MainForm
             Text = "VECTO" & VectoSimulationCore.BranchSuffix & " " & COREvers
         End If
 
+#If MOCKUP Then
+        Text += " [MOCKUP]"
+#End If
+
         If Cfg.DeclMode Then
             _lastModeName = "Declaration"
         Else

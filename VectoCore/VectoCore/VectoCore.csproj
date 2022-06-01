@@ -4,6 +4,16 @@
     <AssemblyName>VectoCore</AssemblyName>
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />

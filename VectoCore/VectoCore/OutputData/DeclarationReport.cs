@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.OutputData
 					Mission = mission.MissionType,
 					LoadingType = loadingType,
 					FuelMode = fuelMode,
-					FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList(),
+					FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList(),
 					Payload = runData.VehicleData.Loading,
 					TotalVehicleMass = runData.VehicleData.TotalVehicleMass,
 					CargoVolume = runData.VehicleData.CargoVolume,

@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoMockup
 {
 
 
@@ -24,8 +28,8 @@ namespace TUGraz.VectoCore.Utils
 		private static class MockupResultHelper
 		{
 			private static string _convArch = "Conv";
-			private const string mockupResourcePrefix = "TUGraz.VectoCore.Resources.Declaration.Report";
-
+			private const string mockupResourcePrefix = "TUGraz.VectoMockup.MockupResults";
+			
 			
 			private static HashSet<string> conventional = new HashSet<string>() {
 				//MRF
@@ -50,9 +54,24 @@ namespace TUGraz.VectoCore.Utils
 				XMLNames.CIF_OutputDataType_HEV_IEPC_S_LorryOutputType,
 				XMLNames.CIF_OutputDataType_HEV_Px_LorryOutputType,
 			};
-			private static HashSet<string> pev = new HashSet<string>() { };
+			private static HashSet<string> pev = new HashSet<string>() {
+				//MRF
+				XMLNames.MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType,
+				XMLNames.MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType,
+
+				//CIF
+				XMLNames.CIF_OutputDataType_PEV_E2_LorryOutputType,
+				XMLNames.CIF_OutputDataType_PEV_E3_LorryOutputType,
+				XMLNames.CIF_OutputDataType_PEV_E4_LorryOutputType,
+				XMLNames.CIF_OutputDataType_PEV_IEPC_LorryOutputType
+
+			};
+
 			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, bool ovc)
 			{
+				var resNames = Assembly.GetAssembly(typeof(MockupResultReader)).GetManifestResourceNames();
 				//if (result.Status == VectoRun.Status.Success) {
 					var arch = GetArch(xmlName, ovc);
 					var reportType = type == ResultType.MRF ? "MRF" : "CIF";
@@ -83,11 +102,12 @@ namespace TUGraz.VectoCore.Utils
 
 		}
         
-		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, bool ovc)
+		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, ovc));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData.VehicleData.Ocv));
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
+			ClearGearboxAndAxleGearEntries(result, resultElement, runData);
 			
 
 			return resultElement;
@@ -95,9 +115,9 @@ namespace TUGraz.VectoCore.Utils
 
 
 
-		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, bool ovc)
+		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, ovc));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData.VehicleData.Ocv));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
@@ -107,14 +127,24 @@ namespace TUGraz.VectoCore.Utils
 
 		private static XElement GetResultElement(XName resultElementName, string resourceName)
 		{
-			var xDoc = XDocument.Load(RessourceHelper.ReadStream(resourceName));
+			var xDoc = XDocument.Load(ReadStream(resourceName));
 			
 			var results = xDoc.XPathSelectElements($"//*[name()='{resultElementName.LocalName}']");
 			
 			return results.First();
 		}
+		public static Stream ReadStream(string resourceName)
+		{
+			var assembly = Assembly.GetAssembly(typeof(MockupResultReader));
+			var resource = assembly.GetManifestResourceStream(resourceName);
+			if (resource == null)
+			{
+				throw new VectoException("Resource file not found: " + resourceName);
+			}
+			return resource;
+		}
 
-		
+
 		private static void ReplaceMission(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
 			var mission = resultElement.Elements()
@@ -150,7 +180,7 @@ namespace TUGraz.VectoCore.Utils
 
 					var fuelElementToAdd = new XElement(fuelElement); //deep copy of fuel element;
 					fuelElementToAdd.SetAttributeValue(XMLNames.Report_Results_Fuel_Type_Attr, fuelProperties.FuelType.ToXMLFormat());
-					ClearFuelConsumptionEntries(fuelProperties.FuelType, fuelElementToAdd, result.VehicleClass);
+					ClearFuelConsumptionEntries(fuelProperties, fuelElementToAdd, result.VehicleClass);
 
 
 
@@ -161,10 +191,27 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		private static void ClearGearboxAndAxleGearEntries(XMLDeclarationReport.ResultEntry result,
+			XElement resultElement, VectoRunData runData)
+		{
+			var elementsToRemove = new List<XElement>();
+			if (runData.GearboxData == null) {
+				elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='GearshiftCount']"));
+				elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='AverageGearboxEfficiency']"));
+			}
+
+			if (runData.AxleGearData == null) {
+				elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='AverageAxlegearEfficiency']"));
+			}
+			foreach (var xElement in elementsToRemove) {
+				xElement.Remove();
+			}
+		}
+
 		/// <summary>
 		/// Clears fuel consumption entries that are not used for a specified fueltype and vehicle class
 		/// </summary>
-		private static void ClearFuelConsumptionEntries(FuelType fuelType, XElement fuelElement,
+		private static void ClearFuelConsumptionEntries(IFuelProperties fuelProperties, XElement fuelElement,
 			VehicleClass vehicleClass)
 		{
 			if(!(vehicleClass.IsHeavyLorry() || vehicleClass.IsMediumLorry()))
@@ -172,7 +219,7 @@ namespace TUGraz.VectoCore.Utils
 				fuelElement.XPathSelectElements("//*[@unit='l/m³-km']").FirstOrDefault()?.Remove();
 			}
 
-			if (fuelType.IsGaseous()) {
+			if (fuelProperties.FuelDensity == null) {
 				//var test = fuelElement.XPathSelectElements("//*[@unit='l/m³-km']");
 				fuelElement.XPathSelectElements("//*[@unit='l/m³-km']").FirstOrDefault()?.Remove();
 				fuelElement.XPathSelectElements("//*[@unit='l/t-km']").FirstOrDefault()?.Remove();

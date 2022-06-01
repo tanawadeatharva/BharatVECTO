@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 
 
-		public static bool ValidateAndPrint(XDocument document)
+		public static bool ValidateAndPrint(XDocument document, string xsdPath = "../../../../VectoCore/Resources/XSD")
 		{
 			var error = false;
 
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 				XmlSchema schema;
 				using (var reader = XmlReader.Create(
-							Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputManufacturer.0.9.xsd")))
+							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputManufacturer.0.9.xsd"))))
 				{
 					schema = XmlSchema.Read(reader, null);
 				}
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				schemaSet.Add(schema);
 
 				using (var reader = XmlReader.Create(
-							Path.GetFullPath("../../../../VectoCore/Resources/XSD/VectoOutputCustomer.0.9.xsd")))
+							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputCustomer.0.9.xsd"))))
 				{
 					schema = XmlSchema.Read(reader, null);
 				}

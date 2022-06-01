@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
@@ -45,8 +46,13 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
+#if MOCKUPDEBUG
+[assembly:InternalsVisibleTo("VectoMockup")]
+#endif
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+   
 	[CustomValidation(typeof(AirdragData), "ValidateAirDragData")]
 	public class AirdragData : SimulationComponentData
 	{

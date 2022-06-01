@@ -12,6 +12,7 @@
     <TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
     <DefineTrace>false</DefineTrace>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
  
   <ItemGroup>
@@ -40,6 +41,18 @@
       <Version>1.0.0-prerelease.20110.1</Version>
     </PackageReference>
   </ItemGroup>
+
+	<Choose>
+		<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+
+			</ItemGroup>
+			<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>
+		</When>
+	</Choose>
 
   <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />

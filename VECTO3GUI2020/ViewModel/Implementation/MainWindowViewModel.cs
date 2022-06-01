@@ -68,7 +68,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			set => SetProperty(ref _jobListVm, value);
 		}
 
+
+
+#if MOCKUP
+		
+		public string Version => "[MOCKUP] VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+#else
 		public string Version => "VECTO Multistep " + Assembly.GetExecutingAssembly().GetName().Version + " (For Testing and Feedback)";
+
+#endif
 
 		#endregion
 
@@ -102,7 +110,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 
 
 
-		#endregion
+#endregion
 
 	}
 }

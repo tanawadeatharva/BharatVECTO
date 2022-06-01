@@ -1,0 +1,606 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.CompletedBus;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
+using TUGraz.VectoCore.Utils;
+using TUGraz.VectoMockup.Factories;
+using TUGraz.VectoMockup.Reports;
+
+namespace TUGraz.VectoMockup.Ninject
+{
+	// ReSharper disable once InconsistentNaming
+	public class MRFMockupModule : AbstractNinjectModule
+    {
+        #region Overrides of NinjectModule
+
+        public override void Load()
+        {
+            Kernel.Bind<IManufacturerReportFactory>().To<MockupManufacturerReportFactory>()
+                .WhenInjectedExactlyInto<XMLDeclarationMockupReportFactory>().InSingletonScope();
+        }
+
+        #endregion
+    }
+
+    public class MockupManufacturerReport : IXMLManufacturerReport, IXMLMockupReport
+    {
+        private AbstractManufacturerReport _ixmlManufacturerReportImplementation;
+        private VectoRunData _modelData;
+
+		private XNamespace Mrf = AbstractManufacturerReport.Mrf;
+		private readonly string _outputData;
+		private XElement Results { get; set; }
+        public MockupManufacturerReport(IXMLManufacturerReport originalManufacturerReport)
+        {
+            _ixmlManufacturerReportImplementation = originalManufacturerReport as AbstractManufacturerReport;
+			_outputData = _ixmlManufacturerReportImplementation.OutputDataType;
+
+            Results = new XElement(Mrf + XMLNames.Report_Results);
+		}
+
+        public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+        {
+
+            Results.Add(MockupResultReader.GetMRFMockupResult(_outputData, resultValue, Mrf + "Result", _modelData));
+
+
+
+        }
+
+        public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+        {
+            Results.AddFirst(new XElement(Mrf + "Status", "success"));
+            Results.AddFirst(new XComment("Always prints success at the moment"));
+            //Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Summary", _ovc));
+        }
+
+
+        #region Implementation of IXMLManufacturerReport
+
+
+        public void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            _ixmlManufacturerReportImplementation.InitializeVehicleData(inputData);
+        }
+
+        public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+        {
+            _modelData = modelData;
+            _ixmlManufacturerReportImplementation.Initialize(modelData, fuelModes);
+        }
+
+        public XDocument Report
+        {
+			get
+			{
+				var report = _ixmlManufacturerReportImplementation.Report;
+                report.XPathSelectElements($"//*[name()='{XMLNames.Report_Results}']").Single().ReplaceWith(Results);
+
+				return report;
+			}
+        }
+
+        public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
+        {
+            _ixmlManufacturerReportImplementation.WriteResult(resultValue);
+        }
+
+        public void GenerateReport()
+        {
+            _ixmlManufacturerReportImplementation.GenerateReport();
+        }
+
+        #endregion
+
+
+
+    }
+
+
+    public class MockupManufacturerReportFactory : IManufacturerReportFactory
+    {
+        private IManufacturerReportFactory _manufacturerReportFactoryImplementation;
+
+        #region Implementation of IManufacturerReportFactory
+
+        public MockupManufacturerReportFactory(IManufacturerReportFactory mrfFactory)
+        {
+            _manufacturerReportFactoryImplementation = mrfFactory;
+        }
+        public IXMLManufacturerReport GetConventionalLorryManufacturerReport()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalLorryManufacturerReport();
+        }
+
+        public IXMLManufacturerReport GetManufacturerReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
+            ArchitectureID archId, bool exempted, bool iepc, bool ihpc)
+        {
+            return new MockupManufacturerReport(_manufacturerReportFactoryImplementation.GetManufacturerReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
+        }
+
+        public IXmlTypeWriter GetConventionalLorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalLorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_Px_IHCP_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_Px_IHCP_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S2_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S2_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S3_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S3_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S4_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S4_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_IEPC_S_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E2_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E3_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E3_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E4_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E4_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_IEPC_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_IEPC_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetConventional_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventional_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_Px_IHPC_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_Px_IHPC_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S2_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S2_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S3_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S3_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_S4_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S4_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E2_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E2_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E3_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E3_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E4_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E4_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_IEPC_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_IEPC_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetConventional_CompletedBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventional_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetHEV_CompletedBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_CompletedBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetConventionalLorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalLorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_Px_IHCP_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_Px_IHCP_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S2_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S2_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S3_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S3_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S4_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S4_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_IEPC_S_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E2_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E2_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E3_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E3_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E4_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E4_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_IEPC_S_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_IEPC_S_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetConventional_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventional_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_Px_IHPC_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_Px_IHPC_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S2_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S2_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S3_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S3_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_S4_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_S4_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E2_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E2_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E3_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E3_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_E4_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_E4_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_IEPC_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_IEPC_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetConventional_CompletedBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventional_CompletedBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetHEV_CompletedBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_CompletedBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetPEV_CompletedBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_CompletedBusComponentsType();
+        }
+
+        public IReportVehicleOutputGroup GetGeneralVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetGeneralVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetGeneralLorryVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetGeneralLorryVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetHEV_VehicleSequenceGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_VehicleSequenceGroup();
+        }
+
+        public IReportOutputGroup GetPEV_VehicleSequenceGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_VehicleSequenceGroup();
+        }
+
+        public IReportOutputGroup GetConventionalLorryVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalLorryVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetHEV_lorryVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_lorryVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetPEV_lorryVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_lorryVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_lorryVehicleOutputSequenceGroup();
+        }
+
+        public IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusGeneralVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_PrimaryBusVehicleOutputGroup();
+        }
+
+        public IXmlTypeWriter GetEngineTorqueLimitationsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetEngineTorqueLimitationsType();
+        }
+
+        public IXmlTypeWriter GetEngineType()
+        {
+            return _manufacturerReportFactoryImplementation.GetEngineType();
+        }
+
+        public IXmlTypeWriter GetRetarderType()
+        {
+            return _manufacturerReportFactoryImplementation.GetRetarderType();
+        }
+
+        public IXmlTypeWriter GetTorqueConverterType()
+        {
+            return _manufacturerReportFactoryImplementation.GetTorqueConverterType();
+        }
+
+        public IXmlTypeWriter GetAngleDriveType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAngleDriveType();
+        }
+
+        public IXmlTypeWriter GetTransmissionType()
+        {
+            return _manufacturerReportFactoryImplementation.GetTransmissionType();
+        }
+
+        public IXmlTypeWriter GetElectricMachinesType()
+        {
+            return _manufacturerReportFactoryImplementation.GetElectricMachinesType();
+        }
+
+        public IXmlTypeWriter GetAxleGearType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxleGearType();
+        }
+
+        public IXmlTypeWriter GetAxleWheelsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxleWheelsType();
+        }
+
+        public IMRFAdasType GetConventionalADASType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalADASType();
+        }
+
+        public IMRFAdasType GetHEVADASType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEVADASType();
+        }
+
+        public IMRFAdasType GetPEVADASType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEVADASType();
+        }
+
+        public IXmlTypeWriter GetIEPCSpecifications()
+        {
+            return _manufacturerReportFactoryImplementation.GetIEPCSpecifications();
+        }
+
+        public IXmlTypeWriter GetREESSSpecificationsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetREESSSpecificationsType();
+        }
+
+        public IMrfAirdragType GetAirdragType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAirdragType();
+        }
+
+        public IMRFLorryAuxiliariesType GetConventionalLorryAuxType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalLorryAuxType();
+        }
+
+        public IMRFLorryAuxiliariesType GetHEV_LorryAuxiliariesType()
+        {
+            return _manufacturerReportFactoryImplementation.GetHEV_LorryAuxiliariesType();
+        }
+
+        public IMRFLorryAuxiliariesType GetPEV_LorryAuxiliariesType()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_LorryAuxiliariesType();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusAuxType_Conventional()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusAuxType_Conventional();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_P()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusAuxType_HEV_P();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_S()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusAuxType_HEV_S();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusAuxType_PEV()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusAuxType_PEV();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_HEV_S()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusPneumaticSystemType_HEV_S();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_PEV_IEPC()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusPneumaticSystemType_PEV_IEPC();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusElectricSystemType_Conventional_HEV()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusElectricSystemType_Conventional_HEV();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusElectricSystemType_PEV()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusElectricSystemType_PEV();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_Conventional_HEV()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusHVACSystemType_Conventional_HEV();
+        }
+
+        public IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_PEV()
+        {
+            return _manufacturerReportFactoryImplementation.GetPrimaryBusHVACSystemType_PEV();
+        }
+
+        public IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalCompletedBusAuxType();
+        }
+
+        public IMRFBusAuxiliariesType GetConventionalCompletedBus_HVACSystemType()
+        {
+            return _manufacturerReportFactoryImplementation.GetConventionalCompletedBus_HVACSystemType();
+        }
+
+        public IMRFBusAuxiliariesType GetCompletedBusElectricSystemType()
+        {
+            return _manufacturerReportFactoryImplementation.GetCompletedBusElectricSystemType();
+        }
+
+        public IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetPEV_PrimaryBusVehicleOutputGroup();
+        }
+
+        public IReportOutputGroup GetCompletedBusGeneralVehicleOutputGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetCompletedBusGeneralVehicleOutputGroup();
+        }
+
+        public IReportVehicleOutputGroup GetCompletedBusSequenceGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetCompletedBusSequenceGroup();
+        }
+
+        public IReportVehicleOutputGroup GetCompletedBusDimensionSequenceGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetCompletedBusDimensionSequenceGroup();
+        }
+
+        public IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup()
+        {
+            return _manufacturerReportFactoryImplementation.GetCompletedBus_HVACSystemGroup();
+        }
+
+        public IMrfVehicleType GetBoostingLimitationsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetBoostingLimitationsType();
+        }
+
+        #endregion
+    }
+}

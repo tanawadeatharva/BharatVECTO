@@ -52,10 +52,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 			_simulate = CanBeSimulated(dataProvider);
 			if (_simulate) {
-				if (MockUpRun) {
-					runDataFactoryFactory = new VectoMockUpRunDataFactoryFactory();
-				}
-					
 				RunDataFactory = runDataFactoryFactory.CreateDeclarationRunDataFactory(_currentStageInputData, _currentStageDeclarationReport,
 					_currentStageVTPReport);
 			} else {
