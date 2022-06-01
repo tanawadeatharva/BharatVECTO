@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl.Mockup
+namespace TUGraz.VectoMockup.Simulation
 {
     public class MockupRun : VectoRun
 	{
