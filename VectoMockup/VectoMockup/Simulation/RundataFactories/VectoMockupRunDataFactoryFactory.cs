@@ -9,7 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoMockup.RunData;
+
 
 namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
@@ -50,7 +50,6 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					report);
 			}
 			else {
-				throw new NotImplementedException();
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
 			}
 		}
