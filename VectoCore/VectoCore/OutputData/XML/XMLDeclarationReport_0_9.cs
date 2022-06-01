@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -11,14 +12,11 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public interface IMockupReport
-	{ 
-		bool Mockup { set; }
-	}
-	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle, IMockupReport
+	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
 	{
 		private readonly ICustomerInformationFileFactory _cifFactory;
 		private readonly IManufacturerReportFactory _mrfFactory;
@@ -31,12 +29,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;
 		}
-		
-		#region Implementation of IMockupReport
 
-		public bool Mockup { get; set; }
 
-		#endregion
+
 
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
@@ -45,13 +40,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var ihpc =
 				vehicleData.Components.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
+			if (modelData.Exempted) {
+				throw new NotImplementedException();
+			}
+			PrimaryReport = new XMLPrimaryBusVehicleReport();
+			
+			//PrimaryRpt = _vifFactory.GetVIF(vehicleData.VehicleCategory,
+			//	vehicleData.VehicleType,
+			//	vehicleData.ArchitectureID,
+			//	vehicleData.ExemptedVehicle,
+			//	iepc,
+			//	ihpc);
+
+
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
-				vehicleData.VehicleType,
-				vehicleData.ArchitectureID,
-				vehicleData.ExemptedVehicle,
-				iepc,
-				ihpc);
-			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
 				vehicleData.VehicleType,
 				vehicleData.ArchitectureID,
 				vehicleData.ExemptedVehicle,
@@ -61,40 +63,35 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			if (!Mockup)
-			{
-				base.DoStoreResult(entry, runData, modData);
-				return;
-			}
+			base.DoStoreResult(entry, runData, modData);
 		}
 
 		protected override void WriteResult(ResultEntry result)
 		{
 
-			if (Mockup)
-			{
+			//if (Mockup)
+			//{
 
-				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
+			//	(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+			//	(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
 
-			}
-			else
-			{
+			//}
+			//else
+			//{
 				base.WriteResult(result);
-			}
+			//}
 		}
 
 
 	}
 
 
-	public class XMLDeclarationReport09 : XMLDeclarationReport, IMockupReport
+	public class XMLDeclarationReport09 : XMLDeclarationReport
 	{
 		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly ICustomerInformationFileFactory _cifFactory;
 
 
-		#region Implementation of IDeclarationReport
 
 		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
@@ -124,34 +121,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		#region Overrides of XMLDeclarationReport
-
-
-		protected override void WriteResult(ResultEntry result)
-		{
-
-			if (Mockup) {
-				
-				(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-				(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
-				
-				
-			} else {
-				base.WriteResult(result);
-			}
-		}
-
-		#endregion
-
-		#endregion
 
 
 
-		#region Implementation of IMockupReport
 
-		public bool Mockup { private get; set; }
 
-		#endregion
 	}
 
 }
