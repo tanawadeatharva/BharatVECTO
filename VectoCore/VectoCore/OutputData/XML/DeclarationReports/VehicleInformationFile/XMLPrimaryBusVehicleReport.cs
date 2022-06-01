@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehiclePIFType"),
+				new XAttribute(xsi + "type", "ConventionalVehicleVIFType"),
 				new XElement(tns + XMLNames.ManufacturerPrimaryVehicle, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.ManufacturerAddressPrimaryVehicle, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
-				new XAttribute(xsi + "type", "VehicleComponentsPIFType"),
+				new XAttribute(xsi + "type", "Vehicle_Conventional_ComponentsVIFType"),
 				GetEngineDescription(modelData.EngineData, fuelModes),
 				GetGearboxDescription(modelData.GearboxData),
 				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(tns + XMLNames.Component_TorqueConverter,
 				new XElement(tns + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + "type", "TorqueConverterDataPIFType"),
+					new XAttribute(xsi + "type", "TorqueConverterDataVIFType"),
 					GetCommonDescription(torqueConverter),
 					new XElement(tns + XMLNames.Component_AppVersion, torqueConverter.AppVersion)
 				));
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(tns + XMLNames.Component_AxleWheels,
 					new XElement(tns + XMLNames.Report_DataWrap, 
-						new XAttribute(xsi + "type", "AxleWheelsDataPIFType"),
+						new XAttribute(xsi + "type", "AxleWheelsDataVIFType"),
 						new XElement(tns + XMLNames.AxleWheels_Axles,
 							GetAxlesNodes(axlesNodes)
 						)));
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			var result =  new XElement(tns + XMLNames.Component_Auxiliaries,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(xsi + "type", "AuxiliaryDataPIFType"),
+					new XAttribute(xsi + "type", "AuxiliaryDataVIFType"),
 					//new XAttribute("xmlns", tns.NamespaceName), //automically created
 					new XElement(tns + XMLNames.BusAux_Fan, new XElement(tns + XMLNames.BusAux_Technology,  aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
@@ -386,7 +386,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetAxlegearDescription(AxleGearData axleGearData)
 		{
 			return WrapComponent(
-				XMLNames.Component_Axlegear, "AxlegearDataPIFType",
+				XMLNames.Component_Axlegear, "AxlegearDataVIFType",
 				GetCommonDescription(axleGearData),
 				new XElement(tns + XMLNames.Component_AppVersion, axleGearData.InputData.AppVersion),
 				new XElement(tns + XMLNames.Axlegear_LineType, axleGearData.LineType.ToXMLFormat()),
@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			} 
 				
 			
-			return WrapComponent(XMLNames.Component_Angledrive, "AngledriveDataPIFType",
+			return WrapComponent(XMLNames.Component_Angledrive, "AngledriveDataVIFType",
 				GetCommonDescription(angledriveData),
 					new XElement(tns + XMLNames.Component_AppVersion, angledriveData.InputData.AppVersion),
 					new XElement(tns + XMLNames.AngleDrive_Ratio, angledriveData.Angledrive.Ratio.ToXMLFormat(3))
@@ -410,12 +410,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetGearboxDescription(GearboxData gearboxData)
 		{
 			var retVal = WrapComponent(
-				"Transmission", "TransmissionDataPIFType",
+				"Transmission", "TransmissionDataVIFType",
 				GetCommonDescription(gearboxData),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(
 					tns + XMLNames.Gearbox_Gears,
-					new XAttribute(xsi + "type", "TransmissionGearsPIFType"),
+					new XAttribute(xsi + "type", "TransmissionGearsVIFType"),
 					gearboxData.Gears.Select(
 						x =>
 							new XElement(
@@ -459,7 +459,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			var retVal = WrapComponent(
-				XMLNames.Component_Engine, "EngineDataPIFType",
+				XMLNames.Component_Engine, "EngineDataVIFType",
 				GetCommonDescription(engineData),
 				new XElement(tns + XMLNames.Engine_Displacement, engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),

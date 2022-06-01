@@ -609,9 +609,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "VehicleComponentsPIFType";
-		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
-		public new const string AXLES_READER_TYPE = "AxleWheelsDataPIFType";
+		public new const string XSD_TYPE = "Vehicle_Conventional_ComponentsVIFType";
+		public new const string GEARBOX_READER_TYPE = "TransmissionDataVIFType";
+		public new const string AXLES_READER_TYPE = "AxleWheelsDataVIFType";
 		
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);

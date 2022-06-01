@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return _simulatorFactory.FollowUpSimulatorFactory;
 				} catch (Exception e){
 					LogManager.GetLogger(typeof(JobContainer).FullName).Error(e);
-					throw;
+					throw e;
 				}finally {
 
 				}
@@ -371,7 +371,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				AddRuns(additionalSimulatorFactory);
 				Execute(_multithreaded);
 			} catch (Exception ex) {
+				
 				Log.Error(ex.Message);
+				throw;
 			}
 			
 		}
