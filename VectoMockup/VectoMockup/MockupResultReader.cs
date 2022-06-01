@@ -7,8 +7,10 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML;
@@ -23,7 +25,8 @@ namespace TUGraz.VectoMockup
 		private enum ResultType
 		{
 			CIF,
-			MRF
+			MRF,
+			VIF
 		}
 		private static class MockupResultHelper
 		{
@@ -73,12 +76,13 @@ namespace TUGraz.VectoMockup
 
 			};
 
-			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, bool ovc)
+			public static string GetResourceName(string xmlName, XMLDeclarationReport.ResultEntry result, ResultType type, VectoRunData runData)
 			{
+				
 				var resNames = Assembly.GetAssembly(typeof(MockupResultReader)).GetManifestResourceNames();
 				//if (result.Status == VectoRun.Status.Success) {
-					var arch = GetArch(xmlName, ovc);
-					var reportType = type == ResultType.MRF ? "MRF" : "CIF";
+					var arch = GetArch(xmlName, runData);
+					var reportType = GetReportType(type);
 					var vehicleType = result.VehicleClass.IsBus() ? "Bus" : "Lorry";
 					return $"{mockupResourcePrefix}.{reportType}_MockupResults_{arch}_{vehicleType}.xml";
 				//}
@@ -86,17 +90,33 @@ namespace TUGraz.VectoMockup
 				throw new NotImplementedException("Error result not implemented\n");
 			}
 
-			private static string GetArch(string xmlName, bool ocv)
+			private static object GetReportType(ResultType type)
 			{
-				if (conventional.Contains(xmlName)) {
+				switch (type) {
+					case ResultType.CIF:
+						return "CIF";
+					case ResultType.MRF:
+						return "MRF";
+					case ResultType.VIF:
+						return "VIF";
+					default:
+						throw new ArgumentOutOfRangeException(nameof(type), type, null);
+				}
+			}
+
+			private static string GetArch(string xmlName, VectoRunData runData)
+			{
+				var ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
+				var jobType = runData.InputData.JobInputData.JobType;
+				if (jobType == VectoSimulationJobType.ConventionalVehicle) {
 					return "Conv";
 				}
 
-				if (hev.Contains(xmlName)) {
-					return ocv ? "OVC-HEV" : "non-OVC-HEV";
+				if (jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle)) {
+					return ovc ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
-				if (pev.Contains(xmlName)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle)) {
 					return "PEV";
 				}
 
@@ -108,12 +128,11 @@ namespace TUGraz.VectoMockup
         
 		public static XElement GetMRFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData.VehicleData.Ocv));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData));
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
 			ClearGearboxAndAxleGearEntries(result, resultElement, runData);
 			
-
 			return resultElement;
 		}
 
@@ -121,7 +140,7 @@ namespace TUGraz.VectoMockup
 
 		public static XElement GetCIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
 		{
-			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData.VehicleData.Ocv));
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.CIF, runData));
 			resultElement.DescendantNodes().OfType<XComment>().Remove();
 			ReplaceMission(result, resultElement);
 			SetFuels(result, resultElement);
@@ -129,11 +148,76 @@ namespace TUGraz.VectoMockup
 			return resultElement;
 		}
 
+		public static XElement GetVIFMockupResult(string xmlName, XMLDeclarationReport.ResultEntry result, XName resultElementName, VectoRunData runData)
+		{
+			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.VIF, runData));
+			resultElement.DescendantNodes().OfType<XComment>().Remove();
+			ReplaceMission(result, resultElement);
+			ReplaceGroup(result, resultElement);
+			ReplacePayload(result, resultElement);
+			ReplaceFuelMode(result,resultElement);
+			//SetFuels(result, resultElement);
+
+			//Results.Add(
+			//	new XElement(
+			//		tns + XMLNames.Report_Result_Result,
+			//		new XAttribute(
+			//			XMLNames.Report_Result_Status_Attr,
+			//			resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
+			//		new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, resultEntry.VehicleClass.GetClassNumber()),
+			//		new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
+			//		new XElement(
+			//			tns + XMLNames.Report_ResultEntry_SimulationParameters,
+			//			new XElement(
+			//				tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
+			//				XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
+			//			new XElement(
+			//				tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
+			//			new XElement(
+			//				tns + XMLNames.Report_ResultEntry_PassengerCount,
+			//				resultEntry.PassengerCount?.ToXMLFormat(2) ?? "NaN"),
+			//			new XElement(
+			//				tns + XMLNames.Report_Result_FuelMode,
+			//				resultEntry.FuelData.Count > 1
+			//					? XMLNames.Report_Result_FuelMode_Val_Dual
+			//					: XMLNames.Report_Result_FuelMode_Val_Single)
+			//		),
+			//		GetResults(resultEntry)));
+
+			return resultElement;
+		}
+
+
+
+		private static void ReplacePayload(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		{
+			var payload = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_ResultEntry_Payload}']");
+			payload.Single().Value = result.Payload.ToXMLFormat();
+		}
+
+		private static void ReplaceGroup(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		{
+			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Vehicle_VehicleGroup}']");
+			groupElement.Single().Value = result.VehicleClass.GetClassNumber();
+		}
+
+		private static void ReplaceFuelMode(XMLDeclarationReport.ResultEntry result, XElement resultElement)
+		{
+			var fuelMode = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Result_FuelMode}']");
+			var fuelModeElement = fuelMode.FirstOrDefault();
+			if (fuelModeElement != null) {
+				fuelModeElement.Value = result.FuelData.Count > 1
+					? XMLNames.Report_Result_FuelMode_Val_Dual
+					: XMLNames.Report_Result_FuelMode_Val_Single;
+			}
+		}
+
+
 		private static XElement GetResultElement(XName resultElementName, string resourceName)
 		{
 			var xDoc = XDocument.Load(ReadStream(resourceName));
 			
-			var results = xDoc.XPathSelectElements($"//*[name()='{resultElementName.LocalName}']");
+			var results = xDoc.XPathSelectElements($"//*[local-name()='{resultElementName.LocalName}']");
 			
 			return results.First();
 		}
