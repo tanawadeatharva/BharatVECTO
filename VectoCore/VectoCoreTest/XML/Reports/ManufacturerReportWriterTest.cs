@@ -112,10 +112,18 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				}
 
 				schemaSet.Add(schema);
-				
+
+				using (var reader = XmlReader.Create(
+							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputMultistep.0.1.xsd"))))
+				{
+					schema = XmlSchema.Read(reader, null);
+				}
+
+				schemaSet.Add(schema);
 
 
-                document.Validate(schemaSet, (sender, args) => {
+
+				document.Validate(schemaSet, (sender, args) => {
 					error = true;
 
 					TestContext.WriteLine(sender?.ToString());
