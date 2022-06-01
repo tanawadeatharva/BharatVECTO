@@ -13,7 +13,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoMockup.Reports
 {
-    class MockupReportFactory : IXMLDeclarationReportFactory
+    class MockupReportFactory : IXMLDeclarationReportFactory, IMockupDeclarationReportFactory
     {
         private readonly IManufacturerReportFactory _mrfFactory;
         private readonly ICustomerInformationFileFactory _cifFactory;
@@ -76,7 +76,7 @@ namespace TUGraz.VectoMockup.Reports
                 return reportCompleted;
             }
             else {
-				throw new NotImplementedException();
+				//throw new NotImplementedException();
                 var report = new XMLDeclarationReportMultistageBusVehicle(outputDataWriter);
                 return report;
             }
@@ -123,5 +123,18 @@ namespace TUGraz.VectoMockup.Reports
         }
 
         #endregion
-    }
+
+		#region Implementation of IMockupDeclarationReportFactory
+
+		public IManufacturerReportFactory MrfFactory => _mrfFactory;
+		public ICustomerInformationFileFactory CifFactory => _cifFactory;
+
+		#endregion
+	}
+
+	internal interface IMockupDeclarationReportFactory
+	{
+		IManufacturerReportFactory MrfFactory { get; }
+        ICustomerInformationFileFactory CifFactory { get; }
+	}
 }
