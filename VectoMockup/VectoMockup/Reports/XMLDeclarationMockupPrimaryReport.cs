@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
@@ -56,13 +58,27 @@ namespace TUGraz.VectoMockup.Reports
 			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
 			(PrimaryReport as IXMLMockupReport).WriteMockupSummary(Results.First());
 			ManufacturerRpt.GenerateReport();
-			var fullReportHash = GetSignature(ManufacturerRpt.Report);
+			var fullReportHash = CreateDummySig();
 			//CustomerRpt.GenerateReport(fullReportHash);
 			PrimaryReport.GenerateReport(fullReportHash);
 		}
 
+		protected virtual XElement CreateDummySig()
+		{
+			XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
+			return new XElement(
+				di + XMLNames.DI_Signature_Reference,
+				new XElement(
+					di + XMLNames.DI_Signature_Reference_DigestMethod,
+					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
+				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
+			);
+		}
+	}
+
+
+
 
 
 		#endregion
-	}
 }
