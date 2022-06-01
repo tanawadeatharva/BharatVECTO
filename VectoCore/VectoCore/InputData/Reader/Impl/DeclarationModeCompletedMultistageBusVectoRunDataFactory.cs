@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
 		}
 
-		private VectoRunData GetExemptedVectoRunData()
+		protected virtual VectoRunData GetExemptedVectoRunData()
 		{
 			return new VectoRunData() {
 				Exempted = true,
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		private IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
+		protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
 			var engineModes = InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.EngineModes;
 
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
+		protected virtual VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
 		{
 			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		
-		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
+		protected virtual VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
 		{
 			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			
