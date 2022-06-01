@@ -26,6 +26,9 @@ Public Class IHPCForm
 
         SetVoltageLevelLow(ihpcData.VoltageLevels.First()) 
         SetVoltageLevelHigh(ihpcData.VoltageLevels.Last())
+
+        LbStatus.Text = ""
+        _changed = False
     End Sub
 
     Private Sub SetVoltageLevelLow(voltageLevel as IElectricMotorVoltageLevel)
