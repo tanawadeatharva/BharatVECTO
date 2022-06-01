@@ -30,9 +30,9 @@ Partial Class IEPCInputDialog
         Me.btAddFilePath = New System.Windows.Forms.Button()
         Me.tbInputFile = New System.Windows.Forms.TextBox()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
+        Me.tbGear = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
-        Me.tbGear = New System.Windows.Forms.TextBox()
         Me.TableLayoutPanel1.SuspendLayout
         Me.TableLayoutPanel5.SuspendLayout
         Me.TableLayoutPanel4.SuspendLayout
@@ -51,7 +51,7 @@ Partial Class IEPCInputDialog
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(148, 29)
-        Me.TableLayoutPanel1.TabIndex = 4
+        Me.TableLayoutPanel1.TabIndex = 105
         '
         'btnOk
         '
@@ -59,7 +59,7 @@ Partial Class IEPCInputDialog
         Me.btnOk.Location = New System.Drawing.Point(3, 3)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(67, 23)
-        Me.btnOk.TabIndex = 0
+        Me.btnOk.TabIndex = 16
         Me.btnOk.Text = "OK"
         '
         'btnCancel
@@ -69,7 +69,7 @@ Partial Class IEPCInputDialog
         Me.btnCancel.Location = New System.Drawing.Point(77, 3)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(67, 23)
-        Me.btnCancel.TabIndex = 1
+        Me.btnCancel.TabIndex = 17
         Me.btnCancel.Text = "Cancel"
         '
         'TableLayoutPanel5
@@ -85,7 +85,7 @@ Partial Class IEPCInputDialog
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
         Me.TableLayoutPanel5.Size = New System.Drawing.Size(356, 39)
-        Me.TableLayoutPanel5.TabIndex = 8
+        Me.TableLayoutPanel5.TabIndex = 103
         '
         'btAddFilePath
         '
@@ -94,7 +94,7 @@ Partial Class IEPCInputDialog
         Me.btAddFilePath.Location = New System.Drawing.Point(324, 6)
         Me.btAddFilePath.Name = "btAddFilePath"
         Me.btAddFilePath.Size = New System.Drawing.Size(24, 26)
-        Me.btAddFilePath.TabIndex = 30
+        Me.btAddFilePath.TabIndex = 12
         Me.btAddFilePath.UseVisualStyleBackColor = true
         '
         'tbInputFile
@@ -103,7 +103,7 @@ Partial Class IEPCInputDialog
         Me.tbInputFile.Location = New System.Drawing.Point(3, 9)
         Me.tbInputFile.Name = "tbInputFile"
         Me.tbInputFile.Size = New System.Drawing.Size(310, 20)
-        Me.tbInputFile.TabIndex = 0
+        Me.tbInputFile.TabIndex = 11
         '
         'TableLayoutPanel4
         '
@@ -119,7 +119,15 @@ Partial Class IEPCInputDialog
         Me.TableLayoutPanel4.RowCount = 1
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(128, 28)
-        Me.TableLayoutPanel4.TabIndex = 10
+        Me.TableLayoutPanel4.TabIndex = 100
+        '
+        'tbGear
+        '
+        Me.tbGear.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.tbGear.Location = New System.Drawing.Point(46, 4)
+        Me.tbGear.Name = "tbGear"
+        Me.tbGear.Size = New System.Drawing.Size(77, 20)
+        Me.tbGear.TabIndex = 10
         '
         'Label3
         '
@@ -138,15 +146,7 @@ Partial Class IEPCInputDialog
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(501, 45)
-        Me.FlowLayoutPanel1.TabIndex = 8
-        '
-        'tbGear
-        '
-        Me.tbGear.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbGear.Location = New System.Drawing.Point(46, 4)
-        Me.tbGear.Name = "tbGear"
-        Me.tbGear.Size = New System.Drawing.Size(77, 20)
-        Me.tbGear.TabIndex = 9
+        Me.FlowLayoutPanel1.TabIndex = 102
         '
         'IEPCInputDialog
         '

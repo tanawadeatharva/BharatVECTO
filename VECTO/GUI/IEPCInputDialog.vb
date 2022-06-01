@@ -20,7 +20,7 @@ Public Class IEPCInputDialog
 		SetDialogTitle(dialogType)
 		_dialogType = dialogType
 
-    End Sub
+	End Sub
 
 	Public Sub Clear()
 		_tbGear.Text = ""
@@ -51,25 +51,25 @@ Public Class IEPCInputDialog
 			Return
 		End If
 
-	    If Not File.Exists(tbInputFile.Text) Then
-	        MsgBox("Invalid input no valid file path given")
-	        _tbInputFile.Focus()
+		If Not File.Exists(tbInputFile.Text) Then
+			MsgBox("Invalid input no valid file path given")
+			_tbInputFile.Focus()
 			Return
-	    End If
+		End If
 		
 		Dim fileExtension = new FileInfo(tbInputFile.Text).Extension
-        Select Case _dialogType
-            Case IEPCDialogType.DragCurveDialog
+		Select Case _dialogType
+			Case IEPCDialogType.DragCurveDialog
 				If Not $".{IEPCDragFileBrowser.Extensions.First()}"= fileExtension Then
-				    MsgBox($"The Selected Drag Curve file(.{IEPCDragFileBrowser.Extensions.First()}) has the wrong file extension")
-				    Return		
+					MsgBox($"The Selected Drag Curve file(.{IEPCDragFileBrowser.Extensions.First()}) has the wrong file extension")
+					Return		
 				End If
 			Case IEPCDialogType.PowerMapDialog
-			    If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension Then
-			        MsgBox($"The Selected Power Map file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
+				If Not $".{IEPCPowerMapFileBrowser.Extensions.First()}" = fileExtension Then
+					MsgBox($"The Selected Power Map file(.{IEPCPowerMapFileBrowser.Extensions.First()}) has the wrong file extension")
 					Return
-			    End If
-        End Select
+				End If
+		End Select
 
 		DialogResult = DialogResult.OK
 		Close()
@@ -82,20 +82,20 @@ Public Class IEPCInputDialog
 	End Sub
 
 	Private Sub btAddFilePath_Click(sender As Object, e As EventArgs) Handles btAddFilePath.Click
-	    Select Case _dialogType
-	        Case IEPCDialogType.DragCurveDialog
-	            SelectInputFileDialog(IEPCDragFileBrowser, _dragCurveFilePath)
-	        Case IEPCDialogType.PowerMapDialog
-	            SelectInputFileDialog(IEPCDragFileBrowser, _powerMapFilePath)
-	    End Select
+		Select Case _dialogType
+			Case IEPCDialogType.DragCurveDialog
+				SelectInputFileDialog(IEPCDragFileBrowser, _dragCurveFilePath)
+			Case IEPCDialogType.PowerMapDialog
+				SelectInputFileDialog(IEPCDragFileBrowser, _powerMapFilePath)
+		End Select
 	End Sub
 
 #End Region
 
 	Private Sub SelectInputFileDialog(fileBrowser As FileBrowser, filePath As String )
 		If fileBrowser.OpenDialog(FileRepl(tbInputFile.Text, GetPath(filePath))) Then
-		    tbInputFile.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), GetPath(filePath))
-	    End If
+			tbInputFile.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), GetPath(filePath))
+		End If
 	End Sub
 	
 	Private Sub SetDialogTitle(dialogType As IEPCDialogType)
@@ -107,9 +107,9 @@ Public Class IEPCInputDialog
 		End Select
 	End Sub
 
-    Private Sub IEPCInputDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	Private Sub IEPCInputDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		Show()
-        _tbGear.Focus()
-    End Sub
+		_tbGear.Focus()
+	End Sub
 
 End Class
