@@ -4,6 +4,7 @@
     <AssemblyName>VectoCoreTest</AssemblyName>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,5 +30,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+	<Choose>
+		<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
+			<ItemGroup>
+				<ProjectReference Include="..\..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+
+			</ItemGroup>
+			<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>
+		</When>
+	</Choose>
 
 </Project>
