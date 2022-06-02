@@ -177,6 +177,8 @@ namespace HashingTool.ViewModel.UserControl
 			}
 
 			try {
+				_source = fileName;
+				RaisePropertyChanged("Source");
 				using (var stream = File.OpenRead(fileName)) {
 					await LoadXMLFile(stream);
 				}
