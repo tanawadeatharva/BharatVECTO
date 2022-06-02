@@ -293,6 +293,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
 				}
 			};
+			
 			return addReportResult;
 		}
 	}

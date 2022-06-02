@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML;
@@ -106,8 +107,17 @@ namespace TUGraz.VectoMockup
 
 			private static string GetArch(string xmlName, VectoRunData runData)
 			{
-				var ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
-				var jobType = runData.InputData.JobInputData.JobType;
+
+				bool ovc = false;
+				var jobType = VectoSimulationJobType.ConventionalVehicle;
+				if (runData.InputData is IXMLMultistageInputDataProvider) {
+					ovc = false; //TODO implement
+				} else {
+					ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
+					jobType = runData.InputData.JobInputData.JobType;
+				}
+
+				
 				if (jobType == VectoSimulationJobType.ConventionalVehicle) {
 					return "Conv";
 				}

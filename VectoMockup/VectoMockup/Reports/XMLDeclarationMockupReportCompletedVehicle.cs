@@ -14,7 +14,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoMockup.Reports
 {
-    internal class XMLDeclarationMockupReportCompletedVehicle : XMLDeclarationReportCompletedVehicle
+    public class XMLDeclarationMockupReportCompletedVehicle : XMLDeclarationReportCompletedVehicle
 	{
 		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly ICustomerInformationFileFactory _cifFactory;
@@ -57,14 +57,24 @@ namespace TUGraz.VectoMockup.Reports
 			base.InitializeReport(modelData, fuelModes);
 		}
 
-		protected internal override void DoWriteReport()
-		{
-			base.DoWriteReport();
-		}
-
 		#endregion
 
 		#region Overrides of XMLDeclarationReport
+
+		#region Overrides of XMLDeclarationReportCompletedVehicle
+
+		protected internal override void DoWriteReport()
+		{
+			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+            (CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			GenerateReports();
+			if (Writer != null)
+			{
+				OutputReports();
+			}
+		}
+
+		#endregion
 
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
@@ -73,13 +83,21 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			base.WriteResult(result);
+			(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
+			(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
 		}
 
 		protected override void GenerateReports()
 		{
-			base.GenerateReports();
+			base.GenerateReports();	
 		}
+
+		protected override void OutputReports()
+		{
+			base.OutputReports();
+		}
+
+
 
 		#endregion
 	}

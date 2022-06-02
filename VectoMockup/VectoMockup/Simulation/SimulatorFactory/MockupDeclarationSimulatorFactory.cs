@@ -50,9 +50,29 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		{
 			var addReportResult = PrepareReport(data);
 			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-					new ModalDataContainer(data, ReportWriter, addReportResult))
+					new MockupModalDataContainer(new ModalDataContainer(data, ReportWriter, null), addReportResult))
 				{ RunData = data });
 			
+		}
+		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)
+		{
+			if (data.Report != null)
+			{
+				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+			}
+			Action<IModalDataContainer> addReportResult = modData => {
+				if (modData is MockupModalDataContainer && data.Report != null) {
+					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+				}
+
+				return;
+				//if (data.Report != null)
+				//{
+				//	data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+				//}
+			};
+
+			return addReportResult;
 		}
 
 		#region Overrides of SimulatorFactoryDeclaration

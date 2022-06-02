@@ -42,11 +42,14 @@ namespace TUGraz.VectoMockup
 	internal class MockupModalDataContainer : IModalDataContainer
     {
 		private IModalDataContainer _modalDataContainerImplementation;
+		private readonly Action<IModalDataContainer> _addReportResult;
 
-		public MockupModalDataContainer(IModalDataContainer modalDataContainer)
+		public MockupModalDataContainer(IModalDataContainer modalDataContainer,
+			Action<IModalDataContainer> addReportResult)
 		{
 			_modalDataContainerImplementation = modalDataContainer;
-			
+			_addReportResult = addReportResult;
+
 		}
 
 		#region MockupImplementation
@@ -143,6 +146,10 @@ namespace TUGraz.VectoMockup
 		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
 			_modalDataContainerImplementation.Finish(runStatus, exception);
+			if (_addReportResult != null) {
+				_addReportResult(this);
+			}
+
 		}
 
 		public void FinishSimulation()

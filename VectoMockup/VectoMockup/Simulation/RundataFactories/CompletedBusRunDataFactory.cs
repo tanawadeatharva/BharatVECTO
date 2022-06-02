@@ -23,6 +23,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
 		}
 
+
 		#region Overrides of DeclarationModeCompletedMultistageBusVectoRunDataFactory
 
 		protected override void Initialize()
@@ -58,30 +59,34 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				Mission = mission,
 				GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
 				InputData = InputDataProvider,
+				SimulationType = SimulationType.DistanceCycle,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+				Report = Report,
 				//Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
 
-    //            //AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
-    //            //EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
-    //            //ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-    //            //GearboxData = _gearboxData,
-    //            //AxleGearData = _axlegearData,
-    //            //AngledriveData = _angledriveData,
-    //            Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
-    //                PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length,
-    //                PrimaryVehicle.Components.AxleWheels.NumSteeredAxles),
-                //Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-                //Retarder = _retarderData,
-                ////DriverData = _driverData,
-                //ExecutionMode = ExecutionMode.Declaration,
-                //JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
-                //ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
-                //Report = Report,
-                //Mission = mission,
-                //InputDataHash = InputDataProvider.XMLHash,// right hash?!?
-                //SimulationType = SimulationType.DistanceCycle,
-                //VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
-                //GearshiftParameters = _gearshiftData,
-            };
+				//            //AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
+				//            //EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
+				//            //ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				//            //GearboxData = _gearboxData,
+				//            //AxleGearData = _axlegearData,
+				//            //AngledriveData = _angledriveData,
+				//            Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+				//                PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length,
+				//                PrimaryVehicle.Components.AxleWheels.NumSteeredAxles),
+				//Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				//Retarder = _retarderData,
+				////DriverData = _driverData,
+				//ExecutionMode = ExecutionMode.Declaration,
+				//JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
+				//ModFileSuffix = $"_{_segmentCompletedBus.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
+				//Report = Report,
+				//Mission = mission,
+				//InputDataHash = InputDataProvider.XMLHash,// right hash?!?
+				//SimulationType = SimulationType.DistanceCycle,
+				//VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+				//GearshiftParameters = _gearshiftData,
+			};
 			simulationRunData.EngineData.FuelMode = 0;
 			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
 			simulationRunData.BusAuxiliaries = DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
@@ -100,7 +105,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					Loading = loading.Value.Item1,
 					
 				},
+				JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+				ExecutionMode = ExecutionMode.Declaration,
+				SimulationType = SimulationType.DistanceCycle,
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Report = Report,
 			};
 			return base.CreateVectoRunDataGeneric(mission, loading, primarySegment, modeIdx);
 		}

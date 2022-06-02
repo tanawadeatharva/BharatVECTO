@@ -129,9 +129,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		//SpecialCase II
 		[Test, Timeout(1000 * 20 * 60)]
+        [NonParallelizable]
 		public void PrimaryAndCompletedTest()
 		{
-			StartSimulation(CompletedDiesel);
+			StartSimulation(CompletedDiesel, false);
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
@@ -160,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 		//SpecialCase I
-		[Test, Timeout(1000 * 10 * 60)]
+		[Test]//, Timeout(1000 * 10 * 60)]
 		public void PrimaryAndInterimTest()
 		{
 			StartSimulation(InterimDiesel);
@@ -168,14 +169,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
-
 			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
 			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
 			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
 		}
 
-		private void StartSimulation(string path)
+		private void StartSimulation(string path, bool multithreaded = true)
 		{
 			var inputFile = Path.GetFullPath(path);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		}
 
 
-		private void StartSimulation(IInputDataProvider input)
+		private void StartSimulation(IInputDataProvider input, bool multithreaded = true)
 		{
 			_fileoutputWriter = new FileOutputWriter(_outputDirectory);
 			_tempFileOutputWriter = new TempFileOutputWriter(_fileoutputWriter);
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 
 			_jobContainer.AddRuns(runsFactory);
-			_jobContainer.Execute();
+			_jobContainer.Execute(multithreaded);
 		}
 
 		private void ShowWrittenFiles(IList<string> writtenFiles)
