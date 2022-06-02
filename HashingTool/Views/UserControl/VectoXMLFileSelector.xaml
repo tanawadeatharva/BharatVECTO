@@ -75,7 +75,7 @@
 					VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" />
 
 			<TextBox DockPanel.Dock="Left" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="23"
-					Margin="0,0,10,0" TextWrapping="NoWrap" Text="{Binding XMLFile.Source, UpdateSourceTrigger=PropertyChanged}">
+					Margin="0,0,10,0" TextWrapping="NoWrap" Text="{Binding XMLFile.Source, Mode=OneWay}" IsReadOnly="True">
 				<TextBox.InputBindings>
 					<KeyBinding Command="{Binding XMLFile.SetXMLFileCommnd}" Key="Return" />
 				</TextBox.InputBindings>
