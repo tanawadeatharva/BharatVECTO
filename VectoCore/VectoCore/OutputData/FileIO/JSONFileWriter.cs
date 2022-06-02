@@ -38,6 +38,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 
 	private const int ElectricMotorFormatVersion = 5;
+	
+	private const int IEPCFormatVersion = 1;
 
 	private const int REESSFormatVersion = 1;
 
@@ -128,6 +130,69 @@ public class JSONFileWriter : IOutputFileWriter
 	}
 
 
+	public void SaveIEPC(IIEPCEngineeringInputData iepc, string filename, bool declMode)
+	{
+		var header = GetHeader(IEPCFormatVersion);
+
+		var body = new Dictionary<string, object>
+		{
+			{JsonKeys.SavedInDeclMode, declMode},
+			{JsonKeys.Component_Model, iepc.Model},
+			{JsonKeys.IEPC_Inertia, iepc.Inertia.Value()},
+			{JsonKeys.IEPC_DifferentialIncluded, iepc.DifferentialIncluded},
+			{JsonKeys.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor},
+			{JsonKeys.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured},
+			{JsonKeys.IEPC_ThermalOverloadRecoveryFactor, iepc.OverloadRecoveryFactor}
+		};
+
+		var gears = new List<Dictionary<string, object>>();
+
+		foreach (var gear in iepc.Gears) {
+			var currentGear = new Dictionary<string, object> {
+				{ JsonKeys.Gearbox_Gear_Ratio, gear.Ratio }
+			};
+			if(gear.MaxOutputShaftSpeed != null)
+				currentGear.Add(JsonKeys.Gearbox_Gear_MaxOutShaftTorque, gear.MaxOutputShaftTorque.Value());
+			if(gear.MaxOutputShaftSpeed != null)
+				currentGear.Add(JsonKeys.Gearbox_Gear_MaxOutShaftSpeed, gear.MaxOutputShaftSpeed.Value());
+			gears.Add(currentGear);
+		}
+
+		var voltageLevels = new List<Dictionary<string, object>>();
+		foreach (var voltageLevel in iepc.VoltageLevels) {
+			var currentLevel = new Dictionary<string, object>
+			{
+				{JsonKeys.IEPC_Voltage, voltageLevel.VoltageLevel.Value()},
+				{JsonKeys.IEPC_ContinuousTorque, voltageLevel.ContinuousTorque.Value()},
+				{JsonKeys.IEPC_ContinuousTorqueSpeed, Convert.ToDouble(voltageLevel.ContinuousTorqueSpeed.AsRPM.ToString())},
+				{JsonKeys.IEPC_OverloadTorque, voltageLevel.OverloadTorque.Value()},
+				{JsonKeys.IEPC_OverloadTorqueSpeed,Convert.ToDouble(voltageLevel.OverloadTestSpeed.AsRPM.ToString())},
+				{JsonKeys.IEPC_OverloadTime, voltageLevel.OverloadTime.Value()},
+				{JsonKeys.IEPC_FullLoadCurve, GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(filename))},
+
+			};
+			var powerMaps = new Dictionary<string, object>();
+			foreach (var pMap in voltageLevel.PowerMap)
+			{
+				powerMaps.Add(pMap.Gear.ToString(), GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
+			}
+			currentLevel.Add(JsonKeys.IEPC_PowerMaps, powerMaps); //PowerMap
+			voltageLevels.Add(currentLevel);
+		}
+
+		var dragCurves = new Dictionary<string, object>();
+		foreach (var dragCurveEntry in iepc.DragCurves) {
+			dragCurves.Add(dragCurveEntry.Gear.ToString(), 
+				GetRelativePath(dragCurveEntry.DragCurve.Source, Path.GetDirectoryName(filename)));
+		}
+		
+		body.Add(JsonKeys.Gearbox_Gears, gears);
+		body.Add(JsonKeys.IEPC_VoltageLevels, voltageLevels);
+		body.Add(JsonKeys.IEPC_DragCurves, dragCurves);
+		
+		WriteFile(header, body, filename);
+	}
+	
 	public void SaveBattery(IBatteryPackEngineeringInputData battery, string filename, bool declMode)
 	{
 		var header = GetHeader(REESSFormatVersion);
