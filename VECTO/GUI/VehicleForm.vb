@@ -540,7 +540,7 @@ Public Class VehicleForm
 			tpTorqueLimits.BindingContext = BindingContext
 		End If
 
-
+		lblNotePtoPEV_HEVS.Visible = False
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
@@ -635,6 +635,11 @@ Public Class VehicleForm
 				'IHPC 
 				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
+				'PTO
+				gbPTODrive.Enabled = False
+				pnPtoMode1.Enabled = false
+				pnPtoMode3.Enabled = False
+				lblNotePtoPEV_HEVS.Visible = True
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
 
@@ -667,6 +672,11 @@ Public Class VehicleForm
 				'IHPC 
 				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
+			    'PTO
+			    gbPTODrive.Enabled = False
+			    pnPtoMode1.Enabled = false
+			    pnPtoMode3.Enabled = False
+				lblNotePtoPEV_HEVS.Visible = true
 			Case VectoSimulationJobType.IEPC_E
 				lblTitle.Text = "IEPC-E Vehicle"
 				
@@ -674,17 +684,39 @@ Public Class VehicleForm
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
 				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
+			    'Torque Limits ------------------------------------------------------------
+			    gbEMTorqueLimits.Enabled = False
+			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
+
+				'PTO
+				gbPTO.Enabled = False
+				pnPTO.Enabled = false
 			Case VectoSimulationJobType.IEPC_S
 				lblTitle.Text = "IEPC-S Vehicle"
 				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+			    'Torque Limits ------------------------------------------------------------
+			    gbEMTorqueLimits.Enabled = False
+			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
 				
+			    'PTO
+				gbPTO.Enabled = False
+				pnPTO.Enabled = false
+
 			Case VectoSimulationJobType.IHPC
 				lblTitle.Text = "IHPC Vehicle"
 
 				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
 				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				gbEMTorqueLimits.Enabled = False
+				gbPropulsionTorque.Enabled = False
+
+			    'PTO
+			    gbPTO.Enabled = False
+			    pnPTO.Enabled = false
 
 			Case Else
 				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
