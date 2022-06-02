@@ -794,6 +794,11 @@ Public Class VehicleForm
 			veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
 		End If
 
+		if (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
+		    veh.PtoType = CType(cbPTOType.SelectedValue, String)
+		    veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
+		End If
+
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
 			For Each reess As ListViewItem In lvREESSPacks.Items
 				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))

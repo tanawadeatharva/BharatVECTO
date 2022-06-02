@@ -1280,6 +1280,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+		public PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto)
+		{
+			if (pto.PTOTransmissionType != "None") {
+				var ptoData = new PTOData() {
+					TransmissionType = pto.PTOTransmissionType,
+					LossMap = pto.PTOLossMap == null
+						? PTOIdleLossMapReader.GetZeroLossMap()
+						: PTOIdleLossMapReader.Create(pto.PTOLossMap)
+				};
+				return ptoData;
+			}
+
+			return null;
+		}
 	}
 
 	public class IEPCGearboxInputData : IGearboxDeclarationInputData

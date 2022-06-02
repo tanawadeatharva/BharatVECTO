@@ -48,7 +48,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			Data = table.Rows.Cast<DataRow>().ToDictionary(
 				r => r.Field<string>("technology"),
-				r => new AuxDemandEntry { PowerDemand = r.ParseDouble("powerloss").SI<Watt>() });
+				r => new AuxDemandEntry {
+					PowerDemand = r.ParseDouble("powerloss").SI<Watt>(),
+					TorqueLoss = r.ParseDouble("torqueloss").SI<NewtonMeter>()
+				});
 		}
 
 		public string[] GetTechnologies()
