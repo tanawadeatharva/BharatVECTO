@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 
 Public Enum IEPCDialogType
 	DragCurveDialog
@@ -10,6 +11,7 @@ Public Class IEPCInputDialog
 	Private ReadOnly _dialogType As IEPCDialogType
 	Private _dragCurveFilePath As String
 	Private _powerMapFilePath As String
+	Public IEPCPath As String
 
 	Public Sub New(dialogType As IEPCDialogType)
 
@@ -51,7 +53,9 @@ Public Class IEPCInputDialog
 			Return
 		End If
 
-		If Not File.Exists(tbInputFile.Text) Then
+		Dim tmp As SubPath = New SubPath()
+		tmp.Init(IEPCPath, tbInputFile.Text)
+		If Not File.Exists(tmp.FullPath) Then
 			MsgBox("Invalid input no valid file path given")
 			_tbInputFile.Focus()
 			Return
@@ -86,15 +90,15 @@ Public Class IEPCInputDialog
 			Case IEPCDialogType.DragCurveDialog
 				SelectInputFileDialog(IEPCDragFileBrowser, _dragCurveFilePath)
 			Case IEPCDialogType.PowerMapDialog
-				SelectInputFileDialog(IEPCDragFileBrowser, _powerMapFilePath)
+				SelectInputFileDialog(IEPCPowerMapFileBrowser, _powerMapFilePath)
 		End Select
 	End Sub
 
 #End Region
 
 	Private Sub SelectInputFileDialog(fileBrowser As FileBrowser, filePath As String )
-		If fileBrowser.OpenDialog(FileRepl(tbInputFile.Text, GetPath(filePath))) Then
-			tbInputFile.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), GetPath(filePath))
+		If fileBrowser.OpenDialog(FileRepl(tbInputFile.Text, IEPCPath)) Then
+			tbInputFile.Text = GetFilenameWithoutDirectory(fileBrowser.Files(0), IEPCPath)
 		End If
 	End Sub
 	

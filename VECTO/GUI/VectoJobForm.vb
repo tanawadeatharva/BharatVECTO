@@ -476,7 +476,7 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
 			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbENG.Text = ""
@@ -538,7 +538,11 @@ Public Class VectoJobForm
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
                 Dim lv0 As ListViewItem = New ListViewItem
-                lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                if (sb.CycleData.SourceType = DataSourceType.Embedded) Then
+                    lv0.Text = sb.Name
+                else 
+                    lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                End If
                 LvCycles.Items.Add(lv0)
             Next
         Catch ex As Exception

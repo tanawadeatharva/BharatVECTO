@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
@@ -27,7 +28,7 @@ Public Class IEPCForm
 
 	Public Sub ReadIEPCFile(file As String)
 		Dim inputData = JSONInputDataFactory.ReadIEPCEngineeringInputData(file, True)
-
+	    _iepcFilePath = file
 		tbModel.Text = inputData.Model
 		tbInertia.Text = inputData.Inertia.ToGUIFormat()
 		cbDifferentialIncluded.Checked = inputData.DifferentialIncluded
@@ -41,7 +42,7 @@ Public Class IEPCForm
 		SetSecondaryVoltageLevel(voltageLevel)
 		SetGearEntries(inputData.Gears)
 		SetDragEntries(inputData.DragCurves)
-		_iepcFilePath = file
+		
 
 		LbStatus.Text = ""
 		_changed = False
@@ -54,7 +55,7 @@ Public Class IEPCForm
 		tbOverloadTime1.Text = voltageLevel.OverloadTime.ToGUIFormat()
 		tbOverloadTorque1.Text = voltageLevel.OverloadTorque.ToGUIFormat()
 		tboverloadTorqueSpeed1.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-		tbFLCurve1.Text = voltageLevel.FullLoadCurve.Source
+		tbFLCurve1.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
 		SetPowerMapEntries(_lvPowerMap1, voltageLevel.PowerMap)
 	End Sub
 
@@ -65,7 +66,7 @@ Public Class IEPCForm
 		tbOverloadTime2.Text = voltageLevel.OverloadTime.ToGUIFormat()
 		tbOverloadTorque2.Text = voltageLevel.OverloadTorque.ToGUIFormat()
 		tbOverloadTorqueSpeed2.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-		tbFLCurve2.Text = voltageLevel.FullLoadCurve.Source
+		tbFLCurve2.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
 		SetPowerMapEntries(_lvPowerMap2, voltageLevel.PowerMap)
 	End Sub
 
@@ -91,10 +92,12 @@ Public Class IEPCForm
 	End Sub
 
 	Private Function CreateListViewItem(axleNumber As Integer, filepath As String) As ListViewItem
-		Dim retVal As New ListViewItem
+	    Dim basePath As String = Path.GetDirectoryName(_iepcFilePath)
+	    Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
-		retVal.SubItems.Add(filepath)
-		Return retVal
+        retVal.SubItems.Add(GetRelativePath(filepath, basePath))
+        'retVal.SubItems.Add(filepath)
+        Return retVal
 	End Function
 
 	Private Function CreateListViewItem(ratio As Double, outputShaftTorque As NewtonMeter, outputShaftSpeed As PerSecond) As ListViewItem
@@ -242,6 +245,7 @@ Public Class IEPCForm
 		dialog.tbGear.Text = entry.SubItems(0).Text
 		dialog.tbInputFile.Text = entry.SubItems(1).Text
 		dialog.tbGear.Focus()
+		dialog.IEPCPath = GetPath(_iepcFilePath)
 
 		If dialog.ShowDialog() = DialogResult.OK Then
 			entry.SubItems(0).Text = dialog.tbGear.Text
@@ -251,14 +255,14 @@ Public Class IEPCForm
 	End Sub
 
 	Private Sub btFLCurveFile1_Click(sender As Object, e As EventArgs) Handles btFLCurveFile1.Click
-		If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve1.Text, GetPath(_flcFilePath1))) Then
-			tbFLCurve1.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_flcFilePath1))
+		If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve1.Text, GetPath(_iepcFilePath))) Then
+			tbFLCurve1.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_iepcFilePath))
 		End If
 	End Sub
 
 	Private Sub btFLCurveFile2_Click(sender As Object, e As EventArgs) Handles btFLCurveFile2.Click
-		If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve2.Text, GetPath(_flcFilePath2))) Then
-			tbFLCurve2.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_flcFilePath2))
+		If IEPCFLCFileBrowser.OpenDialog(FileRepl(tbFLCurve2.Text, GetPath(_iepcFilePath))) Then
+			tbFLCurve2.Text = GetFilenameWithoutDirectory(IEPCFLCFileBrowser.Files(0), GetPath(_iepcFilePath))
 		End If
 	End Sub
 
@@ -398,7 +402,7 @@ Public Class IEPCForm
 	End Function
 	
 	Private Function SaveIEPCToFile(ByVal file As String) As Boolean
-		Dim iepc = New IEPCInputData 
+		Dim iepc = New IEPCInputData(file)
 
 		iepc.SetCommonEntries(tbModel.Text, tbInertia.Text, cbDesignTypeWheelMotor.Checked, 
 							  tbNumberOfDesignTypeWheelMotor.Text, cbDifferentialIncluded.Checked,
@@ -416,7 +420,7 @@ Public Class IEPCForm
 		iepc.SetDragCurveEntries(lvDragCurve)
 
 
-		If Not iepc.SaveFile(file) Then
+		If Not iepc.SaveFile Then
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -584,7 +588,9 @@ Public Class IEPCForm
 	End Function
 
 	Private Function ValidateFullLoadCurve1() As Boolean
-		If Not File.Exists(tbFLCurve1.Text) Then
+		dim tmp = new SubPath()
+		tmp.Init(GetPath(_iepcFilePath), tbFLCurve1.Text)
+		If Not File.Exists(tmp.FullPath) Then
 			ShowErrorMessageBox("No valid file path given", tbFLCurve1, False)
 			Return False
 		End If
@@ -599,7 +605,9 @@ Public Class IEPCForm
 	End Function
 
 	Private Function ValidateFullLoadCurve2() As Boolean
-		If Not File.Exists(tbFLCurve2.Text) Then
+	    dim tmp = new SubPath()
+	    tmp.Init(GetPath(_iepcFilePath), tbFLCurve2.Text)
+		If Not File.Exists(tmp.FullPath) Then
 			ShowErrorMessageBox("Invalid input no valid file path given", tbFLCurve2, False)
 			Return False
 		End If

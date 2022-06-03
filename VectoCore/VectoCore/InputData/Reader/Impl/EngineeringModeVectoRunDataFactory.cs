@@ -439,7 +439,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var retarderData = axleGearRequired
 				? dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition)
 				: new RetarderData() {
-					Type = RetarderType.LossesIncludedInTransmission
+					Type = RetarderType.LossesIncludedInTransmission,
+					Ratio = 1.0
 				};
 
 			var gearshiftParams = dao.CreateGearshiftData(GearboxType.APTN,

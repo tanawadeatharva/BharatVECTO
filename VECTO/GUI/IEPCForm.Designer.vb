@@ -178,7 +178,7 @@ Partial Class IEPCForm
         '
         Me.btFLCurveFile1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.btFLCurveFile1.Image = CType(resources.GetObject("btFLCurveFile1.Image"),System.Drawing.Image)
-        Me.btFLCurveFile1.Location = New System.Drawing.Point(573, 1)
+        Me.btFLCurveFile1.Location = New System.Drawing.Point(630, 1)
         Me.btFLCurveFile1.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile1.Name = "btFLCurveFile1"
         Me.btFLCurveFile1.Size = New System.Drawing.Size(36, 37)
@@ -188,10 +188,10 @@ Partial Class IEPCForm
         'tbThermalOverload
         '
         Me.tbThermalOverload.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbThermalOverload.Location = New System.Drawing.Point(237, 5)
+        Me.tbThermalOverload.Location = New System.Drawing.Point(317, 5)
         Me.tbThermalOverload.Margin = New System.Windows.Forms.Padding(45, 5, 4, 5)
         Me.tbThermalOverload.Name = "tbThermalOverload"
-        Me.tbThermalOverload.Size = New System.Drawing.Size(82, 20)
+        Me.tbThermalOverload.Size = New System.Drawing.Size(82, 26)
         Me.tbThermalOverload.TabIndex = 3
         '
         'Label52
@@ -201,7 +201,7 @@ Partial Class IEPCForm
         Me.Label52.Location = New System.Drawing.Point(4, 8)
         Me.Label52.Margin = New System.Windows.Forms.Padding(4, 0, 15, 0)
         Me.Label52.Name = "Label52"
-        Me.Label52.Size = New System.Drawing.Size(173, 13)
+        Me.Label52.Size = New System.Drawing.Size(253, 20)
         Me.Label52.TabIndex = 50
         Me.Label52.Text = "Thermal Overload Recovery Factor"
         '
@@ -212,7 +212,7 @@ Partial Class IEPCForm
         Me.Label48.Location = New System.Drawing.Point(4, 8)
         Me.Label48.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label48.Name = "Label48"
-        Me.Label48.Size = New System.Drawing.Size(207, 13)
+        Me.Label48.Size = New System.Drawing.Size(304, 20)
         Me.Label48.TabIndex = 48
         Me.Label48.Text = "Nr of Design Type Wheel Motor Measured"
         '
@@ -220,10 +220,10 @@ Partial Class IEPCForm
         '
         Me.tbNumberOfDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.tbNumberOfDesignTypeWheelMotor.Enabled = false
-        Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(219, 5)
+        Me.tbNumberOfDesignTypeWheelMotor.Location = New System.Drawing.Point(316, 5)
         Me.tbNumberOfDesignTypeWheelMotor.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbNumberOfDesignTypeWheelMotor.Name = "tbNumberOfDesignTypeWheelMotor"
-        Me.tbNumberOfDesignTypeWheelMotor.Size = New System.Drawing.Size(43, 20)
+        Me.tbNumberOfDesignTypeWheelMotor.Size = New System.Drawing.Size(43, 26)
         Me.tbNumberOfDesignTypeWheelMotor.TabIndex = 5
         '
         'Label51
@@ -233,17 +233,17 @@ Partial Class IEPCForm
         Me.Label51.Location = New System.Drawing.Point(4, 8)
         Me.Label51.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label51.Name = "Label51"
-        Me.Label51.Size = New System.Drawing.Size(36, 13)
+        Me.Label51.Size = New System.Drawing.Size(54, 20)
         Me.Label51.TabIndex = 45
         Me.Label51.Text = "Inertia"
         '
         'tbInertia
         '
         Me.tbInertia.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbInertia.Location = New System.Drawing.Point(48, 5)
+        Me.tbInertia.Location = New System.Drawing.Point(66, 5)
         Me.tbInertia.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbInertia.Name = "tbInertia"
-        Me.tbInertia.Size = New System.Drawing.Size(84, 20)
+        Me.tbInertia.Size = New System.Drawing.Size(84, 26)
         Me.tbInertia.TabIndex = 2
         '
         'Label49
@@ -253,17 +253,17 @@ Partial Class IEPCForm
         Me.Label49.Location = New System.Drawing.Point(4, 8)
         Me.Label49.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label49.Name = "Label49"
-        Me.Label49.Size = New System.Drawing.Size(36, 13)
+        Me.Label49.Size = New System.Drawing.Size(52, 20)
         Me.Label49.TabIndex = 43
         Me.Label49.Text = "Model"
         '
         'tbModel
         '
         Me.tbModel.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbModel.Location = New System.Drawing.Point(48, 5)
+        Me.tbModel.Location = New System.Drawing.Point(64, 5)
         Me.tbModel.Margin = New System.Windows.Forms.Padding(4, 5, 0, 5)
         Me.tbModel.Name = "tbModel"
-        Me.tbModel.Size = New System.Drawing.Size(289, 20)
+        Me.tbModel.Size = New System.Drawing.Size(289, 26)
         Me.tbModel.TabIndex = 1
         '
         'tcVoltageLevels
@@ -309,26 +309,26 @@ Partial Class IEPCForm
         '
         Me.Label44.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label44.AutoSize = true
-        Me.Label44.Location = New System.Drawing.Point(21, 13)
+        Me.Label44.Location = New System.Drawing.Point(21, 9)
         Me.Label44.Margin = New System.Windows.Forms.Padding(21, 0, 0, 0)
         Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(125, 13)
+        Me.Label44.Size = New System.Drawing.Size(182, 20)
         Me.Label44.TabIndex = 59
         Me.Label44.Text = "Full Load Curve (.viepcp)"
         '
         'tbFLCurve1
         '
         Me.tbFLCurve1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbFLCurve1.Location = New System.Drawing.Point(150, 9)
+        Me.tbFLCurve1.Location = New System.Drawing.Point(207, 6)
         Me.tbFLCurve1.Margin = New System.Windows.Forms.Padding(4, 5, 9, 5)
         Me.tbFLCurve1.Name = "tbFLCurve1"
-        Me.tbFLCurve1.Size = New System.Drawing.Size(414, 20)
+        Me.tbFLCurve1.Size = New System.Drawing.Size(414, 26)
         Me.tbFLCurve1.TabIndex = 14
         '
         'btShowFLCurve1
         '
         Me.btShowFLCurve1.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btShowFLCurve1.Location = New System.Drawing.Point(609, 2)
+        Me.btShowFLCurve1.Location = New System.Drawing.Point(666, 2)
         Me.btShowFLCurve1.Margin = New System.Windows.Forms.Padding(0, 2, 0, 0)
         Me.btShowFLCurve1.Name = "btShowFLCurve1"
         Me.btShowFLCurve1.Size = New System.Drawing.Size(36, 37)
@@ -378,10 +378,10 @@ Partial Class IEPCForm
         '
         Me.Label11.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label11.AutoSize = true
-        Me.Label11.Location = New System.Drawing.Point(311, 56)
+        Me.Label11.Location = New System.Drawing.Point(305, 53)
         Me.Label11.Margin = New System.Windows.Forms.Padding(0)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(29, 13)
+        Me.Label11.Size = New System.Drawing.Size(41, 20)
         Me.Label11.TabIndex = 63
         Me.Label11.Text = "[Nm]"
         '
@@ -389,10 +389,10 @@ Partial Class IEPCForm
         '
         Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(315, 14)
+        Me.Label4.Location = New System.Drawing.Point(311, 11)
         Me.Label4.Margin = New System.Windows.Forms.Padding(0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(20, 13)
+        Me.Label4.Size = New System.Drawing.Size(28, 20)
         Me.Label4.TabIndex = 62
         Me.Label4.Text = "[V]"
         '
@@ -400,10 +400,10 @@ Partial Class IEPCForm
         '
         Me.Label13.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(640, 14)
+        Me.Label13.Location = New System.Drawing.Point(634, 11)
         Me.Label13.Margin = New System.Windows.Forms.Padding(0)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(30, 13)
+        Me.Label13.Size = New System.Drawing.Size(42, 20)
         Me.Label13.TabIndex = 65
         Me.Label13.Text = "[sec]"
         '
@@ -411,10 +411,10 @@ Partial Class IEPCForm
         '
         Me.Label43.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label43.AutoSize = true
-        Me.Label43.Location = New System.Drawing.Point(460, 14)
+        Me.Label43.Location = New System.Drawing.Point(426, 11)
         Me.Label43.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(76, 13)
+        Me.Label43.Size = New System.Drawing.Size(110, 20)
         Me.Label43.TabIndex = 11
         Me.Label43.Text = "Overload Time"
         '
@@ -422,39 +422,39 @@ Partial Class IEPCForm
         '
         Me.Label37.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label37.AutoSize = true
-        Me.Label37.Location = New System.Drawing.Point(163, 14)
+        Me.Label37.Location = New System.Drawing.Point(142, 11)
         Me.Label37.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(43, 13)
+        Me.Label37.Size = New System.Drawing.Size(64, 20)
         Me.Label37.TabIndex = 1
         Me.Label37.Text = "Voltage"
         '
         'tbOverloadTime1
         '
         Me.tbOverloadTime1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTime1.Location = New System.Drawing.Point(545, 11)
+        Me.tbOverloadTime1.Location = New System.Drawing.Point(545, 8)
         Me.tbOverloadTime1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbOverloadTime1.Name = "tbOverloadTime1"
-        Me.tbOverloadTime1.Size = New System.Drawing.Size(82, 20)
+        Me.tbOverloadTime1.Size = New System.Drawing.Size(82, 26)
         Me.tbOverloadTime1.TabIndex = 11
         '
         'tbVoltage1
         '
         Me.tbVoltage1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbVoltage1.Location = New System.Drawing.Point(215, 11)
+        Me.tbVoltage1.Location = New System.Drawing.Point(215, 8)
         Me.tbVoltage1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbVoltage1.Name = "tbVoltage1"
-        Me.tbVoltage1.Size = New System.Drawing.Size(82, 20)
+        Me.tbVoltage1.Size = New System.Drawing.Size(82, 26)
         Me.tbVoltage1.TabIndex = 8
         '
         'Label39
         '
         Me.Label39.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label39.AutoSize = true
-        Me.Label39.Location = New System.Drawing.Point(109, 56)
+        Me.Label39.Location = New System.Drawing.Point(62, 53)
         Me.Label39.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(97, 13)
+        Me.Label39.Size = New System.Drawing.Size(144, 20)
         Me.Label39.TabIndex = 3
         Me.Label39.Text = "Continuous Torque"
         '
@@ -462,39 +462,39 @@ Partial Class IEPCForm
         '
         Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(75, 98)
+        Me.Label1.Location = New System.Drawing.Point(11, 95)
         Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(131, 13)
+        Me.Label1.Size = New System.Drawing.Size(195, 20)
         Me.Label1.TabIndex = 6
         Me.Label1.Text = "Continuous Torque Speed"
         '
         'tbContinousTorque1
         '
         Me.tbContinousTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque1.Location = New System.Drawing.Point(215, 53)
+        Me.tbContinousTorque1.Location = New System.Drawing.Point(215, 50)
         Me.tbContinousTorque1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorque1.Name = "tbContinousTorque1"
-        Me.tbContinousTorque1.Size = New System.Drawing.Size(82, 20)
+        Me.tbContinousTorque1.Size = New System.Drawing.Size(82, 26)
         Me.tbContinousTorque1.TabIndex = 9
         '
         'tbContinousTorqueSpeed1
         '
         Me.tbContinousTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(215, 95)
+        Me.tbContinousTorqueSpeed1.Location = New System.Drawing.Point(215, 92)
         Me.tbContinousTorqueSpeed1.Margin = New System.Windows.Forms.Padding(0)
         Me.tbContinousTorqueSpeed1.Name = "tbContinousTorqueSpeed1"
-        Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(82, 20)
+        Me.tbContinousTorqueSpeed1.Size = New System.Drawing.Size(82, 26)
         Me.tbContinousTorqueSpeed1.TabIndex = 10
         '
         'Label15
         '
         Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label15.AutoSize = true
-        Me.Label15.Location = New System.Drawing.Point(310, 98)
+        Me.Label15.Location = New System.Drawing.Point(303, 95)
         Me.Label15.Margin = New System.Windows.Forms.Padding(0)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(30, 13)
+        Me.Label15.Size = New System.Drawing.Size(44, 20)
         Me.Label15.TabIndex = 67
         Me.Label15.Text = "[rpm]"
         '
@@ -502,10 +502,10 @@ Partial Class IEPCForm
         '
         Me.Label42.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label42.AutoSize = true
-        Me.Label42.Location = New System.Drawing.Point(415, 98)
+        Me.Label42.Location = New System.Drawing.Point(359, 95)
         Me.Label42.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(121, 13)
+        Me.Label42.Size = New System.Drawing.Size(177, 20)
         Me.Label42.TabIndex = 9
         Me.Label42.Text = "Overload Torque Speed"
         '
@@ -513,50 +513,50 @@ Partial Class IEPCForm
         '
         Me.Label14.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(640, 98)
+        Me.Label14.Location = New System.Drawing.Point(633, 95)
         Me.Label14.Margin = New System.Windows.Forms.Padding(0)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(30, 13)
+        Me.Label14.Size = New System.Drawing.Size(44, 20)
         Me.Label14.TabIndex = 66
         Me.Label14.Text = "[rpm]"
         '
         'tboverloadTorqueSpeed1
         '
         Me.tboverloadTorqueSpeed1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tboverloadTorqueSpeed1.Location = New System.Drawing.Point(545, 95)
+        Me.tboverloadTorqueSpeed1.Location = New System.Drawing.Point(545, 92)
         Me.tboverloadTorqueSpeed1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tboverloadTorqueSpeed1.Name = "tboverloadTorqueSpeed1"
-        Me.tboverloadTorqueSpeed1.Size = New System.Drawing.Size(82, 20)
+        Me.tboverloadTorqueSpeed1.Size = New System.Drawing.Size(82, 26)
         Me.tboverloadTorqueSpeed1.TabIndex = 13
         '
         'Label41
         '
         Me.Label41.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label41.AutoSize = true
-        Me.Label41.Location = New System.Drawing.Point(449, 56)
+        Me.Label41.Location = New System.Drawing.Point(410, 53)
         Me.Label41.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(87, 13)
+        Me.Label41.Size = New System.Drawing.Size(126, 20)
         Me.Label41.TabIndex = 7
         Me.Label41.Text = "Overload Torque"
         '
         'tbOverloadTorque1
         '
         Me.tbOverloadTorque1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTorque1.Location = New System.Drawing.Point(545, 53)
+        Me.tbOverloadTorque1.Location = New System.Drawing.Point(545, 50)
         Me.tbOverloadTorque1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbOverloadTorque1.Name = "tbOverloadTorque1"
-        Me.tbOverloadTorque1.Size = New System.Drawing.Size(82, 20)
+        Me.tbOverloadTorque1.Size = New System.Drawing.Size(82, 26)
         Me.tbOverloadTorque1.TabIndex = 12
         '
         'Label12
         '
         Me.Label12.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label12.AutoSize = true
-        Me.Label12.Location = New System.Drawing.Point(641, 56)
+        Me.Label12.Location = New System.Drawing.Point(635, 53)
         Me.Label12.Margin = New System.Windows.Forms.Padding(0)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(29, 13)
+        Me.Label12.Size = New System.Drawing.Size(41, 20)
         Me.Label12.TabIndex = 64
         Me.Label12.Text = "[Nm]"
         '
@@ -595,10 +595,10 @@ Partial Class IEPCForm
         '
         Me.Label47.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label47.AutoSize = true
-        Me.Label47.Location = New System.Drawing.Point(338, 195)
+        Me.Label47.Location = New System.Drawing.Point(286, 195)
         Me.Label47.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label47.Name = "Label47"
-        Me.Label47.Size = New System.Drawing.Size(106, 13)
+        Me.Label47.Size = New System.Drawing.Size(158, 20)
         Me.Label47.TabIndex = 6
         Me.Label47.Text = "(Double-Click to Edit)"
         '
@@ -681,10 +681,10 @@ Partial Class IEPCForm
         '
         Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label5.AutoSize = true
-        Me.Label5.Location = New System.Drawing.Point(338, 195)
+        Me.Label5.Location = New System.Drawing.Point(286, 195)
         Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(106, 13)
+        Me.Label5.Size = New System.Drawing.Size(158, 20)
         Me.Label5.TabIndex = 6
         Me.Label5.Text = "(Double-Click to Edit)"
         '
@@ -734,27 +734,27 @@ Partial Class IEPCForm
         '
         Me.Label28.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label28.AutoSize = true
-        Me.Label28.Location = New System.Drawing.Point(21, 13)
+        Me.Label28.Location = New System.Drawing.Point(21, 9)
         Me.Label28.Margin = New System.Windows.Forms.Padding(21, 0, 0, 0)
         Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(125, 13)
+        Me.Label28.Size = New System.Drawing.Size(182, 20)
         Me.Label28.TabIndex = 59
         Me.Label28.Text = "Full Load Curve (.viepcp)"
         '
         'tbFLCurve2
         '
         Me.tbFLCurve2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbFLCurve2.Location = New System.Drawing.Point(150, 9)
+        Me.tbFLCurve2.Location = New System.Drawing.Point(207, 6)
         Me.tbFLCurve2.Margin = New System.Windows.Forms.Padding(4, 5, 9, 5)
         Me.tbFLCurve2.Name = "tbFLCurve2"
-        Me.tbFLCurve2.Size = New System.Drawing.Size(414, 20)
+        Me.tbFLCurve2.Size = New System.Drawing.Size(414, 26)
         Me.tbFLCurve2.TabIndex = 23
         '
         'btFLCurveFile2
         '
         Me.btFLCurveFile2.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.btFLCurveFile2.Image = CType(resources.GetObject("btFLCurveFile2.Image"),System.Drawing.Image)
-        Me.btFLCurveFile2.Location = New System.Drawing.Point(573, 1)
+        Me.btFLCurveFile2.Location = New System.Drawing.Point(630, 1)
         Me.btFLCurveFile2.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile2.Name = "btFLCurveFile2"
         Me.btFLCurveFile2.Size = New System.Drawing.Size(36, 37)
@@ -764,7 +764,7 @@ Partial Class IEPCForm
         'btShowFLCurve2
         '
         Me.btShowFLCurve2.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btShowFLCurve2.Location = New System.Drawing.Point(609, 2)
+        Me.btShowFLCurve2.Location = New System.Drawing.Point(666, 2)
         Me.btShowFLCurve2.Margin = New System.Windows.Forms.Padding(0, 2, 0, 0)
         Me.btShowFLCurve2.Name = "btShowFLCurve2"
         Me.btShowFLCurve2.Size = New System.Drawing.Size(36, 37)
@@ -815,10 +815,10 @@ Partial Class IEPCForm
         '
         Me.Label17.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label17.AutoSize = true
-        Me.Label17.Location = New System.Drawing.Point(311, 56)
+        Me.Label17.Location = New System.Drawing.Point(305, 53)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(29, 13)
+        Me.Label17.Size = New System.Drawing.Size(41, 20)
         Me.Label17.TabIndex = 63
         Me.Label17.Text = "[Nm]"
         '
@@ -826,10 +826,10 @@ Partial Class IEPCForm
         '
         Me.Label18.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(315, 14)
+        Me.Label18.Location = New System.Drawing.Point(311, 11)
         Me.Label18.Margin = New System.Windows.Forms.Padding(0)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(20, 13)
+        Me.Label18.Size = New System.Drawing.Size(28, 20)
         Me.Label18.TabIndex = 62
         Me.Label18.Text = "[V]"
         '
@@ -837,10 +837,10 @@ Partial Class IEPCForm
         '
         Me.Label26.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label26.AutoSize = true
-        Me.Label26.Location = New System.Drawing.Point(640, 14)
+        Me.Label26.Location = New System.Drawing.Point(634, 11)
         Me.Label26.Margin = New System.Windows.Forms.Padding(0)
         Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(30, 13)
+        Me.Label26.Size = New System.Drawing.Size(42, 20)
         Me.Label26.TabIndex = 65
         Me.Label26.Text = "[sec]"
         '
@@ -848,50 +848,50 @@ Partial Class IEPCForm
         '
         Me.Label19.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label19.AutoSize = true
-        Me.Label19.Location = New System.Drawing.Point(163, 14)
+        Me.Label19.Location = New System.Drawing.Point(142, 11)
         Me.Label19.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(43, 13)
+        Me.Label19.Size = New System.Drawing.Size(64, 20)
         Me.Label19.TabIndex = 1
         Me.Label19.Text = "Voltage"
         '
         'tbOverloadTime2
         '
         Me.tbOverloadTime2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTime2.Location = New System.Drawing.Point(545, 11)
+        Me.tbOverloadTime2.Location = New System.Drawing.Point(545, 8)
         Me.tbOverloadTime2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbOverloadTime2.Name = "tbOverloadTime2"
-        Me.tbOverloadTime2.Size = New System.Drawing.Size(82, 20)
+        Me.tbOverloadTime2.Size = New System.Drawing.Size(82, 26)
         Me.tbOverloadTime2.TabIndex = 20
         '
         'Label24
         '
         Me.Label24.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label24.AutoSize = true
-        Me.Label24.Location = New System.Drawing.Point(460, 14)
+        Me.Label24.Location = New System.Drawing.Point(426, 11)
         Me.Label24.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(76, 13)
+        Me.Label24.Size = New System.Drawing.Size(110, 20)
         Me.Label24.TabIndex = 11
         Me.Label24.Text = "Overload Time"
         '
         'tbVoltage2
         '
         Me.tbVoltage2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbVoltage2.Location = New System.Drawing.Point(215, 11)
+        Me.tbVoltage2.Location = New System.Drawing.Point(215, 8)
         Me.tbVoltage2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbVoltage2.Name = "tbVoltage2"
-        Me.tbVoltage2.Size = New System.Drawing.Size(82, 20)
+        Me.tbVoltage2.Size = New System.Drawing.Size(82, 26)
         Me.tbVoltage2.TabIndex = 17
         '
         'Label20
         '
         Me.Label20.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label20.AutoSize = true
-        Me.Label20.Location = New System.Drawing.Point(109, 56)
+        Me.Label20.Location = New System.Drawing.Point(62, 53)
         Me.Label20.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(97, 13)
+        Me.Label20.Size = New System.Drawing.Size(144, 20)
         Me.Label20.TabIndex = 3
         Me.Label20.Text = "Continuous Torque"
         '
@@ -899,39 +899,39 @@ Partial Class IEPCForm
         '
         Me.Label21.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(75, 98)
+        Me.Label21.Location = New System.Drawing.Point(11, 95)
         Me.Label21.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(131, 13)
+        Me.Label21.Size = New System.Drawing.Size(195, 20)
         Me.Label21.TabIndex = 6
         Me.Label21.Text = "Continuous Torque Speed"
         '
         'tbContinousTorque2
         '
         Me.tbContinousTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorque2.Location = New System.Drawing.Point(215, 53)
+        Me.tbContinousTorque2.Location = New System.Drawing.Point(215, 50)
         Me.tbContinousTorque2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbContinousTorque2.Name = "tbContinousTorque2"
-        Me.tbContinousTorque2.Size = New System.Drawing.Size(82, 20)
+        Me.tbContinousTorque2.Size = New System.Drawing.Size(82, 26)
         Me.tbContinousTorque2.TabIndex = 18
         '
         'tbContinousTorqueSpeed2
         '
         Me.tbContinousTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(215, 95)
+        Me.tbContinousTorqueSpeed2.Location = New System.Drawing.Point(215, 92)
         Me.tbContinousTorqueSpeed2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbContinousTorqueSpeed2.Name = "tbContinousTorqueSpeed2"
-        Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(82, 20)
+        Me.tbContinousTorqueSpeed2.Size = New System.Drawing.Size(82, 26)
         Me.tbContinousTorqueSpeed2.TabIndex = 19
         '
         'Label27
         '
         Me.Label27.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label27.AutoSize = true
-        Me.Label27.Location = New System.Drawing.Point(310, 98)
+        Me.Label27.Location = New System.Drawing.Point(303, 95)
         Me.Label27.Margin = New System.Windows.Forms.Padding(0)
         Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(30, 13)
+        Me.Label27.Size = New System.Drawing.Size(44, 20)
         Me.Label27.TabIndex = 67
         Me.Label27.Text = "[rpm]"
         '
@@ -939,30 +939,30 @@ Partial Class IEPCForm
         '
         Me.Label23.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label23.AutoSize = true
-        Me.Label23.Location = New System.Drawing.Point(415, 98)
+        Me.Label23.Location = New System.Drawing.Point(359, 95)
         Me.Label23.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(121, 13)
+        Me.Label23.Size = New System.Drawing.Size(177, 20)
         Me.Label23.TabIndex = 9
         Me.Label23.Text = "Overload Torque Speed"
         '
         'tbOverloadTorqueSpeed2
         '
         Me.tbOverloadTorqueSpeed2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTorqueSpeed2.Location = New System.Drawing.Point(545, 95)
+        Me.tbOverloadTorqueSpeed2.Location = New System.Drawing.Point(545, 92)
         Me.tbOverloadTorqueSpeed2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbOverloadTorqueSpeed2.Name = "tbOverloadTorqueSpeed2"
-        Me.tbOverloadTorqueSpeed2.Size = New System.Drawing.Size(82, 20)
+        Me.tbOverloadTorqueSpeed2.Size = New System.Drawing.Size(82, 26)
         Me.tbOverloadTorqueSpeed2.TabIndex = 22
         '
         'Label25
         '
         Me.Label25.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label25.AutoSize = true
-        Me.Label25.Location = New System.Drawing.Point(640, 98)
+        Me.Label25.Location = New System.Drawing.Point(633, 95)
         Me.Label25.Margin = New System.Windows.Forms.Padding(0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(30, 13)
+        Me.Label25.Size = New System.Drawing.Size(44, 20)
         Me.Label25.TabIndex = 66
         Me.Label25.Text = "[rpm]"
         '
@@ -970,30 +970,30 @@ Partial Class IEPCForm
         '
         Me.Label22.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label22.AutoSize = true
-        Me.Label22.Location = New System.Drawing.Point(449, 56)
+        Me.Label22.Location = New System.Drawing.Point(410, 53)
         Me.Label22.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(87, 13)
+        Me.Label22.Size = New System.Drawing.Size(126, 20)
         Me.Label22.TabIndex = 7
         Me.Label22.Text = "Overload Torque"
         '
         'tbOverloadTorque2
         '
         Me.tbOverloadTorque2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbOverloadTorque2.Location = New System.Drawing.Point(545, 53)
+        Me.tbOverloadTorque2.Location = New System.Drawing.Point(545, 50)
         Me.tbOverloadTorque2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbOverloadTorque2.Name = "tbOverloadTorque2"
-        Me.tbOverloadTorque2.Size = New System.Drawing.Size(82, 20)
+        Me.tbOverloadTorque2.Size = New System.Drawing.Size(82, 26)
         Me.tbOverloadTorque2.TabIndex = 21
         '
         'Label16
         '
         Me.Label16.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label16.AutoSize = true
-        Me.Label16.Location = New System.Drawing.Point(641, 56)
+        Me.Label16.Location = New System.Drawing.Point(635, 53)
         Me.Label16.Margin = New System.Windows.Forms.Padding(0)
         Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(29, 13)
+        Me.Label16.Size = New System.Drawing.Size(41, 20)
         Me.Label16.TabIndex = 64
         Me.Label16.Text = "[Nm]"
         '
@@ -1004,18 +1004,18 @@ Partial Class IEPCForm
         Me.Label3.Location = New System.Drawing.Point(4, 9)
         Me.Label3.Margin = New System.Windows.Forms.Padding(4, 9, 9, 9)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(87, 9)
+        Me.Label3.Size = New System.Drawing.Size(191, 20)
         Me.Label3.TabIndex = 54
         Me.Label3.Text = "Design Type Wheel Motor"
         '
         'cbDesignTypeWheelMotor
         '
-        Me.cbDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.cbDesignTypeWheelMotor.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.cbDesignTypeWheelMotor.AutoSize = true
-        Me.cbDesignTypeWheelMotor.Location = New System.Drawing.Point(96, 6)
-        Me.cbDesignTypeWheelMotor.Margin = New System.Windows.Forms.Padding(0, 9, 4, 9)
+        Me.cbDesignTypeWheelMotor.Location = New System.Drawing.Point(274, 9)
+        Me.cbDesignTypeWheelMotor.Margin = New System.Windows.Forms.Padding(70, 9, 4, 9)
         Me.cbDesignTypeWheelMotor.Name = "cbDesignTypeWheelMotor"
-        Me.cbDesignTypeWheelMotor.Size = New System.Drawing.Size(15, 14)
+        Me.cbDesignTypeWheelMotor.Size = New System.Drawing.Size(22, 21)
         Me.cbDesignTypeWheelMotor.TabIndex = 4
         Me.cbDesignTypeWheelMotor.UseVisualStyleBackColor = true
         '
@@ -1026,7 +1026,7 @@ Partial Class IEPCForm
         Me.Label2.Location = New System.Drawing.Point(4, 9)
         Me.Label2.Margin = New System.Windows.Forms.Padding(4, 9, 9, 9)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(101, 13)
+        Me.Label2.Size = New System.Drawing.Size(151, 20)
         Me.Label2.TabIndex = 53
         Me.Label2.Text = "Differential Included"
         '
@@ -1034,10 +1034,10 @@ Partial Class IEPCForm
         '
         Me.cbDifferentialIncluded.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.cbDifferentialIncluded.AutoSize = true
-        Me.cbDifferentialIncluded.Location = New System.Drawing.Point(234, 9)
+        Me.cbDifferentialIncluded.Location = New System.Drawing.Point(284, 9)
         Me.cbDifferentialIncluded.Margin = New System.Windows.Forms.Padding(120, 9, 4, 9)
         Me.cbDifferentialIncluded.Name = "cbDifferentialIncluded"
-        Me.cbDifferentialIncluded.Size = New System.Drawing.Size(15, 14)
+        Me.cbDifferentialIncluded.Size = New System.Drawing.Size(22, 21)
         Me.cbDifferentialIncluded.TabIndex = 6
         Me.cbDifferentialIncluded.UseVisualStyleBackColor = true
         '
@@ -1106,10 +1106,10 @@ Partial Class IEPCForm
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(340, 192)
+        Me.Label6.Location = New System.Drawing.Point(288, 192)
         Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(106, 13)
+        Me.Label6.Size = New System.Drawing.Size(158, 20)
         Me.Label6.TabIndex = 6
         Me.Label6.Text = "(Double-Click to Edit)"
         '
@@ -1243,10 +1243,10 @@ Partial Class IEPCForm
         '
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = true
-        Me.Label7.Location = New System.Drawing.Point(340, 192)
+        Me.Label7.Location = New System.Drawing.Point(288, 192)
         Me.Label7.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(106, 13)
+        Me.Label7.Size = New System.Drawing.Size(158, 20)
         Me.Label7.TabIndex = 6
         Me.Label7.Text = "(Double-Click to Edit)"
         '
@@ -1257,8 +1257,7 @@ Partial Class IEPCForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Padding = New System.Windows.Forms.Padding(0, 0, 2, 0)
-        Me.ToolStrip1.Size = New System.Drawing.Size(1296, 31)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1296, 38)
         Me.ToolStrip1.TabIndex = 63
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -1268,7 +1267,7 @@ Partial Class IEPCForm
         Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtNew.Text = "ToolStripButton1"
         Me.ToolStripBtNew.ToolTipText = "New"
         '
@@ -1278,7 +1277,7 @@ Partial Class IEPCForm
         Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtOpen.Text = "ToolStripButton1"
         Me.ToolStripBtOpen.ToolTipText = "Open..."
         '
@@ -1288,7 +1287,7 @@ Partial Class IEPCForm
         Me.ToolStripBtSave.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_icon
         Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSave.Text = "ToolStripButton1"
         Me.ToolStripBtSave.ToolTipText = "Save"
         '
@@ -1298,14 +1297,14 @@ Partial Class IEPCForm
         Me.ToolStripBtSaveAs.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_document_save_as_icon
         Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSaveAs.Text = "ToolStripButton1"
         Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 31)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 33)
         '
         'ToolStripBtSendTo
         '
@@ -1313,14 +1312,14 @@ Partial Class IEPCForm
         Me.ToolStripBtSendTo.Image = Global.TUGraz.VECTO.My.Resources.Resources.export_icon
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripBtSendTo.Text = "Send to Vehicle Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to Vehicle Editor"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 31)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 33)
         '
         'ToolStripButton1
         '
@@ -1328,7 +1327,7 @@ Partial Class IEPCForm
         Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
+        Me.ToolStripButton1.Size = New System.Drawing.Size(34, 28)
         Me.ToolStripButton1.Text = "Help"
         '
         'PictureBox1
@@ -1336,7 +1335,7 @@ Partial Class IEPCForm
         Me.PictureBox1.BackColor = System.Drawing.Color.White
         Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_Mainform
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 31)
+        Me.PictureBox1.Location = New System.Drawing.Point(0, 38)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(1296, 62)
@@ -1352,7 +1351,7 @@ Partial Class IEPCForm
         Me.lblTitle.Location = New System.Drawing.Point(171, 55)
         Me.lblTitle.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(68, 29)
+        Me.lblTitle.Size = New System.Drawing.Size(100, 40)
         Me.lblTitle.TabIndex = 65
         Me.lblTitle.Text = "IEPC"
         '
@@ -1415,10 +1414,10 @@ Partial Class IEPCForm
         '
         Me.Label9.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label9.AutoSize = true
-        Me.Label9.Location = New System.Drawing.Point(270, 8)
+        Me.Label9.Location = New System.Drawing.Point(367, 8)
         Me.Label9.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(16, 13)
+        Me.Label9.Size = New System.Drawing.Size(22, 20)
         Me.Label9.TabIndex = 66
         Me.Label9.Text = "[-]"
         '
@@ -1437,10 +1436,10 @@ Partial Class IEPCForm
         '
         Me.lblinertiaUnit.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.lblinertiaUnit.AutoSize = true
-        Me.lblinertiaUnit.Location = New System.Drawing.Point(140, 8)
+        Me.lblinertiaUnit.Location = New System.Drawing.Point(158, 8)
         Me.lblinertiaUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblinertiaUnit.Name = "lblinertiaUnit"
-        Me.lblinertiaUnit.Size = New System.Drawing.Size(36, 13)
+        Me.lblinertiaUnit.Size = New System.Drawing.Size(52, 20)
         Me.lblinertiaUnit.TabIndex = 64
         Me.lblinertiaUnit.Text = "[kgm²]"
         '
@@ -1469,10 +1468,10 @@ Partial Class IEPCForm
         '
         Me.Label10.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label10.AutoSize = true
-        Me.Label10.Location = New System.Drawing.Point(327, 8)
+        Me.Label10.Location = New System.Drawing.Point(407, 8)
         Me.Label10.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(16, 13)
+        Me.Label10.Size = New System.Drawing.Size(22, 20)
         Me.Label10.TabIndex = 67
         Me.Label10.Text = "[-]"
         '
@@ -1480,10 +1479,10 @@ Partial Class IEPCForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 915)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 905)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(2, 0, 21, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(1296, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1296, 32)
         Me.StatusStrip1.SizingGrip = false
         Me.StatusStrip1.TabIndex = 74
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -1491,7 +1490,7 @@ Partial Class IEPCForm
         'LbStatus
         '
         Me.LbStatus.Name = "LbStatus"
-        Me.LbStatus.Size = New System.Drawing.Size(39, 17)
+        Me.LbStatus.Size = New System.Drawing.Size(60, 25)
         Me.LbStatus.Text = "Status"
         '
         'CmOpenFile
@@ -1499,18 +1498,18 @@ Partial Class IEPCForm
         Me.CmOpenFile.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+        Me.CmOpenFile.Size = New System.Drawing.Size(203, 68)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(202, 32)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(202, 32)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
         'IEPCForm
