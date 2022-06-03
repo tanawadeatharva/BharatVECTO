@@ -1056,11 +1056,11 @@ lbFound:
 
                 ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
                 If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
-                    for Each run as JobContainer.RunEntry In jobContainer.Runs
-                        dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
-                        tmpDriver.LookAheadCoasting.Enabled = True
-                        tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
-                    Next
+                    'for Each run as JobContainer.RunEntry In jobContainer.Runs
+                    '    dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
+                    '    tmpDriver.LookAheadCoasting.Enabled = True
+                    '    tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
+                    'Next
                 end if
 
                     
