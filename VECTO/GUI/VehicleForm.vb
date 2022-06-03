@@ -475,7 +475,7 @@ Public Class VehicleForm
 				Next
 			End If
             end If
-			if vehicle.VehicleType = VectoSimulationJobType.IEPC_E OrElse vehicle.VehicleType = VectoSimulationJobType.IHPC Then
+			if vehicle.VehicleType = VectoSimulationJobType.IEPC_E OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S Then
 				Dim iepc = vehicle.Components.IEPCEngineeringInputData
 				tbIEPCFilePath.Text = GetRelativePath(iepc.DataSource.SourceFile, basePath)
 			End If
@@ -486,7 +486,7 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
 			Dim gen As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position = PowertrainPosition.GEN)
 			tbGenSetEM.Text = GetRelativePath(gen.ElectricMachine.DataSource.SourceFile, basePath)
 			tbGenSetCount.Text = gen.Count.ToGUIFormat()

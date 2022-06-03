@@ -491,7 +491,7 @@ Public Class VectoJobForm
 		Else
 			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
 		End If
-		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle) Then
+		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC) Then
 			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
 		End If
 
@@ -1075,7 +1075,7 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IEPC_S
-                pnEngine.Enabled = False
+                pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True
