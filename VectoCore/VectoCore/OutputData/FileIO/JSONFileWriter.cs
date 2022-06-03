@@ -1144,6 +1144,9 @@ public class JSONFileWriter : IOutputFileWriter
 				body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 			}
 		}
+		if (!job.SavedInDeclarationMode) {
+			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
 		if (!job.SavedInDeclarationMode && job.Vehicle is IVehicleEngineeringInputData engVehicle) {
