@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			};
 		}
 
-		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed, GearshiftPosition gear)
+		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed)
 		{
 			var (vLow, vHigh) = GetSection(voltage);
 
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				vHigh.FullGenerationTorque(avgSpeed), voltage);
 		}
 
-		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed, GearshiftPosition gear)
+		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed)
 		{
 			var (vLow, vHigh) = GetSection(voltage);
 
@@ -221,20 +221,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class IEPCVoltageLevelData : ElectricMotorVoltageLevelData
 	{
 		[ValidateObject]
-		protected internal Dictionary<uint, EfficiencyMap> IEPCEfficiencyMap { protected get; set; }
+		protected internal Dictionary<uint, EfficiencyMap> EfficiencyMaps { protected get; set; }
 
 
-		public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(FullLoadCurve.MaxSpeed, IEPCEfficiencyMap.Values.Min(x => x.MaxSpeed)));
+		public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(FullLoadCurve.MaxSpeed, EfficiencyMaps.Values.Min(x => x.MaxSpeed)));
 
 		public override EfficiencyMap.EfficiencyResult LookupElectricPower(PerSecond avgSpeed, NewtonMeter torque, uint gear, bool allowExtrapolation)
 		{
-			return IEPCEfficiencyMap[gear].LookupElectricPower(avgSpeed, torque, allowExtrapolation);
+			return EfficiencyMaps[gear].LookupElectricPower(avgSpeed, torque, allowExtrapolation);
 		}
 
 		public override NewtonMeter LookupTorque(Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque, uint gear)
 		{
-			return IEPCEfficiencyMap[gear].LookupTorque(electricPower, avgSpeed, maxEmTorque);
+			return EfficiencyMaps[gear].LookupTorque(electricPower, avgSpeed, maxEmTorque);
 		}
+
+	}
+
+	public class IHPCVoltageLevelData : IEPCVoltageLevelData
+	{
 
 	}
 

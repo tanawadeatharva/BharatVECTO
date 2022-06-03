@@ -108,6 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV11_SerialHybrid(json, filename, tolerateMissing);
 				case 12:
 					return new JSONInputDataV12_IEPC(json, filename, tolerateMissing);
+				case 13: 
+					return new JSONInputDataV13_IHPC(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -254,6 +256,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONIEPCData(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
+			}
+		}
+
+		public static IElectricMotorEngineeringInputData ReadIHPCEngineeringInputData(string filename,
+			bool tolerateMissing = false)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version)
+			{
+				case 5:
+					return ReadElectricMotorData(filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering IHPC: Unsupported FileVersion. Got {0}", version);
 			}
 		}
 	}

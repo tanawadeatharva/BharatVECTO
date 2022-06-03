@@ -521,20 +521,26 @@ Public Class VehicleForm
 	Private Sub UpdateForm(vehType As VectoSimulationJobType)
 		VehicleType = vehType
 
-		If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-			tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-			tpElectricComponents.BindingContext = BindingContext
+		If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
+			tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
+			tpElectricMachine.BindingContext = BindingContext
 		End If
+
+		If Not tcVehicleComponents.TabPages.Contains(tpReess) Then
+			tcVehicleComponents.TabPages.Insert(3, tpReess)
+			tpReess.BindingContext = BindingContext
+		End If
+
 		If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
-			tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+			tcVehicleComponents.TabPages.Insert(4, tpGensetComponents)
 			tpGensetComponents.BindingContext = BindingContext
 		End If
 		If Not tcVehicleComponents.TabPages.Contains(tpTorqueLimits) Then
-			tcVehicleComponents.TabPages.Insert(4, tpTorqueLimits)
+			tcVehicleComponents.TabPages.Insert(5, tpTorqueLimits)
 			tpTorqueLimits.BindingContext = BindingContext
 		End If
 
-
+		lblNotePtoPEV_HEVS.Visible = False
 		Select Case vehType
 			Case VectoSimulationJobType.ConventionalVehicle
 				lblTitle.Text = "Conventional Vehicle"
@@ -546,7 +552,8 @@ Public Class VehicleForm
 				gbAngledrive.Enabled = True
 
 				'Electric Powertrain Components -------------------------------------------
-				tcVehicleComponents.TabPages.Remove(tpElectricComponents)
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpReess)
 
 				'GenSet Components --------------------------------------------------------
 				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
@@ -558,6 +565,12 @@ Public Class VehicleForm
 				cbEngineStopStart.Visible = True
 				cbAtEcoRollReleaseLockupClutch.Visible = True
 				pnEcoRoll.Visible = True
+
+				'IEPC
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				'IHPC 
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
 			Case VectoSimulationJobType.ParallelHybridVehicle
 				lblTitle.Text = "Parallel Hybrid Vehicle"
@@ -583,6 +596,12 @@ Public Class VehicleForm
 				cbAtEcoRollReleaseLockupClutch.Visible = False
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
+
+				'IEPC
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				'IHPC 
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
 
 			Case VectoSimulationJobType.SerialHybridVehicle
 				lblTitle.Text = "Serial Hybrid Vehicle"
@@ -610,6 +629,17 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
+				'IEPC
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				'IHPC 
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+				'PTO
+				gbPTODrive.Enabled = False
+				pnPtoMode1.Enabled = false
+				pnPtoMode3.Enabled = False
+				lblNotePtoPEV_HEVS.Visible = True
 			Case VectoSimulationJobType.BatteryElectricVehicle
 				lblTitle.Text = "Battery Electric Vehicle"
 
@@ -636,13 +666,71 @@ Public Class VehicleForm
 				pnEcoRoll.Visible = False
 				cbEcoRoll.SelectedIndex = 0
 
+				'IEPC
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				'IHPC 
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+			    'PTO
+			    gbPTODrive.Enabled = False
+			    pnPtoMode1.Enabled = false
+			    pnPtoMode3.Enabled = False
+				lblNotePtoPEV_HEVS.Visible = true
+			Case VectoSimulationJobType.IEPC_E
+				lblTitle.Text = "IEPC-E Vehicle"
+				
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+			    'Torque Limits ------------------------------------------------------------
+			    gbEMTorqueLimits.Enabled = False
+			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
+
+				'PTO
+				gbPTO.Enabled = False
+				pnPTO.Enabled = false
+			Case VectoSimulationJobType.IEPC_S
+				lblTitle.Text = "IEPC-S Vehicle"
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tbIHPC)
+
+			    'Torque Limits ------------------------------------------------------------
+			    gbEMTorqueLimits.Enabled = False
+			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
+				
+			    'PTO
+				gbPTO.Enabled = False
+				pnPTO.Enabled = false
+
+			Case VectoSimulationJobType.IHPC
+				lblTitle.Text = "IHPC Vehicle"
+
+				tcVehicleComponents.TabPages.Remove(tpElectricMachine)
+				tcVehicleComponents.TabPages.Remove(tpGensetComponents)
+				tcVehicleComponents.TabPages.Remove(tpIEPC)
+
+				gbEMTorqueLimits.Enabled = False
+				gbPropulsionTorque.Enabled = False
+
+			    'PTO
+			    gbPTO.Enabled = False
+			    pnPTO.Enabled = false
+
 			Case Else
-				If Not tcVehicleComponents.TabPages.Contains(tpElectricComponents) Then
-					tcVehicleComponents.TabPages.Insert(2, tpElectricComponents)
-					tpElectricComponents.BindingContext = BindingContext
+				If Not tcVehicleComponents.TabPages.Contains(tpElectricMachine) Then
+					tcVehicleComponents.TabPages.Insert(2, tpElectricMachine)
+					tpElectricMachine.BindingContext = BindingContext
 				End If
+
+				If Not tcVehicleComponents.TabPages.Contains(tpReess) Then
+					tcVehicleComponents.TabPages.Insert(3, tpReess)
+					tpReess.BindingContext = BindingContext
+				End If
+
 				If Not tcVehicleComponents.TabPages.Contains(tpGensetComponents) Then
-					tcVehicleComponents.TabPages.Insert(3, tpGensetComponents)
+					tcVehicleComponents.TabPages.Insert(4, tpGensetComponents)
 					tpGensetComponents.BindingContext = BindingContext
 				End If
 				pnEcoRoll.Visible = True
@@ -738,6 +826,11 @@ Public Class VehicleForm
 			veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
 		End If
 
+		if (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
+		    veh.PtoType = CType(cbPTOType.SelectedValue, String)
+		    veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
+		End If
+
 		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
 			For Each reess As ListViewItem In lvREESSPacks.Items
 				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
@@ -746,21 +839,25 @@ Public Class VehicleForm
 
 			If tbElectricMotor.Text = "" Then
 				MsgBox("Electric Motor File is required.")
-				tcVehicleComponents.SelectedTab = tpElectricComponents
+				tcVehicleComponents.SelectedTab = tpElectricMachine
 				tbElectricMotor.Focus()
 				Return False
 			End If
+
 			veh.ElectricMotorFile.Init(GetPath(file), tbElectricMotor.Text)
 			veh.ElectricMotorPosition = CType(cbEmPos.SelectedValue, PowertrainPosition)
 			veh.ElectricMotorCount = tbEmCount.Text.ToInt(1)
 			veh.ElectricMotorRatio = tbRatioEm.Text.ToDouble(1)
 			'veh.ElectricMotorMechEff = tbEmADCLossMap.Text.ToDouble()
+
 			If tbEmADCLossMap.Text = "" Then
 				MsgBox("Loss Map EM ADC is required.")
-				tcVehicleComponents.SelectedTab = tpElectricComponents
+				tcVehicleComponents.SelectedTab = tpElectricMachine
 				tbEmADCLossMap.Focus()
 				Return False
 			End If
+
+
 			veh.ElectricMotorMechLossMap.Init(GetPath(file), tbEmADCLossMap.Text)
 			If (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) Then
 				veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(Function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
@@ -1233,7 +1330,6 @@ Public Class VehicleForm
 		If ElectricMotorFileBrowser.OpenDialog(FileRepl(tbElectricMotor.Text, GetPath(_vehFile))) Then
 			tbElectricMotor.Text = GetFilenameWithoutDirectory(ElectricMotorFileBrowser.Files(0), GetPath(_vehFile))
 		End If
-
 	End Sub
 
 
@@ -1466,5 +1562,73 @@ Public Class VehicleForm
 	Private Sub cbEngineStopStart_CheckedChanged(sender As Object, e As EventArgs) Handles cbEngineStopStart.CheckedChanged
 		Change()
 	End Sub
-End Class
 
+	Private Sub btIEPCFilePath_Click(sender As Object, e As EventArgs) Handles btIEPCFilePath.Click
+		If IEPCFileBrowser.OpenDialog(FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))) Then
+			tbIEPCFilePath.Text = GetFilenameWithoutDirectory(IEPCFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
+
+	Private Sub btnIEPC_Click(sender As Object, e As EventArgs) Handles btnIEPC.Click
+		Dim f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
+
+		IEPCForm.JobDir = GetPath(_vehFile)
+
+		If Not Trim(f) = "" Then
+			If Not File.Exists(f) Then
+				MsgBox("File not found!")
+				Exit Sub
+			End If
+		End If
+
+		If Not IEPCForm.Visible Then
+			IEPCForm.NewIEPC()
+			IEPCForm.Show()
+		Else
+			If IEPCForm.WindowState = FormWindowState.Minimized Then IEPCForm.WindowState = FormWindowState.Normal
+			IEPCForm.BringToFront()
+		End If
+
+		If Not Trim(f) = "" Then
+			Try
+				IEPCForm.ReadIEPCFile(f)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IEPC File")
+			End Try
+		End If
+	End Sub
+
+	Private Sub btIHPCFile_Click(sender As Object, e As EventArgs) Handles btIHPCFile.Click
+		If IHPCFileBrowser.OpenDialog(FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))) Then
+			tbIHPCFilePath.Text = GetFilenameWithoutDirectory(IHPCFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
+
+	Private Sub btIHPC_Click(sender As Object, e As EventArgs) Handles btIHPC.Click
+		Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
+
+		IHPCForm.JobDir = GetPath(_vehFile)
+	    If Not Trim(f) = "" Then
+	        If Not File.Exists(f) Then
+	            MsgBox("File not found!")
+	            Exit Sub
+	        End If
+	    End If
+
+		If Not IHPCForm.Visible Then
+			IHPCForm.ClearIHPC()
+			IHPCForm.Show()
+		Else
+			If IHPCForm.WindowState = FormWindowState.Minimized Then IHPCForm.WindowState = FormWindowState.Normal
+			IHPCForm.BringToFront()
+		End If
+
+		If Not Trim(f) = "" Then
+			Try
+				IHPCForm.ReadIHPCFile(f)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading IHPC File")
+			End Try
+		End If
+	End Sub
+End Class
