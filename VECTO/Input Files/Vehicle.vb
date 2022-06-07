@@ -1080,7 +1080,10 @@ Public Class ElectricMachinesWrapper
 	Public ReadOnly Property Entries As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) Implements IElectricMachinesDeclarationInputData.Entries
 		Get
 			Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) = New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))
-			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then 
+			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
 
 				retval.Add(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
 					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
@@ -1108,11 +1111,15 @@ Public Class ElectricMachinesWrapper
 		Get
 			Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) =  New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))
 			
-			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then 
+			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
+
 				retval.Add(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData) With {
 					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
 					.MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
-					.MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
+					.MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath) OrElse String.IsNullOrWhiteSpace(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
 					.Position = Vehicle.ElectricMotorPosition, 
 					.RatioADC = Vehicle.ElectricMotorRatio, 
 					.RatioPerGear = Vehicle.ElectricMotorPerGearRatios,

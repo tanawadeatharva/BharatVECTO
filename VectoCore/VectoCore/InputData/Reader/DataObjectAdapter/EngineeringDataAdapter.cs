@@ -936,9 +936,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				averageVoltage = (voltageLevels.Min(x => x.Voltage) + voltageLevels.Max(x => x.Voltage)) / 2.0;
 			}
 
-			var lossMap = adcLossMap != null
-				? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
-				: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
+			var lossMap = powertrainPosition == PowertrainPosition.IHPC
+				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
+				: adcLossMap != null
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
+					: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
 
 			var retVal = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},

@@ -36,7 +36,7 @@ public class JSONFileWriter : IOutputFileWriter
 	private const int SHEVVectoJobFormatVersion = 11;
 
 	private const int IEPCVectoJobFormatVersion = 12;
-
+	private const int IHPCVectoJobFormatVersion = 13;
 	#endregion
 
 
@@ -387,6 +387,7 @@ public class JSONFileWriter : IOutputFileWriter
 				break;
 			case VectoSimulationJobType.ParallelHybridVehicle:
 			case VectoSimulationJobType.SerialHybridVehicle:
+			case VectoSimulationJobType.IHPC:
 				SaveHybridVehicle(vehicle, airdrag, retarder, pto, angledrive, filename, DeclMode);
 				break;
 			case VectoSimulationJobType.BatteryElectricVehicle:
@@ -572,7 +573,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		body.Add("InitialSoC", vehicle.InitialSOC * 100);
-		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid" : "ParallelHybrid");
+		body.Add("PowertrainConfiguration", vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle ? "SerialHybrid" : vehicle.VehicleType == VectoSimulationJobType.IHPC ? "IHPC":  "ParallelHybrid");
 		body.Add("ElectricMotors", GetElectricMotors(vehicle, basePath));
 		body.Add("Batteries", GetBattery(vehicle, basePath));
 
@@ -710,6 +711,9 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.IEPC_S:
 				SaveIEPCEJob(input, filename, DeclMode);
 				break;
+			case VectoSimulationJobType.IHPC:
+				SaveIHPCJob(input, filename, DeclMode);
+				break;
 			case VectoSimulationJobType.EngineOnlySimulation:
 				SaveEngineOnlyJob(input, filename, DeclMode);
 				break;
@@ -718,12 +722,21 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 	}
 
-	
+	private void SaveIHPCJob(IEngineeringInputDataProvider input, string filename, bool declMode)
+	{
+		DoSaveParallelHybridJob(input, filename, declMode, IHPCVectoJobFormatVersion);
+	}
 
 	private void SaveParallelHybridJob(IEngineeringInputDataProvider input, string filename, bool declMode)
 	{
+		DoSaveParallelHybridJob(input, filename, declMode, PHEVVectoJobFormatVersion);
+	}
+
+	private void DoSaveParallelHybridJob(IEngineeringInputDataProvider input, string filename, bool declMode,
+		int versionNumber)
+	{
 		var basePath = Path.GetDirectoryName(filename);
-		var header = GetHeader(PHEVVectoJobFormatVersion);
+		var header = GetHeader(versionNumber);
 		var body = new Dictionary<string, object>();
 		// SavedInDeclMode = Cfg.DeclMode
 		var job = input.JobInputData;

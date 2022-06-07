@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
@@ -18,11 +19,11 @@ Public Class IHPCForm
 
     Public Sub ReadIHPCFile(file As String)
         Dim ihpcData = JSONInputDataFactory.ReadIHPCEngineeringInputData(file, True)
-
+        _ihpcFilePath = file
         tbModel.Text = ihpcData.Model
         tbInertia.Text = ihpcData.Inertia.ToGUIFormat()
         tbThermalOverload.Text = ihpcData.OverloadRecoveryFactor.ToGUIFormat()
-        tbDragCurve.Text = ihpcData.DragCurve.Source
+        tbDragCurve.Text = GetRelativePath(ihpcData.DragCurve.Source, Path.GetDirectoryName(_ihpcFilePath))
 
         SetVoltageLevelLow(ihpcData.VoltageLevels.First()) 
         SetVoltageLevelHigh(ihpcData.VoltageLevels.Last())
@@ -39,7 +40,7 @@ Public Class IHPCForm
         tbOverloadTime1.Text = voltageLevel.OverloadTime.ToGUIFormat()
         tbOverloadTorque1.Text = voltageLevel.OverloadTorque.ToGUIFormat()
         tbOverloadTorqueSpeed1.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-        tbFLCurve1.Text = voltageLevel.FullLoadCurve.Source
+        tbFLCurve1.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, path.GetDirectoryName(_ihpcFilePath))
         SetPowerMapEntries(_lvPowerMap1, voltageLevel.PowerMap)
 
     End Sub
@@ -52,7 +53,7 @@ Public Class IHPCForm
         tbOverloadTime2.Text = voltageLevel.OverloadTime.ToGUIFormat()
         tbOverloadTorque2.Text = voltageLevel.OverloadTorque.ToGUIFormat()
         tbOverloadTorqueSpeed2.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-        tbFLCurve2.Text = voltageLevel.FullLoadCurve.Source
+        tbFLCurve2.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(_ihpcFilePath))
         SetPowerMapEntries(_lvPowerMap2, voltageLevel.PowerMap)
 
     End Sub
@@ -67,7 +68,7 @@ Public Class IHPCForm
     Private Function CreateListViewItem(axleNumber As Integer, filepath As String) As ListViewItem
         Dim retVal As New ListViewItem
         retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
-        retVal.SubItems.Add(filepath)
+        retVal.SubItems.Add(GetRelativePath(filepath, Path.GetDirectoryName(_ihpcFilePath)))
         Return retVal
     End Function
     
@@ -116,20 +117,20 @@ Public Class IHPCForm
 #Region "Events"
 
     Private Sub btDragCurve_Click(sender As Object, e As EventArgs) Handles btDragCurve.Click
-        If IHPCDragCurveFileBrowser.OpenDialog(FileRepl(tbDragCurve.Text, GetPath(_dragCurveFilePath)))
-            _tbDragCurve.Text = GetFilenameWithoutDirectory(IHPCDragCurveFileBrowser.Files(0), GetPath(_dragCurveFilePath))
+        If IHPCDragCurveFileBrowser.OpenDialog(FileRepl(tbDragCurve.Text, GetPath(_ihpcFilePath)))
+            _tbDragCurve.Text = GetFilenameWithoutDirectory(IHPCDragCurveFileBrowser.Files(0), GetPath(_ihpcFilePath))
         End If
     End Sub
     
     Private Sub btFLCurveFile1_Click(sender As Object, e As EventArgs) Handles btFLCurveFile1.Click
-        If IHPCFullLoadCurveFileBrowser.OpenDialog(FileRepl(tbFLCurve1.Text, GetPath(_flCurveFilePath1)))
-            _tbFLCurve1.Text = GetFilenameWithoutDirectory(IHPCFullLoadCurveFileBrowser.Files(0), GetPath(_flCurveFilePath1))
+        If IHPCFullLoadCurveFileBrowser.OpenDialog(FileRepl(tbFLCurve1.Text, GetPath(_ihpcFilePath)))
+            _tbFLCurve1.Text = GetFilenameWithoutDirectory(IHPCFullLoadCurveFileBrowser.Files(0), GetPath(_ihpcFilePath))
         End If
     End Sub
     
     Private Sub btFLCurveFile2_Click(sender As Object, e As EventArgs) Handles btFLCurveFile2.Click
-        If IHPCFullLoadCurveFileBrowser.OpenDialog(FileRepl(tbFLCurve2.Text, GetPath(_flCurveFilePath2)))
-            _tbFLCurve2.Text = GetFilenameWithoutDirectory(IHPCFullLoadCurveFileBrowser.Files(0), GetPath(_flCurveFilePath2))
+        If IHPCFullLoadCurveFileBrowser.OpenDialog(FileRepl(tbFLCurve2.Text, GetPath(_ihpcFilePath)))
+            _tbFLCurve2.Text = GetFilenameWithoutDirectory(IHPCFullLoadCurveFileBrowser.Files(0), GetPath(_ihpcFilePath))
         End If
     End Sub
 
@@ -184,6 +185,7 @@ Public Class IHPCForm
         IHPCPowerMapInputDialog.tbGear.Text = entry.SubItems(0).Text
         IHPCPowerMapInputDialog.tbInputFile.Text = entry.SubItems(1).Text
         IHPCPowerMapInputDialog.tbGear.Focus()
+        IHPCPowerMapInputDialog.IHPCPath = GetPath(_ihpcFilePath)
 
         If IHPCPowerMapInputDialog.ShowDialog() = DialogResult.OK Then
             entry.SubItems(0).Text = IHPCPowerMapInputDialog.tbGear.Text
@@ -275,7 +277,7 @@ Public Class IHPCForm
     End Function
 
     Private Function SaveIHPCToFile(ByVal ihpcFilePath As String) As Boolean
-        Dim ihpcInputData = New IHPCInputData
+        Dim ihpcInputData = New IHPCInputData(ihpcFilePath)
 
         ihpcInputData.SetCommonEntries(tbModel.Text, tbInertia.Text, tbDragCurve.Text, tbThermalOverload.Text)
         ihpcInputData.SetVoltageLevelEntries(tbVoltage1.Text, tbContinuousTorque1.Text, tbContinuousTorqueSpeed1.Text,
@@ -286,7 +288,7 @@ Public Class IHPCForm
                                              tbFLCurve2.Text, lvPowerMap2)
 
 
-        If Not ihpcInputData.SaveFile(ihpcFilePath) Then
+        If Not ihpcInputData.SaveFile() Then
             MsgBox("Cannot save to " & ihpcFilePath, MsgBoxStyle.Critical)
             Return False
         End If
@@ -355,7 +357,9 @@ Public Class IHPCForm
     End Function
 
     Private Function ValidateDragCurve() As Boolean
-        If Not File.Exists(tbDragCurve.Text) Then
+        dim tmp = new SubPath()
+		tmp.Init(GetPath(_ihpcFilePath), tbDragCurve.Text)
+        If Not File.Exists(tmp.FullPath) Then
             ShowErrorMessageBox("No valid Drag Curve file path given", tbDragCurve, False)
             Return False
         End If
@@ -418,7 +422,9 @@ Public Class IHPCForm
     End Function
     
     Private Function ValidateFullLoadCurve(tb As TextBox) As Boolean
-        If Not File.Exists(tb.Text) Then
+        dim tmp = new SubPath()
+        tmp.Init(GetPath(_ihpcFilePath), tb.Text)
+        If Not File.Exists(tmp.FullPath) Then
             ShowErrorMessageBox("No valid Full Load Curve file path given", tb, False)
             Return False
         End If

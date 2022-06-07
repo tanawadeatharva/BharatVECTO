@@ -814,7 +814,8 @@ Public Class VehicleForm
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
-		If (VehicleType = VectoSimulationJobType.ConventionalVehicle OrElse VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
+		If (VehicleType = VectoSimulationJobType.ConventionalVehicle OrElse VehicleType = VectoSimulationJobType.ParallelHybridVehicle _
+            OrElse VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse VehicleType = VectoSimulationJobType.IHPC) Then
 			veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
 
 			veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
@@ -876,10 +877,22 @@ Public Class VehicleForm
 			    If (veh.ElectricMotorPosition = PowertrainPosition.HybridP2_5) Then
 				    veh.ElectricMotorPerGearRatios = lvRatioPerGear.Items.Cast(Of ListViewItem).Select(Function(item) item.SubItems(RatiosPerGearTbl.Ratio).Text.ToDouble(0)).ToArray()
 			    End If
+				
 		    end if
 			if (VehicleType = VectoSimulationJobType.IEPC_S OrElse VehicleType = VectoSimulationJobType.IEPC_E) Then
 				veh.IEPCFile.Init(GetPath(file), tbIEPCFilePath.Text)
 			End If
+		    if (VehicleType = VectoSimulationJobType.IHPC) Then
+		        If (tbIHPCFilePath.Text = "") Then
+		            MsgBox("IHPC File is required.")
+		            tcVehicleComponents.SelectedTab = tbIHPC
+		            tbIHPCFilePath.Focus()
+		        End If
+		        veh.ElectricMotorFile.Init(GetPath(file), tbIHPCFilePath.Text)
+		        veh.ElectricMotorPosition = PowertrainPosition.IHPC
+		        veh.ElectricMotorCount = 1
+		        veh.ElectricMotorRatio = 1
+		    End If
 		End If
 
 		If (VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse VehicleType = VectoSimulationJobType.IEPC_S) Then

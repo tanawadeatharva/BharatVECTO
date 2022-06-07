@@ -1,8 +1,10 @@
 ﻿Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 
 Public Class IHPCPowerMapInputDialog
     
     Private _inputFilePath As String
+    Public IHPCPath As String
 
     public Sub Clear()
         _tbGear.Text = ""
@@ -34,7 +36,9 @@ Public Class IHPCPowerMapInputDialog
             Return
         End If
 
-        If Not File.Exists(tbInputFile.Text) Then
+        Dim tmp As SubPath = New SubPath()
+        tmp.Init(IHPCPath, tbInputFile.Text)
+        If Not File.Exists(tmp.FullPath) Then
             MsgBox("Invalid input no valid file path given")
             _tbInputFile.Focus()
             Return
@@ -57,8 +61,8 @@ Public Class IHPCPowerMapInputDialog
     End Sub
 
     Private Sub btAddFilePath_Click(sender As Object, e As EventArgs) Handles btAddFilePath.Click
-        If IHPCPowerMapFileBrowser.OpenDialog(FileRepl(tbInputFile.Text, GetPath(_inputFilePath)))
-            tbInputFile.Text = GetFilenameWithoutDirectory(IHPCPowerMapFileBrowser.Files(0), GetPath(_inputFilePath))
+        If IHPCPowerMapFileBrowser.OpenDialog(FileRepl(tbInputFile.Text, IHPCPath))
+            tbInputFile.Text = GetFilenameWithoutDirectory(IHPCPowerMapFileBrowser.Files(0),IHPCPath)
         End If
     End Sub
 

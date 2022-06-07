@@ -1063,11 +1063,12 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IHPC
-                pnEngine.Enabled = False
+                pnEngine.Enabled = True
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = True
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
             Case VectoSimulationJobType.IEPC_E
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
