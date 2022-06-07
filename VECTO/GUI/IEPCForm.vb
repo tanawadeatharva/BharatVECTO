@@ -14,6 +14,8 @@ Public Class IEPCForm
 	Private _flcFilePath1 as String
 	Private _flcFilePath2 as String
 	Private _changed as Boolean
+
+    Public AutoSendTo As action(of string, VehicleForm)
 	
 	Private _contextMenuFiles As String()
 
@@ -92,7 +94,7 @@ Public Class IEPCForm
 	End Sub
 
 	Private Function CreateListViewItem(axleNumber As Integer, filepath As String) As ListViewItem
-	    Dim basePath As String = Path.GetDirectoryName(_iepcFilePath)
+	    Dim basePath As String = GetPath(_iepcFilePath)
 	    Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
         retVal.SubItems.Add(GetRelativePath(filepath, basePath))
@@ -424,6 +426,12 @@ Public Class IEPCForm
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
+
+	    If not AutoSendTo is nothing Then
+	        If VehicleForm.Visible Then
+	            AutoSendTo(file, VehicleForm)
+	        End If
+	    End If
 
 		_changed = False
 		LbStatus.Text = ""

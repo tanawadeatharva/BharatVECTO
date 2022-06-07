@@ -15,6 +15,8 @@ Public Class IHPCForm
 
     Private _contextMenuFiles As String()
 
+    Public AutoSendTo As action(of string, VehicleForm)
+
 #Region "Set JSON Data"
 
     Public Sub ReadIHPCFile(file As String)
@@ -59,7 +61,7 @@ Public Class IHPCForm
     End Sub
 
     Private Sub SetPowerMapEntries(powerMapListView As ListView, entries As IList(Of IElectricMotorPowerMap))
-        For Each entry As IElectricMotorPowerMap In entries
+        For Each entry As IElectricMotorPowerMap In entries.OrderBy(Function(x) x.Gear)
             Dim listEntry = CreateListViewItem(entry.Gear, entry.PowerMap.Source)
             powerMapListView.Items.Add(listEntry)
         Next
@@ -68,7 +70,7 @@ Public Class IHPCForm
     Private Function CreateListViewItem(axleNumber As Integer, filepath As String) As ListViewItem
         Dim retVal As New ListViewItem
         retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
-        retVal.SubItems.Add(GetRelativePath(filepath, Path.GetDirectoryName(_ihpcFilePath)))
+        retVal.SubItems.Add(GetRelativePath(filepath, GetPath(_ihpcFilePath)))
         Return retVal
     End Function
     
@@ -144,21 +146,30 @@ Public Class IHPCForm
     
     Private Sub AddListViewItem(listView As ListView)
         IHPCPowerMapInputDialog.Clear()
+        dim gear = listView.Items.Count + 1
+        IHPCPowerMapInputDialog.tbGear.Text = gear.ToString()
 
         If IHPCPowerMapInputDialog.ShowDialog() = DialogResult.OK Then
-            Dim gear = Convert.ToInt32(IHPCPowerMapInputDialog.tbGear.Text)
             Dim filePath = IHPCPowerMapInputDialog.tbInputFile.Text
             listView.Items.Add(CreateListViewItem(gear, filePath))
+            if (listView.Equals(lvPowerMap1)) Then
+                lvPowerMap2.Items.Add(CreateListViewItem(gear, ""))
+            End If
+            if (listView.Equals(_lvPowerMap2)) Then
+                lvPowerMap1.Items.Add(CreateListViewItem(gear, ""))
+            End If
             Change()
         End If
     End Sub
 
     Private Sub btRemovePowerMap1_Click(sender As Object, e As EventArgs) Handles btRemovePowerMap1.Click
         RemoveListEntry(lvPowerMap1)
+        RemoveListEntry(lvPowerMap2)
     End Sub
     
     Private Sub btRemovePowerMap2_Click(sender As Object, e As EventArgs) Handles btRemovePowerMap2.Click
         RemoveListEntry(lvPowerMap2)
+        RemoveListEntry(lvPowerMap1)
     End Sub
 
     Private Sub RemoveListEntry(listView As ListView)
@@ -291,6 +302,12 @@ Public Class IHPCForm
         If Not ihpcInputData.SaveFile() Then
             MsgBox("Cannot save to " & ihpcFilePath, MsgBoxStyle.Critical)
             Return False
+        End If
+
+        If not AutoSendTo is nothing Then
+            If VehicleForm.Visible Then
+                AutoSendTo(ihpcFilePath, VehicleForm)
+            End If
         End If
 
         _changed = False

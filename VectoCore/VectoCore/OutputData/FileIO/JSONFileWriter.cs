@@ -109,7 +109,7 @@ public class JSONFileWriter : IOutputFileWriter
 	private List<Dictionary<string, object>> GetVoltageLevelEntries(IList<IElectricMotorVoltageLevel> voltageLevels, string filename)
 	{
 		var vlevels = new List<Dictionary<string, object>>();
-		foreach (var entry in voltageLevels)
+		foreach (var entry in voltageLevels.OrderBy(x => x.VoltageLevel))
 		{
 			var vlevel = new Dictionary<string, object> {
 				{ JsonKeys.EM_Voltage, entry.VoltageLevel.Value() },
@@ -121,7 +121,7 @@ public class JSONFileWriter : IOutputFileWriter
 				{ JsonKeys.EM_FullLoadCurve, GetRelativePath(entry.FullLoadCurve.Source, Path.GetDirectoryName(filename)) }
 			};
 			var powerMaps = new Dictionary<int, object>();
-			foreach (var pMap in entry.PowerMap)
+			foreach (var pMap in entry.PowerMap.OrderBy(x => x.Gear))
 			{
 				powerMaps.Add(pMap.Gear, GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
 			}
@@ -150,7 +150,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 		var gears = new List<Dictionary<string, object>>();
 
-		foreach (var gear in iepc.Gears) {
+		foreach (var gear in iepc.Gears.OrderBy(x => x.GearNumber)) {
 			var currentGear = new Dictionary<string, object> {
 				{ JsonKeys.Gearbox_Gear_Ratio, gear.Ratio }
 			};
@@ -162,7 +162,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		var voltageLevels = new List<Dictionary<string, object>>();
-		foreach (var voltageLevel in iepc.VoltageLevels) {
+		foreach (var voltageLevel in iepc.VoltageLevels.OrderBy(x => x.VoltageLevel)) {
 			var currentLevel = new Dictionary<string, object>
 			{
 				{JsonKeys.IEPC_Voltage, voltageLevel.VoltageLevel.Value()},
@@ -175,7 +175,7 @@ public class JSONFileWriter : IOutputFileWriter
 
 			};
 			var powerMaps = new Dictionary<string, object>();
-			foreach (var pMap in voltageLevel.PowerMap)
+			foreach (var pMap in voltageLevel.PowerMap.OrderBy(x => x.Gear))
 			{
 				powerMaps.Add(pMap.Gear.ToString(), GetRelativePath(pMap.PowerMap.Source, Path.GetDirectoryName(filename)));
 			}
@@ -184,7 +184,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		var dragCurves = new Dictionary<string, object>();
-		foreach (var dragCurveEntry in iepc.DragCurves) {
+		foreach (var dragCurveEntry in iepc.DragCurves.OrderBy(x => x.Gear)) {
 			dragCurves.Add(dragCurveEntry.Gear.ToString(), 
 				GetRelativePath(dragCurveEntry.DragCurve.Source, Path.GetDirectoryName(filename)));
 		}

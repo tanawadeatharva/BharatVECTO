@@ -1605,6 +1605,11 @@ Public Class VehicleForm
 		Dim f = FileRepl(tbIEPCFilePath.Text, GetPath(_vehFile))
 
 		IEPCForm.JobDir = GetPath(_vehFile)
+	    IEPCForm.AutoSendTo = Sub(file, vehicleForm)
+	        If UCase(FileRepl(vehicleForm.tbIEPCFilePath.Text, JobDir)) <> UCase(file) Then _
+	            vehicleForm.tbIEPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
+	        VectoJobForm.UpdatePic()
+	    End Sub
 
 		If Not Trim(f) = "" Then
 			If Not File.Exists(f) Then
@@ -1640,6 +1645,12 @@ Public Class VehicleForm
 		Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
 
 		IHPCForm.JobDir = GetPath(_vehFile)
+	    IHPCForm.AutoSendTo = Sub(file, vehicleForm)
+	        If UCase(FileRepl(vehicleForm.tbIHPCFilePath.Text, JobDir)) <> UCase(file) Then _
+	            vehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
+	        VectoJobForm.UpdatePic()
+	    End Sub
+
 	    If Not Trim(f) = "" Then
 	        If Not File.Exists(f) Then
 	            MsgBox("File not found!")
