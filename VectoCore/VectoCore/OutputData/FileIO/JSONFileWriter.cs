@@ -707,6 +707,9 @@ public class JSONFileWriter : IOutputFileWriter
 			case VectoSimulationJobType.IEPC_E:
 				SaveIEPCEJob(input, filename, DeclMode);
 				break;
+			case VectoSimulationJobType.IEPC_S:
+				SaveIEPCEJob(input, filename, DeclMode);
+				break;
 			case VectoSimulationJobType.EngineOnlySimulation:
 				SaveEngineOnlyJob(input, filename, DeclMode);
 				break;
@@ -1137,15 +1140,20 @@ public class JSONFileWriter : IOutputFileWriter
 
 		// Main Files
 		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath));
-		if (input.JobInputData.Vehicle.Components.GearboxInputData != null) {
+		if (job.JobType == VectoSimulationJobType.IEPC_S) {
+			body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath));
+		}
+
+		if (job.Vehicle.Components.GearboxInputData != null) {
 			body.Add("GearboxFile",
 				GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath));
-			if (input.DriverInputData.GearshiftInputData != null) {
+			if (input.DriverInputData.GearshiftInputData != null && !job.SavedInDeclarationMode) {
 				body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
 			}
 		}
-		if (!job.SavedInDeclarationMode) {
-			body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath));
+
+		if (!job.SavedInDeclarationMode && job.Vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
+			body.Add("HybridStrategyParams", GetRelativePath(input.JobInputData.HybridStrategyParameters.Source, basePath));
 		}
 		body.Add("Padd_electric", input.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand.Value());
 
