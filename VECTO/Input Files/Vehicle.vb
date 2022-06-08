@@ -47,8 +47,8 @@ Public Class Vehicle
 	<ValidateObject> Public RetarderType As RetarderType
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
-    Public ReadOnly EmTorqueLimitsFile As SubPath
-    public ReadOnly PropulsionTorqueFile as SubPath
+	Public ReadOnly EmTorqueLimitsFile As SubPath
+	public ReadOnly PropulsionTorqueFile as SubPath
 
 	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of AxleInputData)
@@ -67,7 +67,7 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycleStandstill As SubPath
-    Public ReadOnly PtoCycleDriving As SubPath
+	Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
@@ -80,26 +80,27 @@ Public Class Vehicle
 	Public VehicleTankSystem As TankSystem?
 
 	Public ReadOnly ElectricMotorFile As SubPath
-    Public ReadOnly GenSetEMFile As SubPath
+	Public ReadOnly GenSetEMFile As SubPath
 
 	public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
 
-    Public ElectricMotorPosition As PowertrainPosition
+	Public ElectricMotorPosition As PowertrainPosition
 	Public ElectricMotorCount As Integer
 	Public ElectricMotorRatio As Double
-    'Public ElectricMotorMechEff As Double
-    Public ElectricMotorMechLossMap As SubPath
-    Public GenSetMechLossMap As SubPath
+	'Public ElectricMotorMechEff As Double
+	Public ElectricMotorMechLossMap As SubPath
+	Public GenSetMechLossMap As SubPath
 
-    Public GenSetPosition As PowertrainPosition
-    Public GenSetCount As Integer
-    Public GenSetRatio As Double
-    'Public ElectricMotorMechEff As Double
-    Public GenSetLossMap As SubPath
+	Public GenSetPosition As PowertrainPosition
+	Public GenSetCount As Integer
+	Public GenSetRatio As Double
+	'Public ElectricMotorMechEff As Double
+	Public GenSetLossMap As SubPath
 
-    public GearDuringPTODrive As UInteger?
-    Public EngineSpeedDuringPTODrive As PerSecond
-    Public ElectricMotorPerGearRatios As Double()
+	public GearDuringPTODrive As UInteger?
+	Public EngineSpeedDuringPTODrive As PerSecond
+	Public ElectricMotorPerGearRatios As Double()
+	Public IEPCFile As SubPath
 
 	Public Sub New()
 		_path = ""
@@ -108,15 +109,16 @@ Public Class Vehicle
 
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
-        EmTorqueLimitsFile = new SubPath()
-        PropulsionTorqueFile = New SubPath()
+		EmTorqueLimitsFile = new SubPath()
+		PropulsionTorqueFile = New SubPath()
+		IEPCFile = new SubPath()
 
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		ReessPacks = new List(Of Tuple(Of String,Integer,Integer))
-	    PtoLossMap = New SubPath()
+		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
-        PtoCycleDriving = new SubPath()
+		PtoCycleDriving = new SubPath()
 		ElectricMotorFile = New SubPath()
 		ElectricMotorMechLossMap = new SubPath()
 		GenSetEMFile = new SubPath()
@@ -226,7 +228,7 @@ Public Class Vehicle
 		RetarderLossMapFile.Clear()
 		AngledriveLossMapFile.Clear()
 		EmTorqueLimitsFile.Clear()
-	    PropulsionTorqueFile.Clear()
+		PropulsionTorqueFile.Clear()
 
 		AngledriveType = AngledriveType.None
 		AngledriveLossMapFile.Clear()
@@ -235,7 +237,7 @@ Public Class Vehicle
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
 		PtoCycleStandstill.Clear()
-	    PtoCycleDriving.Clear()
+		PtoCycleDriving.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck
@@ -787,9 +789,17 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
+	Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
+	get
+		Return new IEPCWrapper(me)
+	End Get
+	End Property
 
-    Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+	Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+	get
+		return IEPCEngineeringInputData
+	End Get
+	End Property
 
 	Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
 
@@ -825,21 +835,21 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
-    get
-            return If(gearDuringPTODrive.HasValue, new GearshiftPosition(GearDuringPTODrive.Value), Nothing)
-    End Get
+	Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
+	get
+			return If(gearDuringPTODrive.HasValue, new GearshiftPosition(GearDuringPTODrive.Value), Nothing)
+	End Get
 end Property
 
-    Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
-    Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
+	Public Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+	Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
 
 
-    Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
-    get
-            Return EngineSpeedDuringPTODrive
-    End Get
-    End Property
+	Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
+	get
+			Return EngineSpeedDuringPTODrive
+	End Get
+	End Property
 
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 		Get
@@ -871,9 +881,9 @@ end Property
 		End Get
 	End Property
 
-    Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
+	Public ReadOnly Property ExemptedTechnology As String Implements IVehicleDeclarationInputData.ExemptedTechnology
 
-    Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
+	Public ReadOnly Property RegisteredClass As RegistrationClass? Implements IVehicleDeclarationInputData.RegisteredClass
 	Public ReadOnly Property NumberPassengerSeatsUpperDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsUpperDeck
 	Public ReadOnly Property NumberPassengerSeatsLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengerSeatsLowerDeck
 	Public ReadOnly Property NumberPassengersStandingLowerDeck As Integer? Implements IVehicleDeclarationInputData.NumberPassengersStandingLowerDeck
@@ -915,12 +925,12 @@ end Property
 		End Get
 	End Property
 
-    Public ReadOnly Property NumSteeredAxles As Integer? Implements IAxlesDeclarationInputData.NumSteeredAxles
+	Public ReadOnly Property NumSteeredAxles As Integer? Implements IAxlesDeclarationInputData.NumSteeredAxles
 	get
 		return nothing
 	End Get
-    End Property
-    Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
+	End Property
+	Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 	Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
 	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
 	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
@@ -944,42 +954,80 @@ end Property
 	Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 End Class
 
+Public Class IEPCWrapper
+	Implements IIEPCEngineeringInputData
+
+	Private _vehicle As Vehicle
+
+	Public Sub New(vehicle As Vehicle)
+		_vehicle = vehicle
+	End Sub
+
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+	get
+		Dim retVal As DataSource = New DataSource()
+		retVal.SourceType = DataSourceType.JSONFile
+		retVal.SourceFile = _vehicle.IEPCFile.FullPath
+		Return retVal
+	End Get
+	End Property
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
+	Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
+	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
+	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IIEPCDeclarationInputData.ElectricMachineType
+	Public ReadOnly Property R85RatedPower As Watt Implements IIEPCDeclarationInputData.R85RatedPower
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IIEPCDeclarationInputData.Inertia
+	Public ReadOnly Property DifferentialIncluded As Boolean Implements IIEPCDeclarationInputData.DifferentialIncluded
+	Public ReadOnly Property DesignTypeWheelMotor As Boolean Implements IIEPCDeclarationInputData.DesignTypeWheelMotor
+	Public ReadOnly Property NrOfDesignTypeWheelMotorMeasured As Integer? Implements IIEPCDeclarationInputData.NrOfDesignTypeWheelMotorMeasured
+	Public ReadOnly Property Gears As IList(Of IGearEntry) Implements IIEPCDeclarationInputData.Gears
+	Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IIEPCDeclarationInputData.VoltageLevels
+	Public ReadOnly Property DragCurves As IList(Of IDragCurve) Implements IIEPCDeclarationInputData.DragCurves
+	Public ReadOnly Property Conditioning As TableData Implements IIEPCDeclarationInputData.Conditioning
+	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IIEPCEngineeringInputData.OverloadRecoveryFactor
+End Class
+
 Public Class ElectricStorageSystemWrapper
-    Implements IElectricStorageSystemEngineeringInputData
+	Implements IElectricStorageSystemEngineeringInputData
 
-    Private _vehicle As Vehicle
+	Private _vehicle As Vehicle
 
-    Public Sub New(vehicle As Vehicle)
-        _vehicle = vehicle    
-    End Sub
+	Public Sub New(vehicle As Vehicle)
+		_vehicle = vehicle    
+	End Sub
 
-    Public ReadOnly Property ElectricStorageElements As IList(Of IElectricStorageDeclarationInputData) Implements IElectricStorageSystemDeclarationInputData.ElectricStorageElements
+	Public ReadOnly Property ElectricStorageElements As IList(Of IElectricStorageDeclarationInputData) Implements IElectricStorageSystemDeclarationInputData.ElectricStorageElements
 	get
 			return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).Cast(of IElectricStorageDeclarationInputData) .toList()
 	End Get
-    End Property
-    Public ReadOnly Property IElectricStorageSystemEngineeringInputData_ElectricStorageElements As IList(Of IElectricStorageEngineeringInputData) Implements IElectricStorageSystemEngineeringInputData.ElectricStorageElements
+	End Property
+	Public ReadOnly Property IElectricStorageSystemEngineeringInputData_ElectricStorageElements As IList(Of IElectricStorageEngineeringInputData) Implements IElectricStorageSystemEngineeringInputData.ElectricStorageElements
 	get
-	    return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).cast(of IElectricStorageEngineeringInputData).toList()
+		return _vehicle.ReessPacks.Select(Function(x) new ElectricStorageWrapper(x, GetPath(_vehicle.FilePath))).cast(of IElectricStorageEngineeringInputData).toList()
 	End Get
-    End Property
+	End Property
 End Class
 
 Public Class ElectricStorageWrapper
 	Implements IElectricStorageEngineeringInputData, IBatteryPackEngineeringInputData
 
-    Public Property BatteryFile As SubPath
+	Public Property BatteryFile As SubPath
 
-    Public Sub New(veh As Tuple(Of String,Integer,Integer), filePath As String)
+	Public Sub New(veh As Tuple(Of String,Integer,Integer), filePath As String)
 		count = veh.Item2
 		StringId = veh.Item3
-        BatteryFile = New SubPath
-        BatteryFile.Init(filePath, veh.Item1)
+		BatteryFile = New SubPath
+		BatteryFile.Init(filePath, veh.Item1)
 	End Sub
 
 
 
-    Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
+	Public ReadOnly Property REESSPack As IREESSPackInputData Implements IElectricStorageEngineeringInputData.REESSPack
 		Get
 			Return Me
 		End Get
@@ -988,9 +1036,9 @@ Public Class ElectricStorageWrapper
 	Public ReadOnly Property Count As Integer Implements IElectricStorageEngineeringInputData.Count
 		
 
-    Public ReadOnly Property StringId As Integer Implements IElectricStorageDeclarationInputData.StringId
+	Public ReadOnly Property StringId As Integer Implements IElectricStorageDeclarationInputData.StringId
 
-    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
 			Dim retVal As DataSource = New DataSource()
 			retVal.SourceType = DataSourceType.JSONFile
@@ -1031,50 +1079,63 @@ Public Class ElectricMachinesWrapper
 
 	Public ReadOnly Property Entries As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) Implements IElectricMachinesDeclarationInputData.Entries
 		Get
-			Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) = New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData)() {
-			New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
-					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
-                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
-				    .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
-                    .Position = Vehicle.ElectricMotorPosition, 
-                    .RatioADC = Vehicle.ElectricMotorRatio, 
-				    .RatioPerGear = vehicle.ElectricMotorPerGearRatios,
-                    .Count = Vehicle.ElectricMotorCount}})
+			Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData)) = New List(Of ElectricMachineEntry(Of IElectricMotorDeclarationInputData))
+			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
 
-			if (Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
 				retval.Add(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
-                              .ElectricMachine = new ElectricMachineWrapper(Vehicle.GenSetEMFile),
-                              .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Vehicle.GenSetMechLossMap.OriginalPath.ToDouble(), double.NaN), 
-                              .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Nothing,VectoCSVFile.Read(Vehicle.GenSetMechLossMap.FullPath)),
-                              .Position = PowertrainPosition.GEN, 
-                              .RatioADC = Vehicle.GenSetRatio, 
-                              .Count = Vehicle.GenSetCount})
+					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
+					.MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+					.MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
+					.Position = Vehicle.ElectricMotorPosition, 
+					.RatioADC = Vehicle.ElectricMotorRatio, 
+					.RatioPerGear = vehicle.ElectricMotorPerGearRatios,
+					.Count = Vehicle.ElectricMotorCount})
+			End If
+
+			if (Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse Vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
+				retval.Add(New ElectricMachineEntry(Of IElectricMotorDeclarationInputData) With {
+							  .ElectricMachine = new ElectricMachineWrapper(Vehicle.GenSetEMFile),
+							  .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Vehicle.GenSetMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+							  .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Nothing,VectoCSVFile.Read(Vehicle.GenSetMechLossMap.FullPath)),
+							  .Position = PowertrainPosition.GEN, 
+							  .RatioADC = Vehicle.GenSetRatio, 
+							  .Count = Vehicle.GenSetCount})
 			End If
 			Return retval
 		End Get
 	End Property
 	Public ReadOnly Property IElectricMachinesEngineeringInputData_Entries As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) Implements IElectricMachinesEngineeringInputData.Entries
 		Get
-		    Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) =  New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() {
-			New ElectricMachineEntry(Of IElectricMotorEngineeringInputData)() With {
-					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
-                    .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
-                    .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
-                    .Position = Vehicle.ElectricMotorPosition, 
-                    .RatioADC = Vehicle.ElectricMotorRatio, 
-				    .RatioPerGear = Vehicle.ElectricMotorPerGearRatios,
-                    .Count = Vehicle.ElectricMotorCount}})
+			Dim retval As IList(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData)) =  New List(Of ElectricMachineEntry(Of IElectricMotorEngineeringInputData))
+			
+			If (Vehicle.VehicleType = VectoSimulationJobType.BatteryElectricVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse 
+                Vehicle.VehicleType = VectoSimulationJobType.IHPC) Then 
 
-		    if (Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle) Then
-		        retval.Add(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData) With {
-                              .ElectricMachine = new ElectricMachineWrapper(Vehicle.GenSetEMFile),
-                              .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Vehicle.GenSetMechLossMap.OriginalPath.ToDouble(), double.NaN), 
-                              .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Nothing,VectoCSVFile.Read(Vehicle.GenSetMechLossMap.FullPath)),
-                              .Position = PowertrainPosition.GEN, 
-                              .RatioADC = Vehicle.GenSetRatio, 
-                              .Count = Vehicle.GenSetCount})
-		    End If
-		    Return retval
+				retval.Add(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData) With {
+					.ElectricMachine = new ElectricMachineWrapper(Vehicle.ElectricMotorFile),
+					.MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath), Vehicle.ElectricMotorMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+					.MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.ElectricMotorMechLossMap.OriginalPath) OrElse String.IsNullOrWhiteSpace(Vehicle.ElectricMotorMechLossMap.OriginalPath), Nothing, VectoCSVFile.Read(Vehicle.ElectricMotorMechLossMap.FullPath)),
+					.Position = Vehicle.ElectricMotorPosition, 
+					.RatioADC = Vehicle.ElectricMotorRatio, 
+					.RatioPerGear = Vehicle.ElectricMotorPerGearRatios,
+					.Count = Vehicle.ElectricMotorCount})
+			End If
+
+			if (Vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle  OrElse Vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
+				retval.Add(New ElectricMachineEntry(Of IElectricMotorEngineeringInputData) With {
+							  .ElectricMachine = new ElectricMachineWrapper(Vehicle.GenSetEMFile),
+							  .MechanicalTransmissionEfficiency = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Vehicle.GenSetMechLossMap.OriginalPath.ToDouble(), double.NaN), 
+							  .MechanicalTransmissionLossMap = If(IsNumeric(Vehicle.GenSetMechLossMap.OriginalPath), Nothing,VectoCSVFile.Read(Vehicle.GenSetMechLossMap.FullPath)),
+							  .Position = PowertrainPosition.GEN, 
+							  .RatioADC = Vehicle.GenSetRatio, 
+							  .Count = Vehicle.GenSetCount})
+			End If
+			Return retval
 		End Get
 	End Property
 
@@ -1082,36 +1143,36 @@ Public Class ElectricMachinesWrapper
 End Class
 
 Public Class ElectricMachineWrapper
-    Implements  IElectricMotorEngineeringInputData
+	Implements  IElectricMotorEngineeringInputData
 
-    Private EMFile As SubPath
+	Private EMFile As SubPath
 
-    Public Sub New(em As SubPath)
+	Public Sub New(em As SubPath)
 		EMFile = em
-    End Sub
+	End Sub
 
-    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-        Get
-            Return New DataSource() With {
-                                .SourceFile = EMFile.FullPath}
-        End Get
-    End Property
-    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
-    Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
-    Public ReadOnly Property Model As String Implements IComponentInputData.Model
-    Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
-    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
-    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
-    Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
-    Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+		Get
+			Return New DataSource() With {
+								.SourceFile = EMFile.FullPath}
+		End Get
+	End Property
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
+	Public ReadOnly Property [Date] As Date Implements IComponentInputData.[Date]
+	Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 
-    Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
-    Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
-    Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
-    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
-    Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
-    Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
-    Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
-    Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
-    Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
+	Public ReadOnly Property VoltageLevels As IList(Of IElectricMotorVoltageLevel) Implements IElectricMotorDeclarationInputData.VoltageLevels
+	Public ReadOnly Property ElectricMachineType As ElectricMachineType Implements IElectricMotorDeclarationInputData.ElectricMachineType
+	Public ReadOnly Property R85RatedPower As Watt Implements IElectricMotorDeclarationInputData.R85RatedPower
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IElectricMotorDeclarationInputData.Inertia
+	Public ReadOnly Property DcDcConverterIncluded As Boolean Implements IElectricMotorDeclarationInputData.DcDcConverterIncluded
+	Public ReadOnly Property IHPCType As String Implements IElectricMotorDeclarationInputData.IHPCType
+	Public ReadOnly Property DragCurve As TableData Implements IElectricMotorDeclarationInputData.DragCurve
+	Public ReadOnly Property Conditioning As TableData Implements IElectricMotorDeclarationInputData.Conditioning
+	Public ReadOnly Property OverloadRecoveryFactor As Double Implements IElectricMotorEngineeringInputData.OverloadRecoveryFactor
 End Class

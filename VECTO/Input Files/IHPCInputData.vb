@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -17,16 +18,15 @@ Public Class IHPCInputData
     Private _overloadRecoveryFactor As Double
     private _filePath As String
 
-    Public Sub New ()
+    Public Sub New (file As String)
         _voltageLevels = New List(Of IElectricMotorVoltageLevel)()
+        _filePath = file
     End Sub
 
-    Public Function SaveFile(filePath As String) As Boolean
-        _filePath = filePath
-
+    Public Function SaveFile() As Boolean
         Try
             Dim writer = New JSONFileWriter()
-            writer.SaveIHPC(Me, filePath, Cfg.DeclMode)
+            writer.SaveIHPC(Me, _filePath, Cfg.DeclMode)
         Catch ex As Exception
             MsgBox("Failed to write IHPC file: " + ex.Message)
             Return False
@@ -39,10 +39,12 @@ Public Class IHPCInputData
                                 thermalOverloadRecoverFactor As String )
         _model = model
         _inertia = inertia.ToDouble().SI(Of KilogramSquareMeter)
-        If Not File.Exists(dragCurveFilePath) Then 
+        Dim tmp as SubPath = new SubPath()
+        tmp.Init(GetPath(_filePath), dragCurveFilePath)
+        If Not File.Exists(tmp.FullPath) Then 
             Throw New VectoException("Drag Curve is missing or invalid")
         Else
-            _dragCurve = VectoCSVFile.Read(dragCurveFilePath)
+            _dragCurve = VectoCSVFile.Read(tmp.FullPath)
         End If
 
         _overloadRecoveryFactor = thermalOverloadRecoverFactor.ToDouble()
@@ -60,10 +62,12 @@ Public Class IHPCInputData
         level.OverloadTime = overloadTime.ToDouble().SI(Of Second)
         level.OverloadTorque = overloadTorque.ToDouble().SI(Of NewtonMeter)
         level.OverloadTestSpeed = overloadTorqueSpeed.ToDouble().RPMtoRad()
-        If Not File.Exists(fullLoadCurve) Then 
+        Dim tmp as SubPath = new SubPath()
+        tmp.Init(GetPath(_filePath), fullLoadCurve)
+        If Not File.Exists(tmp.FullPath) Then 
             Throw New VectoException("Full-Load Curve is missing or invalid")
         Else
-            level.FullLoadCurve = VectoCSVFile.Read(fullLoadCurve)
+            level.FullLoadCurve = VectoCSVFile.Read(tmp.FullPath)
         End If
         level.PowerMap = GetPowerMap(powerMap)
         
@@ -77,11 +81,12 @@ Public Class IHPCInputData
         For Each entry As ListViewItem In powerMap.Items
             Dim currentEntry = New JSONElectricMotorPowerMap
             currentEntry.Gear = entry.SubItems(0).Text.ToInt()
-            
-            If Not File.Exists(entry.SubItems(1).Text) Then
+            Dim tmp as SubPath = new SubPath()
+            tmp.Init(GetPath(_filePath), entry.SubItems(1).Text)
+            If Not File.Exists(tmp.FullPath) Then
                 Throw New VectoException("Power Map is missing or invalid")
             Else 
-                currentEntry.PowerMap = VectoCSVFile.Read(entry.SubItems(1).Text)
+                currentEntry.PowerMap = VectoCSVFile.Read(tmp.FullPath)
             End If
             powerMaps.Add(currentEntry)
         Next

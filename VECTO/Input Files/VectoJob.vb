@@ -132,8 +132,15 @@ Public Class VectoJob
     End Sub
 
     Public Function SaveFile() As Boolean
+        dim emPos As PowertrainPosition? = Nothing
+        if (IEngineeringJobInputData_Vehicle?.VehicleType <> VectoSimulationJobType.ConventionalVehicle) then
+            if (IEngineeringJobInputData_Vehicle.VehicleType <> VectoSimulationJobType.IEPC_E) Then
+                emPos =  IEngineeringJobInputData_Vehicle?.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position
+            End If
+        end if
+
         Dim validationResults As IList(Of ValidationResult) =
-                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), JobType, IEngineeringJobInputData_Vehicle?.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position, Nothing, False)
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), JobType, emPos, Nothing, False)
 
         If validationResults.Count > 0 Then
             Dim messages As IEnumerable(Of String) =
@@ -521,7 +528,7 @@ Public Class VectoJob
         If vectoJob.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle) _
            AndAlso (vehicleInputData.Components.ElectricMachines Is Nothing OrElse vehicleInputData.Components.ElectricMachines.Entries.Count = 0) Then _
             result.Add(New ValidationResult("Electric machine is missing in vehicle"))
-        If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle AndAlso engineInputData Is Nothing Then _
+        If Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E) AndAlso engineInputData Is Nothing Then _
             result.Add(New ValidationResult("Engine File is missing or invalid"))
         If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
              AndAlso gearboxInputData Is Nothing Then _
@@ -557,7 +564,7 @@ Public Class VectoJob
                 If vehicleInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
                 End If
-                If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle AndAlso engineInputData.SavedInDeclarationMode Then
+                If Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E) AndAlso engineInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Engine File is not in Engineering Mode"))
                 End If
                 If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle _ 
@@ -578,8 +585,13 @@ Public Class VectoJob
                 End If
             End If
 
-
-            result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), vehicleInputData.VehicleType, vehicleInputData.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position, If(jobData.GearboxData?.Type, GearboxType.NoGearbox), False)
+            dim emPos As PowertrainPosition? = Nothing
+            if (vehicleInputData?.VehicleType <> VectoSimulationJobType.ConventionalVehicle) then
+                if (vehicleInputData.VehicleType <> VectoSimulationJobType.IEPC_E) Then
+                    emPos =  vehicleInputData?.Components.ElectricMachines?.Entries.FirstOrDefault()?.Position
+                End If
+            end if
+            result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), vehicleInputData.VehicleType, empos, If(jobData.GearboxData?.Type, GearboxType.NoGearbox), False)
             If result.Any() Then
                 Return _
                     New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())

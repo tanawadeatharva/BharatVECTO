@@ -11,7 +11,7 @@ The electric motor file defines all parameters relevant for the electric machine
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
 
-VECTO automatically uses relative paths if the input file (e.g. elctric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. elctric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
 
 
 ### Main Parameters

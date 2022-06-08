@@ -45,8 +45,9 @@ Partial Class IHPCPowerMapInputDialog
         Me.FlowLayoutPanel1.Controls.Add(Me.TableLayoutPanel5)
         Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.FlowLayoutPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(508, 45)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(762, 69)
         Me.FlowLayoutPanel1.TabIndex = 11
         '
         'TableLayoutPanel4
@@ -57,29 +58,32 @@ Partial Class IHPCPowerMapInputDialog
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.2!))
         Me.TableLayoutPanel4.Controls.Add(Me.tbGear, 1, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label3, 0, 0)
-        Me.TableLayoutPanel4.Location = New System.Drawing.Point(6, 8)
-        Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(6, 3, 3, 3)
+        Me.TableLayoutPanel4.Location = New System.Drawing.Point(9, 13)
+        Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(9, 5, 4, 5)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
         Me.TableLayoutPanel4.RowCount = 1
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(128, 28)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(192, 43)
         Me.TableLayoutPanel4.TabIndex = 10
         '
         'tbGear
         '
         Me.tbGear.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.tbGear.Location = New System.Drawing.Point(46, 4)
+        Me.tbGear.Location = New System.Drawing.Point(70, 8)
+        Me.tbGear.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbGear.Name = "tbGear"
-        Me.tbGear.Size = New System.Drawing.Size(77, 20)
+        Me.tbGear.ReadOnly = true
+        Me.tbGear.Size = New System.Drawing.Size(114, 26)
         Me.tbGear.TabIndex = 1
         '
         'Label3
         '
         Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(5, 7)
+        Me.Label3.Location = New System.Drawing.Point(8, 11)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(30, 13)
+        Me.Label3.Size = New System.Drawing.Size(45, 20)
         Me.Label3.TabIndex = 9
         Me.Label3.Text = "Gear"
         '
@@ -87,33 +91,36 @@ Partial Class IHPCPowerMapInputDialog
         '
         Me.TableLayoutPanel5.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TableLayoutPanel5.ColumnCount = 2
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 316!))
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 474!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60!))
         Me.TableLayoutPanel5.Controls.Add(Me.btAddFilePath, 1, 0)
         Me.TableLayoutPanel5.Controls.Add(Me.tbInputFile, 0, 0)
-        Me.TableLayoutPanel5.Location = New System.Drawing.Point(140, 3)
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(209, 5)
+        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(356, 39)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(534, 60)
         Me.TableLayoutPanel5.TabIndex = 11
         '
         'btAddFilePath
         '
         Me.btAddFilePath.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.btAddFilePath.Image = CType(resources.GetObject("btAddFilePath.Image"),System.Drawing.Image)
-        Me.btAddFilePath.Location = New System.Drawing.Point(324, 6)
+        Me.btAddFilePath.Location = New System.Drawing.Point(486, 10)
+        Me.btAddFilePath.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btAddFilePath.Name = "btAddFilePath"
-        Me.btAddFilePath.Size = New System.Drawing.Size(24, 26)
+        Me.btAddFilePath.Size = New System.Drawing.Size(36, 40)
         Me.btAddFilePath.TabIndex = 13
         Me.btAddFilePath.UseVisualStyleBackColor = true
         '
         'tbInputFile
         '
         Me.tbInputFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbInputFile.Location = New System.Drawing.Point(3, 9)
+        Me.tbInputFile.Location = New System.Drawing.Point(4, 17)
+        Me.tbInputFile.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.tbInputFile.Name = "tbInputFile"
-        Me.tbInputFile.Size = New System.Drawing.Size(310, 20)
+        Me.tbInputFile.Size = New System.Drawing.Size(466, 26)
         Me.tbInputFile.TabIndex = 12
         '
         'TableLayoutPanel1
@@ -123,19 +130,21 @@ Partial Class IHPCPowerMapInputDialog
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50!))
         Me.TableLayoutPanel1.Controls.Add(Me.btAddInput, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.btCancel, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(348, 51)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(522, 78)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(148, 29)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(222, 45)
         Me.TableLayoutPanel1.TabIndex = 12
         '
         'btAddInput
         '
         Me.btAddInput.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.btAddInput.Location = New System.Drawing.Point(3, 3)
+        Me.btAddInput.Location = New System.Drawing.Point(5, 5)
+        Me.btAddInput.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btAddInput.Name = "btAddInput"
-        Me.btAddInput.Size = New System.Drawing.Size(67, 23)
+        Me.btAddInput.Size = New System.Drawing.Size(100, 35)
         Me.btAddInput.TabIndex = 14
         Me.btAddInput.Text = "OK"
         '
@@ -143,20 +152,22 @@ Partial Class IHPCPowerMapInputDialog
         '
         Me.btCancel.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btCancel.Location = New System.Drawing.Point(77, 3)
+        Me.btCancel.Location = New System.Drawing.Point(116, 5)
+        Me.btCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btCancel.Name = "btCancel"
-        Me.btCancel.Size = New System.Drawing.Size(67, 23)
+        Me.btCancel.Size = New System.Drawing.Size(100, 35)
         Me.btCancel.TabIndex = 15
         Me.btCancel.Text = "Cancel"
         '
         'IHPCPowerMapInputDialog
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9!, 20!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(508, 85)
+        Me.ClientSize = New System.Drawing.Size(762, 131)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.FlowLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.MaximizeBox = false
         Me.MinimizeBox = false
         Me.Name = "IHPCPowerMapInputDialog"

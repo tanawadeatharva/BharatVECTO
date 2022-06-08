@@ -476,7 +476,7 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
 			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbENG.Text = ""
@@ -491,7 +491,7 @@ Public Class VectoJobForm
 		Else
 			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
 		End If
-		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle) Then
+		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC) Then
 			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
 		End If
 
@@ -538,7 +538,11 @@ Public Class VectoJobForm
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
                 Dim lv0 As ListViewItem = New ListViewItem
-                lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                if (sb.CycleData.SourceType = DataSourceType.Embedded) Then
+                    lv0.Text = sb.Name
+                else 
+                    lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                End If
                 LvCycles.Items.Add(lv0)
             Next
         Catch ex As Exception
@@ -1059,11 +1063,12 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IHPC
-                pnEngine.Enabled = False
+                pnEngine.Enabled = True
                 pnGearbox.Enabled = True
-                GrAuxMech.Enabled = False
+                GrAuxMech.Enabled = True
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
             Case VectoSimulationJobType.IEPC_E
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
@@ -1071,7 +1076,7 @@ Public Class VectoJobForm
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.IEPC_S
-                pnEngine.Enabled = False
+                pnEngine.Enabled = True
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True

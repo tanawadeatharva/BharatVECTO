@@ -13,7 +13,7 @@
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
     "MassMax": 11.99,
-    "CdxA": 4.83,
+    "CdA": 4.83,
     "rdyn": 421.0,
     "PowertrainConfiguration": "BatteryElectric",
     "CdCorrMode": "CdofVdecl",
