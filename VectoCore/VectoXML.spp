@@ -82,6 +82,7 @@
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\Gearbox_IHPC.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\IEPC_1.xml" HomeFolder="Yes"/>
 			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\IEPC_StdValues.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ComponentData\Tyre.xml" HomeFolder="Yes"/>
 		</Folder>
 		<Folder FolderName="Schema 2.4_Jobs">
 			<Folder FolderName="HeavyLorry">
