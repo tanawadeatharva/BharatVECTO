@@ -11,6 +11,8 @@
 1-user-interface/H1_HybridStrategyParams-Editor.md
 1-user-interface/L_ElectricMotor.md
 1-user-interface/M_BatteryPackEditor.md
+1-user-interface/N_IEPC.md
+1-user-interface/O_IHPC.md
 1-user-interface/I_Graph.md
 4-command-line-arguments/cmd.md
 2-calculation-modes/calculation-modes.md
@@ -47,6 +49,7 @@
 3-simulation-models/PTO.md
 3-simulation-models/Electric_Motor.md
 3-simulation-models/IEPC.md
+3-simulation-models/IHPC.md
 3-simulation-models/Electric_Storage.md
 3-simulation-models/HybridControlStrategy.md
 5-input-and-output-files/input-output.md

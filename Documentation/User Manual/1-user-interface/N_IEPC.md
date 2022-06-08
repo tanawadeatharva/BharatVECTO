@@ -1,11 +1,15 @@
-## Electric Motor Editor
+## IEPC Editor
 
-![](pics/VECTO_ElectricMotor.png)
+![](pics/IEPC_Form.png)
 
 
 ### Description
 
-The electric motor file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
+Integrated electric powertrain component (IEPC) means a combined system of an electric machine system together with the funcitonality of either a single- or multi-speed gearbox or a differential or both. 
+
+An IEPC can be of design-type wheel motor which means that the output shaft (or two output shafts) are directly connected to the wheel hub(s). The IEPC component file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
+
+An IEPC may have several shiftable transmission steps or only a single gear stage between the output shaft and the electric machine. The electric power consumption map has to be provided for every gear. 
 
 ### Relative File Paths
 
@@ -21,6 +25,9 @@ Make and Model
 
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
+
+Gears
+:   Gear ratios of the transmission steps of the IEPC
 
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously
@@ -41,26 +48,20 @@ Thermal Overload Recovery Factor
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
 Drag Torque Curve
-:   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd))
+:   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [IEPO Drag Curve File (.viepcd)](#iepc-drag-curve-file-.viepcd))
 
 Max. Drive and Max. Generation Torque Curve
-:   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The max drive and max generation torque have to be provided for two different voltage levels.
+:   Torque over engine speed the electric motor can apply on its output shaft. (see [IEPC Max Torque File (.vemp)](#iepc-max-torque-file-.viepcp)). The max drive and max generation torque have to be provided for two different voltage levels.
 
 Electric Power Consumption Map
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels.
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [IEPC Map (.viepco)](#iepc-map-.viepco)). The power map has to be provided for two different voltage levels and all gears.
 
 Voltage Level Low/High
 :    Applicable voltage level for the electric power consumption map and max drive/generation torque curve
 
 
 
-### Chart Area
-
-The Chart Area displays the electric machine's max. drive curve and max. generation curve (blue), the drag curve (green) and the entries provided in the electric power consumption map (red).
-
-
 ### Controls
-
 
 
 ![](pics/blue-document-icon.png) New file

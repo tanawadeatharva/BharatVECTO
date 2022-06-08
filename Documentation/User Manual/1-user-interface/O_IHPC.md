@@ -1,11 +1,13 @@
-## Electric Motor Editor
+## IHPC Editor
 
-![](pics/VECTO_ElectricMotor.png)
+![](pics/IHPC_Form.png)
 
 
 ### Description
 
-The electric motor file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
+Integrated hybrid electric vehicle powertrain component (IHPC) means a combined system of multiple electric machine systems together with the functionality of a multi-speed gearbox.
+
+For an IHPC the 
 
 ### Relative File Paths
 
@@ -21,6 +23,9 @@ Make and Model
 
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
+
+Gears
+:   Gear ratios of the transmission steps of the IEPC
 
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously
@@ -47,20 +52,14 @@ Max. Drive and Max. Generation Torque Curve
 :   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The max drive and max generation torque have to be provided for two different voltage levels.
 
 Electric Power Consumption Map
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels.
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.viepco)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels and all gears.
 
 Voltage Level Low/High
 :    Applicable voltage level for the electric power consumption map and max drive/generation torque curve
 
 
 
-### Chart Area
-
-The Chart Area displays the electric machine's max. drive curve and max. generation curve (blue), the drag curve (green) and the entries provided in the electric power consumption map (red).
-
-
 ### Controls
-
 
 
 ![](pics/blue-document-icon.png) New file
