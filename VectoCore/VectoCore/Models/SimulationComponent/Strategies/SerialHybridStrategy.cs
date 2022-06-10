@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var minGensetPower = emDtData.EfficiencyData.VoltageLevels.First().FullLoadCurve.MaxPower * StrategyParameters.GensetMinOptPowerFactor;
 
 			GenSetCharacteristics = new GenSetCharacteristics(minGensetPower);
-
+			runData.GenSet = new VectoRunData.GenSetData() { GenSetCharacteristics = GenSetCharacteristics };
 
 			// create testcontainer
 			var modData = new ModalDataContainer(runData, null, null);

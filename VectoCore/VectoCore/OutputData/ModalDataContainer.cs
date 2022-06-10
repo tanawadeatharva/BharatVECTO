@@ -165,7 +165,11 @@ namespace TUGraz.VectoCore.OutputData
 				return;
 			}
 
-			PostProcessingCorrection = new ModalDataPostprocessingCorrection();
+			var isSerialHybrid = runData.JobType == VectoSimulationJobType.IEPC_S ||
+								runData.JobType == VectoSimulationJobType.SerialHybridVehicle;
+			PostProcessingCorrection = isSerialHybrid
+				? new SerialHybridModalDataPostprocessingCorrection()
+				: new ModalDataPostprocessingCorrection();
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
 			var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();

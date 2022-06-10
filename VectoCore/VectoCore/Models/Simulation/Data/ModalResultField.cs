@@ -480,6 +480,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	{
 		private static ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute> _attributeDictionary =
 			new ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute>();
+
 		public static string GetName(this ModalResultField field)
 		{
 			return GetAttribute(field).Name ?? field.ToString();
