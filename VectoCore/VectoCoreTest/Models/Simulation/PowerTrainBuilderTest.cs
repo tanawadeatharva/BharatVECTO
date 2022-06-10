@@ -78,10 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider);
 			var runData = reader.NextRun().First();
 
-			var writer = new MockModalDataContainer();
-			var builder = new PowertrainBuilder(writer);
-
-			var powerTrain = builder.Build(runData) as VehicleContainer;
+			var powerTrain = PowertrainBuilder.Build(runData, new MockModalDataContainer()) as VehicleContainer;
 
 			Assert.NotNull(powerTrain);
 			Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
@@ -108,10 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (!shouldFail) {
 				var runData = reader.NextRun().First();
 
-				var writer = new MockModalDataContainer();
-				var builder = new PowertrainBuilder(writer);
-
-				var powerTrain = builder.Build(runData) as VehicleContainer;
+				var powerTrain = PowertrainBuilder.Build(runData, new MockModalDataContainer()) as VehicleContainer;
 
 				Assert.NotNull(powerTrain);
 				Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
