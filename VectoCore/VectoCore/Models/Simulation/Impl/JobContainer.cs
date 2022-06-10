@@ -349,8 +349,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_runsRwLock.EnterWriteLock();
 				//_unfinishedRuns.Remove(runId);
 				_unfinishedRuns.TryRemove(runId, out var tmpVal);
-				if (AllCompletedUnsafe())
-				{
+				if (AllCompletedUnsafe()) {
 					_sumWriter.Finish();
 				}
 			} finally {

@@ -159,15 +159,14 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults(false);
 			CurrentRow = Data.NewRow();
 
+			PostProcessingCorrection = GetModDataPostprocessor(runData);
+
 			if (runData.JobType == VectoSimulationJobType.BatteryElectricVehicle ||
 				runData.JobType == VectoSimulationJobType.IEPC_E) {
-				PostProcessingCorrection = new BatteryElectricPostprocessingCorrection();
 				return;
 			}
-
-			PostProcessingCorrection = new ModalDataPostprocessingCorrection();
-
-			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
+			
+            var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
 			var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
 			foreach (var fuel in fuels) {
 				var entry = fuel.FuelData;
@@ -197,6 +196,20 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 
+		}
+
+		protected IModalDataPostProcessor GetModDataPostprocessor(VectoRunData runData)
+		{
+			switch (runData.JobType) {
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					return new BatteryElectricPostprocessingCorrection();
+				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return new SerialHybridModalDataPostprocessingCorrection();
+				default:
+					return new ModalDataPostprocessingCorrection();
+			}
 		}
 
 		public int JobRunId => _runData.JobRunId;

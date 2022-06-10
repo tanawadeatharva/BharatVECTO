@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
@@ -157,6 +158,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[JsonIgnore]
 		public IMultistageVIFInputData MultistageVIFInputData { get; internal set; }
 
+		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
+		public GenSetData GenSet { get; set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming
@@ -173,6 +177,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 			public MissionType? MissionType;
+		}
+
+		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
+		public class GenSetData
+		{
+			public GenSetCharacteristics GenSetCharacteristics { get; set; }
 		}
 
 		public static ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
