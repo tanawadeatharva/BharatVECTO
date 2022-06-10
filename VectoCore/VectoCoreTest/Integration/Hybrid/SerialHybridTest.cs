@@ -364,7 +364,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[
 			TestCase(30, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.22, level")
+			TestCase(30, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.22, level"),
+			TestCase(80, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 80km/h SoC: 0.22, level"),
 		]
 		public void S4HybridDriveOff(double vmax, double initialSoC, double slope)
 		{
