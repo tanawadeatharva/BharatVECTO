@@ -24,7 +24,7 @@ Make and Model
 :   Free text defining the gearbox model, type, etc.
 
 Inertia \[kgm²\]
-:   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
+:   Rotational inertia of the electric machine at the output shaft of the EM. (Engineering mode only)
 
 Gears
 :   Gear ratios of the transmission steps of the IEPC
@@ -48,7 +48,7 @@ Thermal Overload Recovery Factor
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
 Drag Torque Curve
-:   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [IEPO Drag Curve File (.viepcd)](#iepc-drag-curve-file-.viepcd))
+:   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [IEPC Drag Curve File (.viepcd)](#iepc-drag-curve-file-.viepcd))
 
 Max. Drive and Max. Generation Torque Curve
 :   Torque over engine speed the electric motor can apply on its output shaft. (see [IEPC Max Torque File (.vemp)](#iepc-max-torque-file-.viepcp)). The max drive and max generation torque have to be provided for two different voltage levels.
