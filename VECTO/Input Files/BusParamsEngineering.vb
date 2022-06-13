@@ -72,7 +72,7 @@ Public Class BusAuxEngineeringParams
             writer.SaveBusAuxEngineeringParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Failed to write Strategy Parameters file: " + ex.Message)
+            MsgBox("Failed to write auxiliary parameters file: " + ex.Message)
             Return False
         End Try
         Return True

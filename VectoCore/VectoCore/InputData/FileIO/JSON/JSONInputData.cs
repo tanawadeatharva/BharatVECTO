@@ -1153,7 +1153,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
-				AxleGear = ReadGearbox() as IAxleGearInputData;
+				//AxleGear = ReadGearbox() as IAxleGearInputData;
+				Gearbox = ReadGearbox();  // gearbox is not used, but required by GUI
+				AxleGear = Gearbox as IAxleGearInputData;
 			}
 		}
 

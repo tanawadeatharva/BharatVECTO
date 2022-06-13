@@ -89,7 +89,7 @@ Public Class GearboxForm
         Else
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC) _
+                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         End If
         DeclInit()

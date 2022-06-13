@@ -316,6 +316,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
+			if (retVal.Type == GearboxType.IEPC) {
+				if (gearbox.Gears.Count > 0) {
+					throw new VectoSimulationException("No gears are allowed for IEPC gearbox.");
+				}
+
+				retVal.Inertia = 0.SI<KilogramSquareMeter>();
+				retVal.TractionInterruption = 0.SI<Second>();
+				return retVal;
+			}
+
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
