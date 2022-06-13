@@ -57,6 +57,7 @@ namespace TUGraz.VectoCommon.Models
 				case GearboxType.ATSerial:     return "Automatic Transmission - Serial (AT-S)"; //todo mk20211210 shouldn't we call it APT-S?
 				case GearboxType.ATPowerSplit: return "Automatic Transmission - PowerSplit (AT-P)";//todo mk20211210 shouldn't we call it APT-P?
 				case GearboxType.APTN:         return "Automatic Transmission - No Torque Converter (APT-N)";
+				case GearboxType.IHPC:         return "IHPC Transmission";
 				case GearboxType.DrivingCycle: return "Gear from Driving Cycle";
 				default: throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}

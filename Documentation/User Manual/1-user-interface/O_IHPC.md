@@ -7,7 +7,6 @@
 
 Integrated hybrid electric vehicle powertrain component (IHPC) means a combined system of multiple electric machine systems together with the functionality of a multi-speed gearbox.
 
-For an IHPC the 
 
 ### Relative File Paths
 
@@ -22,7 +21,7 @@ Make and Model
 :   Free text defining the gearbox model, type, etc.
 
 Inertia \[kgm²\]
-:   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
+:   Rotational inertia of the electric machine defined at the output shaft of the EM. (Engineering mode only)
 
 Gears
 :   Gear ratios of the transmission steps of the IEPC

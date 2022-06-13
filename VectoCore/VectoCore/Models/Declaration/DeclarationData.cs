@@ -577,6 +577,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				switch (type) {
 					case GearboxType.AMT:
 					case GearboxType.APTN:
+					case GearboxType.IHPC:
 						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
 						return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT:

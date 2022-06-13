@@ -405,7 +405,7 @@ Public Class MainForm
                         GearboxForm.BringToFront()
                     End If
                     Try
-                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
+                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle)
                     Catch ex As Exception
                         MsgBox("Failed to open Gearbox File: " + ex.Message)
                     End Try

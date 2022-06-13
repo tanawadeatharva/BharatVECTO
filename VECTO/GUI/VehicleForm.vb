@@ -722,7 +722,7 @@ Public Class VehicleForm
 				tcVehicleComponents.TabPages.Remove(tpIEPC)
 
 				gbEMTorqueLimits.Enabled = False
-				gbPropulsionTorque.Enabled = False
+				gbPropulsionTorque.Enabled = True
 
 			    'PTO
 			    gbPTO.Enabled = False
