@@ -330,19 +330,22 @@ Public Class VectoJobForm
             GearboxForm.BringToFront()
         End If
         Dim vehicleType As VehicleCategory
+        Dim jobType as VectoSimulationJobType
         Try
             If Not Trim(f) = "" Then
-                Dim vehInput As IVehicleDeclarationInputData =
+                Dim vehInput As IVehicleEngineeringInputData =
                         CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
                             IEngineeringInputDataProvider).JobInputData.Vehicle
                 vehicleType = vehInput.VehicleCategory
+                jobType = vehInput.VehicleType
             End If
 
         Catch ex As Exception
             vehicleType = VehicleCategory.RigidTruck
+            jobType = VectoSimulationJobType.ConventionalVehicle
         End Try
         Try
-            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
+            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType, jobType)
         Catch ex As Exception
             MsgBox("Failed to open Gearbox File: " + ex.Message)
         End Try
