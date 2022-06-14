@@ -272,6 +272,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											(DataBus.Brakes.BrakePower.IsGreater(0) || inTorque.IsSmaller(0));
 			var vehicleSpeedBelowThreshold =
 				DataBus.VehicleInfo.VehicleSpeed.IsSmaller(ModelData.DisengageWhenHaltingSpeed);
+			if (!dryRun) {
+				CurrentState.DrivingBehavior = DataBus.DriverInfo.DriverBehavior;
+			}
+			
 			if (halted || (driverDeceleratingNegTorque && vehicleSpeedBelowThreshold)) {
 				EngageTime = VectoMath.Max(EngageTime, absTime + dt);
 				_strategy?.Disengage(absTime, dt, outTorque, outAngularVelocity);
@@ -282,10 +286,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//}
 
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, inTorque, dryRun);
-			}
-
-			if (!dryRun) {
-				CurrentState.DrivingBehavior = DataBus.DriverInfo.DriverBehavior;
 			}
 
 			if (GearEngaged(absTime)) {
