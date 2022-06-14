@@ -1190,7 +1190,11 @@ Public Class VectoJobForm
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse  JobType = VectoSimulationJobType.IEPC_S) Then
+            TbGbxTxt.Text = $"IEPC {gearbox.Model}"
+        else
+            TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        End If
 
 	    If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count
