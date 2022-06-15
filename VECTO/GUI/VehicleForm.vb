@@ -698,6 +698,12 @@ Public Class VehicleForm
 			    gbEMTorqueLimits.Enabled = False
 			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
 
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
 				'PTO
 				gbPTO.Enabled = False
 				pnPTO.Enabled = false
@@ -710,6 +716,12 @@ Public Class VehicleForm
 			    gbEMTorqueLimits.Enabled = False
 			    tcVehicleComponents.TabPages.Remove(tpTorqueLimits)
 				
+				'ADAS ---------------------------------------------------------------------
+				cbEngineStopStart.Visible = False
+				cbAtEcoRollReleaseLockupClutch.Visible = False
+				pnEcoRoll.Visible = False
+				cbEcoRoll.SelectedIndex = 0
+
 			    'PTO
 				gbPTO.Enabled = False
 				pnPTO.Enabled = false

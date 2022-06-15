@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl{
 
 			container[ModalResultField.P_IEPC_el_, Position] = CurrentState.ElectricPowerToBattery;
 
-			container[ModalResultField.P_IEPC_electricMotorLoss_, Position] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed - CurrentState.ElectricPowerToBattery;
+			container[ModalResultField.P_IEPC_electricMotorLoss_, Position] = (CurrentState.DrivetrainInTorque - CurrentState.DrivetrainOutTorque) * avgDTSpeed - CurrentState.ElectricPowerToBattery;
 
 			//container[ModalResultField.P_EM_TransmissionLoss_, Position] = CurrentState.TransmissionTorqueLoss * avgDTSpeed;
 
