@@ -484,7 +484,7 @@ Public Class VectoJobForm
 		Else
 			TbENG.Text = ""
 		End If
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle orelse inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
 			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbGBX.Text = ""

@@ -114,13 +114,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				// create a dummy powertrain for pre-processing and estimations
 				var testContainer = new SimplePowertrainContainer(data);
-				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle && data.JobType != VectoSimulationJobType.SerialHybridVehicle && 
-					data.JobType != VectoSimulationJobType.IEPC_E && data.JobType != VectoSimulationJobType.IEPC_S)
-					PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
-				else {
-					PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
-				}
 
+				switch (data.JobType) {
+					case VectoSimulationJobType.BatteryElectricVehicle:
+					case VectoSimulationJobType.SerialHybridVehicle:
+					case VectoSimulationJobType.IEPC_E:
+					case VectoSimulationJobType.IEPC_S:
+						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
+						break;
+					case VectoSimulationJobType.IHPC:
+					case VectoSimulationJobType.ParallelHybridVehicle:
+						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
+						break;
+					case VectoSimulationJobType.ConventionalVehicle:
+						PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(data.JobType));
+				}
+				
 				container.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
 		}
