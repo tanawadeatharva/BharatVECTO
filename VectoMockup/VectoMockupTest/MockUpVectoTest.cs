@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -103,15 +104,15 @@ namespace VectoMockupTest
 		private const string TestDataDir = "TestData\\";
 
 		private const string CompletedDiesel = TestDataDir + "Integration\\Multistage\\newVifCompletedConventional.vecto";
-		private const string CompletedExempted = TestDataDir + "Multistage\\newVifExempted.vecto";
-		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "Multistage\\newVifExempted-noTPMLM.vecto";
-		private string CompletedWithoutADAS = TestDataDir + "Multistage\\newVifCompletedConventional-noADAS.vecto";
+		private const string CompletedExempted = TestDataDir + "Integration\\Multistage\\newVifExempted.vecto";
+		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "Integration\\Multistage\\newVifExempted-noTPMLM.vecto";
+		private string CompletedWithoutADAS = TestDataDir + "Integration\\Multistage\\newVifCompletedConventional-noADAS.vecto";
 
 
 
 
-		private const string InterimExempted = TestDataDir + "newVifExemptedIncomplete.vecto";
-		private const string InterimDiesel = TestDataDir + "newVifInterimDiesel.vecto";
+		private const string InterimExempted = TestDataDir + "Integration\\Multistage\\newVifExemptedIncomplete.vecto";
+		private const string InterimDiesel = TestDataDir + "Integration\\Multistage\\newVifInterimDiesel.vecto";
 
 
 		#endregion
@@ -211,7 +212,7 @@ namespace VectoMockupTest
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif:false, checkVif:true);
+			CheckFileExists(fileWriter, checkCif:false, checkPrimaryReport:true);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XsdPath), "VIF invalid" );
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XsdPath), "MRF invalid");
 		}
@@ -276,6 +277,23 @@ namespace VectoMockupTest
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
 			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+		}
+
+		[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
+		public void PrimaryAndInterim(string fileName)
+		{
+
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var input = JSONInputDataFactory.ReadJsonJob(fileName);
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+			CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
 
 
 
@@ -286,22 +304,43 @@ namespace VectoMockupTest
 
 
 
-		private static void CheckFileExists(FileOutputWriter fileWriter, bool checkMrf = true, bool checkCif = true, bool checkVif = false)
+		private static void CheckFileExists(FileOutputWriter fileWriter, 
+			bool checkMrf = true,
+			bool checkCif = true, 
+			bool checkVif = false, 
+			bool checkPrimaryMrf = false,
+			bool checkPrimaryReport = false)
 		{
 			if (checkCif && !File.Exists(fileWriter.XMLCustomerReportName)) {
-				TestContext.WriteLine(fileWriter.XMLCustomerReportName);
+				TestContext.WriteLine(fileWriter.XMLCustomerReportName + "Missing\n");
 				Assert.Fail();
 			}
 			if (checkMrf && !File.Exists(fileWriter.XMLFullReportName))
 			{
-				TestContext.WriteLine(fileWriter.XMLFullReportName);
+				TestContext.WriteLine(fileWriter.XMLFullReportName + "Missing\n");
 				Assert.Fail();
 			}
 
-			if (checkVif && !File.Exists(fileWriter.XMLPrimaryVehicleReportName)) {
-				TestContext.WriteLine(fileWriter.XMLPrimaryVehicleReportName);
+			var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
+			if (checkPrimaryMrf && !File.Exists(primaryMrfPath)) {
+				TestContext.WriteLine(primaryMrfPath + "Missing\n");
 				Assert.Fail();
 			}
+
+
+			if (checkPrimaryReport && !File.Exists(fileWriter.XMLPrimaryVehicleReportName))
+			{
+				TestContext.WriteLine(fileWriter.XMLPrimaryVehicleReportName + "Missing\n");
+				Assert.Fail();
+			}
+
+
+			if (checkVif && !File.Exists(fileWriter.XMLMultistageReportFileName)) {
+				TestContext.WriteLine(fileWriter.XMLMultistageReportFileName + "Missing\n");
+				Assert.Fail();
+			}
+
+			
 		}
 	}
 }
