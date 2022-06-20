@@ -201,6 +201,15 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
+        [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
+        [TestCase(HEV_Px_IHPC_PrimaryBus, TestName="HEV_Px_PrimaryBus")]
+        [TestCase(HEV_S2_PrimaryBus, TestName="HEV_S2_PrimaryBus")]
+		[TestCase(HEV_S3_PrimaryBus, TestName = "HEV_S3_PrimaryBus")]
+		[TestCase(HEV_S4_PrimaryBus, TestName = "HEV_S4_PrimaryBus")]
+        [TestCase(PEV_E2_PrimaryBus, TestName="PEV_E2_PrimaryBus")]
+		[TestCase(PEV_E3_PrimaryBus, TestName = "PEV_E3_PrimaryBus")]
+		[TestCase(PEV_E4_PrimaryBus, TestName = "PEV_E4_PrimaryBus")]
+        [TestCase(PEV_IEPC_PrimaryBus, TestName="PEV_IEPC_PrimaryBus")]
 		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
 			var inputProvider = _inputDataReader.Create(fileName);
