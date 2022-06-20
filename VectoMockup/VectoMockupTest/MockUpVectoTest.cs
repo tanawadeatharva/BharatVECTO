@@ -92,6 +92,9 @@ namespace VectoMockupTest
 
 		protected const string Conventional_InterimBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_consolidated_multiple_stages.xml";
+
+		protected const string Conventional_StageInput =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-stage_input_full-sample.xml";
 		#endregion
 
 		#region completed bus
@@ -187,7 +190,7 @@ namespace VectoMockupTest
 
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
-
+			Clearfiles(fileWriter);
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
@@ -218,22 +221,27 @@ namespace VectoMockupTest
 		}
 
 		
-		[TestCase(Conventional_InterimBus, TestName = "ConventionalInterimBus")]
-		public void InterimBusMockupTest(string fileName)
+		[TestCase(Conventional_InterimBus,Conventional_StageInput, TestName = "ConventionalInterimBus")]
+		public void InterimBusMockupTest(string vifInput, string stageInputFile)
 		{
 			//SimulatorFactory.MockUpRun = mockup;
-			var inputProvider = _inputDataReader.Create(fileName);
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistageBusInputDataProvider;
+			Assert.NotNull(multistageBusInput);
+
+			var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 
-			_simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+			var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
 
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
+			Clearfiles(fileWriter);
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: false, checkVif: true);
+			CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
 
 
 		}
@@ -255,7 +263,7 @@ namespace VectoMockupTest
 
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-
+			Clearfiles(fileWriter);
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
@@ -272,7 +280,7 @@ namespace VectoMockupTest
 			var input = JSONInputDataFactory.ReadJsonJob(fileName);
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-
+			Clearfiles(fileWriter);
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
@@ -289,7 +297,7 @@ namespace VectoMockupTest
 			var input = JSONInputDataFactory.ReadJsonJob(fileName);
 			_simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-
+			Clearfiles(fileWriter);
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
