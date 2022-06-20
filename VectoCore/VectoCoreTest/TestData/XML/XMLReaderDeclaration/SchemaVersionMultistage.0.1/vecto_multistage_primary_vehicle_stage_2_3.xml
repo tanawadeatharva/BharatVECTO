@@ -10,7 +10,7 @@ xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 v:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
-			<Vehicle xsi:type="VehiclePIFType">
+			<Vehicle xsi:type="ConventionalVehicleVIFType">
 				<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
 				<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
 				<Model>Generic Model</Model>
@@ -40,7 +40,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 				</TorqueLimits>
 				<Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
 					<Engine>
-						<Data xsi:type="EngineDataPIFType">
+						<Data xsi:type="EngineDataVIFType">
 							<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 							<Model>Bus 6x2</Model>
 							<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -76,7 +76,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Engine>
 					<Transmission>
-						<Data xsi:type="TransmissionDataPIFType">
+						<Data xsi:type="TransmissionDataVIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck Gearbox</Model>
 							<MainCertificationMethod>Standard values</MainCertificationMethod>
@@ -84,7 +84,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<Date>2017-01-11T11:00:00Z</Date>
 							<AppVersion>3.0.1</AppVersion>
 							<TransmissionType>AMT</TransmissionType>
-							<Gears xsi:type="TransmissionGearsPIFType">
+							<Gears xsi:type="TransmissionGearsVIFType">
 								<Gear number="1">
 									<Ratio>14.930</Ratio>
 									<MaxTorque>1900</MaxTorque>
@@ -138,7 +138,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Transmission>
 					<TorqueConverter>
-						<Data xsi:type="TorqueConverterDataPIFType">
+						<Data xsi:type="TorqueConverterDataVIFType">
 							<Manufacturer>Generic Torque Converter</Manufacturer>
 							<Model>Generic Torque Converter Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -153,7 +153,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</TorqueConverter>
 					<Angledrive>
-						<Data xsi:type="AngledriveDataPIFType">
+						<Data xsi:type="AngledriveDataVIFType">
 							<Manufacturer>Generic Angledrive</Manufacturer>
 							<Model>Generic Angledrive Model</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -164,7 +164,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Angledrive>
 					<Axlegear>
-						<Data xsi:type="AxlegearDataPIFType">
+						<Data xsi:type="AxlegearDataVIFType">
 							<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 							<Model>Generic 40t Long Haul Truck AxleGear</Model>
 							<CertificationMethod>Standard values</CertificationMethod>
@@ -176,7 +176,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</Axlegear>
 					<AxleWheels>
-						<Data xsi:type="AxleWheelsDataPIFType">
+						<Data xsi:type="AxleWheelsDataVIFType">
 							<Axles>
 								<Axle axleNumber="1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
 									<v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
@@ -263,7 +263,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 						</Data>
 					</AxleWheels>
 					<Auxiliaries>
-						<Data xsi:type="AuxiliaryDataPIFType">
+						<Data xsi:type="AuxiliaryDataVIFType">
 							<Fan>
 								<Technology>Hydraulic driven - Constant displacement pump</Technology>
 							</Fan>
@@ -629,7 +629,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			</ApplicationInformation>
 		</Data>
 		<Signature>
-			<di:Reference URI="#PIF-d10aff76c5d149948046">
+			<di:Reference URI="#VIF-d10aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
@@ -642,7 +642,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 	<ManufacturingStep stepCount="2">
 		<Data xsi:type="BusManufacturingStepDataType" id="MSTG-1">
 			<HashPreviousStep>
-			<di:Reference URI="#PIF-d10aff76c5d149948046">
+			<di:Reference URI="#VIF-d10aff76c5d149948046">
 				<di:Transforms>
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
