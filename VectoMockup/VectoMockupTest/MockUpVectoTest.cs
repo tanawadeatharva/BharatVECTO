@@ -102,7 +102,7 @@ namespace VectoMockupTest
 
 		private const string TestDataDir = "TestData\\";
 
-		private const string CompletedDiesel = TestDataDir + "Multistage\\newVifCompletedConventional.vecto";
+		private const string CompletedDiesel = TestDataDir + "Integration\\Multistage\\newVifCompletedConventional.vecto";
 		private const string CompletedExempted = TestDataDir + "Multistage\\newVifExempted.vecto";
 		private const string CompletedExemptedWithoutTPMLM = TestDataDir + "Multistage\\newVifExempted-noTPMLM.vecto";
 		private string CompletedWithoutADAS = TestDataDir + "Multistage\\newVifCompletedConventional-noADAS.vecto";
@@ -216,6 +216,7 @@ namespace VectoMockupTest
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XsdPath), "MRF invalid");
 		}
 
+		
 		[TestCase(Conventional_InterimBus, TestName = "ConventionalInterimBus")]
 		public void InterimBusMockupTest(string fileName)
 		{
