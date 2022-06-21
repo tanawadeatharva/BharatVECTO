@@ -6,7 +6,7 @@
     <ApplicationIcon>VECTO.ico</ApplicationIcon>
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
-    <Configurations>Debug;Release;MockupDebug</Configurations>
+    <Configurations>Debug;Release;MockupDebug;Mockup</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
@@ -17,7 +17,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
-
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="NLog" Version="4.7.13" />
@@ -40,14 +42,15 @@
   </ItemGroup>
 
 	<Choose>
-		<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
-			<PropertyGroup>
+			<!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>
+			</PropertyGroup>-->
 		</When>
 	</Choose>
 </Project>

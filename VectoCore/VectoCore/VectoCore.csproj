@@ -4,9 +4,9 @@
     <AssemblyName>VectoCore</AssemblyName>
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
-    <Configurations>Debug;Release;MockupDebug</Configurations>
+    <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
@@ -15,7 +15,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <ItemGroup>
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />

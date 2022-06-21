@@ -12,7 +12,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <DefineConstants />
-    <Configurations>Debug;Release;MockupDebug</Configurations>
+    <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
     <DebugType>full</DebugType>
@@ -20,6 +20,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" NoWarn="NU1701" />
@@ -34,19 +37,19 @@
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
-	
-  <Choose>
-	<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
-	  <ItemGroup>
-		<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
-		
-	  </ItemGroup>
-		<PropertyGroup>
-			<DefineConstants>MOCKUP</DefineConstants>
-		</PropertyGroup>
-	</When>
-  </Choose>
-	
+
+	<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+
+			</ItemGroup>
+			<!--<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>-->
+		</When>
+	</Choose>
 
 
 

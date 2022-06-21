@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore
 			LoadModule<CIFNinjectModule>();
 
 
-#if (MOCKUPDEBUG)  //TODO: add second constant for release
+#if (MOCKUP)  //TODO: add second constant for release
 			var compiledModuleLoaderPlugin = new CompiledModuleLoaderPlugin(Kernel, new AssemblyNameRetriever());
 			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
 			//var assembly = Assembly.LoadFile("VectoMockup.dll");

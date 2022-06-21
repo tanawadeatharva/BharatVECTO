@@ -9,7 +9,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
-
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -34,14 +36,27 @@
     </None>
   </ItemGroup>
 	<Choose>
-		<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
-				<ProjectReference Include="..\..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
-			<PropertyGroup>
+			<!--<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>
+			</PropertyGroup>-->
+		</When>
+	</Choose>
+	<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+
+			</ItemGroup>
+			<!--<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>-->
 		</When>
 	</Choose>
 
