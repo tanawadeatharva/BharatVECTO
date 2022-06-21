@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XAttribute("stringId", electricStorage.StringId),
 						new XElement(_mrf + XMLNames.Component_Model, battery.Model),
 						new XElement(_mrf + XMLNames.Component_CertificationNumber, battery.CertificationNumber),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue.DigestValue),
+						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue?.DigestValue ?? ""),
 						new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
 						new XElement(_mrf + "TotalStorageCapacity", battery.Capacity.AsAmpHour.ToXMLFormat(0)),
 						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().AsAmpHour),
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.Capacitor_Capacitance, superCap.Capacity.ToXMLFormat()),
 						new XElement(_mrf + XMLNames.Capacitor_MinVoltage, superCap.MinVoltage),
 						new XElement(_mrf + XMLNames.Capacitor_MaxVoltage, superCap.MinVoltage),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, superCap.DigestValue.DigestValue)
+						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, superCap.DigestValue?.DigestValue ?? "")
 						);
 				} else {
 					throw new VectoException("Invalid REESS type");

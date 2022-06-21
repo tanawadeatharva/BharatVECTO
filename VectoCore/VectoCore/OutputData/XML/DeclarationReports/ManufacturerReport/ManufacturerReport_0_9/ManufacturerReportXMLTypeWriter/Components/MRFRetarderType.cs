@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Model,
 					inputData.JobInputData.Vehicle.Components.RetarderInputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, retarderData.CertificationNumber),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, retarderData.DigestValue.DigestValue),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, retarderData.DigestValue?.DigestValue ?? ""),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod,
 					retarderData.CertificationMethod.ToXMLFormat()));
 			return result;

@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Model, torqueConverterInputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber,
 					torqueConverterInputData.CertificationNumber),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, torqueConverterInputData.DigestValue.DigestValue),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, torqueConverterInputData.DigestValue?.DigestValue ?? ""),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod,
 					torqueConverterInputData.CertificationMethod.ToXMLFormat()));
 		}

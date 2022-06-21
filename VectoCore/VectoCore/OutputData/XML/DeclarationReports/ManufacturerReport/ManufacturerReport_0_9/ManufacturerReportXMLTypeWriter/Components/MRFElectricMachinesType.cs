@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 				electricMachineSystem.Add(new XElement(_mrf + XMLNames.Component_Model, electricMachine.ElectricMachine.Model),
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, electricMachine.ElectricMachine.CertificationNumber),
-					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue.DigestValue),
+					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue?.DigestValue ?? ""),
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
 					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
 					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)));
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					result.Add(new XElement(_mrf + XMLNames.Component_ADC, 
 						new XElement(_mrf + XMLNames.Component_Model, adc.Model),
 						new XElement(_mrf + XMLNames.Component_CertificationNumber, adc.CertificationNumber),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, adc.DigestValue.DigestValue),
+						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, adc.DigestValue?.DigestValue ?? ""),
 						new XElement(_mrf + XMLNames.Component_CertificationMethod, adc.CertificationMethod.ToXMLFormat()),
 						new XElement(_mrf + XMLNames.AngleDrive_Ratio, adc.Ratio.ToXMLFormat(3)))
 						);

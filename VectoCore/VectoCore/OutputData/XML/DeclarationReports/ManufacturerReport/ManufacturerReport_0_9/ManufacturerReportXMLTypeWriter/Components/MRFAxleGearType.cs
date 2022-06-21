@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Model, axleGearInputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, axleGearInputData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
-					axleGearInputData.DigestValue.DigestValue),
+					axleGearInputData.DigestValue?.DigestValue ?? ""),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod,
 					axleGearInputData.CertificationMethod.ToXMLFormat()),
 				new XElement(_mrf + "AxleType", axleGearInputData.LineType.ToXMLFormat()),
