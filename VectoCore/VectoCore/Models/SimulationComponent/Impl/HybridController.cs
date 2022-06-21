@@ -38,9 +38,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : base(container)
 		{
 			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
-			_shiftStrategy = container.RunData.GearboxData.Type.AutomaticTransmission()
-				? new HybridCtlATShiftStrategy(this, container)
-				: new HybridCtlShiftStrategy(this, container);
+
+			switch (container.RunData.GearboxData.Type) {
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
+					_shiftStrategy = new HybridCtlATShiftStrategy(this, container);
+					break;
+				case GearboxType.AMT:
+					_shiftStrategy = new HybridCtlShiftStrategy(this, container);
+					break;
+				case GearboxType.APTN:
+				case GearboxType.IHPC:
+					_shiftStrategy = new HybridCtlIHPCShiftStrategy(this, container);
+					break;
+				default: throw new ArgumentException($"Unsupported Gearbox type for Hybrid Controller: {container.RunData.GearboxData.Type}");
+			}
+			
 			_hybridStrategy = strategy;
 			strategy.Controller = this;
 
@@ -291,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected GearshiftPosition _nextGear { get; set; }
 
 			protected readonly GearList GearList;
-			private readonly VectoRunData _runData;
+			protected readonly VectoRunData _runData;
 
 			public HybridCtlShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(
 				container)
@@ -562,6 +575,85 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				return base.SpeedTooHighForEngine(gear, outAngularSpeed);
+			}
+		}
+
+		///=======================================================================================
+
+		public class HybridCtlIHPCShiftStrategy : HybridCtlATShiftStrategy
+		{
+			protected new APTNGearbox _gearbox;
+
+			public HybridCtlIHPCShiftStrategy(HybridController hybridController, IVehicleContainer container) : base(hybridController, container) { }
+
+			public override IGearbox Gearbox {
+				get => _gearbox;
+				set => _gearbox = value as APTNGearbox ?? throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
+			}
+
+			public override GearshiftPosition InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
+			{
+				if (DataBus.VehicleInfo.VehicleSpeed.IsEqual(0)) {
+					return InitStartGear(absTime, torque, outAngularVelocity);
+				}
+
+				foreach (var gear in Gears.Reverse()) {
+					var response = _gearbox.Initialize(absTime, gear, torque, outAngularVelocity);
+
+					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineRatedSpeed || response.Engine.EngineSpeed < DataBus.EngineInfo.EngineIdleSpeed) {
+						continue;
+					}
+
+					if (!IsBelowDownShiftCurve(gear, response.Engine.PowerRequest / response.Engine.EngineSpeed, response.Engine.EngineSpeed)) {
+						_gearbox.Disengaged = false;
+						return gear;
+					}
+				}
+
+				// fallback: start with first gear;
+				_gearbox.Disengaged = false;
+				return Gears.First();
+			}
+
+			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
+
+			protected GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			{
+				if (!DataBus.EngineCtl.CombustionEngineOn) {
+					return _nextGear;
+				}
+
+				foreach (var gear in GearList.IterateGears(MaxStartGear, GearList.First())) {
+					//for (var gear = MaxStartGear; gear > 1; gear--) {
+					var inAngularSpeed = outAngularVelocity * GearboxModelData.Gears[gear.Gear].Ratio;
+
+					var ratedSpeed = DataBus.EngineInfo.EngineRatedSpeed;
+					if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
+						continue;
+					}
+
+					var response = _gearbox.Initialize(absTime, gear, outTorque, outAngularVelocity);
+
+					var fullLoadPower =
+						response.Engine.DynamicFullLoadTorque; //EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - response.Engine.TorqueOutDemand / fullLoadPower;
+
+					if (_runData != null && _runData.HybridStrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(gear) != null) {
+						var tqRequest = response.Gearbox.InputTorque;
+						var maxTorque = _runData.HybridStrategyParameters.MaxPropulsionTorque[gear].FullLoadDriveTorque(response.Gearbox.InputSpeed);
+						reserve = 1 - VectoMath.Min(response.Engine.TorqueOutDemand / fullLoadPower, tqRequest / maxTorque);
+					}
+
+					if (response.Engine.EngineSpeed > DataBus.EngineInfo.EngineIdleSpeed &&
+						reserve.IsGreaterOrEqual(0)) {
+						//reserve >= GearshiftParams.StartTorqueReserve) {
+						_nextGear = gear;
+						return gear;
+					}
+				}
+
+				_nextGear = GearList.First();
+				return _nextGear;
 			}
 		}
 	}

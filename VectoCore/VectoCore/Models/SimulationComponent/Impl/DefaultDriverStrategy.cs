@@ -114,12 +114,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				// create a dummy powertrain for pre-processing and estimations
 				var testContainer = new SimplePowertrainContainer(data);
-				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle && data.JobType != VectoSimulationJobType.SerialHybridVehicle)
-					PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
-				else {
-					PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
-				}
 
+				switch (data.JobType) {
+					case VectoSimulationJobType.BatteryElectricVehicle:
+					case VectoSimulationJobType.SerialHybridVehicle:
+					case VectoSimulationJobType.IEPC_E:
+					case VectoSimulationJobType.IEPC_S:
+						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
+						break;
+					case VectoSimulationJobType.IHPC:
+					case VectoSimulationJobType.ParallelHybridVehicle:
+						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
+						break;
+					case VectoSimulationJobType.ConventionalVehicle:
+						PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(data.JobType));
+				}
+				
 				container.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
 		}
@@ -425,7 +438,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 			var emDragLoss = CalculateElectricMotorDragLoss();
 			var iceDragLoss = 0.SI<Watt>();
-			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission() && dataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
 				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
 					iceDragLoss = DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
 				}

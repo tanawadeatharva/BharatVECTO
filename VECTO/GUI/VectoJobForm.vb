@@ -484,7 +484,7 @@ Public Class VectoJobForm
 		Else
 			TbENG.Text = ""
 		End If
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle orelse inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
 			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbGBX.Text = ""
@@ -1190,7 +1190,11 @@ Public Class VectoJobForm
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse  JobType = VectoSimulationJobType.IEPC_S) Then
+            TbGbxTxt.Text = $"IEPC {gearbox.Model}"
+        else
+            TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        End If
 
 	    If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count

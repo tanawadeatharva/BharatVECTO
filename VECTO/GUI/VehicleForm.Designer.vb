@@ -2047,7 +2047,7 @@ Partial Class VehicleForm
         Me.gbPropulsionTorque.Size = New System.Drawing.Size(604, 80)
         Me.gbPropulsionTorque.TabIndex = 2
         Me.gbPropulsionTorque.TabStop = false
-        Me.gbPropulsionTorque.Text = "Propulsion Torque Limit"
+        Me.gbPropulsionTorque.Text = "Boosting Torque Limits"
         '
         'btnPropulsionTorqueLimit
         '

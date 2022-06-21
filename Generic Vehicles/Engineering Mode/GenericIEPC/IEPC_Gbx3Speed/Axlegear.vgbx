@@ -21,7 +21,7 @@
     "StartTqReserve": 20.0,
     "StartSpeed": 2.22222222222222,
     "StartAcc": 0.8,
-    "GearboxType": "AMT",
+    "GearboxType": "IEPC",
     "TorqueConverter": {
       "Enabled": false
     },

@@ -355,7 +355,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString());
 
 		var torqueConverterDict = new Dictionary<string, object> { { "Enabled", torqueConverter != null && gbx.Type.AutomaticTransmission() } };
-		if (gbx.Type.AutomaticTransmission() && gbx.Type != GearboxType.APTN) {
+		if (gbx.Type.AutomaticTransmission() && gbx.Type != GearboxType.APTN && gbx.Type != GearboxType.IHPC) {
 			torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)));
 			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, Math.Round(torqueConverter.ReferenceRPM.AsRPM, 4));
 			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value());
