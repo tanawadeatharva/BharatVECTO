@@ -311,9 +311,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 										CrossWindCorrectionMode.VAirBetaLookupTable;
-                var ptoTransmissionData = dao.CreateBatteryElectricPTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+				var ptoTransmissionData = dao.CreateBatteryElectricPTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
-                var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
+				var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
 
 				var vehicleData = dao.CreateVehicleData(vehicle);
 				yield return new VectoRunData
@@ -329,8 +329,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 					BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, VectoSimulationJobType.BatteryElectricVehicle),
 					Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData, powertrainPosition),
-                    PTO = ptoTransmissionData,
-                    Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
+					PTO = ptoTransmissionData,
+					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
 					ElectricMachinesData = electricMachinesData,
 					//HybridStrategyParameters = dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData.HybridStrategyParameters),
@@ -578,6 +578,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						? VectoSimulationJobType.ParallelHybridVehicle
 						: VectoSimulationJobType.ConventionalVehicle;
 
+					if (powertrainPosition == PowertrainPosition.HybridP2 && gearboxData.Type.AutomaticTransmission()) {
+						throw new VectoException(
+							"Powertrain Architecture 'hybrid electric vehicle, P2' with AT transmission not supported");
+					}
 					var vehicleData = dao.CreateVehicleData(vehicle);
 
 					var gearshiftParams = dao.CreateGearshiftData(

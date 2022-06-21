@@ -135,11 +135,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					return new ValidationResult("Torque Converter can only be used with AT gearbox model");
 				}
 			} else {
-				if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN) {
+				if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN && gearboxData.Type != GearboxType.IHPC) {
 					return new ValidationResult("AT gearbox model requires torque converter");
 				}
 			}
-			if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN) {
+			if (gearboxData.Type.AutomaticTransmission() && gearboxData.Type != GearboxType.APTN && gearboxData.Type != GearboxType.IHPC) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
 					Math.Round(gearboxData.Gears[1].TorqueConverterRatio / gearboxData.Gears[1].Ratio, 4) * 0.95;
 				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, jobType, emPos, gearboxData.Type, emsMission));

@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = engine.Inertia +
 							(gbx != null && gbx.Type.AutomaticTransmission()
-								? (gbx.Type == GearboxType.APTN ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
+								? (gbx.Type == GearboxType.APTN || gbx.Type == GearboxType.IHPC ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
 								: 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			SetEngineeringData(gearbox, gearshiftData, retVal);
 
-			var hasTorqueConverter = retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN;
+			var hasTorqueConverter = retVal.Type.AutomaticTransmission() && retVal.Type != GearboxType.APTN && retVal.Type != GearboxType.IHPC;
 
 			var gearDifferenceRatio = hasTorqueConverter && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
@@ -431,8 +431,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
 		{
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN ? 0.SI<Second>() : gearbox.TractionInterruption;
-			
+			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN || gearbox.Type == GearboxType.IHPC ? 0.SI<Second>() : gearbox.TractionInterruption;
 		}
 
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data)

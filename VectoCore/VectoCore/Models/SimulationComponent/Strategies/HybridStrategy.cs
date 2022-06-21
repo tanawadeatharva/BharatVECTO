@@ -421,46 +421,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		}
 
-		//protected virtual bool? CheckUpshiftTcTc(
-		//	Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-		//	PerSecond inAngularVelocity, GearshiftPosition gear, GearData currentGear, IResponse response)
-		//{
-		//	// C -> C+1
-		//	var nextGearPos = GearList.Successor(gear); // GearboxModelData.Gears[gear + 1];
-		//	var nextGear = ModelData.GearboxData.Gears[nextGearPos.Gear];
-		//	var gearRatio = nextGear.TorqueConverterRatio / currentGear.TorqueConverterRatio;
-		//	var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineInfo.EngineN80hSpeed - 150.RPMtoRad()));
-
-		//	var nextGearboxInSpeed = outAngularVelocity * nextGear.TorqueConverterRatio;
-		//	var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
-		//	var shiftLosses = _gearbox.ComputeShiftLosses(outTorque, outAngularVelocity, nextGearPos) /
-		//					ModelData.GearboxData.PowershiftShiftTime / nextGearboxInSpeed;
-		//	nextGearboxInTorque += shiftLosses;
-		//	var tcOperatingPoint =
-		//		_gearbox.TorqueConverter.FindOperatingPoint(absTime, dt, nextGearboxInTorque, nextGearboxInSpeed);
-
-		//	var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
-		//	var avgSpeed = (DataBus.EngineInfo.EngineSpeed + tcOperatingPoint.InAngularVelocity) / 2;
-		//	var engineMaxTorque = DataBus.EngineInfo.EngineStationaryFullPower(avgSpeed) / avgSpeed;
-		//	var engineInertiaTorque = Formulas.InertiaPower(
-		//								DataBus.EngineInfo.EngineSpeed, tcOperatingPoint.InAngularVelocity, ModelData.EngineData.Inertia, dt) / avgSpeed;
-		//	var engineTorqueBelowMax =
-		//		tcOperatingPoint.InTorque.IsSmallerOrEqual(engineMaxTorque - engineInertiaTorque);
-
-		//	var reachableAcceleration =
-		//		EstimateAcceleration(
-		//			outAngularVelocity, outTorque, inAngularVelocity, inTorque, gear.Gear, response); // EstimateAccelerationForGear(gear + 1, outAngularVelocity);
-		//	var minAcceleration = VectoMath.Min(
-		//		ModelData.GearboxData.TorqueConverterData.CCUpshiftMinAcceleration,
-		//		DataBus.DriverInfo.DriverAcceleration);
-		//	var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
-
-		//	if (engineSpeedOverMin && engineTorqueBelowMax && minAccelerationReachable) {
-		//		return true;
-		//	}
-
-		//	return null;
-		//}
 	}
 
 	// =====================================================
@@ -1102,7 +1062,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 								DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 				if (EngineSpeedTooLow(response)
-					&& DataBus.GearboxInfo.GearboxType.ManualTransmission() 
+					&& (DataBus.GearboxInfo.GearboxType.ManualTransmission() || DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) 
 					&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
 					var responseEmOff = ResponseEmOff;
 					responseEmOff.Gear = new GearshiftPosition(0);
@@ -1234,7 +1194,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					? (maxRecuperationResponse as ResponseDryRun).DeltaDragLoadTorque
 					: maxRecuperationResponse.Engine.TotalTorqueDemand - maxRecuperationResponse.Engine.DragTorque;
 
-				if (!maxRecuperationResponse.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				var isAPTWithTorqueConverter = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+												DataBus.GearboxInfo.GearboxType != GearboxType.IHPC;
+				if (!maxRecuperationResponse.Engine.EngineOn && isAPTWithTorqueConverter) {
 					deltaDragTqMaxRecuperation = maxRecuperationResponse.Gearbox.InputTorque;
 				}
 
@@ -1278,7 +1240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						var deltaDragLoad = disengaged
 							? (r as ResponseDryRun).DeltaDragLoadTorque
 							: r.Engine.TotalTorqueDemand - r.Engine.DragTorque;
-						if (!r.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						if (!r.Engine.EngineOn && isAPTWithTorqueConverter) {
 							deltaDragLoad = r.Gearbox.InputTorque;
 						}
 						return deltaDragLoad;
@@ -1299,7 +1261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						var deltaDragLoad = disengaged
 							? (r as ResponseDryRun).DeltaDragLoadTorque
 							: r.Engine.TotalTorqueDemand - r.Engine.DragTorque;
-						if (!r.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						if (!r.Engine.EngineOn && isAPTWithTorqueConverter) {
 							deltaDragLoad = r.Gearbox.InputTorque;
 						}
 						return deltaDragLoad.Value();
@@ -1321,7 +1283,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						}
 					};
 					entry.Response = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, entry.Setting);
-					eval.Add(entry);
+					if (entry.Response.ElectricSystem.ConsumerPower.IsGreater(0)) {
+						eval.Add(entry);
+					} else {
+						// for the found operating point, although recuperating no electric energy is generated. leave EM off
+						var off = ResponseEmOff;
+						if (vehiclespeedBelowThreshold && (emPos == PowertrainPosition.HybridP2 || emPos == PowertrainPosition.HybridP1)) {
+							off.Setting.GearboxInNeutral = true;
+						} else {
+							off.Setting.GearboxInNeutral = PreviousState.Solution?.Setting.GearboxInNeutral ?? false;
+						}
+
+						eval.Add(off);
+					}
 				} else {
 					if (emRecuperationTq.IsGreater(0)) {
 						eval.Add(
@@ -1359,7 +1333,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return false;
 			}
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
 				return firstResponse.Engine.EngineOn
 					? firstResponse.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)
 					: (firstResponse.Gearbox.InputSpeed?.IsSmaller(ModelData.EngineData.IdleSpeed) ?? false);
