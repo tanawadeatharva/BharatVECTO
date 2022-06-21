@@ -10,6 +10,8 @@
 		<MyType>WindowsForms</MyType>
 		<TargetFrameworks>net6.0-windows</TargetFrameworks>
 		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net45;net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net45;net48;net6.0-windows</TargetFrameworks>
 		<DefineTrace>false</DefineTrace>
 		<DefineConstants />
 		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>

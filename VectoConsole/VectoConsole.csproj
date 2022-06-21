@@ -6,7 +6,7 @@
     <ApplicationIcon>VECTO.ico</ApplicationIcon>
     <TargetFrameworks>net45;net48;net6.0</TargetFrameworks>
     <DefineConstants />
-    <Configurations>Debug;Release;MockupDebug;Mockup</Configurations>
+    <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net45|AnyCPU'">
     <DebugType>full</DebugType>
@@ -42,8 +42,7 @@
   </ItemGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
-         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
