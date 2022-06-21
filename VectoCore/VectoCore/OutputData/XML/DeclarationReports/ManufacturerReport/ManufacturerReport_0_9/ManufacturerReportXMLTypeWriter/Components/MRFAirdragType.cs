@@ -26,6 +26,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IAirdragDeclarationInputData inputData)
 		{
+			if (inputData == null || inputData.AirDragArea == null) {
+				return null;
+			}
 			return new XElement(_mrf + XMLNames.Component_AirDrag,
 				new XElement(_mrf + XMLNames.Component_Model, inputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, inputData.CertificationMethod),
