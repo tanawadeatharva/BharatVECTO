@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					new XElement(_cif + XMLNames.Report_Tyre_TyreCertificationNumber, axle.Tyre.CertificationNumber)));
 			}
 			averageRRC /= axleWheels.AxlesDeclaration.Count;
-			result.Insert(0, new XElement(_cif + "AverageRRC", averageRRC));
+			result.Insert(0, new XElement(_cif + "AverageRRC", averageRRC.ToXMLFormat(4)));
 
 
 			return result;
