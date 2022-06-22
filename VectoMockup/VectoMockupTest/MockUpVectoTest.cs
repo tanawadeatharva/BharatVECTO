@@ -394,8 +394,8 @@ namespace VectoMockupTest
 		}
 		
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/Tractor_4x2_vehicle-class-5_5_t_0.xml", TestName="Schema10Test1")]
-        [Ignore("Invalid combination for ecoroll")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-new_parameters-sample.xml",TestName="Schema10_new_parameters")]
+        
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-new_parameters-sample.xml",TestName="Schema10_new_parameters", Ignore = "Invalid combination for ecoroll")]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-sample_LNG.xml", TestName="Schema10_vehicle_sample_lng")]
 		public void Schema1_0_Test(string fileName, bool mockup = true)
 		{
@@ -438,6 +438,31 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName),XsdPath), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName),XsdPath), "CIF invalid");
+		}
+
+
+
+
+        [TestCase("TestData/Generic Vehicles/Declaration Mode/40t Long Haul Truck/40t_Long_Haul_Truck.vecto", TestName="JSON_40TLonghaul")]
+		[TestCase("TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto", TestName="JSON_RigitTruckClass9")]
+		public void JSONTest(string fileName, bool mockup = true)
+		{
+
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(fileName);
+			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			_simulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+			Clearfiles(fileWriter);
+			jobContainer.AddRuns(_simulatorFactory);
+			jobContainer.Execute(false);
+			jobContainer.WaitFinished();
+
+			CheckFileExists(fileWriter);
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XsdPath), "MRF invalid");
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XsdPath), "CIF invalid");
 		}
 	}
 }
