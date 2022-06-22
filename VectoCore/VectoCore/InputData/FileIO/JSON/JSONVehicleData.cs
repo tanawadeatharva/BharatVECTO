@@ -341,7 +341,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string ManufacturerAddress => Constants.NOT_AVAILABLE;
 
-		public virtual PerSecond EngineIdleSpeed => Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null;
+		public virtual PerSecond EngineIdleSpeed
+		{
+			get
+			{
+				if (Body["IdlingSpeed"] != null) {
+					return Body.GetEx<double>("IdlingSpeed").RPMtoRad();
+				} else {
+					return (EngineInputData as IEngineModeDeclarationInputData)?.IdleSpeed;
+				}
+
+				return null;
+			}
+		}
 
 		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration => AxleWheels().Cast<IAxleDeclarationInputData>().ToList();
 
