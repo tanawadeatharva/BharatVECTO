@@ -228,8 +228,9 @@ namespace TUGraz.VectoMockup
 			var xDoc = XDocument.Load(ReadStream(resourceName));
 			
 			var results = xDoc.XPathSelectElements($"//*[local-name()='{resultElementName.LocalName}']");
-			
-			return results.First();
+			var resultElement = results.First();
+			resultElement.DescendantNodes().OfType<XComment>().Remove();
+			return resultElement;
 		}
 		public static Stream ReadStream(string resourceName)
 		{
