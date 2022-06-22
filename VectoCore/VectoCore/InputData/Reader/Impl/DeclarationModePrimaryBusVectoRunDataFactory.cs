@@ -18,8 +18,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	{
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
-		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
-			base(dataProvider, report)
+		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true) :
+			base(dataProvider, report, checkJobType)
 		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory

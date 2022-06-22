@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var result = new XElement(_mrf + XMLNames.Component_Engine,
 				new XElement(_mrf + XMLNames.Component_Model, engineData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, engineData.CertificationNumber),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, engineData.DigestValue.DigestValue),
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, engineData.DigestValue?.DigestValue ?? ""),
 				new XElement(_mrf + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
 				new XElement(_mrf + XMLNames.Engine_IdlingSpeed, inputData.JobInputData.Vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)),
 				new XElement(_mrf + XMLNames.Engine_RatedSpeed, inputData.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),

@@ -23,7 +23,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report) :
-            base(dataProvider, report)
+            base(dataProvider, report, false)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory

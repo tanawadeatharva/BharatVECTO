@@ -7,9 +7,12 @@
 	<Exec Command="&quot;$(solutiondir)documentation\VectoHashingTool\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\VectoHashingTool"/>  
  </Target>   
  -->
+	<!--<Target Name="BeforeBuild">
+		<Message Text="Compiling the program in $(Configuration) Configuration" Importance="high" />
+	</Target>-->
 
-	<Target Name="AfterBuild" Condition="'$(Configuration)'=='Deploy'">
-
+	<Target Name="AfterBuild" Condition="('$(Configuration)'=='Deploy') Or ('$(Configuration)' == 'MockupDeploy')">
+		<Message Text="Packaging in $(Configuration) Configuration" Importance="high" />
 		<Exec Command="cscript &quot;$(SolutionDir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(SolutionDir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
@@ -18,7 +21,8 @@
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<MakeDir Directories="$(DeployPath)"/>
 
-		<ItemGroup>
+
+		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net45 -->
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe*"/>
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.dll*"/>
@@ -29,11 +33,27 @@
 			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe*"/>
 			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.dll*"/>
 		</ItemGroup>
+		<!--MockupDeploy-->
+
+		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
+			<!-- All files for net45 -->
+			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.exe*"/>
+			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.dll*"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.dll*"/>
+			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net45\*.exe*"/>
+			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net45\*.dll*"/>
+		</ItemGroup>
+
+		
 		<Copy SourceFiles="@(Net45VectoCommandLine)" DestinationFolder="$(DeployPath)net45"/>
 		<Copy SourceFiles="@(Net45HashingTool)" DestinationFolder="$(DeployPath)net45"/>
 		<Copy SourceFiles="@(Net45VECTO)" DestinationFolder="$(DeployPath)net45"/>
 
-		<ItemGroup>
+
+		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net48 -->
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe*"/>
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.dll*"/>
@@ -44,12 +64,26 @@
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe*"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
+			
+		<!--MockupDeploy-->
+		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
+			<!-- All files for net48 -->
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\*.exe*" />
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\*.dll*" />
+			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe*" />
+			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*" />
+			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.exe*" />
+			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.dll*" />
+			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net48\*.exe*" />
+			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net48\*.dll*" />
+		</ItemGroup>
+
 		<Copy SourceFiles="@(Net48VectoCommandLine)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48HashingTool)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48VectoMultistage)" DestinationFolder="$(DeployPath)net48"/>
 		<Copy SourceFiles="@(Net48VECTO)" DestinationFolder="$(DeployPath)net48"/>
 
-		<ItemGroup>
+		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for net6.0 -->
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\*.dll"/>
@@ -64,6 +98,24 @@
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\*.dll"/>
 			<VectoMultistageRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 		</ItemGroup>
+		<!--MockupDeploy-->
+			
+		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
+			<!-- All files for net6.0 -->
+			<Vecto Include="$(SolutionDir)VECTO\bin\MockupRelease\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
+			<Vecto Include="$(SolutionDir)VECTO\bin\MockupRelease\net6.0-windows\*.dll"/>
+			<VectoRuntimes Include="$(SolutionDir)VECTO\bin\MockupRelease\net6.0-windows\runtimes\**\*.*"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net6.0\vectocmd.*" Exclude="*.dev.json"/>
+			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net6.0\*.dll"/>
+			<VectoCommandLineRuntimes Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net6.0\runtimes\**\*.*"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
+			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
+			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
+			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\*.dll"/>
+			<VectoMultistageRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\runtimes\**\*.*"/>
+		</ItemGroup>
+	
 		<Copy SourceFiles="@(HashingTool)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoMultistage)" DestinationFolder="$(DeployPath)net60"/>
 		<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(DeployPath)net60"/>

@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.Report_Tyre_TyreDimension, axleDeclaration.Tyre.Dimension),
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, axleDeclaration.Tyre.CertificationNumber),
 					new XElement(_mrf + "SpecificRRC", axleDeclaration.Tyre.RollResistanceCoefficient.ToXMLFormat(4)),
-					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, axleDeclaration.Tyre.DigestValue.DigestValue)));
+					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, axleDeclaration.Tyre.DigestValue?.DigestValue ?? "")));
 				result.Add(axle);
 			}
 

@@ -3,17 +3,30 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Reflection;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace TUGraz.VECTO
 {
 	class Program
 	{
-		static void Main()
+		private static int Main(string[] args)
 		{
 			var version = GetHighestNETVersion();
-			Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe") {
-				WorkingDirectory = Directory.GetCurrentDirectory()
+
+			var argsString = "";
+			foreach (var arg in args) {
+				argsString += $"\"{arg}\" ";
+			}
+
+			var process = Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe")
+            {
+                WorkingDirectory = Directory.GetCurrentDirectory(),
+				UseShellExecute = false,
+				Arguments = argsString,
 			});
+			process?.WaitForExit();
+			return process?.ExitCode ?? -1;
 		}
 
 		private static string GetHighestNETVersion()

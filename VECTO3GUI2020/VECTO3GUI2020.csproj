@@ -12,7 +12,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <DefineConstants />
-    <Configurations>Debug;Release;MockupDebug</Configurations>
+    <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
     <DebugType>full</DebugType>
@@ -20,12 +20,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
+	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
+		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" NoWarn="NU1701" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" NoWarn="NU1701" />
-    <PackageReference Include="Ninject" Version="3.3.5" />
+    <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="PresentationFramework.Aero2" Version="1.0.1" NoWarn="NU1701" />
   </ItemGroup>
@@ -34,19 +37,19 @@
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
-	
-  <Choose>
-	<When Condition="'$(Configuration)|$(Platform)'=='MockupDebug|AnyCPU'">
-	  <ItemGroup>
-		<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
-		
-	  </ItemGroup>
-		<PropertyGroup>
-			<DefineConstants>MOCKUP</DefineConstants>
-		</PropertyGroup>
-	</When>
-  </Choose>
-	
+
+	<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+			<ItemGroup>
+				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+
+			</ItemGroup>
+			<!--<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>-->
+		</When>
+	</Choose>
 
 
 

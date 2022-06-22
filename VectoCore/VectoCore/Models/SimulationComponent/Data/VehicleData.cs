@@ -46,8 +46,8 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
-#if MOCKUPDEBUG
-[assembly:InternalsVisibleTo("VectoMockup")]
+#if (MOCKUP || DEBUG) //DEBUG to prevent errors in Visual studio
+	[assembly:InternalsVisibleTo("VectoMockup")]
 #endif
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data

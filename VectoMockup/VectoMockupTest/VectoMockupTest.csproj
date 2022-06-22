@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
 	<Nullable>enable</Nullable>
@@ -24,16 +25,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-primary_heavyBus-sample.xml" Link="TestData\vecto_vehicle-primary_heavyBus-sample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-stage_input_full-sample-final-noADAS.xml" Link="TestData\vecto_vehicle-stage_input_full-sample-final-noADAS.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\vecto_vehicle-stage_input_full-sample.xml" Link="TestData\vecto_vehicle-stage_input_full-sample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Compile Remove="TestData\**" />
+    <EmbeddedResource Remove="TestData\**" />
+    <None Remove="TestData\**" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="..\..\VectoCore\VectoCoreTest\TestData\**\*.*">
+
+			<Link>TestData\%(RecursiveDir)%(FileName).%(Extension)</Link>
+
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="..\..\VectoCore\VectoCoreTest\TestData\Components\**" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
@@ -44,34 +53,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional-noADAS.vecto" Link="TestData\Multistage\newVifCompletedConventional-noADAS.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifCompletedConventional.vecto" Link="TestData\Multistage\newVifCompletedConventional.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted-noTPMLM.vecto" Link="TestData\Multistage\newVifExempted-noTPMLM.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" Link="TestData\Multistage\newVifExempted.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" Link="TestData\Multistage\newVifExemptedIncomplete.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" Link="TestData\Multistage\newVifInterimDiesel.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\VectoCore\VectoCoreTest\VectoCoreTest.csproj" />
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
     <ProjectReference Include="..\VectoMockup\VectoMockup.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestData\Multistage\" />
   </ItemGroup>
 
 </Project>
