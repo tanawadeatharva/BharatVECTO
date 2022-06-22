@@ -39,7 +39,7 @@
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
          $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
-				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
+				<ProjectReference Include="$(SolutionDir)\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
 			</ItemGroup>
 			<!--<PropertyGroup>
@@ -47,17 +47,4 @@
 			</PropertyGroup>-->
 		</When>
 	</Choose>
-	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
-         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
-			<ItemGroup>
-				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
-
-			</ItemGroup>
-			<!--<PropertyGroup>
-				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
-		</When>
-	</Choose>
-
 </Project>
