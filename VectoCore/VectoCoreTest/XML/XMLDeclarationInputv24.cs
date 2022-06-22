@@ -1414,7 +1414,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(vehicle.Components.ElectricStorage);
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.TorqueLimits);
-			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
@@ -1457,7 +1457,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
 			Assert.IsNull(vehicle.CargoVolume);
 			Assert.IsNull(vehicle.TorqueLimits);
-			Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
+			Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			Assert.IsNull(vehicle.BoostingLimitations);
 		}
 
