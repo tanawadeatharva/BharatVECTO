@@ -179,9 +179,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual bool ZeroEmissionVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle));
 
-		public virtual bool HybridElectricHDV => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV));
+		public virtual bool HybridElectricHDV => ElementExists(XMLNames.Vehicle_HybridElectricHDV) 
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)) 
+			: false;
 
-		public virtual bool DualFuelVehicle => XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle));
+		public virtual bool DualFuelVehicle => ElementExists(XMLNames.Vehicle_DualFuelVehicle) 
+			? XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)) 
+			: false;
 
 		public virtual Watt MaxNetPower1 =>
 			ElementExists(XMLNames.Vehicle_MaxNetPower1)
@@ -237,7 +241,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ?
 			XmlConvert.ToInt32(GetString(XMLNames.Vehicle_MaxChargingPower)).SI<Watt>() : null;
 
-		public virtual VectoSimulationJobType VehicleType { get => throw new NotImplementedException("must be overriden in derived classes"); }
+		public virtual VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
