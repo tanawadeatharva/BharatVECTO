@@ -441,7 +441,7 @@
 	<xs:complexType name="Conventional-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-LorryVehicleOutputTypeGroup"/>
-			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
 			<xs:element name="Components" type="mrf:ConventionalLorryComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
