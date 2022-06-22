@@ -1900,6 +1900,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+				Type = GearboxType.AMT
 			};
 		}
 

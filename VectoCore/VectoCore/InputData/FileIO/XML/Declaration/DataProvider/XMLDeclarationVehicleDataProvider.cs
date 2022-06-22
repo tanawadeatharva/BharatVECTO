@@ -712,7 +712,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				foreach (XmlNode electricMachineNode in electricMachineNodes)
 				{
 					var powertrainPosition =
-						PowertrainPositionHelper.Parse(PowertrainPositionPrefix + GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
+						PowertrainPositionHelper.Parse(PowertrainPositionPrefix, GetString(XMLNames.ElectricMachine_Position, electricMachineNode));
 
 					if (!motorTorqueLimits.ContainsKey(powertrainPosition))
 						motorTorqueLimits.Add(powertrainPosition, new List<Tuple<Volt, TableData>>());
