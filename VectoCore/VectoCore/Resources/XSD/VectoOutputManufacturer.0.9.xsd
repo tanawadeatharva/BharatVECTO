@@ -248,17 +248,32 @@
 	</xs:complexType>
 	<xs:complexType name="ExemptedLorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ExemptedPrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ExemptedCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType"/>
+			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
+					<xs:element name="Results" type="mrf:ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<!--Vehicle-->
