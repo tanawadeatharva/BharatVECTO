@@ -317,7 +317,7 @@
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
 			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
 			<xs:element name="Model" type="v1.0:ModelType"/>
-			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType"/>
+			<xs:element name="VehicleTypeApprovalNumber" type="v2.4:VehicleTypeApprovalNumberType" minOccurs="0"/>
 			<xs:element name="CorrectedActualMass">
 				<xs:complexType>
 					<xs:simpleContent>
@@ -402,7 +402,7 @@
 				<xs:element name="HybridElectricHDV"/>
 				<xs:element name="ClassBus"/>
 				<xs:element name="TotalNumberOfPassengers"/>
-				<xs:element name="VehicleTypeApprovalNumber"/>
+				<xs:element name="VehicleTypeApprovalNumber" minOccurs="0"/>
 			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
