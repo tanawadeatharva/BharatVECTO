@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			if (inputData.JobInputData.Vehicle.TorqueLimits == null) {
+			if (inputData.JobInputData.Vehicle.TorqueLimits == null || inputData.JobInputData.Vehicle.TorqueLimits.Count == 0) {
 
 				return null;
 			}

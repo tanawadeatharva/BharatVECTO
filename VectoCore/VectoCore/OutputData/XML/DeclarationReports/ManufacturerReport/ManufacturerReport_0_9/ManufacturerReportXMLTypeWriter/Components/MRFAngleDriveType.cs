@@ -20,6 +20,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var angleDriveData = inputData.JobInputData.Vehicle.Components.AngledriveInputData;
+			if (angleDriveData == null || angleDriveData.Type == AngledriveType.None) {
+				return null;
+			}
 			return new XElement(_mrf + XMLNames.Component_Angledrive,
 				new XElement(_mrf + XMLNames.Component_Model, angleDriveData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, angleDriveData.CertificationNumber),

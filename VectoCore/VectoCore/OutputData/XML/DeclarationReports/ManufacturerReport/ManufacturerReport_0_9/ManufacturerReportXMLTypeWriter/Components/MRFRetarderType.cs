@@ -19,6 +19,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var retarderData = inputData.JobInputData.Vehicle.Components.RetarderInputData;
+			if (retarderData == null || retarderData.Type == RetarderType.None) {
+				return null;
+			}
 			var result = new XElement(_mrf + XMLNames.Component_Retarder,
 				new XElement(_mrf + XMLNames.Component_Model,
 					inputData.JobInputData.Vehicle.Components.RetarderInputData.Model),
