@@ -1567,6 +1567,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.AMT:
 					switch (runData.JobType) {
 						case VectoSimulationJobType.ConventionalVehicle:
+						case VectoSimulationJobType.ParallelHybridVehicle:
 							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
 							return new AMTShiftStrategyOptimized(container);
 						case VectoSimulationJobType.BatteryElectricVehicle:
