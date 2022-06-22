@@ -891,7 +891,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
 			var gearbox = data.GearboxData.Gears.Count > 1
-				? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+				? (IGearbox)new IEPCGearbox(container, new APTNShiftStrategy(container))
 				: new SingleSpeedGearbox(container, data.GearboxData);
 			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
 			powertrain
@@ -985,7 +985,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
 			var gearbox = data.GearboxData.Gears.Count > 1
-				? (IGearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+				? (IGearbox)new IEPCGearbox(container, new APTNShiftStrategy(container))
 				: new SingleSpeedGearbox(container, data.GearboxData);
 			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
 			powertrain

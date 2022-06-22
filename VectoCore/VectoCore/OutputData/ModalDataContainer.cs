@@ -95,15 +95,15 @@ namespace TUGraz.VectoCore.OutputData
 		};
 
 		private readonly ModalResultField[] _iepcColumns = {
-			ModalResultField.n_IEPC_,
+			ModalResultField.n_IEPC_int_,
 			ModalResultField.T_IEPC_,
 			ModalResultField.T_IEPC_map_,
-			ModalResultField.T_IEPC_drive_max_,
-			ModalResultField.T_IEPC_gen_max_,
-			ModalResultField.P_IEPC_gen_max_,
-			ModalResultField.P_IEPC_drive_max_,
+			ModalResultField.T_IEPC_int_drive_max_,
+			ModalResultField.T_IEPC_int_gen_max_,
+			ModalResultField.P_IEPC_int_gen_max_,
+			ModalResultField.P_IEPC_int_drive_max_,
 			ModalResultField.P_IEPC_electricMotorInertiaLoss_,
-			ModalResultField.P_IEPC_mech_map_,
+			ModalResultField.P_IEPC_int_mech_map_,
 			ModalResultField.P_IEPC_el_,
 			ModalResultField.P_IEPC_out_,
 			ModalResultField.P_IEPC_electricMotorLoss_,
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var elPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_el_ : ModalResultField.P_EM_electricMotor_el_;
-			var mechPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_mech_map_ : ModalResultField.P_EM_mech_;
+			var mechPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_int_mech_map_ : ModalResultField.P_EM_mech_;
 			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
@@ -417,7 +417,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			var offField = emPos == PowertrainPosition.IEPC ? ModalResultField.IEPC_Off_ : ModalResultField.EM_Off_;
 			var elPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_el_ : ModalResultField.P_EM_electricMotor_el_;
-			var mechPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_mech_map_ : ModalResultField.P_EM_mech_;
+			var mechPwrField = emPos == PowertrainPosition.IEPC ? ModalResultField.P_IEPC_int_mech_map_ : ModalResultField.P_EM_mech_;
 			var selected = Data.AsEnumerable().Select(r => {
 				var dt = r.Field<Second>(ModalResultField.simulationInterval.GetName());
 				return new {
@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.OutputData
 		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
 		{
 			var field = emPos == PowertrainPosition.IEPC
-				? ModalResultField.n_IEPC_
+				? ModalResultField.n_IEPC_int_
 				: ModalResultField.n_EM_electricMotor_;
 			var integral = GetValues(x => x.Field<PerSecond>(string.Format(field.GetCaption(), emPos.GetName())).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
