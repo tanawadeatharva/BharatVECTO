@@ -6,5 +6,6 @@ namespace TUGraz.VectoMockup.Reports
 	{
 		void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue);
 		void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue);
+		void WriteExemptedResults();
 	}
 }

@@ -38,12 +38,16 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetExemptedRun(VectoRunData data)
 		{
 
-			//var addReportResult = PrepareReport(data);
-			//return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,
-			//		new ModalDataContainer(data, ReportWriter, addReportResult))
-			//	{ RunData = data });
-
-			return base.GetExemptedRun(data);
+			if (data.Report != null)
+			{
+				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
+			}
+			return new MockupExemptedRun(new ExemptedRunContainer(data.ExecutionMode) { RunData = data }, modData => {
+				if (data.Report != null)
+				{
+					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
+				}
+			});
 		}
 
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)

@@ -12,22 +12,17 @@ namespace TUGraz.VectoMockup.Reports
 {
 	public class XMLDeclarationMockupPrimaryReport : XMLDeclarationReportPrimaryVehicle_09
 	{
+		private readonly bool _exempted;
+
 		public XMLDeclarationMockupPrimaryReport(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
-			ICustomerInformationFileFactory cifFactory,
+			ICustomerInformationFileFactory cifFactory, bool exempted,
 			bool writePIF = false) : base(writer,
 			mrfFactory,
 			cifFactory,
 			writePIF)
 		{
-
-
-
-
-
-
-
-
+			_exempted = exempted;
 		}
 
 		protected override void InstantiateReports(VectoRunData modelData)
@@ -55,8 +50,14 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void GenerateReports()
 		{
-			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-			(PrimaryReport as IXMLMockupReport).WriteMockupSummary(Results.First());
+			if (!_exempted) {
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+				(PrimaryReport as IXMLMockupReport).WriteMockupSummary(Results.First());
+			} else {
+				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
+				(PrimaryReport as IXMLMockupReport).WriteExemptedResults();
+			}
+
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = CreateDummySig();
 			//CustomerRpt.GenerateReport(fullReportHash);

@@ -14,14 +14,16 @@ namespace TUGraz.VectoMockup.Reports
 {
 	public class MockupManufacturerReport : IXMLManufacturerReport, IXMLMockupReport
 	{
+		private readonly bool _exempted;
 		private AbstractManufacturerReport _ixmlManufacturerReportImplementation;
 		private VectoRunData _modelData;
 
 		private XNamespace Mrf = AbstractManufacturerReport.Mrf;
 		private readonly string _outputData;
 		private XElement Results { get; set; }
-		public MockupManufacturerReport(IXMLManufacturerReport originalManufacturerReport)
+		public MockupManufacturerReport(IXMLManufacturerReport originalManufacturerReport, bool exempted)
 		{
+			_exempted = exempted;
 			_ixmlManufacturerReportImplementation = originalManufacturerReport as AbstractManufacturerReport;
 			_outputData = _ixmlManufacturerReportImplementation.OutputDataType;
 
@@ -42,6 +44,12 @@ namespace TUGraz.VectoMockup.Reports
 			Results.AddFirst(new XElement(Mrf + "Status", "success"));
 			Results.AddFirst(new XComment("Always prints success at the moment"));
 			//Results.Add(MockupResultReader.GetMRFMockupResult(OutputDataType, resultValue, Mrf + "Summary", _ovc));
+		}
+
+		public void WriteExemptedResults()
+		{
+			Results.Add(new XElement(Mrf + "Status", "success"));
+			Results.Add(new XElement(Mrf + "ExemptedVehicle"));
 		}
 
 

@@ -14,11 +14,13 @@ namespace TUGraz.VectoMockup.Reports
 {
     public class MockupCustomerReport : IXMLCustomerReport, IXMLMockupReport
     {
-        private readonly AbstractCustomerReport _originalCustomerReport;
+		private readonly bool _exempted;
+		private readonly AbstractCustomerReport _originalCustomerReport;
         private XNamespace Cif = AbstractCustomerReport.Cif;
-        public MockupCustomerReport(IXMLCustomerReport originalReport)
+        public MockupCustomerReport(IXMLCustomerReport originalReport, bool exempted)
         {
-            _originalCustomerReport = originalReport as AbstractCustomerReport;
+			_exempted = exempted;
+			_originalCustomerReport = originalReport as AbstractCustomerReport;
             _outputDataType = _originalCustomerReport.OutputDataType;
             Results = new XElement(Cif + XMLNames.Report_Results);
         }
@@ -74,6 +76,12 @@ namespace TUGraz.VectoMockup.Reports
             Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Summary", _modelData));
         }
 
-        #endregion
+		public void WriteExemptedResults()
+		{
+			Results.Add(new XElement(Cif + "Status", "success"));
+			Results.Add(new XElement(Cif + "ExemptedVehicle"));
+        }
+
+		#endregion
     }
 }

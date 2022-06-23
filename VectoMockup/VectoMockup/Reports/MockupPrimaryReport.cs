@@ -60,6 +60,12 @@ namespace TUGraz.VectoMockup.Reports
 			Results.AddFirst(new XComment("Always prints success at the moment"));
 		}
 
+		public void WriteExemptedResults()
+		{
+			Results.Add(new XElement(Tns + "Status", "success"));
+			Results.Add(new XElement(Tns + "ExemptedVehicle"));
+		}
+
 
 		public void GenerateReport(XElement fullReportHash)
 		{ 

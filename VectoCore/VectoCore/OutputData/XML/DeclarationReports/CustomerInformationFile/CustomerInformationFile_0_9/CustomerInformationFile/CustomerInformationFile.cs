@@ -55,7 +55,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			var vehicle = _cifFactory.GetHEV_PxLorryVehicleType();
 			Vehicle = _cifFactory.GetHEV_PxLorryVehicleType().GetElement(inputData);
 		}
 		#endregion

@@ -14,11 +14,13 @@ namespace TUGraz.VectoMockup.Reports
 {
     internal class XMLDeclarationMockupReport : XMLDeclarationReport09
     {
+		private readonly bool _exempted;
+
 		public XMLDeclarationMockupReport(IReportWriter writer, IManufacturerReportFactory mrfFactory,
-			ICustomerInformationFileFactory cifFactory) :
+			ICustomerInformationFileFactory cifFactory, bool exempted) :
 			base(writer, mrfFactory, cifFactory)
 		{
-
+			_exempted = exempted;
 		}
 
 		#region Overrides of XMLDeclarationReport09
@@ -36,8 +38,16 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void GenerateReports()
 		{
-			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-			(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			if (!_exempted) {
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+				(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			} else {
+				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
+				(CustomerRpt as IXMLMockupReport).WriteExemptedResults();
+			}
+		
+			
+			
 			base.GenerateReports();
 		}
 

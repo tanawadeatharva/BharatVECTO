@@ -88,7 +88,7 @@ namespace TUGraz.VectoMockup.Reports
             var vehicleCategory = declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory;
             if (vehicleCategory.IsLorry())
             {
-                return new XMLDeclarationMockupReport(outputDataWriter, _mrfFactory, _cifFactory);
+                return new XMLDeclarationMockupReport(outputDataWriter, _mrfFactory, _cifFactory, declarationInputDataProvider.JobInputData.Vehicle.ExemptedVehicle);
             }
 
             if (vehicleCategory.IsBus())
@@ -105,6 +105,7 @@ namespace TUGraz.VectoMockup.Reports
                         };
                     case VehicleCategory.HeavyBusPrimaryVehicle:
                         return new XMLDeclarationMockupPrimaryReport(outputDataWriter, _mrfFactory, _cifFactory,
+							declarationInputDataProvider.JobInputData.Vehicle.ExemptedVehicle,
                             declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory ==
                             VehicleCategory.HeavyBusPrimaryVehicle);
 

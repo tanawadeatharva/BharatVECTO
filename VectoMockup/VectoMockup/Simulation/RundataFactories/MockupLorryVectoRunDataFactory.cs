@@ -69,14 +69,15 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle)
             {
                 runData = new VectoRunData
-                {
+                { 
                     Exempted = true,
                     Report = Report,
                     Mission = new Mission() { MissionType = MissionType.ExemptedMission },
                     VehicleData = CreateMockupVehicleData(vehicle),
                     InputDataHash = InputDataProvider.XMLHash
                 };
-            }
+				runData.VehicleData.InputData = vehicle;
+			}
             else
             {
 
