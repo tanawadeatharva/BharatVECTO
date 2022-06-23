@@ -77,7 +77,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
-					VehicleData = CreateMockupVehicleData(vehicle, _segment, loading),
+					VehicleData = CreateExemptedMockupVehicleData(vehicle, _segment),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 				runData.VehicleData.InputData = vehicle;
@@ -117,8 +117,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         }
 
 
-
-        #endregion
+		#endregion
 
         #endregion
         public static IAuxiliaryConfig CreateMockupBusAux(IVehicleDeclarationInputData vehicle)
@@ -274,6 +273,29 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
             };
         }
+
+		private VehicleData CreateExemptedMockupVehicleData(IVehicleDeclarationInputData vehicleData, Segment segment)
+		{
+			return new VehicleData() {
+				InputData = vehicleData,
+				SleeperCab = vehicleData.SleeperCab,
+				//Loading = loading.Value.Item1,
+				VehicleClass = segment.VehicleClass,
+				Ocv = vehicleData.OvcHev,
+				VehicleCategory = vehicleData.VehicleCategory,
+				ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
+				//ADAS = CreateMockupAdasData(vehicleData),
+
+				Manufacturer = vehicleData.Manufacturer,
+				ManufacturerAddress = vehicleData.ManufacturerAddress,
+				ModelName = vehicleData.Model,
+				VIN = vehicleData.VIN,
+				LegislativeClass = vehicleData.LegislativeClass,
+				AxleConfiguration = vehicleData.AxleConfiguration,
+				Date = vehicleData.Date,
+
+			};
+		}
 
         public static VehicleData CreateMockupVehicleData(IVehicleDeclarationInputData vehicleData, Segment segment,
 			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
