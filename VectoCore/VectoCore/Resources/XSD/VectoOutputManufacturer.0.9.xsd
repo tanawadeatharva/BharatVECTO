@@ -619,14 +619,30 @@
 		<xs:sequence>
 			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
 			<xs:element name="VehicleTechnologyExempted"/>
-			<xs:element name="SumNetPower" type="xs:int"/>
+			<xs:element name="SumNetPower">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="out:PowerUnitType"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
 			<xs:element name="VehicleTechnologyExempted" type="xs:string"/>
-			<xs:element name="SumNetPower"/>
+			<xs:element name="SumNetPower">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="out:PowerUnitType"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted-CompletedBusVehicleOutputType">
