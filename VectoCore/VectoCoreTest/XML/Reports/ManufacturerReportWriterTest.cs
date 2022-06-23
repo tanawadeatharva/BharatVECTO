@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using System.Xml.XPath;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
@@ -28,7 +31,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
 {
-	[TestFixture]
+    
+	
 	public class MRF_CIF_WriterTestBase
 	{
 		protected string outputBasePath = @"C:\Users\Harry\source\vecto\mrf_report_0_9";
@@ -60,6 +64,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected const string PEV_IEPC_HeavyLorry =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\IEPC_heavyLorry.xml";
 
+		protected const string Exempted_HeavyLorry =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ExemptedVehicles\exempted_heavyLorry.xml";
+
 		protected const string Conventional_PrimaryBus = 
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string HEV_Px_IHPC_PrimaryBus =
@@ -81,12 +88,14 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		protected const string PEV_IEPC_PrimaryBus =
 			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\IEPC_primaryBus.xml";
 
+		protected const string Exempted_PrimaryBus =
+			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ExemptedVehicles\exempted_primaryBus.xml";
+
 
 		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
+		protected const string Exempted_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ExemptedVehicles\exempted_completedBus_input_full.xml";
 
-
-
-		public static bool ValidateAndPrint(XDocument document, string xsdPath = "../../../../VectoCore/Resources/XSD")
+		public static bool ValidateAndPrint(XDocument document, string xsdPath = "../../../../VectoCore/Resources/XSD", Func<XDocument, XElement> elementSelector = null)
 		{
 			var error = false;
 
@@ -120,15 +129,28 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				}
 
 				schemaSet.Add(schema);
+				
 
+				if (elementSelector != null) {
+					document.Validate(schemaSet, ((sender, args) => {
+						//do nothing just add schema info
+					}), true);
+					var element = elementSelector(document);
+					element.Validate(element.GetSchemaInfo().SchemaType, schemaSet, (sender, args) => {
+						error = true;
+						TestContext.WriteLine(sender?.ToString());
+						TestContext.WriteLine(args.Message);
+					});
+				} else {
+					document.Validate(schemaSet, (sender, args) => {
+						error = true;
 
+						TestContext.WriteLine(sender?.ToString());
+						TestContext.WriteLine(args.Message);
+					});
+				}
 
-				document.Validate(schemaSet, (sender, args) => {
-					error = true;
-
-					TestContext.WriteLine(sender?.ToString());
-					TestContext.WriteLine(args.Message);
-				});
+				
 			} finally {
 				TestContext.WriteLine(document);
 			}
@@ -169,7 +191,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				}
 				catch (Exception ex)
 				{
-					TestContext.WriteLine(ex.Message);
+					TestContext.WriteLine(ex);
 					return false;
 				}
 			}
@@ -196,6 +218,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		}
 	}
 
+    
 	[TestFixture]
     public class ManufacturerReportWriterTest : MRF_CIF_WriterTestBase
 	{
@@ -209,9 +232,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			
 
 			dataProvider.JobInputData.Vehicle.VehicleCategory.GetVehicleType(); // HEV/PEV - Sx/Px
-			var ihpc = (dataProvider.JobInputData.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric =>
+			var ihpc = (dataProvider.JobInputData.Vehicle.Components?.ElectricMachines?.Entries)?.Count(electric =>
 				electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (dataProvider.JobInputData.Vehicle.Components.IEPC != null);
+			var iepc = (dataProvider.JobInputData.Vehicle.Components?.IEPC != null);
 			var report = _mrfFactory.GetManufacturerReport(
 				dataProvider.JobInputData.Vehicle.VehicleCategory,
 				dataProvider.JobInputData.JobType,
@@ -253,15 +276,11 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as ConventionalLorryManufacturerReport;
 
 			report.InitializeVehicleData(dataProvider);
+			report.GenerateReport();
 
-			ValidateAndPrint(report.Report);
-			TestContext.WriteLine(report.Report);
-			//TestContext.WriteLine(report.Vehicle);
-
-			Assert.IsTrue(ValidateAndPrint(report.Report));
-			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
-		
-		}
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector:(document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+            Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+        }
 
 		[TestCase(HEV_Px_HeavyLorry)]
 		public async Task HEV_Px_LorryMRFTest(string fileName)
@@ -269,7 +288,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_Px_IHPC_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -279,7 +300,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S2_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -289,7 +312,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S3_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -299,7 +324,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S4_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -309,7 +336,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_IEPC_S_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -319,7 +348,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E2_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -330,7 +361,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E3_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -340,7 +373,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E4_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -350,7 +385,21 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_IEPC_LorryManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+        [TestCase(Exempted_HeavyLorry, TestName="ExemptedHeavyLorry_MRF")]
+		public void Exempted_LorryMRFTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider); 
+			Assert.NotNull(report as Exempted_LorryManufacturerReport);
+			report.InitializeVehicleData(dataProvider);
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -361,7 +410,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as Conventional_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+            report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -371,7 +422,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_Px_IHPC_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -384,7 +437,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -395,7 +450,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -405,7 +462,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_S4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -415,7 +474,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as HEV_IEPC_S_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -427,7 +488,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E2_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -438,7 +501,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E3_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -448,7 +513,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_E4_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -459,7 +526,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetReport(fileName, out var dataProvider) as PEV_IEPC_PrimaryBus_ManufacturerReport;
 			Assert.NotNull(report);
 			report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
+		}
+
+		[TestCase(Exempted_PrimaryBus)]
+		public void ExemptedPrimaryBusTest(string fileName)
+		{
+			var report = GetReport(fileName, out var dataProvider) as Exempted_PrimaryBus_ManufacturerReport;
+			Assert.NotNull(report);
+			report.InitializeVehicleData(dataProvider);
+
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -469,7 +553,9 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var report = GetCompletedBusReport(fileName, out var dataProvider) as Conventional_CompletedBusManufacturerReport;
 			Assert.NotNull(report);
             report.InitializeVehicleData(dataProvider);
-			Assert.IsTrue(ValidateAndPrint(report.Report));
+			report.GenerateReport();
+
+			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -483,6 +569,13 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		[Ignore("No testfile")]
 		[TestCase("")]
 		public void PEV_CompletedBusTest(string fileName)
+		{
+			Assert.IsFalse(string.IsNullOrEmpty(fileName));
+		}
+
+		[Ignore("No testfile")]
+		[TestCase("")]
+		public void Exempted_CompletedBusTest(string fileName)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
 		}
