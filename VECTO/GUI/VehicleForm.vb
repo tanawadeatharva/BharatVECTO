@@ -495,7 +495,7 @@ Public Class VehicleForm
 			tbGenSetRatio.Text = gen.RatioADC.ToGUIFormat()
 		End If
 
-		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle) Then
+		If (vehicle.VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.IHPC) Then
 			'tbMaxDrivetrainPwr.Text = vehicle.MaxDrivetrainPower.ConvertToKiloWatt().Value.ToXMLFormat(2)
 			'ToDo ElectricMotorTorqueLimits changed
 			'tbEmTorqueLimits.Text = if (Not vehicle.ElectricMotorTorqueLimits Is Nothing, GetRelativePath(vehicle.ElectricMotorTorqueLimits.Source, basePath), "")
@@ -933,7 +933,7 @@ Public Class VehicleForm
 			veh.EmTorqueLimitsFile.Init(GetPath(file), tbEmTorqueLimits.Text)
 		End If
 
-		If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle AndAlso Not String.IsNullOrEmpty(tbPropulsionTorqueLimit.Text)) Then
+		If ((VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse VehicleType = VectoSimulationJobType.IHPC) AndAlso Not String.IsNullOrEmpty(tbPropulsionTorqueLimit.Text)) Then
 			veh.PropulsionTorqueFile.Init(GetPath(file), tbPropulsionTorqueLimit.Text)
 		End If
 
