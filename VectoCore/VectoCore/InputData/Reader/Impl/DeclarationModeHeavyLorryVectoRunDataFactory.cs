@@ -172,13 +172,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				return new VectoRunData {
+				var runData =  new VectoRunData {
+					InputData = InputDataProvider,
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
 					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
 					InputDataHash = InputDataProvider.XMLHash
 				};
+				runData.VehicleData.InputData = vehicle;
+				return runData;
 			}
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
@@ -220,6 +223,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+			simulationRunData.VehicleData.InputData = vehicle;
 			return simulationRunData;
 		}
 
