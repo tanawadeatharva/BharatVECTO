@@ -18,6 +18,21 @@
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
 		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
 	</PropertyGroup>
+
+	<Choose>
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
+         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+			<ItemGroup>
+				<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+					<_Parameter1>VectoMockup</_Parameter1>
+				</AssemblyAttribute>
+			</ItemGroup>
+			<!--<PropertyGroup>
+				<DefineConstants>MOCKUP</DefineConstants>
+			</PropertyGroup>-->
+		</When>
+	</Choose>
+
 	<ItemGroup>
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
