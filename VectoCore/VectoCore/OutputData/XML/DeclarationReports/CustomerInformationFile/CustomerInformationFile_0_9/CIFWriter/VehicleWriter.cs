@@ -306,6 +306,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class CIF_Exempted_LorryVehicleWriter : VehicleWriter
+	{
+		public CIF_Exempted_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = inputData.JobInputData.Vehicle;
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(vehicleData),
+				new XElement(_cif + "VehicleGroupCO2", "todo"),
+				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
+				new XElement(_cif + XMLNames.Component_ManufacturerAddress, vehicleData.ManufacturerAddress),
+				new XElement(_cif + XMLNames.Component_Model, vehicleData.Model),
+				
+				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis),
+				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
+				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
+				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV)
+			);
+		}
+
+		#endregion
+	}
+
 	public class CIF_ConventionalCompletedBusVehicleWriter : VehicleWriter
 	{
 		public CIF_ConventionalCompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
@@ -321,6 +347,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetCompletedBusAuxGroup().GetElements(inputData)
 			);
+		}
+
+		#endregion
+	}
+
+
+
+
+
+
+	public class CIF_ExemptedCompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_ExemptedCompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

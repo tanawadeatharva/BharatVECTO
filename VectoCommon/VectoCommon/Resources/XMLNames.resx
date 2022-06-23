@@ -1974,4 +1974,10 @@
 <data name="CIF_OutputDataType_PEV_IEPC_LorryOutputType" xml:space="preserve">
 	<value>PEV_IEPC_LorryOutputType</value>
 </data>
+<data name="CIF_OutputDataType_Exempted_LorryOutputType" xml:space="preserve">
+	<value>Exempted_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_Exempted_CompletedBusOutputType" xml:space="preserve">
+	<value>Exempted_CompletedBusOutputType</value>
+</data>
 </root>

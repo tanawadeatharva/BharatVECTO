@@ -202,4 +202,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class Exempted_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public Exempted_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "ExemptedLorryManufacturerOutputDataType";
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetExempted_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
 }

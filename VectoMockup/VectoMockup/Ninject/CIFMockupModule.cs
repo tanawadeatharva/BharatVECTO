@@ -93,7 +93,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetPEV_IEPC_LorryVehicleType();
         }
 
-        public IXmlTypeWriter GetConventional_CompletedBusVehicleType()
+		public IXmlTypeWriter GetExempted_LorryVehicleType()
+		{
+			return _cifFactory.GetExempted_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetConventional_CompletedBusVehicleType()
         {
             return _cifFactory.GetConventional_CompletedBusVehicleType();
         }
@@ -108,7 +113,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetPEV_CompletedBusVehicleType();
         }
 
-        public IReportVehicleOutputGroup GetGeneralVehicleSequenceGroupWriter()
+		public IXmlTypeWriter GetExemptedCompletedBusVehicleType()
+		{
+			return _cifFactory.GetExemptedCompletedBusVehicleType();
+		}
+
+		public IReportVehicleOutputGroup GetGeneralVehicleSequenceGroupWriter()
         {
             return _cifFactory.GetGeneralVehicleSequenceGroupWriter();
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
@@ -198,7 +199,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class ExemptedLorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
+		#region Overrides of VehicleTypeWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetGeneralLorryVehicleOutputGroup().GetElements(inputData),
+				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_W))
+			);
+		}
+
+		#endregion
+	}
 
 
 	public class ConventionalPrimaryBusVehicleTypeWriter : VehicleTypeWriter
@@ -365,6 +382,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class ExemptedPrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of VehicleTypeWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
+				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_W))
+			);
+		}
+
+		#endregion
+	}
+
 	public class ConventionalCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
 		public ConventionalCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
@@ -416,8 +451,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class ExemptedCompletedBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
+		#region Overrides of VehicleTypeWriter
 
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputdata == null)
+			{
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
+			);
+		}
 
-
+		#endregion
+	}
 }

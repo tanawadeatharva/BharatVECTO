@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     public class LorryGeneralVehicleOutputXmlGroup : AbstractReportOutputGroup
     {
-		#region Implementation of IMRFGroupWriter
+		#region Implementation of IMRFGroupWriterb
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{

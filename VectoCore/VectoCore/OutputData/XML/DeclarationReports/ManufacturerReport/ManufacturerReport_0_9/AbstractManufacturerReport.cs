@@ -15,9 +15,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9
 {
-
-
-	internal abstract class AbstractManufacturerReport : IXMLManufacturerReport
+	public abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
         protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		public static XNamespace Mrf => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");

@@ -29,6 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				nameCombinationMethod, 6, 6, typeof(ICustomerInformationFileFactory).GetMethod(nameof(ICustomerInformationFileFactory
 					.GetCustomerReport)))).InSingletonScope();
 
+			#region Lorry CIF
 			Bind<IXMLCustomerReport>().To<ConventionalLorry_CIF>().Named(nameCombinationMethod(
 				ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN, false, false, false)));
@@ -89,6 +90,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					true,
 					false)));
 
+			Bind<IXMLCustomerReport>().To<Exempted_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+			#endregion
+			#region CompletedBUsCIF
+
 			Bind<IXMLCustomerReport>().To<Conventional_CompletedBusCIF>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -121,6 +132,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					false,
 					false)));
 
+			Bind<IXMLCustomerReport>().To<Exempted_CompletedBusCIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+			#endregion
 
 			#region VehicleTypes
 			Bind<IXmlTypeWriter>().To<CIFConventionalLorryVehicleWriter>().When(AccessedViaCIFFactory)
@@ -153,9 +172,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IXmlTypeWriter>().To<CIF_PEV_IEPC_LorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEV_IEPC_LorryVehicleType());
 
+			Bind<IXmlTypeWriter>().To<CIF_Exempted_LorryVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetExempted_LorryVehicleType());
+
 			Bind<IXmlTypeWriter>().To<CIF_ConventionalCompletedBusVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventional_CompletedBusVehicleType());
 
+			Bind<IXmlTypeWriter>().To<CIF_ExemptedCompletedBusVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetExemptedCompletedBusVehicleType());
 			#endregion
 			#region VehicleGroups
 			Bind<IReportVehicleOutputGroup>().To<GeneralVehicleOutputSequenceGroupCif>().When(AccessedViaCIFFactory)

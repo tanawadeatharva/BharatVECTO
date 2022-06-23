@@ -1483,6 +1483,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exempted_CompletedBusOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_Exempted_CompletedBusOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_Exempted_CompletedBusOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exempted_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_Exempted_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_Exempted_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HEV_IEPC_S_LorryOutputType.
         /// </summary>
         public static string CIF_OutputDataType_HEV_IEPC_S_LorryOutputType {

@@ -31,12 +31,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType { get; }
+		public override string OutputDataType => "ConventionalCompletedBusManufacturerOutputDataType";
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport("ConventionalCompletedBusManufacturerOutputDataType");
+			GenerateReport(OutputDataType);
 
 		}
 
@@ -66,12 +66,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType { get; }
+		public override string OutputDataType => "PEV_CompletedBusManufacturerOutputDataType";
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport("PEVCompletedBusManufacturerOutputDataType");
+			GenerateReport(OutputDataType);
+		}
+
+		#endregion
+	}
+
+	internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	{
+		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
+
+		#region Overrides of AbstractManufacturerReport
+
+		public override string OutputDataType => "ExemptedCompletedBusManufacturerOutputDataType";
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

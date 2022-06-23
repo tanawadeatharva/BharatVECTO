@@ -167,6 +167,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+
+
 	public class PEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_IEPC_LorryOutputType;
@@ -182,18 +184,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-    #endregion
+
+	public class Exempted_Lorry_CIF : CustomerInformationFile
+	{
+		public Exempted_Lorry_CIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_Exempted_LorryOutputType;
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetExempted_LorryVehicleType().GetElement(inputData);
+		}
+
+		#endregion
+	}
+
+	#endregion
 
 
-
-
-
-
-
-
-
-    #region CompletedBus
-    public class Conventional_CompletedBusCIF : CustomerInformationFile
+	#region CompletedBus
+	public class Conventional_CompletedBusCIF : CustomerInformationFile
 	{
 		public override string OutputDataType => "Conventional_CompletedBusOutputType";
 
@@ -232,6 +244,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			Vehicle = _cifFactory.GetPEV_CompletedBusVehicleType().GetElement(inputData);
 		}
+	}
+
+
+	public class Exempted_CompletedBusCIF : CustomerInformationFile
+	{
+		public Exempted_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCustomerReport
+
+		public override string OutputDataType => XMLNames.CIF_OutputDataType_Exempted_CompletedBusOutputType;
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetExemptedCompletedBusVehicleType().GetElement(inputData);
+		}
+
+		#endregion
 	}
 
 	#endregion

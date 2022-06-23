@@ -97,7 +97,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPEV_IEPC_LorryVehicleType();
         }
 
-        public IXmlTypeWriter GetConventional_PrimaryBusVehicleType()
+		public IXmlTypeWriter GetExempted_LorryVehicleType()
+		{
+			return _manufacturerReportFactoryImplementation.GetExempted_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetConventional_PrimaryBusVehicleType()
         {
             return _manufacturerReportFactoryImplementation.GetConventional_PrimaryBusVehicleType();
         }
@@ -147,7 +152,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPEV_IEPC_PrimaryBusVehicleType();
         }
 
-        public IXmlTypeWriter GetConventional_CompletedBusVehicleType()
+		public IXmlTypeWriter GetExempted_PrimaryBusVehicleType()
+		{
+			return _manufacturerReportFactoryImplementation.GetExempted_PrimaryBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetConventional_CompletedBusVehicleType()
         {
             return _manufacturerReportFactoryImplementation.GetConventional_CompletedBusVehicleType();
         }
@@ -162,7 +172,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPEV_CompletedBusVehicleType();
         }
 
-        public IXmlTypeWriter GetConventionalLorryComponentsType()
+		public IXmlTypeWriter GetExempted_CompletedBusVehicleType()
+		{
+			return _manufacturerReportFactoryImplementation.GetExempted_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetConventionalLorryComponentsType()
         {
             return _manufacturerReportFactoryImplementation.GetConventionalLorryComponentsType();
         }

@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_LorryVehicleType();
 
+		IXmlTypeWriter GetExempted_LorryVehicleType();
 
 
 
@@ -40,9 +41,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_E4_PrimaryBusVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_PrimaryBusVehicleType();
 
+		IXmlTypeWriter GetExempted_PrimaryBusVehicleType();
+
 		IXmlTypeWriter GetConventional_CompletedBusVehicleType();
 		IXmlTypeWriter GetHEV_CompletedBusVehicleType();
 		IXmlTypeWriter GetPEV_CompletedBusVehicleType();
+
+		IXmlTypeWriter GetExempted_CompletedBusVehicleType();
 
 
 		IXmlTypeWriter GetConventionalLorryComponentsType();
@@ -137,6 +142,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IReportVehicleOutputGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
 		IMrfVehicleType GetBoostingLimitationsType();
+
 	}
 
 

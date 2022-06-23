@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
+		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
 
 		public override bool ExemptedVehicle => true;
 
@@ -90,7 +90,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationExemptedHeavyLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationExemptedHeavyLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
