@@ -146,6 +146,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case VectoSimulationJobType.IEPC_E:
 					return _adasInputData = new JSONADASInputDataV10BEV(this);
 				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 					return _adasInputData = new JSONADASInputDataV10HEV(this);
