@@ -36,12 +36,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
 			var vehicleData = modelData.VehicleData.InputData;
-			var iepc = vehicleData.Components.IEPC != null;
+			var iepc = vehicleData.Components?.IEPC != null;
 			var ihpc =
-				vehicleData.Components.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
 			if (modelData.Exempted) {
-				throw new NotImplementedException();
+				PrimaryReport = new XMLExemptedPrimaryBusVehicleReport();
 			}
 			PrimaryReport = new XMLPrimaryBusVehicleReport();
 			
