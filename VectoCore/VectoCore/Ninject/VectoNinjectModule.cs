@@ -41,6 +41,7 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 using TUGraz.VectoCore.OutputData.XML.Engineering;
 
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
@@ -92,6 +93,8 @@ namespace TUGraz.VectoCore
 
 			LoadModule<MRFNinjectModule>();
 			LoadModule<CIFNinjectModule>();
+			LoadModule<VIFNinjectModule>();
+			
 
 
 #if (MOCKUP)  //TODO: add second constant for release

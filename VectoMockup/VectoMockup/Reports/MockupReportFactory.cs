@@ -10,6 +10,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoMockup.Reports
 {
@@ -17,6 +18,7 @@ namespace TUGraz.VectoMockup.Reports
     {
         private readonly IManufacturerReportFactory _mrfFactory;
         private readonly ICustomerInformationFileFactory _cifFactory;
+		private readonly IVIFReportFactory _vifFactory;
 
 
         #region Implementation of IXMLDeclarationReportFactory
