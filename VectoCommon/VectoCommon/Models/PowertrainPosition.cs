@@ -43,7 +43,7 @@ namespace TUGraz.VectoCommon.InputData
 			}
 
 			if (prefix.Equals("B", StringComparison.InvariantCultureIgnoreCase) || prefix.Equals("E", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectricPrefix + prefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
+				return (BatteryElectricPrefix + (prefix + pos).Replace("B", "E")).ParseEnum<PowertrainPosition>();
 			}
 			
 			throw new VectoException("invalid powertrain position {0}", pos);
