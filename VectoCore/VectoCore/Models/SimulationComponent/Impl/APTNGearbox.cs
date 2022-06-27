@@ -77,7 +77,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gear = oldGear;
 			return new ResponseDryRun(this, response) {
 				ElectricMotor = { PowerRequest = response.ElectricMotor.PowerRequest },
-				Gearbox = { PowerRequest = outTorque * outAngularVelocity },
+				Gearbox = {
+					PowerRequest = outTorque * outAngularVelocity,
+					InputSpeed = inAngularVelocity,
+					InputTorque = inTorque,
+					OutputTorque = outTorque,
+					OutputSpeed = outAngularVelocity,
+				},
 				DeltaFullLoad = response.ElectricMotor.PowerRequest - fullLoad
 			};
 		}

@@ -109,7 +109,7 @@ Public Class IEPCInputData
             If Not entry.SubItems(1).Text = Nothing Then _
                 currentEntry.MaxOutputShaftTorque = entry.SubItems(1).Text.ToDouble().SI(Of NewtonMeter)
             If Not entry.SubItems(2).Text = Nothing Then _
-                currentEntry.MaxOutputShaftSpeed = entry.SubItems(2).Text.ToDouble().SI(Of PerSecond)
+                currentEntry.MaxOutputShaftSpeed = entry.SubItems(2).Text.ToDouble().RPMtoRad()
             
             _gears.Add(currentEntry)
         Next

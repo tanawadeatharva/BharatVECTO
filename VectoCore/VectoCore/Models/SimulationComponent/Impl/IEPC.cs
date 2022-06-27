@@ -21,18 +21,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl{
 			var avgDTSpeed = (prevDtSpeed + CurrentState.DrivetrainSpeed) / 2;
 
 			//container[ModalResultField.EM_ratio_, Position] = ModelData.RatioADC.SI<Scalar>();
-			container[ModalResultField.n_IEPC_, Position] = avgEMSpeed;
+			container[ModalResultField.n_IEPC_int_, Position] = avgEMSpeed;
 			container[ModalResultField.T_IEPC_, Position] = CurrentState.EMTorque;
 			container[ModalResultField.T_IEPC_map_, Position] = CurrentState.EmTorqueMap;
 
-			container[ModalResultField.T_IEPC_drive_max_, Position] = CurrentState.DriveMax;
-			container[ModalResultField.T_IEPC_gen_max_, Position] = CurrentState.DragMax;
+			container[ModalResultField.T_IEPC_int_drive_max_, Position] = CurrentState.DriveMax;
+			container[ModalResultField.T_IEPC_int_gen_max_, Position] = CurrentState.DragMax;
 
-			container[ModalResultField.P_IEPC_gen_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
-			container[ModalResultField.P_IEPC_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_gen_max_, Position] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_drive_max_, Position] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 
 			//container[ModalResultField.P_EM_electricMotor_em_mech_, Position] = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
-			container[ModalResultField.P_IEPC_mech_map_, Position] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_mech_map_, Position] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 
 
 			//container[ModalResultField.P_EM_in_, Position] = CurrentState.DrivetrainInTorque * avgDTSpeed;

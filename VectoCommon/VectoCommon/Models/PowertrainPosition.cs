@@ -29,28 +29,33 @@ namespace TUGraz.VectoCommon.InputData
 		public const string HybridPrefix = "Hybrid";
 		public const string BatteryElectricPrefix = "BatteryElectric";
 
-		public static PowertrainPosition Parse(string pos)
+		public static PowertrainPosition Parse(string prefix, string pos)
 		{
 			if (pos.Equals(nameof(PowertrainPosition.GEN))) {
 				return PowertrainPosition.GEN;
 			}
-
-			if (pos.StartsWith("P", StringComparison.InvariantCultureIgnoreCase)) {
-				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
-			}
-
-			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectricPrefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
-			}
-			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectricPrefix + pos).ParseEnum<PowertrainPosition>();
-			}
-
 			if (pos.Equals(nameof(PowertrainPosition.IHPC), StringComparison.InvariantCultureIgnoreCase)) {
 				return PowertrainPosition.IHPC;
 			}
 
+			if (prefix.Equals("P", StringComparison.InvariantCultureIgnoreCase)) {
+				return (HybridPrefix + prefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
+			}
+
+			if (prefix.Equals("B", StringComparison.InvariantCultureIgnoreCase) || prefix.Equals("E", StringComparison.InvariantCultureIgnoreCase)) {
+				return (BatteryElectricPrefix + prefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
+			}
+			
 			throw new VectoException("invalid powertrain position {0}", pos);
+		}
+
+		public static PowertrainPosition Parse(string pos)
+		{
+			if (pos.Length > 1 && pos[0].IsOneOf('B', 'P', 'E')) {
+				return Parse(pos.Substring(0, 1), pos.Substring(1));
+			}
+
+			return Parse("", pos);
 		}
 
 		public static string GetName(this PowertrainPosition pos)
