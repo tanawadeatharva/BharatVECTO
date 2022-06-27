@@ -753,7 +753,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool IsOverspeedAllowed(MeterPerSecond velocity, bool prohibitOverspeed = false) =>
 			!prohibitOverspeed
-			&& Driver.DriverData.OverSpeed.Enabled
+			// allow overspeed either if enabled in the driver model, or ADAS PCC option 3 is enabled in the vehicle and we are on a highway
+			&& (Driver.DriverData.OverSpeed.Enabled || ADAS.PredictiveCruiseControl == PredictiveCruiseControlType.Option_1_2_3 && DataBus.DrivingCycleInfo.CycleData.LeftSample.Highway)
 			&& velocity > Driver.DriverData.OverSpeed.MinSpeed
 			&& ApplyOverspeed(velocity) < (DataBus.VehicleInfo.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());
 	}
