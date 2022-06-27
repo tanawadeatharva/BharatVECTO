@@ -484,7 +484,7 @@ Public Class VectoJobForm
 		Else
 			TbENG.Text = ""
 		End If
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle orelse inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+		If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
 			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbGBX.Text = ""
@@ -1084,7 +1084,7 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
-
+                pnHybridStrategy.Enabled = true
         End Select
     End Sub
 
