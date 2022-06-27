@@ -1127,7 +1127,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							FullDriveTorque = gearboxData.Gears[key].MaxTorque
 						}
 					}.ToList();
-					retVal[new GearshiftPosition(key)] = new VehicleMaxPropulsionTorque(gbxLimit);
+					retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(gbxLimit);
 					continue;
 				} 
 
@@ -1159,7 +1159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				// if no gearbox limit is defined, MaxTorque is null;
 				// in case of P3 or P4, do not apply gearbox limit to propulsion limit as ICE is already cropped with max torque
 				var gearboxTorqueLimit = isP3OrP4Hybrid ? null : gearboxData.Gears[key].MaxTorque;
-				retVal[new GearshiftPosition(key)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
+				retVal[new GearshiftPosition(key, true)] = new VehicleMaxPropulsionTorque(IntersectMaxPropulsionTorqueCurve(entries, gearboxTorqueLimit));
 
 			}
 
