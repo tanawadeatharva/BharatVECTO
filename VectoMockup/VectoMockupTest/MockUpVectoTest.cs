@@ -189,8 +189,21 @@ namespace VectoMockupTest
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
 		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
-		//[NonParallelizable]
-		public void HeavyLorryMockupTest(string fileName, bool mockup = true)
+        //[NonParallelizable]
+        
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/Conventional_mediumLorry_AMT.xml", TestName="Conventional_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_AMT_S2.xml", TestName="HEV_S2_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_IEPC-S.xml", TestName="HEV_IEPC_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_S3.xml", TestName="HEV_S3_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_S4.xml", TestName="HEV_S4_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV_mediumLorry_AMT_Px.xml", TestName="HEV_Px_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/IEPC_mediumLorry.xml", TestName="PEV_IEPC_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_AMT_E2.xml", TestName="PEV_E2_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml", TestName="PEV_E2_std_Medium_Lorry", Ignore="Segment not found")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_APT-N_E2.xml", TestName="PEV_E2_Medium_Lorry_2")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_E3.xml", TestName="PEV_E3_Medium_Lorry")]
+		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_E4.xml", TestName="PEV_E4_Medium_Lorry")]
+		public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			
 			var inputProvider = _inputDataReader.Create(fileName);
