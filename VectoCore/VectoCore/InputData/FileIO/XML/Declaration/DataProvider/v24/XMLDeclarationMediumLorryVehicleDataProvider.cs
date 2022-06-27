@@ -71,6 +71,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationConventionalMediumLorryVehicleDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
 			sourceFile) { }
+
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -84,6 +90,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationHevPxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
 
 		#region Overrides of XMLDeclarationHevPxHeavyLorryDataProviderV24
 
@@ -107,6 +115,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override XmlElement PTONode => null;
 
 		#endregion
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -123,6 +132,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
 		public XMLDeclarationHevSxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
@@ -149,6 +159,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override string PowertrainPositionPrefix => "E";
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 
 		public XMLDeclarationPevMediumLorryExDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
@@ -181,6 +193,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -228,6 +241,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override XmlElement PTONode => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
 	}
 
 	// ---------------------------------------------------------------------------------------
