@@ -39,6 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetElectricMotorTorqueLimitsType();
 		IXmlTypeWriter GetEngineType();
 		IXmlTypeWriter GetTorqueConvertType();
+		IXmlTypeWriter GetIepcType();
 		IXmlTypeWriter GetTorqueLimitsType();
 		IXmlTypeWriter GetTransmissionType();
 
