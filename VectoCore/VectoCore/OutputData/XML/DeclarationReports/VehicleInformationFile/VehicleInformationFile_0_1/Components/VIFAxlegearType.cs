@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XAttribute(_xsi + "type", "vif:AxlegearDataVIFType"),
 					new XElement(_vif + XMLNames.Component_Manufacturer, axleGear.Manufacturer),
 					new XElement(_vif + XMLNames.Component_Model, axleGear.Model),
-					new XElement(_vif + XMLNames.Component_CertificationMethod, axleGear.CertificationMethod),
+					new XElement(_vif + XMLNames.Component_CertificationMethod, axleGear.CertificationMethod.ToXMLFormat()),
 					axleGear.CertificationMethod == CertificationMethod.StandardValues
 						? null
 						: new XElement(_vif + XMLNames.Report_Component_CertificationNumber,
