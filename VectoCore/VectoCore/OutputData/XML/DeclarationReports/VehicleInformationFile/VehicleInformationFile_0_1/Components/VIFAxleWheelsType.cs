@@ -58,25 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_v20 + XMLNames.AxleWheels_Axles_Axle_Tyre,
 				currentTyre,
-				GetSignature(tyre)
-			);
-		}
-
-		private XElement GetSignature(ITyreDeclarationInputData tyre)
-		{
-			return new XElement(_v20 + XMLNames.DI_Signature,
-				new XElement(_di + XMLNames.DI_Signature_Reference,
-					new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, tyre.DigestValue.Reference),
-					new XElement(_di + XMLNames.DI_Signature_Reference_Transforms,
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, tyre.DigestValue.CanonicalizationMethods[0])),
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/10/xml-exc-c14n#"))
-					),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestMethod,
-						new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/04/xmlenc#sha256")),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestValue, tyre.DigestValue.DigestValue))
-
+				GetSignature(tyre.DigestValue)
 			);
 		}
 		

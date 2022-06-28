@@ -38,9 +38,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 							? null
 							: new XElement(_vif + XMLNames.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured.Value),
 						GetGears(iepc.Gears),
+						GetVoltageLevels(iepc.VoltageLevels),
 						GetDragCurves(iepc.DragCurves),
 						GetConditioning(iepc.Conditioning)
-					)
+					),
+					GetSignature(iepc.DigestValue)
 			);
 		}
 		
