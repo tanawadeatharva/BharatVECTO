@@ -1056,7 +1056,7 @@ lbFound:
                                          .Message = "Finished Reading Data for job: " + jobFile})
 
             Catch ex As Exception
-                MsgBox($"ERROR running job {jobFile}: {ex.Message}", MsgBoxStyle.Critical)
+                MsgBox($"ERROR running job {jobFile}: {ex.Message} {vbCrLf} {ex.InnerException?.Message}", MsgBoxStyle.Critical)
                 sender.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError", .Message = ex.Message})
                 Return
             End Try

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCommon.Models
 		public static string PrimaryBus = "PrimaryBus";
 		public static string Lorry = "Lorry";
 		public static string CompletedBus = "CompletedBus";
+		public static string Van = "Van";
 		public static string GetVehicleType(this VehicleCategory category)
 		{
 			switch (category) {
@@ -67,6 +68,8 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					return CompletedBus;
 					break;
+				case VehicleCategory.Van:
+					return Van;
 				default:
 					return category.GetLabel();
 			}
@@ -137,6 +140,8 @@ namespace TUGraz.VectoCommon.Models
 					return "Bus";
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					return "Bus";
+				case VehicleCategory.Van:
+					return Van;
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -17,20 +19,45 @@ using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 {
-    internal class MockupDeclarationSimulatorFactory : SimulatorFactoryDeclaration
+	internal class MockupEngineeringSimulatorFactory : SimulatorFactoryEngineering
+	{
+		public MockupEngineeringSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
+			bool validate) : base(dataProvider, writer, validate)
+		{
+			throw new VectoException("Engineering mode is not supported in Mockup Vecto");
+		}
+	}
+
+
+	internal class MockupDeclarationSimulatorFactory : SimulatorFactoryDeclaration
     {
+		private void CheckInputData(IInputDataProvider dataProvider)
+		{
+			if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus)) {
+				throw new VectoException($"JSON input data is not supported in Mockup Vecto");
+			}
+		}
+
 		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
 			IDeclarationReport declarationReport, IVTPReport vtpReport, bool validate,
 			IXMLInputDataReader xmlInputDataReader, ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory, IVectoRunDataFactoryFactory runDataFactoryFactory)
 			: base(dataProvider, writer, declarationReport, vtpReport, validate, xmlInputDataReader,
-				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory) { }
-		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider, 
-			IOutputDataWriter writer, bool validate, 
-			IXMLInputDataReader xmlInputDataReader, 
-			ISimulatorFactoryFactory simulatorFactoryFactory, 
-			IXMLDeclarationReportFactory xmlDeclarationReportFactory, 
-			IVectoRunDataFactoryFactory runDataFactoryFactory) : base(dataProvider, writer, validate, xmlInputDataReader, simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory) { }
+				simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory)
+		{
+			CheckInputData(dataProvider);
+		}
+
+		public MockupDeclarationSimulatorFactory(IInputDataProvider dataProvider,
+			IOutputDataWriter writer, bool validate,
+			IXMLInputDataReader xmlInputDataReader,
+			ISimulatorFactoryFactory simulatorFactoryFactory,
+			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
+			IVectoRunDataFactoryFactory runDataFactoryFactory) : base(dataProvider, writer, validate,
+			xmlInputDataReader, simulatorFactoryFactory, xmlDeclarationReportFactory, runDataFactoryFactory)
+		{
+			CheckInputData(dataProvider);
+		}
 
 		#region Overrides of SimulatorFactory
 

@@ -18,6 +18,8 @@ namespace TUGraz.VectoMockup.Ninject
 		public override void Load()
 		{
 			Kernel.Rebind<ISimulatorFactory>().To<MockupDeclarationSimulatorFactory>().Named(ExecutionMode.Declaration.ToString());
+			//Rebind clears all bindings for ISimulatorFactory
+			Kernel.Bind<ISimulatorFactory>().To<MockupEngineeringSimulatorFactory>().Named(ExecutionMode.Engineering.ToString());
 			//Bind<ISimulatorFactory>().To<SimulatorFactoryEngineering>().Named(ExecutionMode.Engineering.ToString());
 		}
 

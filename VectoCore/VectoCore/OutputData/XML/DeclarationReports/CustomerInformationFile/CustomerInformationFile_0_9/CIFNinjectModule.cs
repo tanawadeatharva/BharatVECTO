@@ -97,7 +97,79 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					true,
 					false,
 					false)));
+			#region MediumLorryCIF
+			Bind<IXMLCustomerReport>().To<ConventionalLorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_PxLorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.ParallelHybridVehicle,
+					ArchitectureID.UNKNOWN, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_S2_Lorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S2, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_S3_Lorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S3, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_S4_Lorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S4, false, false, false)));
+
+			Bind<IXMLCustomerReport>().To<HEV_IEPC_Lorry_CIF>().Named(nameCombinationMethod(
+				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S_IEPC, false, true, false)));
+
+			Bind<IXMLCustomerReport>().To<PEV_E2_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<PEV_E3_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<PEV_E4_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<PEV_IEPC_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<Exempted_Lorry_CIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.Van,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
 			#endregion
+
+			#endregion
+
 			#region CompletedBUsCIF
 
 			Bind<IXMLCustomerReport>().To<Conventional_CompletedBusCIF>().Named(nameCombinationMethod.Invoke(

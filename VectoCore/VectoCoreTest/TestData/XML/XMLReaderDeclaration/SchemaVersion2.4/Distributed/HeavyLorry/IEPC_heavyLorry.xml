@@ -323,7 +323,7 @@
 			<Auxiliaries>
 				<Data xsi:type="AUX_IEPC_LorryDataType">
 					<SteeringPump>
-						<Technology axleNumber="1">Medium Supply 2-stage + elec. driven</Technology>
+						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
 					<ElectricSystem>
 						<Technology>Standard technology - LED headlights, all</Technology>
