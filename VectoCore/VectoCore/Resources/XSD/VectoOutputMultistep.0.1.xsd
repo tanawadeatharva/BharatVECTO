@@ -33,7 +33,12 @@
 	<xs:complexType name="AbstractTorqueConverterDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionGearsVIFType" abstract="true"/>
-	<xs:complexType name="AbstractVehicleComponentsVIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsConventionalVIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsHEV_Px_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsIEPC_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsIEPC_S_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsHEV_Sx_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsPEV_Ex_VIFType" abstract="true"/>
 	<xs:complexType name="AngledriveDataVIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractAngledriveDataVIFType">
@@ -737,7 +742,7 @@
 	<!--Components-->
 	<xs:complexType name="Vehicle_Conventional_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsConventionalVIFType">
 				<xs:sequence>
 					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
 					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
@@ -752,7 +757,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_HEV-Px_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Px_VIFType">
 				<xs:sequence>
 					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
 					<xs:element name="IEPC" type="vif:IEPCType"/>
@@ -771,7 +776,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_HEV-IEPC-S_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsIEPC_S_VIFType">
 				<xs:sequence>
 					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
 					<xs:element name="ElectricMachineGEN" type="vif:ElectricMachineGENType"/>
@@ -786,7 +791,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle-IEPC_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsIEPC_VIFType">
 				<xs:sequence>
 					<xs:element name="IEPC" type="vif:IEPCType"/>
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
@@ -799,7 +804,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_HEV-S2_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
 				<xs:sequence>
 					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
 					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
@@ -811,7 +816,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_HEV-S3_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
 				<xs:sequence>
 					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
 					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
@@ -823,7 +828,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_HEV-S4_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
 				<xs:sequence>
 					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
@@ -834,7 +839,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_PEV-E2_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
@@ -850,7 +855,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_PEV-E3_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
@@ -863,7 +868,7 @@
 	</xs:complexType>
 	<xs:complexType name="Vehicle_PEV-E4_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsVIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
@@ -1003,7 +1008,7 @@
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="vif:AbstractVehicleComponentsVIFType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsConventionalVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1037,7 +1042,7 @@
 					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-IEPC-S_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsIEPC_S_VIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1071,7 +1076,7 @@
 					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsHEV_Sx_VIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1107,7 +1112,7 @@
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
 					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.4:Abstract_Components_HEV-Px_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsHEV_Px_VIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1135,12 +1140,12 @@
 					</xs:element>
 					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
-					<xs:element name="Components" type="v2.4:Abstract_Components_IEPC_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsIEPC_VIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="PEV_VehicleVIFType">
+	<xs:complexType name="PEV_Ex_VehicleVIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractPrimaryVehicleType">
 				<xs:sequence>
@@ -1164,7 +1169,7 @@
 					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
 					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
-					<xs:element name="Components" type="v2.4:Abstract_Components_PEV_PrimaryBusDeclarationType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsPEV_Ex_VIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
