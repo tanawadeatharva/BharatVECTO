@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					data, ReportWriter,
 					(_mode == ExecutionMode.Declaration) ? addReportResult : null,
 					GetModDataFilter(data)) {
-					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
+					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults,
 				};
 
 
@@ -203,11 +203,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					JsonConvert.SerializeObject(data, Formatting.Indented));
 			}
 
-			var run = GetVectoRun(data, modContainer, modData => {
-				if (SumData != null) {
-					SumData.Write(modData, JobNumber, current, d);
-				}
-			});
+			data.JobNumber = JobNumber;
+			data.RunNumber = current;
+			var run = GetVectoRun(data, modContainer, SumData);
 
 			if (Validate) {
 				ValidateVectoRunData(
@@ -238,7 +236,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 		}
 
-		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, WriteSumData sumWriter)
+		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			VectoRun run;
 			switch (data.Cycle.CycleType) {

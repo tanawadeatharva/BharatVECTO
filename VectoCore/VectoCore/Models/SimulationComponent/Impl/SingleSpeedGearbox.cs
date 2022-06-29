@@ -43,6 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IModalDataContainer container)
 		{
 			container[ModalResultField.Gear] = Gear.Gear;
+            container[ModalResultField.n_IEPC_out_avg] = (PreviousState.OutAngularVelocity +
+														CurrentState.OutAngularVelocity) / 2.0;
+			container[ModalResultField.T_IEPC_out] = CurrentState.OutTorque;
 		}
 
 		#endregion

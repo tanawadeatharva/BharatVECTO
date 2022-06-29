@@ -18,12 +18,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly BatteryData ModelData;
 
-		public Battery(IVehicleContainer container, BatteryData modelData, int idx = -1) : base(container)
+		public Battery(IVehicleContainer container, BatteryData modelData) : base(container)
 		{
 			ModelData = modelData;
-			if (idx >= 0) {
-				BatteryId = idx;
-			}
 			CurrentState.PulseDuration = 0.SI<Second>();
 			PreviousState.PulseDuration = 0.SI<Second>();
 			PreviousState.PowerDemand = 0.SI<Watt>();
@@ -161,21 +158,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var tPulse = PreviousState.PowerDemand.Sign() == CurrentState.PowerDemand.Sign()
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
-			container[ModalResultField.U0_reess, BatteryId] = cellVoltage;
-			container[ModalResultField.U_reess_terminal, BatteryId] =
+			container[ModalResultField.U0_reess, ModelData.BatteryId] = cellVoltage;
+			container[ModalResultField.U_reess_terminal, ModelData.BatteryId] =
 				cellVoltage +
 				CurrentState.TotalCurrent *
 				ModelData.InternalResistance.Lookup(PreviousState.StateOfCharge, tPulse); // adding both terms because pos. current charges the battery!
-			container[ModalResultField.I_reess, BatteryId] = CurrentState.TotalCurrent;
-			container[ModalResultField.REESSStateOfCharge, BatteryId] = CurrentState.StateOfCharge.SI();
-			container[ModalResultField.P_reess_terminal, BatteryId] = CurrentState.PowerDemand;
-			container[ModalResultField.P_reess_int, BatteryId] = cellVoltage * CurrentState.TotalCurrent;
-			container[ModalResultField.P_reess_loss, BatteryId] = CurrentState.BatteryLoss;
-			container[ModalResultField.P_reess_charge_max, BatteryId] = CurrentState.MaxChargePower;
-			container[ModalResultField.P_reess_discharge_max, BatteryId] = CurrentState.MaxDischargePower;
+			container[ModalResultField.I_reess, ModelData.BatteryId] = CurrentState.TotalCurrent;
+			container[ModalResultField.REESSStateOfCharge, ModelData.BatteryId] = CurrentState.StateOfCharge.SI();
+			container[ModalResultField.P_reess_terminal, ModelData.BatteryId] = CurrentState.PowerDemand;
+			container[ModalResultField.P_reess_int, ModelData.BatteryId] = cellVoltage * CurrentState.TotalCurrent;
+			container[ModalResultField.P_reess_loss, ModelData.BatteryId] = CurrentState.BatteryLoss;
+			container[ModalResultField.P_reess_charge_max, ModelData.BatteryId] = CurrentState.MaxChargePower;
+			container[ModalResultField.P_reess_discharge_max, ModelData.BatteryId] = CurrentState.MaxDischargePower;
 		}
 
-		public int? BatteryId { get;  }
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{

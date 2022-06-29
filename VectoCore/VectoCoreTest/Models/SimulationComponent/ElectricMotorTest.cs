@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var modData = new ModalDataContainer(runData, new FileOutputWriter("debug.csv"), null);
-			modData.AddElectricMotor(PowertrainPosition.HybridP2);
+			//modData.AddElectricMotor(PowertrainPosition.HybridP2);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			new EngineOnlyGearboxInfo(container);
 

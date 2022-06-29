@@ -187,8 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new SummaryDataContainer(
 					new FileOutputWriter(
 						$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}"));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
-				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
+			((VehicleContainer)run.GetContainer()).WriteSumData = sumWriter;
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IModalDataContainer ModData;
 
-		internal WriteSumData WriteSumData;
+		internal ISumData WriteSumData;
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
@@ -102,10 +102,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
-			WriteSumData writeSumData = null)
+			ISumData writeSumData = null)
 		{
 			ModData = modData;
-			WriteSumData = writeSumData ?? delegate { };
+			WriteSumData = writeSumData;
 			ExecutionMode = executionMode;
 		}
 
@@ -197,6 +197,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_components.Add(Tuple.Create(commitPriority, component));
 			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
+
+			if (ModalData != null) {
+				ModalData.RegisterComponent(component);
+			}
+
+			if (WriteSumData != null) {
+				WriteSumData.RegisterComponent(component);
+			}
 		}
 
 
@@ -224,7 +232,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
 
-			WriteSumData(ModData);
+			WriteSumData.Write(ModData, RunData);
 
 			ModData?.FinishSimulation();
 			DrivingCycleInfo?.FinishSimulation();
@@ -277,7 +285,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IGearboxInfo _gearboxInfo;
 
 		public ExemptedRunContainer(
-			ExecutionMode executionMode, IModalDataContainer modData = null, WriteSumData writeSumData = null) : base(
+			ExecutionMode executionMode, IModalDataContainer modData = null, ISumData writeSumData = null) : base(
 			executionMode, modData, writeSumData)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);

@@ -920,7 +920,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			}
 
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
+				ExecutionMode.Engineering, modData, sumData) {
 				RunData = runData
 			};
 
@@ -1005,7 +1005,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			//ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);

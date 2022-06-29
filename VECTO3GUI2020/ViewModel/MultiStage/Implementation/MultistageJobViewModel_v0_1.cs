@@ -430,7 +430,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public class NullSumWriter : SummaryDataContainer
 	{
-		public override void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData) { }
+		public override void Write(IModalDataContainer modData, VectoRunData runData) { }
 
 		public override void Finish() { }
 	}

@@ -859,6 +859,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						InternalResistance =
 							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+						BatteryId = i
 					}));
 				}
 			}

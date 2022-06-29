@@ -161,6 +161,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
 		public GenSetData GenSet { get; set; }
 
+		// used to identify job and run in summary container
+		public int JobNumber { get; set; }
+		public int RunNumber { get; set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming

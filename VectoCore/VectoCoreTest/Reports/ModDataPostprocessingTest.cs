@@ -1170,7 +1170,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new ModalDataContainer(runData, writer, null) {
 				WriteModalResults = true
 			};
-			modData.AddElectricMotor(emPos);
+			//modData.AddElectricMotor(emPos);
 
 			var fuel = runData.EngineData.Fuels[0];
 
@@ -1353,7 +1353,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				WriteModalResults = true
 			};
 
-			modData.AddElectricMotor(emPos);
+			//modData.AddElectricMotor(emPos);
 
 			var fuel = runData.EngineData.Fuels[0];
 
@@ -2057,7 +2057,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				WriteModalResults = true
 			};
 
-			modData.AddElectricMotor(emPos);
+			//modData.AddElectricMotor(emPos);
 
 			var fuel = runData.EngineData.Fuels[0];
 
@@ -2203,7 +2203,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				WriteModalResults = true
 			};
 
-			modData.AddElectricMotor(emPos);
+			//modData.AddElectricMotor(emPos);
 
 			var fuel = runData.EngineData.Fuels[0];
 
@@ -2475,7 +2475,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				WriteModalResults = true
 			};
 
-			modData.AddElectricMotor(emPos);
+			//modData.AddElectricMotor(emPos);
 
 			var fuel = runData.EngineData.Fuels[0];
 

@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -114,6 +115,7 @@ namespace TUGraz.VectoCore.OutputData
 		void FinishSimulation();
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
+
 		void Reset();
 
 		Second Duration { get; }
@@ -124,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
-		void AddElectricMotor(PowertrainPosition pos);
+		//void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
@@ -146,6 +148,7 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond REESSLoss();
 
 		ICorrectedModalData CorrectedModalData { get; }
+		void RegisterComponent(VectoSimulationComponent component);
 	}
 
 	public interface IModalDataPostProcessor
@@ -312,7 +315,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia);
 			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
-			return paEngine + paGearbox;
+			return paEngine + (paGearbox ?? 0.SI<WattSecond>());
 		}
 
 		public static WattSecond WorkClutch(this IModalDataContainer data)
@@ -409,12 +412,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.WorkWheelsPos() / data.Duration;
+			return (data.WorkWheelsPos() ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static Watt PowerWheel(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
+			return (data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static WattSecond WorkREESSChargeTerminal(this IModalDataContainer data)
@@ -708,7 +711,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static int NumICEStarts(this IModalDataContainer data)
 		{
-			return data.GetValues(x => x.Field<bool>((int)ModalResultField.ICEOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+			return data.GetValues(x => x.Field<bool>(ModalResultField.ICEOn.GetName())).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
 		}
 	}
 }

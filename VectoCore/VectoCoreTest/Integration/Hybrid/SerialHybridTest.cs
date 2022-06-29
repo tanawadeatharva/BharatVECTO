@@ -682,7 +682,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				WriteModalResults = true,
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, 
-				x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
+				sumData) { RunData = runData };
 
 			var strategy = new SerialHybridStrategy(runData, container);
 			var es = new ElectricSystem(container);
@@ -843,7 +843,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			if (pos == PowertrainPosition.GEN) {
