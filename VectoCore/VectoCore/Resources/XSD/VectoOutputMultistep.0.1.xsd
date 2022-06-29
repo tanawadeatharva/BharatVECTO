@@ -187,7 +187,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-P_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.4:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
+			<xs:extension base="vif:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
@@ -272,7 +272,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_HEV-S_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.4:Abstract_AUX_HEV-S_PrimaryBusDeclarationType">
+			<xs:extension base="vif:Abstract_AUX_HEV-S_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
@@ -356,7 +356,7 @@
 	</xs:complexType>
 	<xs:complexType name="AUX_IEPC_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="v2.4:Abstract_AUX_IEPC_PrimaryBusDeclarationType">
+			<xs:extension base="vif:Abstract_AUX_IEPC_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:element name="SteeringPump">
 						<xs:complexType>
