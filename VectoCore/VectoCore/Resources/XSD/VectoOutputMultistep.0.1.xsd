@@ -758,7 +758,7 @@
 	</xs:complexType>
 	<xs:complexType name="BatterySystemDataType">
 		<xs:complexContent>
-			<xs:extension base="v2.3:AbstractBatterySystemDataType">
+			<xs:extension base="vif:AbstractBatterySystemDataType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<!-- <xs:annotation>
