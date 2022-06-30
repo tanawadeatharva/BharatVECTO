@@ -54,8 +54,8 @@ namespace TUGraz.VectoMockup
 
 		#region MockupImplementation
 
-		public Second Duration => Second.Create(60*60*1);
-		public Meter Distance => Meter.Create(100 * 1000);
+		public Second Duration => 1.SI(Unit.SI.Hour).Cast<Second>();
+		public Meter Distance => 100.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
 
 		#endregion
