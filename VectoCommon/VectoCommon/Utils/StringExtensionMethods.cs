@@ -54,7 +54,7 @@ namespace TUGraz.VectoCommon.Utils
 				throw new FormatException("Cannot convert an empty string to a number.");
 			}
 
-			var success = double.TryParse(self, out var retVal);
+			var success = double.TryParse(self, NumberStyles.Float, CultureInfo.InvariantCulture, out var retVal);
 			if (success) {
 				return retVal;
 			}
