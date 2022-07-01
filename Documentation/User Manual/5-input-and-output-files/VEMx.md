@@ -36,7 +36,7 @@ n [rpm] , T_drag [Nm]
 ~~~
 
 
-## Electric Motor Map (.vemo)
+## Electric Motor Power Map (.vemo)
 
 This file is used to interpolate the electric power required for a certain mechanical power at the eletric motor's shaft.  The file uses the [VECTO CSV format](#csv).
 
