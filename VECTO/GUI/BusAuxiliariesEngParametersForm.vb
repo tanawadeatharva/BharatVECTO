@@ -170,7 +170,7 @@ Public Class BusAuxiliariesEngParametersForm
         _busAuxParamsFile = ""
         Text = "Bus Auxiliaries Parameters Editor"
         LbStatus.Text = ""
-
+        pnSmartElectricParams.Enabled = false
         _changed = False
     End Sub
 

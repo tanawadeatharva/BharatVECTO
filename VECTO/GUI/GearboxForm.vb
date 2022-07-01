@@ -513,7 +513,7 @@ Public Class GearboxForm
 
         Change()
 
-        Dim hasTorqueConverter = gStype.AutomaticTransmission() AndAlso gStype <> GearboxType.APTN
+        Dim hasTorqueConverter = gStype.AutomaticTransmission() AndAlso gStype <> GearboxType.APTN AndAlso gStype <> GearboxType.IHPC
         'ChTCon.Enabled = (GStype.AutomaticTransmission())
         gbTC.Enabled = hasTorqueConverter
         pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso hasTorqueConverter

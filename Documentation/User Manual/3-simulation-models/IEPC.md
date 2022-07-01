@@ -19,3 +19,6 @@ The first two curves are read from a .viepcp file (see [IEPC Max Torque File (.v
 
 In the VECTO simulation, the IEPC component is virtually split up into the electric machine (with gear-dependent electric power maps), an APT-N gearbox in case of a multi-speed gearbox or a single-speed gearbox in case the IEPC has only a single fixed transmission ratio, and optionally an axle gear. All virtual powertrain components (gearbox, axlegear) are modeled as loss-less components. Thus, the simulation of an IEPC is similar to E2 vehicles in case of a multi-speed gearbox or an E3 vehicle in case of a single-speed gearbox.
 
+![](pics/Structure_IEPC.png)
+
+All signals with the suffix "_int" refer to the electric motor, while signals without this suffix refer to the whole component.
