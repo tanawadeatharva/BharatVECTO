@@ -86,9 +86,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
 			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
 			Tuple.Create(SumDataFields.STATUS, typeof(string)),
-		};
-
-		public static Tuple<string, Type>[] CombustionEngineColumns = {
+			// Engine Infos
 			Tuple.Create(SumDataFields.ENGINE_MANUFACTURER, typeof(string)),
 			Tuple.Create(SumDataFields.ENGINE_MODEL, typeof(string)),
 			Tuple.Create(SumDataFields.ENGINE_FUEL_TYPE, typeof(string)),
@@ -105,6 +103,65 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.VEHICLE_FUEL_TYPE, typeof(string)),
 			Tuple.Create(SumDataFields.ENGINE_CERTIFICATION_NUMBER, typeof(string)),
 			Tuple.Create(SumDataFields.AVERAGE_ENGINE_EFFICIENCY, typeof(double)),
+			// Vehicle Infos
+			Tuple.Create(SumDataFields.VEHICLE_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.VIN_NUMBER, typeof(string)),
+			Tuple.Create(SumDataFields.VEHICLE_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.HDV_CO2_VEHICLE_CLASS, typeof(string)),
+
+			Tuple.Create(SumDataFields.AIRDRAG_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.CD_x_A_DECLARED, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.CD_x_A, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.SLEEPER_CAB, typeof(string)),
+			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE1, typeof(double)),
+			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE1, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE2, typeof(double)),
+			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE2, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE3, typeof(double)),
+			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE3, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE4, typeof(double)),
+			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE4, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
+			Tuple.Create(SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
+			Tuple.Create(SumDataFields.R_DYN, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.NUM_AXLES_DRIVEN, typeof(int)),
+			Tuple.Create(SumDataFields.NUM_AXLES_NON_DRIVEN, typeof(int)),
+			Tuple.Create(SumDataFields.NUM_AXLES_TRAILER, typeof(int)),
+			Tuple.Create(SumDataFields.GEARBOX_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.GEARBOX_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.GEARBOX_TYPE, typeof(string)),
+			Tuple.Create(SumDataFields.GEAR_RATIO_FIRST_GEAR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.GEAR_RATIO_LAST_GEAR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.TORQUECONVERTER_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.TORQUECONVERTER_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.RETARDER_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.RETARDER_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.RETARDER_TYPE, typeof(string)),
+			Tuple.Create(SumDataFields.ANGLEDRIVE_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.ANGLEDRIVE_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.ANGLEDRIVE_RATIO, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.AXLE_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.AXLE_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.AXLE_RATIO, typeof(ConvertedSI)),
+			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.SteeringPump), typeof(string)),
+			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.Fan), typeof(string)),
+			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition), typeof(string)),
+			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
+			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
+			Tuple.Create(SumDataFields.TCU_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
+			Tuple.Create(SumDataFields.PTO_TECHNOLOGY, typeof(string)),
+			Tuple.Create(SumDataFields.REESS_CAPACITY, typeof(string)),
+			Tuple.Create(SumDataFields.CARGO_VOLUME, typeof(ConvertedSI))
+		};
+
+		public static Tuple<string, Type>[] CombustionEngineColumns = {
+			
+			
+		};
+
+		public static Tuple<string, Type>[] VehilceColumns = {
+
 		};
 
 		private object _tableLock = new object();
@@ -1356,7 +1413,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private static string ReplaceNotAllowedCharacters(string text)
+		public static string ReplaceNotAllowedCharacters(string text)
 		{
 			return text.Replace('#', '_').Replace(',', '_').Replace('\n', '_').Replace('\r', '_');
 		}

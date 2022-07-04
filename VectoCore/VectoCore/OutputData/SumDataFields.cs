@@ -288,9 +288,25 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_LOSS_FORMAT = "E_{0}_loss [kWh]";
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
 
+		public delegate object WriteSumEntry(VectoRunData r, IModalDataContainer m);
 
-		public static readonly Dictionary<string, Tuple<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>>() {
-			{SumDataFields.ENGINE_MANUFACTURER, Tuple.Create<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>(null ,(r, m) => r.EngineData.Manufacturer)},
+		private static Tuple<ModalResultField[], WriteSumEntry> SumFunc(ModalResultField[] mrf, WriteSumEntry w)
+		{
+			return Tuple.Create(mrf, w);
+		}
+
+		private static Tuple<ModalResultField[], WriteSumEntry> SumFunc(WriteSumEntry w)
+		{
+			return Tuple.Create<ModalResultField[], WriteSumEntry>(null, w);
+		}
+
+		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
+			// common fields
+			{SumDataFields.SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
+			{SumDataFields.JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
+			{SumDataFields.INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
+			// engine Infos
+			{SumDataFields.ENGINE_MANUFACTURER, SumFunc((r, m) => r.EngineData.Manufacturer)},
 			
 		};
 	}
