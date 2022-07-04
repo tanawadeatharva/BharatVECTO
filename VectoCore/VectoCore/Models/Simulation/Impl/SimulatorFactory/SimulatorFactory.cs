@@ -241,12 +241,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, WriteSumData sumWriter)
 		{
 			VectoRun run;
+			
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
 					if ((data.SimulationType & SimulationType.DistanceCycle) == 0) {
 						throw new VectoException("Distance-based cycle can not be simulated in {0} mode", data.SimulationType);
 					}
-					run = new DistanceRun(PowertrainBuilder.Build(data, modData, sumWriter));
+
+					var container = PowertrainBuilder.Build(data, modData, sumWriter);
+					run = new DistanceRun(container, new FollowUpOvcRunCreator());
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
