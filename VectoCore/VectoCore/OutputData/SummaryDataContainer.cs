@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
 
@@ -79,6 +80,33 @@ namespace TUGraz.VectoCore.OutputData
 			SumDataFields.SPECIFIC_FC, SumDataFields.K_VEHLINE, SumDataFields.K_ENGLINE
 		};
 
+		public static Tuple<string, Type>[] CommonColumns = {
+			Tuple.Create(SumDataFields.SORT, typeof(int)),
+			Tuple.Create(SumDataFields.JOB, typeof(string)),
+			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
+			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
+			Tuple.Create(SumDataFields.STATUS, typeof(string)),
+		};
+
+		public static Tuple<string, Type>[] CombustionEngineColumns = {
+			Tuple.Create(SumDataFields.ENGINE_MANUFACTURER, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_MODEL, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_FUEL_TYPE, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_RATED_POWER, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ENGINE_IDLING_SPEED, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ENGINE_RATED_SPEED, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ENGINE_DISPLACEMENT, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ENGINE_WHTC_URBAN, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_WHTC_RURAL, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_WHTC_MOTORWAY, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_BF_COLD_HOT, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_CF_REG_PER, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_ACTUAL_CORRECTION_FACTOR, typeof(string)),
+			Tuple.Create(SumDataFields.VEHICLE_FUEL_TYPE, typeof(string)),
+			Tuple.Create(SumDataFields.ENGINE_CERTIFICATION_NUMBER, typeof(string)),
+			Tuple.Create(SumDataFields.AVERAGE_ENGINE_EFFICIENCY, typeof(double)),
+		};
+
 		private object _tableLock = new object();
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
@@ -93,12 +121,196 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			_sumWriter = writer;
 			Table = new DataTable();
-			InitTableColumns();
+			//InitTableColumns();
+			CreateColumns(CommonColumns);
 		}
 
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
+			switch (component) {
+				case ICombustionEngine _:
+					CreateColumns(CombustionEngineColumns);
+					break;
+			}
+		}
 
+		private void CreateColumns(Tuple<string, Type>[] cols)
+		{
+			lock (Table) {
+				Table.Columns.AddRange(cols.Where(x => !Table.Columns.Contains(x.Item1))
+					.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+			}
+		}
+
+		private IList<string> GetOutputColumnsOrdered()
+		{
+			var cols = new List<string>();
+			cols.AddRange(new[] {
+				SumDataFields.SORT,
+				SumDataFields.JOB,
+				SumDataFields.INPUTFILE,
+				SumDataFields.CYCLE,
+				SumDataFields.STATUS,
+				SumDataFields.VEHICLE_MANUFACTURER,
+				SumDataFields.VIN_NUMBER,
+				SumDataFields.VEHICLE_MODEL,
+				SumDataFields.HDV_CO2_VEHICLE_CLASS,
+				SumDataFields.CURB_MASS,
+				SumDataFields.LOADING,
+				SumDataFields.PassengerCount,
+				SumDataFields.TOTAL_VEHICLE_MASS,
+
+				SumDataFields.ENGINE_MANUFACTURER,
+				SumDataFields.ENGINE_MODEL,
+				SumDataFields.ENGINE_FUEL_TYPE,
+				SumDataFields.ENGINE_RATED_POWER,
+				SumDataFields.ENGINE_IDLING_SPEED,
+				SumDataFields.ENGINE_RATED_SPEED,
+				SumDataFields.ENGINE_DISPLACEMENT,
+				SumDataFields.ENGINE_WHTC_URBAN,
+				SumDataFields.ENGINE_WHTC_RURAL,
+				SumDataFields.ENGINE_WHTC_MOTORWAY,
+				SumDataFields.ENGINE_BF_COLD_HOT,
+				SumDataFields.ENGINE_CF_REG_PER,
+				SumDataFields.ENGINE_ACTUAL_CORRECTION_FACTOR,
+				SumDataFields.VEHICLE_FUEL_TYPE,
+
+				SumDataFields.AIRDRAG_MODEL,
+				SumDataFields.CD_x_A_DECLARED,
+				SumDataFields.CD_x_A,
+				SumDataFields.SLEEPER_CAB,
+				SumDataFields.DECLARED_RRC_AXLE1,
+				SumDataFields.DECLARED_FZISO_AXLE1,
+				SumDataFields.DECLARED_RRC_AXLE2,
+				SumDataFields.DECLARED_FZISO_AXLE2,
+				SumDataFields.DECLARED_RRC_AXLE3,
+				SumDataFields.DECLARED_FZISO_AXLE3,
+				SumDataFields.DECLARED_RRC_AXLE4,
+				SumDataFields.DECLARED_FZISO_AXLE4,
+				SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER,
+				SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER,
+				SumDataFields.R_DYN,
+				SumDataFields.NUM_AXLES_DRIVEN,
+				SumDataFields.NUM_AXLES_NON_DRIVEN,
+				SumDataFields.NUM_AXLES_TRAILER,
+				SumDataFields.GEARBOX_MANUFACTURER,
+				SumDataFields.GEARBOX_MODEL,
+				SumDataFields.GEARBOX_TYPE,
+				SumDataFields.GEAR_RATIO_FIRST_GEAR,
+				SumDataFields.GEAR_RATIO_LAST_GEAR,
+				SumDataFields.TORQUECONVERTER_MANUFACTURER,
+				SumDataFields.TORQUECONVERTER_MODEL,
+				SumDataFields.RETARDER_MANUFACTURER,
+				SumDataFields.RETARDER_MODEL,
+				SumDataFields.RETARDER_TYPE,
+				SumDataFields.ANGLEDRIVE_MANUFACTURER,
+				SumDataFields.ANGLEDRIVE_MODEL,
+				SumDataFields.ANGLEDRIVE_RATIO,
+				SumDataFields.AXLE_MANUFACTURER,
+				SumDataFields.AXLE_MODEL,
+				SumDataFields.AXLE_RATIO
+			});
+			cols.AddRange(new[] {
+				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+				Constants.Auxiliaries.IDs.PneumaticSystem, Constants.Auxiliaries.IDs.ElectricSystem
+			}.Select(x => string.Format(SumDataFields.AUX_TECH_FORMAT, x)));
+
+			cols.AddRange(new[] {
+				SumDataFields.TCU_MODEL, 
+				SumDataFields.ADAS_TECHNOLOGY_COMBINATION, 
+				SumDataFields.PTO_TECHNOLOGY, 
+				SumDataFields.REESS_CAPACITY,
+				SumDataFields.CARGO_VOLUME,
+				SumDataFields.TIME, 
+				SumDataFields.DISTANCE, 
+				SumDataFields.SPEED,
+				SumDataFields.ALTITUDE_DELTA,
+
+				SumDataFields.CO2_KM, 
+				SumDataFields.CO2_TKM, 
+				SumDataFields.CO2_M3KM, 
+				SumDataFields.CO2_PKM, 
+				SumDataFields.P_WHEEL,
+				SumDataFields.P_WHEEL_POS, 
+				SumDataFields.P_FCMAP, 
+				SumDataFields.P_FCMAP_POS,
+				SumDataFields.E_FCMAP_POS, 
+				SumDataFields.E_FCMAP_NEG, 
+				SumDataFields.E_POWERTRAIN_INERTIA, 
+				SumDataFields.E_AUX,
+				SumDataFields.E_AUX_EL_HV, 
+				SumDataFields.E_CLUTCH_LOSS,
+				SumDataFields.E_TC_LOSS, 
+				SumDataFields.E_SHIFT_LOSS, 
+				SumDataFields.E_GBX_LOSS, 
+				SumDataFields.E_RET_LOSS,
+				SumDataFields.E_ANGLE_LOSS,
+				SumDataFields.E_AXL_LOSS, 
+				SumDataFields.E_BRAKE, 
+				SumDataFields.E_VEHICLE_INERTIA, 
+				SumDataFields.E_WHEEL, 
+				SumDataFields.E_AIR,
+				SumDataFields.E_ROLL, 
+				SumDataFields.E_GRAD,
+				SumDataFields.AirConsumed, 
+				SumDataFields.AirGenerated, 
+				SumDataFields.E_PS_CompressorOff, 
+				SumDataFields.E_PS_CompressorOn,
+				SumDataFields.E_BusAux_ES_consumed, 
+				SumDataFields.E_BusAux_ES_generated, 
+				SumDataFields.Delta_E_BusAux_Battery,
+				SumDataFields.E_BusAux_PS_corr, 
+				SumDataFields.E_BusAux_ES_mech_corr,
+				SumDataFields.E_BusAux_HVAC_Mech, 
+				SumDataFields.E_BusAux_HVAC_El,
+				SumDataFields.E_BusAux_AuxHeater,
+				SumDataFields.E_WHR_EL, 
+				SumDataFields.E_WHR_MECH, 
+				SumDataFields.E_ICE_START, 
+				SumDataFields.E_AUX_ESS_missing,
+				SumDataFields.NUM_ICE_STARTS, 
+				SumDataFields.ACC,
+				SumDataFields.ACC_POS, 
+				SumDataFields.ACC_NEG, 
+				SumDataFields.ACC_TIMESHARE, 
+				SumDataFields.DEC_TIMESHARE,
+				SumDataFields.CRUISE_TIMESHARE,
+				SumDataFields.MAX_SPEED, 
+				SumDataFields.MAX_ACCELERATION, 
+				SumDataFields.MAX_DECELERATION, 
+				SumDataFields.AVG_ENGINE_SPEED,
+				SumDataFields.MAX_ENGINE_SPEED, 
+				SumDataFields.NUM_GEARSHIFTS, 
+				SumDataFields.STOP_TIMESHARE,
+				SumDataFields.ICE_FULL_LOAD_TIME_SHARE, 
+				SumDataFields.ICE_OFF_TIME_SHARE,
+				SumDataFields.COASTING_TIME_SHARE, 
+				SumDataFields.BRAKING_TIME_SHARE, 
+				SumDataFields.AVERAGE_POS_ACC,
+
+				SumDataFields.ENGINE_CERTIFICATION_NUMBER,
+				SumDataFields.AVERAGE_ENGINE_EFFICIENCY,
+				SumDataFields.TORQUE_CONVERTER_CERTIFICATION_METHOD, 
+				SumDataFields.TORQUE_CONVERTER_CERTIFICATION_NUMBER, 
+				SumDataFields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP,
+				SumDataFields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, 
+				SumDataFields.GEARBOX_CERTIFICATION_METHOD, 
+				SumDataFields.GEARBOX_CERTIFICATION_NUMBER, 
+				SumDataFields.AVERAGE_GEARBOX_EFFICIENCY, 
+				SumDataFields.RETARDER_CERTIFICATION_METHOD,
+				SumDataFields.RETARDER_CERTIFICATION_NUMBER, 
+				SumDataFields.ANGLEDRIVE_CERTIFICATION_METHOD, 
+				SumDataFields.ANGLEDRIVE_CERTIFICATION_NUMBER,
+				SumDataFields.AVERAGE_ANGLEDRIVE_EFFICIENCY,
+				SumDataFields.AXLEGEAR_CERTIFICATION_METHOD, 
+				SumDataFields.AXLEGEAR_CERTIFICATION_NUMBER, 
+				SumDataFields.AVERAGE_AXLEGEAR_EFFICIENCY, 
+				SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
+				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
+			});
+
+			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
 
 		private void InitTableColumns()
@@ -119,20 +331,7 @@ namespace TUGraz.VectoCore.OutputData
 						Tuple.Create(SumDataFields.LOADING, typeof(ConvertedSI)),
 						Tuple.Create(SumDataFields.PassengerCount, typeof(double)),
 						Tuple.Create(SumDataFields.TOTAL_VEHICLE_MASS, typeof(ConvertedSI)),
-						Tuple.Create(SumDataFields.ENGINE_MANUFACTURER, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_MODEL, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_FUEL_TYPE, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_RATED_POWER, typeof(ConvertedSI)),
-						Tuple.Create(SumDataFields.ENGINE_IDLING_SPEED, typeof(ConvertedSI)),
-						Tuple.Create(SumDataFields.ENGINE_RATED_SPEED, typeof(ConvertedSI)),
-						Tuple.Create(SumDataFields.ENGINE_DISPLACEMENT, typeof(ConvertedSI)),
-						Tuple.Create(SumDataFields.ENGINE_WHTC_URBAN, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_WHTC_RURAL, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_WHTC_MOTORWAY, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_BF_COLD_HOT, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_CF_REG_PER, typeof(string)),
-						Tuple.Create(SumDataFields.ENGINE_ACTUAL_CORRECTION_FACTOR, typeof(string)),
-						Tuple.Create(SumDataFields.VEHICLE_FUEL_TYPE, typeof(string)),
+						
 						Tuple.Create(SumDataFields.AIRDRAG_MODEL, typeof(string)),
 						Tuple.Create(SumDataFields.CD_x_A_DECLARED, typeof(ConvertedSI)),
 						Tuple.Create(SumDataFields.CD_x_A, typeof(ConvertedSI)),
@@ -249,29 +448,30 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				lock (Table) {
-					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable();
+					var outputColumns = GetOutputColumnsOrdered().ToArray();
+					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable(false, outputColumns);
 
-					var probablyEmptyCols = new[] { SumDataFields.E_WHEEL, SumDataFields.SPECIFIC_FC }.Select(x =>
-						x.Contains("{") ? x.Substring(0, x.IndexOf("{", StringComparison.Ordinal)) : x).ToArray();
-					var removeCandidates =
-						view.Columns.Cast<DataColumn>()
-							.Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
-					var toRemove = new List<string>();
-					foreach (var column in removeCandidates) {
-						//var column = view.Columns[colName];
-						if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
-							toRemove.Add(column.ColumnName);
-						}
-					}
+					//var probablyEmptyCols = new[] { SumDataFields.E_WHEEL, SumDataFields.SPECIFIC_FC }.Select(x =>
+					//	x.Contains("{") ? x.Substring(0, x.IndexOf("{", StringComparison.Ordinal)) : x).ToArray();
+					//var removeCandidates =
+					//	view.Columns.Cast<DataColumn>()
+					//		.Where(column => probablyEmptyCols.Any(x => column.ColumnName.StartsWith(x))).ToList();
+					//var toRemove = new List<string>();
+					//foreach (var column in removeCandidates) {
+					//	//var column = view.Columns[colName];
+					//	if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
+					//		toRemove.Add(column.ColumnName);
+					//	}
+					//}
 
-					toRemove = toRemove.Concat(
-						view.Columns.Cast<DataColumn>()
-							.Where(column => column.ColumnName.StartsWith(SumDataFields.INTERNAL_PREFIX))
-							.Select(x => x.ColumnName)).ToList();
+					//toRemove = toRemove.Concat(
+					//	view.Columns.Cast<DataColumn>()
+					//		.Where(column => column.ColumnName.StartsWith(SumDataFields.INTERNAL_PREFIX))
+					//		.Select(x => x.ColumnName)).ToList();
 
-					foreach (var dataColumn in toRemove) {
-						view.Columns.Remove(dataColumn);
-					}
+					//foreach (var dataColumn in toRemove) {
+					//	view.Columns.Remove(dataColumn);
+					//}
 
 					try {
 						_sumWriter.WriteSumData(view);
@@ -350,10 +550,28 @@ namespace TUGraz.VectoCore.OutputData
 				Table.Rows.Add(tableRow);
 			}
 		}
-	
 
-	//[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, VectoRunData runData)
+		{
+			var row = GetResultDictionary(modData, runData);
+
+			foreach (DataColumn col in Table.Columns) {
+				var func = SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName);
+				if (func == null) {
+					continue;
+				}
+
+				if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
+					row[col.ColumnName] = func.Item2(runData, modData);
+				}
+			}
+
+			AddResultDictionary(row);
+		}
+
+
+		//[MethodImpl(MethodImplOptions.Synchronized)]
+		public virtual void WriteXXX(IModalDataContainer modData, VectoRunData runData)
 		{
 			//var row = GetResultRow(modData, runData); // Replace row with dictionary
 

@@ -111,6 +111,11 @@ namespace TUGraz.VectoCore.OutputData
 			Data.RegisterComponent(component, _runData);
 		}
 
+		public bool ContainsColumn(string modalResultField)
+		{
+			return Data.Columns.Contains(modalResultField);
+		}
+
 		protected IModalDataPostProcessor GetModDataPostprocessor(VectoRunData runData)
 		{
 			switch (runData.JobType) {

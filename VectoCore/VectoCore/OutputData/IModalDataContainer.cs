@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		ICorrectedModalData CorrectedModalData { get; }
 		void RegisterComponent(VectoSimulationComponent component);
+		bool ContainsColumn(string modalResultField);
 	}
 
 	public interface IModalDataPostProcessor

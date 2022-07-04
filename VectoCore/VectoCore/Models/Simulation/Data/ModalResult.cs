@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -287,6 +288,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.MaxPropulsionTorqe
 		};
 
+		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] DCDCConverterSignals = {
+			ModalResultField.P_DCDC_In,
+			ModalResultField.P_DCDC_Out,
+			ModalResultField.P_DCDC_missing
+		};
+
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
 		protected internal List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
@@ -304,8 +312,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		protected void CreateColumns(ModalResultField[] columns, Func<ModalResultField, string> nameFunc = null, Func<ModalResultField, string> captionFunc = null)
 		{
 			foreach (var value in columns) {
-				var col = new DataColumn(nameFunc != null ? nameFunc(value) : value.GetName(),
-						value.GetAttribute().DataType)
+				var colName = nameFunc != null ? nameFunc(value) : value.GetName();
+				var col = new DataColumn(colName, value.GetAttribute().DataType)
 					{ Caption = captionFunc != null ? captionFunc(value) : value.GetCaption() };
 				col.ExtendedProperties[ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
 				col.ExtendedProperties[ExtendedPropertyNames.OutputFactor] = value.GetAttribute().OutputFactor;
@@ -317,7 +325,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
 		{
 			switch (component) {
-				case ICombustionEngine c1: CreateCombustionEngineColumns(c1, runData); break;
+				case ICombustionEngine c1: CreateCombustionEngineColumns(runData); break;
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
@@ -343,7 +351,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IElectricMotor c4 when c4.Position != PowertrainPosition.IEPC:
 					CreateElectricMotorColumns(c4, runData, ElectricMotorSignals);
 					break;
-				case IElectricEnergyStorage c5 when c5 is BatterySystem: CreateBatteryColumns(c5, runData);
+				case IElectricEnergyStorage c5 when c5 is BatterySystem: CreateBatteryColumns(runData);
 					break;
 				case IElectricEnergyStorage _: CreateColumns(BatterySignals);
 					break;
@@ -351,10 +359,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IHybridController _: CreateColumns(HybridControllerSignals);
 					break;
+				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
+					break;
 			}
 		}
 
-		private void CreateBatteryColumns(IElectricEnergyStorage reess, VectoRunData vectoRunData)
+		private void CreateBatteryColumns(VectoRunData vectoRunData)
 		{
 			CreateColumns(BatterySignals);
 
@@ -390,7 +400,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 		}
 
-		private void CreateCombustionEngineColumns(ICombustionEngine component, VectoRunData runData)
+		private void CreateCombustionEngineColumns(VectoRunData runData)
 		{
 			CreateColumns(CombustionEngineSignals);
 			if (runData.BusAuxiliaries != null) {

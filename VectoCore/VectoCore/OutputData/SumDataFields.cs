@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -286,5 +289,9 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_IEPC_OFF_TIME_SHARE = "{0} off time share [%]";
 
 
+		public static readonly Dictionary<string, Tuple<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>>() {
+			{SumDataFields.ENGINE_MANUFACTURER, Tuple.Create<ModalResultField[], Func<VectoRunData, IModalDataContainer, object>>(null ,(r, m) => r.EngineData.Manufacturer)},
+			
+		};
 	}
 }

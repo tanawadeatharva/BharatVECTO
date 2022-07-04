@@ -350,6 +350,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			
 		}
 
+		public bool ContainsColumn(string modalResultField)
+		{
+			return true;
+		}
+
 		public WattSecond REESSEnergyEnd()
 		{
 			throw new NotImplementedException();
