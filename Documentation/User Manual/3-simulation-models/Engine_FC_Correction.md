@@ -143,9 +143,9 @@ $$
 $\textbf{\textrm{FC\_WHR}} = - (\textrm{E\_WHR\_mech} + \textrm{E\_WHR\_el\_mech}) \cdot k_\textrm{engline}$
 
 
-#### Hybrid Vehicles: REESS SoC Correction
+#### Parallel Hybrid Vehicles: REESS SoC Correction
 
-If the REESS Soc at the end of the simulation is higher than the initial SoC the correction is done according to:
+If the REESS Soc at the end of the simulation is different than the initial SoC the correction is done according to:
 
 $$
 \textbf{\textrm{FC\_SoC}} = -\frac{\Delta\textrm{E\_REESS} \cdot k_\textrm{engline}}{\eta_{\textrm{EM}_\textrm{chg}} \cdot \eta_{\textrm{REESS}_\textrm{chg}}} 
@@ -163,6 +163,24 @@ $\eta_{\textrm{REESS}_\textrm{chg}} = \frac{\textrm{E\_REESS\_INT\_CHG}}{\textrm
 
 $\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_INT\_DISCHG}}{\textrm{E\_REEES\_T\_DISCHG}}$
 
+
+#### Serial Hybrid Vehicles: REESS SoC Correction
+
+If the REESS Soc at the end of the simulation is different than the initial SoC the correction is done according to:
+
+$FC_\textrm{gen,charging} = \sum{FC_\textrm{mod,final}\cdot dt}$
+
+$E_\textrm{gen,el} = \sum{P_\textrm{em,el}\cdot dt}$
+
+If the GenSet was on during the cycle, the SoC correction is done according to:
+
+$\textrm{FC\_SOC} = \Delta\textrm{E\_REESS} \cdot \frac{FC_\textrm{gen,charging}}{E_\textrm{gen,el}}$
+
+If the GenSet was never on during the cycle, the SoC correction is done according to:
+
+$\textrm{FC\_SOC} = \Delta\textrm{E\_REESS} \cdot \frac{FC_\textrm{gen,optimal}}{E_\textrm{gen,el,optimal}}$
+
+where $FC_\textrm{gen,optimal}$ and $E_\textrm{gen,el,optimal}$ are the fuel consumption and generated electric power in the optimal operating point of the GenSet
 
 ### Corrected Total Fuel Consumption
 
