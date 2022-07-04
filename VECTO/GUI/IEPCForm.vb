@@ -709,6 +709,10 @@ Public Class IEPCForm
 
 	Private Sub cbDesignTypeWheelMotor_CheckedChanged(sender As Object, e As EventArgs) Handles cbDesignTypeWheelMotor.CheckedChanged
 		tbNumberOfDesignTypeWheelMotor.Enabled = cbDesignTypeWheelMotor.Checked
+		cbDifferentialIncluded.Enabled = Not cbDesignTypeWheelMotor.Checked
+		if (cbDesignTypeWheelMotor.Checked) then
+		    cbDifferentialIncluded.Checked = False
+		end if
 		If tbNumberOfDesignTypeWheelMotor.Enabled = False Then _
 			tbNumberOfDesignTypeWheelMotor.Text = "0"
 		Change()
