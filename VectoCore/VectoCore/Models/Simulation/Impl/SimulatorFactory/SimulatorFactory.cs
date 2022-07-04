@@ -64,11 +64,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 		private static object _kernelLock = new object();
 		private static IKernel _kernel; //Kernel is only used when the SimulatorFactory is created with the Factory Method.
-
+        
 		protected IFollowUpSimulatorFactoryCreator _followUpSimulatorFactoryCreator = null;
 
 		protected bool _simulate = true;
 
+        
+		private IFollowUpRunCreatorFactory _followUpRunFactory = new FollowUpRunCreatorFactory();//TODO: inject with NInject
 
 		public ISimulatorFactory FollowUpSimulatorFactory
 		{
@@ -203,7 +205,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					JsonConvert.SerializeObject(data, Formatting.Indented));
 			}
 
-			var run = GetVectoRun(data, modContainer, modData => {
+			var run = GetVectoRun(data, modContainer, _followUpRunFactory, modData => {
 				if (SumData != null) {
 					SumData.Write(modData, JobNumber, current, d);
 				}
@@ -238,7 +240,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 		}
 
-		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData, WriteSumData sumWriter)
+		private static VectoRun GetVectoRun(VectoRunData data, IModalDataContainer modData,
+			IFollowUpRunCreatorFactory followUpRunCreatorFactory, WriteSumData sumWriter)
 		{
 			VectoRun run;
 			
@@ -249,7 +252,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 					}
 
 					var container = PowertrainBuilder.Build(data, modData, sumWriter);
-					run = new DistanceRun(container, new FollowUpOvcRunCreator());
+					run = new DistanceRun(container, followUpRunCreatorFactory.CreateFollowUpRunCreator(data)); 
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
