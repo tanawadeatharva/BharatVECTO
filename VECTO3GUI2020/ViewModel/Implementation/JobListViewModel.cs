@@ -518,7 +518,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter);
+					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
 					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
 					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;
@@ -593,7 +593,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			});
 
 			var start = Stopwatch.StartNew();
-			jobContainer.Execute(true);
+			jobContainer.Execute(false); //TODO HM set back to true
 			
 			while (!jobContainer.AllCompleted)
 			{
