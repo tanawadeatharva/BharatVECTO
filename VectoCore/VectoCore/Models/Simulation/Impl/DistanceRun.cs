@@ -34,14 +34,15 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
+		public DistanceRun(IVehicleContainer container, IFollowUpRunCreator followUpCreator) : base(container, followUpCreator) {}
 		public DistanceRun(IVehicleContainer container) : base(container) {}
-
 		protected override IResponse DoSimulationStep()
 		{
 			IterationStatistics.StartIteration();
