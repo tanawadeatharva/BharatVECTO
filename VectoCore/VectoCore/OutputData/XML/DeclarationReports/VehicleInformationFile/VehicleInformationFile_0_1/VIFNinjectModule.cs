@@ -86,6 +86,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<VIFElectricEnergyStorageType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricEnergyStorageType());
 
+			Bind<IXmlTypeWriter>().To<VIFElectricMachineGENType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineGENType());
+
 			Bind<IXmlTypeWriter>().To<VIFElectricMotorTorqueLimitsType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMotorTorqueLimitsType());
 
