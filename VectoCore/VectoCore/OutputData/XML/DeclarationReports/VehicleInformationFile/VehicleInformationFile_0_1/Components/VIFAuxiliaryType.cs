@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux != null)
+				return null;
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,

@@ -19,7 +19,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var electricStorages = inputData.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements;
-			
+			if (electricStorages == null)
+				return null;
+
 			var result = new List<XElement>();
 			
 			foreach (var entry in electricStorages) {

@@ -23,6 +23,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var transmission = inputData.JobInputData.Vehicle.Components.GearboxInputData;
+			if (transmission == null)
+				return null;
 
 			return new XElement(_vif + XMLNames.Component_Transmission,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,

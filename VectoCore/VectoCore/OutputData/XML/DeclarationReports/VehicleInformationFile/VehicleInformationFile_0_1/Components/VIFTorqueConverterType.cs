@@ -20,6 +20,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var torque = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
+			if (torque == null)
+				return null;
 			
 			return new XElement(_vif + XMLNames.Component_TorqueConverter,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,

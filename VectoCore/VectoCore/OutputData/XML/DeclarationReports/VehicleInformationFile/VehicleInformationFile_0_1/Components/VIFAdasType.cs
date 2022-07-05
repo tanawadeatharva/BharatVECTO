@@ -17,6 +17,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var adas = inputData.JobInputData.Vehicle.ADAS;
+
+			if (adas == null)
+				return null;
+
 			return new XElement(_vif + XMLNames.Vehicle_ADAS,
 				new XElement(_vif + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
 				new XElement(_vif +  XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),

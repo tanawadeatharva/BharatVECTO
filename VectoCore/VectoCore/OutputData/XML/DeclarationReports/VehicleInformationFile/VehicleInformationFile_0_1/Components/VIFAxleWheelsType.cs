@@ -16,6 +16,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var axleWheels = inputData.JobInputData.Vehicle.Components.AxleWheels;
+			if (axleWheels != null)
+				return null;
+
 			return new XElement(_vif + XMLNames.Component_AxleWheels,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + "type", "v2.0:AxleDataDeclarationType"),

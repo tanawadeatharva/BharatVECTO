@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var engine = inputData.JobInputData.Vehicle.Components.EngineInputData;
+			if (engine == null)	
+				return null;
 
 			return new XElement(_vif + XMLNames.Component_Engine,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,

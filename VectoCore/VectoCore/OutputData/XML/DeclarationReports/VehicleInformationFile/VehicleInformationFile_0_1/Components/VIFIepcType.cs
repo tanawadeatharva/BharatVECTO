@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var iepc = inputData.JobInputData.Vehicle.Components.IEPC;
+			if (iepc == null)
+				return null;
 
 			return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
