@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
@@ -40,6 +41,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetBoostingLimitationsType();
 		IXmlTypeWriter GetElectricEnergyStorageType();
 		IXmlTypeWriter GetElectricMachineGENType();
+		IVIFElectricMachineSystemType GetElectricMachineSystemMeasuredType();
 		IXmlTypeWriter GetElectricMotorTorqueLimitsType();
 		IXmlTypeWriter GetEngineType();
 		IXmlTypeWriter GetTorqueConvertType();
