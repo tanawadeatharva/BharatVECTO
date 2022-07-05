@@ -30,10 +30,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 
 		#region Components
-		
+
 		IXmlTypeWriter GetAdasType();
 		IXmlTypeWriter GetAngelDriveType();
 		IXmlTypeWriter GetAuxiliaryType();
+		IXmlTypeWriter GetAuxiliaryHevSType();
 		IXmlTypeWriter GetAxlegearType();
 		IXmlTypeWriter GetAxleWheelsType();
 		IXmlTypeWriter GetBoostingLimitationsType();

@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Implementation of IXmlTypeWriter
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+		public virtual XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
 			if (aux != null)
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					));
 		}
 
-		private XElement GetSteeringPumpElement(IList<string> steeringPumps)
+		protected virtual XElement GetSteeringPumpElement(IList<string> steeringPumps)
 		{
 			var result = new List<XElement>();
 			for (int i = 0; i < steeringPumps.Count; i++)
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 		
 
-		private XElement GetElectricSystem(IElectricSupplyDeclarationData electricSupply)
+		protected virtual XElement GetElectricSystem(IElectricSupplyDeclarationData electricSupply)
 		{
 			var alternatorTech = new XElement(_vif + XMLNames.Bus_AlternatorTechnology, electricSupply.AlternatorTechnology.ToXMLFormat());
 
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 		
 
-		private XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
+		protected virtual XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
 		{
 
 			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			);
 		}
 
-		private string GetXMLAirsuspensionControl(ConsumerTechnology airsuspensionControl)
+		protected string GetXMLAirsuspensionControl(ConsumerTechnology airsuspensionControl)
 		{
 			switch (airsuspensionControl)
 			{
@@ -135,11 +135,63 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 
 
-		private XElement GetHvac(IHVACBusAuxiliariesDeclarationData hvac)
+		protected virtual XElement GetHvac(IHVACBusAuxiliariesDeclarationData hvac)
 		{
 			return new XElement(new XElement(_vif + XMLNames.BusAux_HVAC,
 				new XElement(_vif + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat),
 				new XElement(_vif + XMLNames.Bus_EngineWasteGasHeatExchanger, hvac.EngineWasteGasHeatExchanger)));
+		}
+
+		#endregion
+	}
+
+	public class VIFAuxiliaryHevSType : VIFAuxiliaryType
+	{
+		public VIFAuxiliaryHevSType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VIFAuxiliaryType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux != null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Component_Auxiliaries,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + "type", "vif:AUX_HEV-S_PrimaryBusType"),
+					new XElement(_vif + XMLNames.BusAux_Fan,
+						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+					GetElectricSystem(aux.ElectricSupply),
+					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+					GetHvac(aux.HVACAux)
+				));
+		}
+
+
+		protected override XElement GetElectricSystem(IElectricSupplyDeclarationData electricSupply)
+		{
+			return new XElement(_vif + XMLNames.BusAux_ElectricSystem,
+				new XElement(_vif + XMLNames.BusAux_ElectricSystem_AlternatorTechnology,
+					electricSupply.AlternatorTechnology.ToXMLFormat()),
+				new XElement(_vif + XMLNames.BusAux_ElectricSystem_SupplyFromHEVPossible,
+					electricSupply.ESSupplyFromHEVREESS));
+		}
+
+
+		protected override XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
+		{
+			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
+				new XElement(_vif + XMLNames.Bus_SizeOfAirSupply, pSupply.CompressorSize),
+				new XElement(_vif + XMLNames.CompressorDrive, pSupply.CompressorDrive.GetLabel()),
+				new XElement(_vif + XMLNames.Vehicle_Clutch, pSupply.Clutch),
+				new XElement(_vif + XMLNames.Bus_CompressorRatio, pSupply.Ratio.ToXMLFormat(3)),
+				new XElement(_vif + XMLNames.Bus_SmartRegenerationSystem, pSupply.SmartRegeneration),
+				new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl)),
+				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, pConsumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+			);
 		}
 
 		#endregion
