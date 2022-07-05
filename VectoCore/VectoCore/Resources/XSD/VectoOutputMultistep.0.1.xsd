@@ -363,8 +363,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -983,6 +983,66 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:group name="BusAuxPneumaticSystemConsumerSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P316 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-S_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:complexType name="CapacitorSystemDataType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractCapacitorSystemDataType">
