@@ -30,6 +30,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			#endregion
 
+
+			#region Component Group
+
+			Bind<IXmlTypeWriter>().To<ConventionalComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetConventionalComponentType());
+
+			Bind<IXmlTypeWriter>().To<HevIepcSComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevIepcSComponentVIFType());
+
+			#endregion
+
 			#region Vehicle Group
 
 			Bind<IReportOutputGroup>().To<ConventionalVIFVehicleGroup>().When(AccessedViaVIFFactory)

@@ -20,6 +20,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
+		#region Componenet Group
+
+		IXmlTypeWriter GetConventionalComponentType();
+		IXmlTypeWriter GetHevIepcSComponentVIFType();
+
+		#endregion
+
 
 
 		#region Components

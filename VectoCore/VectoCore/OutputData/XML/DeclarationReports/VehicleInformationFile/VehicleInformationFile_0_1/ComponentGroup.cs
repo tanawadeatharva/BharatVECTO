@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
+{
+	public abstract class ComponentVIFType : IXmlTypeWriter
+	{
+		protected readonly IVIFReportFactory _vifReportFactory;
+		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+
+		protected ComponentVIFType(IVIFReportFactory vifReportFactory)
+		{
+			_vifReportFactory = vifReportFactory;
+		}
+
+		#region Implementation of IXmlTypeWriter
+
+		public abstract XElement GetElement(IDeclarationInputDataProvider inputData);
+
+		#endregion
+	}
+
+
+	public class ConventionalComponentVIFType : ComponentVIFType
+	{
+		public ConventionalComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+				return new XElement(_vif + XMLNames.Vehicle_Components,
+					new XAttribute(_xsi + "type", "vif:Vehicle_Conventional_ComponentsVIFType"),
+					_vifReportFactory.GetEngineType().GetElement(inputData),
+					_vifReportFactory.GetTransmissionType().GetElement(inputData),
+					_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
+					_vifReportFactory.GetAngelDriveType().GetElement(inputData),
+					_vifReportFactory.GetAxlegearType().GetElement(inputData),
+					_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+					_vifReportFactory.GetAuxiliaryType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+
+	public class HevIepcSComponentVIFType : ComponentVIFType
+	{
+		public HevIepcSComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_vif + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-IEPC-S_ComponentsVIFType"),
+				_vifReportFactory.GetEngineType().GetElement(inputData),
+				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetIepcType().GetElement(inputData),
+				_vifReportFactory.GetAxlegearType().GetElement(inputData),
+				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+				_vifReportFactory.GetAuxiliaryType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+	public class HevPxComponentVIFType : ComponentVIFType
+	{
+		public HevPxComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_vif + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-Px_ComponentsVIFType"),
+				_vifReportFactory.GetEngineType().GetElement(inputData),
+				_vifReportFactory.GetIepcType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData)
+				//_vifReportFactory().GetElement(inputData),
+				//_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+				//_vifReportFactory.GetAuxiliaryType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+}
