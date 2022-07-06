@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerDemand"></param>
+		/// <param name="columnName"></param>
 		public void AddConstant(string auxId, Watt powerDemand, string columnName = null)
 		{
 			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand, columnName);
@@ -84,17 +85,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
-		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
+		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample));
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample), columnName);
 		}
 
-		
+
 		/// <summary>
 		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerLossFunction"></param>
+		/// <param name="columnName"></param>
 		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction, string columnName = null)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
