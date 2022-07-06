@@ -203,7 +203,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
 
 
-				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer);
+				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer, null, null);
 				//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 					FileHelper.CreateDirectory(outputFile);
 
