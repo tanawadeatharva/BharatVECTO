@@ -18,25 +18,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	public class XmlElectricMachineSystemMeasuredType : AbstractVIFXmlType, IXmlElectricMachineSystemType
 	{
-		public XmlElectricMachineSystemMeasuredType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+		public string XmlTypeAttributeName { get; set; }
+
+		public XmlElectricMachineSystemMeasuredType(IVIFReportFactory vifFactory) : base(vifFactory)
+		{
+			XmlTypeAttributeName = "ElectricMachineSystemMeasuredDataDeclarationType";
+		}
 
 		#region Implementation of IVIFElectricMachineSystemType
 
-		public XElement GetElement(IElectricMotorDeclarationInputData em)
+		public virtual XElement GetElement(IElectricMotorDeclarationInputData em)
 		{
 			return new XElement(_vif + XMLNames.ElectricMachineSystem,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:ElectricMachineSystemMeasuredDataDeclarationType"),
+					new XAttribute(_xsi + "type", $"vif:{XmlTypeAttributeName}"),
 					new XAttribute("id", em.DigestValue.Reference),
-					new XElement(_vif + XMLNames.Component_Manufacturer, em.Manufacturer),
-					new XElement(_vif + XMLNames.Component_Model, em.Model),
-					new XElement(_vif + XMLNames.Component_CertificationNumber, em.CertificationNumber),
-					new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(em.Date, XmlDateTimeSerializationMode.Utc)),
-					new XElement(_vif + XMLNames.Component_AppVersion, em.AppVersion),
-					new XElement(_vif + XMLNames.ElectricMachine_ElectricMachineType, em.ElectricMachineType.ToString()),
+					GetElectricMachineSystemCommon(em),
 					new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),
-					new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, em.R85RatedPower.ToXMLFormat()),
-					new XElement(_vif + XMLNames.ElectricMachine_RotationalInertia, em.Inertia.ToXMLFormat(2)),
+					GetElectricMachineSystemPowerRange(em),
 					new XElement(_vif + XMLNames.ElectricMachine_DcDcConverterIncluded, em.DcDcConverterIncluded),
 					new XElement(_vif + XMLNames.ElectricMachine_IHPCType, em.IHPCType),
 					GetVoltageLevels(em.VoltageLevels),
@@ -49,7 +48,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		
 		#endregion
 
-		
+		protected virtual List<XElement> GetElectricMachineSystemCommon(IElectricMotorDeclarationInputData em)
+		{
+			return new List<XElement> {
+				new XElement(_vif + XMLNames.Component_Manufacturer, em.Manufacturer),
+				new XElement(_vif + XMLNames.Component_Model, em.Model),
+				new XElement(_vif + XMLNames.Component_CertificationNumber, em.CertificationNumber),
+				new XElement(_vif + XMLNames.Component_Date,
+					XmlConvert.ToString(em.Date, XmlDateTimeSerializationMode.Utc)),
+				new XElement(_vif + XMLNames.Component_AppVersion, em.AppVersion),
+				new XElement(_vif + XMLNames.ElectricMachine_ElectricMachineType, em.ElectricMachineType.ToString()),
+			};
+		}
+
+		protected virtual List<XElement> GetElectricMachineSystemPowerRange(IElectricMotorDeclarationInputData em)
+		{
+			return new List<XElement> {
+				new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, em.R85RatedPower.ToXMLFormat()),
+				new XElement(_vif + XMLNames.ElectricMachine_RotationalInertia, em.Inertia.ToXMLFormat(2))
+			};
+		}
+
+
+
 		protected virtual List<XElement> GetVoltageLevels(IList<IElectricMotorVoltageLevel> voltageLevels)
 		{
 			var result = new List<XElement>();
@@ -166,5 +187,72 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Conditioning, entries);
 		}
+	}
+
+
+	public class XmlElectricMachineSystemIHPCMeasuredType :  XmlElectricMachineSystemMeasuredType
+	{
+		public XmlElectricMachineSystemIHPCMeasuredType(IVIFReportFactory vifFactory) : base(vifFactory)
+		{
+			XmlTypeAttributeName = "ElectricMachineSystemIHPCMeasuredDataDeclarationType";
+		}
+	}
+
+
+	public class XmlElectricMachineSystemStandardValueType : XmlElectricMachineSystemMeasuredType
+	{
+		public XmlElectricMachineSystemStandardValueType(IVIFReportFactory vifFactory) : base(vifFactory)
+		{
+			XmlTypeAttributeName = "ElectricMachineSystemStandardValuesDataDeclarationType";
+		}
+		
+		#region Overrides of XmlElectricMachineSystemMeasuredType
+
+		public override XElement GetElement(IElectricMotorDeclarationInputData em)
+		{
+			return new XElement(_vif + XMLNames.ElectricMachineSystem,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + "type", $"vif:{XmlTypeAttributeName}"),
+					new XAttribute("id", em.DigestValue.Reference),
+					GetElectricMachineSystemCommon(em),
+					new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),
+					GetElectricMachineSystemPowerRange(em),
+					new XElement(_vif + XMLNames.ElectricMachine_DcDcConverterIncluded, em.DcDcConverterIncluded),
+					new XElement(_vif + XMLNames.ElectricMachine_IHPCType, em.IHPCType),
+					GetVoltageLevels(em.VoltageLevels),
+					GetDragCurve(em.DragCurve)
+				),
+				GetSignature(em.DigestValue)
+			);
+		}
+
+		#endregion
+
+		#region Overrides of XmlElectricMachineSystemMeasuredType
+
+		protected override List<XElement> GetVoltageLevels(IList<IElectricMotorVoltageLevel> voltageLevels)
+		{
+			var result = new List<XElement>();
+
+			foreach (var voltageLevel in voltageLevels)
+			{
+
+				var entry = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
+					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageLevel.ContinuousTorque.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageLevel.ContinuousTorqueSpeed.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageLevel.OverloadTorque.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageLevel.OverloadTestSpeed.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageLevel.OverloadTime.ToXMLFormat(2)),
+					GetMaxTorqueCurve(voltageLevel.FullLoadCurve),
+					GetPowerMap(voltageLevel.PowerMap)
+
+				);
+				result.Add(entry);
+			}
+
+			return result;
+		}
+
+		#endregion
 	}
 }
