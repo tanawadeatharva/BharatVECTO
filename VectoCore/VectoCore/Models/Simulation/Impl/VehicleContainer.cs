@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			if (WriteSumData != null) {
-				WriteSumData.RegisterComponent(component);
+				WriteSumData.RegisterComponent(component, RunData);
 			}
 		}
 
@@ -239,6 +239,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns => new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors);
+		public ISumData SumData => WriteSumData;
 
 		public virtual void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{

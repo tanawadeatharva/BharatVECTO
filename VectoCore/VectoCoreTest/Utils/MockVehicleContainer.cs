@@ -318,6 +318,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		#endregion
 
 		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public ISumData SumData { get; }
+
 		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
 			throw new NotImplementedException();

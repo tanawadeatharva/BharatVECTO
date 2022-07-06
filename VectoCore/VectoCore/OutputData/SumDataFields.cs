@@ -1,7 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -290,6 +299,13 @@ namespace TUGraz.VectoCore.OutputData
 
 		public delegate object WriteSumEntry(VectoRunData r, IModalDataContainer m);
 
+		public delegate object WriteFuelEntry(VectoRunData r, IModalDataContainer m, IFuelProperties f);
+
+		public delegate object WriteEmEntry(VectoRunData r, IModalDataContainer m, PowertrainPosition emPos);
+
+
+		public delegate object WriteAuxEntry(VectoRunData r, IModalDataContainer m, DataColumn aux);
+
 		private static Tuple<ModalResultField[], WriteSumEntry> SumFunc(ModalResultField[] mrf, WriteSumEntry w)
 		{
 			return Tuple.Create(mrf, w);
@@ -300,14 +316,362 @@ namespace TUGraz.VectoCore.OutputData
 			return Tuple.Create<ModalResultField[], WriteSumEntry>(null, w);
 		}
 
+		private static Tuple<ModalResultField[], WriteFuelEntry> FuelFunc(WriteFuelEntry w)
+		{
+			return Tuple.Create<ModalResultField[], WriteFuelEntry>(null, w);
+		}
+
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 			// common fields
-			{SumDataFields.SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
-			{SumDataFields.JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
-			{SumDataFields.INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
-			// engine Infos
-			{SumDataFields.ENGINE_MANUFACTURER, SumFunc((r, m) => r.EngineData.Manufacturer)},
+			{ SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber)},
+			{ JOB, SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}")},
+			{ INPUTFILE, SumFunc((r,m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
+			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
+			{ STATUS, SumFunc((r, m) => m.RunStatus)},
+
+			{ TIME, SumFunc((r,m) => (ConvertedSI)m.Duration)},
+			{ DISTANCE, SumFunc((r, m) => m.Distance.ConvertToKiloMeter())},
+			{ SPEED, SumFunc((r, m) => m.Speed().ConvertToKiloMeterPerHour())},
+			{ ALTITUDE_DELTA, SumFunc((r, m) => (ConvertedSI)m.AltitudeDelta())},
+
+
+			// Vehicle 
+			{ VEHICLE_FUEL_TYPE, SumFunc((r, m) => m.FuelData.Select(x => x.GetLabel()).Join())},
+			{ P_WHEEL_POS, SumFunc((r, m) => m.PowerWheelPositive().ConvertToKiloWatt())},
+			{ P_WHEEL, SumFunc((r, m) => m.PowerWheel().ConvertToKiloWatt())},
+			{ VEHICLE_MANUFACTURER, SumFunc((r, m) => r.VehicleData.Manufacturer)},
+			{ VIN_NUMBER, SumFunc((r, m) => r.VehicleData.VIN)},
+			{ VEHICLE_MODEL, SumFunc((r, m) => r.VehicleData.ModelName)},
+			{ HDV_CO2_VEHICLE_CLASS, SumFunc((r, m) => r.Mission?.BusParameter?.BusGroup.GetClassNumber() ?? r.VehicleData.VehicleClass.GetClassNumber())},
+			{ CURB_MASS, SumFunc((r, m) => (ConvertedSI)r.VehicleData.CurbMass)},
+			{ LOADING, SumFunc((r, m) => (ConvertedSI)r.VehicleData.Loading)},
+			{ PassengerCount, SumFunc((r, m) => r.VehicleData.PassengerCount)},
+			{ CARGO_VOLUME, SumFunc((r, m) => (ConvertedSI)r.VehicleData.CargoVolume)},
+			{ TOTAL_VEHICLE_MASS, SumFunc((r, m) => (ConvertedSI)r.VehicleData.TotalVehicleMass)},
+			{ SLEEPER_CAB, SumFunc((r, m) => r.VehicleData.SleeperCab.HasValue ? (r.VehicleData.SleeperCab.Value ? "yes" : "no") : "-")},
+			{ ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, SumFunc((r, m) =>   r.VehicleData.RollResistanceCoefficientWithoutTrailer)},
+			{ ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, SumFunc((r, m) =>    r.VehicleData.TotalRollResistanceCoefficient)},
+			{ R_DYN, SumFunc((r, m) => (ConvertedSI)r.VehicleData.DynamicTyreRadius)},
+			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => r.VehicleData.ADAS != null ? DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, r.GearboxData?.Type ?? GearboxType.NoGearbox).ID : "")},
+			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity} F" : null)},
+			{ TCU_MODEL, SumFunc((r, m) =>  r.ShiftStrategy)},
+			{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "")},
+
+			// air drag infos
+			{ AIRDRAG_MODEL, SumFunc((r, m) => r.AirdragData.ModelName)},
+			{ AIRDRAG_CERTIFICATION_METHOD, SumFunc((r, m) => r.AirdragData.CertificationMethod.GetName())},
+			{ AIRDRAG_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AirdragData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AirdragData.CertificationNumber)},
+			{ CD_x_A_DECLARED, SumFunc((r, m) => (ConvertedSI)r.AirdragData.DeclaredAirdragArea)},
+			{ CD_x_A, SumFunc((r, m) => (ConvertedSI)r.AirdragData.CrossWindCorrectionCurve.AirDragArea)},
 			
+			// engine infos
+			{ ENGINE_MANUFACTURER, SumFunc((r, m) => r.EngineData.Manufacturer)},
+			{ ENGINE_MODEL, SumFunc((r, m) => r.EngineData.ModelName)},
+			{ ENGINE_CERTIFICATION_NUMBER, SumFunc((r, m) => r.EngineData.CertificationNumber)},
+			{ ENGINE_FUEL_TYPE, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.FuelData.GetLabel()).Join(" / "))},
+			{ ENGINE_RATED_POWER, SumFunc((r, m) => r.EngineData.RatedPowerDeclared != null && r.EngineData.RatedPowerDeclared > 0 ? r.EngineData.RatedPowerDeclared.ConvertToKiloWatt() : r.EngineData.FullLoadCurves[0].MaxPower.ConvertToKiloWatt())},
+			{ ENGINE_IDLING_SPEED, SumFunc((r, m) => (ConvertedSI)r.EngineData.IdleSpeed.AsRPM.SI<Scalar>())},
+			{ ENGINE_RATED_SPEED, SumFunc((r, m) => r.EngineData.RatedSpeedDeclared != null && r.EngineData.RatedSpeedDeclared > 0 ? (ConvertedSI)r.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>() : (ConvertedSI)r.EngineData.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())},
+			{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData.Displacement.ConvertToCubicCentiMeter())},
+			{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCUrban).Join(" / "))},
+			{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCRural).Join(" / "))},
+			{ ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCMotorway).Join(" / "))},
+			{ ENGINE_BF_COLD_HOT, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / "))},
+			{ ENGINE_CF_REG_PER, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / "))},
+			{ ENGINE_ACTUAL_CORRECTION_FACTOR, SumFunc((r, m) => {
+				if (r.Mission?.MissionType == MissionType.VerificationTest) {
+					var fuelsWhtc = r.EngineData.Fuels.Select(
+							fuel => m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
+									m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
+						.Select(dummy => (double)dummy).ToArray();
+					return fuelsWhtc.Join(" / ");
+				}
+				return r.EngineData.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
+			})},
+			
+			// axlegear infos
+			{ AXLE_MANUFACTURER, SumFunc((r, m) => r.AxleGearData.Manufacturer)},
+			{ AXLE_MODEL, SumFunc((r, m) => r.AxleGearData.ModelName)},
+			{ AXLE_RATIO, SumFunc((r, m) => (ConvertedSI)r.AxleGearData.AxleGear.Ratio.SI<Scalar>())},
+			{ AXLEGEAR_CERTIFICATION_METHOD, SumFunc((r, m) => r.AxleGearData.CertificationMethod.GetName())},
+			{ AXLEGEAR_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AxleGearData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AxleGearData.CertificationNumber)},
+
+			// axle/tyre infos
+			{ NUM_AXLES_DRIVEN, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleDriven))},
+			{ NUM_AXLES_NON_DRIVEN, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleNonDriven))},
+			{ NUM_AXLES_TRAILER, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.Trailer))},
+
+			{ DECLARED_RRC_AXLE1, SumFunc((r, m) => r.VehicleData.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[0].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE2, SumFunc((r, m) => r.VehicleData.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[1].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE3, SumFunc((r, m) => r.VehicleData.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[2].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE4, SumFunc((r, m) => r.VehicleData.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[3].RollResistanceCoefficient : double.NaN) },
+
+			{ DECLARED_FZISO_AXLE1, SumFunc((r, m) => r.VehicleData.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[0].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE2, SumFunc((r, m) => r.VehicleData.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[1].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE3, SumFunc((r, m) => r.VehicleData.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[2].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE4, SumFunc((r, m) => r.VehicleData.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[3].TyreTestLoad : null) },
+
+			// angle drive
+			{ ANGLEDRIVE_MANUFACTURER, SumFunc((r, m) => r.AngledriveData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ ANGLEDRIVE_MODEL, SumFunc((r, m) => r.AngledriveData?.ModelName?? Constants.NOT_AVAILABLE)},
+			{ ANGLEDRIVE_RATIO, SumFunc((r, m) => r.AngledriveData?.Angledrive.Ratio)},
+			{ ANGLEDRIVE_CERTIFICATION_METHOD, SumFunc((r, m) => r.AngledriveData?.CertificationMethod.GetName() ?? "")},
+			{ ANGLEDRIVE_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AngledriveData == null || r.AngledriveData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AngledriveData.CertificationNumber)},
+
+			// retarder
+			{ RETARDER_TYPE, SumFunc((r, m) => (r.Retarder?.Type ?? RetarderType.None).GetLabel())},
+			{ RETARDER_MANUFACTURER, SumFunc((r, m) => r.Retarder != null && r.Retarder.Type.IsDedicatedComponent() ? r.Retarder.Manufacturer : Constants.NOT_AVAILABLE)},
+			{ RETARDER_MODEL, SumFunc((r, m) => r.Retarder != null && r.Retarder.Type.IsDedicatedComponent() ? r.Retarder.ModelName : Constants.NOT_AVAILABLE)},
+			{ RETARDER_CERTIFICATION_METHOD, SumFunc((r, m) => r.Retarder != null && r.Retarder.Type.IsDedicatedComponent() ? r.Retarder?.CertificationMethod.GetName() : "")},
+			{ RETARDER_CERTIFICATION_NUMBER, SumFunc((r, m) => r.Retarder == null || !r.Retarder.Type.IsDedicatedComponent() || r.Retarder.CertificationMethod == CertificationMethod.StandardValues ? "" : r.Retarder.CertificationNumber)},
+
+			// gearbox
+			{ GEARBOX_MANUFACTURER, SumFunc((r, m) => r.GearboxData.Manufacturer)},
+			{ GEARBOX_MODEL, SumFunc((r, m) => r.GearboxData.ModelName)},
+			{ GEARBOX_TYPE, SumFunc((r, m) => r.GearboxData.Type)},
+			{ GEARBOX_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData.CertificationNumber)},
+			{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData.CertificationMethod.GetName())},
+
+			{ GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData.Gears.Count > 0
+					? (double.IsNaN(r.GearboxData.Gears.First().Value.Ratio)
+						? (ConvertedSI)r.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
+						: (ConvertedSI)r.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
+					: 0.SI<Scalar>())}, 
+			{ GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData.Gears.Count > 0
+				? (ConvertedSI) r.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+				: (ConvertedSI)0.SI<Scalar>())},
+
+			// torque converter
+			{ TORQUECONVERTER_MANUFACTURER, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ TORQUECONVERTER_MODEL, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ TORQUE_CONVERTER_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData?.TorqueConverterData?.CertificationNumber ?? "")},
+			{ TORQUE_CONVERTER_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.CertificationMethod.GetName() ?? "")},
+
+			// engine 
+			{ P_FCMAP_POS, SumFunc((r, m) => m.TotalPowerEnginePositiveAverage().ConvertToKiloWatt())},
+			{ P_FCMAP, SumFunc((r, m) => m.TotalPowerEngineAverage().ConvertToKiloWatt())},
+
+			{ E_FCMAP_POS, SumFunc((r, m) => m.TotalEngineWorkPositive().ConvertToKiloWattHour())},
+			{ E_FCMAP_NEG, SumFunc((r, m) => (-m.TotalEngineWorkNegative()).ConvertToKiloWattHour())},
+			{ E_ICE_START, SumFunc((r, m) =>  m.WorkEngineStart().ConvertToKiloWattHour())},
+
+			{ E_WHR_EL, SumFunc((r, m) => m.CorrectedModalData.WorkWHREl.ConvertToKiloWattHour())},
+			{ E_WHR_MECH, SumFunc((r, m) => m.CorrectedModalData.WorkWHRMech.ConvertToKiloWattHour())},
+			{ E_BusAux_PS_corr, SumFunc((r, m) => m.CorrectedModalData.WorkBusAuxPSCorr.ConvertToKiloWattHour())},
+			{ E_BusAux_ES_mech_corr, SumFunc((r, m) => m.CorrectedModalData.WorkBusAuxESMech.ConvertToKiloWattHour())},
+			{ E_BusAux_AuxHeater, SumFunc((r, m) => m.CorrectedModalData.AuxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour())},
+
+			
+			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour())},
+			
+			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries().ConvertToKiloWattHour())},
+			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_aux_el).ConvertToKiloWattHour())},
+			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour())},
+			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour())},
+			{ E_SHIFT_LOSS, SumFunc((r, m) => m.WorkGearshift().ConvertToKiloWattHour())},
+			{ E_GBX_LOSS, SumFunc((r, m) => m.WorkGearbox().ConvertToKiloWattHour())},
+			{ E_RET_LOSS, SumFunc((r, m) => m.WorkRetarder().ConvertToKiloWattHour())},
+			{ E_AXL_LOSS, SumFunc((r, m) => m.WorkAxlegear().ConvertToKiloWattHour())},
+			{ E_ANGLE_LOSS, SumFunc((r, m) => m.WorkAngledrive().ConvertToKiloWattHour())},
+			{ E_BRAKE, SumFunc((r, m) => m.WorkTotalMechanicalBrake().ConvertToKiloWattHour())},
+			{ E_VEHICLE_INERTIA, SumFunc((r, m) => m.WorkVehicleInertia().ConvertToKiloWattHour())},
+			{ E_AIR, SumFunc((r, m) => m.WorkAirResistance().ConvertToKiloWattHour())},
+			{ E_ROLL, SumFunc((r, m) => m.WorkRollingResistance().ConvertToKiloWattHour())},
+			{ E_GRAD, SumFunc((r, m) => m.WorkRoadGradientResistance().ConvertToKiloWattHour())},
+			{ E_AUX_ESS_missing, SumFunc((r, m) => m.CorrectedModalData.WorkESSMissing.ConvertToKiloWattHour())},
+
+
+			{E_WHEEL, SumFunc((r, m) => m.WorkWheels().ConvertToKiloWattHour())},
+			
+			// BusAux
+			{ AirGenerated, SumFunc((r, m) => (ConvertedSI)m.AirGenerated())},
+			{ AirConsumed, SumFunc((r, m) => (ConvertedSI)m.AirConsumed())},
+			{ E_PS_CompressorOff, SumFunc((r, m) => m.EnergyPneumaticCompressorPowerOff().ConvertToKiloWattHour())},
+			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour())},
+			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour())},
+			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour())},
+			{ Delta_E_BusAux_Battery, SumFunc((r, m) => (r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+					? m.DeltaSOCBusAuxBattery() * r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
+					: 0.SI<WattSecond>())
+				.ConvertToKiloWattHour()) },
+			{ E_BusAux_HVAC_Mech, SumFunc(new[] {ModalResultField.P_busAux_HVACmech_consumer}, (r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour())}, 
+			{ E_BusAux_HVAC_El, SumFunc(new[] {ModalResultField.P_busAux_ES_HVAC}, (r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour())},
+
+			// REESS
+			{ E_REESS_LOSS, SumFunc((r, m) => m.REESSLoss().ConvertToKiloWattHour())},
+			{ E_REESS_T_chg, SumFunc((r, m) => m.WorkREESSChargeTerminal().ConvertToKiloWattHour())},
+			{ E_REESS_T_dischg, SumFunc((r, m) => m.WorkREESSDischargeTerminal().ConvertToKiloWattHour())},
+			{ E_REESS_int_chg, SumFunc((r, m) => m.WorkREESSChargeInternal().ConvertToKiloWattHour())},
+			{ E_REESS_int_dischg, SumFunc((r, m) => m.WorkREESSDischargeInternal().ConvertToKiloWattHour())},
+
+			{ REESS_StartSoC, SumFunc((r, m) => r.BatteryData != null ? r.BatteryData.InitialSoC * 100 : r.SuperCapData.InitialSoC * 100)},
+			{ REESS_EndSoC, SumFunc((r, m) => m.REESSEndSoC())},
+			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour())},
+
+			// performance entries
+			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage())},
+			{ ACC_POS, SumFunc((r, m) => (ConvertedSI)m.AccelerationsPositive())},
+			{ ACC_NEG, SumFunc((r, m) => (ConvertedSI)m.AccelerationsNegative())},
+			{ ACC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.AccelerationTimeShare())},
+			{ DEC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.DecelerationTimeShare())},
+			{ CRUISE_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.CruiseTimeShare())},
+			{ STOP_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.StopTimeShare())},
+			{ MAX_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxSpeed().AsKmph.SI<Scalar>())},
+			{ MAX_ACCELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxAcceleration())},
+			{ MAX_DECELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxDeceleration())},
+			{ AVG_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.AvgEngineSpeed().AsRPM.SI<Scalar>())},
+			{ MAX_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxEngineSpeed().AsRPM.SI<Scalar>())},
+			{ AVERAGE_POS_ACC, SumFunc((r, m) => (ConvertedSI)m.AverageAccelerationBelowTargetSpeed())},
+
+			{ AVERAGE_ENGINE_EFFICIENCY, SumFunc((r, m) => {
+				var eFC = 0.SI<Joule>();
+				foreach (var fuel in m.FuelData) {
+					eFC += m.TimeIntegral<Kilogram>(m.GetColumnName(fuel, ModalResultField.FCFinal)) * fuel.LowerHeatingValueVecto;
+				}
+				var eIcePos = m.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x > 0);
+				return eFC.IsEqual(0, 1e-9) ? 0 : (eIcePos / eFC).Value();
+			}) },
+			{ AVERAGE_GEARBOX_EFFICIENCY, SumFunc(new[] { ModalResultField.P_gbx_in }, (r, m) => {
+				var gbxOutSignal = r.Retarder != null && r.Retarder.Type == RetarderType.TransmissionOutputRetarder
+					? ModalResultField.P_retarder_in
+					: (r.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
+				var eGbxIn = m.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
+				var eGbxOut = m.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+				return eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
+			})},
+			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP, SumFunc(new[] { ModalResultField.P_gbx_in, ModalResultField.P_TC_in }, (r, m) => {
+				var eTcIn = m.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
+				var eTcOut = m.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);;
+				return eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
+			})},
+			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, SumFunc(new[] {ModalResultField.P_TC_in, ModalResultField.P_TC_out, ModalResultField.TC_Locked}, (r, m) => {
+					var tcData = m.GetValues(
+						x => new {
+							dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
+							locked = x.Field<int>(ModalResultField.TC_Locked.GetName()),
+							P_TCin = x.Field<Watt>(ModalResultField.P_TC_in.GetName()),
+							P_TCout = x.Field<Watt>(ModalResultField.P_TC_out.GetName())
+						});
+					var eTcIn = 0.SI<WattSecond>();
+					var eTcOut = 0.SI<WattSecond>();
+					foreach (var entry in tcData.Where(x => x.locked == 0)) {
+						eTcIn += entry.dt * entry.P_TCin;
+						eTcOut += entry.dt * entry.P_TCout;
+					}
+
+					return eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
+				}
+			)},
+			{ AVERAGE_ANGLEDRIVE_EFFICIENCY, SumFunc(new[] {ModalResultField.P_angle_in, ModalResultField.P_axle_in},(r, m) => {
+				if (r.AngledriveData == null) {
+					return null;
+				}
+				var eAngleIn = m.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
+				var eAngleOut = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+				return (eAngleOut / eAngleIn).Value();
+			})
+			},
+			{ AVERAGE_AXLEGEAR_EFFICIENCY, SumFunc(new[] {ModalResultField.P_axle_in, ModalResultField.P_brake_in},
+				(r, m) => {
+					if (r.AxleGearData == null) {
+						return null;
+					}
+					var eAxlIn = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+					var eAxlOut = m.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
+					return eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
+				})
+			},
+
+			{ NUM_GEARSHIFTS, SumFunc((r, m) => ((uint?)r.GearboxData?.Gears.Count ?? 0u) == 1 ? 0.SI<Scalar>() : (ConvertedSI)m.GearshiftCount())},
+			
+			{ COASTING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.CoastingTimeShare()) },
+			{ BRAKING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.BrakingTimeShare()) },
+			{ ICE_FULL_LOAD_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEMaxLoadTimeShare()) },
+			{ ICE_OFF_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEOffTimeShare()) },
+			{ NUM_ICE_STARTS, SumFunc((r, m) => (ConvertedSI)m.NumICEStarts().SI<Scalar>()) },
+
+			// CO2
+			{ CO2_KM, SumFunc((r, m) => m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter()) },
+			{ CO2_TKM, SumFunc((r, m) => r.VehicleData.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer()) },
+			{ CO2_M3KM, SumFunc((r, m) => r.VehicleData.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter()) },
+			{ CO2_PKM, SumFunc((r, m) => r.VehicleData.PassengerCount == null ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter()) },
+
+			// electric consumption
+			{ ElectricEnergyConsumptionPerKm, SumFunc(new[] {ModalResultField.P_reess_int}, (r, m) => (-m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / m.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter())},
+
+			//			{, SumFunc((r, m) =>)},
+
 		};
+
+
+		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>> FuelDataValue = new Dictionary<string, Tuple<ModalResultField[], WriteFuelEntry>>() {
+			{ FCMAP_H, FuelFunc((r, m, f) => m.FuelConsumptionPerSecond(ModalResultField.FCMap, f)?.ConvertToGrammPerHour())},
+			{ FCMAP_KM, FuelFunc((r, m, f) => m.FuelConsumptionPerMeter(ModalResultField.FCMap, f)?.ConvertToGrammPerKiloMeter())},
+			{ FCNCVC_H, FuelFunc((r, m, f) => m.FuelConsumptionPerSecond(ModalResultField.FCNCVc, f)?.ConvertToGrammPerHour())},
+			{ FCNCVC_KM, FuelFunc((r, m, f) => m.FuelConsumptionPerMeter(ModalResultField.FCNCVc, f)?.ConvertToGrammPerKiloMeter())},
+			{ FCWHTCC_H, FuelFunc((r, m, f) => m.FuelConsumptionPerSecond(ModalResultField.FCWHTCc, f)?.ConvertToGrammPerHour())},
+			{ FCWHTCC_KM, FuelFunc((r, m, f) => m.FuelConsumptionPerMeter(ModalResultField.FCWHTCc, f)?.ConvertToGrammPerKiloMeter())},
+			{ K_ENGLINE, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).EngineLineCorrectionFactor.ConvertToGramPerKiloWattHour())},
+			{ K_VEHLINE, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).VehicleLine?.ConvertToGramPerKiloWattHour())},
+			{ FCESS_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_H?.ConvertToGrammPerHour())},
+			{ FCESS_H_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_CORR_H?.ConvertToGrammPerHour())},
+			{ FC_BusAux_PS_CORR_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_BusAux_PS_CORR_H?.ConvertToGrammPerHour())},
+			{ FC_BusAux_ES_CORR_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_BusAux_ES_CORR_H?.ConvertToGrammPerHour())},
+			{ FCWHR_H_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_WHR_CORR_H?.ConvertToGrammPerHour())},
+			{ FC_HEV_SOC_CORR_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_REESS_SOC_CORR_H?.ConvertToGrammPerHour())},
+			{ FC_HEV_SOC_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_REESS_SOC_H?.ConvertToGrammPerHour())},
+			{ FC_AUXHTR_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H?.ConvertToGrammPerHour())},
+			{ FC_AUXHTR_H_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_H_CORR?.ConvertToGrammPerHour())},
+			{ FCFINAL_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_FINAL_H?.ConvertToGrammPerHour())},
+			{ FCWHR_KM_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_WHR_CORR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_BusAux_PS_CORR_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_BusAux_PS_CORR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_BusAux_ES_CORR_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_BusAux_ES_CORR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_HEV_SOC_CORR_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_REESS_SOC_CORR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_HEV_SOC_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_REESS_SOC_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_AUXHTR_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FC_AUXHTR_KM_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_AUXHTR_KM_CORR?.ConvertToGrammPerKiloMeter())},
+			{ FCESS_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_KM?.ConvertToGrammPerKiloMeter())},
+			{ FCESS_KM_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_CORR_KM?.ConvertToGrammPerKiloMeter())},
+			{ FCFINAL_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_FINAL_KM?.ConvertToGrammPerKiloMeter())},
+
+			{ FCFINAL_LITERPER100KM, FuelFunc((r, m, f) => f.FuelDensity == null ? null :  m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter.ConvertToLiterPer100Kilometer()) },
+			{ FCFINAL_LITERPER100TKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.Loading == null || r.VehicleData.Loading.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :  (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.Loading).ConvertToLiterPer100TonKiloMeter()) },
+			{ FCFINAL_LiterPer100M3KM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null : (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.CargoVolume).ConvertToLiterPerCubicMeter100KiloMeter()) },
+			{ FCFINAL_LiterPer100PassengerKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.PassengerCount == null || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :(m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.PassengerCount.Value).ConvertToLiterPer100Kilometer()) },
+			
+			{ SPECIFIC_FC, FuelFunc((r, m, f) => r.Cycle.CycleType == CycleType.VTP ? (m.TotalFuelConsumption(ModalResultField.FCFinal, f) / m.WorkWheelsPos()).ConvertToGramPerKiloWattHour() : null) },
+
+		};
+
+		public static readonly Dictionary<string, WriteEmEntry> ElectricMotorValue = new Dictionary<string, WriteEmEntry>() {
+			{ EM_AVG_SPEED_FORMAT, (r, m, em) =>    m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
+			{ E_EM_Mot_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_Mot_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorMotWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_Mot_DRIVE_FORMAT, (r, m, em) =>    new ConvertedSI(m.ElectricMotorMotEfficiencyDrive(em), "") },
+			{ ETA_EM_Mot_GEN_FORMAT, (r, m, em) =>  new ConvertedSI(m.ElectricMotorMotEfficiencyGenerate(em), "") },
+			{ E_EM_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_EM_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_EM_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
+			{ ETA_EM_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
+			{ E_EM_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_LOSS_TRANSM_FORMAT, (r, m, em) => m.ElectricMotorTransmissionLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_Mot_LOSS_FORMAT, (r, m, em) => m.ElectricMotorMotLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
+			{ E_EM_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+		};
+
+		public static readonly Dictionary<string, WriteEmEntry> IEPCValue = new Dictionary<string, WriteEmEntry>() {
+			{ IEPC_AVG_SPEED_FORMAT, (r, m, em) => m.ElectricMotorAverageSpeed(em).ConvertToRoundsPerMinute() },
+			{ E_IEPC_DRIVE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkDrive(em).ConvertToKiloWattHour() },
+			{ E_IEPC_GENERATE_FORMAT, (r, m, em) => m.TotalElectricMotorWorkRecuperate(em).ConvertToKiloWattHour() },
+			{ ETA_IEPC_DRIVE_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyDrive(em), "") },
+			{ ETA_IEPC_GEN_FORMAT, (r, m, em) => new ConvertedSI(m.ElectricMotorEfficiencyGenerate(em), "") },
+			{ E_IEPC_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
+			{ E_IEPC_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
+			{ E_IEPC_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
+		};
+
+		public static readonly WriteAuxEntry AuxDataValue = (r, m, a) => m.AuxiliaryWork(a).ConvertToKiloWattHour();
 	}
+	
 }

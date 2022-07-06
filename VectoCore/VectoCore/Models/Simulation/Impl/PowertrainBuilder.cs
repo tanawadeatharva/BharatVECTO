@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, _sumWriter) { RunData = data };
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
+			//container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
@@ -221,10 +221,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
-				container.ModalData?.AddAuxiliary(id);
+				//container.ModalData?.AddAuxiliary(id);
+				//container.SumData?.AddAuxiliary(id);
 			}
-
-
 			engine.Connect(aux.Port());
 		}
 
@@ -233,18 +232,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = CreateSpeedDependentAuxiliaries(data, container);
 			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
 			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+			//container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+			//container.SumData?.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+				//container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+				//	Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+				//container.SumData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+					(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+				//container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				//	Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+				//container.SumData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			engine.Connect(aux.Port());
@@ -1443,7 +1447,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
 
-				container.ModalData?.AddAuxiliary(id);
+				//container.ModalData?.AddAuxiliary(id);
+				//container.SumData?.AddAuxiliary(id);
 			}
 
 			RoadSweeperAuxiliary rdSwpAux = null;
@@ -1454,8 +1459,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
 				}
 				rdSwpAux = new RoadSweeperAuxiliary(container);
-				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun));
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping,
+					(nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun),
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+				//container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+				//container.SumData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping);
 			}
 
 			if (data.ExecutionMode == ExecutionMode.Engineering &&
@@ -1465,19 +1473,28 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
-				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun));
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive,
+					(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun),
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+				//container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+				//container.SumData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
-												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+				//container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+				//								Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+					(n, absTime, dt, dryRun) =>
+						container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) ||
+						(ptoDrive?.Active(absTime) ?? false)
+							? null
+							: data.PTO.LossMap.GetTorqueLoss(n) * n,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+				//container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				//								Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+				//container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return aux;
@@ -1502,7 +1519,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
 
-				container.ModalData?.AddAuxiliary(id);
+				//container.ModalData?.AddAuxiliary(id);
 			}
 
 			return aux;

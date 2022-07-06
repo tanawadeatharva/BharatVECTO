@@ -70,9 +70,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerDemand"></param>
-		public void AddConstant(string auxId, Watt powerDemand)
+		public void AddConstant(string auxId, Watt powerDemand, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand);
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand, columnName);
 		}
 
 		/// <summary>
@@ -95,9 +95,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerLossFunction"></param>
-		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction)
+		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction, string columnName = null)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
+			(DataBus as IVehicleContainer)?.ModalData?.AddAuxiliary(auxId, columnName);
+			(DataBus as IVehicleContainer)?.SumData?.AddAuxiliary(auxId);
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
