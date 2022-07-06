@@ -1283,7 +1283,7 @@
 			<xs:element name="Entry" type="vif:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemMeasuredDataDeclarationType">
+	<xs:complexType name="ElectricMachineSystemDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractElectricMachineSystemDataType">
 				<xs:sequence>
@@ -1301,6 +1301,7 @@
 						<xs:simpleType>
 							<xs:restriction base="v2.3:CertificationMethodType">
 								<xs:enumeration value="Measured"/>
+								<xs:enumeration value="Standard values"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -1349,7 +1350,7 @@
 		<xs:complexContent>
 			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
-					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType">
+					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P467 - [V]</xs:documentation>
 						</xs:annotation>
