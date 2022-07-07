@@ -8,7 +8,8 @@ namespace TUGraz.VECTO
 		static void Main(string[] args)
 		{
 			try {
-				StarterHelper.StartVECTO(args, "net45");
+				// mk20220707: hashing tool currently only works under net45, therefore we hardcoded the version
+				StarterHelper.StartVECTO(new[]{"net45"});
 			} catch (Exception e) {
 				MessageBox.Show(e.Message);
 			}
