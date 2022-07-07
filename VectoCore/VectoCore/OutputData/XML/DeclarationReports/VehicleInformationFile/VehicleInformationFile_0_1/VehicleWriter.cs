@@ -27,22 +27,40 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class VIFConventionalVehicle : VehicleWriter
+	public class ConventionalVehicleType : VehicleWriter
 	{
-		public VIFConventionalVehicle(IVIFReportFactory vifReportFactory) : base(vifReportFactory)
-		{
-		}
+		public ConventionalVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 		
 		#region Overrides of VehicleWriter
 		
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var commonVehicleGroup = _vifReportFactory.GetConventionalVehicleGroup().GetElements(inputData);
-			commonVehicleGroup.Add(_vifReportFactory.GetConventionalComponentType().GetElement(inputData));
+			var vehicleData = _vifReportFactory.GetConventionalVehicleGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetConventionalComponentType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif: ConventionalVehicleVIFType"),
-				commonVehicleGroup);
+					new XAttribute(_xsi + "type", "vif:ConventionalVehicleVIFType"),
+					vehicleData);
+		}
+
+		#endregion
+	}
+
+
+	public class HevIepcSVehicleType : VehicleWriter
+	{
+		public HevIepcSVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetHevIepcSVehicleGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetHevIepcSComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+					new XAttribute(_xsi + "type", "vif:HEV-IEPC-S_VehicleVIFType"),
+					vehicleData);
 		}
 
 		#endregion

@@ -16,7 +16,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Vehicle
 
-		IXmlTypeWriter GetConventionalLorryVehicleType();
+		IXmlTypeWriter GetConventionalVehicleType();
+		IXmlTypeWriter GetHevIepcSVehicleType();
+
+
 
 
 		#endregion
