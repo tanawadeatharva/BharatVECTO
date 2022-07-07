@@ -1,91 +1,18 @@
-﻿using System;
-using Microsoft.Win32;
-using System.Diagnostics;
-using System.Reflection;
-using System.IO;
-using System.Windows.Forms;
-using System.Linq;
+﻿using System.Windows.Forms;
+using System;
 
 namespace TUGraz.VECTO
 {
 	class Program
 	{
-		private static string[] validVersions = { "net45" };
-		private static void ValidateVersion(string version)
-		{
-			if (!validVersions.Contains(version))
-				throw new Exception($"Invalid .NET Version supplied. Only the following values are valid: {string.Join(", ", validVersions)}");
-		}
-
 		static void Main(string[] args)
 		{
-			var path = "No path found.";
-			string version = "No version found.";
 			try {
-				if (args.Length > 0) {
-					version = args[0].ToLower();
-					ValidateVersion(version);
-				} else {
-					version = GetHighestNETVersion();
-				}
-
-				path = $"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe";
-				Process.Start(new ProcessStartInfo(path) {
-					WorkingDirectory = Directory.GetCurrentDirectory()
-				});
+				StarterHelper.StartVECTO(args, "net45");
 			} catch (Exception e) {
-				var message = $"Error during starting VECTO.\nDetected .NET version: {version}\nTried to open path: {path}\n{e.Message}";
-				File.AppendAllText("LOG.txt", $"{DateTime.Now} {message}\n");
-				Console.WriteLine(message);
-				MessageBox.Show(message);
+				MessageBox.Show(e.Message);
 			}
 		}
 
-		private static string GetHighestNETVersion()
-		{
-			//todo mk2022-02-17 hashing tool currently only works under net45. this has to be fixed.
-			//if (SupportsNet60()) {
-			//	return "net60";
-			//}
-
-			//if (SupportsNet48()) {
-			//	return "net48";
-			//}
-
-			return "net45";
-		}
-
-		private static bool SupportsNet60()
-		{
-			try {
-				var p = Process.Start(new ProcessStartInfo("dotnet", "--list-runtimes") {
-					CreateNoWindow = true,
-					UseShellExecute = false,
-					RedirectStandardError = true,
-					RedirectStandardOutput = true
-				});
-
-				p.WaitForExit();
-				var output = p.StandardOutput.ReadToEnd();
-				return output.Contains("Microsoft.WindowsDesktop.App 6");
-			} catch (Exception e) {
-				Console.WriteLine(e);
-			}
-
-			return false;
-		}
-
-		private static bool SupportsNet48()
-		{
-			const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
-			using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey)) {
-				if (ndpKey != null && ndpKey.GetValue("Release") != null) {
-					var releaseKey = (int)ndpKey.GetValue("Release");
-					return releaseKey >= 528040;
-				}
-
-				return false;
-			}
-		}
 	}
 }

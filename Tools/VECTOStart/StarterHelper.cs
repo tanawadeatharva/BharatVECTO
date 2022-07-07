@@ -4,7 +4,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace TUGraz.VECTO
 {
@@ -33,7 +32,7 @@ namespace TUGraz.VECTO
 				var message = $"Error during starting VECTO.\nDetected .NET version: {version}\nTried to open path: {path}\n{e.Message}";
 				File.AppendAllText("LOG.txt", $"{DateTime.Now} {message}\n");
 				Console.WriteLine(message);
-				MessageBox.Show(message);
+				throw new Exception(message);
 			}
 		}
 		
