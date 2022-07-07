@@ -1,38 +1,34 @@
-﻿using System;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace TUGraz.VECTO
 {
-	class Program
+	class StarterHelper
 	{
-		private static string[] validVersions = { "net45" };
-		private static void ValidateVersion(string version)
-		{
-			if (!validVersions.Contains(version))
-				throw new Exception($"Invalid .NET Version supplied. Only the following values are valid: {string.Join(", ", validVersions)}");
-		}
-
-		static void Main(string[] args)
+		public static void StartVECTO(string[] args, params string[] validVersions)
 		{
 			var path = "No path found.";
 			string version = "No version found.";
+			if (validVersions is null) {
+				validVersions = new[] { "net45", "net48", "net60" };
+			}
 			try {
 				if (args.Length > 0) {
 					version = args[0].ToLower();
-					ValidateVersion(version);
 				} else {
-					version = GetHighestNETVersion();
+					version = StarterHelper.GetHighestNETVersion();
 				}
 
 				path = $"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe";
 				Process.Start(new ProcessStartInfo(path) {
 					WorkingDirectory = Directory.GetCurrentDirectory()
 				});
+				ValidateVersion(version, validVersions);
 			} catch (Exception e) {
 				var message = $"Error during starting VECTO.\nDetected .NET version: {version}\nTried to open path: {path}\n{e.Message}";
 				File.AppendAllText("LOG.txt", $"{DateTime.Now} {message}\n");
@@ -40,17 +36,22 @@ namespace TUGraz.VECTO
 				MessageBox.Show(message);
 			}
 		}
-
+		
+		private static void ValidateVersion(string version, params string[] validVersions)
+		{
+			if (!((IList)validVersions).Contains(version))
+				throw new Exception($"Invalid .NET Version supplied. Only the following values are valid: {string.Join(", ", validVersions)}");
+		}
+		
 		private static string GetHighestNETVersion()
 		{
-			//todo mk2022-02-17 hashing tool currently only works under net45. this has to be fixed.
-			//if (SupportsNet60()) {
-			//	return "net60";
-			//}
+			if (SupportsNet60()) {
+				return "net60";
+			}
 
-			//if (SupportsNet48()) {
-			//	return "net48";
-			//}
+			if (SupportsNet48()) {
+				return "net48";
+			}
 
 			return "net45";
 		}
@@ -87,5 +88,6 @@ namespace TUGraz.VECTO
 				return false;
 			}
 		}
+
 	}
 }
