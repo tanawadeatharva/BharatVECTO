@@ -104,16 +104,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineGENType());
 
 			Bind<IXmlElectricMachineSystemType>().To<XmlElectricMachineSystemMeasuredType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineSystemMeasuredType());
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineSystemType());
+
 			Bind<IXmlTypeWriter>().To<VIFElectricMachineType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineType());
 
-			Bind<IXmlElectricMachineSystemType>().To<XmlElectricMachineSystemIHPCMeasuredType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineSystemIHPCMeasuredType());
 
-			Bind<IXmlElectricMachineSystemType>().To<XmlElectricMachineSystemStandardValueType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineSystemStandardValueType());
-			
 			Bind<IXmlTypeWriter>().To<VIFElectricMotorTorqueLimitsType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMotorTorqueLimitsType());
 
