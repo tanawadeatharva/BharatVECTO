@@ -227,4 +227,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
+
+	public class IepcComponentVIFType : ComponentVIFType
+	{
+		public IepcComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_vif + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + "type", "vif:Vehicle-IEPC_ComponentsVIFType"),
+				_vifReportFactory.GetIepcType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetAxlegearType().GetElement(inputData),
+				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+				_vifReportFactory.GetAuxiliaryIEPCType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
 }
