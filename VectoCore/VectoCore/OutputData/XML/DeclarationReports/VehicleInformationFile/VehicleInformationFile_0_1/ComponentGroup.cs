@@ -207,4 +207,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
+
+	public class PevE4ComponentVIFType : ComponentVIFType
+	{
+		public PevE4ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_vif + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + "type", "vif:Vehicle_PEV-E4_ComponentsVIFType"),
+				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+				_vifReportFactory.GetAuxiliaryPEVType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
 }
