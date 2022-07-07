@@ -2690,7 +2690,7 @@
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
 					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
-					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:IEPC_PrimaryAuxiliairesVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
