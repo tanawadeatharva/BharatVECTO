@@ -30,6 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetHevS3ComponentVIFType();
 		IXmlTypeWriter GetHevS4ComponentVIFType();
 		IXmlTypeWriter GetPevE2ComponentVIFType();
+		IXmlTypeWriter GetPevE3ComponentVIFType();
 
 		#endregion
 
