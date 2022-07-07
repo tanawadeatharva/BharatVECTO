@@ -4,28 +4,32 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace TUGraz.VECTO
 {
 	class Program
 	{
-		static void Main(string[] args)
-		{
+		static void Main(string[] args) {
+			var path = "No path found.";
+			string version = "No version found.";
 			try {
-				string version;
 				if (args.Length > 0) {
 					version = args[0];
 					ValidateVersion(version);
 				} else {
 					version = GetHighestNETVersion();
 				}
-				Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe") {
+
+				path = $"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe";
+				Process.Start(new ProcessStartInfo(path) {
 					WorkingDirectory = Directory.GetCurrentDirectory()
 				});
 			} catch (Exception e) {
 				Console.WriteLine(e);
-				File.AppendAllText("LOG.txt", e.ToString());
-				throw;
+				var message = $"Error during starting VECTO.\nDetected .NET version: {version}\nTried to open path: {path}\n{e.Message}";
+				File.AppendAllText("LOG.txt", $"{DateTime.Now} {message}\n");
+				MessageBox.Show(message);
 			}
 		}
 
