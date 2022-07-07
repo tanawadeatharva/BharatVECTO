@@ -20,7 +20,7 @@ namespace TUGraz.VECTO
 				if (args.Length > 0) {
 					version = args[0].ToLower();
 				} else {
-					version = StarterHelper.GetHighestNETVersion();
+					version = GetHighestNETVersion();
 				}
 
 				path = $"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe";
@@ -35,7 +35,7 @@ namespace TUGraz.VECTO
 				throw new Exception(message);
 			}
 		}
-		
+
 		private static void ValidateVersion(string version, params string[] validVersions)
 		{
 			if (!((IList)validVersions).Contains(version))
