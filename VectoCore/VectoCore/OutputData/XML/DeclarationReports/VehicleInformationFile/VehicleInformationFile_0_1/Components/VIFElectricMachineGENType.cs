@@ -16,8 +16,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Implementation of IXmlTypeWriter
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+		public virtual XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
+
 			foreach (var entry in inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries) {
 
 				if (entry.Position == PowertrainPosition.GEN)
@@ -35,10 +36,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.Component_ElectricMachineGEN,
 				new XElement(_vif + XMLNames.ElectricMachine_PowertrainPosition, electricMachineData.Position.ToXmlFormat()),
 				new XElement(_vif + XMLNames.ElectricMachine_Count, electricMachineData.Count),
+				_vifFactory.GetElectricMachineSystemType().GetElement(electricMachineData.ElectricMachine),
 				GetADC(electricMachineData.ADC));
 		}
 
-		private XElement GetADC(IADCDeclarationInputData adcData)
+		protected virtual XElement GetADC(IADCDeclarationInputData adcData)
 		{
 			if (adcData == null)
 				return null;
