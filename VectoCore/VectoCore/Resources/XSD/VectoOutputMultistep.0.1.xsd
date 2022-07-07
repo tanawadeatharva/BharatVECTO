@@ -58,6 +58,111 @@
 	<xs:complexType name="Abstract_AUX_HEV-S_PrimaryBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_IEPC_PrimaryBusDeclarationType" abstract="true"/>
 	<xs:complexType name="Abstract_AUX_PEV_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:group name="BusAuxElectricSystemSupplySequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartAlternator" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RatedCurrent">
+							<xs:annotation>
+								<xs:documentation>P295 - [A]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedVoltage">
+							<xs:annotation>
+								<xs:documentation>P296 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:enumeration value="12"/>
+									<xs:enumeration value="24"/>
+									<xs:enumeration value="48"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Battery" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="BatteryTechnology">
+							<xs:annotation>
+								<xs:documentation>P296 - enum</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="lead-acid battery – conventional"/>
+									<xs:enumeration value="lead-acid battery – AGM"/>
+									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="li-ion battery - high power"/>
+									<xs:enumeration value="li-ion battery - high energy"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedCapacity" type="xs:integer">
+							<xs:annotation>
+								<xs:documentation>P299 - [Ah]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="NominalVoltage">
+							<xs:annotation>
+								<xs:documentation>P298 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:enumeration value="12"/>
+									<xs:enumeration value="24"/>
+									<xs:enumeration value="48"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Capacitor" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CapacitorTechnology">
+							<xs:annotation>
+								<xs:documentation>P300 - [-]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="with DCDC converter"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedCapacitance">
+							<xs:annotation>
+								<xs:documentation>P301 - [F]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedVoltage">
+							<xs:annotation>
+								<xs:documentation>P302 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
 	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v1.0:AbstractAngledriveDataDeclarationType"/>
@@ -267,7 +372,7 @@
 										<xs:documentation>P294 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:group ref="v2.4:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
+								<xs:group ref="vif:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
 								<xs:element name="SupplyFromHEVPossible" type="xs:boolean">
 									<xs:annotation>
 										<xs:documentation>P303 - bool</xs:documentation>
@@ -279,8 +384,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -420,8 +525,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -472,8 +577,8 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
-								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1005,6 +1110,74 @@
 				<xs:annotation>
 					<xs:documentation>P316 - bool</xs:documentation>
 				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P313 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_IEPC_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_PEV_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
