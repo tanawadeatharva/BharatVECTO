@@ -88,6 +88,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevSType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevSType());
 
+			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevPType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevPType());
+
+			Bind<IXmlTypeWriter>().To<VIFAuxiliaryIEPCType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryIEPCType());
+
+			Bind<IXmlTypeWriter>().To<VIFAuxiliaryPEVType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryPEVType());
+
 			Bind<IXmlTypeWriter>().To<VIFAxlegearType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlegearType());
 

@@ -1069,6 +1069,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clutch.
+        /// </summary>
+        public static string BusAux_Clutch {
+            get {
+                return ResourceManager.GetString("BusAux_Clutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ElectricSystem.
         /// </summary>
         public static string BusAux_ElectricSystem {

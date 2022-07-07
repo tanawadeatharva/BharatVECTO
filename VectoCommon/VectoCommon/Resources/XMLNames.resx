@@ -1980,6 +1980,9 @@
   <data name="CIF_OutputDataType_Exempted_CompletedBusOutputType" xml:space="preserve">
     <value>Exempted_CompletedBusOutputType</value>
   </data>
+  <data name="BusAux_Clutch" xml:space="preserve">
+    <value>Clutch</value>
+  </data>
   <data name="ElectricMachine_P2_5GearRatios_Gear_Attr" xml:space="preserve">
     <value>gear</value>
   </data>

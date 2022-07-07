@@ -196,4 +196,126 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
+
+	public class VIFAuxiliaryHevPType : VIFAuxiliaryType
+	{
+		public VIFAuxiliaryHevPType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VIFAuxiliaryHevSType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+
+			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux != null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Component_Auxiliaries,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + "type", "vif:AUX_HEV-P_PrimaryBusType"),
+					new XElement(_vif + XMLNames.BusAux_Fan,
+						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+					GetElectricSystem(aux.ElectricSupply),
+					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+					GetHvac(aux.HVACAux)
+				));
+
+		}
+
+		#endregion
+		
+		#region Overrides of VIFAuxiliaryHevSType
+
+		protected override XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
+		{
+			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
+				new XElement(_vif + XMLNames.Bus_SizeOfAirSupply, pSupply.CompressorSize),
+				new XElement(_vif + XMLNames.CompressorDrive, pSupply.CompressorDrive.GetLabel()),
+				new XElement(_vif + XMLNames.BusAux_Clutch, pSupply.Clutch),
+				new XElement(_vif + XMLNames.Bus_CompressorRatio, pSupply.Ratio.ToXMLFormat(3)),
+				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem, pSupply.SmartAirCompression),
+				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, pSupply.SmartRegeneration),
+				new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl)),
+				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, pConsumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+			);
+		}
+		
+		#endregion
+	}
+
+	public class VIFAuxiliaryIEPCType : VIFAuxiliaryType
+	{
+		public VIFAuxiliaryIEPCType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+		#region Implementation of IXmlTypeWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux != null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Component_Auxiliaries,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + "type", "vif:AUX_IEPC_PrimaryBusType"),
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+					GetHvac(aux.HVACAux)
+				));
+		}
+
+		#endregion
+		
+
+		#region Overrides of VIFAuxiliaryType
+
+		protected override XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
+		{
+			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
+				new XElement(_vif + XMLNames.CompressorDrive, pSupply.CompressorDrive.GetLabel()),
+				new XElement(_vif + XMLNames.Bus_SmartRegenerationSystem, pSupply.SmartRegeneration),
+				new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl)),
+				new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, pConsumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+			);
+		}
+
+		protected override XElement GetHvac(IHVACBusAuxiliariesDeclarationData hvac)
+		{
+			return new XElement(new XElement(_vif + XMLNames.BusAux_HVAC,
+				new XElement(_vif + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat)));
+		}
+		
+		#endregion
+	}
+	
+	public class VIFAuxiliaryPEVType : VIFAuxiliaryIEPCType
+	{
+		public VIFAuxiliaryPEVType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VIFAuxiliaryType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+
+			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux != null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Component_Auxiliaries,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + "type", "vif:AUX_PEV_PrimaryBusType"),
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+					GetHvac(aux.HVACAux)
+				));
+		}
+
+		#endregion
+
+
+	}
+
 }

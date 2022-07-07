@@ -28,22 +28,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
-
-
+		
 		#region Components
 
 		IXmlTypeWriter GetAdasType();
 		IXmlTypeWriter GetAngelDriveType();
 		IXmlTypeWriter GetAuxiliaryType();
 		IXmlTypeWriter GetAuxiliaryHevSType();
+		IXmlTypeWriter GetAuxiliaryHevPType();
+		IXmlTypeWriter GetAuxiliaryIEPCType();
+		IXmlTypeWriter GetAuxiliaryPEVType();
 		IXmlTypeWriter GetAxlegearType();
 		IXmlTypeWriter GetAxleWheelsType();
 		IXmlTypeWriter GetBoostingLimitationsType();
 		IXmlTypeWriter GetElectricEnergyStorageType();
 		IXmlTypeWriter GetElectricMachineGENType();
-		IXmlElectricMachineSystemType GetElectricMachineSystemMeasuredType();
-		IXmlElectricMachineSystemType GetElectricMachineSystemIHPCMeasuredType();
-		IXmlElectricMachineSystemType GetElectricMachineSystemStandardValueType();
+		IXmlElectricMachineSystemType GetElectricMachineSystemType();
 		IXmlTypeWriter GetElectricMachineType();
 		IXmlTypeWriter GetElectricMotorTorqueLimitsType();
 		IXmlTypeWriter GetEngineType();
@@ -66,7 +66,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IReportOutputGroup GetHevSxVehicleGroup();
 		IReportOutputGroup GetIepcVehicleGroup();
 		IReportOutputGroup GetPEVVehicleGroup();
-
 
 		#endregion
 
