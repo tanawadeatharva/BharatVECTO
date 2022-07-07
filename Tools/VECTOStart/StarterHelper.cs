@@ -13,7 +13,7 @@ namespace TUGraz.VECTO
 		{
 			var path = "No path found.";
 			string version = "No version found.";
-			if (validVersions is null) {
+			if (validVersions is null || validVersions.Length == 0) {
 				validVersions = new[] { "net45", "net48", "net60" };
 			}
 			try {
