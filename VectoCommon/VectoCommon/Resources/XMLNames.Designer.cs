@@ -2464,6 +2464,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string ElectricMachine_P2_5GearRatios_Gear_Attr {
+            get {
+                return ResourceManager.GetString("ElectricMachine_P2_5GearRatios_Gear_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string ElectricMachine_Position {
