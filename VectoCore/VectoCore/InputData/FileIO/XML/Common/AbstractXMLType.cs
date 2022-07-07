@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
@@ -136,12 +137,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 
 		protected virtual TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
 		{
-			var entries = BaseNode.SelectNodes(
-				XMLHelper.QueryLocalName(baseElement, entryElement));
-			if (entries != null && entries.Count > 0) {
-				return XMLHelper.ReadTableData(mapping, entries);
+			try {
+				var entries = BaseNode.SelectNodes(XMLHelper.QueryLocalName(baseElement, entryElement));
+				if (entries != null && entries.Count > 0) {
+					return XMLHelper.ReadTableData(mapping, entries);
+				}
+			} catch (NullReferenceException) {
+				throw new VectoException($"Could not find element: {baseElement} {entryElement}");
 			}
-
 			return null;
 		}
 	}
