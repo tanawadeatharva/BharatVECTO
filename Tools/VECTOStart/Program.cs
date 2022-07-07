@@ -2,18 +2,38 @@
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace TUGraz.VECTO
 {
 	class Program
 	{
-		static void Main()
+		static void Main(string[] args)
 		{
-			var version = GetHighestNETVersion();
-			Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe") {
-				WorkingDirectory = Directory.GetCurrentDirectory()
-			});
+			try {
+				string version;
+				if (args.Length > 0) {
+					version = args[0];
+					ValidateVersion(version);
+				} else {
+					version = GetHighestNETVersion();
+				}
+				Process.Start(new ProcessStartInfo($"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe") {
+					WorkingDirectory = Directory.GetCurrentDirectory()
+				});
+			} catch (Exception e) {
+				Console.WriteLine(e);
+				File.AppendAllText("LOG.txt", e.ToString());
+				throw;
+			}
+		}
+
+		private static void ValidateVersion(string version)
+		{
+			var validVersions = new[] { "net45", "net48", "net60" };
+			if (!validVersions.Contains(version))
+				throw new Exception($"Invalid .NET Version supplied. Only the following values are valid: {string.Join(", ", validVersions)}");
 		}
 
 		private static string GetHighestNETVersion()
