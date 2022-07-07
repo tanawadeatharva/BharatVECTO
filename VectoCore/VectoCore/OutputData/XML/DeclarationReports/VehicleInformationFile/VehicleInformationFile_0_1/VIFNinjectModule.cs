@@ -97,6 +97,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IReportOutputGroup>().To<PEVVehicleGroup>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPEVVehicleGroup());
 
+			Bind<IReportOutputGroup>().To<HevPxVehicleGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevPxVehicleGroup());
+
 			#endregion
 			
 

@@ -73,10 +73,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IReportOutputGroup GetPrimaryBusChassisParameterGroup();
 		IReportOutputGroup GetPrimaryBusRetarderParameterGroup();
 		IReportOutputGroup GetPrimaryBusXeVParameterGroup();
+
 		IReportOutputGroup GetHevIepcSVehicleGroup();
 		IReportOutputGroup GetHevSxVehicleGroup();
 		IReportOutputGroup GetIepcVehicleGroup();
 		IReportOutputGroup GetPEVVehicleGroup();
+		IReportOutputGroup GetHevPxVehicleGroup();
 
 		#endregion
 
