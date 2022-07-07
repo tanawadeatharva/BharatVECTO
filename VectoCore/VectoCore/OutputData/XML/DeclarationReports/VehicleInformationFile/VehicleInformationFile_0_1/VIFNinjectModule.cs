@@ -48,6 +48,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<HevS3ComponentVIFType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevS3ComponentVIFType());
 
+			Bind<IXmlTypeWriter>().To<HevS4ComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevS4ComponentVIFType());
+
 
 			#endregion
 

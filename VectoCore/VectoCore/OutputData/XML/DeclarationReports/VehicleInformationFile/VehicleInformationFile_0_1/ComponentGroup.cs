@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class HevS3ComponentVIFType: ComponentVIFType
+	public class HevS3ComponentVIFType : ComponentVIFType
 	{
 		public HevS3ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -133,6 +133,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
+				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
+		}
+
+		#endregion
+	}
+
+
+	public class HevS4ComponentVIFType : ComponentVIFType
+	{
+		public HevS4ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of ComponentVIFType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_vif + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-S4_ComponentsVIFType"),
+				_vifReportFactory.GetEngineType().GetElement(inputData),
+				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
 		}
