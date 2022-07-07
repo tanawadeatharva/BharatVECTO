@@ -15,7 +15,7 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 Public Class AboutBox
 	Private Sub F10_AboutBox_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers & " / " & Runtime.InteropServices.RuntimeInformation.FrameworkDescription
 	End Sub
 
 	Private Sub LinkLabel1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) _
