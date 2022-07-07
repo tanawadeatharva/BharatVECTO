@@ -44,6 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlElectricMachineSystemType GetElectricMachineSystemMeasuredType();
 		IXmlElectricMachineSystemType GetElectricMachineSystemIHPCMeasuredType();
 		IXmlElectricMachineSystemType GetElectricMachineSystemStandardValueType();
+		IXmlTypeWriter GetElectricMachineType();
 		IXmlTypeWriter GetElectricMotorTorqueLimitsType();
 		IXmlTypeWriter GetEngineType();
 		IXmlTypeWriter GetTorqueConvertType();
