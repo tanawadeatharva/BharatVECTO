@@ -20,7 +20,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IXmlTypeWriter GetHevS2VehicleType();
 		IXmlTypeWriter GetHevS3VehicleType();
 		IXmlTypeWriter GetHevS4VehicleType();
-		
+		IXmlTypeWriter GetIepcVehicleType();
+
 
 		#endregion
 

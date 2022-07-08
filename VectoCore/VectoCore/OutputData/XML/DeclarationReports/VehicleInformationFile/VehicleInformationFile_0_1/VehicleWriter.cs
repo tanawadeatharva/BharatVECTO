@@ -147,4 +147,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
+	public class IepcVehicleType : VehicleWriter
+	{
+		public IepcVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetIepcVehicleParameterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetIepcComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + "type", "vif:IEPC_VehicleVIFType"),
+				vehicleData);
+		}
+
+		#endregion
+	}
 }
