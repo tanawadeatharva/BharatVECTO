@@ -225,9 +225,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class PevVehicleParameterGroup : AbstractVIFGroupWriter
+	public class PevExVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public PevVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public PevExVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
