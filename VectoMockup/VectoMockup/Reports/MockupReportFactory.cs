@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -12,10 +8,12 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
+
 namespace TUGraz.VectoMockup.Reports
 {
     class MockupReportFactory : IXMLDeclarationReportFactory, IMockupDeclarationReportFactory
     {
+
         private readonly IManufacturerReportFactory _mrfFactory;
         private readonly ICustomerInformationFileFactory _cifFactory;
 		private readonly IVIFReportFactory _vifFactory;
@@ -24,13 +22,17 @@ namespace TUGraz.VectoMockup.Reports
         #region Implementation of IXMLDeclarationReportFactory
 
 
-        public MockupReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory)
+        public MockupReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory, IVIFReportFactory vifFactory)
         {
             _mrfFactory = mrfFactory;
             _cifFactory = cifFactory;
-        }
+			_vifFactory = vifFactory;
+		}
+
+	
+
         public IDeclarationReport CreateReport(IInputDataProvider input, IOutputDataWriter outputWriter)
-        {
+		{
             switch (input)
             {
                 case IMultistageBusInputDataProvider multistageBusInputDataProvider:
