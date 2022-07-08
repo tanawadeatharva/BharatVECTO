@@ -165,4 +165,62 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
+
+
+	public class PevE2VehicleType : VehicleWriter
+	{
+		public PevE2VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetPevE2ComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				vehicleData);
+		}
+
+		#endregion
+	}
+
+	public class PevE3VehicleType : VehicleWriter
+	{
+		public PevE3VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetPevE3ComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				vehicleData);
+		}
+
+		#endregion
+	}
+
+	public class PevE4VehicleType : VehicleWriter
+	{
+		public PevE4VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetPevE4ComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				vehicleData);
+		}
+
+		#endregion
+	}
 }
