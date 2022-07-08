@@ -55,12 +55,33 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetHevIepcSVehicleGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetHevIepcSVehicleParameterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevIepcSComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
 					new XAttribute(_xsi + "type", "vif:HEV-IEPC-S_VehicleVIFType"),
 					vehicleData);
+		}
+
+		#endregion
+	}
+
+
+	public class HevPxVehicleType : VehicleWriter
+	{
+		public HevPxVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+
+			var vehicleData = _vifReportFactory.GetHevPxVehicleParameterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.GetHevPxComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + "type", "vif:HEV-Px_VehicleVIFType"),
+				vehicleData);
 		}
 
 		#endregion
