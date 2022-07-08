@@ -12,13 +12,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 
-
-
 		#region Vehicle
 
 		IXmlTypeWriter GetConventionalVehicleType();
 		IXmlTypeWriter GetHevIepcSVehicleType();
 		IXmlTypeWriter GetHevPxVehicleType();
+		IXmlTypeWriter GetHevS2VehicleType();
+		IXmlTypeWriter GetHevS3VehicleType();
+		IXmlTypeWriter GetHevS4VehicleType();
 		
 
 		#endregion
