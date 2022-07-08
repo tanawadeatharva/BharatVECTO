@@ -10,6 +10,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
 using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Ninject
@@ -46,14 +47,114 @@ namespace TUGraz.VectoMockup.Ninject
 					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
 			}
 
-			public IXmlTypeWriter GetConventionalLorryVehicleType()
+			public IXmlTypeWriter GetConventionalVehicleType()
 			{
-				return _vifReportFactoryImplementation.GetConventionalLorryVehicleType();
+				return _vifReportFactoryImplementation.GetConventionalVehicleType();
+			}
+
+			public IXmlTypeWriter GetHevIepcSVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcSVehicleType();
+			}
+
+			public IXmlTypeWriter GetHevPxVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevPxVehicleType();
+			}
+
+			public IXmlTypeWriter GetHevS2VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevS2VehicleType();
+			}
+
+			public IXmlTypeWriter GetHevS3VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevS3VehicleType();
+			}
+
+			public IXmlTypeWriter GetHevS4VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevS4VehicleType();
+			}
+
+			public IXmlTypeWriter GetIepcVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetIepcVehicleType();
+			}
+
+			public IXmlTypeWriter GetPevE2VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetPevE2VehicleType();
+			}
+
+			public IXmlTypeWriter GetPevE3VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetPevE3VehicleType();
+			}
+
+			public IXmlTypeWriter GetPevE4VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetPevE4VehicleType();
+			}
+
+			public IXmlTypeWriter GetConventionalComponentType()
+			{
+				return _vifReportFactoryImplementation.GetConventionalComponentType();
+			}
+
+			public IXmlTypeWriter GetHevIepcSComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcSComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevPxComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevPxComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevS2ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevS2ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevS3ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevS3ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevS4ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevS4ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetPevE2ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetPevE2ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetPevE3ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetPevE3ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetPevE4ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetPevE4ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetIepcComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetIepcComponentVIFType();
 			}
 
 			public IXmlTypeWriter GetTorqueConvertType()
 			{
 				return _vifReportFactoryImplementation.GetTorqueConvertType();
+			}
+
+			public IXmlTypeWriter GetIepcType()
+			{
+				return _vifReportFactoryImplementation.GetIepcType();
 			}
 
 			public IXmlTypeWriter GetTorqueLimitsType()
@@ -73,7 +174,47 @@ namespace TUGraz.VectoMockup.Ninject
 
 			public IReportOutputGroup GetPrimaryBusGeneralParameterGroup()
 			{
+				return _vifReportFactoryImplementation.GetPrimaryBusGeneralParameterGroup();
+			}
+
+			public IReportOutputGroup GetPrimaryBusChassisParameterGroup()
+			{
 				throw new NotImplementedException();
+			}
+
+			public IReportOutputGroup GetPrimaryBusRetarderParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetPrimaryBusRetarderParameterGroup();
+			}
+
+			public IReportOutputGroup GetPrimaryBusXevParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetPrimaryBusXevParameterGroup();
+			}
+
+			public IReportOutputGroup GetHevIepcSVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcSVehicleParameterGroup();
+			}
+
+			public IReportOutputGroup GetHevSxVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetHevSxVehicleParameterGroup();
+			}
+
+			public IReportOutputGroup GetIepcVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetIepcVehicleParameterGroup();
+			}
+
+			public IReportOutputGroup GetPevExVehicleParmeterGroup()
+			{
+				return _vifReportFactoryImplementation.GetPevExVehicleParmeterGroup();
+			}
+
+			public IReportOutputGroup GetHevPxVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetHevPxVehicleParameterGroup();
 			}
 
 			public IXmlTypeWriter GetAdasType()
@@ -91,6 +232,26 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetAuxiliaryType();
 			}
 
+			public IXmlTypeWriter GetAuxiliaryHevSType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryHevSType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryHevPType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryHevPType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryIEPCType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryIEPCType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryPEVType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryPEVType();
+			}
+
 			public IXmlTypeWriter GetAxlegearType()
 			{
 				return _vifReportFactoryImplementation.GetAxlegearType();
@@ -99,6 +260,36 @@ namespace TUGraz.VectoMockup.Ninject
 			public IXmlTypeWriter GetAxleWheelsType()
 			{
 				return _vifReportFactoryImplementation.GetAxleWheelsType();
+			}
+
+			public IXmlTypeWriter GetBoostingLimitationsType()
+			{
+				return _vifReportFactoryImplementation.GetBoostingLimitationsType();
+			}
+
+			public IXmlTypeWriter GetElectricEnergyStorageType()
+			{
+				return _vifReportFactoryImplementation.GetElectricEnergyStorageType();
+			}
+
+			public IXmlTypeWriter GetElectricMachineGENType()
+			{
+				return _vifReportFactoryImplementation.GetElectricMachineGENType();
+			}
+
+			public IXmlElectricMachineSystemType GetElectricMachineSystemType()
+			{
+				return _vifReportFactoryImplementation.GetElectricMachineSystemType();
+			}
+
+			public IXmlTypeWriter GetElectricMachineType()
+			{
+				return _vifReportFactoryImplementation.GetElectricMachineType();
+			}
+
+			public IXmlTypeWriter GetElectricMotorTorqueLimitsType()
+			{
+				return _vifReportFactoryImplementation.GetElectricMotorTorqueLimitsType();
 			}
 
 			public IXmlTypeWriter GetEngineType()
