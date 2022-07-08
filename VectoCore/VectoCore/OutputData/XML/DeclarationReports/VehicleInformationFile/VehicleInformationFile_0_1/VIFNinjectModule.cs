@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			#region Vehicle Group
 
-			Bind<IReportOutputGroup>().To<ConventionalVIFVehicleGroup>().When(AccessedViaVIFFactory)
+			Bind<IReportOutputGroup>().To<ConventionalVIFVehicleParameterGroup>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetConventionalVehicleGroup());
 
 			Bind<IReportOutputGroup>().To<PrimaryBusGeneralParameterGroup>().When(AccessedViaVIFFactory)
@@ -83,22 +83,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPrimaryBusRetarderParameterGroup());
 
 			Bind<IReportOutputGroup>().To<PrimaryBusXeVParameterGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPrimaryBusXeVParameterGroup());
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPrimaryBusXevParameterGroup());
 
-			Bind<IReportOutputGroup>().To<HevIepcSVehicleGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevIepcSVehicleGroup());
+			Bind<IReportOutputGroup>().To<HevIepcSVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevIepcSVehicleParameterGroup());
 
-			Bind<IReportOutputGroup>().To<HevSxVehicleGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevSxVehicleGroup());
+			Bind<IReportOutputGroup>().To<HevSxVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevSxVehicleParameterGroup());
 
-			Bind<IReportOutputGroup>().To<IepcVehicleGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetIepcVehicleGroup());
+			Bind<IReportOutputGroup>().To<IepcVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetIepcVehicleParameterGroup());
 
-			Bind<IReportOutputGroup>().To<PEVVehicleGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPEVVehicleGroup());
+			Bind<IReportOutputGroup>().To<PevVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPevVehicleParmeterGroup());
 
-			Bind<IReportOutputGroup>().To<HevPxVehicleGroup>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevPxVehicleGroup());
+			Bind<IReportOutputGroup>().To<HevPxVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevPxVehicleParameterGroup());
 
 			#endregion
 			

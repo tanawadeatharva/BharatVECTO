@@ -101,9 +101,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 	
-	public class ConventionalVIFVehicleGroup : AbstractVIFGroupWriter
+	public class ConventionalVIFVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public ConventionalVIFVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public ConventionalVIFVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 		
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -139,9 +139,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class HevIepcSVehicleGroup : AbstractVIFGroupWriter
+	public class HevIepcSVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public HevIepcSVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public HevIepcSVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXeVParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
 			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
 			var electricMotorTorque = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if(electricMotorTorque != null)
@@ -169,9 +169,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevSxVehicleGroup : AbstractVIFGroupWriter
+	public class HevSxVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public HevSxVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public HevSxVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXeVParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
 			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
 			var electricMotorTorque = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if (electricMotorTorque != null)
@@ -199,9 +199,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class IepcVehicleGroup : AbstractVIFGroupWriter
+	public class IepcVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public IepcVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public IepcVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXeVParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
 			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
 
 			return result;
@@ -225,9 +225,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class PEVVehicleGroup : AbstractVIFGroupWriter
+	public class PevVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public PEVVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public PevVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXeVParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
 			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
 			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if(motorTorqueLimits != null)
@@ -254,9 +254,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevPxVehicleGroup : AbstractVIFGroupWriter
+	public class HevPxVehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public HevPxVehicleGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+		public HevPxVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		#region Overrides of AbstractVIFGroupWriter
 
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXeVParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
 			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetTorqueLimitsType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData));
