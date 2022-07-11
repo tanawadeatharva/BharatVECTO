@@ -92,6 +92,11 @@ namespace TUGraz.VectoMockup.Reports
 		{
 		}
 
+		public void WriteExemptedResults()
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 	}
 }
