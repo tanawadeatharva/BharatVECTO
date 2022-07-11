@@ -52,9 +52,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<RatedPower>325032</RatedPower>
 							<MaxEngineTorque>2134</MaxEngineTorque>
 							<WHRType>
-								<v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
-								<v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
-								<v2.3:ElectricalOutput>true</v2.3:ElectricalOutput>
+								<MechanicalOutputICE>false</MechanicalOutputICE>
+								<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+								<ElectricalOutput>true</ElectricalOutput>
 							</WHRType>
 							<Mode>
 								<IdlingSpeed>600</IdlingSpeed>

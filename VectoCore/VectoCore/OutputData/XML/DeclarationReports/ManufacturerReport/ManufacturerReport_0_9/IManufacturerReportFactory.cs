@@ -75,10 +75,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_CompletedBusComponentsType();
 
 
-
-
-
-
 		IReportVehicleOutputGroup GetGeneralVehicleOutputGroup();
 
 
@@ -91,7 +87,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup();
 		IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup();
-
 
 
 		IXmlTypeWriter GetEngineTorqueLimitationsType();

@@ -129,19 +129,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return auxId + "Technology";
 		}
 
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-		
-
-		
 	}
 }
