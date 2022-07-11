@@ -20,13 +20,14 @@
 
 		<ItemGroup>
 			<!-- All files for net45 -->
-			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe*"/>
+			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.exe"/>
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\Release\net45\*.dll*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
+			<Net45Vecto Include="$(SolutionDir)VECTO\bin\Release\net45\nlog.config"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
-			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
+			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.dll*"/>
-			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe*"/>
+			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.exe"/>
 			<Net45VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net45\*.dll*"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(Net45VectoCommandLine)" DestinationFolder="$(DeployPath)net45"/>
@@ -35,13 +36,14 @@
 
 		<ItemGroup>
 			<!-- All files for net48 -->
-			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe*"/>
+			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.exe"/>
 			<Net48VECTO Include="$(SolutionDir)VECTO\bin\Release\net48\*.dll*"/>
-			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe*"/>
+			<Net48Vecto Include="$(SolutionDir)VECTO\bin\Release\net48\nlog.config"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*"/>
-			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe*"/>
+			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.dll*"/>
-			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe*"/>
+			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.dll*"/>
 		</ItemGroup>
 		<Copy SourceFiles="@(Net48VectoCommandLine)" DestinationFolder="$(DeployPath)net48"/>
@@ -53,6 +55,7 @@
 			<!-- All files for net6.0 -->
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\VECTO.*" Exclude="*.dev.json"/>
 			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\*.dll"/>
+			<Vecto Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\nlog.config"/>
 			<VectoRuntimes Include="$(SolutionDir)VECTO\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\vectocmd.*" Exclude="*.dev.json"/>
 			<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net6.0\*.dll"/>
