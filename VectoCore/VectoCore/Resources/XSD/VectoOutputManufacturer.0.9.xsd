@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -1542,12 +1542,12 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="ResultSuccessOCVHEVType">
+	<xs:complexType name="ResultSuccessOVCHEVType">
 		<xs:complexContent>
 			<xs:extension base="mrf:AbstractResultType">
 				<xs:sequence>
 					<xs:group ref="mrf:ResultSuccessSimulationParametersGroup"/>
-					<xs:element name="OCVMode" minOccurs="2" maxOccurs="2">
+					<xs:element name="OVCMode" minOccurs="2" maxOccurs="2">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType"/>
@@ -1702,6 +1702,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="SimulationParameters" type="mrf:SimulationParametersType"/>
+					<xs:element name="VehicleGroup" type="xs:string"/>
 					<xs:element name="Error" type="xs:string"/>
 					<xs:element name="ErrorDetails" type="xs:string"/>
 				</xs:sequence>
@@ -2116,6 +2117,7 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="SimulationParameters" type="mrf:SimulationParametersType"/>
+			<xs:element name="VehicleGroup" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="EnergyConsumptionType">
