@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public XMLPrimaryBusVehicleReport()
 		{
+			throw new NotImplementedException("use new implementation...");
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
@@ -468,11 +469,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(
 					tns + XMLNames.Engine_WHRType,
 					new XElement(
-						v23 + XMLNames.Engine_WHR_MechanicalOutputICE, (engineData.WHRType & WHRType.MechanicalOutputICE) != 0),
+						tns + XMLNames.Engine_WHR_MechanicalOutputICE, (engineData.WHRType & WHRType.MechanicalOutputICE) != 0),
 					new XElement(
-						v23 + XMLNames.Engine_WHR_MechanicalOutputIDrivetrain,
+						tns + XMLNames.Engine_WHR_MechanicalOutputIDrivetrain,
 						(engineData.WHRType & WHRType.MechanicalOutputDrivetrain) != 0),
-					new XElement(v23 + XMLNames.Engine_WHR_ElectricalOutput, (engineData.WHRType & WHRType.ElectricalOutput) != 0)
+					new XElement(tns + XMLNames.Engine_WHR_ElectricalOutput, (engineData.WHRType & WHRType.ElectricalOutput) != 0)
 				),
 				fuels
 			);
