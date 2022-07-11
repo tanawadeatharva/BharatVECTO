@@ -314,9 +314,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
 		{
-			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia);
-			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
-			return paEngine + (paGearbox ?? 0.SI<WattSecond>());
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia) ?? 0.SI<WattSecond>();
+			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia) ?? 0.SI<WattSecond>();
+			return paEngine + paGearbox;
 		}
 
 		public static WattSecond WorkClutch(this IModalDataContainer data)
@@ -694,6 +694,9 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[i] = 0.SI<Scalar>();
 			}
 
+			if (!data.ContainsColumn(ModalResultField.Gear.GetName())) {
+				return retVal;
+			}
 			var gearData = data.GetValues(x => new {
 				Gear = x.Field<uint>(ModalResultField.Gear.GetName()),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())

@@ -198,13 +198,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 
-			if (ModalData != null) {
-				ModalData.RegisterComponent(component);
-			}
+			ModalData?.RegisterComponent(component);
 
-			if (WriteSumData != null) {
-				WriteSumData.RegisterComponent(component, RunData);
-			}
+			WriteSumData?.RegisterComponent(component, RunData);
 		}
 
 
@@ -232,7 +228,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
 
-			WriteSumData.Write(ModData, RunData);
+			WriteSumData?.Write(ModData, RunData);
 
 			ModData?.FinishSimulation();
 			DrivingCycleInfo?.FinishSimulation();

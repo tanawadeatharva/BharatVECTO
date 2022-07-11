@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			CreateColumns(CommonSignals);
 		}
 
-		protected void CreateColumns(ModalResultField[] columns, Func<ModalResultField, string> nameFunc = null, Func<ModalResultField, string> captionFunc = null)
+		protected internal void CreateColumns(ModalResultField[] columns, Func<ModalResultField, string> nameFunc = null, Func<ModalResultField, string> captionFunc = null)
 		{
 			foreach (var value in columns) {
 				var colName = nameFunc != null ? nameFunc(value) : value.GetName();
@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 		}
 
-		private void CreateCombustionEngineColumns(VectoRunData runData)
+		protected internal void CreateCombustionEngineColumns(VectoRunData runData)
 		{
 			CreateColumns(CombustionEngineSignals);
 			if (runData.BusAuxiliaries != null) {

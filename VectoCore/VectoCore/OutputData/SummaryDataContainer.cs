@@ -793,7 +793,7 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			var multipleEngineModes = runData.EngineData.MultipleEngineFuelModes;
+			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
 			foreach (var fuel in modData.FuelData) {
 				var suffix = modData.FuelData.Count <= 1 && !multipleEngineModes ? "" : "_" + fuel.FuelType.GetLabel();
 				foreach (var tuple in SumDataFields.FuelDataValue) {
@@ -821,8 +821,9 @@ namespace TUGraz.VectoCore.OutputData
 				row[colName] = SumDataFields.AuxDataValue(runData, modData, aux.Value);
 			}
 
-			WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
-
+			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {
+				WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
+			}
 
 			AddResultDictionary(row);
 		}

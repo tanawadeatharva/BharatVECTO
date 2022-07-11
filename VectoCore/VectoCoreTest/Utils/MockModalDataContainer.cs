@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Data = new ModalResults();
 
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
-				if (ModalResults.FuelConsumptionSignals.Contains(value)) {
+				if (ModalResults.FuelConsumptionSignals.Contains(value) || Data.Columns.Contains(value.GetName())) {
 					continue;
 				}
 

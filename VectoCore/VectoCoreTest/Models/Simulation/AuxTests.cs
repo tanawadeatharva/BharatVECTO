@@ -82,7 +82,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						FuelData = FuelData.Diesel,
 						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap"),
 					}}.ToList(),
-					IdleSpeed = 600.RPMtoRad()
+					IdleSpeed = 600.RPMtoRad(),
+					RatedPowerDeclared = 300e3.SI<Watt>(),
+					RatedSpeedDeclared = 2000.RPMtoRad(),
+					Displacement = 7.SI(Unit.SI.Cubic.Dezi.Meter).Cast<CubicMeter>()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
@@ -100,10 +103,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			modData.AddAuxiliary("STP");
 			modData.AddAuxiliary("ES");
 			modData.AddAuxiliary("AC");
+			modData.Data.CreateColumns(ModalResults.DriverSignals);
+			modData.Data.CreateCombustionEngineColumns(runData);
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				sumWriter);
+				sumWriter) { RunData = runData};
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 			new ZeroMileageCounter(container);

@@ -339,77 +339,77 @@ namespace TUGraz.VectoCore.OutputData
 			{ VEHICLE_FUEL_TYPE, SumFunc((r, m) => m.FuelData.Select(x => x.GetLabel()).Join())},
 			{ P_WHEEL_POS, SumFunc((r, m) => m.PowerWheelPositive().ConvertToKiloWatt())},
 			{ P_WHEEL, SumFunc((r, m) => m.PowerWheel().ConvertToKiloWatt())},
-			{ VEHICLE_MANUFACTURER, SumFunc((r, m) => r.VehicleData.Manufacturer)},
-			{ VIN_NUMBER, SumFunc((r, m) => r.VehicleData.VIN)},
-			{ VEHICLE_MODEL, SumFunc((r, m) => r.VehicleData.ModelName)},
-			{ HDV_CO2_VEHICLE_CLASS, SumFunc((r, m) => r.Mission?.BusParameter?.BusGroup.GetClassNumber() ?? r.VehicleData.VehicleClass.GetClassNumber())},
+			{ VEHICLE_MANUFACTURER, SumFunc((r, m) => r.VehicleData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ VIN_NUMBER, SumFunc((r, m) => r.VehicleData?.VIN ?? Constants.NOT_AVAILABLE)},
+			{ VEHICLE_MODEL, SumFunc((r, m) => r.VehicleData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ HDV_CO2_VEHICLE_CLASS, SumFunc((r, m) => r.Mission?.BusParameter?.BusGroup.GetClassNumber() ?? r.VehicleData?.VehicleClass.GetClassNumber() ?? VehicleClass.Unknown.GetClassNumber())},
 			{ CURB_MASS, SumFunc((r, m) => (ConvertedSI)r.VehicleData.CurbMass)},
 			{ LOADING, SumFunc((r, m) => (ConvertedSI)r.VehicleData.Loading)},
 			{ PassengerCount, SumFunc((r, m) => r.VehicleData.PassengerCount)},
-			{ CARGO_VOLUME, SumFunc((r, m) => (ConvertedSI)r.VehicleData.CargoVolume)},
-			{ TOTAL_VEHICLE_MASS, SumFunc((r, m) => (ConvertedSI)r.VehicleData.TotalVehicleMass)},
-			{ SLEEPER_CAB, SumFunc((r, m) => r.VehicleData.SleeperCab.HasValue ? (r.VehicleData.SleeperCab.Value ? "yes" : "no") : "-")},
-			{ ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, SumFunc((r, m) =>   r.VehicleData.RollResistanceCoefficientWithoutTrailer)},
-			{ ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, SumFunc((r, m) =>    r.VehicleData.TotalRollResistanceCoefficient)},
-			{ R_DYN, SumFunc((r, m) => (ConvertedSI)r.VehicleData.DynamicTyreRadius)},
-			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => r.VehicleData.ADAS != null ? DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, r.GearboxData?.Type ?? GearboxType.NoGearbox).ID : "")},
+			{ CARGO_VOLUME, SumFunc((r, m) => (ConvertedSI)r.VehicleData?.CargoVolume)},
+			{ TOTAL_VEHICLE_MASS, SumFunc((r, m) => (ConvertedSI)r.VehicleData?.TotalVehicleMass)},
+			{ SLEEPER_CAB, SumFunc((r, m) => (r.VehicleData?.SleeperCab.HasValue ?? false) ? (r.VehicleData.SleeperCab.Value ? "yes" : "no") : "-")},
+			{ ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, SumFunc((r, m) =>   r.VehicleData?.RollResistanceCoefficientWithoutTrailer)},
+			{ ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, SumFunc((r, m) =>    r.VehicleData?.TotalRollResistanceCoefficient)},
+			{ R_DYN, SumFunc((r, m) => (ConvertedSI)r.VehicleData?.DynamicTyreRadius)},
+			{ ADAS_TECHNOLOGY_COMBINATION, SumFunc((r, m) => r.VehicleData?.ADAS != null ? DeclarationData.ADASCombinations.Lookup(r.VehicleData.ADAS, r.GearboxData?.Type ?? GearboxType.NoGearbox).ID : "")},
 			{ REESS_CAPACITY, SumFunc((r, m) => r.BatteryData?.Capacity != null ? $"{r.BatteryData?.Capacity.AsAmpHour} Ah" : r.SuperCapData?.Capacity != null ?  $"{r.SuperCapData.Capacity} F" : null)},
 			{ TCU_MODEL, SumFunc((r, m) =>  r.ShiftStrategy)},
 			{ PTO_TECHNOLOGY, SumFunc((r, m) => r.PTO?.TransmissionType ?? "")},
 
 			// air drag infos
-			{ AIRDRAG_MODEL, SumFunc((r, m) => r.AirdragData.ModelName)},
-			{ AIRDRAG_CERTIFICATION_METHOD, SumFunc((r, m) => r.AirdragData.CertificationMethod.GetName())},
-			{ AIRDRAG_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AirdragData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AirdragData.CertificationNumber)},
-			{ CD_x_A_DECLARED, SumFunc((r, m) => (ConvertedSI)r.AirdragData.DeclaredAirdragArea)},
-			{ CD_x_A, SumFunc((r, m) => (ConvertedSI)r.AirdragData.CrossWindCorrectionCurve.AirDragArea)},
+			{ AIRDRAG_MODEL, SumFunc((r, m) => r.AirdragData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ AIRDRAG_CERTIFICATION_METHOD, SumFunc((r, m) => r.AirdragData?.CertificationMethod.GetName()  ?? Constants.NOT_AVAILABLE)},
+			{ AIRDRAG_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AirdragData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AirdragData.CertificationNumber)},
+			{ CD_x_A_DECLARED, SumFunc((r, m) => (ConvertedSI)r.AirdragData?.DeclaredAirdragArea)},
+			{ CD_x_A, SumFunc((r, m) => (ConvertedSI)r.AirdragData?.CrossWindCorrectionCurve.AirDragArea)},
 			
 			// engine infos
-			{ ENGINE_MANUFACTURER, SumFunc((r, m) => r.EngineData.Manufacturer)},
-			{ ENGINE_MODEL, SumFunc((r, m) => r.EngineData.ModelName)},
-			{ ENGINE_CERTIFICATION_NUMBER, SumFunc((r, m) => r.EngineData.CertificationNumber)},
-			{ ENGINE_FUEL_TYPE, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.FuelData.GetLabel()).Join(" / "))},
-			{ ENGINE_RATED_POWER, SumFunc((r, m) => r.EngineData.RatedPowerDeclared != null && r.EngineData.RatedPowerDeclared > 0 ? r.EngineData.RatedPowerDeclared.ConvertToKiloWatt() : r.EngineData.FullLoadCurves[0].MaxPower.ConvertToKiloWatt())},
-			{ ENGINE_IDLING_SPEED, SumFunc((r, m) => (ConvertedSI)r.EngineData.IdleSpeed.AsRPM.SI<Scalar>())},
-			{ ENGINE_RATED_SPEED, SumFunc((r, m) => r.EngineData.RatedSpeedDeclared != null && r.EngineData.RatedSpeedDeclared > 0 ? (ConvertedSI)r.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>() : (ConvertedSI)r.EngineData.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())},
-			{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData.Displacement.ConvertToCubicCentiMeter())},
-			{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCUrban).Join(" / "))},
-			{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCRural).Join(" / "))},
-			{ ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.WHTCMotorway).Join(" / "))},
-			{ ENGINE_BF_COLD_HOT, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / "))},
-			{ ENGINE_CF_REG_PER, SumFunc((r, m) => r.EngineData.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / "))},
+			{ ENGINE_MANUFACTURER, SumFunc((r, m) => r.EngineData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ ENGINE_MODEL, SumFunc((r, m) => r.EngineData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ ENGINE_CERTIFICATION_NUMBER, SumFunc((r, m) => r.EngineData?.CertificationNumber ?? Constants.NOT_AVAILABLE)},
+			{ ENGINE_FUEL_TYPE, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.FuelData.GetLabel()).Join(" / "))},
+			{ ENGINE_RATED_POWER, SumFunc((r, m) => r.EngineData?.RatedPowerDeclared != null && r.EngineData.RatedPowerDeclared > 0 ? r.EngineData.RatedPowerDeclared.ConvertToKiloWatt() : r.EngineData?.FullLoadCurves[0].MaxPower.ConvertToKiloWatt())},
+			{ ENGINE_IDLING_SPEED, SumFunc((r, m) => (ConvertedSI)r.EngineData?.IdleSpeed.AsRPM.SI<Scalar>())},
+			{ ENGINE_RATED_SPEED, SumFunc((r, m) => r.EngineData?.RatedSpeedDeclared != null && r.EngineData.RatedSpeedDeclared > 0 ? (ConvertedSI)r.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>() : (ConvertedSI)r.EngineData?.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>())},
+			{ ENGINE_DISPLACEMENT, SumFunc((r, m) => r.EngineData?.Displacement.ConvertToCubicCentiMeter())},
+			{ ENGINE_WHTC_URBAN, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCUrban).Join(" / "))},
+			{ ENGINE_WHTC_RURAL, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCRural).Join(" / "))},
+			{ ENGINE_WHTC_MOTORWAY, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.WHTCMotorway).Join(" / "))},
+			{ ENGINE_BF_COLD_HOT, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.ColdHotCorrectionFactor).Join(" / "))},
+			{ ENGINE_CF_REG_PER, SumFunc((r, m) => r.EngineData?.Fuels.Select(x => x.CorrectionFactorRegPer).Join(" / "))},
 			{ ENGINE_ACTUAL_CORRECTION_FACTOR, SumFunc((r, m) => {
 				if (r.Mission?.MissionType == MissionType.VerificationTest) {
-					var fuelsWhtc = r.EngineData.Fuels.Select(
+					var fuelsWhtc = r.EngineData?.Fuels.Select(
 							fuel => m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
 									m.TimeIntegral<Kilogram>(m.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
 						.Select(dummy => (double)dummy).ToArray();
-					return fuelsWhtc.Join(" / ");
+					return fuelsWhtc?.Join(" / ");
 				}
-				return r.EngineData.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
+				return r.EngineData?.Fuels.Select(x => x.FuelConsumptionCorrectionFactor).Join(" / ");
 			})},
 			
 			// axlegear infos
-			{ AXLE_MANUFACTURER, SumFunc((r, m) => r.AxleGearData.Manufacturer)},
-			{ AXLE_MODEL, SumFunc((r, m) => r.AxleGearData.ModelName)},
-			{ AXLE_RATIO, SumFunc((r, m) => (ConvertedSI)r.AxleGearData.AxleGear.Ratio.SI<Scalar>())},
-			{ AXLEGEAR_CERTIFICATION_METHOD, SumFunc((r, m) => r.AxleGearData.CertificationMethod.GetName())},
-			{ AXLEGEAR_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AxleGearData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AxleGearData.CertificationNumber)},
+			{ AXLE_MANUFACTURER, SumFunc((r, m) => r.AxleGearData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ AXLE_MODEL, SumFunc((r, m) => r.AxleGearData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ AXLE_RATIO, SumFunc((r, m) => (ConvertedSI)r.AxleGearData?.AxleGear.Ratio.SI<Scalar>())},
+			{ AXLEGEAR_CERTIFICATION_METHOD, SumFunc((r, m) => r.AxleGearData?.CertificationMethod.GetName() ?? Constants.NOT_AVAILABLE)},
+			{ AXLEGEAR_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AxleGearData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AxleGearData?.CertificationNumber)},
 
 			// axle/tyre infos
-			{ NUM_AXLES_DRIVEN, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleDriven))},
-			{ NUM_AXLES_NON_DRIVEN, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleNonDriven))},
-			{ NUM_AXLES_TRAILER, SumFunc((r, m) => r.VehicleData.AxleData.Count(x => x.AxleType == AxleType.Trailer))},
+			{ NUM_AXLES_DRIVEN, SumFunc((r, m) => r.VehicleData?.AxleData.Count(x => x.AxleType == AxleType.VehicleDriven))},
+			{ NUM_AXLES_NON_DRIVEN, SumFunc((r, m) => r.VehicleData?.AxleData.Count(x => x.AxleType == AxleType.VehicleNonDriven))},
+			{ NUM_AXLES_TRAILER, SumFunc((r, m) => r.VehicleData?.AxleData.Count(x => x.AxleType == AxleType.Trailer))},
 
-			{ DECLARED_RRC_AXLE1, SumFunc((r, m) => r.VehicleData.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[0].RollResistanceCoefficient : double.NaN) },
-			{ DECLARED_RRC_AXLE2, SumFunc((r, m) => r.VehicleData.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[1].RollResistanceCoefficient : double.NaN) },
-			{ DECLARED_RRC_AXLE3, SumFunc((r, m) => r.VehicleData.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[2].RollResistanceCoefficient : double.NaN) },
-			{ DECLARED_RRC_AXLE4, SumFunc((r, m) => r.VehicleData.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[3].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE1, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[0].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE2, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[1].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE3, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[2].RollResistanceCoefficient : double.NaN) },
+			{ DECLARED_RRC_AXLE4, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? r.VehicleData.AxleData[3].RollResistanceCoefficient : double.NaN) },
 
-			{ DECLARED_FZISO_AXLE1, SumFunc((r, m) => r.VehicleData.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[0].TyreTestLoad : null) },
-			{ DECLARED_FZISO_AXLE2, SumFunc((r, m) => r.VehicleData.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[1].TyreTestLoad : null) },
-			{ DECLARED_FZISO_AXLE3, SumFunc((r, m) => r.VehicleData.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[2].TyreTestLoad : null) },
-			{ DECLARED_FZISO_AXLE4, SumFunc((r, m) => r.VehicleData.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[3].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE1, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 0 && r.VehicleData.AxleData[0].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[0].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE2, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 1 && r.VehicleData.AxleData[1].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[1].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE3, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 2 && r.VehicleData.AxleData[2].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[2].TyreTestLoad : null) },
+			{ DECLARED_FZISO_AXLE4, SumFunc((r, m) => r.VehicleData?.AxleData.Count > 3 && r.VehicleData.AxleData[3].AxleType != AxleType.Trailer ? (ConvertedSI)r.VehicleData.AxleData[3].TyreTestLoad : null) },
 
 			// angle drive
 			{ ANGLEDRIVE_MANUFACTURER, SumFunc((r, m) => r.AngledriveData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
@@ -426,18 +426,18 @@ namespace TUGraz.VectoCore.OutputData
 			{ RETARDER_CERTIFICATION_NUMBER, SumFunc((r, m) => r.Retarder == null || !r.Retarder.Type.IsDedicatedComponent() || r.Retarder.CertificationMethod == CertificationMethod.StandardValues ? "" : r.Retarder.CertificationNumber)},
 
 			// gearbox
-			{ GEARBOX_MANUFACTURER, SumFunc((r, m) => r.GearboxData.Manufacturer)},
-			{ GEARBOX_MODEL, SumFunc((r, m) => r.GearboxData.ModelName)},
-			{ GEARBOX_TYPE, SumFunc((r, m) => r.GearboxData.Type)},
-			{ GEARBOX_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData.CertificationNumber)},
-			{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData.CertificationMethod.GetName())},
+			{ GEARBOX_MANUFACTURER, SumFunc((r, m) => r.GearboxData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
+			{ GEARBOX_MODEL, SumFunc((r, m) => r.GearboxData?.ModelName ?? Constants.NOT_AVAILABLE)},
+			{ GEARBOX_TYPE, SumFunc((r, m) => r.GearboxData?.Type.ToXMLFormat()  ?? Constants.NOT_AVAILABLE)},
+			{ GEARBOX_CERTIFICATION_NUMBER, SumFunc((r, m) => r.GearboxData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.GearboxData?.CertificationNumber)},
+			{ GEARBOX_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.CertificationMethod.GetName())},
 
-			{ GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData.Gears.Count > 0
+			{ GEAR_RATIO_FIRST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
 					? (double.IsNaN(r.GearboxData.Gears.First().Value.Ratio)
 						? (ConvertedSI)r.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
 						: (ConvertedSI)r.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
 					: 0.SI<Scalar>())}, 
-			{ GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData.Gears.Count > 0
+			{ GEAR_RATIO_LAST_GEAR, SumFunc((r, m) => r.GearboxData?.Gears.Count > 0
 				? (ConvertedSI) r.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
 				: (ConvertedSI)0.SI<Scalar>())},
 
@@ -464,7 +464,7 @@ namespace TUGraz.VectoCore.OutputData
 			
 			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour())},
 			
-			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries().ConvertToKiloWattHour())},
+			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour())},
 			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_aux_el).ConvertToKiloWattHour())},
 			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour())},
 			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour())},
@@ -635,9 +635,9 @@ namespace TUGraz.VectoCore.OutputData
 			{ FCFINAL_KM, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_FINAL_KM?.ConvertToGrammPerKiloMeter())},
 
 			{ FCFINAL_LITERPER100KM, FuelFunc((r, m, f) => f.FuelDensity == null ? null :  m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter.ConvertToLiterPer100Kilometer()) },
-			{ FCFINAL_LITERPER100TKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.Loading == null || r.VehicleData.Loading.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :  (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.Loading).ConvertToLiterPer100TonKiloMeter()) },
-			{ FCFINAL_LiterPer100M3KM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null : (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.CargoVolume).ConvertToLiterPerCubicMeter100KiloMeter()) },
-			{ FCFINAL_LiterPer100PassengerKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData.PassengerCount == null || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :(m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.PassengerCount.Value).ConvertToLiterPer100Kilometer()) },
+			{ FCFINAL_LITERPER100TKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :  (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.Loading).ConvertToLiterPer100TonKiloMeter()) },
+			{ FCFINAL_LiterPer100M3KM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null : (m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.CargoVolume).ConvertToLiterPerCubicMeter100KiloMeter()) },
+			{ FCFINAL_LiterPer100PassengerKM, FuelFunc((r, m, f) => f.FuelDensity == null || r.VehicleData?.PassengerCount == null || m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter == null ? null :(m.CorrectedModalData.FuelConsumptionCorrection(f).FuelVolumePerMeter / r.VehicleData.PassengerCount.Value).ConvertToLiterPer100Kilometer()) },
 			
 			{ SPECIFIC_FC, FuelFunc((r, m, f) => r.Cycle.CycleType == CycleType.VTP ? (m.TotalFuelConsumption(ModalResultField.FCFinal, f) / m.WorkWheelsPos()).ConvertToGramPerKiloWattHour() : null) },
 
