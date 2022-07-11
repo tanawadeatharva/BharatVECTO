@@ -31,6 +31,7 @@
 
 using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -378,6 +379,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var missingEnergy = energyDemand - batEnergy;
 
 			if (AuxCfg.ElectricalUserInputsConfig.ConnectESToREESS) {
+				if (DCDCConverter is null) {
+					throw new VectoException("DCDCConverter is missing: The current configuration for the bus auxiliaries " +
+										     "requires a DCDCConverter (ES supply from HEV REESS is activated).");
+				}
 				DCDCConverter.ConsumerEnergy(-missingEnergy, dryRun);
 			} else {
 				if (!dryRun) {
