@@ -101,14 +101,14 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var error = false;
 
 			try {
-				var mrfStream = new MemoryStream();
-				var mrfWriter = new XmlTextWriter(mrfStream, Encoding.UTF8);
-				document.WriteTo(mrfWriter);
-				mrfWriter.Flush();
-				mrfStream.Flush();
-				mrfStream.Seek(0, SeekOrigin.Begin);
-				var validator = new XMLValidator(new XmlTextReader(mrfStream));
-				error = validator.ValidateXML(XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
+				var stream = new MemoryStream();
+				var writer = new XmlTextWriter(stream, Encoding.UTF8);
+				document.WriteTo(writer);
+				writer.Flush();
+				stream.Flush();
+				stream.Seek(0, SeekOrigin.Begin);
+				var validator = new XMLValidator(new XmlTextReader(stream));
+				error = !validator.ValidateXML(XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 			} finally {
 				TestContext.WriteLine(document);
 			}
