@@ -7,110 +7,163 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" schemaLocation="VectoOutputManufacturer.0.9.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
-	<xs:element name="VectoOutput">
-		<xs:annotation>
-			<xs:documentation>Comment describing your root element</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="AbstractVectoCustomerOutputType"/>
 	<xs:complexType name="ConventionalLorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_Px_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_S2_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_S3_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_S4_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_IEPC_S_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV_E2_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV_E3_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV_E4_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV_IEPC_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Conventional_CompletedBusOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="Conventional_CompletedBusVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Conventional_CompletedBusVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="HEV_CompletedBusOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="HEV_CompletedBusVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="HEV_CompletedBusVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PEV_CompletedBusOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="PEV_CompletedBusVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="PEV_CompletedBusVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Exempted_CompletedBusOutputType">
-		<xs:sequence>
-			<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
-			<xs:element name="Results" type="ResultsType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
+				<xs:sequence>
+					<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
+					<xs:element name="Results" type="ResultsType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Conventional_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
 			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
-			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="ADAS" type="ConventionalADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
 			<xs:element name="Retarder" type="xs:boolean"/>
@@ -122,7 +175,7 @@
 	<xs:complexType name="HEV_Px_IHPC_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -136,7 +189,7 @@
 	<xs:complexType name="HEV_S2_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -150,7 +203,7 @@
 	<xs:complexType name="HEV_S3_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -163,7 +216,7 @@
 	<xs:complexType name="HEV_S4_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -174,7 +227,7 @@
 	<xs:complexType name="HEV_IEPC_S_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="HEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
@@ -187,7 +240,7 @@
 	<xs:complexType name="PEV_E2_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="TransmissionGroup"/>
@@ -200,7 +253,7 @@
 	<xs:complexType name="PEV_E3_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
@@ -212,7 +265,7 @@
 	<xs:complexType name="PEV_E4_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -222,7 +275,7 @@
 	<xs:complexType name="PEV_IEPC_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="PEV_LorryVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
 			<xs:element name="Retarder"/>
@@ -234,21 +287,21 @@
 	<xs:complexType name="Conventional_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:ConventionalADASType"/>
+			<xs:element name="ADAS" type="ConventionalADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:HEVADASType"/>
+			<xs:element name="ADAS" type="HEVADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PEV_CompletedBusVehicleType">
 		<xs:sequence>
 			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="mrf:PEVADASType"/>
+			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="CompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -294,10 +347,16 @@
 			</xs:sequence>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="RatedPowerType">
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="LegislativeCategoryType">
+		<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
+	</xs:simpleType>
 	<xs:group name="GeneralVehicleSequenceGroup">
 		<xs:sequence>
 			<xs:element name="VIN" type="v1.0:VINType"/>
-			<xs:element name="VehicleCategory" type="mrf:LegislativeCategoryType"/>
+			<xs:element name="VehicleCategory" type="LegislativeCategoryType"/>
 			<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType"/>
 			<xs:element name="TechnicalPermissibleMaximumLadenMass">
 				<xs:complexType>
@@ -406,6 +465,11 @@
 			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
+	<xs:complexType name="EngineCapacityType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double"/>
+		</xs:simpleContent>
+	</xs:complexType>
 	<xs:group name="EngineGroup">
 		<xs:sequence>
 			<xs:element name="EngineRatedPower">
@@ -420,7 +484,7 @@
 			<xs:element name="EngineCapacity">
 				<xs:complexType>
 					<xs:simpleContent>
-						<xs:extension base="mrf:EngineCapacityType">
+						<xs:extension base="EngineCapacityType">
 							<xs:attribute name="unit" type="out:VolumeUnitType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
@@ -462,7 +526,7 @@
 			<xs:element name="TotalRatedPropulsionPower">
 				<xs:complexType>
 					<xs:simpleContent>
-						<xs:extension base="mrf:RatedPowerType">
+						<xs:extension base="RatedPowerType">
 							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
@@ -474,7 +538,7 @@
 						<xs:element name="VoltageLevel" maxOccurs="unbounded">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element name="MaxContinuousPropulsionPower" type="mrf:RatedPowerType"/>
+									<xs:element name="MaxContinuousPropulsionPower" type="RatedPowerType"/>
 								</xs:sequence>
 								<xs:attribute name="voltage"/>
 							</xs:complexType>
@@ -1042,4 +1106,39 @@
 			<xs:extension base="ResultSummaryConventionalType"/>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ConventionalADASType">
+		<xs:sequence>
+			<xs:group ref="ConventionalADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEVADASType">
+		<xs:sequence>
+			<xs:group ref="HEVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PEVADASType">
+		<xs:sequence>
+			<xs:group ref="PEVADASGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--ADAS-->
+	<xs:group name="ConventionalADASGroup">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="xs:boolean"/>
+			<xs:element name="EcoRollWithoutEngineStopStart" type="xs:boolean"/>
+			<xs:element name="EcoRollWithEngineStopStart" type="xs:boolean"/>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEVADASGroup">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="xs:boolean"/>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEVADASGroup">
+		<xs:sequence>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:group>
 </xs:schema>

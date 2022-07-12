@@ -1387,7 +1387,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="vif:AbstractVehicleComponentsConventionalVIFType"/>
 				</xs:sequence>

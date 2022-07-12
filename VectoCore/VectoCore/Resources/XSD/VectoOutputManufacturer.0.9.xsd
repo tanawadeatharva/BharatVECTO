@@ -10,15 +10,9 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<!-- End imports___________________________________________ -->
-	<xs:element name="VectoOutput" type="mrf:AbstractVectoManufacturerOutputType">
-		<xs:annotation>
-			<xs:documentation>Comment describing your root element</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="AbstractVectoManufacturerOutputType" abstract="true"/>
 	<xs:complexType name="ConventionalLorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -28,7 +22,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPCLorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -38,7 +32,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S2_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -48,7 +42,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S3_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -58,7 +52,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S4_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -68,7 +62,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -78,7 +72,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E2_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -88,7 +82,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E3_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -98,7 +92,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E4_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -108,7 +102,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC_LorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -118,7 +112,7 @@
 	</xs:complexType>
 	<xs:complexType name="ConventionalPrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -128,7 +122,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPCPrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -138,7 +132,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S2_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -148,7 +142,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S3_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -158,7 +152,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-S4_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -168,7 +162,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -178,7 +172,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E2_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -188,7 +182,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E3_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -198,7 +192,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-E4_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -208,7 +202,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEV-IEPC_PrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -218,7 +212,7 @@
 	</xs:complexType>
 	<xs:complexType name="ConventionalCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -228,7 +222,7 @@
 	</xs:complexType>
 	<xs:complexType name="HEVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -238,7 +232,7 @@
 	</xs:complexType>
 	<xs:complexType name="PEVCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -248,7 +242,7 @@
 	</xs:complexType>
 	<xs:complexType name="ExemptedLorryManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -258,7 +252,7 @@
 	</xs:complexType>
 	<xs:complexType name="ExemptedPrimaryBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
@@ -268,7 +262,7 @@
 	</xs:complexType>
 	<xs:complexType name="ExemptedCompletedBusManufacturerOutputDataType">
 		<xs:complexContent>
-			<xs:extension base="mrf:AbstractVectoManufacturerOutputType">
+			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
