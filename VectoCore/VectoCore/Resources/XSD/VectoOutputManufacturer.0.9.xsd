@@ -16,7 +16,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>II.2.5</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>II.2.5</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -26,7 +43,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -36,7 +70,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -46,7 +97,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -56,7 +124,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -66,7 +151,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -76,7 +178,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -86,7 +205,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -96,7 +232,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -106,7 +259,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -116,7 +286,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -126,7 +313,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -136,7 +340,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -146,7 +367,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -156,7 +394,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -166,7 +421,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -176,7 +448,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -186,7 +475,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -196,7 +502,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -206,7 +529,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-PrimaryBus-VehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -216,7 +556,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -226,7 +583,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -236,7 +610,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -246,7 +637,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -256,7 +664,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -266,7 +691,24 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

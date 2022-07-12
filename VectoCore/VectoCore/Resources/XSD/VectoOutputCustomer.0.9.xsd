@@ -13,8 +13,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -23,8 +45,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -33,8 +77,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -43,8 +109,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -53,8 +141,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -63,8 +173,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -73,8 +205,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -83,8 +237,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -93,8 +269,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -103,8 +301,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -113,8 +333,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Conventional_CompletedBusVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -123,8 +365,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_CompletedBusVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -133,8 +397,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_CompletedBusVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -143,8 +429,30 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -153,11 +461,34 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
+					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="Results" type="ResultsType"/>
+					<xs:element name="ApplicationInformation">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SimulationToolVersion" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>I.3.1.1 / #70</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+									<xs:annotation>
+										<xs:documentation>I.3.1.2 / #71</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
+				<xs:attribute name="id" type="xs:NCName" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<!--Vehicle Types-->
 	<xs:complexType name="Conventional_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
