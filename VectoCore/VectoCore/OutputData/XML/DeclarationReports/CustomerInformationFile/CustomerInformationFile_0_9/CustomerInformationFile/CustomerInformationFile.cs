@@ -16,18 +16,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
     public abstract class CustomerInformationFile : AbstractCustomerReport
     {
         public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
-
-		protected void GenerateReport(string outputDataType)
-		{
-			Report = new XDocument(new XElement(Cif + "VectoOutput",
-				new XAttribute("xmlns", Cif),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(XNamespace.Xmlns + "mrf", LorryManufacturerReportBase.Mrf),
-				new XAttribute(xsi + "type", $"{outputDataType}"),
-				Vehicle));
-			//;new XElement(Cif + "Results")));
-		}
-
+		
         protected CustomerInformationFile(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 	}
     #region LorryCIF

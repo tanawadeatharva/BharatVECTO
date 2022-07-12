@@ -217,6 +217,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IXmlTypeWriter>().To<CIFConventionalLorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalLorryVehicleType());
 
+			Bind<IXmlTypeWriter>().To<CIF_HEVPx_LorryVehicleWriter>().When(AccessedViaCIFFactory);
+
 			Bind<IXmlTypeWriter>().To<CIF_HEVPx_LorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetHEV_PxLorryVehicleType());
 
@@ -253,6 +255,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IXmlTypeWriter>().To<CIF_ExemptedCompletedBusVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetExemptedCompletedBusVehicleType());
 			#endregion
+
 			#region VehicleGroups
 			Bind<IReportVehicleOutputGroup>().To<GeneralVehicleOutputSequenceGroupCif>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetGeneralVehicleSequenceGroupWriter());
@@ -293,7 +296,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			#endregion
 
+			#region ADAS
+			Bind<ICIFAdasType>().To<CIFConventionalAdasType>()
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalADASType());
+			Bind<ICIFAdasType>().To<CIFHevAdasType>()
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetHEVADASType());
+			Bind<ICIFAdasType>().To<CIFPevAdasType>()
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEVADASType());
 
+			#endregion ADAS
 
 
 		}

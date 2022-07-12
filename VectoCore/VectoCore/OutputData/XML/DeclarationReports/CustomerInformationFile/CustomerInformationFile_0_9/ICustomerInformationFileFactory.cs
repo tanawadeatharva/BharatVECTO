@@ -55,5 +55,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus();
 
 
+		ICIFAdasType GetConventionalADASType();
+		ICIFAdasType GetHEVADASType();
+		ICIFAdasType GetPEVADASType();
 	}
 }

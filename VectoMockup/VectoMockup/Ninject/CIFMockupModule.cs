@@ -198,6 +198,21 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus();
         }
 
-        #endregion
+		public ICIFAdasType GetConventionalADASType()
+		{
+			return _cifFactory.GetConventionalADASType();
+		}
+
+		public ICIFAdasType GetHEVADASType()
+		{
+			return _cifFactory.GetHEVADASType();
+		}
+
+		public ICIFAdasType GetPEVADASType()
+		{
+			return _cifFactory.GetPEVADASType();
+		}
+
+		#endregion
     }
 }

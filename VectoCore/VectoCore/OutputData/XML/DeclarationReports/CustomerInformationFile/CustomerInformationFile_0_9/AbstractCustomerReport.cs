@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9
 {
@@ -18,7 +22,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+
+		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
+
+		public static XNamespace Cif_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
 		protected XElement Vehicle { get; set; }
 		protected XElement Results { get; set; }
 
@@ -39,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.Ocv;
-			Results = new XElement(Cif + "Results");
+			Results = new XElement(Cif_0_9 + "Results");
 		}
 
 		public XDocument Report { get; protected set; }
@@ -53,16 +60,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public void GenerateReport(XElement resultSignature)
 		{
-			Report = new XDocument(new XElement(Cif + "VectoOutput",
-				new XAttribute("xmlns", Cif),
+			var retVal = new XDocument(new XElement(Cif + "VectoCustomerInformation",
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(XNamespace.Xmlns + "mrf", LorryManufacturerReportBase.Mrf),
-				new XAttribute(xsi + "type", $"{OutputDataType}"),
-				Vehicle,
-				Results));
+				new XAttribute(XNamespace.Xmlns + "cif", Cif.NamespaceName),
+				new XAttribute(XNamespace.Xmlns + "cif0.9", Cif_0_9.NamespaceName),
+				new XAttribute("xmlns", Cif_0_9),
+				new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation", $"{Cif.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputCustomer.xsd"),
+				
+				new XElement(Cif + XMLNames.Report_DataWrap,
+					new XAttribute(xsi + "type", $"{OutputDataType}"),
+					Vehicle,
+					new XElement(Cif_0_9 + XMLNames.Report_ResultData_Signature, resultSignature),
+					Results,
+					GetApplicationInfo())
+				)
+			);
+
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(retVal);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+			var h = VectoHash.Load(stream);
+			Report = h.AddHash();
 		}
 
 		#endregion
+		protected XElement GetApplicationInfo()
+		{
+			var versionNumber = VectoSimulationCore.VersionNumber;
+#if CERTIFICATION_RELEASE
+			// add nothing to version number
+#else
+			versionNumber += " !!NOT FOR CERTIFICATION!!";
+#endif
+			return new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_ApplicationInformation,
+				new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
+				new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_Date,
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+		}
 
 
 	}
