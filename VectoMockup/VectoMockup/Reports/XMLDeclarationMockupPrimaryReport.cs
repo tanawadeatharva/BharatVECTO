@@ -7,6 +7,7 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoMockup.Reports
 {
@@ -16,10 +17,13 @@ namespace TUGraz.VectoMockup.Reports
 
 		public XMLDeclarationMockupPrimaryReport(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
-			ICustomerInformationFileFactory cifFactory, bool exempted,
+			ICustomerInformationFileFactory cifFactory, 
+			IVIFReportFactory vifFactory,
+			bool exempted,
 			bool writePIF = false) : base(writer,
 			mrfFactory,
 			cifFactory,
+			vifFactory,
 			writePIF)
 		{
 			_exempted = exempted;
@@ -28,7 +32,7 @@ namespace TUGraz.VectoMockup.Reports
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
 			base.InstantiateReports(modelData);
-			PrimaryReport = new MockupPrimaryReport(PrimaryReport);
+			//VehicleInformationFile = new MockupPrimaryVehicleInformationFile(VehicleInformationFile);
 		}
 
 		#region Overrides of XMLDeclarationReportPrimaryVehicle_09
@@ -41,7 +45,7 @@ namespace TUGraz.VectoMockup.Reports
 		protected override void WriteResult(ResultEntry result)
 		{
 			(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-			(PrimaryReport as IXMLMockupReport).WriteMockupResult(result);
+			(VehicleInformationFile as IXMLMockupReport).WriteMockupResult(result);
 		}
 
 		#endregion
@@ -52,16 +56,16 @@ namespace TUGraz.VectoMockup.Reports
 		{
 			if (!_exempted) {
 				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-				(PrimaryReport as IXMLMockupReport).WriteMockupSummary(Results.First());
+				(VehicleInformationFile as IXMLMockupReport).WriteMockupSummary(Results.First());
 			} else {
 				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
-				(PrimaryReport as IXMLMockupReport).WriteExemptedResults();
+				(VehicleInformationFile as IXMLMockupReport).WriteExemptedResults();
 			}
 
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = CreateDummySig();
 			//CustomerRpt.GenerateReport(fullReportHash);
-			PrimaryReport.GenerateReport(fullReportHash);
+			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
 		protected virtual XElement CreateDummySig()

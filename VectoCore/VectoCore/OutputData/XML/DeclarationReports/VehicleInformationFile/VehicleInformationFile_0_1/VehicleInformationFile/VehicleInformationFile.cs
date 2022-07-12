@@ -7,10 +7,14 @@ using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.VIFReport
 {
-	internal class PrimaryVIFReportBase : AbstractVIFReport
+	internal class VehicleInformationFile : AbstractVehicleInformationFile
 	{
 		private string _outputDataType;
-		public PrimaryVIFReportBase(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+		public VehicleInformationFile(IVIFReportFactory vifFactory) : base(vifFactory)
+		{
+			_tns = VIF;
+		}
 
 		#region Overrides of AbstractVIFReport
 
@@ -18,23 +22,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-
-
-
-			//Vehicle
-			//InputDataSignature
-			//ManufacturerRecordSignature
-			//Results
-			//ApplicationInformation
-
-
-			throw new NotImplementedException();
+			Vehicle = _vifFactory.GetConventionalVehicleType().GetElement(inputData);
 		}
 
 		#endregion
 	}
 
-	
+	internal class Conventional_PrimaryBus_VIF : VehicleInformationFile
+	{
+		public Conventional_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
+	}
 
 
 }

@@ -121,6 +121,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 						_simFactoryFactory, 
 						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).MrfFactory,
 						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).CifFactory, 
+						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).VifFactory,
 						_xmlInputDataReader, 
 						Validate);
 				case IMultistageVIFInputData multistageVifInputData:

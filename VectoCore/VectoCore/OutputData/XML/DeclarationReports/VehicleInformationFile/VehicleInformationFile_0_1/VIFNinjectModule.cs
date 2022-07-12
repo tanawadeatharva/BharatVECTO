@@ -1,10 +1,13 @@
 ﻿using Ninject.Activation;
 using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.Factory;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.VIFReport;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
@@ -20,7 +23,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod,
 				6, 6, typeof(IVIFReportFactory).GetMethod(nameof(IVIFReportFactory.GetVIFReport)))).InSingletonScope();
 
-			
+			Bind<IXMLVehicleInformationFile>().To<Conventional_PrimaryBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+
 			#region VehicleTypes
 			
 			Bind<IXmlTypeWriter>().To<ConventionalVehicleType>().When(AccessedViaVIFFactory)

@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	public interface IVIFReportFactory
 	{
-		IXMLPrimaryVehicleReport GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
+		IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 

@@ -11,13 +11,13 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoMockup.Reports
 {
-    public class MockupVIFReport : IXMLPrimaryVehicleReport, IXMLMockupReport
+    public class MockupVehicleInformationFile : IXMLVehicleInformationFile, IXMLMockupReport
     {
 		private XDocument _report;
 		private XNamespace _tns;
 
 
-		public MockupVIFReport(IXMLPrimaryVehicleReport vifReport)
+		public MockupVehicleInformationFile(IXMLVehicleInformationFile vehicleInformationFile)
 		{
 
 		}

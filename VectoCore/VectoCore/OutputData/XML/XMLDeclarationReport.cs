@@ -255,12 +255,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
-			if (modelData.Exempted) {
-				ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
-			} else {
-				ManufacturerRpt = new XMLManufacturerReportTruck();
-			}
-			CustomerRpt = new XMLCustomerReport();
+			//if (modelData.Exempted) {
+			//	ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
+			//} else {
+			//	ManufacturerRpt = new XMLManufacturerReportTruck();
+			//}
+			//CustomerRpt = new XMLCustomerReport();
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>

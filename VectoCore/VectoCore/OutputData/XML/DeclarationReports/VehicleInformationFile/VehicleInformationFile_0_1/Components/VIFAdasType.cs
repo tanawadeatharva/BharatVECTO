@@ -21,11 +21,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (adas == null)
 				return null;
 
-			return new XElement(_vif + XMLNames.Vehicle_ADAS,
-				new XElement(_vif + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
-				new XElement(_vif +  XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),
-				new XElement(_vif + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRoll == EcoRollType.WithEngineStop),
-				new XElement(_vif + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat())); 
+			return new XElement(_vif + XMLNames.Vehicle_ADAS, 
+				new XAttribute("xmlns", _v24),
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
+				new XElement(_v24 +  XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRoll == EcoRollType.WithEngineStop),
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat())); 
 		}
 
 		#endregion

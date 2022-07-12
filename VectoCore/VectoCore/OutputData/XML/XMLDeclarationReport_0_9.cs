@@ -13,21 +13,25 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
 	{
-		private readonly ICustomerInformationFileFactory _cifFactory;
+		//private readonly ICustomerInformationFileFactory _cifFactory;
 		private readonly IManufacturerReportFactory _mrfFactory;
+		private readonly IVIFReportFactory _vifFactory;
 
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
+			IVIFReportFactory vifFactory,
 			bool writePIF = false) : base(writer, writePIF)
 		{
 			_mrfFactory = mrfFactory;
-			_cifFactory = cifFactory;
+			//_cifFactory = cifFactory;
+			_vifFactory = vifFactory;
 		}
 
 
@@ -40,25 +44,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var ihpc =
 				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
-			if (modelData.Exempted) {
-				PrimaryReport = new XMLExemptedPrimaryBusVehicleReport();
-			}
-			PrimaryReport = new XMLPrimaryBusVehicleReport();
+			//if (modelData.Exempted) {
+			//	PrimaryReport = new XMLExemptedPrimaryBusVehicleReport();
+			//}
+			//PrimaryReport = new XMLPrimaryBusVehicleReport();
 			
-			//PrimaryRpt = _vifFactory.GetVIF(vehicleData.VehicleCategory,
-			//	vehicleData.VehicleType,
-			//	vehicleData.ArchitectureID,
-			//	vehicleData.ExemptedVehicle,
-			//	iepc,
-			//	ihpc);
-
-
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
 				vehicleData.VehicleType,
 				vehicleData.ArchitectureID,
 				vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
+
+			VehicleInformationFile = _vifFactory.GetVIFReport(vehicleData.VehicleCategory,
+                vehicleData.VehicleType,
+                vehicleData.ArchitectureID,
+                vehicleData.ExemptedVehicle,
+                iepc,
+                ihpc);
+
+
 		}
 
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)

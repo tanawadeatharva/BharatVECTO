@@ -108,7 +108,7 @@ namespace TUGraz.VectoMockup.Reports
                             PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
                         };
                     case VehicleCategory.HeavyBusPrimaryVehicle:
-                        return new XMLDeclarationMockupPrimaryReport(outputDataWriter, _mrfFactory, _cifFactory,
+                        return new XMLDeclarationMockupPrimaryReport(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory,
 							declarationInputDataProvider.JobInputData.Vehicle.ExemptedVehicle,
                             declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory ==
                             VehicleCategory.HeavyBusPrimaryVehicle);
@@ -134,6 +134,8 @@ namespace TUGraz.VectoMockup.Reports
 		public IManufacturerReportFactory MrfFactory => _mrfFactory;
 		public ICustomerInformationFileFactory CifFactory => _cifFactory;
 
+		public IVIFReportFactory VifFactory => _vifFactory;
+
 		#endregion
 	}
 
@@ -141,5 +143,7 @@ namespace TUGraz.VectoMockup.Reports
 	{
 		IManufacturerReportFactory MrfFactory { get; }
         ICustomerInformationFileFactory CifFactory { get; }
+
+        IVIFReportFactory VifFactory { get; }
 	}
 }

@@ -13,10 +13,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
-	public abstract class AbstractVIFReport : IXMLPrimaryVehicleReport
+	public abstract class AbstractVehicleInformationFile : IXMLVehicleInformationFile
 	{
 		private XDocument _report;
-		private XNamespace _tns;
+		protected XNamespace _tns;
 
 		protected readonly IVIFReportFactory _vifFactory;
 
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XElement Results { get; set; }
 	
 
-		protected AbstractVIFReport(IVIFReportFactory vifFactory)
+		protected AbstractVehicleInformationFile(IVIFReportFactory vifFactory)
 		{
 			_vifFactory = vifFactory;
 		}
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(XNamespace.Xmlns + "v2.0", _v20),
 				new XAttribute(XNamespace.Xmlns + "v2.1", _v21),
 				new XAttribute(XNamespace.Xmlns + "v2.3", _v23),
-				new XAttribute(XNamespace.Xmlns + "v2.8", _v24),
+				new XAttribute(XNamespace.Xmlns + "v2.4", _v24),
 				new XAttribute(_xsi + "schemaLocation", $"{_tns.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 				new XAttribute("xmlns", _tns),
 

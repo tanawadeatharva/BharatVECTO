@@ -25,7 +25,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile
 {
-	public class XMLPrimaryBusVehicleReport : IXMLPrimaryVehicleReport
+	public class XMLPrimaryBusVehicleReport : IXMLVehicleInformationFile
 	{
 		public XNamespace Tns => tns;
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";

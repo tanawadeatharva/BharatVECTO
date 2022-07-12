@@ -15,17 +15,17 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoMockup.Reports
 {
-    internal class MockupPrimaryReport : IXMLPrimaryVehicleReport, IXMLMockupReport
+    internal class MockupPrimaryVehicleInformationFile : IXMLVehicleInformationFile, IXMLMockupReport
     {
 		
-		private readonly IXMLPrimaryVehicleReport _primaryVehicleReportImplementation;
+		private readonly IXMLVehicleInformationFile _vehicleInformationFileImplementation;
 		private VectoRunData _modelData;
 
 		private XElement Results;
-		public MockupPrimaryReport(IXMLPrimaryVehicleReport primaryVehicleReportImplementation)
+		public MockupPrimaryVehicleInformationFile(IXMLVehicleInformationFile vehicleInformationFileImplementation)
 		{
-			_primaryVehicleReportImplementation = primaryVehicleReportImplementation;
-			Results = new XElement(_primaryVehicleReportImplementation.Tns + XMLNames.Report_Results);
+			_vehicleInformationFileImplementation = vehicleInformationFileImplementation;
+			Results = new XElement(_vehicleInformationFileImplementation.Tns + XMLNames.Report_Results);
 		}
 
 
@@ -33,16 +33,16 @@ namespace TUGraz.VectoMockup.Reports
 
 		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
-			_primaryVehicleReportImplementation.Initialize(modelData, fuelModes);
+			_vehicleInformationFileImplementation.Initialize(modelData, fuelModes);
 			_modelData = modelData;
 		}
 
 		public void WriteResult(XMLDeclarationReport.ResultEntry result)
 		{
-			_primaryVehicleReportImplementation.WriteResult(result);
+			_vehicleInformationFileImplementation.WriteResult(result);
 		}
 
-		public XNamespace Tns => _primaryVehicleReportImplementation.Tns;
+		public XNamespace Tns => _vehicleInformationFileImplementation.Tns;
 
 		#endregion
 
@@ -69,14 +69,14 @@ namespace TUGraz.VectoMockup.Reports
 
 		public void GenerateReport(XElement fullReportHash)
 		{ 
-			_primaryVehicleReportImplementation.GenerateReport(fullReportHash);
+			_vehicleInformationFileImplementation.GenerateReport(fullReportHash);
 		}
 
 		public XDocument Report
 		{
 			get
 			{
-				var report = _primaryVehicleReportImplementation.Report;
+				var report = _vehicleInformationFileImplementation.Report;
 				var resultsElement = report.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Results}']");
 				resultsElement.First().ReplaceWith(Results);
 				return report;

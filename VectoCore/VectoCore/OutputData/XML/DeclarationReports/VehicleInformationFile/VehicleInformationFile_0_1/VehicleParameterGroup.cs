@@ -112,17 +112,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var vehicle = inputData.JobInputData.Vehicle;
 
 			var result = new List<XElement> {
-				new XElement(_vif + XMLNames.ManufacturerAddressPrimaryVehicle, vehicle.Manufacturer),
+				new XElement(_vif + XMLNames.ManufacturerPrimaryVehicle, vehicle.Manufacturer),
 				new XElement(_vif + XMLNames.ManufacturerAddressPrimaryVehicle, vehicle.ManufacturerAddress),
-				new XElement(_vif +XMLNames.Component_Model, vehicle.Model),
+				new XElement(_vif + XMLNames.Component_Model, vehicle.Model),
 				new XElement(_vif + XMLNames.Vehicle_VIN, vehicle.VIN),
 				new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(vehicle.Date, XmlDateTimeSerializationMode.Utc)),
 				new XElement(_vif + XMLNames.Vehicle_LegislativeCategory, vehicle.LegislativeClass.ToXMLFormat()),
 				new XElement(_vif + XMLNames.ChassisConfiguration, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_Articulated, vehicle.Articulated),
-				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.ToXMLFormat()),
+				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
+				new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)),
 				new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData.Ratio.ToXMLFormat(3)),
 				new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()),

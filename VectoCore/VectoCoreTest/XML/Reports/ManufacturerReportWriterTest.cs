@@ -28,6 +28,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.Tests.Integration.CompletedBus;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.XML.Reports
 {
@@ -100,80 +101,20 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var error = false;
 
 			try {
-
-				var schemaSet = new XmlSchemaSet() {
-					XmlResolver = new XmlUrlResolver()
-				};
-
-				XmlSchema schema;
-				using (var reader = XmlReader.Create(
-							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputManufacturer.0.9.xsd"))))
-				{
-					schema = XmlSchema.Read(reader, null);
-				}
-
-				schemaSet.Add(schema);
-
-				using (var reader = XmlReader.Create(
-							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputCustomer.0.9.xsd"))))
-				{
-					schema = XmlSchema.Read(reader, null);
-				}
-
-				schemaSet.Add(schema);
-
-				using (var reader = XmlReader.Create(
-							Path.GetFullPath(Path.Combine(xsdPath, "VectoOutputMultistep.0.1.xsd"))))
-				{
-					schema = XmlSchema.Read(reader, null);
-				}
-
-				schemaSet.Add(schema);
-				
-
-				if (elementSelector != null) {
-					document.Validate(schemaSet, ((sender, args) => {
-						//do nothing just add schema info
-					}), true);
-					var element = elementSelector(document);
-					element.Validate(element.GetSchemaInfo().SchemaType, schemaSet, (sender, args) => {
-						error = true;
-						TestContext.WriteLine(sender?.ToString());
-						TestContext.WriteLine(args.Message);
-					});
-				} else {
-					document.Validate(schemaSet, (sender, args) => {
-						error = true;
-
-						TestContext.WriteLine(sender?.ToString());
-						TestContext.WriteLine(args.Message);
-					});
-				}
-
-				
+				var mrfStream = new MemoryStream();
+				var mrfWriter = new XmlTextWriter(mrfStream, Encoding.UTF8);
+				document.WriteTo(mrfWriter);
+				mrfWriter.Flush();
+				mrfStream.Flush();
+				mrfStream.Seek(0, SeekOrigin.Begin);
+				var validator = new XMLValidator(new XmlTextReader(mrfStream));
+				error = validator.ValidateXML(XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 			} finally {
 				TestContext.WriteLine(document);
 			}
 			return !error;
 		}
 
-
-		private static XmlSchemaSet XmlSchemaSet(params (string path, string targetNamespace)[] paths)
-		{
-			XmlSchemaSet schemas = new XmlSchemaSet();
-			foreach (var path in paths) {
-				using (XmlReader reader = new XmlTextReader(path.path)
-						{
-							XmlResolver = new XmlUrlResolver()
-
-						})
-				{
-					schemas.Add(path.targetNamespace, reader);
-				};
-				
-			}
-			return schemas;
-		}
 
 		protected bool WriteToDisk(string basePath, string fileName, XDocument xDocument)
 		{

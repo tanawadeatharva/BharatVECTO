@@ -15,7 +15,7 @@ using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Ninject
 {
-    internal class VIFMockupModule : AbstractNinjectModule
+    public class VIFMockupModule : AbstractNinjectModule
     {
 		#region Overrides of NinjectModule
 
@@ -40,11 +40,20 @@ namespace TUGraz.VectoMockup.Ninject
 
 			#region Implementation of IVIFReportFactory
 
-			public IXMLPrimaryVehicleReport GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
+			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
 				bool exempted, bool iepc, bool ihpc)
 			{
-				return new MockupVIFReport(
-					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
+				switch (vehicleType) {
+					case VehicleCategory.HeavyBusPrimaryVehicle:
+						return new MockupPrimaryVehicleInformationFile(
+							_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
+								ihpc));
+					case VehicleCategory.HeavyBusCompletedVehicle:
+						return new MockupVehicleInformationFile(
+							_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
+								ihpc));
+					default: throw new ArgumentException();
+				}
 			}
 
 			public IXmlTypeWriter GetConventionalVehicleType()
