@@ -863,7 +863,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				var testRequest = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, emOff);
 				if (testRequest != null && testRequest.Engine.EngineSpeed < ModelData.EngineData.FullLoadCurves[0].NTq99hSpeed) {
-					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear).FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
+					var maxGbxTorque = StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear)?.FullLoadDriveTorque(testRequest.Gearbox.InputSpeed);
 					candidates[nextGear] = maxGbxTorque != null
 						? Tuple.Create(maxGbxTorque * testRequest.Gearbox.InputSpeed, testRequest)
 						: Tuple.Create(testRequest.Gearbox.InputTorque * testRequest.Gearbox.InputSpeed, testRequest);
