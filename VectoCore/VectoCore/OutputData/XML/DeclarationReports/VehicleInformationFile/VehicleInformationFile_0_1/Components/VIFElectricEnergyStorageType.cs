@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.ElectricEnergyStorage_Capacitor,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + "type", "vif:CapacitorSystemDataType"),
+						new XAttribute(_xsi + XMLNames.XSIType, "CapacitorSystemDataType"),
 						new XAttribute("id", capacitor.DigestValue.Reference),
 					new XElement(_vif + XMLNames.Component_Manufacturer, capacitor.Manufacturer),
 					new XElement(_vif + XMLNames.Component_Model, capacitor.Model), 
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetReess(IBatteryPackDeclarationInputData battery)
 		{
 			return new XElement(_vif + XMLNames.ComponentDataWrapper,
-				new XAttribute(_xsi + "type", "vif:BatterySystemDataType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "BatterySystemDataType"),
 				new XAttribute("id", battery.DigestValue.Reference),
 				new XElement(_vif + XMLNames.Component_Manufacturer, battery.Manufacturer),
 				new XElement(_vif + XMLNames.Component_Model, battery.Model),

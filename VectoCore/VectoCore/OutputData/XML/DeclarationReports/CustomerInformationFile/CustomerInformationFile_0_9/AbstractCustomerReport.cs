@@ -68,11 +68,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation", $"{Cif.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputCustomer.xsd"),
 				
 				new XElement(Cif + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + "type", $"{OutputDataType}"),
+					new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
 					Vehicle,
 					new XElement(Cif_0_9 + XMLNames.Report_ResultData_Signature, resultSignature),
 					Results,
-					GetApplicationInfo())
+					XMLHelper.GetApplicationInfo(Cif_0_9))
 				)
 			);
 
@@ -86,19 +86,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		#endregion
-		protected XElement GetApplicationInfo()
-		{
-			var versionNumber = VectoSimulationCore.VersionNumber;
-#if CERTIFICATION_RELEASE
-			// add nothing to version number
-#else
-			versionNumber += " !!NOT FOR CERTIFICATION!!";
-#endif
-			return new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_ApplicationInformation,
-				new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
-				new XElement(Cif_0_9 + XMLNames.Report_ApplicationInfo_Date,
-					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
-		}
 
 
 	}

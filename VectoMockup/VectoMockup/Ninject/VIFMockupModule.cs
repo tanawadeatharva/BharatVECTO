@@ -156,6 +156,21 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetIepcComponentVIFType();
 			}
 
+			public IVIFFAdasType GetConventionalADASType()
+			{
+				return _vifReportFactoryImplementation.GetConventionalADASType();
+			}
+
+			public IVIFFAdasType GetHEVADASType()
+			{
+				return _vifReportFactoryImplementation.GetHEVADASType();
+			}
+
+			public IVIFFAdasType GetPEVADASType()
+			{
+				return _vifReportFactoryImplementation.GetPEVADASType();
+			}
+
 			public IXmlTypeWriter GetTorqueConvertType()
 			{
 				return _vifReportFactoryImplementation.GetTorqueConvertType();
@@ -224,11 +239,6 @@ namespace TUGraz.VectoMockup.Ninject
 			public IReportOutputGroup GetHevPxVehicleParameterGroup()
 			{
 				return _vifReportFactoryImplementation.GetHevPxVehicleParameterGroup();
-			}
-
-			public IXmlTypeWriter GetAdasType()
-			{
-				return _vifReportFactoryImplementation.GetAdasType();
 			}
 
 			public IXmlTypeWriter GetAngelDriveType()

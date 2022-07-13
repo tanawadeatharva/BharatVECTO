@@ -5666,5 +5666,14 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XMLManufacturerReport_torqueLimitPercent", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string XSIType {
+            get {
+                return ResourceManager.GetString("XSIType", resourceCulture);
+            }
+        }
     }
 }

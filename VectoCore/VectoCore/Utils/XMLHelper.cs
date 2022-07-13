@@ -348,5 +348,19 @@ namespace TUGraz.VectoCore.Utils
 			xElement.Name = xName;
 			return xElement;
 		}
+
+		public static XElement GetApplicationInfo(XNamespace ns)
+		{
+			var versionNumber = VectoSimulationCore.VersionNumber;
+#if CERTIFICATION_RELEASE
+			// add nothing to version number
+#else
+			versionNumber += " !!NOT FOR CERTIFICATION!!";
+#endif
+			return new XElement(ns + XMLNames.Report_ApplicationInfo_ApplicationInformation,
+				new XElement(ns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
+				new XElement(ns + XMLNames.Report_ApplicationInfo_Date,
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+		}
 	}
 }

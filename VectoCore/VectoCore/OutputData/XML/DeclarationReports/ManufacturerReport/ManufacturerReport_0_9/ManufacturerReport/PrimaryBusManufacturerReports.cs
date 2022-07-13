@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Report = new XDocument(new XElement(_mrf + "VectoOutput",
 				new XAttribute("xmlns", _mrf),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(xsi + "type", $"{outputDataType}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{outputDataType}"),
 				Vehicle,
 				new XElement(_mrf + "Results")));
 		}

@@ -63,22 +63,10 @@ namespace TUGraz.VectoMockup.Reports
 			}
 
 			ManufacturerRpt.GenerateReport();
-			var fullReportHash = CreateDummySig();
-			//CustomerRpt.GenerateReport(fullReportHash);
+			var fullReportHash = GetSignature(ManufacturerRpt.Report);
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
-		protected virtual XElement CreateDummySig()
-		{
-			XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
-			return new XElement(
-				di + XMLNames.DI_Signature_Reference,
-				new XElement(
-					di + XMLNames.DI_Signature_Reference_DigestMethod,
-					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
-				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
-			);
-		}
 	}
 
 

@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 				return new XElement(_vif + XMLNames.Vehicle_Components,
-					new XAttribute(_xsi + "type", "vif:Vehicle_Conventional_ComponentsVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_Conventional_ComponentsVIFType"),
 					_vifReportFactory.GetEngineType().GetElement(inputData),
 					_vifReportFactory.GetTransmissionType().GetElement(inputData),
 					_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-IEPC-S_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-IEPC-S_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-Px_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-Px_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-S2_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-S2_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-S3_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-S3_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_HEV-S4_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-S4_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_PEV-E2_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-E2_ComponentsVIFType"),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_PEV-E3_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-E3_ComponentsVIFType"),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle_PEV-E4_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-E4_ComponentsVIFType"),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + "type", "vif:Vehicle-IEPC_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle-IEPC_ComponentsVIFType"),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),

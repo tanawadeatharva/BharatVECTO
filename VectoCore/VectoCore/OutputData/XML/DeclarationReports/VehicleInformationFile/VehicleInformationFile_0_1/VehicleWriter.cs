@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetConventionalComponentType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-					new XAttribute(_xsi + "type", "vif:ConventionalVehicleVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "ConventionalVehicleVIFType"),
 					vehicleData);
 		}
 
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetHevIepcSComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-					new XAttribute(_xsi + "type", "vif:HEV-IEPC-S_VehicleVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "HEV-IEPC-S_VehicleVIFType"),
 					vehicleData);
 		}
 
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetHevPxComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:HEV-Px_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Px_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetHevS2ComponentVIFType().GetElement(inputData));
 			
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:HEV-Sx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Sx_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetHevS3ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:HEV-Sx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Sx_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetHevS4ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:HEV-Sx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Sx_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetIepcComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:IEPC_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "IEPC_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetPevE2ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "PEV_Ex_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetPevE3ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "PEV_Ex_VehicleVIFType"),
 				vehicleData);
 		}
 
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			vehicleData.Add(_vifReportFactory.GetPevE4ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + "type", "vif:PEV_Ex_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "PEV_Ex_VehicleVIFType"),
 				vehicleData);
 		}
 

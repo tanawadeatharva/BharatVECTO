@@ -26,11 +26,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Engine,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + "type", "vif:EngineDataVIFType"),
+						new XAttribute(_xsi + XMLNames.XSIType, "EngineDataVIFType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, engine.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, engine.Model),
 						new XElement(_vif + XMLNames.Component_CertificationNumber, engine.CertificationNumber),
-						new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(engine.Date, XmlDateTimeSerializationMode.Utc),
+						new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(engine.Date, XmlDateTimeSerializationMode.Utc)),
 						new XElement(_vif + XMLNames.Component_AppVersion, engine.AppVersion),
 						new XElement(_vif + XMLNames.Engine_Displacement,
 							engine.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
@@ -39,11 +39,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						new XElement(_vif + XMLNames.Engine_MaxTorque, engine.MaxTorqueDeclared.ToXMLFormat(0)),
 						new XElement(
 							_vif + XMLNames.Engine_WHRType,
-							new XElement(_v23 + XMLNames.Engine_WHR_MechanicalOutputICE, (engine.WHRType & WHRType.MechanicalOutputICE) != 0),
-							new XElement(_v23 + XMLNames.Engine_WHR_MechanicalOutputIDrivetrain, (engine.WHRType & WHRType.MechanicalOutputDrivetrain) != 0),
-							new XElement(_v23 + XMLNames.Engine_WHR_ElectricalOutput, (engine.WHRType & WHRType.ElectricalOutput) != 0)
+							new XElement(_vif + XMLNames.Engine_WHR_MechanicalOutputICE, (engine.WHRType & WHRType.MechanicalOutputICE) != 0),
+							new XElement(_vif + XMLNames.Engine_WHR_MechanicalOutputIDrivetrain, (engine.WHRType & WHRType.MechanicalOutputDrivetrain) != 0),
+							new XElement(_vif + XMLNames.Engine_WHR_ElectricalOutput, (engine.WHRType & WHRType.ElectricalOutput) != 0)
 						),
-						GetEngineModes(engine.EngineModes)))
+						GetEngineModes(engine.EngineModes))
 					);
 		}
 

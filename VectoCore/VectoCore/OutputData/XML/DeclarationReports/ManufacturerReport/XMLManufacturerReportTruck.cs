@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleTruckType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleTruckType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			if (modelData.VehicleData.AxleConfiguration.AxlegearIncludedInGearbox()) {
 				return new XElement(
 					tns + XMLNames.Vehicle_Components,
-					new XAttribute(xsi + "type", "ComponentsTruckFWDType"),
+					new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckFWDType"),
 					GetEngineDescription(modelData.EngineData, fuelModes),
 					GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData),
 					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			}
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
-				new XAttribute(xsi + "type", "ComponentsTruckType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
 				GetEngineDescription(modelData.EngineData, fuelModes),
 				GetGearboxDescription(modelData.GearboxData),
 				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),

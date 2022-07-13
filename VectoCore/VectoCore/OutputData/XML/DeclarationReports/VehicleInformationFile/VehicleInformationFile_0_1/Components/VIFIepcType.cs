@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + "type", "vif:IEPCMeasuredDataDeclarationType"),
+						new XAttribute(_xsi + XMLNames.XSIType, "IEPCMeasuredDataDeclarationType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, iepc.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, iepc.Model),
 						new XElement(_vif + XMLNames.Component_CertificationNumber, iepc.CertificationNumber),

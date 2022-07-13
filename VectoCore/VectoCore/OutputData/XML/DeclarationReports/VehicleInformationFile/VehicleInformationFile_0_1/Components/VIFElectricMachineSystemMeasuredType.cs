@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			return new XElement(_vif + XMLNames.ElectricMachineSystem,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:ElectricMachineSystemDataDeclarationType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "ElectricMachineSystemDataDeclarationType"),
 					new XAttribute("id", em.DigestValue.Reference),
 					GetElectricMachineSystemCommon(em),
 					new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),

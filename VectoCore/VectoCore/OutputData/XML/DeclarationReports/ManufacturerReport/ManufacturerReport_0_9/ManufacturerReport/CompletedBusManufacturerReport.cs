@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
@@ -19,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Report = new XDocument(new XElement(_mrf + "VectoOutput",
 				new XAttribute("xmlns", _mrf),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(xsi + "type", $"{outputDataType}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{outputDataType}"),
 				Vehicle,
 				new XElement(_mrf + "Results")));
 		}

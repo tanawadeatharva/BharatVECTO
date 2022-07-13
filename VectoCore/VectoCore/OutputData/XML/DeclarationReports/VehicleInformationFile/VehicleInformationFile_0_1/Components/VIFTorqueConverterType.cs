@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(_vif + XMLNames.Component_TorqueConverter,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:TorqueConverterDataVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "TorqueConverterDataVIFType"),
 					_vif + XMLNames.Component_Manufacturer, torque.Manufacturer,
 					_vif + XMLNames.Component_Model, torque.Model,
 					_vif + XMLNames.Component_CertificationMethod, torque.CertificationMethod.ToXMLFormat(),

@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(
 				v24 + XMLNames.Vehicle_ADAS,
-				new XAttribute(xsi + "type", "ADAS_Conventional_Type"),
+				new XAttribute(xsi + XMLNames.XSIType, "ADAS_Conventional_Type"),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 				new XElement(v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),

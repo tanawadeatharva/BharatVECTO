@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData.Ratio.ToXMLFormat(3)),
 				new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
-				_vifReportFactory.GetAdasType().GetElement(inputData),
+				_vifReportFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
 				_vifReportFactory.GetTorqueLimitsType().GetElement(inputData),
 				
 			};
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
+			result.Add(_vifReportFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			var electricMotorTorque = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if(electricMotorTorque != null)
 				result.Add(electricMotorTorque);
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
+			result.Add(_vifReportFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			var electricMotorTorque = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if (electricMotorTorque != null)
 				result.Add(electricMotorTorque);
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
+			result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 
 			return result;
 		}
@@ -243,7 +243,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
+			result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
 			if(motorTorqueLimits != null)
 				result.Add(motorTorqueLimits);
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetAdasType().GetElement(inputData));
+			result.Add(_vifReportFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			result.Add(_vifReportFactory.GetTorqueLimitsType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetBoostingLimitationsType().GetElement(inputData));

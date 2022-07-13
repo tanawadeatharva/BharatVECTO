@@ -138,8 +138,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			#region Components
 
-			Bind<IXmlTypeWriter>().To<VIFAdasType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAdasType());
+			Bind<IVIFFAdasType>().To<VIFConventionalAdasType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetConventionalADASType());
+
+			Bind<IVIFFAdasType>().To<VIFHEVAdasType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHEVADASType());
+
+			Bind<IVIFFAdasType>().To<VIFPEVAdasType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPEVADASType());
 
 			Bind<IXmlTypeWriter>().To<VIFAngleDriveType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAngelDriveType());

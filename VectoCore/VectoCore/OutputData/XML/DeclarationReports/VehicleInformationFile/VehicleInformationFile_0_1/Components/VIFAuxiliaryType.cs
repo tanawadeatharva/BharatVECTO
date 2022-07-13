@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AuxiliaryDataVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AuxiliaryDataVIFType"),
 					new XElement(_vif + XMLNames.BusAux_Fan,
 						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AUX_HEV-S_PrimaryBusType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AUX_HEV-S_PrimaryBusType"),
 					new XElement(_vif + XMLNames.BusAux_Fan,
 						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AUX_HEV-P_PrimaryBusType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AUX_HEV-P_PrimaryBusType"),
 					new XElement(_vif + XMLNames.BusAux_Fan,
 						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AUX_IEPC_PrimaryBusType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AUX_IEPC_PrimaryBusType"),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
 					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
 					GetHvac(aux.HVACAux)
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AUX_PEV_PrimaryBusType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AUX_PEV_PrimaryBusType"),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
 					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
 					GetHvac(aux.HVACAux)

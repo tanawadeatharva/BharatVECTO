@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_AxleWheels,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "v2.0:AxleDataDeclarationType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AxleDataDeclarationType"),
 						GetAxleData(axleWheels.AxlesDeclaration)
 				));
 		}
@@ -34,8 +34,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (var currentAxle in axleInput) {
 				var axle = new XElement(_vif + XMLNames.AxleWheels_Axles_Axle,
 					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, axleNumber++),
-					new XAttribute(XNamespace.Xmlns + "v2.0", _v20),
-					new XAttribute(_xsi + "type", "v2.0:AxleDataDeclarationType"),
+					//new XAttribute(XNamespace.Xmlns + "v2.0", _v20),
+					new XAttribute(_xsi + XMLNames.XSIType, "AxleDataDeclarationType"),
 					GetTyre(currentAxle.Tyre));
 				axles.Add(axle);
 			}
@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var currentTyre = 
 				new XElement(_v20 + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "TyreDataDeclarationType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "TyreDataDeclarationType"),
 					new XAttribute("id", tyre.DigestValue.Reference),
 					new XElement(XMLNames.Component_Manufacturer, tyre.Manufacturer),
 					new XElement(XMLNames.Component_Model, tyre.Model),

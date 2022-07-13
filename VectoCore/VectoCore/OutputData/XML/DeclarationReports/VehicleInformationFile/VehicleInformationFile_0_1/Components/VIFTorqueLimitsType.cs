@@ -21,9 +21,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var torqueLimits = inputData.JobInputData.Vehicle.TorqueLimits;
 
 			return new XElement(_vif + XMLNames.Vehicle_TorqueLimits,
+				new XAttribute(_xsi + XMLNames.XSIType, "TorqueLimitsType"),
+				new XAttribute("xmlns", _v20.NamespaceName),
 				torqueLimits
 					.OrderBy(x => x.Gear)
-					.Select(entry => new XElement(_vif + XMLNames.Vehicle_TorqueLimits_Entry,
+					.Select(entry => new XElement(_v20 + XMLNames.Vehicle_TorqueLimits_Entry,
 							new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, entry.Gear),
 							new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr, entry.MaxTorque.ToXMLFormat(0))
 						)

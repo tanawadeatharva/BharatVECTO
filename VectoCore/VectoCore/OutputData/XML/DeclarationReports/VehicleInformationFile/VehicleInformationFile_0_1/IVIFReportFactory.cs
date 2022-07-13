@@ -46,7 +46,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#region Components
 
-		IXmlTypeWriter GetAdasType();
+		IVIFFAdasType GetConventionalADASType();
+		IVIFFAdasType GetHEVADASType();
+		IVIFFAdasType GetPEVADASType();
+
 		IXmlTypeWriter GetAngelDriveType();
 		IXmlTypeWriter GetAuxiliaryType();
 		IXmlTypeWriter GetAuxiliaryHevSType();

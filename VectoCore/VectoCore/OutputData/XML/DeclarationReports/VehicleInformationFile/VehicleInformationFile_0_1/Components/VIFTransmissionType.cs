@@ -27,29 +27,37 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return null;
 
 			return new XElement(_vif + XMLNames.Component_Transmission,
-					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + "type", "vif:TransmissionDataVIFType"),
-						new XElement(_vif + XMLNames.Component_Manufacturer, transmission.Manufacturer),
-						new XElement(_vif + XMLNames.Component_Model, transmission.Model),
-						new XElement(_vif + XMLNames.Component_Gearbox_CertificationMethod,
-							transmission.CertificationMethod.ToXMLFormat(),
-							transmission.CertificationNumber == null
-								? null
-								: new XElement(_vif + XMLNames.Component_CertificationNumber, transmission.CertificationNumber),
-						new XElement(_vif + XMLNames.Component_Date,
-							XmlConvert.ToString(transmission.Date, XmlDateTimeSerializationMode.Utc)),
-						new XElement(_vif + XMLNames.Component_AppVersion, transmission.AppVersion),
-						new XElement(_vif + XMLNames.Gearbox_TransmissionType, transmission.Type.ToXMLFormat()),
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					new XAttribute(_xsi + XMLNames.XSIType, "TransmissionDataVIFType"),
+					new XElement(_vif + XMLNames.Component_Manufacturer, transmission.Manufacturer),
+					new XElement(_vif + XMLNames.Component_Model, transmission.Model),
+					new XElement(_vif + XMLNames.Component_Gearbox_CertificationMethod,
+						transmission.CertificationMethod.ToXMLFormat()),
+					transmission.CertificationNumber == null
+						? null
+						: new XElement(_vif + XMLNames.Component_CertificationNumber, transmission.CertificationNumber),
+					new XElement(_vif + XMLNames.Component_Date,
+						XmlConvert.ToString(transmission.Date, XmlDateTimeSerializationMode.Utc)),
+					new XElement(_vif + XMLNames.Component_AppVersion, transmission.AppVersion),
+					new XElement(_vif + XMLNames.Gearbox_TransmissionType, transmission.Type.ToXMLFormat()),
+					new XElement(_vif + XMLNames.Gearbox_Gears,
+						new XAttribute(_xsi + XMLNames.XSIType, "TransmissionGearsVIFType"),
 						transmission.Gears.Select(
 							x => new XElement(
 								_vif + XMLNames.Gearbox_Gears_Gear,
 								new XAttribute(XMLNames.Gearbox_Gear_GearNumber_Attr, x.Gear),
 								new XElement(_vif + XMLNames.Gearbox_Gear_Ratio, x.Ratio.ToXMLFormat(3)),
 								x.MaxTorque != null
-									? new XElement(_vif + XMLNames.Gearbox_Gears_MaxTorque, x.MaxTorque.ToXMLFormat(0)) : null,
-								x.MaxInputSpeed != null 
-									? new XElement(_vif + XMLNames.Gearbox_Gear_MaxSpeed, x.MaxInputSpeed.AsRPM.ToXMLFormat(0)) : null)))
-				));
+									? new XElement(_vif + XMLNames.Gearbox_Gears_MaxTorque, x.MaxTorque.ToXMLFormat(0))
+									: null,
+								x.MaxInputSpeed != null
+									? new XElement(_vif + XMLNames.Gearbox_Gear_MaxSpeed,
+										x.MaxInputSpeed.AsRPM.ToXMLFormat(0))
+									: null)
+						)
+					)
+				)
+			);
 		}
 
 		#endregion

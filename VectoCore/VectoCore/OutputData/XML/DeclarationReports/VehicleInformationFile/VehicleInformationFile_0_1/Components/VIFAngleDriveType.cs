@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Angledrive,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:AngledriveDataVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AngledriveDataVIFType"),
 					new XElement(_vif + XMLNames.Component_Manufacturer, angelDrive.Manufacturer),
 					new XElement(_vif + XMLNames.Component_Model, angelDrive.Model),
 					new XElement(_vif + XMLNames.Component_CertificationMethod, angelDrive.CertificationMethod.ToXMLFormat()),

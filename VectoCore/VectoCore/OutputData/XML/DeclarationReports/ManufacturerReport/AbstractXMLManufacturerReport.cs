@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 						$"{mrf} {AbstractXMLWriter.SchemaLocationBaseUrl}/DEV/VectoOutputManufacturer.xsd"),
 					new XElement(
 						mrf + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + "type", "tns:VectoOutputDataType"),
+						new XAttribute(xsi + XMLNames.XSIType, "tns:VectoOutputDataType"),
 						vehicle,
 						results,
 						GetApplicationInfo())
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(
 					XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 				content);
 		}
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(
 					XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()), 
 				new XElement(
 					tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{adasPrefix}:{type}"),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
 			);
 		}
@@ -272,7 +272,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{adasPrefix}:{type}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{adasPrefix}:{type}"),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
 					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),

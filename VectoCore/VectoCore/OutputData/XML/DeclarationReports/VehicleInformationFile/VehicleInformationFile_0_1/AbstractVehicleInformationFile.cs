@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
@@ -36,7 +40,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement Vehicle { get; set; }
 		protected XElement Results { get; set; }
-	
+
+		protected  List<XMLDeclarationReport.ResultEntry> _results = new List<XMLDeclarationReport.ResultEntry>();
+		protected XElement InputDataIntegrity;
 
 		protected AbstractVehicleInformationFile(IVIFReportFactory vifFactory)
 		{
@@ -51,17 +57,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			InitializeVehicleData(modelData.InputData);
 			Results = new XElement(VIF + XMLNames.Report_Results);
+			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
+				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
+
 		}
 
-		private List<XMLDeclarationReport.ResultEntry> results = new List<XMLDeclarationReport.ResultEntry>();
+		
 		public void WriteResult(XMLDeclarationReport.ResultEntry result)
 		{
-			results.Add(result);
+			_results.Add(result);
 		}
 
 		public void GenerateReport(XElement fullReportHash)
 		{
-			Report = new XDocument(new XElement(VIF + XMLNames.VectoOutputMultistep,
+			var retVal = new XDocument(new XElement(VIF + XMLNames.VectoOutputMultistep,
 				new XAttribute(XNamespace.Xmlns + "di", _di),
 				new XAttribute(XNamespace.Xmlns + "xsi", _xsi.NamespaceName),
 				new XAttribute(XNamespace.Xmlns + "vif", VIF),
@@ -72,55 +81,59 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(_xsi + "schemaLocation", $"{_tns.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 				new XAttribute("xmlns", _tns),
 
-				new XElement(VIF + XMLNames.Bus_PrimaryVehicle,
-					new XElement(VIF + "Data", new XAttribute("id", "1234"),
-						Vehicle,
-						Results,
-						GetApplicationInfo()
-					)
-				),
-
-				new XElement(VIF + XMLNames.DI_Signature)
+				GeneratePrimaryVehicle(fullReportHash)
 			));
+
+			Report = retVal;
 		}
 
 		public XDocument Report { get; protected set; }
 
 		public XNamespace Tns => _tns;
 
-		#endregion
+        #endregion
 
-
-
-		protected XElement GetApplicationInfo()
+		protected virtual XElement GeneratePrimaryVehicle(XElement resultSignature)
 		{
-			var versionNumber = VectoSimulationCore.VersionNumber;
-#if CERTIFICATION_RELEASE
-			// add nothing to version number
-#else
-			versionNumber += " !!NOT FOR CERTIFICATION!!";
-#endif
-			return new XElement(VIF + XMLNames.Report_ApplicationInfo_ApplicationInformation,
-				new XElement(VIF + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
-				new XElement(VIF + XMLNames.Report_ApplicationInfo_Date,
-					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+			var allSuccess = _results.All(x => x.Status == VectoRun.Status.Success);
+
+			var results = new XElement(Results);
+			results.AddFirst(new XElement(VIF + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
+			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
+
+			var primaryVehicle = new XElement(VIF + XMLNames.Bus_PrimaryVehicle,
+				new XElement(VIF + XMLNames.Report_DataWrap,
+					new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
+					new XAttribute(_xsi + XMLNames.XSIType, "PrimaryVehicleDataType"),
+					Vehicle,
+					InputDataIntegrity,
+					new XElement(VIF + "ManufacturerRecordSignature", resultSignature),
+					Results,
+					XMLHelper.GetApplicationInfo(VIF)
+				)
+			);
+
+			var sigXElement = GetSignatureElement(primaryVehicle);
+			primaryVehicle.LastNode.Parent.Add(sigXElement);
+			return primaryVehicle;
 		}
 
-
-		protected XElement GetSignature(DigestData digestData)
+		protected XElement GetSignatureElement(XElement stage)
 		{
+			var stream = new MemoryStream();
+			var writer = new XmlTextWriter(stream, Encoding.UTF8);
+			stage.WriteTo(writer);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
 			return new XElement(VIF + XMLNames.DI_Signature,
-				new XElement(_di + XMLNames.DI_Signature_Reference,
-					new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, digestData.Reference),
-					new XElement(_di + XMLNames.DI_Signature_Reference_Transforms,
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, digestData.CanonicalizationMethods[0])),
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/10/xml-exc-c14n#"))),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestMethod,
-						new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/04/xmlenc#sha256")),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestValue, digestData.DigestValue)));
+				VectoHash.Load(stream).ComputeXmlHash
+					(VectoHash.DefaultCanonicalizationMethod, VectoHash.DefaultDigestMethod));
 		}
 
+		protected string GetGUID()
+		{
+			return Guid.NewGuid().ToString("n").Substring(0, 20);
+		}
 	}
 }

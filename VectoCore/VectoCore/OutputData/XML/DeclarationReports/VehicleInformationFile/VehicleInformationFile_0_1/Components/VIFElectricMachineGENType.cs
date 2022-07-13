@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			return new XElement(_vif + XMLNames.Component_ADC,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + "type", "vif:ADCDataDeclarationType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "ADCDataDeclarationType"),
 					new XAttribute("id", adcData.DigestValue.Reference),
 					new XElement(_vif + XMLNames.Component_Manufacturer, adcData.Manufacturer),
 					new XElement(_vif + XMLNames.Component_Model, adcData.Model),

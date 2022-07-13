@@ -107,7 +107,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     AngledriveData = CreateMockupAngleDriveData(vehicle),
 					EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     BusAuxiliaries = CreateMockupBusAux(vehicle),
-
+					InputDataHash = InputDataProvider.XMLHash,
                 };
             }
 
