@@ -106,6 +106,16 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetPevE4VehicleType();
 			}
 
+			public IXmlTypeWriter GetPevIEPCVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetPevIEPCVehicleType();
+			}
+
+			public IXmlTypeWriter GetExemptedVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetExemptedVehicleType();
+			}
+
 			public IXmlTypeWriter GetConventionalComponentType()
 			{
 				return _vifReportFactoryImplementation.GetConventionalComponentType();
@@ -151,9 +161,9 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetPevE4ComponentVIFType();
 			}
 
-			public IXmlTypeWriter GetIepcComponentVIFType()
+			public IXmlTypeWriter GetPevIEPCComponentVIFType()
 			{
-				return _vifReportFactoryImplementation.GetIepcComponentVIFType();
+				return _vifReportFactoryImplementation.GetPevIEPCComponentVIFType();
 			}
 
 			public IVIFFAdasType GetConventionalADASType()
@@ -169,6 +179,11 @@ namespace TUGraz.VectoMockup.Ninject
 			public IVIFFAdasType GetPEVADASType()
 			{
 				return _vifReportFactoryImplementation.GetPEVADASType();
+			}
+
+			public IVIFFAdasType GetIEPCADASType()
+			{
+				return _vifReportFactoryImplementation.GetIEPCADASType();
 			}
 
 			public IXmlTypeWriter GetTorqueConvertType()
@@ -236,6 +251,11 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetPevExVehicleParmeterGroup();
 			}
 
+			public IReportOutputGroup GetPevIEPCVehicleParmeterGroup()
+			{
+				return _vifReportFactoryImplementation.GetPevIEPCVehicleParmeterGroup();
+			}
+
 			public IReportOutputGroup GetHevPxVehicleParameterGroup()
 			{
 				return _vifReportFactoryImplementation.GetHevPxVehicleParameterGroup();
@@ -254,6 +274,11 @@ namespace TUGraz.VectoMockup.Ninject
 			public IXmlTypeWriter GetAuxiliaryHevSType()
 			{
 				return _vifReportFactoryImplementation.GetAuxiliaryHevSType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryIEPC_SType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryIEPC_SType();
 			}
 
 			public IXmlTypeWriter GetAuxiliaryHevPType()

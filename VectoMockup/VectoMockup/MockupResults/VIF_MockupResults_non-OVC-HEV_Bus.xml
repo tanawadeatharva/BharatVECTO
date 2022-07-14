@@ -10,7 +10,6 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xs
 				<TotalVehicleMass unit="kg">15000</TotalVehicleMass>
 				<Payload unit="kg">15000</Payload>
 				<PassengerCount>2</PassengerCount>
-				<FuelMode>single fuel mode</FuelMode>
 			</SimulationParameters>
 			<Fuel type="NG CI">
 				<EnergyConsumption unit="MJ/km">20.71050</EnergyConsumption>

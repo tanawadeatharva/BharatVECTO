@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XAttribute(XMLNames.ADC_TorqueLossMap_InputTorque, inputTorque),
 					new XAttribute(XMLNames.ADC_TorqueLossMap_TorqueLoss, torqueLoss.ToXMLFormat(2))));
 			}
-			
+
 			return new XElement(_vif + XMLNames.Component_ADC,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "ADCDataDeclarationType"),
@@ -70,9 +70,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(_vif + XMLNames.ADC_Ratio, adcData.Ratio.ToXMLFormat(3)),
 					new XElement(_vif + XMLNames.Component_CertificationMethod, adcData.CertificationMethod.ToXMLFormat()),
 					new XElement(_vif + XMLNames.ADC_TorqueLossMap, lossEntries)
-				),
-				GetSignature(adcData.DigestValue)
-				);
+				)
+			);
 		}
 
 

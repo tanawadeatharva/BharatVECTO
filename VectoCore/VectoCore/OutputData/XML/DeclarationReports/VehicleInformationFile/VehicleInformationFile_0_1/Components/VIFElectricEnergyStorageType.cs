@@ -2,6 +2,7 @@
 using System.Data;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -27,10 +28,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (var entry in electricStorages) {
 				switch (entry.REESSPack.StorageType) {
 					case REESSType.SuperCap:
-						result.Add(GetCapacitor(entry as ISuperCapDeclarationInputData));
+						result.Add(GetCapacitor(entry));
 						break;
 					case REESSType.Battery:
-						result.Add(GetBattery(entry as IBatteryPackDeclarationInputData, entry.StringId));
+						result.Add(GetBattery(entry));
 						break;
 				}
 			}
@@ -40,46 +41,53 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
-		private XElement GetCapacitor(ISuperCapDeclarationInputData capacitor)
+		private XElement GetCapacitor(IElectricStorageDeclarationInputData reess)
 		{
-			if(capacitor  == null)
+			if(reess  == null)
 				return null;
+
+			var supercap = reess.REESSPack as ISuperCapDeclarationInputData;
+			if (supercap == null) {
+				throw new VectoException("Electric energy storage of type 'Capacitor' requires capacitor component");
+			}
 
 			return new XElement(_vif + XMLNames.ElectricEnergyStorage_Capacitor,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
 						new XAttribute(_xsi + XMLNames.XSIType, "CapacitorSystemDataType"),
-						new XAttribute("id", capacitor.DigestValue.Reference),
-					new XElement(_vif + XMLNames.Component_Manufacturer, capacitor.Manufacturer),
-					new XElement(_vif + XMLNames.Component_Model, capacitor.Model), 
-					new XElement(_vif + XMLNames.Report_Component_CertificationNumber, capacitor.CertificationNumber), 
-					new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString( capacitor.Date, XmlDateTimeSerializationMode.Utc)),
-					new XElement(_vif + XMLNames.Component_AppVersion, capacitor.AppVersion),
-					new XElement(_vif + XMLNames.Component_CertificationMethod, capacitor.CertificationMethod.ToXMLFormat()),
-					new XElement(_vif + XMLNames.Capacitor_Capacitance, capacitor.Capacity.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_InternalResistance, capacitor.InternalResistance.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_MinVoltage, capacitor.MinVoltage.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_MaxVoltage, capacitor.MaxVoltage.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_MaxChargingCurrent, capacitor.MaxCurrentCharge.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_MaxDischargingCurrent, capacitor.MaxCurrentDischarge.ToXMLFormat(2)), 
-						capacitor.TestingTemperature == null 
+					new XElement(_vif + XMLNames.Component_Manufacturer, supercap.Manufacturer),
+					new XElement(_vif + XMLNames.Component_Model, supercap.Model), 
+					new XElement(_vif + XMLNames.Report_Component_CertificationNumber, supercap.CertificationNumber), 
+					new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(supercap.Date, XmlDateTimeSerializationMode.Utc)),
+					new XElement(_vif + XMLNames.Component_AppVersion, supercap.AppVersion),
+					new XElement(_vif + XMLNames.Component_CertificationMethod, supercap.CertificationMethod.ToXMLFormat()),
+					new XElement(_vif + XMLNames.Capacitor_Capacitance, supercap.Capacity.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_InternalResistance, supercap.InternalResistance.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_MinVoltage, supercap.MinVoltage.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_MaxVoltage, supercap.MaxVoltage.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_MaxChargingCurrent, supercap.MaxCurrentCharge.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_MaxDischargingCurrent, supercap.MaxCurrentDischarge.ToXMLFormat(2)),
+						supercap.TestingTemperature == null 
 						? null 
-						: new XElement(_vif + XMLNames.REESS_TestingTemperature, capacitor.TestingTemperature.ToXMLFormat())
+						: new XElement(_vif + XMLNames.REESS_TestingTemperature, supercap.TestingTemperature.AsDegCelsius.ToXMLFormat(0))
 					));
 		}
 
 
-		private  XElement GetBattery(IBatteryPackDeclarationInputData battery, int id)
+		private  XElement GetBattery(IElectricStorageDeclarationInputData reess)
 		{
-			if (battery == null)
+			if (reess == null)
 				return null;
+			var battery = reess.REESSPack as IBatteryPackDeclarationInputData;
+			if (battery == null) {
+				throw new VectoException("Electric energy storage of type 'Battery' requires battery component");
+			}
+
 
 			var result = new XElement(_vif + XMLNames.ElectricEnergyStorage_Battery,
-				new XElement(_vif + XMLNames.Battery_StringID, id),
-				new XElement(_vif + "REESS",
-					GetReess(battery),
-					GetSignature(battery.DigestValue)),
-				battery.MinSOC.HasValue ? null : new XElement(_vif + XMLNames.Battery_SOCmin, battery.MinSOC.Value),
-				battery.MaxSOC.HasValue ? null : new XElement(_vif + XMLNames.Battery_SOCmax, battery.MaxSOC.Value)
+				new XElement(_vif + XMLNames.Battery_StringID, reess.StringId),
+				new XElement(_vif + "REESS", GetReess(battery)),
+				battery.MinSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmin, battery.MinSOC.Value) : null,
+				battery.MaxSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmax, battery.MaxSOC.Value) : null
 			);
 			
 			return result;
@@ -90,7 +98,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			return new XElement(_vif + XMLNames.ComponentDataWrapper,
 				new XAttribute(_xsi + XMLNames.XSIType, "BatterySystemDataType"),
-				new XAttribute("id", battery.DigestValue.Reference),
 				new XElement(_vif + XMLNames.Component_Manufacturer, battery.Manufacturer),
 				new XElement(_vif + XMLNames.Component_Model, battery.Model),
 				new XElement(_vif + XMLNames.Report_Component_CertificationNumber, battery.CertificationNumber),
@@ -104,11 +111,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.REESS_JunctionboxIncluded, battery.JunctionboxIncluded),
 				battery.TestingTemperature == null
 					? null
-					: new XElement(_vif + XMLNames.REESS_TestingTemperature, battery.TestingTemperature.ToXMLFormat()),
+					: new XElement(_vif + XMLNames.REESS_TestingTemperature, battery.TestingTemperature.AsDegCelsius.ToXMLFormat(0)),
 				GetOcv(battery.VoltageCurve),
-				GetInternalResistance(battery.InternalResistanceCurve),
 				GetCurrentLimits(battery.MaxCurrentMap)
-				);
+			);
 
 		}
 
@@ -127,33 +133,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 			return new XElement(_vif + XMLNames.REESS_OCV, entries);
 		}
-
-
-		private XElement GetInternalResistance(DataTable internalResistance)
-		{
-			var entries = new List<XElement>();
-
-			foreach (DataRow row in internalResistance.Rows) {
-				var soc = row[XMLNames.REESS_OCV_SoC];
-				var r2 = row[XMLNames.REESS_InternalResistanceCurve_R2].ToString().ToDouble();
-				var r10 = row[XMLNames.REESS_InternalResistanceCurve_R10].ToString().ToDouble();
-				var r20 = row[XMLNames.REESS_InternalResistanceCurve_R20].ToString().ToDouble();
-				var r120 = row[XMLNames.REESS_InternalResistanceCurve_R120].ToString();
-
-				entries.Add(new XElement(_vif + XMLNames.REESS_MapEntry,
-					new XAttribute(XMLNames.REESS_OCV_SoC, soc),
-					new XAttribute(XMLNames.REESS_InternalResistanceCurve_R2, r2.ToXMLFormat(2)),
-					new XAttribute(XMLNames.REESS_InternalResistanceCurve_R10, r10.ToXMLFormat(2)),
-					new XAttribute(XMLNames.REESS_InternalResistanceCurve_R20, r20.ToXMLFormat(2)),
-					r120.IsNullOrEmpty() ?
-						null : new XAttribute(XMLNames.REESS_InternalResistanceCurve_R120, r120.ToDouble().ToXMLFormat(2))
-				));
-			}
-			
-			return new XElement(_vif + XMLNames.REESS_InternalResistanceCurve, entries);
-		}
-
-
+		
 		private XElement GetCurrentLimits(DataTable batteryMaxCurrentMap)
 		{
 			var entries = new List<XElement>();

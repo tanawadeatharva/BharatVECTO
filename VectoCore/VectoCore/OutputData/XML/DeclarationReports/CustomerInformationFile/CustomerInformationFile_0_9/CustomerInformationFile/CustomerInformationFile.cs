@@ -19,6 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		
         protected CustomerInformationFile(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 	}
+
     #region LorryCIF
     public class ConventionalLorry_CIF : CustomerInformationFile
 	{

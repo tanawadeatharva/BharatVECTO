@@ -2,11 +2,14 @@
 using System.Data;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
@@ -22,6 +25,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (iepc == null)
 				return null;
 
+			var xmlIepc = iepc as AbstractCommonComponentType;
+			if (xmlIepc == null) {
+				throw new VectoException("IEPC requires input to be in XML format");
+			}
+
+			var certificationMethod = xmlIepc.XMLSource
+				.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_CertificationMethod))?.InnerText;
+
 			return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
 						new XAttribute(_xsi + XMLNames.XSIType, "IEPCMeasuredDataDeclarationType"),
@@ -31,8 +42,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(iepc.Date, XmlDateTimeSerializationMode.Utc)),
 						new XElement(_vif + XMLNames.Component_AppVersion, iepc.AppVersion),
 						new XElement(_vif + XMLNames.ElectricMachine_ElectricMachineType, iepc.ElectricMachineType.ToString()),
-						new XElement(_vif + XMLNames.Component_CertificationMethod, iepc.CertificationMethod.ToXMLFormat()),
-						new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, iepc.R85RatedPower.ToXMLFormat()),
+						new XElement(_vif + XMLNames.Component_CertificationMethod, certificationMethod),
+						new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, iepc.R85RatedPower.ToXMLFormat(0)),
 						new XElement(_vif + XMLNames.ElectricMachine_RotationalInertia, iepc.Inertia.ToXMLFormat(2)),
 						new XElement(_vif + XMLNames.IEPC_DifferentialIncluded, iepc.DifferentialIncluded),
 						new XElement(_vif + XMLNames.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor),
@@ -43,8 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						GetVoltageLevels(iepc.VoltageLevels),
 						GetDragCurves(iepc.DragCurves),
 						GetConditioning(iepc.Conditioning)
-					),
-					GetSignature(iepc.DigestValue)
+					)
 			);
 		}
 		
@@ -59,19 +69,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 				var currentGear = new XElement(_vif + XMLNames.Gear_EntryName,
 					new XAttribute("number", gearEntry.GearNumber.ToString()),
-					new XElement(_vif + XMLNames.GearRatio_Ratio, gearEntry.Ratio.ToXMLFormat(3),
+					new XElement(_vif + XMLNames.GearRatio_Ratio, gearEntry.Ratio.ToXMLFormat(3)),
 					gearEntry.MaxOutputShaftTorque == null 
 						? null
-						: new XElement(_vif + XMLNames.Gear_MaxOutputShaftTorque, gearEntry.MaxOutputShaftTorque.ToXMLFormat()),
+						: new XElement(_vif + XMLNames.Gear_MaxOutputShaftTorque, gearEntry.MaxOutputShaftTorque.ToXMLFormat(0)),
 
 					gearEntry.MaxOutputShaftSpeed == null 
 						? null 
-						: new XElement(_vif + XMLNames.Gear_MaxOutputShaftSpeed, gearEntry.MaxOutputShaftSpeed.ToXMLFormat()))
+						: new XElement(_vif + XMLNames.Gear_MaxOutputShaftSpeed, gearEntry.MaxOutputShaftSpeed.AsRPM.ToXMLFormat(0))
 					);
 				gears.Add(currentGear);
 			}
 			
-			return new XElement(_vif + XMLNames.Gearbox_Gears, gears);
+			return new XElement(_vif + XMLNames.Gearbox_Gears, 
+				new XAttribute(_xsi + XMLNames.XSIType, "IEPCGearsDeclarationType"),
+				gears);
 		}
 
 
@@ -82,7 +94,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (var voltageEntry in voltageData) {
 
 				var voltage = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
-					new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat()),
+					new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageEntry.ContinuousTorque.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
@@ -118,7 +130,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				maxTorqueCurveEntries.Add(element);
 			}
 
-			return new XElement(XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
+			return new XElement(_vif + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
 		}
 		
 		private List<XElement> GetPowerMap(IList<IElectricMotorPowerMap> powerMapData)
@@ -141,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				}
 
 				var powerEntry = new XElement(_vif + XMLNames.PowerMap,
-					new XAttribute(XMLNames.Gear_GearNumber_Attr, powerMapEntry.Gear),
+					new XAttribute("gear", powerMapEntry.Gear),
 					entries);
 
 				powerMaps.Add(powerEntry);
@@ -162,7 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 					var entry = new XElement(_vif + XMLNames.DragCurve_Entry,
 						new XAttribute(XMLNames.DragCurve_OutShaftSpeed, outShaftSpeed.ToXMLFormat(2)),
-						new XAttribute(XMLNames.DragCurve_DragTorque, dragTorque));
+						new XAttribute(XMLNames.DragCurve_DragTorque, dragTorque.ToXMLFormat(2)));
 
 					entries.Add(entry);
 				}

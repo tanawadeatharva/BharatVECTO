@@ -78,6 +78,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual string FuelEfficiencyClass => DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
 
 		#endregion
+
+		#region Implementation of IXMLTyreDeclarationInputData
+
+		public XmlNode GetXmlNode => BaseNode;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------

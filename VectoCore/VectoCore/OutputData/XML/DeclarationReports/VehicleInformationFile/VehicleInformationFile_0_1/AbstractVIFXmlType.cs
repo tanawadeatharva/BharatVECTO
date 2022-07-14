@@ -29,19 +29,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			_vifFactory = vifFactory;
 		}
 
-		protected XElement GetSignature(DigestData digestData)
-		{
-			return new XElement(_v20 + XMLNames.DI_Signature,
-				new XElement(_di + XMLNames.DI_Signature_Reference,
-					new XAttribute(XMLNames.DI_Signature_Reference_URI_Attr, digestData.Reference),
-					new XElement(_di + XMLNames.DI_Signature_Reference_Transforms,
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, digestData.CanonicalizationMethods[0])),
-						new XElement(_di + XMLNames.DI_Signature_Reference_Transforms_Transform,
-							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/10/xml-exc-c14n#"))),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestMethod,
-						new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/04/xmlenc#sha256")),
-					new XElement(_di + XMLNames.DI_Signature_Reference_DigestValue, digestData.DigestValue)));
-		}
 	}
 }

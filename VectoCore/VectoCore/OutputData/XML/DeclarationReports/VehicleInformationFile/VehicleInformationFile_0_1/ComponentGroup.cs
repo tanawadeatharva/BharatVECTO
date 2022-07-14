@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryIEPC_SType().GetElement(inputData));
 		}
 
 		#endregion
@@ -80,10 +80,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.Vehicle_Components,
 				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV-Px_ComponentsVIFType"),
 				_vifReportFactory.GetEngineType().GetElement(inputData),
-				_vifReportFactory.GetIepcType().GetElement(inputData),
-				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
-				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
+				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
 				_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
 				_vifReportFactory.GetAngelDriveType().GetElement(inputData),
@@ -237,7 +235,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle-IEPC_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-IEPC_ComponentsVIFType"),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),

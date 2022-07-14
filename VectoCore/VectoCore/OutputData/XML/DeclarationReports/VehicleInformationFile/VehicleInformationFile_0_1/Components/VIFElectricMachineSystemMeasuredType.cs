@@ -28,7 +28,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.ElectricMachineSystem,
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "ElectricMachineSystemDataDeclarationType"),
-					new XAttribute("id", em.DigestValue.Reference),
 					GetElectricMachineSystemCommon(em),
 					new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),
 					GetElectricMachineSystemPowerRange(em),
@@ -37,9 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					GetVoltageLevels(em.VoltageLevels, em.CertificationMethod),
 					GetDragCurve(em.DragCurve),
 					GetConditioning(em.Conditioning)
-				),
-				GetSignature(em.DigestValue)
-				);
+				)
+			);
 		}
 		
 		#endregion
@@ -60,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected virtual List<XElement> GetElectricMachineSystemPowerRange(IElectricMotorDeclarationInputData em)
 		{
 			return new List<XElement> {
-				new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, em.R85RatedPower.ToXMLFormat()),
+				new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, em.R85RatedPower.ToXMLFormat(0)),
 				new XElement(_vif + XMLNames.ElectricMachine_RotationalInertia, em.Inertia.ToXMLFormat(2))
 			};
 		}
@@ -75,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				var entry = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
 					certificationMethod == CertificationMethod.StandardValues 
 						? null 
-						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageLevel.VoltageLevel.ToXMLFormat()),
+						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageLevel.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageLevel.ContinuousTorque.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageLevel.ContinuousTorqueSpeed.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageLevel.OverloadTorque.ToXMLFormat(2)),
@@ -110,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				maxTorqueCurveEntries.Add(element);
 			}
 
-			return new XElement(XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
+			return new XElement(_vif + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
 		}
 
 
@@ -124,7 +122,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 				var entry = new XElement(_vif + XMLNames.DragCurve_Entry,
 					new XAttribute(XMLNames.DragCurve_OutShaftSpeed, outShaftSpeed.ToXMLFormat(2)),
-					new XAttribute(XMLNames.DragCurve_DragTorque, dragTorque));
+					new XAttribute(XMLNames.DragCurve_DragTorque, dragTorque.ToXMLFormat(2)));
 
 				entries.Add(entry);
 			}

@@ -178,16 +178,8 @@
 			<xs:extension base="vif:AbstractREESSDataType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractCapacitorSystemDataType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractREESSDataType"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="AbstractElectricMachineSystemDataType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="v1.0:VectoSimulationComponent"/>
-		</xs:complexContent>
-	</xs:complexType>
+	<xs:complexType name="AbstractCapacitorSystemDataType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMachineSystemDataType" abstract="true"/>
 	<xs:complexType name="AbstractElectricMachineSystemVoltageLevelType" abstract="true"/>
 	<xs:complexType name="AbstractEngineDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractIEPCGearsDeclarationType" abstract="true"/>
@@ -195,11 +187,7 @@
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
-	<xs:complexType name="AbstractREESSDataType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="v1.0:VectoSimulationComponent"/>
-		</xs:complexContent>
-	</xs:complexType>
+	<xs:complexType name="AbstractREESSDataType" abstract="true"/>
 	<xs:complexType name="AbstractTorqueConverterDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractTransmissionGearsVIFType" abstract="true"/>
@@ -1020,13 +1008,6 @@
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
-					<xs:element name="InternalResistance">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Entry" type="vif:BatterySystemInternalResistanceEntryType" minOccurs="2" maxOccurs="unbounded"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 					<xs:element name="CurrentLimits">
 						<xs:complexType>
 							<xs:sequence>
@@ -1448,7 +1429,6 @@
 	<xs:complexType name="ElectricMachineSystemComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractElectricMachineSystemDataType"/>
-			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineSystemMaxTorqueCurveType">
@@ -1500,7 +1480,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
+					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelMeasuredType" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
 						<xs:complexType>
 							<xs:sequence>
@@ -1847,7 +1827,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
-					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
@@ -2099,7 +2079,6 @@
 	<xs:complexType name="IEPCType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractVIFIEPCDataType"/>
-			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ManufacturingStepType">
@@ -2202,7 +2181,6 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="Data" type="vif:AbstractBatterySystemDataType"/>
-						<xs:element name="Signature" type="v2.0:SignatureType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -2235,7 +2213,6 @@
 	<xs:complexType name="REESSCapacitorType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractCapacitorSystemDataType"/>
-			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ResultPrimaryVehicleType">
@@ -2486,10 +2463,8 @@
 			<xs:extension base="vif:AbstractVehicleComponentsHEV_Px_VIFType">
 				<xs:sequence>
 					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
-					<xs:element name="IEPC" type="vif:IEPCType"/>
-					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
-					<xs:element name="ElectricMachineGEN" type="vif:ElectricMachineGENType"/>
 					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
 					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
 					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
@@ -2572,6 +2547,19 @@
 					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
 					<xs:element name="Auxiliaries" type="vif:PEV_PrimaryAuxiliairesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_PEV-IEPC_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsIEPC_VIFType">
+				<xs:sequence>
+					<xs:element name="IEPC" type="vif:IEPCType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:IEPC_PrimaryAuxiliairesVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2668,19 +2656,6 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle-IEPC_ComponentsVIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsIEPC_VIFType">
-				<xs:sequence>
-					<xs:element name="IEPC" type="vif:IEPCType"/>
-					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
-					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
-					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
-					<xs:element name="Auxiliaries" type="vif:IEPC_PrimaryAuxiliairesVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

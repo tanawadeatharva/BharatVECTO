@@ -508,7 +508,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(totalMass.SI<Kilogram>(), result.SimulationParameter.TotalVehicleMass);
 			Assert.AreEqual(payload.SI<Kilogram>(), result.SimulationParameter.Payload);
 			Assert.AreEqual(passenger, result.SimulationParameter.PassengerCount);
-			Assert.AreEqual(fuelMode, result.SimulationParameter.FuelMode);
+			//Assert.AreEqual(fuelMode, result.SimulationParameter.FuelMode);
 
 			index++;
 		}

@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				TotalVehicleMass = GetString(XMLNames.Report_ResultEntry_TotalVehicleMass, xmlNode).ToDouble().SI<Kilogram>(),
 				Payload = GetString(XMLNames.Report_Result_Payload, xmlNode).ToDouble().SI<Kilogram>(),
 				PassengerCount = GetString(XMLNames.Bus_PassengerCount, xmlNode).ToDouble(),
-				FuelMode = GetString(XMLNames.Report_Result_FuelMode, xmlNode)
+				//FuelMode = GetString(XMLNames.Report_Result_FuelMode, xmlNode)
 			};
 		}
 	}

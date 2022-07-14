@@ -86,7 +86,7 @@
         <BodyworkCode>CE</BodyworkCode>
         <LowEntry>true</LowEntry>
         <HeightIntegratedBody>2000</HeightIntegratedBody>
-      </vif0.1:Vehicle>
+	</vif0.1:Vehicle>
       <ApplicationInformation>
         <SimulationToolVersion>0.7.5.2380-DEV</SimulationToolVersion>
         <Date>2021-08-24T09:29:02.5917498Z</Date>

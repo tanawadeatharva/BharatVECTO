@@ -27,7 +27,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					GetVoltageLevels(entry.Value)));
 			}
 
-			return new XElement(_vif + XMLNames.ElectricMotorTorqueLimits, electricMachine);
+			var xmlType = inputData.JobInputData.Vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle
+				? "ElectricMachineTorqueLimitsSerialHybridType"
+				: "ElectricMachineTorqueLimitsType";
+			return new XElement(_vif + XMLNames.ElectricMotorTorqueLimits,
+				new XAttribute(_xsi + XMLNames.XSIType, xmlType),
+				new XAttribute("xmlns", _v24),
+				electricMachine);
 		}
 
 		private  List<XElement> GetVoltageLevels(List<Tuple<Volt, TableData>> voltageLevels)
@@ -54,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				}
 				
 				voltageEntries.Add( new XElement(_v24 + XMLNames.ElectricMachine_VoltageLevel, 
-					new XElement(_v24 + XMLNames.VoltageLevel_Voltage, voltage.ToXMLFormat()),
+					new XElement(_v24 + XMLNames.VoltageLevel_Voltage, voltage.ToXMLFormat(0)),
 					new XElement(_v24 + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries)));
 
 			}

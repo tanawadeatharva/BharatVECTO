@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using System.Xml.XPath;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
@@ -36,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 	
 	public class MRF_CIF_WriterTestBase
 	{
-		protected string outputBasePath = @"C:\Users\Harry\source\vecto\mrf_report_0_9";
+		protected string outputBasePath; //@"C:\Users\Harry\source\vecto\mrf_report_0_9";
 		protected ISimulatorFactory _simulatorFactory;
 		protected IOutputDataWriter _outputWriter;
 		protected StandardKernel _kernel;
@@ -94,9 +92,11 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 
 		protected const string Conventional_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\vecto_multistage_conventional_final_vif.VIF_Report_1.xml";
-		protected const string Exempted_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ExemptedVehicles\exempted_completedBus_input_full.xml";
 
-		public static bool ValidateAndPrint(XDocument document, string xsdPath = "../../../../VectoCore/Resources/XSD", Func<XDocument, XElement> elementSelector = null)
+		protected const string Exempted_CompletedBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\exempted_completed.VIF_Report_2.xml";
+		//@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\ExemptedVehicles\exempted_completedBus_input_full.xml";
+
+		public static bool ValidateAndPrint(XDocument document, XmlDocumentType documentType)
 		{
 			var error = false;
 
@@ -108,7 +108,10 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 				stream.Flush();
 				stream.Seek(0, SeekOrigin.Begin);
 				var validator = new XMLValidator(new XmlTextReader(stream));
-				error = !validator.ValidateXML(XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
+				error = !validator.ValidateXML(documentType);
+				if (error) {
+					TestContext.WriteLine(validator.ValidationError);
+				}
 			} finally {
 				TestContext.WriteLine(document);
 			}
@@ -122,6 +125,10 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			if (!fileName.EndsWith(".xml"))
 			{
 				fileName = fileName + ".xml";
+			}
+
+			if (!Directory.Exists(basePath)) {
+				Directory.CreateDirectory(basePath);
 			}
 			var destPath = Path.Combine(basePath, fileName);
 			using (var writer = new XmlTextWriter(destPath, Encoding.UTF8) { Formatting = Formatting.Indented })
@@ -146,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			_kernel = new StandardKernel(
 				new VectoNinjectModule()
 			);
-
+			outputBasePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "XMLReports_0.9");
 		}
 
 		[SetUp]
@@ -219,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector:(document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
             Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
         }
 
@@ -231,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -243,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -255,7 +262,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -267,7 +274,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -279,7 +286,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -291,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -304,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -316,7 +323,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -328,7 +335,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -340,7 +347,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -353,7 +360,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
             report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -365,7 +372,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -380,7 +387,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -393,7 +400,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -405,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -417,7 +424,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -431,7 +438,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -444,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -456,7 +463,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -471,7 +478,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -484,7 +491,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 
@@ -496,7 +503,7 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
             report.InitializeVehicleData(dataProvider);
 			report.GenerateReport();
 
-			Assert.IsTrue(ValidateAndPrint(report.Report, elementSelector: (document => document.XPathSelectElement($"//*[local-name()='{XMLNames.Component_Vehicle}']"))));
+			Assert.IsTrue(ValidateAndPrint(report.Report, XmlDocumentType.ManufacturerReport));
 			Assert.IsTrue(WriteToDisk(outputBasePath, TestContext.CurrentContext.Test.MethodName, report.Report));
 		}
 

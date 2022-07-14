@@ -1091,7 +1091,7 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
 		double PassengerCount { get; }
-		string FuelMode { get; }
+		//string FuelMode { get; }
 	}
 
 

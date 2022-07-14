@@ -22,20 +22,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var torque = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
 			if (torque == null)
 				return null;
-			
+
 			return new XElement(_vif + XMLNames.Component_TorqueConverter,
-					new XElement(_vif + XMLNames.ComponentDataWrapper,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "TorqueConverterDataVIFType"),
-					_vif + XMLNames.Component_Manufacturer, torque.Manufacturer,
-					_vif + XMLNames.Component_Model, torque.Model,
-					_vif + XMLNames.Component_CertificationMethod, torque.CertificationMethod.ToXMLFormat(),
+					new XElement(_vif + XMLNames.Component_Manufacturer, torque.Manufacturer),
+					new XElement(_vif + XMLNames.Component_Model, torque.Model),
+					new XElement(_vif + XMLNames.Component_CertificationMethod,
+						torque.CertificationMethod.ToXMLFormat()),
 					torque.CertificationMethod == CertificationMethod.StandardValues
 						? null
-						: new XElement(_vif + XMLNames.Report_Component_CertificationNumber, torque.CertificationNumber),
-					_vif + XMLNames.Component_Date, XmlConvert.ToString(torque.Date, XmlDateTimeSerializationMode.Utc),
-					_vif + XMLNames.Component_AppVersion, torque.AppVersion,
+						: new XElement(_vif + XMLNames.Report_Component_CertificationNumber,
+							torque.CertificationNumber),
+					new XElement(_vif + XMLNames.Component_Date,
+						XmlConvert.ToString(torque.Date, XmlDateTimeSerializationMode.Utc)),
+					new XElement(_vif + XMLNames.Component_AppVersion, torque.AppVersion),
 					GetCharacteristics(torque.TCData)
-					));
+				));
 		}
 
 

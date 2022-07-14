@@ -76,4 +76,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
+
+	public class VIFIEPCAdasType : AbstractVIFXmlType, IVIFFAdasType
+	{
+		public VIFIEPCAdasType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+		#region Implementation of IXmlTypeWriter
+
+		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			if (adas == null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Vehicle_ADAS,
+				new XAttribute("xmlns", _v24),
+				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_IEPC_Type"),
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()));
+		}
+
+		#endregion
+	}
 }

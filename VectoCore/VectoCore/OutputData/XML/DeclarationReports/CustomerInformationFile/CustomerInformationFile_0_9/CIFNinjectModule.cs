@@ -97,7 +97,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					true,
 					false,
 					false)));
+
 			#region MediumLorryCIF
+
 			Bind<IXMLCustomerReport>().To<ConventionalLorry_CIF>().Named(nameCombinationMethod(
 				ToParams(VehicleCategoryHelper.Van, VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN, false, false, false)));

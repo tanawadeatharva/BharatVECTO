@@ -190,8 +190,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.TotalVehicleMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(primaryResult.SimulationParameter.Payload, XMLNames.Unit_kg)),
-				new XElement(tns + "PassengerCount", primaryResult.SimulationParameter.PassengerCount.ToMinSignificantDigits(3, 1)),
-				new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
+				new XElement(tns + "PassengerCount", primaryResult.SimulationParameter.PassengerCount.ToMinSignificantDigits(3, 1))
+				//new XElement(tns + XMLNames.Report_Result_FuelMode, primaryResult.SimulationParameter.FuelMode)
 			);
 		}
 

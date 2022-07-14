@@ -35,6 +35,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
 		{
 			_cifFactory = cifFactory;
+
+			// MQ: write dummy result element for testcases (2022-07-13)
+			Results = new  XElement(Cif_0_9 + "Results",
+				new XElement(Cif_0_9 + "Status", "success"),
+				new XElement(Cif_0_9 + "ExemptedVehicle"));
 		}
 
 

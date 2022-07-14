@@ -592,7 +592,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				////return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle);
 			}
 		}
-		public VehicleCategory VehicleCategory { get => VehicleDeclarationType == VehicleDeclarationType.final ? VehicleCategory.HeavyBusCompletedVehicle : VehicleCategory.HeavyBusInterimVehicle; }
+		public VehicleCategory VehicleCategory
+		{
+			get
+			{
+				if (ExemptedVehicle) {
+					return IsInputDataCompleteExempted(VectoSimulationJobType.ConventionalVehicle, false) 
+						? VehicleCategory.HeavyBusCompletedVehicle
+						: VehicleCategory.HeavyBusInterimVehicle;
+				}
+				return VehicleDeclarationType == VehicleDeclarationType.final
+					? VehicleCategory.HeavyBusCompletedVehicle
+					: VehicleCategory.HeavyBusInterimVehicle;
+			}
+		}
+
 		public AxleConfiguration AxleConfiguration { get; }
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }
 

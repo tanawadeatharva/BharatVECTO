@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.ChassisConfiguration, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_Articulated, vehicle.Articulated),
-				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat()),
+				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
 			};
 
 			return result;
@@ -71,7 +71,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var result = new List<XElement>
 			{
 				new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3)),
+				vehicle.Components.RetarderInputData.Type.IsDedicatedComponent()
+					? new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3))
+					: null,
 			};
 			return result;
 		}
@@ -89,10 +91,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 
-			var result = new List<XElement>
-			{
-				new XElement(_vif + XMLNames.Vehicle_OvcHev, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3)),
+			var result = new List<XElement> {
+				new XElement(_vif + XMLNames.Vehicle_OvcHev, vehicle.OvcHev),
+				vehicle.OvcHev
+					? new XElement(_vif + XMLNames.Vehicle_MaxChargingPower, vehicle.MaxChargingPower.ToXMLFormat(0))
+					: null,
 			};
 			return result;
 		}
@@ -124,7 +127,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)),
 				new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData.Ratio.ToXMLFormat(3)),
+				vehicle.Components.RetarderInputData.Type.IsDedicatedComponent()
+					? new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3))
+					: null,
 				new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()),
 				new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
 				_vifReportFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
@@ -152,9 +157,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var result = new List<XElement>();
 			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
 			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
 			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
@@ -182,9 +187,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var result = new List<XElement>();
 			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
 			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
 			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
@@ -239,7 +244,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
 			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
 			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
@@ -248,6 +253,35 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if(motorTorqueLimits != null)
 				result.Add(motorTorqueLimits);
 			
+			return result;
+		}
+
+		#endregion
+	}
+
+	public class PevIEPCVehicleParameterGroup : AbstractVIFGroupWriter
+	{
+		public PevIEPCVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of AbstractVIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var vehicle = inputData.JobInputData.Vehicle;
+
+			var result = new List<XElement>();
+			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+			result.Add(_vifReportFactory.GetIEPCADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
+			if (motorTorqueLimits != null)
+				result.Add(motorTorqueLimits);
+
 			return result;
 		}
 
@@ -268,7 +302,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
 			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
 			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
