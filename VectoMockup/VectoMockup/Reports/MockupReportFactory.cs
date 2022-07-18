@@ -73,7 +73,8 @@ namespace TUGraz.VectoMockup.Reports
         {
 			if (multistageVifInputData.VehicleInputData == null)
             {
-                var reportCompleted = new XMLDeclarationMockupReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, true)
+                var reportCompleted = new XMLDeclarationMockupReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, 
+					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle, true)
                 {
                     PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
                 };

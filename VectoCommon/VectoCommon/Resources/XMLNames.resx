@@ -1149,8 +1149,8 @@
   <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
     <value>Electrical</value>
   </data>
-  <data name="ManufacturerAddressPrimaryVehicle" xml:space="preserve">
-    <value>ManufacturerAddressPrimaryVehicle</value>
+  <data name="ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
   </data>
   <data name="Engine_WHRCorrectionFactors_Mechanical" xml:space="preserve">
     <value>Mechanical</value>

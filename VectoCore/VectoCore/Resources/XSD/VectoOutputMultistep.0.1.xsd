@@ -1341,27 +1341,9 @@
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractPrimaryVehicleType">
 				<xs:sequence>
-					<xs:element name="ManufacturerPrimaryVehicle" type="v1.0:ManufacturerType"/>
-					<xs:element name="ManufacturerAddressPrimaryVehicle" type="v1.0:ManufacturerAddressType"/>
-					<xs:element name="Model" type="v1.0:ModelType"/>
-					<xs:element name="VIN" type="v1.0:VINType"/>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
-					<xs:element name="LegislativeCategory" type="xs:string">
-						<xs:annotation>
-							<xs:documentation>P251 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType"/>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType"/>
-					<xs:element name="Articulated" type="xs:boolean"/>
-					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
-					<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
-					<xs:element name="RetarderRatio" type="v1.0:RetarderRatioType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P053 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
 					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
@@ -1827,7 +1809,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
-					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType" minOccurs="0">
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
 						<xs:annotation>
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
@@ -2564,64 +2546,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="VehicleExemptedPrimaryBusType">
+	<xs:complexType name="Exempted_VehicleVIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractPrimaryVehicleType">
 				<xs:sequence>
-					<xs:element name="ManufacturerPrimaryVehicle" type="v1.0:ManufacturerType">
-						<xs:annotation>
-							<xs:documentation>P235 / I.1.1.1 / #14</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ManufacturerAddressPrimaryVehicle" type="v1.0:ManufacturerAddressType">
-						<xs:annotation>
-							<xs:documentation>P252 / I.1.1.1 / #14</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Model" type="v1.0:ModelType">
-						<xs:annotation>
-							<xs:documentation>P236 / I.1.1.2</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="VIN" type="v1.0:VINType">
-						<xs:annotation>
-							<xs:documentation>P238 / I.1.1.3 / #1</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
-					<xs:element name="LegislativeCategory">
-						<xs:annotation>
-							<xs:documentation>P251 / I.1.1.4 / #10</xs:documentation>
-						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:minLength value="1"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P036 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P037 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Articulated" type="xs:boolean"/>
-					<xs:element name="TechnicalPermissibleMaximumLadenMass">
-						<xs:annotation>
-							<xs:documentation>P041 / I.1.1.6 / #12</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:double">
-									<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P269 / I.1.1.10</xs:documentation>
@@ -2935,6 +2864,11 @@
 	</xs:group>
 	<xs:group name="Vehicle_PrimaryBusGeneralParametersSequence">
 		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P235 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
 				<xs:annotation>
 					<xs:documentation>P252 - [-]</xs:documentation>
@@ -2953,11 +2887,6 @@
 			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
 				<xs:annotation>
 					<xs:documentation>P239 - [-]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
-				<xs:annotation>
-					<xs:documentation>P235 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>

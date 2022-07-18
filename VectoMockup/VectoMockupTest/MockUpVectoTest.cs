@@ -31,9 +31,9 @@ namespace VectoMockupTest
     public class MockUpVectoTest
 	{
 
+		private const string BasePath = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\";
 
-
-		private const string XsdPath = @"../../../../../VectoCore/VectoCore/Resources/XSD";
+		private const string XsdPath = @".. /../../../../VectoCore/VectoCore/Resources/XSD";
 
 		private IKernel _vectoKernel;
 		private ISimulatorFactoryFactory _simFactoryFactory;
@@ -41,55 +41,33 @@ namespace VectoMockupTest
 		private IXMLInputDataReader _inputDataReader;
 
 		#region Lorry Testfiles
-		protected const string ConventionalHeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\Conventional_heavyLorry_AMT.xml";
-		protected const string HEV_Px_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
-		protected const string HEV_S2_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
-		protected const string HEV_S3_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3.xml";
-		protected const string HEV_S3_HeavyLorry_ovc =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml";
-		protected const string HEV_S4_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S4.xml";
-		protected const string HEV_IEPC_S_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
-		protected const string PEV_E2_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
-		protected const string PEV_E3_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\PEV_heavyLorry_E3.xml";
-		protected const string PEV_E4_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\PEV_heavyLorry_E4.xml";
-		protected const string PEV_IEPC_HeavyLorry =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\IEPC_heavyLorry.xml";
+		protected const string ConventionalHeavyLorry = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT.xml";
+		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
+		protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
+		protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
+		protected const string HEV_S3_HeavyLorry_ovc = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml";
+		protected const string HEV_S4_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S4.xml";
+		protected const string HEV_IEPC_S_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
+		protected const string PEV_E2_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
+		protected const string PEV_E3_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E3.xml";
+		protected const string PEV_E4_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E4.xml";
+		protected const string PEV_IEPC_HeavyLorry = BasePath + @"HeavyLorry\IEPC_heavyLorry.xml";
 
 		#endregion
 
 		#region PrimaryBus
 
-		protected const string Conventional_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT.xml";
-		protected const string Conventional_PrimaryBus_Tyres =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
-		protected const string HEV_Px_IHPC_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV_primaryBus_AMT_Px.xml";
-		protected const string HEV_S2_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
-		protected const string HEV_S3_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_S3.xml";
-		protected const string HEV_S4_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_S4.xml";
-		protected const string HEV_IEPC_S_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
-		protected const string PEV_E2_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\PEV_primaryBus_AMT_E2.xml";
-		protected const string PEV_E3_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\PEV_primaryBus_E3.xml";
-		protected const string PEV_E4_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\PEV_primaryBus_E4.xml";
-		protected const string PEV_IEPC_PrimaryBus =
-			@"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\PrimaryBus\IEPC_primaryBus.xml";
+		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
+		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
+		protected const string HEV_Px_IHPC_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
+		protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
+		protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
+		protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
+		protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
+		protected const string PEV_E2_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_AMT_E2.xml";
+		protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
+		protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
+		protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
 
 		#endregion
 
@@ -177,14 +155,14 @@ namespace VectoMockupTest
 		}
 
 
-	
-		
 
-		[TestCase(ConventionalHeavyLorry, TestName="ConventionalHeavyLorry")]
+
+
+		[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
 		//[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
 		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
 		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
-		[TestCase(HEV_S3_HeavyLorry_ovc, TestName="HEV_S3_HeavyLorry_ovc")]
+		[TestCase(HEV_S3_HeavyLorry_ovc, TestName = "HEV_S3_HeavyLorry_ovc")]
 		[TestCase(HEV_S4_HeavyLorry, TestName = "HEV_S4_HeavyLorry")]
 		[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry")]
 		[TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry")]
@@ -193,20 +171,19 @@ namespace VectoMockupTest
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
 		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
-        //[NonParallelizable]
-        
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/Conventional_mediumLorry_AMT.xml", TestName="Conventional_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_AMT_S2.xml", TestName="HEV_S2_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_IEPC-S.xml", TestName="HEV_IEPC_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_S3.xml", TestName="HEV_S3_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV-S_mediumLorry_S4.xml", TestName="HEV_S4_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/HEV_mediumLorry_AMT_Px.xml", TestName="HEV_Px_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/IEPC_mediumLorry.xml", TestName="PEV_IEPC_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_AMT_E2.xml", TestName="PEV_E2_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml", TestName="PEV_E2_std_Medium_Lorry", Ignore="Segment not found")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_APT-N_E2.xml", TestName="PEV_E2_Medium_Lorry_2")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_E3.xml", TestName="PEV_E3_Medium_Lorry")]
-		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/MediumLorry/PEV_mediumLorry_E4.xml", TestName="PEV_E4_Medium_Lorry")]
+		//[NonParallelizable]
+		[TestCase(BasePath + @"MediumLorry/Conventional_mediumLorry_AMT.xml", TestName="Conventional_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml", TestName="HEV_S2_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml", TestName="HEV_IEPC_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_S3.xml", TestName="HEV_S3_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_S4.xml", TestName="HEV_S4_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/HEV_mediumLorry_AMT_Px.xml", TestName="HEV_Px_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/IEPC_mediumLorry.xml", TestName="PEV_IEPC_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2.xml", TestName="PEV_E2_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml", TestName="PEV_E2_std_Medium_Lorry", Ignore="Segment not found")]
+		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_APT-N_E2.xml", TestName="PEV_E2_Medium_Lorry_2")]
+		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_E3.xml", TestName="PEV_E3_Medium_Lorry")]
+		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_E4.xml", TestName="PEV_E4_Medium_Lorry")]
 		public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			
@@ -258,7 +235,7 @@ namespace VectoMockupTest
 		}
 
 		
-		[TestCase(Conventional_InterimBus,Conventional_StageInput, TestName = "ConventionalInterimBus")]
+		[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
 		public void InterimBusMockupTest(string vifInput, string stageInputFile)
 		{
 			//SimulatorFactory.MockUpRun = mockup;
@@ -308,9 +285,10 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(CompletedDiesel, TestName="CompletedDiesel")]
+        [TestCase(CompletedExempted, TestName = "CompleteExempted Bus")]
+        [TestCase(CompletedExemptedWithoutTPMLM, TestName = "CompletedExempted No TPMLM")]
 		public void PrimaryAndCompletedTest(string fileName)
 		{
-
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -321,7 +299,7 @@ namespace VectoMockupTest
 			jobContainer.AddRuns(_simulatorFactory);
 			jobContainer.Execute(false);
 			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+			CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
 		}
 
 		[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
@@ -356,33 +334,55 @@ namespace VectoMockupTest
 			bool checkPrimaryMrf = false,
 			bool checkPrimaryReport = false)
 		{
-			if (checkCif && !File.Exists(fileWriter.XMLCustomerReportName)) {
-				TestContext.WriteLine(fileWriter.XMLCustomerReportName + "Missing\n");
-				Assert.Fail();
+			if (checkCif) {
+				if (!File.Exists(fileWriter.XMLCustomerReportName)) {
+					TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
+					Assert.Fail();
+				}
+
+				MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
+					XmlDocumentType.CustomerReport);
 			}
-			if (checkMrf && !File.Exists(fileWriter.XMLFullReportName))
-			{
-				TestContext.WriteLine(fileWriter.XMLFullReportName + "Missing\n");
-				Assert.Fail();
+			if (checkMrf) {
+				if (!File.Exists(fileWriter.XMLFullReportName)) {
+					TestContext.WriteLine(fileWriter.XMLFullReportName + " Missing\n");
+					Assert.Fail();
+				}
+
+				MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLFullReportName),
+					XmlDocumentType.ManufacturerReport);
 			}
 
 			var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
-			if (checkPrimaryMrf && !File.Exists(primaryMrfPath)) {
-				TestContext.WriteLine(primaryMrfPath + "Missing\n");
-				Assert.Fail();
+			if (checkPrimaryMrf) {
+				if (!File.Exists(primaryMrfPath)) {
+					TestContext.WriteLine(primaryMrfPath + " Missing\n");
+					Assert.Fail();
+				}
+
+				MRF_CIF_WriterTestBase.Validate(XDocument.Load(primaryMrfPath), XmlDocumentType.ManufacturerReport);
 			}
 
 
-			if (checkPrimaryReport && !File.Exists(fileWriter.XMLPrimaryVehicleReportName))
-			{
-				TestContext.WriteLine(fileWriter.XMLPrimaryVehicleReportName + "Missing\n");
-				Assert.Fail();
+			if (checkPrimaryReport) {
+				if (!File.Exists(fileWriter.XMLPrimaryVehicleReportName)) {
+					TestContext.WriteLine(fileWriter.XMLPrimaryVehicleReportName + " Missing\n");
+					Assert.Fail();
+				}
+
+				MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName),
+					XmlDocumentType.MultistepOutputData);
 			}
 
 
-			if (checkVif && !File.Exists(fileWriter.XMLMultistageReportFileName)) {
-				TestContext.WriteLine(fileWriter.XMLMultistageReportFileName + "Missing\n");
-				Assert.Fail();
+			if (checkVif) {
+				if (!File.Exists(fileWriter.XMLMultistageReportFileName)) {
+					TestContext.WriteLine(fileWriter.XMLMultistageReportFileName + " Missing\n");
+					Assert.Fail();
+				}
+
+				MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMultistageReportFileName),
+					XmlDocumentType.MultistepOutputData);
 			}
 
 			
@@ -508,36 +508,37 @@ namespace VectoMockupTest
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
 		}
 
-        [TestCase("TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_completedBus_input_full.xml", 
-			true, 
-			true,
-			false,
-			false, 
-			true, 
-			TestName="ExemptedCompletedBus1")]
-		[TestCase("TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_completedBus_input_only_mandatory_entries.xml", 
-			true, 
-			true,
-			false,
-			false, 
-			false, 
-			TestName="ExemptedCompletedBus1")]
-		[TestCase("TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_heavyLorry.xml", 
+		private const string BasePathExempted = "TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/";
+
+   //     [TestCase(BasePathExempted + "exempted_completedBus_input_full.xml",
+   //         true,
+   //         true,
+   //         false,
+   //         false,
+   //         true,
+   //         TestName = "ExemptedCompletedBus1")]
+   //     [TestCase(BasePathExempted + "exempted_completedBus_input_only_mandatory_entries.xml", 
+			//true, 
+			//true,
+			//false,
+			//false, 
+			//false, 
+			//TestName="ExemptedCompletedBus2")]
+		[TestCase(BasePathExempted + "exempted_heavyLorry.xml", 
 			false, 
 			false,
 			true,
 			false, 
 			false, 
 			TestName="ExemptedHeavyLorry")]
-		[TestCase("TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_mediumLorry.xml",
-			
+		[TestCase(BasePathExempted + "exempted_mediumLorry.xml",
 			false, 
 			true,
 			true,
 			false, 
 			false, 
 			TestName="ExemptedMediumLorry")]
-		[TestCase("TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ExemptedVehicles/exempted_primaryBus.xml", 
+		[TestCase(BasePathExempted + "exempted_primaryBus.xml", 
 			false, 
 			false,
 			true,
@@ -565,8 +566,17 @@ namespace VectoMockupTest
 				checkMrf:checkMrf, 
 				checkPrimaryMrf:checkPrimaryMrf, 
 				checkPrimaryReport:checkPrimaryReport);
-			if(checkMrf) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
-			if(checkCif) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+			if (checkMrf) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
+			if (checkPrimaryReport) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XmlDocumentType.MultistepOutputData), "VIF invalid");
+			if (checkCif) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+		}
+
+		public void ExemptedCompleteBusTest()
+		{
+			var primaryInput = BasePathExempted + "exempted_primaryBus.xml";
+			var completeInput = BasePathExempted + "exempted_completedBus_input_full.xml";
+
+
 		}
 	}
 }

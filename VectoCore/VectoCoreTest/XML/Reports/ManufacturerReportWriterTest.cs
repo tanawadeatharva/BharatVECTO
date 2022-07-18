@@ -118,6 +118,24 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			return !error;
 		}
 
+		public static void Validate(XDocument document, XmlDocumentType documentType)
+		{
+			var error = false;
+
+			var stream = new MemoryStream();
+			var writer = new XmlTextWriter(stream, Encoding.UTF8);
+			document.WriteTo(writer);
+			writer.Flush();
+			stream.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+			var validator = new XMLValidator(new XmlTextReader(stream));
+			error = !validator.ValidateXML(documentType);
+			if (error) {
+				TestContext.WriteLine(validator.ValidationError);
+				Assert.Fail($"XML Validation failed {documentType}");
+			}
+		}
+
 
 		protected bool WriteToDisk(string basePath, string fileName, XDocument xDocument)
 		{

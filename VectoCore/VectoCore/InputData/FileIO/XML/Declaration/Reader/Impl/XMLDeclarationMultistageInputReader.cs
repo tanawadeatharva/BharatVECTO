@@ -607,7 +607,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public AxleConfiguration AxleConfiguration { get; }
+		public AxleConfiguration AxleConfiguration => _primaryVehicle.Vehicle.AxleConfiguration;
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		public PerSecond EngineIdleSpeed { get; }

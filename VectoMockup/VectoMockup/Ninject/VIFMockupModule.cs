@@ -261,6 +261,11 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevPxVehicleParameterGroup();
 			}
 
+			public IReportOutputGroup GetExemptedVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetExemptedVehicleParameterGroup();
+			}
+
 			public IXmlTypeWriter GetAngelDriveType()
 			{
 				return _vifReportFactoryImplementation.GetAngelDriveType();

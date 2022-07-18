@@ -88,7 +88,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			Vehicle = _mRFReportFactory.GetExempted_CompletedBusVehicleType().GetElement(inputData);
+			GenerateReport(OutputDataType);
 		}
 
 		#endregion

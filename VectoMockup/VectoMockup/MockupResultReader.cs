@@ -107,7 +107,6 @@ namespace TUGraz.VectoMockup
 
 			private static string GetArch(string xmlName, VectoRunData runData)
 			{
-
 				bool ovc = false;
 				var jobType = VectoSimulationJobType.ConventionalVehicle;
 				if (runData.InputData is IXMLMultistageInputDataProvider) {

@@ -12,8 +12,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 	<PrimaryVehicle>
 		<Data id="text" xsi:type="PrimaryVehicleDataType">
 			<Vehicle xsi:type="ConventionalVehicleVIFType">
-				<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
-				<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+				<Manufacturer>Generic Truck Manufacturer</Manufacturer>
+				<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 				<Model>Generic Model</Model>
 				<VIN>VEH-1234567890_nonSmart</VIN>
 				<Date>2017-02-15T11:00:00Z</Date>
@@ -51,9 +51,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 							<RatedPower>220000</RatedPower>
 							<MaxEngineTorque>1100</MaxEngineTorque>
 							<WHRType>
-								<v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
-								<v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
-								<v2.3:ElectricalOutput>false</v2.3:ElectricalOutput>
+								<MechanicalOutputICE>false</MechanicalOutputICE>
+								<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+								<ElectricalOutput>false</ElectricalOutput>
 							</WHRType>
 							<Mode>
 							  <IdlingSpeed>700</IdlingSpeed>

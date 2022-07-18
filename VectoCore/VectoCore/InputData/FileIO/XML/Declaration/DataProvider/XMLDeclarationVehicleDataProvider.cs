@@ -485,9 +485,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractCommonComponentType
 
-		public override string Manufacturer => GetString(XMLNames.ManufacturerPrimaryVehicle);
-
-		public string ManufacturerAddress => GetString(XMLNames.ManufacturerAddressPrimaryVehicle);
+		
+		public virtual string ManufacturerAddress => GetString(XMLNames.ManufacturerAddress);
 
 		#endregion
 
@@ -639,7 +638,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "VehicleExemptedPrimaryBusType";
+		public new const string XSD_TYPE = "Exempted_VehicleVIFType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);

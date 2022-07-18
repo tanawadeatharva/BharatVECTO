@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IReportOutputGroup GetPevIEPCVehicleParmeterGroup();
 		IReportOutputGroup GetHevPxVehicleParameterGroup();
 
+		IReportOutputGroup GetExemptedVehicleParameterGroup();
+
 		#endregion
 
 	}

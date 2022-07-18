@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
@@ -21,11 +22,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			var result = new List<XElement>
 			{
+				new XElement(_vif + XMLNames.Component_Manufacturer, vehicle.Manufacturer),
 				new XElement(_vif + XMLNames.Component_ManufacturerAddress, vehicle.ManufacturerAddress),
 				new XElement(_vif + XMLNames.Component_Model, vehicle.Model),
 				new XElement(_vif + XMLNames.Vehicle_VIN, vehicle.VIN),
 				new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(vehicle.Date, XmlDateTimeSerializationMode.Utc)),
-				new XElement(_vif + XMLNames.Component_Manufacturer, vehicle.Manufacturer)
 			};
 
 			return result;
@@ -114,29 +115,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 
-			var result = new List<XElement> {
-				new XElement(_vif + XMLNames.ManufacturerPrimaryVehicle, vehicle.Manufacturer),
-				new XElement(_vif + XMLNames.ManufacturerAddressPrimaryVehicle, vehicle.ManufacturerAddress),
-				new XElement(_vif + XMLNames.Component_Model, vehicle.Model),
-				new XElement(_vif + XMLNames.Vehicle_VIN, vehicle.VIN),
-				new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(vehicle.Date, XmlDateTimeSerializationMode.Utc)),
-				new XElement(_vif + XMLNames.Vehicle_LegislativeCategory, vehicle.LegislativeClass.ToXMLFormat()),
-				new XElement(_vif + XMLNames.ChassisConfiguration, vehicle.VehicleCategory.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_Articulated, vehicle.Articulated),
-				new XElement(_vif + XMLNames.TPMLM, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
-				new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)),
-				new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
-				vehicle.Components.RetarderInputData.Type.IsDedicatedComponent()
-					? new XElement(_vif + XMLNames.Vehicle_RetarderRatio, vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3))
-					: null,
-				new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()),
-				new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
-				_vifReportFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
-				_vifReportFactory.GetTorqueLimitsType().GetElement(inputData),
-				
-			};
-
+			var result = new List<XElement>();
+			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()));
+			if (vehicle.Components.RetarderInputData.Type.IsDedicatedComponent()) {
+				result.Add(new XElement(_vif + XMLNames.Vehicle_RetarderRatio,
+					vehicle.Components.RetarderInputData?.Ratio.ToXMLFormat(3)));
+			}
+			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+			result.Add(_vifReportFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+			result.Add(_vifReportFactory.GetTorqueLimitsType().GetElement(inputData));
+			
 			return result;
 		}
 
@@ -312,6 +304,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(_vifReportFactory.GetTorqueLimitsType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData));
 			result.Add(_vifReportFactory.GetBoostingLimitationsType().GetElement(inputData));
+
+			return result;
+		}
+
+		#endregion
+	}
+
+	public class ExemptedVehicleParameterGroup : AbstractVIFGroupWriter
+	{
+		public ExemptedVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of AbstractVIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var vehicle = inputData.JobInputData.Vehicle;
+
+			var result = new List<XElement>();
+
+			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+			result.Add(new XElement(_vif + "SumNetPower", XMLHelper.ValueAsUnit(vehicle.MaxNetPower1, "W")));
+			result.Add(new XElement(_vif + "Technology", vehicle.ExemptedTechnology));
 
 			return result;
 		}

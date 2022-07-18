@@ -383,6 +383,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					false)));
 
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.ParallelHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
 			Bind<IXMLManufacturerReport>().To<Exempted_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.CompletedBus,
 					VectoSimulationJobType.ConventionalVehicle,

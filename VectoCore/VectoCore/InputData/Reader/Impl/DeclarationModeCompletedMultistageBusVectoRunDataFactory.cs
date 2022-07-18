@@ -92,7 +92,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Report = Report,
 				Mission = new Mission() {
 					MissionType = MissionType.ExemptedMission
-				}
+				},
+				InputData = InputDataProvider
 			};
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -464,11 +465,34 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			{
 				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
 			}
-			return new XElement(_mrf + XMLNames.Component_Vehicle,
-				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
-			);
+			var primaryVehicleData = multistageInputdata.JobInputData.PrimaryVehicle.Vehicle;
+			var consolidatedVehicleData = multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var result = new XElement(_mrf + XMLNames.Component_Vehicle);
+			var manufacturers = new XElement(_mrf + "Manufacturers");
+			result.Add(manufacturers);
+			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress, 1));
+			foreach (var manufacturingStageInputData in multistageInputdata.JobInputData.ManufacturingStages) {
+				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
+					manufacturingStageInputData.Vehicle.ManufacturerAddress,
+					stepCount: manufacturingStageInputData.StepCount));
+			}
+			result.Add(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle));
+			result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+			return result;
+
+			//return new XElement(_mrf + XMLNames.Component_Vehicle,
+			//	_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
+			//);
 		}
 
 		#endregion
+
+		protected XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		{
+			return new XElement(_mrf + "Step",
+				new XAttribute("Count", stepCount),
+				new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, address));
+		}
 	}
 }

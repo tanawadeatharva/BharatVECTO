@@ -365,7 +365,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData)
+			);
 		}
 
 		#endregion

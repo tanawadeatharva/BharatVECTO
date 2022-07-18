@@ -145,6 +145,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<PevIEPCVehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPevIEPCVehicleType());
 
+			Bind<IXmlTypeWriter>().To<ExemptedVehicleType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetExemptedVehicleType());
+
 			#endregion
 
 
@@ -217,8 +220,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IReportOutputGroup>().To<HevPxVehicleParameterGroup>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevPxVehicleParameterGroup());
 
+			Bind<IReportOutputGroup>().To<ExemptedVehicleParameterGroup>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetExemptedVehicleParameterGroup());
+
 			#endregion
-			
+
 
 			#region Components
 

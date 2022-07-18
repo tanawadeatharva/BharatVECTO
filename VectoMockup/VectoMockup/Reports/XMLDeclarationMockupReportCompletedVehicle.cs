@@ -18,12 +18,16 @@ namespace TUGraz.VectoMockup.Reports
 	{
 		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly ICustomerInformationFileFactory _cifFactory;
+		private readonly bool _exempted;
 
-		public XMLDeclarationMockupReportCompletedVehicle(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory, bool writePIF = false) : base(writer,
+		public XMLDeclarationMockupReportCompletedVehicle(IReportWriter writer, IManufacturerReportFactory mrfFactory, 
+			ICustomerInformationFileFactory cifFactory, bool exempted, bool writePIF = false) : base(writer,
 			writePIF)
 		{
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;
+
+			_exempted = exempted;
 		}
 
 		#region Overrides of XMLDeclarationReportCompletedVehicle
@@ -33,8 +37,8 @@ namespace TUGraz.VectoMockup.Reports
 			var inputData = modelData.InputData as IXMLMultistageInputDataProvider;
 
 
-			var ihpc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-			var iepc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
+			var ihpc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (inputData.JobInputData.PrimaryVehicle.Vehicle.Components?.IEPC != null);
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(
 				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				inputData.JobInputData.JobType,
@@ -57,28 +61,30 @@ namespace TUGraz.VectoMockup.Reports
 			base.InitializeReport(modelData, fuelModes);
 		}
 
-		#endregion
+        #endregion
 
-		#region Overrides of XMLDeclarationReport
+        #region Overrides of XMLDeclarationReport
 
-		#region Overrides of XMLDeclarationReportCompletedVehicle
+        #region Overrides of XMLDeclarationReportCompletedVehicle
 
-		protected internal override void DoWriteReport()
-		{
-			(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
-            (CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+        protected internal override void DoWriteReport()
+        {
+			foreach (var result in OrderedResults) {
+				WriteResult(result);
+			}
+
 			GenerateReports();
-			if (Writer != null)
-			{
+
+			if (Writer != null) {
 				OutputReports();
 			}
 		}
 
-		#endregion
+        #endregion
 
-		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+        protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			base.DoStoreResult(entry, runData, modData);
+			
 		}
 
 		protected override void WriteResult(ResultEntry result)
@@ -89,7 +95,17 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void GenerateReports()
 		{
-			base.GenerateReports();	
+			if (!_exempted) {
+				(ManufacturerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+				(CustomerRpt as IXMLMockupReport).WriteMockupSummary(Results.First());
+			} else {
+				(ManufacturerRpt as IXMLMockupReport).WriteExemptedResults();
+				(CustomerRpt as IXMLMockupReport).WriteExemptedResults();
+			}
+
+
+
+			base.GenerateReports();
 		}
 
 		protected override void OutputReports()

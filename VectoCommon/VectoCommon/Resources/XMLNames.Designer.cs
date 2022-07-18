@@ -3355,20 +3355,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerAddress.
+        /// </summary>
+        public static string ManufacturerAddress {
+            get {
+                return ResourceManager.GetString("ManufacturerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddressCompletedVehicle.
         /// </summary>
         public static string ManufacturerAddressCompletedVehicle {
             get {
                 return ResourceManager.GetString("ManufacturerAddressCompletedVehicle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ManufacturerAddressPrimaryVehicle.
-        /// </summary>
-        public static string ManufacturerAddressPrimaryVehicle {
-            get {
-                return ResourceManager.GetString("ManufacturerAddressPrimaryVehicle", resourceCulture);
             }
         }
         

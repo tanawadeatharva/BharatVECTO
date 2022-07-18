@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     internal class CompletedBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
     {
-		private XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		protected XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
 		{
 			return new XElement(_mrf + "Step",
 				new XAttribute("Count", stepCount),
@@ -41,18 +41,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					manufacturingStageInputData.Vehicle.ManufacturerAddress,
 					stepCount: manufacturingStageInputData.StepCount));
 			}
-			//result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle));
-			result.AddRange(new List<XElement>() {
-				new XElement(_mrf + XMLNames.Component_Model, consolidatedVehicleData.Model),
-				new XElement(_mrf + XMLNames.Vehicle_VIN, consolidatedVehicleData.VIN),
-				consolidatedVehicleData.VehicleTypeApprovalNumber != null ? new XElement(_mrf + XMLNames.Vehicle_TypeApprovalNumber, consolidatedVehicleData.VehicleTypeApprovalNumber) : null,
-				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.Vehicle_AxleConfiguration, primaryVehicleData.AxleConfiguration.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.TPMLM, consolidatedVehicleData.GrossVehicleMassRating.ToXMLFormat(0)),
-				new XElement(_mrf + XMLNames.Report_Vehicle_VehicleGroup, consolidatedVehicleData.VehicleCategory.ToXMLFormat()),
-			});
-
-			result.AddRange(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+            result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle));
+            result.AddRange(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			result.AddRange(_mrfFactory.GetCompletedBusDimensionSequenceGroup().GetElements(consolidatedVehicleData));
 			result.Add(new XElement(_mrf + XMLNames.Bus_DoorDriveTechnology, consolidatedVehicleData.DoorDriveTechnology.ToXMLFormat()));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem));

@@ -242,4 +242,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
+
+	public class ExemptedVehicleType : VehicleWriter
+	{
+		public ExemptedVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicleData = _vifReportFactory.GetExemptedVehicleParameterGroup().GetElements(inputData);
+			//vehicleData.Add(_vifReportFactory.GetPevIEPCComponentVIFType().GetElement(inputData));
+
+			return new XElement(_vif + XMLNames.Component_Vehicle,
+				new XAttribute(_xsi + XMLNames.XSIType, "Exempted_VehicleVIFType"),
+				vehicleData);
+		}
+
+		#endregion
+	}
 }

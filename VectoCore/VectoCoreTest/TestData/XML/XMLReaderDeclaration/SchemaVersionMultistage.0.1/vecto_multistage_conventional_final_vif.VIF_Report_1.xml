@@ -9,8 +9,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
   <PrimaryVehicle>
     <Data id="VEH-622a60d3b3cf4340a362" xsi:type="PrimaryVehicleDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
       <Vehicle xsi:type="ConventionalVehicleVIFType">
-        <ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
-        <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+        <Manufacturer>Generic Truck Manufacturer</Manufacturer>
+        <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
         <Model>Generic Model</Model>
         <VIN>VEH-1234567890</VIN>
         <Date>2017-02-15T11:00:00Z</Date>
