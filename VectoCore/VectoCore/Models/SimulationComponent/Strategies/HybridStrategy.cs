@@ -56,28 +56,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
 			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
+			
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
+			
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
+			
 			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
-			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			if (TestPowertrain.Battery != null) {
-				TestPowertrain.Battery.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
-			}
-			if (TestPowertrain.BatterySystem != null) {
-				var batSystem = DataBus.BatteryInfo as BatterySystem;
-				foreach (var bsKey in batSystem.Batteries.Keys) {
-					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
-						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
-							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
-					}
-				}
-				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
-			}
-			TestPowertrain.SuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-
+			
+			TestPowertrain.Battery?.UpdateFrom(DataBus.BatteryInfo);
+			TestPowertrain.BatterySystem?.UpdateFrom(DataBus.BatteryInfo);
+			TestPowertrain.SuperCap?.UpdateFrom(DataBus.BatteryInfo);
+			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 
 			var currentGear = DataBus.VehicleInfo.VehicleStopped ? Controller.ShiftStrategy.NextGear : PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
@@ -108,67 +99,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
 			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
 
-			var combustionEngineInfo = DataBus.EngineInfo as CombustionEngine;
-			var enginePrevious = combustionEngineInfo.PreviousState;
-			TestPowertrain.CombustionEngine.Initialize(enginePrevious.EngineTorque, enginePrevious.EngineSpeed);
-			var testPreviousState = TestPowertrain.CombustionEngine.PreviousState;
-			testPreviousState.EngineOn = enginePrevious.EngineOn;
-			testPreviousState.EnginePower = enginePrevious.EnginePower;
-			testPreviousState.dt = enginePrevious.dt;
-			testPreviousState.EngineSpeed = enginePrevious.EngineSpeed;
-			testPreviousState.EngineTorque = enginePrevious.EngineTorque;
-			testPreviousState.EngineTorqueOut = enginePrevious.EngineTorqueOut;
-			testPreviousState.DynamicFullLoadTorque = enginePrevious.DynamicFullLoadTorque;
+			TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
+			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
+			TestPowertrain.WHRCharger?.UpdateFrom(DataBus.WHRCharger);
 
-			switch (TestPowertrain.CombustionEngine.EngineAux) {
-				case EngineAuxiliary engineAux:
-					engineAux.PreviousState.AngularSpeed =
-						(combustionEngineInfo.EngineAux as EngineAuxiliary).PreviousState
-						.AngularSpeed;
-					break;
-				case BusAuxiliariesAdapter busAux:
-					busAux.PreviousState.AngularSpeed =
-						(combustionEngineInfo.EngineAux as BusAuxiliariesAdapter).PreviousState
-						.AngularSpeed;
-					if (busAux.ElectricStorage is SimpleBattery bat) {
-						bat.SOC = (combustionEngineInfo.EngineAux as BusAuxiliariesAdapter)
-							.ElectricStorage
-							.SOC;
-					}
-					break;
-			}
+			TestPowertrain.Gearbox.PreviousState.InAngularVelocity = (DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
 
-			if (TestPowertrain.DCDCConverter != null) {
-				TestPowertrain.DCDCConverter.PreviousState.ConsumedEnergy =
-					(DataBus.DCDCConverter as DCDCConverter).PreviousState.ConsumedEnergy;
-			}
+			TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchInfo);
 
-			if (TestPowertrain.WHRCharger != null) {
-				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
-					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
-				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
-					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
-			}
-
-			TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
-				(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
-
-			TestPowertrain.Clutch.PreviousState.InAngularVelocity =
-				(DataBus.ClutchInfo as SwitchableClutch).PreviousState.InAngularVelocity;
-			TestPowertrain.Clutch.PreviousState.OutAngularVelocity =
-				(DataBus.ClutchInfo as SwitchableClutch).PreviousState.OutAngularVelocity;
-
-			//}
 
 			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestPowertrain.ElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).ThermalBuffer;
-			TestPowertrain.ElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
+			TestPowertrain.ElectricMotor.ThermalBuffer = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).ThermalBuffer;
+			TestPowertrain.ElectricMotor.DeRatingActive = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
 
 			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed =
-					DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
+				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
 			}
 
 			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
