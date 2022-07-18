@@ -170,5 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public GearshiftPosition Gear;
 		public TransmissionLossMap.LossMapResult TorqueLossResult;
 		public DrivingBehavior DrivingBehavior;
+
+		public new GearboxState Clone() => (GearboxState)base.Clone();
 	}
 }

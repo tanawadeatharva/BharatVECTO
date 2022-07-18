@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class SwitchableClutch : Clutch
+	public class SwitchableClutch : Clutch, IUpdateable
 	{
 		public SwitchableClutch(IVehicleContainer container, CombustionEngineData engineData) : base(container, engineData) { }
 
@@ -140,6 +140,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public override bool ClutchClosed(Second absTime) { return !ClutchOpen; } 
 
 		#endregion
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is SwitchableClutch c) {
+				PreviousState = c.PreviousState.Clone();
+				ClutchOpen = c.ClutchOpen;
+				return true;
+			}
+			return false;
+		}
 
 		#endregion
 	}

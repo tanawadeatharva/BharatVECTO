@@ -1636,7 +1636,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class SimpleCharger : IElectricChargerPort
+	public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
 		#region Implementation of IElectricChargerPort
 
@@ -1656,6 +1656,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
 		{
 			return ChargingPower;
+		}
+
+		#endregion
+
+		#region Implementation of IUpdateable
+		public bool UpdateFrom(object other)
+		{
+			if (other is IElectricSystemInfo es) {
+				_chargingPower = es.ChargePower;
+				return true;
+			}
+
+			if (other is Watt w) {
+				_chargingPower = w;
+				return true;
+			}
+
+			return false;
 		}
 
 		#endregion

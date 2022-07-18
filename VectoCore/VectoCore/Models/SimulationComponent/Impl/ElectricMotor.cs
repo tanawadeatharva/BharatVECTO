@@ -14,7 +14,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort
+	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, 
+		IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort, IUpdateable
 	{
 
 		protected internal IElectricSystem ElectricPower;
@@ -576,6 +577,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return emSpeed / ModelData.RatioADC;
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is ElectricMotor e) {
+				PreviousState = e.PreviousState.Clone();
+				ElectricPower = e.ElectricPower;
+				ThermalBuffer = e.ThermalBuffer;
+				DeRatingActive = e.DeRatingActive;
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 
 	public class ElectricMotorState // : SimpleComponentState
@@ -603,5 +620,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public Watt ElectricPowerToBattery;
+
+		public ElectricMotorState Clone() => (ElectricMotorState)MemberwiseClone();
 	}
 }

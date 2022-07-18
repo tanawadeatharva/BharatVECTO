@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var inAngularVelocity = GearboxModelData.Gears[next.Gear].Ratio * outAngularVelocity;
 				var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt);
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * totalTransmissionRatio).Cast<PerSecond>();
+				var estimatedEngineSpeed = vehicleSpeedPostShift * totalTransmissionRatio;
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}

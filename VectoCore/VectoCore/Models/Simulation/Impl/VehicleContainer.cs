@@ -198,8 +198,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
+		private List<(IUpdateable, object)> ComponentUpdateList = new List<(IUpdateable, object)>();
 
+		protected void UpdateComponentsInternal(IDataBus realContainer)
+		{
+			if (ComponentUpdateList.Any()) {
+				foreach (var (target, source) in ComponentUpdateList) {
+					target.UpdateFrom(source);
+				}
+			} else {
+				foreach (var (_, c) in _components) {
+					var found = false;
+					if (c is IUpdateable target) {
+						foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+							if (target.UpdateFrom(source)) {
+								ComponentUpdateList.Add((target, source));
+								found = true;
+							}
+						}
+					}
 
+					#if DEBUG
+					if (!found) {
+						Console.WriteLine("Test Component is not updateable: " + c.GetType());
+					}
+					#endif
+				}
+				
+				#if DEBUG
+				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
+				foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+					if (!sourceList.Contains(source)){
+						Console.WriteLine("Real Component is not used for update: " + source.GetType());
+					}
+				}
+				#endif
+
+				ComponentUpdateList = ComponentUpdateList.Distinct().ToList();
+			}
+		}
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval)
 		{

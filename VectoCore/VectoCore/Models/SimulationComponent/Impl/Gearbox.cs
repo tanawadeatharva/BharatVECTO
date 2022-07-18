@@ -43,7 +43,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : AbstractGearbox<GearboxState>, IHybridControlledGearbox
+	public class Gearbox : AbstractGearbox<GearboxState>, IHybridControlledGearbox, IUpdateable
 	{
 		/// <summary>
 		/// The shift strategy.
@@ -565,5 +565,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override Second LastShift => EngageTime;
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is Gearbox g) {
+				PreviousState = g.PreviousState.Clone();
+				Disengaged = g.Disengaged;
+				DisengageGearbox = g.DisengageGearbox;
+				_nextGear = g.NextGear;
+				Gear = g.Gear;
+
+				if (DataBus.VehicleInfo.VehicleStopped) {
+					Gear = _nextGear;
+				}
+				
+				return true;
+			}
+
+			if (other is GearshiftPosition p) {
+				_nextGear = p;
+				DisengageGearbox = !p.Engaged;
+				Disengaged = !p.Engaged;
+				return true;
+			}
+
+			if (other is GearboxState s) {
+				PreviousState = s.Clone();
+			}
+			
+			return false;
+		}
+
+		#endregion
 	}
 }

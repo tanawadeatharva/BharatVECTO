@@ -45,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox, IUpdateable
 	{
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
@@ -581,8 +581,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public bool Disengaged = true;
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
+
+			public ATGearboxState Clone() => (ATGearboxState)MemberwiseClone();
+
 		}
 
 		public bool SwitchToNeutral { get; set; }
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other)
+		{
+			if (other is ATGearbox g) {
+				PreviousState = g.PreviousState.Clone();
+				_powershiftLossEnergy = g._powershiftLossEnergy;
+				EngineInertia = g.EngineInertia;
+				Disengaged = g.Disengaged;
+				SwitchToNeutral = g.SwitchToNeutral;
+				RequestAfterGearshift = g.RequestAfterGearshift;
+				LastShift = g.LastShift;
+				return true;
+			}
+
+			if (other is GearshiftPosition p) {
+				Gear = p;
+				DisengageGearbox = !p.Engaged;
+				Disengaged = !p.Engaged;
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }
