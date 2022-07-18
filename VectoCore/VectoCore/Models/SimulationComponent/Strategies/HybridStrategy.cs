@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			
-			TestPowertrain.Battery.UpdateFrom(DataBus.BatteryInfo);
+			TestPowertrain.Battery?.UpdateFrom(DataBus.BatteryInfo);
 			TestPowertrain.BatterySystem?.UpdateFrom(DataBus.BatteryInfo);
 			TestPowertrain.SuperCap?.UpdateFrom(DataBus.BatteryInfo);
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
