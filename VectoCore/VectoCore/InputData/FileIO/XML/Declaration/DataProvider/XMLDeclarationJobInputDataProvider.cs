@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
+	public class XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
 		IXMLPrimaryVehicleBusJobInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IVehicleDeclarationInputData _vehicle;
 
-		public XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+		public XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
 			string fileName) : base(node, fileName)
 		{
 			InputData = inputProvider;
@@ -134,13 +134,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 		public IXMLJobDataReader Reader { protected get; set; }
-		public IXMLPrimaryVehicleBusInputData InputData { get; }
+		public virtual IXMLPrimaryVehicleBusInputData InputData { get; }
 	}
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusJobInputDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "HEV-Px_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+			string fileName) : base(node,inputProvider, fileName)
+		{ }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01 :
-			XMLDeclarationMultistagePrimaryVehicleBusJobInputDataProviderV01
+			XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
