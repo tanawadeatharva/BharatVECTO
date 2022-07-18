@@ -574,10 +574,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = g.Disengaged;
 				DisengageGearbox = g.DisengageGearbox;
 				_nextGear = g.NextGear;
-				Gear = g.Gear;
-
+				
 				if (DataBus.VehicleInfo.VehicleStopped) {
 					Gear = _nextGear;
+				} else {
+					Gear = g.Gear;
 				}
 				
 				return true;

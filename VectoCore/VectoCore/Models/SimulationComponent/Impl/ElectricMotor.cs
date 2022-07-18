@@ -581,7 +581,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of IUpdateable
 
 		public bool UpdateFrom(object other) {
-			if (other is ElectricMotor e) {
+			if (other is ElectricMotor e && Position == e.Position) {
 				PreviousState = e.PreviousState.Clone();
 				ElectricPower = e.ElectricPower;
 				ThermalBuffer = e.ThermalBuffer;

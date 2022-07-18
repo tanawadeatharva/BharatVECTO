@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public void UpdateComponents() => Container.UpdateComponents(RealContainer);
 	}
 
-	public class MockBrakes : VectoSimulationComponent, IBrakes
+	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
 	{
 		public MockBrakes(IVehicleContainer container) : base(container)
 		{
@@ -142,6 +142,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		#region Implementation of IBrakes
 
 		public Watt BrakePower { get; set; }
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is IBrakes b) {
+				BrakePower = b.BrakePower;
+				return true;
+			}
+
+			return false;
+		}
 
 		#endregion
 	}
