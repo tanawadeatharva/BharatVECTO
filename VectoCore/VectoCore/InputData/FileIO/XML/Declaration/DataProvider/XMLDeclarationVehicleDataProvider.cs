@@ -650,6 +650,58 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "HEV-Sx_VehicleVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "HEV-IEPC-S_VehicleVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "PEV_Ex_VehicleVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
