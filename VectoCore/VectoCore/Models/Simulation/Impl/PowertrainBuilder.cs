@@ -1639,25 +1639,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
 		#region Implementation of IElectricChargerPort
-
-		public Watt ChargingPower { get; set; }
-
-		public SimpleCharger()
-		{
-			ChargingPower = 0.SI<Watt>();
-		}
-
-		public Watt Initialize()
-		{
-			ChargingPower = 0.SI<Watt>();
-			return ChargingPower;
-		}
-
-		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
-		{
-			return ChargingPower;
-		}
-
+		private Watt _chargingPower;
+		public SimpleCharger() => _chargingPower = 0.SI<Watt>();
+		public Watt Initialize() => _chargingPower = 0.SI<Watt>();
+		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun) => _chargingPower;
 		#endregion
 
 		#region Implementation of IUpdateable
@@ -1675,7 +1660,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			return false;
 		}
-
 		#endregion
 	}
 
