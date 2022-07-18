@@ -542,8 +542,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 			var strategy = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission()
-				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
-				: new SerialHybridStrategy(data, container);
+				? (IHybridControlStrategy)new SerialHybridStrategy<APTNGearbox>(data, container)
+				: new SerialHybridStrategy<Gearbox>(data, container);
 
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
@@ -957,7 +957,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(data.ExecutionMode, modData, _sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 
-			var strategy = new SerialHybridStrategy(data, container);
+			var strategy = new SerialHybridStrategy<Gearbox>(data, container);
 			var ctl = new SerialHybridController(container, strategy, es);
 
 			var engine = new StopStartCombustionEngine(container, data.EngineData);

@@ -19,15 +19,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-
-	public class SerialHybridStrategyAT : AbstractSerialHybridStrategy<APTNGearbox>
+	public class SerialHybridStrategy<T> : AbstractSerialHybridStrategy<T> where T : class, IHybridControlledGearbox, IGearbox, IUpdateable
 	{
-		public SerialHybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
+		public SerialHybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
 
 		#region Overrides of AbstractSerialHybridStrategy<ATGearbox>
 
 		protected override DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque,
-		PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
+			PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
 		{
 			TestPowertrain.UpdateComponents();
 			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
@@ -36,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 
 			TestPowertrain.Gearbox?.UpdateFrom((DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState);
-			
+
 			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false,
@@ -54,44 +53,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		#endregion
 	}
-
-	// =======================================================================
-
-
-	public class SerialHybridStrategy : AbstractSerialHybridStrategy<Gearbox>
-	{
-
-		public SerialHybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
-
-		protected override DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque,
-				PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset) 
-		{
-			TestPowertrain.UpdateComponents();
-			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
-
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-
-			TestPowertrain.Gearbox?.UpdateFrom((DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState);
-			
-			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
-			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
-				CombustionEngineOn = false,
-				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
-					{ EmPosition, Tuple.Create(testResponse.ElectricMotor.AvgDrivetrainSpeed, -testResponse.ElectricMotor.TorqueRequest) } }
-			});
-			var testResponse2 = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
-			return new DrivetrainDemand {
-				AvgEmDrivetrainSpeed = testResponse2.ElectricMotor.AvgDrivetrainSpeed,
-				EmTorqueDemand = testResponse2.ElectricMotor.TorqueRequest,
-				ElectricPowerDemand = testResponse2.ElectricSystem.ConsumerPower,
-				Response = testResponse2
-			};
-		}
-
-	}
-
-	// =======================================================================
 
 	public abstract class AbstractSerialHybridStrategy<T> : LoggingObject, IHybridControlStrategy where T : class, IHybridControlledGearbox, IGearbox
 	{

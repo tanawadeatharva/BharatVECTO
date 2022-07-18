@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, 
 				x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
 
-			var strategy = new SerialHybridStrategy(runData, container);
+			var strategy = new SerialHybridStrategy<Gearbox>(runData, container);
 			var es = new ElectricSystem(container);
 			var battery = new BatterySystem(container, batteryData);
 			battery.Initialize(initialBatCharge);
