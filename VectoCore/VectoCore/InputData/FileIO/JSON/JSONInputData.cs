@@ -1012,7 +1012,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// --------------------------
 
-	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IMultistageVIFInputData //, IDeclarationInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		protected internal string PrimaryInputDataFile;
@@ -1027,12 +1027,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
 
-			//PrimaryVehicle = CreateReader(primaryInputData);
+            //PrimaryVehicle = CreateReader(primaryInputData);
 
-			Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
-			PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IPrimaryVehicleInformationInputDataProvider);
-			JobName = Vehicle.VIN;
-		}
+            Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
+            PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IMultistageBusInputDataProvider);
+            //JobName = Vehicle.VIN;
+        }
 
 
 		//private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
@@ -1048,22 +1048,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-		#endregion
+        #endregion
 
-		#region Implementation of IDeclarationInputDataProvider
+        //#region Implementation of IDeclarationInputDataProvider
 
-		public IDeclarationJobInputData JobInputData => this;
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
-		public XElement XMLHash { get; }
+        //public IDeclarationJobInputData JobInputData => this;
+        public IMultistageBusInputDataProvider PrimaryVehicleData { get; }
+        //public XElement XMLHash { get; }
 
-		#endregion
+        //#endregion
 
-		#region Implementation of IDeclarationJobInputData
+        //#region Implementation of IDeclarationJobInputData
 
-		public IVehicleDeclarationInputData Vehicle { get; }
-		public string JobName { get; }
-		
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+        public IVehicleDeclarationInputData Vehicle { get; }
+        //public string JobName { get; }
+
+        //public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+
+        //#endregion
+
+        #region Implementation of IMultistageVIFInputData
+
+		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
+		public IMultistageBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
 
 		#endregion
 	}

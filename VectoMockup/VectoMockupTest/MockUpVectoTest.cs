@@ -413,9 +413,7 @@ namespace VectoMockupTest
 			// this is the actual test: run completed simulation
 
 			var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeBusInput, TestContext.CurrentContext.Test.Name);
-			var completedInputData = CompletedVIF.CreateCompletedVif(
-				JSONInputDataFactory.ReadJsonJob(completedJob) as JSONInputDataCompletedBusFactorMethodV7,
-				_inputDataReader);
+			var completedInputData = JSONInputDataFactory.ReadJsonJob(completedJob);
 			var completedFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
 			var completedSumWriter = new SummaryDataContainer(completedFileWriter);
 			var completedJobContainer = new JobContainer(completedSumWriter);
