@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			TestPowertrain.Gearbox.UpdateFrom(nextGear);
 			TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Gearbox.UpdateFrom((DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState);
+			TestPowertrain.Gearbox.UpdateFrom((DataBus.GearboxInfo as Gearbox).PreviousState);
 			
 			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
 				TestPowertrain.ElectricMotorsUpstreamTransmission[ModelData.ElectricMachinesData.FirstOrDefault().Item1].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
@@ -129,6 +129,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			TestPowertrain.UpdateComponents();
 
 			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
+			
 			TestPowertrain.Gearbox.UpdateFrom(nextGear);
 			
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
