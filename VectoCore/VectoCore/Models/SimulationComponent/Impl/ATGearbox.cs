@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -50,7 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		protected internal bool RequestAfterGearshift;
 
 		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
@@ -595,21 +595,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (other is ATGearbox g) {
 				PreviousState = g.PreviousState.Clone();
 				_powershiftLossEnergy = g._powershiftLossEnergy;
-				EngineInertia = g.EngineInertia;
-				Disengaged = g.Disengaged;
-				SwitchToNeutral = g.SwitchToNeutral;
-				RequestAfterGearshift = g.RequestAfterGearshift;
 				LastShift = g.LastShift;
 				return true;
 			}
-
-			if (other is GearshiftPosition p) {
-				Gear = p;
-				DisengageGearbox = !p.Engaged;
-				Disengaged = !p.Engaged;
-				return true;
-			}
-
+			
 			return false;
 		}
 

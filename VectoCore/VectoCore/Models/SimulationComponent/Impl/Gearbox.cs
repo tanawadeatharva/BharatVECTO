@@ -571,30 +571,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public bool UpdateFrom(object other) {
 			if (other is Gearbox g) {
 				PreviousState = g.PreviousState.Clone();
-				Disengaged = g.Disengaged;
-				DisengageGearbox = g.DisengageGearbox;
-				_nextGear = g.NextGear;
-				
-				if (DataBus.VehicleInfo.VehicleStopped) {
-					Gear = _nextGear;
-				} else {
-					Gear = g.Gear;
-				}
-				
 				return true;
 			}
-
-			if (other is GearshiftPosition p) {
-				_nextGear = p;
-				DisengageGearbox = !p.Engaged;
-				Disengaged = !p.Engaged;
-				return true;
-			}
-
-			if (other is GearboxState s) {
-				PreviousState = s.Clone();
-			}
-			
 			return false;
 		}
 
