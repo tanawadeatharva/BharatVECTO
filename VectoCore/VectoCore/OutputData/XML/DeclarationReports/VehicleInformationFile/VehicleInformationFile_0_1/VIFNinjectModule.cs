@@ -23,6 +23,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod,
 				6, 6, typeof(IVIFReportFactory).GetMethod(nameof(IVIFReportFactory.GetVIFReport)))).InSingletonScope();
 
+			#region Primary Vehicle Information File Reports
+
 			Bind<IXMLVehicleInformationFile>().To<Conventional_PrimaryBus_VIF>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -109,6 +111,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					true,
 					false,
 					false)));
+
+			#endregion
+
+			#region Complete(d) Primary Vehicle Information File Reports
+
+			#endregion
 
 			#region VehicleTypes
 

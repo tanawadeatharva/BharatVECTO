@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -16,6 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
 			: base(writer)
 		{
+			//throw new VectoException("Used here");
 			//_multistageBusReport = new XMLMultistageBusReport();
 		}
 		

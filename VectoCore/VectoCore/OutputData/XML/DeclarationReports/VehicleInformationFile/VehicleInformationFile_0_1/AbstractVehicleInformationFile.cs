@@ -19,7 +19,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	public abstract class AbstractVehicleInformationFile : IXMLVehicleInformationFile
 	{
-		private XDocument _report;
 		protected XNamespace _tns;
 
 		protected readonly IVIFReportFactory _vifFactory;
@@ -36,7 +35,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace _v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 
 		public abstract string OutputDataType { get; }
-
 
 		protected XElement Vehicle { get; set; }
 		protected XElement Results { get; set; }
@@ -68,12 +66,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			_results.Add(result);
 		}
 
-		public void GenerateReport(XElement fullReportHash)
+		public virtual void GenerateReport(XElement fullReportHash)
 		{
 			var retVal = new XDocument(new XElement(VIF + XMLNames.VectoOutputMultistep,
 				new XAttribute(XNamespace.Xmlns + "di", _di),
 				new XAttribute(XNamespace.Xmlns + "xsi", _xsi.NamespaceName),
 				new XAttribute(XNamespace.Xmlns + "vif", VIF),
+				new XAttribute(XNamespace.Xmlns + "v1.0", _v10),
 				new XAttribute(XNamespace.Xmlns + "v2.0", _v20),
 				new XAttribute(XNamespace.Xmlns + "v2.1", _v21),
 				new XAttribute(XNamespace.Xmlns + "v2.3", _v23),

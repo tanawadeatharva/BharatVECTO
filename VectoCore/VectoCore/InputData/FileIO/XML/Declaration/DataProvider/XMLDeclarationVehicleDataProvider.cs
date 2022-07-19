@@ -684,7 +684,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	public class XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -694,11 +694,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+		public XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
 
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "IEPC_VehicleVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+	}
 
 	// ---------------------------------------------------------------------------------------
 

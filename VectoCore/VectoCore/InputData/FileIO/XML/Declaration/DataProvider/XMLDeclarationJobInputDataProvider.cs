@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusJobInputDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01
+	public class XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusJobInputDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -198,13 +198,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationMultistage_HEV_Ex_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+		public XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
 			string fileName) : base(node, inputProvider, fileName)
 		{ }
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusJobInputDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "IEPC_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+			string fileName) : base(node, inputProvider, fileName)
+		{ }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+	}
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01 :

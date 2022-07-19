@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
+﻿using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
+	/// <summary>
+	/// Create MRF and VIF for primary bus
+	/// </summary>
 	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
 	{
-		//private readonly ICustomerInformationFileFactory _cifFactory;
-		private readonly IManufacturerReportFactory _mrfFactory;
+				private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly IVIFReportFactory _vifFactory;
 
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
@@ -66,31 +57,23 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		}
 
-		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
-		{
-			base.DoStoreResult(entry, runData, modData);
-		}
-
-		protected override void WriteResult(ResultEntry result)
-		{
-
-			//if (Mockup)
-			//{
-
-			//	(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-			//	(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
-
-			//}
-			//else
-			//{
-				base.WriteResult(result);
-			//}
-		}
-
-
 	}
 
+	// --------------------------------------------------
 
+	/// <summary>
+	/// Create VIF
+	/// </summary>
+	//public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReportMultistageBusVehicle
+	//{
+
+	//}
+
+	// --------------------------------------------------
+
+	/// <summary>
+	/// Create MRF and CIF for lorries
+	/// </summary>
 	public class XMLDeclarationReport09 : XMLDeclarationReport
 	{
 		private readonly IManufacturerReportFactory _mrfFactory;

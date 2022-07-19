@@ -19,11 +19,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationConventionalCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHevCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationHevCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPeVompletedBusDataProviderV24>()
 				.Named(XMLDeclarationPeVompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationConventionalCompletedBusDataProviderV24>()
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationIepcCompletedBusDataProviderV24>()
 				.Named(XMLDeclarationIepcCompletedBusDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationExemptedCompletedBusDataProviderV24>()
