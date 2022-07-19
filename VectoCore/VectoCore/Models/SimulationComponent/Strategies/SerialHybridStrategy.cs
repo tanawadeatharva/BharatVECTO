@@ -19,104 +19,47 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-
 	public class SerialHybridStrategyAT : AbstractSerialHybridStrategy<APTNGearbox>
 	{
 		public SerialHybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
 
 		#region Overrides of AbstractSerialHybridStrategy<ATGearbox>
 
-		protected override DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque,
-		PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
+		protected override DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
 		{
-			if (TestPowertrain.Gearbox != null) {
-				var gearboxInfo = DataBus.GearboxInfo as APTNGearbox;
-				if (gearboxInfo == null) {
-					throw new VectoException("AT Gearbox Required!");
-				}
-				var currentGear = DataBus.VehicleInfo.VehicleStopped
-					? gearboxInfo.NextGear
-					: DataBus.GearboxInfo.Gear;
+			TestPowertrain.UpdateComponents();
 
-				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
-					gearboxInfo.PreviousState.InAngularVelocity;
+			if (TestPowertrain.Gearbox != null) {
+				var gearboxInfo = DataBus.GearboxInfo as APTNGearbox ?? throw new VectoException("AT Gearbox Required!");
+				var currentGear = DataBus.VehicleInfo.VehicleStopped ? gearboxInfo.NextGear : DataBus.GearboxInfo.Gear;
 				TestPowertrain.Gearbox.Disengaged = gearboxInfo.Disengaged;
 				TestPowertrain.Gearbox.DisengageGearbox = gearboxInfo.DisengageGearbox;
 				TestPowertrain.Gearbox.Gear = currentGear;
 				TestPowertrain.Gearbox._nextGear = gearboxInfo.NextGear;
 			}
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			(TestPowertrain.Container.VehicleInfo as Vehicle).PreviousState.Velocity =
-				(DataBus.VehicleInfo as Vehicle).PreviousState.Velocity;
-
-			TestPowertrain.ElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(EmPosition) as ElectricMotor).ThermalBuffer;
-			TestPowertrain.ElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(EmPosition) as ElectricMotor).DeRatingActive;
-
-			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			if (TestPowertrain.Battery != null) {
-				TestPowertrain.Battery.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
-				TestPowertrain.Battery.PreviousState.PowerDemand =
-					(DataBus.BatteryInfo as Battery).PreviousState.PowerDemand;
-			}
-			if (TestPowertrain.BatterySystem != null) {
-				var batSystem = DataBus.BatteryInfo as BatterySystem;
-				foreach (var bsKey in batSystem.Batteries.Keys) {
-					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
-						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
-							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
-					}
-				}
-				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
-				TestPowertrain.BatterySystem.PreviousState.PowerDemand = (DataBus.BatteryInfo as BatterySystem).PreviousState.PowerDemand;
-			}
-
-			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
-
-			if (TestPowertrain.WHRCharger != null) {
-				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
-					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
-				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
-					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
-			}
-
-			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
-				Controller.PreviousState.OutAngularVelocity);
-
-			if (TestPowertrain.Gearbox != null) {
-				var gearboxInfo = DataBus.GearboxInfo as APTNGearbox;
-				TestPowertrain.Gearbox.PreviousState.OutAngularVelocity = gearboxInfo.PreviousState.OutAngularVelocity;
-				TestPowertrain.Gearbox.PreviousState.InAngularVelocity = gearboxInfo.PreviousState.InAngularVelocity;
-			}
-
+			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
+			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
+			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
+			
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			var testResponse =
-				TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 
-			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse() {
-				CombustionEngineOn = false,
-				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
-					{
-						EmPosition,
-						Tuple.Create(testResponse.ElectricMotor.AvgDrivetrainSpeed, -testResponse.ElectricMotor.TorqueRequest)
-					}
+			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
+				CombustionEngineOn = false, 
+				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
+					{ EmPosition, Tuple.Create(testResponse.ElectricMotor.AvgDrivetrainSpeed, -testResponse.ElectricMotor.TorqueRequest) }
 				}
 			});
-			var testResponse2 =
-				TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity,
-					false);
-			return new DrivetrainDemand() {
+			var testResponse2 = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+			return new DrivetrainDemand {
 				AvgEmDrivetrainSpeed = testResponse2.ElectricMotor.AvgDrivetrainSpeed,
 				EmTorqueDemand = testResponse2.ElectricMotor.TorqueRequest,
 				ElectricPowerDemand = testResponse2.ElectricSystem.ConsumerPower,
 				Response = testResponse2
 			};
 		}
-
-
+		
 		#endregion
 	}
 
@@ -131,77 +74,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected override DrivetrainDemand GetDrivetrainPowerDemand(Second absTime, Second dt, NewtonMeter outTorque,
 				PerSecond outAngularVelocity, GenSetOperatingPoint maxPowerGenset)
 		{
-			if (TestPowertrain.Gearbox != null) {
-				var currentGear = DataBus.VehicleInfo.VehicleStopped
-					? (DataBus.GearboxInfo as Gearbox).NextGear
-					: DataBus.GearboxInfo.Gear;
+			TestPowertrain.UpdateComponents();
 
-				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
-					(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
-				TestPowertrain.Gearbox.Disengaged = (DataBus.GearboxInfo as Gearbox).Disengaged;
-				TestPowertrain.Gearbox.DisengageGearbox = (DataBus.GearboxInfo as Gearbox).DisengageGearbox;
-				TestPowertrain.Gearbox.Gear = currentGear;
-				TestPowertrain.Gearbox._nextGear = (DataBus.GearboxInfo as Gearbox).NextGear;
+			if (TestPowertrain.Gearbox != null) {
+				var g = DataBus.GearboxInfo as Gearbox ?? throw new VectoException("AMT Gearbox Required!");
+				TestPowertrain.Gearbox.Disengaged = g.Disengaged;
+				TestPowertrain.Gearbox.DisengageGearbox = g.DisengageGearbox;
+				TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped ? g.NextGear : DataBus.GearboxInfo.Gear;
+				TestPowertrain.Gearbox._nextGear = g.NextGear;
 			}
+
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-
-			TestPowertrain.ElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(EmPosition) as ElectricMotor).ThermalBuffer;
-			TestPowertrain.ElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(EmPosition) as ElectricMotor).DeRatingActive;
-
-			TestPowertrain.Battery?.Initialize(DataBus.BatteryInfo.StateOfCharge);
-			if (TestPowertrain.Battery != null) {
-				TestPowertrain.Battery.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as Battery).PreviousState.PulseDuration;
-				TestPowertrain.Battery.PreviousState.PowerDemand =
-					(DataBus.BatteryInfo as Battery).PreviousState.PowerDemand;
-			}
-			if (TestPowertrain.BatterySystem != null) {
-				var batSystem = DataBus.BatteryInfo as BatterySystem;
-				foreach (var bsKey in batSystem.Batteries.Keys) {
-					for (var i = 0; i < batSystem.Batteries[bsKey].Batteries.Count; i++) {
-						TestPowertrain.BatterySystem.Batteries[bsKey].Batteries[i]
-							.Initialize(batSystem.Batteries[bsKey].Batteries[i].StateOfCharge);
-					}
-				}
-				TestPowertrain.BatterySystem.PreviousState.PulseDuration =
-					(DataBus.BatteryInfo as BatterySystem).PreviousState.PulseDuration;
-				TestPowertrain.BatterySystem.PreviousState.PowerDemand = (DataBus.BatteryInfo as BatterySystem).PreviousState.PowerDemand;
-			}
-
-			TestPowertrain.Charger.ChargingPower = maxPowerGenset.ElectricPower;
-
-			if (TestPowertrain.WHRCharger != null) {
-				TestPowertrain.WHRCharger.PreviousState.GeneratedEnergy =
-					DataBus.WHRCharger.PreviousState.GeneratedEnergy;
-				TestPowertrain.WHRCharger.PreviousState.ExcessiveEnergy =
-					DataBus.WHRCharger.PreviousState.ExcessiveEnergy;
-			}
-
-			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
-				Controller.PreviousState.OutAngularVelocity);
+			TestPowertrain.Charger.UpdateFrom(maxPowerGenset);
+			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
+			TestPowertrain.Gearbox?.UpdateFrom(DataBus.GearboxInfo);
+		
 			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-			if (TestPowertrain.Gearbox != null) {
-				TestPowertrain.Gearbox.PreviousState.InAngularVelocity =
-					(DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
-			}
-			var testResponse =
-				TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
-
-			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse() {
+			
+			var testResponse = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+			TestPowertrain.HybridController.ApplyStrategySettings(new HybridStrategyResponse {
 				CombustionEngineOn = false,
-				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>() {
-					{
-						EmPosition,
-						Tuple.Create(testResponse.ElectricMotor.AvgDrivetrainSpeed, -testResponse.ElectricMotor.TorqueRequest)
-					}
+				MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
+					{ EmPosition, Tuple.Create(testResponse.ElectricMotor.AvgDrivetrainSpeed, -testResponse.ElectricMotor.TorqueRequest) }
 				}
 			});
-			var testResponse2 =
-				TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity,
-					false);
-			return new DrivetrainDemand() {
+			var testResponse2 = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
+			return new DrivetrainDemand {
 				AvgEmDrivetrainSpeed = testResponse2.ElectricMotor.AvgDrivetrainSpeed,
 				EmTorqueDemand = testResponse2.ElectricMotor.TorqueRequest,
 				ElectricPowerDemand = testResponse2.ElectricSystem.ConsumerPower,
