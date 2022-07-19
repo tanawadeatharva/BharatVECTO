@@ -315,6 +315,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return ClutchClosed(absTime);
 		}
 
+		public bool RequestAfterGearshift { get; set; }
+
 		#endregion
 
 		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
