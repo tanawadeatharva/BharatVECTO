@@ -44,35 +44,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
-			if (DataBus.VehicleInfo.VehicleStopped) {
-				TestPowertrain.Gearbox.Gear = Controller.ShiftStrategy.NextGear;
-			}
-			else if (PreviousState.GearboxEngaged) {
-				TestPowertrain.Gearbox.Gear = DataBus.GearboxInfo.Gear;
-			} else {
-				TestPowertrain.Gearbox.Gear = Controller.ShiftStrategy.NextGear;
-			}
+			TestPowertrain.UpdateComponents();
 
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
+			TestPowertrain.Gearbox.UpdateFrom(nextGear);
+			TestPowertrain.Gearbox.Gear = DataBus.VehicleInfo.VehicleStopped 
+				? Controller.ShiftStrategy.NextGear 
+				: PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
 			
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
-			
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			
-			TestPowertrain.Clutch.Initialize(DataBus.ClutchInfo.ClutchLosses);
-			
-			TestPowertrain.Battery?.UpdateFrom(DataBus.BatteryInfo);
-			TestPowertrain.BatterySystem?.UpdateFrom(DataBus.BatteryInfo);
-			TestPowertrain.SuperCap?.UpdateFrom(DataBus.BatteryInfo);
-			
-			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
-
-			var currentGear = DataBus.VehicleInfo.VehicleStopped ? Controller.ShiftStrategy.NextGear : PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
-
-			if (nextGear.Engaged && !nextGear.Equals(currentGear)) {
+			if (nextGear.Engaged && !nextGear.Equals(TestPowertrain.Gearbox.Gear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
 					return null;
 				}
@@ -85,34 +68,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return null;
 				}
 
-				var vDrop = DataBus.VehicleInfo.VehicleSpeed - estimatedVelocityPostShift;
-				var vehicleSpeedPostShift = estimatedVelocityPostShift; // DataBus.VehicleInfo.VehicleSpeed - vDrop * ModelData.GearshiftParameters.VelocityDropFactor;
 				TestPowertrain.Gearbox.Gear = nextGear;
-				var init = TestPowertrain.Container.VehiclePort.Initialize(
-					vehicleSpeedPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				var init = TestPowertrain.Container.VehiclePort.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 				if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
 					return null;
 				}
 			}
 
+			TestPowertrain.Gearbox.UpdateFrom(nextGear);
 			TestPowertrain.Gearbox._nextGear = Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-
-			TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
-			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
-			TestPowertrain.WHRCharger?.UpdateFrom(DataBus.WHRCharger);
-
-			TestPowertrain.Gearbox.PreviousState.InAngularVelocity = (DataBus.GearboxInfo as Gearbox).PreviousState.InAngularVelocity;
-
-			TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchInfo);
-
-
-			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestPowertrain.ElectricMotor.ThermalBuffer = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).ThermalBuffer;
-			TestPowertrain.ElectricMotor.DeRatingActive = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
-
+			TestPowertrain.Gearbox.UpdateFrom((DataBus.GearboxInfo as AbstractGearbox<GearboxState>).PreviousState);
+			
 			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
+				TestPowertrain.ElectricMotorsUpstreamTransmission[ModelData.ElectricMachinesData.FirstOrDefault().Item1].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
 			}
 
 			var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, true);
@@ -158,24 +126,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
+			TestPowertrain.UpdateComponents();
+
 			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
+			TestPowertrain.Gearbox.UpdateFrom(nextGear);
 			
 			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
-			
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
-			
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
-			
-			TestPowertrain.Battery?.UpdateFrom(DataBus.BatteryInfo);
-			TestPowertrain.BatterySystem?.UpdateFrom(DataBus.BatteryInfo);
-			TestPowertrain.SuperCap?.UpdateFrom(DataBus.BatteryInfo);
-			TestPowertrain.Brakes.BrakePower = DataBus.Brakes.BrakePower;
 
-			var currentGear = PreviousState.GearboxEngaged ? DataBus.GearboxInfo.Gear : Controller.ShiftStrategy.NextGear;
-
-			if (nextGear.Engaged && !nextGear.Equals(currentGear)) {
+			if (nextGear.Engaged && !nextGear.Equals(TestPowertrain.Gearbox.Gear)) {
 				if (!AllowEmergencyShift && ModelData.GearboxData.Gears[nextGear.Gear].Ratio > ModelData.GearshiftParameters.RatioEarlyUpshiftFC) {
 					return null;
 				}
@@ -195,10 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						return null;
 					}
 
-					var totalTransmissionRatio = inAngularVelocity /
-												(DataBus.VehicleInfo.VehicleSpeed +
-												DataBus.DriverInfo.DriverAcceleration * dt);
-
+					var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt);
 					var estimatedEngineSpeed = (vehicleSpeedPostShift * totalTransmissionRatio).Cast<PerSecond>();
 					if (estimatedEngineSpeed.IsSmaller(ModelData.GearshiftParameters.MinEngineSpeedPostUpshift)) {
 						return null;
@@ -211,25 +168,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				TestPowertrain.Gearbox.RequestAfterGearshift = (DataBus.GearboxInfo as ATGearbox).RequestAfterGearshift;
 			}
 
-			if (!nextGear.Engaged) {
-				TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			}
-
-			TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
-			TestPowertrain.DCDCConverter?.UpdateFrom(DataBus.DCDCConverter);
-			TestPowertrain.WHRCharger?.UpdateFrom(DataBus.WHRCharger);
-			TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxInfo);
-
-			if (nextGear.TorqueConverterLocked.HasValue && !nextGear.TorqueConverterLocked.Value) {
-				TestPowertrain.TorqueConverter.UpdateFrom(DataBus.TorqueConverterInfo);
-			}
-			
-			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestPowertrain.ElectricMotor.ThermalBuffer = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).ThermalBuffer;
-			TestPowertrain.ElectricMotor.DeRatingActive = (DataBus.ElectricMotorInfo(pos) as ElectricMotor).DeRatingActive;
+			TestPowertrain.Gearbox.UpdateFrom(nextGear);
 
 			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
+				TestPowertrain.ElectricMotorsUpstreamTransmission[ModelData.ElectricMachinesData.FirstOrDefault().Item1].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
 			}
 
 			try {
