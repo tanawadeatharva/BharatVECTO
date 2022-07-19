@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		public virtual bool UpdateFrom(object other) {
 			if (other is Clutch c) {
 				PreviousState = c.PreviousState.Clone();
 				return true;

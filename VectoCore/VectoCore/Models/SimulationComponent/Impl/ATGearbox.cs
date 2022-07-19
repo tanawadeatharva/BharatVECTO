@@ -582,7 +582,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
 
-			public ATGearboxState Clone() => (ATGearboxState)MemberwiseClone();
+			public new ATGearboxState Clone() => (ATGearboxState)MemberwiseClone();
 
 		}
 

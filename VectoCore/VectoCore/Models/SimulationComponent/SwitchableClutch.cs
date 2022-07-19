@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class SwitchableClutch : Clutch, IUpdateable
+	public class SwitchableClutch : Clutch
 	{
 		public SwitchableClutch(IVehicleContainer container, CombustionEngineData engineData) : base(container, engineData) { }
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		#region Implementation of IUpdateable
 
-		public bool UpdateFrom(object other) {
+		public override bool UpdateFrom(object other) {
 			if (other is SwitchableClutch c) {
 				PreviousState = c.PreviousState.Clone();
 				ClutchOpen = c.ClutchOpen;
