@@ -362,5 +362,10 @@ namespace TUGraz.VectoCore.Utils
 				new XElement(ns + XMLNames.Report_ApplicationInfo_Date,
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
+
+		public static string GetGUID()
+		{
+			return Guid.NewGuid().ToString("n").Substring(0, 20);
+		}
 	}
 }

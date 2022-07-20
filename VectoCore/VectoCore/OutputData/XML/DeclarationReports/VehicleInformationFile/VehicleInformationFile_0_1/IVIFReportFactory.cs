@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -6,12 +8,53 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
+	public interface IXmlMultistepTypeWriter
+	{
+		XElement GetElement(IMultistageVIFInputData inputData);
+	}
+
+	public interface IReportMultistepCompletedBusOutputGroup
+	{
+		IList<XElement> GetElements(IMultistageVIFInputData multiStageInputDataProvider);
+	}
+
+	public interface IReportMultistepCompletedBusTypeWriter
+	{
+		XElement GetElement(IMultistageVIFInputData inputData);
+
+	}
+
+	public interface IVIFReportInterimFactory
+	{
+		IXMLMultistepIntermediateReport GetInterimVIFReport(VehicleCategory vehicleType,
+			VectoSimulationJobType jobType, ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
+
+		#region Vehicle
+
+		IXmlMultistepTypeWriter GetConventionalVehicleType();
+
+		#endregion
+
+		IReportMultistepCompletedBusOutputGroup GetCompletedBusGeneralParametersGroup();
+		IReportMultistepCompletedBusOutputGroup GetCompletedBusParametersGroup();
+		IReportMultistepCompletedBusOutputGroup GetCompletedBusPassengerCountGroup();
+		IReportMultistepCompletedBusOutputGroup GetCompletedBusDimensionsGroup();
+
+		IReportMultistepCompletedBusTypeWriter GetCompletedComponentsType();
+
+		IReportMultistepCompletedBusTypeWriter GetCompletedAirdragType();
+		IReportMultistepCompletedBusTypeWriter GetCompletedAuxiliariesType();
+
+		IVIFFAdasType GetCompletedADASType();
+	}
+
+
 	public interface IVIFReportFactory
 	{
 		IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
-
+		
 		#region Vehicle
 
 		IXmlTypeWriter GetConventionalVehicleType();

@@ -33,7 +33,7 @@
 		</ADAS>
 		<Components xsi:type="Components_Conventional_CompletedBusType">
 			<AirDrag>
-				<v2.0:Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType">
+				<v2.0:Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<v2.0:Manufacturer>Generic Manufacturer</v2.0:Manufacturer>
 					<v2.0:Model>Generic Model</v2.0:Model>
 					<v2.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v2.0:CertificationNumber>

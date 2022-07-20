@@ -15,7 +15,53 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoMockup.Reports
 {
-    internal class MockupPrimaryVehicleInformationFile : IXMLVehicleInformationFile, IXMLMockupReport
+	internal class MockupInterimVehicleInformationFile : IXMLMultistepIntermediateReport, IXMLMockupReport
+	{
+		private readonly IXMLMultistepIntermediateReport _intermediateVifImplementation;
+
+		public MockupInterimVehicleInformationFile(IXMLMultistepIntermediateReport vifImplementation)
+		{
+			_intermediateVifImplementation = vifImplementation;
+		}
+
+		#region Implementation of IXMLMultistepIntermediateReport
+
+		public void Initialize(VectoRunData modelData)
+		{
+			_intermediateVifImplementation.Initialize(modelData);
+		}
+
+		public XDocument Report => _intermediateVifImplementation.Report;
+
+		public void GenerateReport()
+		{
+			_intermediateVifImplementation.GenerateReport();
+		}
+
+		#endregion
+
+		#region Implementation of IXMLMockupReport
+
+		public void WriteMockupResult(XMLDeclarationReport.ResultEntry resultValue)
+		{
+			
+		}
+
+		public void WriteMockupSummary(XMLDeclarationReport.ResultEntry resultValue)
+		{
+			
+		}
+
+		public void WriteExemptedResults()
+		{
+			
+		}
+
+		#endregion
+	}
+
+
+	internal class MockupPrimaryVehicleInformationFile : IXMLVehicleInformationFile, IXMLMockupReport
     {
 		
 		private readonly IXMLVehicleInformationFile _vehicleInformationFileImplementation;

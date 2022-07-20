@@ -1043,6 +1043,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
+		
+		public XmlNode XMLSource => AirdragEntry.XMLSource;
 
 		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }

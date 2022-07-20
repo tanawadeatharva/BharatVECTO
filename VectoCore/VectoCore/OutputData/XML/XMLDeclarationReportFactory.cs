@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			if (multistageVifInputData.VehicleInputData == null)
 			{
-				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter, true)
+				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter)
 				{
 					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 				};
@@ -89,14 +89,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				switch (declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory)
 				{
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new XMLDeclarationReportCompletedVehicle(outputDataWriter,
-												declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle)
+						return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
 											{
 												PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
 											};
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter,
-												declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
+						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter);
 
 					default:
 						break;

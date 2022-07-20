@@ -402,6 +402,9 @@ namespace TUGraz.VectoCommon.InputData
 		SquareMeter TransferredAirDragArea { get; } // P246
 
 		SquareMeter AirDragArea_0 { get; } // P245
+
+		XmlNode XMLSource { get; }
+
 	}
 
 	public interface IRetarderInputData : IComponentInputData

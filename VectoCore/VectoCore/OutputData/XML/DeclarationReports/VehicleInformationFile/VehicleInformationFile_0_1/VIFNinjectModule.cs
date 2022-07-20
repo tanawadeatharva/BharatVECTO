@@ -7,6 +7,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.InterimComponents;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.VIFReport;
 using TUGraz.VectoCore.Utils.Ninject;
 
@@ -20,9 +21,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			LoadModule<ContextPreservationModule>();
 
-			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod,
-				6, 6, typeof(IVIFReportFactory).GetMethod(nameof(IVIFReportFactory.GetVIFReport)))).InSingletonScope();
+			Bind<IVIFReportInterimFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod,
+				6, 6, 
+				typeof(IVIFReportInterimFactory).GetMethod(nameof(IVIFReportInterimFactory.GetInterimVIFReport)) )).InSingletonScope();
 
+			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(nameCombinationMethod,
+				6, 6, typeof(IVIFReportFactory).GetMethod(nameof(IVIFReportFactory.GetVIFReport))
+				)).InSingletonScope();
+			
+			
 			#region Primary Vehicle Information File Reports
 
 			Bind<IXMLVehicleInformationFile>().To<Conventional_PrimaryBus_VIF>().Named(nameCombinationMethod.Invoke(
@@ -115,6 +122,42 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			#endregion
 
 			#region Complete(d) Primary Vehicle Information File Reports
+
+			Bind<IXMLMultistepIntermediateReport>().To<Conventional_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXmlMultistepTypeWriter>().To<ConventionalInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetConventionalVehicleType());
+
+
+			Bind<IReportMultistepCompletedBusTypeWriter>().To<ConventionalComponentsInterimVIFType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedComponentsType());
+
+			Bind<IVIFFAdasType>().To<VIFCompletedConventionalAdasType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedADASType());
+
+            Bind<IReportMultistepCompletedBusTypeWriter>().To<AirdragInterimType>().When(AccessedViaInterimVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedAirdragType());
+
+            Bind<IReportMultistepCompletedBusTypeWriter>().To<ConventionalInterimAuxiliaryType>().When(AccessedViaInterimVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedAuxiliariesType());
+
+            Bind<IReportMultistepCompletedBusOutputGroup>().To<CompletedBusGeneralParametersGroup>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedBusGeneralParametersGroup());
+
+			Bind<IReportMultistepCompletedBusOutputGroup>().To<GetCompletedBusParametersGroup>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedBusParametersGroup());
+
+			Bind<IReportMultistepCompletedBusOutputGroup>().To<CompletedBusPassengerCountGroup>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedBusPassengerCountGroup());
+
+			Bind<IReportMultistepCompletedBusOutputGroup>().To<CompletedBusDimensionsGroup>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedBusDimensionsGroup());
 
 			#endregion
 
@@ -321,6 +364,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return typeof(IVIFReportFactory).IsAssignableFrom(request.ParentRequest.Service);
 		}
 
+
+		private bool AccessedViaInterimVIFFactory(IRequest request)
+		{
+			if (request.ParentRequest == null) {
+				return false;
+			}
+			return typeof(IVIFReportInterimFactory).IsAssignableFrom(request.ParentRequest.Service);
+		}
 
 		#endregion
 	}

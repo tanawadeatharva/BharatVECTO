@@ -25,7 +25,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 				inputDataReader, validate)
 		{
 			_currentStageDeclarationReport =
-				new XMLDeclarationMockupPrimaryReport(_currentStageOutputDataWriter, mrfFactory, cifFactory, vifFactory, originalStageInputData.StageInputData.ExemptedVehicle,true);
+				new XMLDeclarationMockupPrimaryReport(_currentStageOutputDataWriter, mrfFactory, cifFactory, vifFactory, originalStageInputData.StageInputData.ExemptedVehicle);
 		}
 
 		#region Overrides of InterimAfterPrimaryFactoryCreator

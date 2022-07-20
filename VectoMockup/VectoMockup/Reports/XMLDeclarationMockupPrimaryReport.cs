@@ -11,6 +11,10 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.
 
 namespace TUGraz.VectoMockup.Reports
 {
+
+	/// <summary>
+	/// Create MRF and VIF for primary bus
+	/// </summary>
 	public class XMLDeclarationMockupPrimaryReport : XMLDeclarationReportPrimaryVehicle_09
 	{
 		private readonly bool _exempted;
@@ -19,20 +23,12 @@ namespace TUGraz.VectoMockup.Reports
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory, 
 			IVIFReportFactory vifFactory,
-			bool exempted,
-			bool writePIF = false) : base(writer,
+			bool exempted) : base(writer,
 			mrfFactory,
 			cifFactory,
-			vifFactory,
-			writePIF)
+			vifFactory)
 		{
 			_exempted = exempted;
-		}
-
-		protected override void InstantiateReports(VectoRunData modelData)
-		{
-			base.InstantiateReports(modelData);
-			//VehicleInformationFile = new MockupPrimaryVehicleInformationFile(VehicleInformationFile);
 		}
 
 		#region Overrides of XMLDeclarationReportPrimaryVehicle_09
@@ -50,8 +46,7 @@ namespace TUGraz.VectoMockup.Reports
 
 		#endregion
 
-		#region Overrides of XMLDeclarationReportPrimaryVehicle
-
+		
 		protected override void GenerateReports()
 		{
 			if (!_exempted) {
@@ -69,9 +64,4 @@ namespace TUGraz.VectoMockup.Reports
 
 	}
 
-
-
-
-
-		#endregion
 }

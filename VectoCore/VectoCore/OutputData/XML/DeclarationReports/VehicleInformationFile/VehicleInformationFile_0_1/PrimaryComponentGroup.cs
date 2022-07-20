@@ -5,13 +5,13 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
-	public abstract class ComponentVIFType : IXmlTypeWriter
+	public abstract class PrimaryComponentVIFType : IXmlTypeWriter
 	{
 		protected readonly IVIFReportFactory _vifReportFactory;
 		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
-		protected ComponentVIFType(IVIFReportFactory vifReportFactory)
+		protected PrimaryComponentVIFType(IVIFReportFactory vifReportFactory)
 		{
 			_vifReportFactory = vifReportFactory;
 		}
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 	
 
-	public class ConventionalComponentVIFType : ComponentVIFType
+	public class ConventionalComponentVIFType : PrimaryComponentVIFType
 	{
 		public ConventionalComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class HevIepcSComponentVIFType : ComponentVIFType
+	public class HevIepcSComponentVIFType : PrimaryComponentVIFType
 	{
 		public HevIepcSComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevPxComponentVIFType : ComponentVIFType
+	public class HevPxComponentVIFType : PrimaryComponentVIFType
 	{
 		public HevPxComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevS2ComponentVIFType: ComponentVIFType
+	public class HevS2ComponentVIFType: PrimaryComponentVIFType
 	{
 		public HevS2ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class HevS3ComponentVIFType : ComponentVIFType
+	public class HevS3ComponentVIFType : PrimaryComponentVIFType
 	{
 		public HevS3ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class HevS4ComponentVIFType : ComponentVIFType
+	public class HevS4ComponentVIFType : PrimaryComponentVIFType
 	{
 		public HevS4ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class PevE2ComponentVIFType : ComponentVIFType
+	public class PevE2ComponentVIFType : PrimaryComponentVIFType
 	{
 		public PevE2ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class PevE3ComponentVIFType : ComponentVIFType
+	public class PevE3ComponentVIFType : PrimaryComponentVIFType
 	{
 		public PevE3ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class PevE4ComponentVIFType : ComponentVIFType
+	public class PevE4ComponentVIFType : PrimaryComponentVIFType
 	{
 		public PevE4ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	}
 
 
-	public class IepcComponentVIFType : ComponentVIFType
+	public class IepcComponentVIFType : PrimaryComponentVIFType
 	{
 		public IepcComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 

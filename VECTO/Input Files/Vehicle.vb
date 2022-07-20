@@ -437,8 +437,9 @@ Public Class Vehicle
 
 	Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
 	Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
+    Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
 
-	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
+    Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IAxlesEngineeringInputData.AxlesEngineering
 		Get
 			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()

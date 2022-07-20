@@ -23,18 +23,23 @@ namespace TUGraz.VectoMockup.Ninject
 		{
 			Kernel.Bind<IVIFReportFactory>().To<MockupVIFReportFactory>()
 				.WhenInjectedExactlyInto<MockupReportFactory>().InSingletonScope();
+
+			Kernel.Bind<IVIFReportInterimFactory>().To<MockupVIFReportFactory>()
+				.WhenInjectedExactlyInto<MockupReportFactory>().InSingletonScope();
 		}
 
 		#endregion
 
-		public class MockupVIFReportFactory : IVIFReportFactory
+		public class MockupVIFReportFactory : IVIFReportFactory, IVIFReportInterimFactory
 		{
 			private IVIFReportFactory _vifReportFactoryImplementation;
+			private readonly IVIFReportInterimFactory _interimFactory;
 
 
-			public MockupVIFReportFactory(IVIFReportFactory vifReportFactoryImplementation)
+			public MockupVIFReportFactory(IVIFReportFactory vifReportFactoryImplementation, IVIFReportInterimFactory interimFactory)
 			{
 				_vifReportFactoryImplementation = vifReportFactoryImplementation;
+				_interimFactory = interimFactory;
 			}
 
 
@@ -43,17 +48,62 @@ namespace TUGraz.VectoMockup.Ninject
 			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
 				bool exempted, bool iepc, bool ihpc)
 			{
-				switch (vehicleType) {
-					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new MockupPrimaryVehicleInformationFile(
-							_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
-								ihpc));
-					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new MockupVehicleInformationFile(
-							_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
-								ihpc));
-					default: throw new ArgumentException();
-				}
+				return new MockupPrimaryVehicleInformationFile(
+					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
+						ihpc));
+			}
+			
+			public IXMLMultistepIntermediateReport GetInterimVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
+				ArchitectureID archId, bool exempted, bool iepc, bool ihpc)
+			{
+				return new MockupInterimVehicleInformationFile(
+					_interimFactory.GetInterimVIFReport(vehicleType, jobType, archId, exempted,
+						iepc, ihpc));
+			}
+
+			IXmlMultistepTypeWriter IVIFReportInterimFactory.GetConventionalVehicleType()
+			{
+				return _interimFactory.GetConventionalVehicleType();
+			}
+
+			public IReportMultistepCompletedBusOutputGroup GetCompletedBusGeneralParametersGroup()
+			{
+				return _interimFactory.GetCompletedBusGeneralParametersGroup();
+			}
+
+			public IReportMultistepCompletedBusOutputGroup GetCompletedBusParametersGroup()
+			{
+				return _interimFactory.GetCompletedBusParametersGroup();
+			}
+
+			public IReportMultistepCompletedBusOutputGroup GetCompletedBusPassengerCountGroup()
+			{
+				return _interimFactory.GetCompletedBusPassengerCountGroup();
+			}
+
+			public IReportMultistepCompletedBusOutputGroup GetCompletedBusDimensionsGroup()
+			{
+				return _interimFactory.GetCompletedBusDimensionsGroup();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetCompletedAuxiliariesType()
+			{
+				return _interimFactory.GetCompletedAuxiliariesType();
+			}
+
+			public IVIFFAdasType GetCompletedADASType()
+			{
+				return _interimFactory.GetCompletedADASType();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetCompletedComponentsType()
+			{
+				return _interimFactory.GetCompletedComponentsType();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetCompletedAirdragType()
+			{
+				return _interimFactory.GetCompletedAirdragType();
 			}
 
 			public IXmlTypeWriter GetConventionalVehicleType()

@@ -10,13 +10,17 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
+	/// <summary>
+	/// Create VIF of an interim (or the complete(d) step
+	/// </summary>
 	public class XMLDeclarationReportMultistageBusVehicle : XMLDeclarationReport
 	{
-		private IXMLMultistageReport _multistageBusReport;
+		protected IXMLMultistepIntermediateReport _multistageBusReport;
 
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
 			: base(writer)
 		{
+			throw new NotImplementedException();
 			//throw new VectoException("Used here");
 			//_multistageBusReport = new XMLMultistageBusReport();
 		}

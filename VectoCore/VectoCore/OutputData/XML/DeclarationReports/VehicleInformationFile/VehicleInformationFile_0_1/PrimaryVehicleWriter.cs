@@ -12,8 +12,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-		
-		public VehicleWriter(IVIFReportFactory vifReportFactory)
+
+		protected VehicleWriter(IVIFReportFactory vifReportFactory)
 		{
 			_vifReportFactory = vifReportFactory;
 		}

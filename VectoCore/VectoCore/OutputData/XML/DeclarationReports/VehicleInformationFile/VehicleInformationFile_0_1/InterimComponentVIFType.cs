@@ -1,0 +1,51 @@
+﻿using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
+
+namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
+{
+	public abstract class CompletedComponentVIFType : IReportMultistepCompletedBusTypeWriter
+	{
+		protected readonly IVIFReportInterimFactory _vifReportFactory;
+		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
+		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+
+		protected CompletedComponentVIFType(IVIFReportInterimFactory vifReportFactory)
+		{
+			_vifReportFactory = vifReportFactory;
+		}
+
+		#region Implementation of IReportMultistepCompletedBusTypeWriter
+
+		public abstract XElement GetElement(IMultistageVIFInputData inputData);
+
+		#endregion
+	}
+
+
+	public class ConventionalComponentsInterimVIFType : CompletedComponentVIFType
+	{
+		public ConventionalComponentsInterimVIFType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of CompletedComponentVIFType
+
+		public override XElement GetElement(IMultistageVIFInputData inputData)
+		{
+			var airDrag = _vifReportFactory.GetCompletedAirdragType().GetElement(inputData);
+			var auxiliaries = _vifReportFactory.GetCompletedAuxiliariesType().GetElement(inputData);
+
+			if (airDrag == null && auxiliaries == null) {
+				return null;
+			}
+
+			return new XElement(_v24 + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + XMLNames.XSIType, "Components_Conventional_CompletedBusType"),
+				airDrag,
+				auxiliaries);
+
+		}
+
+		#endregion
+	}
+}

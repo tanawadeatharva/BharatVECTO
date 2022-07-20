@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 						var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
                         var originalReportWriter = ReportWriter;
                         ReportWriter = tempOutputWriter;
-                        var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter, true);
+                        var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter);
 
 
                         RunDataFactory = CreateRunDataReader(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);

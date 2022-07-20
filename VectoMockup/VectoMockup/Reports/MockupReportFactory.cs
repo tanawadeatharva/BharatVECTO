@@ -17,16 +17,19 @@ namespace TUGraz.VectoMockup.Reports
         private readonly IManufacturerReportFactory _mrfFactory;
         private readonly ICustomerInformationFileFactory _cifFactory;
 		private readonly IVIFReportFactory _vifFactory;
+		private readonly IVIFReportInterimFactory _interimFactory;
 
 
-        #region Implementation of IXMLDeclarationReportFactory
+		#region Implementation of IXMLDeclarationReportFactory
 
 
-        public MockupReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory, IVIFReportFactory vifFactory)
+        public MockupReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory,
+			IVIFReportFactory vifFactory, IVIFReportInterimFactory interimFactory)
         {
             _mrfFactory = mrfFactory;
             _cifFactory = cifFactory;
 			_vifFactory = vifFactory;
+			_interimFactory = interimFactory;
 		}
 
 	
@@ -73,16 +76,17 @@ namespace TUGraz.VectoMockup.Reports
         {
 			if (multistageVifInputData.VehicleInputData == null)
             {
-                var reportCompleted = new XMLDeclarationMockupReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, 
-					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle, true)
+                var reportCompleted = new XMLDeclarationMockupReportCompletedVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory,
+					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle)
                 {
                     PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
                 };
                 return reportCompleted;
             }
             else {
-				//throw new NotImplementedException();
-                var report = new XMLDeclarationReportMultistageBusVehicle(outputDataWriter);
+				
+                var report = new XMLDeclarationMockupReportInterimVehicle(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _interimFactory,
+					multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle);
                 return report;
             }
         }
@@ -102,17 +106,13 @@ namespace TUGraz.VectoMockup.Reports
                 {
                     case VehicleCategory.HeavyBusCompletedVehicle:
                         throw new NotImplementedException();
-                        return new XMLDeclarationReportCompletedVehicle(outputDataWriter,
-                            declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory ==
-                            VehicleCategory.HeavyBusPrimaryVehicle)
+                        return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
                         {
                             PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
                         };
                     case VehicleCategory.HeavyBusPrimaryVehicle:
                         return new XMLDeclarationMockupPrimaryReport(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory,
-							declarationInputDataProvider.JobInputData.Vehicle.ExemptedVehicle,
-                            declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory ==
-                            VehicleCategory.HeavyBusPrimaryVehicle);
+							declarationInputDataProvider.JobInputData.Vehicle.ExemptedVehicle);
 
                     default:
                         break;
@@ -143,6 +143,7 @@ namespace TUGraz.VectoMockup.Reports
 	internal interface IMockupDeclarationReportFactory
 	{
 		IManufacturerReportFactory MrfFactory { get; }
+
         ICustomerInformationFileFactory CifFactory { get; }
 
         IVIFReportFactory VifFactory { get; }

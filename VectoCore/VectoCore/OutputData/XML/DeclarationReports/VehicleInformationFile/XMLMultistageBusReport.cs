@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 	}
 
-	public class XMLMultistageBusReport: IXMLMultistageReport 
+	public class XMLMultistageBusReport: IXMLMultistepIntermediateReport 
 	{
 		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public XMLMultistageBusReport()
 		{
+			throw new VectoException("do not use anymore!");
 			_manufacturingStages = new List<XElement>();
 			_namespaceAttributes = new List<XAttribute>();
 		}

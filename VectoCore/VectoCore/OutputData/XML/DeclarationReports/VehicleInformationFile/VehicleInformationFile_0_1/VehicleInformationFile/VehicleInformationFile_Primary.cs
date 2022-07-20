@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public Conventional_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetConventionalVehicleType().GetElement(inputData);
 		}
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEV_Px_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetHevPxVehicleType().GetElement(inputData);
 		}
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEV_S2_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetHevS2VehicleType().GetElement(inputData);
 		}
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEV_S3_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetHevS3VehicleType().GetElement(inputData);
 		}
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEV_S4_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetHevS4VehicleType().GetElement(inputData);
 		}
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEV_IEPC_S_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetHevIepcSVehicleType().GetElement(inputData);
 		}
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public PEV_E2_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetPevE2VehicleType().GetElement(inputData);
 		}
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public PEV_E3_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetPevE3VehicleType().GetElement(inputData);
 		}
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public PEV_E4_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetPevE4VehicleType().GetElement(inputData);
 		}
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public PEV_IEPC_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetPevIEPCVehicleType().GetElement(inputData);
 		}
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public Exempted_PrimaryBus_VIF(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _vifFactory.GetExemptedVehicleType().GetElement(inputData);
 		}

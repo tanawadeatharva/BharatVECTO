@@ -6,6 +6,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
     public interface IXmlTypeWriter
 	{
 		XElement GetElement(IDeclarationInputDataProvider inputData);
-		
+
 	}
 }
