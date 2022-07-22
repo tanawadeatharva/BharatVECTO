@@ -22,7 +22,7 @@
 		<VehicleWidth>2500</VehicleWidth>
 		<EntranceHeight>2000</EntranceHeight>
 		<DoorDriveTechnology>electric</DoorDriveTechnology>
-		<VehicleDeclarationType>interim</VehicleDeclarationType>
+		<VehicleDeclarationType>final</VehicleDeclarationType>
 		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
@@ -61,7 +61,7 @@
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
-						<SystemConfiguration>0</SystemConfiguration>
+						<SystemConfiguration>1</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>
 							<Cooling>non R-744 2-stage</Cooling>
 							<Heating>none</Heating>

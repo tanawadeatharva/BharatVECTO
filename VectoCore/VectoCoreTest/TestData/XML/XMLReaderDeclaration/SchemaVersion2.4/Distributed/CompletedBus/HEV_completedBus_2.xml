@@ -23,7 +23,7 @@
 		<VehicleWidth>2500</VehicleWidth>
 		<EntranceHeight>2000</EntranceHeight>
 		<DoorDriveTechnology>electric</DoorDriveTechnology>
-		<VehicleDeclarationType>interim</VehicleDeclarationType>
+		<VehicleDeclarationType>final</VehicleDeclarationType>
 		<ADAS xsi:type="ADAS_HEV_Type">
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
@@ -63,7 +63,7 @@
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
-						<SystemConfiguration>0</SystemConfiguration>
+						<SystemConfiguration>1</SystemConfiguration>
 						<HeatPumpTypeDriverCompartment>
 							<Cooling>non R-744 2-stage</Cooling>
 							<Heating>none</Heating>
@@ -75,7 +75,7 @@
 						<AuxiliaryHeaterPower>50</AuxiliaryHeaterPower>
 						<DoubleGlazing>false</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
-						<SeparateAirDistributionDucts>false</SeparateAirDistributionDucts>
+						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
 						<WaterElectricHeater>false</WaterElectricHeater>
 						<AirElectricHeater>false</AirElectricHeater>
 						<OtherHeatingTechnology>false</OtherHeatingTechnology>

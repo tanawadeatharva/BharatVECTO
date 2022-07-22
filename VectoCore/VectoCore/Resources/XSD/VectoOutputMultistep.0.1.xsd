@@ -312,6 +312,210 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="AUX_Convetional_PrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAuxiliaryDataVIFType">
+				<xs:sequence>
+					<xs:element name="Fan">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology">
+									<xs:annotation>
+										<xs:documentation>P181</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 steps"/>
+											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 steps"/>
+											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 steps"/>
+											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 steps"/>
+											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
+											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
+											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
+											<xs:enumeration value="Electrically driven - Electronically controlled"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AuxSPTechnologyPrimaryBusType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ElectricSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AlternatorTechnology">
+									<xs:annotation>
+										<xs:documentation>P294 - enum</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AlternatorTechnologyType"/>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:sequence minOccurs="0">
+									<xs:element name="SmartAlternator" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="RatedCurrent" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>P295 - [A]</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="RatedVoltage">
+													<xs:annotation>
+														<xs:documentation>P296 - [V]</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+															<xs:enumeration value="12"/>
+															<xs:enumeration value="24"/>
+															<xs:enumeration value="48"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Battery" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="BatteryTechnology">
+													<xs:annotation>
+														<xs:documentation>P296 - enum</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="lead-acid battery – conventional"/>
+															<xs:enumeration value="lead-acid battery – AGM"/>
+															<xs:enumeration value="lead-acid battery – gel"/>
+															<xs:enumeration value="li-ion battery - high power"/>
+															<xs:enumeration value="li-ion battery - high energy"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="RatedCapacity" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>P299 - [Ah]</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="NominalVoltage">
+													<xs:annotation>
+														<xs:documentation>P298 - [V]</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+															<xs:enumeration value="12"/>
+															<xs:enumeration value="24"/>
+															<xs:enumeration value="48"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Capacitor" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="CapacitorTechnology" type="xs:string">
+													<xs:annotation>
+														<xs:documentation>P300 - [-]</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="RatedCapacitance" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>P301 - [F]</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="RatedVoltage" type="xs:integer">
+													<xs:annotation>
+														<xs:documentation>P302 - [V]</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="SupplyFromHEVPossible" type="xs:boolean" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>P303 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType"/>
+								<xs:element name="CompressorDrive">
+									<xs:annotation>
+										<xs:documentation>P310 - enum</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="mechanically"/>
+											<xs:enumeration value="electrically"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType"/>
+								<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+								<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+								<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+								<xs:element name="AirsuspensionControl">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="mechanically"/>
+											<xs:enumeration value="electronically"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="AUX_HEV-P_PrimaryBusType">
 		<xs:complexContent>
 			<xs:extension base="vif:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
@@ -589,210 +793,6 @@
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractAuxiliaryDataVIFType"/>
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="AuxiliaryDataVIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractAuxiliaryDataVIFType">
-				<xs:sequence>
-					<xs:element name="Fan">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Technology">
-									<xs:annotation>
-										<xs:documentation>P181</xs:documentation>
-									</xs:annotation>
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
-											<xs:enumeration value="Crankshaft mounted - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 2 steps"/>
-											<xs:enumeration value="Crankshaft mounted - Discrete step clutch 3 steps"/>
-											<xs:enumeration value="Crankshaft mounted - On/off clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Electronically controlled visco clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Bimetallic controlled visco clutch"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 2 steps"/>
-											<xs:enumeration value="Belt driven or driven via transm. - Discrete step clutch 3 steps"/>
-											<xs:enumeration value="Belt driven or driven via transm. - On/off clutch"/>
-											<xs:enumeration value="Hydraulic driven - Variable displacement pump"/>
-											<xs:enumeration value="Hydraulic driven - Constant displacement pump"/>
-											<xs:enumeration value="Electrically driven - Electronically controlled"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="SteeringPump">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Technology" maxOccurs="4">
-									<xs:annotation>
-										<xs:documentation>P182</xs:documentation>
-									</xs:annotation>
-									<xs:complexType>
-										<xs:simpleContent>
-											<xs:extension base="v2.4:AuxSPTechnologyPrimaryBusType">
-												<xs:attribute name="axleNumber" use="required">
-													<xs:simpleType>
-														<xs:restriction base="xs:int">
-															<xs:minInclusive value="1"/>
-															<xs:maxInclusive value="4"/>
-														</xs:restriction>
-													</xs:simpleType>
-												</xs:attribute>
-											</xs:extension>
-										</xs:simpleContent>
-									</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="ElectricSystem">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AlternatorTechnology">
-									<xs:annotation>
-										<xs:documentation>P294 - enum</xs:documentation>
-									</xs:annotation>
-									<xs:complexType>
-										<xs:simpleContent>
-											<xs:extension base="v2.4:AlternatorTechnologyType"/>
-										</xs:simpleContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:sequence minOccurs="0">
-									<xs:element name="SmartAlternator" maxOccurs="unbounded">
-										<xs:complexType>
-											<xs:sequence>
-												<xs:element name="RatedCurrent" type="xs:integer">
-													<xs:annotation>
-														<xs:documentation>P295 - [A]</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-												<xs:element name="RatedVoltage">
-													<xs:annotation>
-														<xs:documentation>P296 - [V]</xs:documentation>
-													</xs:annotation>
-													<xs:simpleType>
-														<xs:restriction base="xs:integer">
-															<xs:enumeration value="12"/>
-															<xs:enumeration value="24"/>
-															<xs:enumeration value="48"/>
-														</xs:restriction>
-													</xs:simpleType>
-												</xs:element>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="Battery" minOccurs="0" maxOccurs="unbounded">
-										<xs:complexType>
-											<xs:sequence>
-												<xs:element name="BatteryTechnology">
-													<xs:annotation>
-														<xs:documentation>P296 - enum</xs:documentation>
-													</xs:annotation>
-													<xs:simpleType>
-														<xs:restriction base="xs:string">
-															<xs:enumeration value="lead-acid battery – conventional"/>
-															<xs:enumeration value="lead-acid battery – AGM"/>
-															<xs:enumeration value="lead-acid battery – gel"/>
-															<xs:enumeration value="li-ion battery - high power"/>
-															<xs:enumeration value="li-ion battery - high energy"/>
-														</xs:restriction>
-													</xs:simpleType>
-												</xs:element>
-												<xs:element name="RatedCapacity" type="xs:integer">
-													<xs:annotation>
-														<xs:documentation>P299 - [Ah]</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-												<xs:element name="NominalVoltage">
-													<xs:annotation>
-														<xs:documentation>P298 - [V]</xs:documentation>
-													</xs:annotation>
-													<xs:simpleType>
-														<xs:restriction base="xs:integer">
-															<xs:enumeration value="12"/>
-															<xs:enumeration value="24"/>
-															<xs:enumeration value="48"/>
-														</xs:restriction>
-													</xs:simpleType>
-												</xs:element>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="Capacitor" minOccurs="0" maxOccurs="unbounded">
-										<xs:complexType>
-											<xs:sequence>
-												<xs:element name="CapacitorTechnology" type="xs:string">
-													<xs:annotation>
-														<xs:documentation>P300 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-												<xs:element name="RatedCapacitance" type="xs:integer">
-													<xs:annotation>
-														<xs:documentation>P301 - [F]</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-												<xs:element name="RatedVoltage" type="xs:integer">
-													<xs:annotation>
-														<xs:documentation>P302 - [V]</xs:documentation>
-													</xs:annotation>
-												</xs:element>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:element name="SupplyFromHEVPossible" type="xs:boolean" minOccurs="0">
-									<xs:annotation>
-										<xs:documentation>P303 - bool</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="PneumaticSystem">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType"/>
-								<xs:element name="CompressorDrive">
-									<xs:annotation>
-										<xs:documentation>P310 - enum</xs:documentation>
-									</xs:annotation>
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="mechanically"/>
-											<xs:enumeration value="electrically"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-								<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType"/>
-								<xs:element name="CompressorRatio" type="v1.0:Double3"/>
-								<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
-								<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
-								<xs:element name="AirsuspensionControl">
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="mechanically"/>
-											<xs:enumeration value="electronically"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:element>
-								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="HVAC">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean"/>
-								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AxlegearComponentVIFType">
 		<xs:sequence>
@@ -2462,7 +2462,10 @@
 			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
 				<xs:sequence>
 					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
-					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
+					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
+					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
 					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
 				</xs:sequence>
@@ -2474,7 +2477,7 @@
 			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
 				<xs:sequence>
 					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
-					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
 					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
 					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
 				</xs:sequence>

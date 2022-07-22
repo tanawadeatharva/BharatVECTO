@@ -1033,6 +1033,7 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="AirDrag" type="mrf:AirdragType"/>
+						<xs:element name="Auxiliaries" type="mrf:HEVCompletedBusAuxOutputType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1046,6 +1047,7 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="AirDrag" type="mrf:AirdragType"/>
+						<xs:element name="Auxiliaries" type="mrf:PEVCompletedBusAuxOutputType"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
