@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return _nextGear;
 			}
 
-			protected GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			protected virtual GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				if (!DataBus.EngineCtl.CombustionEngineOn) {
 					return _nextGear;
@@ -617,7 +617,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
 
-			protected GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			protected override GearshiftPosition InitStartGear(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				if (!DataBus.EngineCtl.CombustionEngineOn) {
 					return _nextGear;
