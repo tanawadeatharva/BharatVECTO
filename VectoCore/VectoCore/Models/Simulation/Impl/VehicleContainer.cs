@@ -198,8 +198,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
+		private List<(IUpdateable, object)> ComponentUpdateList = new List<(IUpdateable, object)>();
 
+		protected void UpdateComponentsInternal(IDataBus realContainer)
+		{
+			if (ComponentUpdateList.Any()) {
+				foreach (var (target, source) in ComponentUpdateList) {
+					target.UpdateFrom(source);
+				}
+			} else {
+				foreach (var (_, c) in _components) {
+#if DEBUG
+					var found = false;
+#endif
+					if (c is IUpdateable target) {
+						foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+							if (target.UpdateFrom(source)) {
+								ComponentUpdateList.Add((target, source));
+#if DEBUG
+								found = true;
+#endif
+							}
+						}
+					}
 
+#if DEBUG
+					if (!found) {
+						Console.WriteLine("Test Component is not updateable: " + c.GetType());
+					}
+#endif
+				}
+				
+#if DEBUG
+				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
+				foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+					if (!sourceList.Contains(source)){
+						Console.WriteLine("Real Component is not used for update: " + source.GetType());
+					}
+				}
+#endif
+
+				ComponentUpdateList = ComponentUpdateList.Distinct().ToList();
+			}
+		}
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -244,7 +285,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual VectoRun.Status RunStatus { get; set; }
 
-		#endregion
+#endregion
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
@@ -285,22 +326,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_gearboxInfo = new EngineOnlyGearboxInfo(this);
 		}
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IMileageCounter MileageCounter => _mileageCounter;
 
-		#endregion
+#endregion
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IVehicleInfo VehicleInfo => _vehicleInfo;
 
-		#endregion
+#endregion
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IGearboxInfo GearboxInfo => _gearboxInfo;
 
-		#endregion
+#endregion
 	}
 }
