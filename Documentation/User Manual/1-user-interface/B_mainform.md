@@ -76,15 +76,15 @@ In this tab the global calculation settings can be changed.
 :   Toggle output of modal results (.vmod files) in declaration mode. A Summary file (.vsum) is always created.
 
 ![cb](pics/checkbox.png) Modal results in 1Hz
-:   If selected, the modal results (.vmod file) will be converted into 1Hz after the simulation. This may add certain artefacts in the resulting modal results file.
+:   If selected, the modal results (.vmod file) will be converted into 1Hz after the simulation. This may add certain artifacts in the resulting modal results file.
 
 **MISC**
 
 Validate Data
 :    Enables or disables internal checks if the model parameters are within a reasonable range. When simulating a new vehicle model it is good to have this option enabled. If the model parameters are from certified components or the model data has only been modified slightly this check may be disabled. The VECTO simulation will abort anyways if there is an error in the model parameters. Enabling this option increases the simulation time by a few seconds.
 
-Output values in vmod at beginning and end of simulation iterval
-:    By default VECTO writes the simulation results at the middle of every simulation interval. If this option is enabled, the .vmod file will contain two entries for every simulation interval, one at the beginning and one at the end of the simulation interval. Enabling this option may be helpful for analysing the trace of certain signals but can not be used for quantitative analyses of the fuel consumption, average power losses, etc. The generated modal result file has the suffix '_sim'. The picture below shows the difference in the output (top: conventional, bottom: if this option is checked)
+Output values in vmod at beginning and end of simulation interval
+:    By default VECTO writes the simulation results at the middle of every simulation interval. If this option is enabled, the .vmod file will contain two entries for every simulation interval, one at the beginning and one at the end of the simulation interval. Enabling this option may be helpful for analyzing the trace of certain signals but can not be used for quantitative analyses of the fuel consumption, average power losses, etc. The generated modal result file has the suffix '_sim'. The picture below shows the difference in the output (top: conventional, bottom: if this option is checked)
 
 ![Regular VECTO .vmod output (top) vs. beginning and end of simulation interval (bottom)](pics/VECTO_vmod_vgl.png)
 
@@ -136,7 +136,7 @@ Depending on the colour the following message types are displayed:
 
 Note that the [message log](#application-files) can be opened in the ![](pics/Misc-Tools-icon.png) Tools menu with **Open Log**.
 
-In addition to the log messages shown in the message list, Vecto writes more elaborate messages in the subdirectory logs. If multiple simulations are run in parallel (e.g., in declartion mode a vehicle is simulated on different cycles with different loadings) a separate log-file is created for every simulation run.
+In addition to the log messages shown in the message list, VECTO writes more elaborate messages in the subdirectory logs. If multiple simulations are run in parallel (e.g., in declaration mode a vehicle is simulated on different cycles with different loadings) a separate log-file is created for every simulation run.
 
 Statusbar
 : Displays current status and progress of active simulations. When no simulation is executed the current mode is displayed (Engineering or Declaration Mode).

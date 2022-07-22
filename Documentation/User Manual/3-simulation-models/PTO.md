@@ -25,12 +25,12 @@ This is considered by constant power consumption as a function of the PTO type. 
 
 #### Idling losses of the PTO "Consumer" (red)
 
-The idling losses are a function of speed as determined by the DIN 30752-1 procedure. If the PTO transmission includes a shifting element (i.e. declutching of consumer part possible) the torque losses of the consumer in VECTO input shall be defined with zero. This is only used outside of PTO cycles, since the PTO cycles already include these losses. The idling losses are defined as a lossmap dependend on speed which is configurable in the [Vehicle Editor](#vehicle-editor-pto-tab). The file format is described in [PTO Idle Consumption Map](#pto-idle-consumption-map-.vptoi).
+The idling losses are a function of speed as determined by the DIN 30752-1 procedure. If the PTO transmission includes a shifting element (i.e. declutching of consumer part possible) the torque losses of the consumer in VECTO input shall be defined with zero. This is only used outside of PTO cycles, since the PTO cycles already include these losses. The idling losses are defined as a lossmap dependent on speed which is configurable in the [Vehicle Editor](#vehicle-editor-pto-tab). The file format is described in [PTO Idle Consumption Map](#pto-idle-consumption-map-.vptoi).
 
 
 #### Cycle losses during the PTO cycle of the PTO "Consumer" (red)
 
-A specific PTO cycle (time-based, engine speed and torque from PTO consumer as determined by the DIN 30752-1 procedure) is simulated during vehicle stops labelled as "with PTO activation". The execution of the driving cycle stops during this time and the pto cycle is executed. Afterwards the normal driving cycle continues.
+A specific PTO cycle (time-based, engine speed and torque from PTO consumer as determined by the DIN 30752-1 procedure) is simulated during vehicle stops labeled as "with PTO activation". The execution of the driving cycle stops during this time and the pto cycle is executed. Afterwards the normal driving cycle continues.
 
 Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor-pto-tab) and follows the file format described in [PTO-Cycle (.vptoc)](#pto-cycle-.vptoc). The timings in the PTO cycle get shifted to start at 0.
 
@@ -55,7 +55,7 @@ The following image shows the behavior of running PTO cycles during a normal dri
 
 ### Additional PTO activations in Engineering mode
 
-In engineering mode additonal PTO activations are available to simulate different types of municipal vehicles. It is possible to add a certain PTO load during driving while the engine speed and gear is fixed (to simulate for example roadsweepers), or to add PTO activation while driving (to simulate side loader refuse trucks for example). In both cases the PTO activation is indicated in the driving cycle.
+In engineering mode additional PTO activations are available to simulate different types of municipal vehicles. It is possible to add a certain PTO load during driving while the engine speed and gear is fixed (to simulate for example roadsweepers), or to add PTO activation while driving (to simulate side loader refuse trucks for example). In both cases the PTO activation is indicated in the driving cycle.
 
 The .vmod file file contains additional columns with the PTO power applied during driving (P_PTO_RoadSweeping, P_PTO_DuringDrive) and is also included in P_PTO_CONSUM. In the .vsum file the energy demand for both PTO modes is provided in the columns E_aux_PTO_RoadSweeping and E_aux_PTO_DuringDrive.
 

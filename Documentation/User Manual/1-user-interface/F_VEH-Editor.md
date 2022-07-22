@@ -6,7 +6,7 @@
 
 The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and masses.
 
-The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The third tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the fourth tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The fifth tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The last tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
+The Vehicle Editor contains up to 6 tabs, depending on the powertrain architecture and simulation mode, to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' tab allows to define the retarder, an optional angle drive. The 'Electric Machine' tab is dedicated to all electric components in case of hybrid electric and battery electric vehicles. In the 'Torque Limits' tab the torque limitations for the combustion engine, the electric motor and the whole vehicle can be specified. The 'ADAS' tab allows to enable or disable certain advanced driver assistant systems to be considered in the vehicle. The 'PTO' tab is dedicated to PTOs, either as a basic component or to simulate municipal vehicles such as refuse trucks or road sweepers with dedicated PTO activation either during driving or during standstill. 
 
 ### Relative File Paths
 
@@ -39,7 +39,7 @@ Curb Mass Extra Trailer/Body
 : Specifies additional mass due to superstructures on the vehicle or an additional trailer
 
 Loading
-: Speciefies the loading of both, the vehicle and if available the trailer
+: Specifies the loading of both, the vehicle and if available the trailer
 </div>
 
 **Max. Loading** displays a hint for the maximum possible loading for the selected vehicle depending on curb mass and TPMLM values (without taking into account the loading capacity of an additional trailer).
@@ -50,7 +50,7 @@ Loading
 In Declaration Mode only the vehicle itself needs to be specified. Depending on the vehicle category and mission the simulation adds a standard trailer for certain missions.
 </div>
 
-### Air Resistance and Corss Wind Correction Options
+### Air Resistance and Cross Wind Correction Options
 
 The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value **c~d x A** as input. 
 **Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#vehicle-cross-wind-correction).**
@@ -90,8 +90,8 @@ Use the ![](pics/plus-circle-icon.png) and ![](pics/minus-circle-icon.png) butto
 
 <div class="declaration">
 In [Declaration mode](#declaration-mode) only the axles of the truck have to be given (e.g., 2 axles for a 4x2 truck). 
-The dynamic tyre radius is derived from the second axle as it is assumed this is the driven axle.
-For missions with a trailer, predefined wheels and load-shares are added by Vecto automatically.
+The dynamic tire radius is derived from the second axle as it is assumed this is the driven axle.
+For missions with a trailer, predefined wheels and load-shares are added by VECTO automatically.
 </div>
 
 Doubleclick entries to edit existing axle configurations.
@@ -139,9 +139,9 @@ The following options are available:
 -   Primary Retarder (before gearbox, transmission input retarder): The rpm ratio is relative to the engine speed.
 -   Secondary Retarder (after gearbox, transmission output retarder): The rpm ratio is relative to the cardan shaft speed.
 -   Engine Retarder: Used this if the engine already includes the retarder losses.
--   Axlegear Input Retarder (after axlegear): The rpm ratio is relative to the axlegear input shaft speed. Only available for battery electric vehicles with E3 motor, serial hybrid with S3 motor, S-IEPC, and E-IEPC.
+-   Axlegear Input Retarder (after axle gear): The rpm ratio is relative to the axle gear input shaft speed. Only available for battery electric vehicles with E3 motor, serial hybrid with S3 motor, IEPC-S, and IEPC-E.
 
-Primary, secondary and axlegear input retarder require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
+Primary, secondary and axle gear input retarder require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 The retarder ratio defines the ratio between the engine speed/cardan shaft speed and the retarder.
 
 ### Angledrive
@@ -159,7 +159,7 @@ Three options are available:
 
 ![](pics/VehicleForm_ElectricMachine.png)
 
-For hybrid vehicles and battery electric vehicles the input elements on the *electric machine* tab is enabled. Here the component file for the eletric motor can be loaded or created (see [Electric Motor Editor](#electric-motor-editor))
+For hybrid vehicles and battery electric vehicles the input elements on the *electric machine* tab is enabled. Here the component file for the electric motor can be loaded or created (see [Electric Motor Editor](#electric-motor-editor))
 
 The position where the electric machine is located in the powertrain can be selected. It is possible that the electric machine is connected to the powertrain via a fixed gear ratio.
 At the moment electric machines are supported to be present at a single position only. It is not possible to have an electric motor at position P2 and another at position P4!
@@ -167,7 +167,7 @@ However, it is possible that more than one electric machine is used at a certain
 
 The *Loss map EM ADC* can be used to consider the losses of a transmission step between drivetrain and electric machine or to consider losses of a summation gear. The loss map has the same format as for all other transmission components (see [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)). For simplicity or if no such transmission step is used it is possible to enter the efficiency directly (i.e., "1" if no transmission step is used).
 
-In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the tranmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defeined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
+In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the transmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
 
 
@@ -220,7 +220,7 @@ In case that the gearbox' maximum torque is lower than the engine's maximum torq
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehicle-boosting-limits-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehicle-boosting-limits-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components in between. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modeled as P2 architecture.
 
 ## Vehicle Editor -- ADAS Tab
 

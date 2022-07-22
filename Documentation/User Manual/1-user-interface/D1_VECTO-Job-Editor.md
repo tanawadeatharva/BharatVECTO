@@ -40,12 +40,12 @@ Filepath to the Vehicle File (.vveh)
 Filepath to the Engine File (.veng)
 :	Files can be created and edited using the [Engine Editor](#engine-editor).
 
-Filepath ot the Gearbox File(.vgbx)
+Filepath to the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
-Filepath ot the Shift Parameters File(.vtcu)
+Filepath to the Shift Parameters File(.vtcu)
 
-Filepath ot the Hybrid Strategy Parameters File(.vhctl)
+Filepath to the Hybrid Strategy Parameters File(.vhctl)
 :	Files can be created and edited using the [Hybrid Strategy Parameters Editor](#hybrid-strategy-parameters-editor).
 
 
@@ -56,8 +56,8 @@ Filepath ot the Hybrid Strategy Parameters File(.vhctl)
 <div class="declaration">
 Auxiliaries
 :	This group contains input elements to define the engine's load from the auxiliaries.
-In Declaration Mode only the pre-defined auxiliaries are available and their power-demand is also pre-defined, depending on the vehicle category and driving cycle. 
-The list contains the pre-defined auxiliaries where the concrete technology for each auxiliary can be configured using the [Auxiliary Dialog](#auxiliary-dialog). 
+In Declaration Mode only the predefined auxiliaries are available and their power-demand is also predefined, depending on the vehicle category and driving cycle. 
+The list contains the predefined auxiliaries where the concrete technology for each auxiliary can be configured using the [Auxiliary Dialog](#auxiliary-dialog). 
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog). No other types of auxiliaries can be used in declaration mode.
 </div>
 
@@ -65,7 +65,7 @@ The list contains the pre-defined auxiliaries where the concrete technology for 
 Auxiliaries
 :	In Engineering Mode the auxiliary power demand can be defined in three ways. 
 
-The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles).
+The first option is to define the power demand directly in the driving cycle in the column "Padd" (see [Driving Cycles](#driving-cycles-.vdri). This allows to vary the auxiliary load over distance (or time, for time-based driving cycles). TODO: ask for Padd
 
 The second option is to define a constant power demand over the whole cycle. The auxiliary power demand can be specified depending on whether the combustion engine is on or off and the vehicle is driving. The auxiliary power demand during engine-off phase is corrected in the [post-processing](#engine-fuel-consumption-correction).
 
@@ -98,12 +98,12 @@ In Engineering Mode the cycles can be freely selected. All declaration cycles ar
 : ![remcycle](pics/minus-circle-icon.png) Remove the selected cycle from the list
 
 
-### Driver Assist Tab
+### Driver Model Tab
 
 ![](pics/JobForm_DriverModel.png)
 
 
-In this tab the driver assistance functions are enabled and parameterised. The parameters for overspeed, look-ahead coasting and driver acceleration can only be modified in Engineering Mode.
+In this tab the driver assistance functions are enabled and parameterized. The parameters for overspeed, look-ahead coasting and driver acceleration can only be modified in Engineering Mode.
 
 Overspeed
 :	See [Overspeed](#driver-overspeed) for details.
