@@ -407,6 +407,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	// ---------------------------------------------------------------------------------------
 
 
+	public class XMLPrimaryBusAuxiliaries_IEPC_DataProviderV01 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+	{
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "AUX_IEPC_PrimaryBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLPrimaryBusAuxiliaries_IEPC_DataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(componentNode) { }
+
+
+		public override XmlNode XMLSource => BaseNode;
+
+		#region Overrides of AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+
+		public override string FanTechnology => null;
+
+		public override bool SmartAirCompression => false;
+
+		public override bool EngineWasteGasHeatExchanger => false;
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
 	public class XMLDeclarationCompletedBusAuxiliariesDataProviderV24 : AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24, IElectricConsumersDeclarationData
 	{
 		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;

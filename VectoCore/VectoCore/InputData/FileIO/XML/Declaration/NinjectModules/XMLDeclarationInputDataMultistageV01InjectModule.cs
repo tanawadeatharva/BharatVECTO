@@ -42,6 +42,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLPrimaryBusAuxiliaries_PEV_DataProviderV01>()
 				.Named(XMLPrimaryBusAuxiliaries_PEV_DataProviderV01.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLPrimaryBusAuxiliaries_IEPC_DataProviderV01>()
+				.Named(XMLPrimaryBusAuxiliaries_IEPC_DataProviderV01.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLDeclarationPrimaryVehicleBusInputDataReader>().To<XMLMultistagePrimaryVehicleReaderV01>()
 				.Named(XMLMultistagePrimaryVehicleReaderV01.QUALIFIED_XSD_TYPE);
 			
@@ -185,6 +188,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 				.To<XMLDeclarationComponentsMultistagePrimaryVehicleBus_PEV_E4_DataProviderV01>()
 				.Named(XMLDeclarationComponentsMultistagePrimaryVehicleBus_PEV_E4_DataProviderV01.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLVehicleComponentsDeclaration>()
+				.To<XMLDeclarationComponentsMultistagePrimaryVehicleBus_PEV_IEPC_DataProviderV01>()
+				.Named(XMLDeclarationComponentsMultistagePrimaryVehicleBus_PEV_IEPC_DataProviderV01.QUALIFIED_XSD_TYPE);
 
 			// -----------------------------------
 

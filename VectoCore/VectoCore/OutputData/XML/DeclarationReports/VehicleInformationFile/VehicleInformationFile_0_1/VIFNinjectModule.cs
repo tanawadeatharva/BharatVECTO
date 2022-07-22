@@ -157,6 +157,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
+			Bind<IXMLMultistepIntermediateReport>().To<IEPC_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					true,
+					false)));
+
 			Bind<IXMLMultistepIntermediateReport>().To<Exempted_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
