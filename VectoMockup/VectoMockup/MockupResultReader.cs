@@ -109,8 +109,9 @@ namespace TUGraz.VectoMockup
 			{
 				bool ovc = false;
 				var jobType = VectoSimulationJobType.ConventionalVehicle;
-				if (runData.InputData is IXMLMultistageInputDataProvider) {
+				if (runData.InputData is IXMLMultistageInputDataProvider mst) {
 					ovc = false; //TODO implement
+					jobType = mst.JobInputData.JobType; //runData.InputData.JobInputData.JobType;
 				} else {
 					ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
 					jobType = runData.InputData.JobInputData.JobType;

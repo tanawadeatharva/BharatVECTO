@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_Auxiliaries,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + XMLNames.XSIType, "AuxiliaryDataVIFType"),
+					new XAttribute(_xsi + XMLNames.XSIType, "AUX_Convetional_PrimaryBusType"),
 					new XElement(_vif + XMLNames.BusAux_Fan,
 						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),

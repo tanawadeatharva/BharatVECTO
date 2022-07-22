@@ -128,14 +128,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType();
 		IMRFBusAuxiliariesType GetConventionalCompletedBus_HVACSystemType();
-		IMRFBusAuxiliariesType GetCompletedBusElectricSystemType();
+		IMRFBusAuxiliariesType GetConventionalCompletedBusElectricSystemType();
+
+		IMRFBusAuxiliariesType GetHEVCompletedBusAuxType();
+		IMRFBusAuxiliariesType GetHEVCompletedBus_HVACSystemType();
+		IMRFBusAuxiliariesType GetHEVCompletedBusElectricSystemType();
+
+		IMRFBusAuxiliariesType GetPEVCompletedBusAuxType();
+		IMRFBusAuxiliariesType GetPEVCompletedBus_HVACSystemType();
+		IMRFBusAuxiliariesType GetPEVCompletedBusElectricSystemType();
 
 
 		IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup();
-		IReportOutputGroup GetCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetConventionalCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetHEVCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetPEVCompletedBusGeneralVehicleOutputGroup();
 		IReportVehicleOutputGroup GetCompletedBusSequenceGroup();
 		IReportVehicleOutputGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
+		IMrfBusAuxGroup GetCompletedBus_xEVHVACSystemGroup();
 		IMrfVehicleType GetBoostingLimitationsType();
 
 	}

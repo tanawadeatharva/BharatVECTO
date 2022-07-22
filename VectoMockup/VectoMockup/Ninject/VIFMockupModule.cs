@@ -66,6 +66,26 @@ namespace TUGraz.VectoMockup.Ninject
 				return _interimFactory.GetConventionalVehicleType();
 			}
 
+			public IXmlMultistepTypeWriter GetHEVVehicleType()
+			{
+				return _interimFactory.GetHEVVehicleType();
+			}
+
+			public IXmlMultistepTypeWriter GetPEVVehicleType()
+			{
+				return _interimFactory.GetPEVVehicleType();
+			}
+
+			public IXmlMultistepTypeWriter GetIEPCVehicleType()
+			{
+				return _interimFactory.GetIEPCVehicleType();
+			}
+
+			IXmlMultistepTypeWriter IVIFReportInterimFactory.GetExemptedVehicleType()
+			{
+				return _interimFactory.GetExemptedVehicleType();
+			}
+
 			public IReportMultistepCompletedBusOutputGroup GetCompletedBusGeneralParametersGroup()
 			{
 				return _interimFactory.GetCompletedBusGeneralParametersGroup();
@@ -86,24 +106,49 @@ namespace TUGraz.VectoMockup.Ninject
 				return _interimFactory.GetCompletedBusDimensionsGroup();
 			}
 
-			public IReportMultistepCompletedBusTypeWriter GetCompletedAuxiliariesType()
+			public IReportMultistepCompletedBusTypeWriter GetInterimConventionalAuxiliariesType()
 			{
-				return _interimFactory.GetCompletedAuxiliariesType();
+				return _interimFactory.GetInterimConventionalAuxiliariesType();
 			}
 
-			public IVIFFAdasType GetCompletedADASType()
+			public IReportMultistepCompletedBusTypeWriter GetInterimxEVAuxiliariesType()
 			{
-				return _interimFactory.GetCompletedADASType();
+				return _interimFactory.GetInterimxEVAuxiliariesType();
 			}
 
-			public IReportMultistepCompletedBusTypeWriter GetCompletedComponentsType()
+			public IVIFFAdasType GetConventionalInterimADASType()
 			{
-				return _interimFactory.GetCompletedComponentsType();
+				return _interimFactory.GetConventionalInterimADASType();
 			}
 
-			public IReportMultistepCompletedBusTypeWriter GetCompletedAirdragType()
+			public IVIFFAdasType GetHEVInterimADASType()
 			{
-				return _interimFactory.GetCompletedAirdragType();
+				return _interimFactory.GetHEVInterimADASType();
+			}
+
+			public IVIFFAdasType GetPEVInterimADASType()
+			{
+				return _interimFactory.GetPEVInterimADASType();
+			}
+
+			public IVIFFAdasType GetIEPCInterimADASType()
+			{
+				return _interimFactory.GetIEPCInterimADASType();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetConventionalInterimComponentsType()
+			{
+				return _interimFactory.GetConventionalInterimComponentsType();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetxEVInterimComponentsType()
+			{
+				return _interimFactory.GetxEVInterimComponentsType();
+			}
+
+			public IReportMultistepCompletedBusTypeWriter GetInterimAirdragType()
+			{
+				return _interimFactory.GetInterimAirdragType();
 			}
 
 			public IXmlTypeWriter GetConventionalVehicleType()

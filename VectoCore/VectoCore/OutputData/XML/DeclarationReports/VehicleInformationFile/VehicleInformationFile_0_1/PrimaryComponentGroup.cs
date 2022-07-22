@@ -107,6 +107,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
+				_vifReportFactory.GetTransmissionType().GetElement(inputData),
+				_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
+				_vifReportFactory.GetAngelDriveType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));

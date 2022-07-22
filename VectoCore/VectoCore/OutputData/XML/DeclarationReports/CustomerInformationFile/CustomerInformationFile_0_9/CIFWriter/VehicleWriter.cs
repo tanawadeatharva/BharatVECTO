@@ -352,7 +352,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class CIF_HEVCompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_HEVCompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
 
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+					.JobInputData
+					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				_cifFactory.GetCompletedBusAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
+
+	public class CIF_PEVCompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_PEVCompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+		#region Overrides of VehicleWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_cif + XMLNames.Component_Vehicle,
+				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
+				_cifFactory.GetPEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+					.JobInputData
+					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				_cifFactory.GetCompletedBusAuxGroup().GetElements(inputData)
+			);
+		}
+
+		#endregion
+	}
 
 
 

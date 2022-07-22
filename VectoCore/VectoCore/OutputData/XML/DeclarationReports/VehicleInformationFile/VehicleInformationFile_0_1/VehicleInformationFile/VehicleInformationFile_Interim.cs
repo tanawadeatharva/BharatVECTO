@@ -236,4 +236,72 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 	}
+
+	// ----------------------------------
+
+	internal class HEV_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	{
+		public HEV_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VehicleInformationFile_InterimStep
+
+		protected override XElement GetVehicleElement()
+		{
+			return _vifFactory.GetHEVVehicleType().GetElement(_inputData);
+		}
+
+		#endregion
+	}
+
+	// ----------------------------------
+
+	internal class PEV_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	{
+		public PEV_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VehicleInformationFile_InterimStep
+
+		protected override XElement GetVehicleElement()
+		{
+			return _vifFactory.GetPEVVehicleType().GetElement(_inputData);
+		}
+
+		#endregion
+	}
+
+	// ----------------------------------
+
+	internal class IEPC_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	{
+		public IEPC_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VehicleInformationFile_InterimStep
+
+		protected override XElement GetVehicleElement()
+		{
+			return _vifFactory.GetIEPCVehicleType().GetElement(_inputData);
+		}
+
+		#endregion
+	}
+
+	// ----------------------------------
+
+	internal class Exempted_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	{
+		public Exempted_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VehicleInformationFile_InterimStep
+
+		protected override XElement GetVehicleElement()
+		{
+			return _vifFactory.GetExemptedVehicleType().GetElement(_inputData);
+		}
+
+		#endregion
+	}
 }

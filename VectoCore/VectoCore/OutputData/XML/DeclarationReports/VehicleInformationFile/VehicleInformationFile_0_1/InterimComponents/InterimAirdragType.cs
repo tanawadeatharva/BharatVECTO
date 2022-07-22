@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
 		protected XNamespace v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
 
+		public AirdragInterimType() {}
+
 		#region Implementation of IReportMultistepCompletedBusTypeWriter
 
 		public XElement GetElement(IMultistageVIFInputData inputData)

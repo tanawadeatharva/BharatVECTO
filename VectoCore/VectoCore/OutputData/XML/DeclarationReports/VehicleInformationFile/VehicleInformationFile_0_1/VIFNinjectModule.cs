@@ -123,6 +123,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			#region Complete(d) Primary Vehicle Information File Reports
 
+			// -- Reports
+
 			Bind<IXMLMultistepIntermediateReport>().To<Conventional_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -131,23 +133,95 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
+			Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.ParallelHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<Exempted_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
+			// -- Vehicle type writers
+
 			Bind<IXmlMultistepTypeWriter>().To<ConventionalInterimVehicleType>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetConventionalVehicleType());
 
+			Bind<IXmlMultistepTypeWriter>().To<HEVInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetHEVVehicleType());
+
+			Bind<IXmlMultistepTypeWriter>().To<PEVInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetPEVVehicleType());
+
+			Bind<IXmlMultistepTypeWriter>().To<IEPCInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetIEPCVehicleType());
+
+
+			Bind<IXmlMultistepTypeWriter>().To<ExemptedInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetExemptedVehicleType());
+
+			// -- Components type writers
 
 			Bind<IReportMultistepCompletedBusTypeWriter>().To<ConventionalComponentsInterimVIFType>().When(AccessedViaInterimVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedComponentsType());
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetConventionalInterimComponentsType());
+
+			Bind<IReportMultistepCompletedBusTypeWriter>().To<XEVComponentsInterimVIFType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetxEVInterimComponentsType());
+
+			// -- ADAS type writers
 
 			Bind<IVIFFAdasType>().To<VIFCompletedConventionalAdasType>().When(AccessedViaInterimVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedADASType());
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetConventionalInterimADASType());
 
-            Bind<IReportMultistepCompletedBusTypeWriter>().To<AirdragInterimType>().When(AccessedViaInterimVIFFactory)
-                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedAirdragType());
+			Bind<IVIFFAdasType>().To<VIFCompletedHEVAdasType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetHEVInterimADASType());
 
-            Bind<IReportMultistepCompletedBusTypeWriter>().To<ConventionalInterimAuxiliaryType>().When(AccessedViaInterimVIFFactory)
-                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedAuxiliariesType());
+			Bind<IVIFFAdasType>().To<VIFCompletedPEVAdasType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetPEVInterimADASType());
 
-            Bind<IReportMultistepCompletedBusOutputGroup>().To<CompletedBusGeneralParametersGroup>().When(AccessedViaInterimVIFFactory)
+			Bind<IVIFFAdasType>().To<VIFCompletedIEPCAdasType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetIEPCInterimADASType());
+
+
+			// -- Airdrag type writers
+
+			Bind<IReportMultistepCompletedBusTypeWriter>().To<AirdragInterimType>().When(AccessedViaInterimVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetInterimAirdragType());
+
+            // -- Aux type writers
+			
+			Bind<IReportMultistepCompletedBusTypeWriter>().To<ConventionalInterimAuxiliaryType>().When(AccessedViaInterimVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetInterimConventionalAuxiliariesType());
+
+			Bind<IReportMultistepCompletedBusTypeWriter>().To<XEVInterimAuxiliaryType>().When(AccessedViaInterimVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetInterimxEVAuxiliariesType());
+
+			// -- Parameter Groups
+
+			Bind<IReportMultistepCompletedBusOutputGroup>().To<CompletedBusGeneralParametersGroup>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetCompletedBusGeneralParametersGroup());
 
 			Bind<IReportMultistepCompletedBusOutputGroup>().To<GetCompletedBusParametersGroup>().When(AccessedViaInterimVIFFactory)

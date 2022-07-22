@@ -414,7 +414,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle, 
-				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetConventionalCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetConventionalADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
 				_mrfFactory.GetConventional_CompletedBusComponentsType().GetElement(inputData)
 				);
@@ -432,7 +432,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetHEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
@@ -446,7 +454,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion

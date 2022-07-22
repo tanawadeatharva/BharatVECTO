@@ -111,19 +111,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
 		IXMLPrimaryVehicleBusJobInputData
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public static readonly XNamespace NAMESPACE_URI =
+			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
 		public const string XSD_TYPE = "ConventionalVehicleVIFType";
 
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IVehicleDeclarationInputData _vehicle;
 
-		public XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node, IXMLPrimaryVehicleBusInputData inputProvider,
+		public XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01(XmlNode node,
+			IXMLPrimaryVehicleBusInputData inputProvider,
 			string fileName) : base(node, fileName)
 		{
 			InputData = inputProvider;
 		}
+
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.CreateVehicle);
@@ -131,10 +135,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 		public bool SavedInDeclarationMode { get; }
 		public string JobName { get; }
-		
+
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 		public IXMLJobDataReader Reader { protected get; set; }
 		public virtual IXMLPrimaryVehicleBusInputData InputData { get; }
+		
 	}
 
 	// ---------------------------------------------------------------------------------------

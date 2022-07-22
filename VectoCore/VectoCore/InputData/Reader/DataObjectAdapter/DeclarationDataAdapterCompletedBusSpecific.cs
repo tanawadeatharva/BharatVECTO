@@ -168,8 +168,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
-				vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
+			var fanPower = vehicleData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				? 0.SI<Watt>()
+				: DeclarationData.Fan.LookupElectricalPowerDemand(
+					vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
 			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,
@@ -183,9 +185,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IVehicleDeclarationInputData completedVehicle)
 		{
 			return new PneumaticUserInputsConfig {
-				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize, primaryBusAuxiliaries.PneumaticSupply.Clutch),
+				CompressorMap = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+					? null
+					: DeclarationData.BusAuxiliaries.GetCompressorMap(
+						primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
+						primaryBusAuxiliaries.PneumaticSupply.Clutch),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
+				CompressorGearRatio = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+					?  0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,
 				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(),
@@ -345,6 +352,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Mission mission)
 		{
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
+			if (!hvacConfiguration.HasValue || hvacConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration0, BusHVACSystemConfiguration.Unknown )) {
+				throw new VectoException(
+					$"HVAC Configuration {hvacConfiguration.ToXmlFormat()} is invalid for final step");
+			}
+
 			var correctionLengthDrivetrainVolume = DeclarationData.BusAuxiliaries.CorrectionLengthDrivetrainVolume(
 				completedVehicle.VehicleCode, completedVehicle.LowEntry, primaryVehicle.AxleConfiguration.NumAxles(),
 				primaryVehicle.Articulated);

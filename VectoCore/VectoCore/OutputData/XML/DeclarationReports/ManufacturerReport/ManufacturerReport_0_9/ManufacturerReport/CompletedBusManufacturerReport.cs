@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport(OutputDataType);
+			//GenerateReport(OutputDataType);
 
 		}
 
@@ -50,12 +50,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType { get; }
+		public override string OutputDataType => "HEVCompletedBusManufacturerOutputDataType";
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport("HEVCompletedBusManufacturerOutputDataType");
+			Vehicle = _mRFReportFactory.GetHEV_CompletedBusVehicleType().GetElement(inputData);
+			//GenerateReport("HEVCompletedBusManufacturerOutputDataType");
 		}
 
 		#endregion
@@ -67,12 +67,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => "PEV_CompletedBusManufacturerOutputDataType";
+		public override string OutputDataType => "PEVCompletedBusManufacturerOutputDataType";
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport(OutputDataType);
+			Vehicle = _mRFReportFactory.GetPEV_CompletedBusVehicleType().GetElement(inputData);
+			//GenerateReport(OutputDataType);
 		}
 
 		#endregion
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetExempted_CompletedBusVehicleType().GetElement(inputData);
-			GenerateReport(OutputDataType);
+			//GenerateReport(OutputDataType);
 		}
 
 		#endregion

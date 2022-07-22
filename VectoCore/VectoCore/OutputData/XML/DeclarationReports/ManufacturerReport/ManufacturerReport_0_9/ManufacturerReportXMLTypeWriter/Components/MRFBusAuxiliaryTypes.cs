@@ -169,12 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
-					new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
-					new XElement(_mrf + "HeadLightsLED", auxData.ElectricConsumers.HeadlightsLED),
-					new XElement(_mrf + "PositionLightsLED", auxData.ElectricConsumers.PositionlightsLED),
-					new XElement(_mrf + "BrakeLightsLED", auxData.ElectricConsumers.BrakelightsLED),
-					new XElement(_mrf + "InteriorLightsLED", auxData.ElectricConsumers.InteriorLightsLED)),
+				_mrfFactory.GetConventionalCompletedBusElectricSystemType().GetElement(auxData),
 				_mrfFactory.GetConventionalCompletedBus_HVACSystemType().GetElement(auxData)
 			);
 			return result;
@@ -183,14 +178,67 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-
-	internal class MRFCompletedBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFHEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFHEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				_mrfFactory.GetHEVCompletedBusElectricSystemType().GetElement(auxData),
+				_mrfFactory.GetHEVCompletedBus_HVACSystemType().GetElement(auxData)
+            );
+			return result;
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				_mrfFactory.GetPEVCompletedBusElectricSystemType().GetElement(auxData),
+                _mrfFactory.GetPEVCompletedBus_HVACSystemType().GetElement(auxData)
+            );
+			return result;
+		}
+
+		#endregion
+	}
+
+	internal class MRFConventionalCompletedBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFConventionalCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
@@ -201,6 +249,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 
 		#endregion
+	}
+
+	internal class MRFHEVCompletedBusElectricSystemType : MRFConventionalCompletedBusElectricSystemType
+	{
+		public MRFHEVCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+	}
+
+	internal class MRFPEVCompletedBusElectricSystemType : MRFConventionalCompletedBusElectricSystemType
+	{
+		public MRFPEVCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
 	}
 
 	internal class MRFConventionalCompletedBus_HVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
@@ -216,6 +276,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 
 		#endregion
+	}
+
+	internal class MRFHEVCompletedBus_HVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFHEVCompletedBus_HVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + "HVACSystem",
+				_mrfFactory.GetCompletedBus_HVACSystemGroup().GetElements(auxData),
+				_mrfFactory.GetCompletedBus_xEVHVACSystemGroup().GetElements(auxData));
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEVCompletedBus_HVACSystemType : MRFHEVCompletedBus_HVACSystemType
+	{
+		public MRFPEVCompletedBus_HVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		
 	}
 
 	internal class MRFPrimaryBusElectricSystemType_Conventional_HEV : AbstractMrfXmlType, IMRFBusAuxiliariesType

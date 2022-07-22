@@ -558,6 +558,54 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
+	public class XMLElectricMachineSystemReaderV01 : AbstractComponentReader, IXMLElectricMachineSystemReader
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricMachineType";
+		public const string XSD_GEN_TYPE = "ElectricMachineGENType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+		public XMLElectricMachineSystemReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode)
+		{
+
+		}
+
+		#region Implementation of IXMLElectricMotorReader
+
+		public virtual IElectricMotorDeclarationInputData CreateElectricMachineSystem(XmlNode electricMachineSystem)
+		{
+			return CreateComponent(XMLNames.ElectricMachineSystem, ElectricMachinesCreator);
+		}
+
+		public virtual IADCDeclarationInputData ADCInputData {
+			get {
+				return CreateComponent("ADC", ADCCreator);
+			}
+		}
+
+
+		protected virtual IADCDeclarationInputData ADCCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateADCDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		protected virtual IElectricMotorDeclarationInputData ElectricMachinesCreator(string version,
+			XmlNode componentNode, string sourcefile)
+		{
+			return Factory.CreateElectricMotorDeclarationInputData(version, componentNode, sourcefile);
+		}
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLREESSReaderV24 : AbstractComponentReader, IXMLREESSReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -674,6 +722,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
 
 		public XMLMultistagePrimaryVehicleBus_HEV_S2_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -712,6 +761,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
 
 		public XMLMultistagePrimaryVehicleBus_HEV_S4_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
+		#region Overrides of XMLComponentReaderV10
+
+		public override IAxleGearInputData AxleGearInputData => null;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -731,6 +786,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		//public new static readonly string AXLES_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, AXLES_READER_TYPE);
 
 		public XMLMultistagePrimaryVehicleBus_HEV_IEPC_S_ComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(vehicle, componentsNode) { }
+
+		#region Overrides of XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01
+
+		public override IGearboxDeclarationInputData GearboxInputData => null;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------

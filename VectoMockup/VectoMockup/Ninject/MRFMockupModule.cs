@@ -497,22 +497,62 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetConventionalCompletedBus_HVACSystemType();
         }
 
-        public IMRFBusAuxiliariesType GetCompletedBusElectricSystemType()
+        public IMRFBusAuxiliariesType GetConventionalCompletedBusElectricSystemType()
         {
-            return _manufacturerReportFactoryImplementation.GetCompletedBusElectricSystemType();
+            return _manufacturerReportFactoryImplementation.GetConventionalCompletedBusElectricSystemType();
         }
 
-        public IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup()
+		public IMRFBusAuxiliariesType GetHEVCompletedBusAuxType()
+		{
+			return _manufacturerReportFactoryImplementation.GetHEVCompletedBusAuxType();
+		}
+
+		public IMRFBusAuxiliariesType GetHEVCompletedBus_HVACSystemType()
+		{
+			return _manufacturerReportFactoryImplementation.GetHEVCompletedBus_HVACSystemType();
+		}
+
+		public IMRFBusAuxiliariesType GetHEVCompletedBusElectricSystemType()
+		{
+			return _manufacturerReportFactoryImplementation.GetHEVCompletedBusElectricSystemType();
+		}
+
+		public IMRFBusAuxiliariesType GetPEVCompletedBusAuxType()
+		{
+			return _manufacturerReportFactoryImplementation.GetPEVCompletedBusAuxType();
+		}
+
+		public IMRFBusAuxiliariesType GetPEVCompletedBus_HVACSystemType()
+		{
+			return _manufacturerReportFactoryImplementation.GetPEVCompletedBus_HVACSystemType();
+		}
+
+		public IMRFBusAuxiliariesType GetPEVCompletedBusElectricSystemType()
+		{
+			return _manufacturerReportFactoryImplementation.GetPEVCompletedBusElectricSystemType();
+		}
+
+		public IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup()
         {
             return _manufacturerReportFactoryImplementation.GetPEV_PrimaryBusVehicleOutputGroup();
         }
 
-        public IReportOutputGroup GetCompletedBusGeneralVehicleOutputGroup()
+        public IReportOutputGroup GetConventionalCompletedBusGeneralVehicleOutputGroup()
         {
-            return _manufacturerReportFactoryImplementation.GetCompletedBusGeneralVehicleOutputGroup();
+            return _manufacturerReportFactoryImplementation.GetConventionalCompletedBusGeneralVehicleOutputGroup();
         }
 
-        public IReportVehicleOutputGroup GetCompletedBusSequenceGroup()
+		public IReportOutputGroup GetHEVCompletedBusGeneralVehicleOutputGroup()
+		{
+			return _manufacturerReportFactoryImplementation.GetHEVCompletedBusGeneralVehicleOutputGroup();
+		}
+
+		public IReportOutputGroup GetPEVCompletedBusGeneralVehicleOutputGroup()
+		{
+			return _manufacturerReportFactoryImplementation.GetPEVCompletedBusGeneralVehicleOutputGroup();
+		}
+
+		public IReportVehicleOutputGroup GetCompletedBusSequenceGroup()
         {
             return _manufacturerReportFactoryImplementation.GetCompletedBusSequenceGroup();
         }
@@ -527,7 +567,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetCompletedBus_HVACSystemGroup();
         }
 
-        public IMrfVehicleType GetBoostingLimitationsType()
+		public IMrfBusAuxGroup GetCompletedBus_xEVHVACSystemGroup()
+		{
+			return _manufacturerReportFactoryImplementation.GetCompletedBus_xEVHVACSystemGroup();
+		}
+
+		public IMrfVehicleType GetBoostingLimitationsType()
         {
             return _manufacturerReportFactoryImplementation.GetBoostingLimitationsType();
         }

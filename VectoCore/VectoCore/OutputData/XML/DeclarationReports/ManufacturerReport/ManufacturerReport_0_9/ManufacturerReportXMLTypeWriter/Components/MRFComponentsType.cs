@@ -552,7 +552,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputData = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputData == null) {
+				throw new ArgumentException($"inputData must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData != null
+					? _mrfFactory.GetAirdragType().GetXmlType(multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData) : null,
+				_mrfFactory.GetHEVCompletedBusAuxType().GetElement(multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries)
+			);
 		}
 
 		#endregion
@@ -566,7 +574,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputData = inputData as IMultistageBusInputDataProvider;
+			if (multistageInputData == null) {
+				throw new ArgumentException($"inputData must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Vehicle_Components,
+				multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData != null
+					? _mrfFactory.GetAirdragType().GetXmlType(multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData) : null,
+				_mrfFactory.GetPEVCompletedBusAuxType().GetElement(multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries)
+			);
 		}
 
 		#endregion

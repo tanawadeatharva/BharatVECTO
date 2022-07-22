@@ -87,7 +87,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 //VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
                 //GearshiftParameters = _gearshiftData,
             };
-			simulationRunData.EngineData.FuelMode = 0;
+			if (simulationRunData.EngineData != null) {
+				simulationRunData.EngineData.FuelMode = 0;
+			}
 			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;
 			simulationRunData.BusAuxiliaries = DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, simulationRunData);
 

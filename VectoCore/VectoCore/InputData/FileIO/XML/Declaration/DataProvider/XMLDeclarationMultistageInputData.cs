@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public VectoSimulationJobType JobType => ConsolidateManufacturingStage.Vehicle.VehicleType;
 
 		public bool InputComplete => Reader.InputComplete;
 

@@ -55,4 +55,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 	}
+
+	internal class CompletedBus_xEVHVACSystem_Group : AbstractReportOutputGroup, IMrfBusAuxGroup
+	{
+		public CompletedBus_xEVHVACSystem_Group(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlGroup
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of IMrfBusAuxGroup
+
+		public IList<XElement> GetElements(IBusAuxiliariesDeclarationData busAuxiliaries)
+		{
+			return new List<XElement>() {
+				new XElement(_mrf + XMLNames.Bus_WaterElectricHeater,
+					busAuxiliaries.HVACAux.WaterElectricHeater),
+				new XElement(_mrf + XMLNames.Bus_AirElectricHeater, busAuxiliaries.HVACAux.AirElectricHeater),
+				new XElement(_mrf + XMLNames.Bus_OtherHeatingTechnology, busAuxiliaries.HVACAux.OtherHeatingTechnology)
+			};
+		}
+
+		#endregion
+	}
 }

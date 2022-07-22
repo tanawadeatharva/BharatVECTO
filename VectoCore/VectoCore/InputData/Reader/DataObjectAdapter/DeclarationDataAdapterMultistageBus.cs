@@ -50,7 +50,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
+			retVal.AlternatorType = primaryVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				? AlternatorType.None
+				: primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
 
 			retVal.AlternatorMap = new SimpleAlternator(

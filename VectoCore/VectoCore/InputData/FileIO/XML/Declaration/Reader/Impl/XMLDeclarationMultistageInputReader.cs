@@ -883,7 +883,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private bool PrimaryGearboxIsAT()
 		{
-			switch (_primaryVehicleData.Components.GearboxInputData.Type) {
+			switch (_primaryVehicleData.Components.GearboxInputData?.Type) {
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					return true;

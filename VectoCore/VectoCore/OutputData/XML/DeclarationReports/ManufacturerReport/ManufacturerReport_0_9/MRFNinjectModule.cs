@@ -634,8 +634,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBus_HVACSystemType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusElectricSystemType());
+			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusElectricSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBusAuxType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusAuxType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBus_HVACSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusElectricSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBusAuxType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusAuxType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBus_HVACSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusElectricSystemType());
 
 			#region Groups
 
@@ -672,12 +690,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IReportVehicleOutputGroup>().To<CompletedBusDimensionsSequenceOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusDimensionSequenceGroup());
 
-			Bind<IReportOutputGroup>().To<CompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusGeneralVehicleOutputGroup());
+			Bind<IReportOutputGroup>().To<ConventionalCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusGeneralVehicleOutputGroup());
+
+			Bind<IReportOutputGroup>().To<HEVCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusGeneralVehicleOutputGroup());
+
+			Bind<IReportOutputGroup>().To<PEVCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusGeneralVehicleOutputGroup());
 
 
 			Bind<IMrfBusAuxGroup>().To<CompletedBus_HVACSystem_Group>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBus_HVACSystemGroup());
+
+			Bind<IMrfBusAuxGroup>().To<CompletedBus_xEVHVACSystem_Group>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBus_xEVHVACSystemGroup());
 
 			#endregion
 

@@ -32,8 +32,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IMultistageVIFInputData inputData)
 		{
-			var airDrag = _vifReportFactory.GetCompletedAirdragType().GetElement(inputData);
-			var auxiliaries = _vifReportFactory.GetCompletedAuxiliariesType().GetElement(inputData);
+			var airDrag = _vifReportFactory.GetInterimAirdragType().GetElement(inputData);
+			var auxiliaries = _vifReportFactory.GetInterimConventionalAuxiliariesType().GetElement(inputData);
 
 			if (airDrag == null && auxiliaries == null) {
 				return null;
@@ -41,6 +41,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_v24 + XMLNames.Vehicle_Components,
 				new XAttribute(_xsi + XMLNames.XSIType, "Components_Conventional_CompletedBusType"),
+				airDrag,
+				auxiliaries);
+
+		}
+
+		#endregion
+	}
+
+
+	public class XEVComponentsInterimVIFType : CompletedComponentVIFType
+	{
+		public XEVComponentsInterimVIFType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
+
+		#region Overrides of CompletedComponentVIFType
+
+		public override XElement GetElement(IMultistageVIFInputData inputData)
+		{
+			var airDrag = _vifReportFactory.GetInterimAirdragType().GetElement(inputData);
+			var auxiliaries = _vifReportFactory.GetInterimxEVAuxiliariesType().GetElement(inputData);
+
+			if (airDrag == null && auxiliaries == null) {
+				return null;
+			}
+
+			return new XElement(_v24 + XMLNames.Vehicle_Components,
+				new XAttribute(_xsi + XMLNames.XSIType, "Components_xEV_CompletedBusType"),
 				airDrag,
 				auxiliaries);
 

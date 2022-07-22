@@ -33,6 +33,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		IXmlMultistepTypeWriter GetConventionalVehicleType();
 
+		IXmlMultistepTypeWriter GetHEVVehicleType();
+
+		IXmlMultistepTypeWriter GetPEVVehicleType();
+
+		IXmlMultistepTypeWriter GetIEPCVehicleType();
+
+		IXmlMultistepTypeWriter GetExemptedVehicleType();
+
 		#endregion
 
 		IReportMultistepCompletedBusOutputGroup GetCompletedBusGeneralParametersGroup();
@@ -40,12 +48,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IReportMultistepCompletedBusOutputGroup GetCompletedBusPassengerCountGroup();
 		IReportMultistepCompletedBusOutputGroup GetCompletedBusDimensionsGroup();
 
-		IReportMultistepCompletedBusTypeWriter GetCompletedComponentsType();
+		IReportMultistepCompletedBusTypeWriter GetConventionalInterimComponentsType();
 
-		IReportMultistepCompletedBusTypeWriter GetCompletedAirdragType();
-		IReportMultistepCompletedBusTypeWriter GetCompletedAuxiliariesType();
+		IReportMultistepCompletedBusTypeWriter GetxEVInterimComponentsType();
 
-		IVIFFAdasType GetCompletedADASType();
+
+		IReportMultistepCompletedBusTypeWriter GetInterimAirdragType();
+		IReportMultistepCompletedBusTypeWriter GetInterimConventionalAuxiliariesType();
+
+		IReportMultistepCompletedBusTypeWriter GetInterimxEVAuxiliariesType();
+
+		IVIFFAdasType GetConventionalInterimADASType();
+
+		IVIFFAdasType GetHEVInterimADASType();
+
+		IVIFFAdasType GetPEVInterimADASType();
+
+		IVIFFAdasType GetIEPCInterimADASType();
+
 	}
 
 

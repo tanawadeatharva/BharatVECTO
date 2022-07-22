@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -13,6 +14,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -68,7 +70,9 @@ namespace VectoMockupTest
 		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
 		protected const string HEV_Px_IHPC_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
+		protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + "NOT_AVAILABLE";
 		protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
+		protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
 		protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
 		protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
 		protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
@@ -92,6 +96,9 @@ namespace VectoMockupTest
 		#region Interim Bus Input
 
 		protected const string Conventional_InterimBusInput = BasePathMockup + @"CompletedBus\Conventional_InterimBus_Min.xml";
+		protected const string Conventional_InterimBusInput_AirdragV10 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV10.xml";
+		protected const string Conventional_InterimBusInput_AirdragV20 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV23.xml";
+		protected const string Conventional_InterimBusInput_AirdragV24 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV24.xml";
 		protected const string HEV_InterimBusInput = BasePathMockup + @"CompletedBus\HEV_InterimBus_Min.xml";
 		protected const string PEV_InterimBusInput = BasePathMockup + @"CompletedBus\PEV_InterimBus_Min.xml";
 		protected const string PEV_IEPC_InterimBusInput = BasePathMockup + @"CompletedBus\IEPC_InterimBus_Min.xml";
@@ -236,7 +243,9 @@ namespace VectoMockupTest
 		[TestCase(Conventional_PrimaryBus_Tyres, TestName = "ConventionalPrimaryBus Tyres")]
         [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
         [TestCase(HEV_Px_IHPC_PrimaryBus, TestName="HEV_Px_PrimaryBus")]
+		[TestCase(HEV_Px_PrimaryBus_SuperCap, TestName = "HEV_Px_PrimaryBus_SuperCap")]
         [TestCase(HEV_S2_PrimaryBus, TestName="HEV_S2_PrimaryBus")]
+		[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "HEV_S2_PrimaryBus_GenSetADC")]
 		[TestCase(HEV_S3_PrimaryBus, TestName = "HEV_S3_PrimaryBus")]
 		[TestCase(HEV_S4_PrimaryBus, TestName = "HEV_S4_PrimaryBus")]
         [TestCase(PEV_E2_PrimaryBus, TestName="PEV_E2_PrimaryBus")]
@@ -349,17 +358,20 @@ namespace VectoMockupTest
 
 		}
 
-		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim Conventional Bus Different Tyres")]
-		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", TestName = "Interim HEV_IEPC_S_Bus")]
-		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", TestName = "Interim HEV_Px_Bus")]
-		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "Interim HEV_S2_Bus")]
-		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "Interim HEV_S3_Bus")]
-		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "Interim HEV_S4_Bus")]
-		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "Interim PEV_E2_Bus")]
-		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "Interim PEV_E3_Bus")]
-		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "Interim PEV_E4_Bus")]
+		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
+		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV10, "Conventional", TestName = "InterimConventionalBusAirdrag_v1_0")]
+		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV20, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_0")]
+		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV24, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_4")]
+		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "Interim HEV_IEPC_S_Bus")]
+		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus")]
+		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S2_Bus")]
+		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S3_Bus")]
+		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "Interim HEV_S4_Bus")]
+		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus")]
+		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E3_Bus")]
+		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E4_Bus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_Bus")]
-		public void InterimTest(string primaryBusInput, string interimBusInput, string expectedType)
+		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
 		{
 			// VIF + interim input =>  VIF
 			// (approach: first simulate primary on its own to have an up-to-date VIF
@@ -409,16 +421,16 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim Conventional Bus Different Tyres")]
-		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", TestName = "PrimaryAndInterim HEV_IEPC_S_PrimaryBus")]
-		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", TestName = "PrimaryAndInterim HEV_Px_PrimaryBus")]
-		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "PrimaryAndInterim HEV_S2_PrimaryBus")]
-		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "PrimaryAndInterim HEV_S3_PrimaryBus")]
-		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", TestName = "PrimaryAndInterim HEV_S4_PrimaryBus")]
-		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus")]
-		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
-		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
+		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "PrimaryAndInterim HEV_IEPC_S_PrimaryBus")]
+		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_Px_PrimaryBus")]
+		[TestCase(HEV_S2_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S2_PrimaryBus")]
+		[TestCase(HEV_S3_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S3_PrimaryBus")]
+		[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, "Sx", "HEV", TestName = "PrimaryAndInterim HEV_S4_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus")]
+		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
+		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
-		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, string expectedType)
+		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
 		{
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
 			// (approach: first simulate primary on its own to have an up-to-date VIF
@@ -449,16 +461,16 @@ namespace VectoMockupTest
 		
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
-		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
-		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", TestName = "Complete HEV_Px_PrimaryBus")]
-		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "S2", TestName = "Complete HEV_S2_PrimaryBus")]
-		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "S3", TestName = "Complete HEV_S3_PrimaryBus")]
-		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "S4", TestName = "Complete HEV_S4_PrimaryBus")]
-		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "E2", TestName = "Complete PEV_E2_PrimaryBus")]
-		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", TestName = "Complete PEV_E3_PrimaryBus")]
-		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", TestName = "Complete PEV_E4_PrimaryBus")]
+		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
+		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus")]
+		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "S2", "HEV", TestName = "Complete HEV_S2_PrimaryBus")]
+		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "S3", "HEV", TestName = "Complete HEV_S3_PrimaryBus")]
+		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "S4", "HEV", TestName = "Complete HEV_S4_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus")]
+		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", "PEV", TestName = "Complete PEV_E3_PrimaryBus")]
+		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", "PEV", TestName = "Complete PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
-		public void CompleteTest(string primaryBusInput, string completeBusInput, string expectedType)
+		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
 			// (approach: first simulate primary on its own to have an up-to-date VIF
@@ -489,16 +501,16 @@ namespace VectoMockupTest
 
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus Different Tyres")]
-		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", TestName = "Completed HEV_IEPC_S_PrimaryBus")]
-		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", TestName = "Completed HEV_Px_PrimaryBus")]
-		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "Sx", TestName = "Completed HEV_S2_PrimaryBus")]
-		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "Sx", TestName = "Completed HEV_S3_PrimaryBus")]
-		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "Sx", TestName = "Completed HEV_S4_PrimaryBus")]
-		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "Ex", TestName = "Completed PEV_E2_PrimaryBus")]
-		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", TestName = "Completed PEV_E3_PrimaryBus")]
-		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", TestName = "Completed PEV_E4_PrimaryBus")]
+		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Completed HEV_IEPC_S_PrimaryBus")]
+		[TestCase(HEV_Px_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus")]
+		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S2_PrimaryBus")]
+		[TestCase(HEV_S3_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S3_PrimaryBus")]
+		[TestCase(HEV_S4_PrimaryBus, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S4_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus")]
+		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
+		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
-		public void CompletedTest(string primaryBusInput, string completeBusInput, string expectedType)
+		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
 			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
 			// (approach: first simulate primary on its own to have an up-to-date VIF
@@ -548,7 +560,7 @@ namespace VectoMockupTest
 		}
 
 
-		private static void CheckElementTypeNameContains(string fileName, string elementName, string expectedType)
+		private static void CheckElementTypeNameContains(string fileName, string elementName, params string[] expectedType)
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.Load(XmlReader.Create(fileName));
@@ -558,7 +570,8 @@ namespace VectoMockupTest
 			var vehicleNodes = xmlDoc.SelectNodes($"//*[local-name()='{elementName}']");
 			foreach (XmlNode vehicleNode in vehicleNodes) {
 				var typeName = vehicleNode?.SchemaInfo?.SchemaType?.Name ?? "";
-				Assert.IsTrue(typeName.Contains(expectedType, StringComparison.InvariantCultureIgnoreCase), typeName);
+				var contains = expectedType.Select(x => typeName.Contains(x, StringComparison.InvariantCultureIgnoreCase));
+				Assert.IsTrue(contains.Any(x => x), $"{typeName} -- {expectedType.Join()}");
 			}
 		}
 

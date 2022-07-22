@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using NLog.LayoutRenderers;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -29,6 +30,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public ConventionalInterimAuxiliaryType(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
 
+		protected virtual string XMLType => "AUX_Conventional_CompletedBusType";
+
 		#region Overrides of InterimVIFAuxiliaryType
 
 		public override XElement GetElement(IMultistageVIFInputData inputData)
@@ -45,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_v24 + XMLNames.Component_Auxiliaries,
 				new XElement(_v24 + XMLNames.ComponentDataWrapper,
-					new XAttribute(_xsi + XMLNames.Attr_Type, "AUX_Conventional_CompletedBusType"),
+					new XAttribute(_xsi + XMLNames.Attr_Type, XMLType),
 					electricSystemEntry != null
 						? GetElectricSystem(busAux.ElectricConsumers) : null,
 					hvacEntry != null
@@ -55,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		#endregion
 
-		private XElement GetElectricSystem(IElectricConsumersDeclarationData electricConsumer)
+		protected virtual XElement GetElectricSystem(IElectricConsumersDeclarationData electricConsumer)
 		{
 			if (electricConsumer == null)
 				return null;
@@ -80,7 +83,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				));
 		}
 
-		private XElement GetHVAC(IHVACBusAuxiliariesDeclarationData hvac)
+		protected virtual XElement GetHVAC(IHVACBusAuxiliariesDeclarationData hvac)
 		{
 			if (hvac == null)
 				return null;
@@ -111,14 +114,37 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				hvac.AdjustableAuxiliaryHeater != null
 					? new XElement(_v24 + XMLNames.Bus_AdjustableAuxiliaryHeater, hvac.AdjustableAuxiliaryHeater) : null,
 				hvac.SeparateAirDistributionDucts != null
-					? new XElement(_v24 + XMLNames.Bus_SeparateAirDistributionDucts, hvac.SeparateAirDistributionDucts) : null,
-				hvac.WaterElectricHeater != null
-					? new XElement(_v24 + XMLNames.Bus_WaterElectricHeater, hvac.WaterElectricHeater) : null,
-				hvac.AirElectricHeater != null
-					? new XElement(_v24 + XMLNames.Bus_AirElectricHeater, hvac.AirElectricHeater) : null,
-				hvac.OtherHeatingTechnology != null
-					? new XElement(_v24 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
+					? new XElement(_v24 + XMLNames.Bus_SeparateAirDistributionDucts, hvac.SeparateAirDistributionDucts) : null
 			);
+		}
+
+	}
+
+	public class XEVInterimAuxiliaryType : ConventionalInterimAuxiliaryType
+	{
+		public XEVInterimAuxiliaryType(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+
+		protected override string XMLType => "AUX_xEV_CompletedBusType";
+
+		protected override XElement GetHVAC(IHVACBusAuxiliariesDeclarationData hvac)
+		{
+			var retVal = base.GetHVAC(hvac);
+			retVal.Add(GetxEVHVAC(hvac));
+
+			return retVal;
+			
+		}
+
+		protected virtual XElement[] GetxEVHVAC(IHVACBusAuxiliariesDeclarationData hvac)
+		{
+			return new[] {
+				hvac.WaterElectricHeater.HasValue ?
+					new XElement(_v24 + XMLNames.Bus_WaterElectricHeater, hvac.WaterElectricHeater) :null,
+				hvac.AirElectricHeater.HasValue ?
+					new XElement(_v24 + XMLNames.Bus_AirElectricHeater, hvac.AirElectricHeater) : null,
+				hvac.OtherHeatingTechnology.HasValue ?
+					new XElement(_v24 + XMLNames.Bus_OtherHeatingTechnology, hvac.OtherHeatingTechnology) : null
+			};
 		}
 	}
 }
