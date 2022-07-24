@@ -74,6 +74,7 @@ namespace VectoMockupTest
 		protected const string HEV_Px_PrimaryBus_SuperCap = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_Px_SuperCap.xml";
 		protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
 		protected const string HEV_S2_PrimaryBus_GenSetADC = BasePathMockup + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
+		protected const string HEV_S2_PrimaryBus_ADC = BasePathMockup + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_ADC.xml";
 		protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
 		protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
 		protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
@@ -97,9 +98,8 @@ namespace VectoMockupTest
 		#region Interim Bus Input
 
 		protected const string Conventional_InterimBusInput = BasePathMockup + @"CompletedBus\Conventional_InterimBus_Min.xml";
-		protected const string Conventional_InterimBusInput_AirdragV10 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV10.xml";
-		protected const string Conventional_InterimBusInput_AirdragV20 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV23.xml";
-		protected const string Conventional_InterimBusInput_AirdragV24 = BasePathMockup + @"CompletedBus\Conventional_InterimBus_AirdragV24.xml";
+		protected const string Conventional_InterimBusInput_AirdragV10 = BasePathMockup + @"CompletedBus\Conventional_completedBus_AirdragV10.xml";
+		protected const string Conventional_InterimBusInput_AirdragV20 = BasePathMockup + @"CompletedBus\Conventional_completedBus_AirdragV20.xml";
 		protected const string HEV_InterimBusInput = BasePathMockup + @"CompletedBus\HEV_InterimBus_Min.xml";
 		protected const string PEV_InterimBusInput = BasePathMockup + @"CompletedBus\PEV_InterimBus_Min.xml";
 		protected const string PEV_IEPC_InterimBusInput = BasePathMockup + @"CompletedBus\IEPC_InterimBus_Min.xml";
@@ -248,6 +248,7 @@ namespace VectoMockupTest
 		[TestCase(HEV_Px_PrimaryBus_SuperCap, TestName = "HEV_Px_PrimaryBus_SuperCap")]
         [TestCase(HEV_S2_PrimaryBus, TestName="HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "HEV_S2_PrimaryBus_GenSetADC")]
+		[TestCase(HEV_S2_PrimaryBus_ADC, TestName = "HEV_S2_PrimaryBus_ADC")]
 		[TestCase(HEV_S3_PrimaryBus, TestName = "HEV_S3_PrimaryBus")]
 		[TestCase(HEV_S4_PrimaryBus, TestName = "HEV_S4_PrimaryBus")]
         [TestCase(PEV_E2_PrimaryBus, TestName="PEV_E2_PrimaryBus")]
