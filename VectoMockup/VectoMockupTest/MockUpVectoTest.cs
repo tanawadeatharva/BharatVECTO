@@ -70,10 +70,10 @@ namespace VectoMockupTest
 		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
 		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
 		protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
-		protected const string HEV_IHPC_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
-		protected const string HEV_Px_PrimaryBus_SuperCap = BasePath + "NOT_AVAILABLE";
+		protected const string HEV_IHPC_PrimaryBus = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
+		protected const string HEV_Px_PrimaryBus_SuperCap = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_Px_SuperCap.xml";
 		protected const string HEV_S2_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2.xml";
-		protected const string HEV_S2_PrimaryBus_GenSetADC = BasePath + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
+		protected const string HEV_S2_PrimaryBus_GenSetADC = BasePathMockup + @"PrimaryBus\HEV-S_primaryBus_AMT_S2_GenSetADC.xml";
 		protected const string HEV_S3_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S3.xml";
 		protected const string HEV_S4_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_S4.xml";
 		protected const string HEV_IEPC_S_PrimaryBus = BasePath + @"PrimaryBus\HEV-S_primaryBus_IEPC-S.xml";
@@ -244,7 +244,7 @@ namespace VectoMockupTest
 		[TestCase(Conventional_PrimaryBus_Tyres, TestName = "ConventionalPrimaryBus Tyres")]
         [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
         [TestCase(HEV_Px_PrimaryBus, TestName="HEV_Px_PrimaryBus")]
-		[TestCase(HEV_IHPC_PrimaryBus, TestName = "HEV_iHPC_PrimaryBus")]
+		[TestCase(HEV_IHPC_PrimaryBus, TestName = "HEV_IHPC_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus_SuperCap, TestName = "HEV_Px_PrimaryBus_SuperCap")]
         [TestCase(HEV_S2_PrimaryBus, TestName="HEV_S2_PrimaryBus")]
 		[TestCase(HEV_S2_PrimaryBus_GenSetADC, TestName = "HEV_S2_PrimaryBus_GenSetADC")]
@@ -363,7 +363,6 @@ namespace VectoMockupTest
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV10, "Conventional", TestName = "InterimConventionalBusAirdrag_v1_0")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV20, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_0")]
-		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV24, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_4")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "Interim HEV_IEPC_S_Bus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_IHPC_Bus")]
