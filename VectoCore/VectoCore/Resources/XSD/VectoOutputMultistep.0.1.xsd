@@ -1423,7 +1423,7 @@
 			<xs:extension base="vif:AbstractElectricMachineSystemDataType">
 				<xs:sequence>
 					<xs:group ref="vif:ElectricMachineSystemCommonParametersSequenceGroup"/>
-					<xs:element name="CertificationMethod">
+					<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
 						<xs:annotation>
 							<xs:documentation>P456 - enum</xs:documentation>
 							<xs:appinfo>
@@ -1433,12 +1433,6 @@
 								</vectoParam:description>
 							</xs:appinfo>
 						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="v2.3:CertificationMethodType">
-								<xs:enumeration value="Measured"/>
-								<xs:enumeration value="Standard values"/>
-							</xs:restriction>
-						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="vif:ElectricMachineSystemPowerRatingsSequenceGroup"/>
 					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
@@ -1452,15 +1446,10 @@
 							</xs:appinfo>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="IHPCType">
+					<xs:element name="IHPCType" type="v2.3:IHPCTypeType">
 						<xs:annotation>
 							<xs:documentation>P466 - enum</xs:documentation>
 						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="v2.3:IHPCTypeType">
-								<xs:enumeration value="None"/>
-							</xs:restriction>
-						</xs:simpleType>
 					</xs:element>
 					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelMeasuredType" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
