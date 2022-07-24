@@ -15,7 +15,11 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 Public Class AboutBox
 	Private Sub F10_AboutBox_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
+#If NET47_OR_GREATER Or NET5_0_OR_GREATER Then
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers & " / " & Runtime.InteropServices.RuntimeInformation.FrameworkDescription
+#Else
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers & " / .NET Framework " & If(Environment.Version.Revision < 42000, "4.5", "4.6")
+#End If
 	End Sub
 
 	Private Sub LinkLabel1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) _

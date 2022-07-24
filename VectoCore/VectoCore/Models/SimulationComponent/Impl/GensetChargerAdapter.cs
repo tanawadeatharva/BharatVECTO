@@ -1,10 +1,11 @@
 ﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class GensetChargerAdapter : IElectricChargerPort
+	public class GensetChargerAdapter : IElectricChargerPort, IUpdateable
 	{
 		protected IElectricSystem es;
 		protected Watt PowerGenerated;
@@ -75,5 +76,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			#endregion
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is GenSetOperatingPoint p) {
+				ChargingPower = p.ElectricPower;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

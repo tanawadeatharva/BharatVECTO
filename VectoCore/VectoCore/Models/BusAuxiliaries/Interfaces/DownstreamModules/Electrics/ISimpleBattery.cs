@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics {
 
@@ -9,7 +10,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 
 	}
 
-	public interface ISimpleBattery  : ISimpleBatteryInfo
+	public interface ISimpleBattery  : ISimpleBatteryInfo, IUpdateable
 	{
 		WattSecond ConsumedEnergy { get; }
 
