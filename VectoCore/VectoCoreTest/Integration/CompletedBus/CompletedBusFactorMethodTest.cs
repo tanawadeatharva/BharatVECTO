@@ -882,7 +882,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				genericDriver.LookAheadCoasting.LookAheadDistanceFactor);
 			Assert.AreEqual(genericDriver.LookAheadCoasting, specificDriver.LookAheadCoasting);
 
-			Assert.AreEqual(true, genericDriver.OverSpeed.Enabled);
+			Assert.AreEqual(false, genericDriver.OverSpeed.Enabled);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeed.MinSpeed, genericDriver.OverSpeed.MinSpeed);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeed.AllowedOverSpeed, genericDriver.OverSpeed.OverSpeed);
 			Assert.AreEqual(genericDriver.OverSpeed, specificDriver.OverSpeed);

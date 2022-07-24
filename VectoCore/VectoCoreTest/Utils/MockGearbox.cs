@@ -131,6 +131,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return _clutchClosed;
 		}
 
+		public bool RequestAfterGearshift { get; set; }
+
 		public bool ClutchClosed(Second absTime)
 		{
 			return _clutchClosed;

@@ -196,10 +196,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual Dictionary<MeterPerSecond, Radian> SimulationRunPreprocessingEcoRoll(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, null);
-			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, simpleContainer);
+			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new Dictionary<MeterPerSecond, Radian>();
 			var preprocessor = new PCCEcoRollEngineStopPreprocessor(simpleContainer, tmp, 50.KMPHtoMeterPerSecond(), 90.KMPHtoMeterPerSecond());
@@ -220,10 +218,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual PCCSegments SimulationRunPreprocessingPCCSegments(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, null);
-			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, simpleContainer);
+			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new PCCSegments();
 			var preprocessor = new PCCSegmentPreprocessor(simpleContainer, tmp, data.DriverData.PCC);
@@ -292,10 +288,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		protected virtual VelocityRollingLookup SimulationRunPreprocessingVelocityTractionInterruption(IVectoRun run)
 		{
 			var data = run.GetContainer().RunData;
-			var modData = new ModalDataContainer(data, null, null);
-			var builder = new PowertrainBuilder(modData);
 			var simpleContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, simpleContainer);
+			PowertrainBuilder.BuildSimplePowertrain(data, simpleContainer);
 
 			var tmp = new VelocityRollingLookup();
 			var preprocessor = new VelocitySpeedGearshiftPreprocessor(tmp, 1.SI<Second>(), simpleContainer, minGradient: -12, maxGradient: 12);

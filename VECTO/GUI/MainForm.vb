@@ -29,16 +29,14 @@
 '   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 '
 
-Imports System.Collections.Generic
+Imports System.Collections.Concurrent
 Imports System.ComponentModel
 Imports System.IO
-Imports System.Linq
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
 Imports System.Threading
 Imports System.Xml
-Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
@@ -50,7 +48,6 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -138,6 +135,10 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
+        IEPCFileBrowser = New FileBrowser("viepc")
+        IEPCFLCFileBrowser = New FileBrowser("viepcp")
+        IEPCDragFileBrowser = new FileBrowser("viepcd")
+        IEPCPowerMapFileBrowser = New FileBrowser("viepco")
         REESSFileBrowser = New FileBrowser("vreess")
         EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
@@ -157,6 +158,10 @@ Public Class MainForm
         PropulsionTorqueLimitFileBrowser = New FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
+        IHPCFileBrowser = new FileBrowser("vem")
+        IHPCPowerMapFileBrowser = new FileBrowser("vemo")
+        IHPCFullLoadCurveFileBrowser = new FileBrowser("vemp")
+        IHPCDragCurveFileBrowser = new FileBrowser("vemd")
 
         '-------------------------------------------------------
         TextFileBrowser.Extensions = New String() {"txt"}
@@ -198,6 +203,16 @@ Public Class MainForm
         PropulsionTorqueLimitFileBrowser.Extensions = New String() {"vtqp"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
+
+        IHPCFileBrowser.Extensions = New String(){"vem"}
+        IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
+        IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
+        IHPCDragCurveFileBrowser.Extensions = New String(){"vemd"}
+        
+        IEPCFileBrowser.Extensions = New String () {"viepc"}
+        IEPCFLCFileBrowser.Extensions = New String() {"viepcp"}
+        IEPCDragFileBrowser.Extensions = New String() {"viepcd"}
+        IEPCPowerMapFileBrowser.Extensions = New String() {"viepco"}
     End Sub
 
     Private Sub FB_Close()
@@ -256,6 +271,10 @@ Public Class MainForm
         _genCheckAllLock = False
         _genChecked = 0
 
+        Dim logMessageTimer As New Windows.Forms.Timer(components)
+        logMessageTimer.Interval = 100
+        AddHandler logMessageTimer.Tick, AddressOf TimerLogMessages_Tick
+        logMessageTimer.Start()
 
         'Load Tabs properly (otherwise problem with ListViews)
         For x = 0 To TabControl1.TabCount - 1
@@ -391,7 +410,7 @@ Public Class MainForm
                         GearboxForm.BringToFront()
                     End If
                     Try
-                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
+                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle)
                     Catch ex As Exception
                         MsgBox("Failed to open Gearbox File: " + ex.Message)
                     End Try
@@ -1042,11 +1061,11 @@ lbFound:
 
                 ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
                 If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
-                    for Each run as JobContainer.RunEntry In jobContainer.Runs
-                        dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
-                        tmpDriver.LookAheadCoasting.Enabled = True
-                        tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
-                    Next
+                    'for Each run as JobContainer.RunEntry In jobContainer.Runs
+                    '    dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
+                    '    tmpDriver.LookAheadCoasting.Enabled = True
+                    '    tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
+                    'Next
                 end if
 
                     
@@ -1516,9 +1535,7 @@ lbFound:
         lv0.SubItems.Add(Now.ToString("HH:mm:ss.ff"))
         lv0.SubItems.Add(source)
 
-        If LvMsg.Items.Count > 9999 Then LvMsg.Items.RemoveAt(0)
-
-        LogFile.WriteToLog(id, msg & vbTab & source)
+        Task.Run(Sub() LogFile.WriteToLog(id, msg & vbTab & source))
 
         Select Case id
 
@@ -1547,10 +1564,26 @@ lbFound:
             lv0.Tag = link
         End If
 
+        _logItemQueue.Enqueue(lv0)
+    End Sub
 
-        LvMsg.Items.Add(lv0)
+    Private ReadOnly _logItemQueue As New ConcurrentQueue(Of ListViewItem)
 
-        lv0.EnsureVisible()
+    Private Sub TimerLogMessages_Tick(sender As Object, e As EventArgs)
+        If Not _logItemQueue.IsEmpty Then
+
+            LvMsg.BeginUpdate()
+            Dim item As ListViewItem = Nothing
+            While _logItemQueue.TryDequeue(item)
+                LvMsg.Items.Add(item)
+                If LvMsg.Items.Count > 9999 Then
+                    LvMsg.Items.RemoveAt(0)
+                End If
+            End While
+
+            LvMsg.Items(LvMsg.Items.Count - 1).EnsureVisible()
+            LvMsg.EndUpdate()
+        End If
     End Sub
 
 
@@ -2183,5 +2216,16 @@ lbFound:
 
     Private Sub JobEditorSerialHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorSerialHybridVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.SerialHybridVehicle)
+    End Sub
+    Private Sub JobEditorIEPC_E_VehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_E_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
+    End Sub
+
+    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click 
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_S_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
     End Sub
 End Class

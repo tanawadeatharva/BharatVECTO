@@ -72,7 +72,7 @@ Public Class BusAuxEngineeringParams
             writer.SaveBusAuxEngineeringParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Failed to write Strategy Parameters file: " + ex.Message)
+            MsgBox("Failed to write auxiliary parameters file: " + ex.Message)
             Return False
         End Try
         Return True
@@ -131,7 +131,7 @@ Public Class BusAuxEngineeringParams
 
     Public ReadOnly Property PS_CompressorMap As TableData Implements IBusAuxPneumaticSystemEngineeringData.CompressorMap
     get
-        if JobType =VectoSimulationJobType.BatteryElectricVehicle then
+        if JobType =VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.IEPC_E then
                 return Nothing
         End If
         if Not file.Exists(CompressorMap.FullPath) Then

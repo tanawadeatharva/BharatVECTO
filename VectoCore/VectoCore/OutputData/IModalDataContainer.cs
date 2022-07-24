@@ -619,8 +619,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar ElectricMotorOffTimeShare(this IModalDataContainer data, PowertrainPosition pos)
 		{
+			var offField = pos == PowertrainPosition.IEPC ? ModalResultField.IEPC_Off_ : ModalResultField.EM_Off_;
 			var emOff = data.GetValues(x => new {
-				dt = x[string.Format(ModalResultField.EM_Off_.GetCaption(), pos.GetName())] is DBNull || !x.Field<Scalar>(string.Format(ModalResultField.EM_Off_.GetCaption(), pos.GetName())).IsEqual(1)
+				dt = x[string.Format(offField.GetCaption(), pos.GetName())] is DBNull || !x.Field<Scalar>(string.Format(offField.GetCaption(), pos.GetName())).IsEqual(1)
 					? 0.SI<Second>()
 					: x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.dt) ?? 0.SI<Second>();

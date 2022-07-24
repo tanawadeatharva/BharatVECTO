@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimpleCharger TestContainerElectricSystemCharger;
 		private double EMRatio;
 
+		protected PowertrainPosition EMPos;
 
 		public static string Name => "AMT - EffShift (BEV)";
 
@@ -60,6 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dataBus.RunData.VehicleData == null) {
 				return;
 			}
+
+			EMPos = dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 			SetupVelocityDropPreprocessor(dataBus);
 		}
 
@@ -71,50 +75,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (runData.VehicleData == null) {
 				return;
 			}
+			EMPos = runData.ElectricMachinesData.FirstOrDefault(x =>
+				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+
 			GearboxModelData = runData.GearboxData;
 			GearshiftParams = runData.GearshiftParameters;
 			GearList = GearboxModelData.GearList;
 			MaxStartGear = GearList.Reverse().First();
 
 			VoltageLevels = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2)?.Item2.EfficiencyData;
+				.FirstOrDefault(x => x.Item1 == EMPos)?.Item2.EfficiencyData;
 
-			
-
-			TransmissionRatio = runData.AxleGearData.AxleGear.Ratio *
+			TransmissionRatio = (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *  // axlegeardata may be null for certain IEPC configurations
 								(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 								runData.VehicleData.DynamicTyreRadius;
-			//var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
-			//    Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
-
-
 
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
-			var em = runData.ElectricMachinesData.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2;
+			var em = runData.ElectricMachinesData.First(x => x.Item1 == EMPos).Item2;
 			EMRatio = em.RatioADC;
 			DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
 				runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
-				runData.AxleGearData.AxleGear.Ratio, runData.GearboxData.Type);
+				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 		}
 
 		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			var modData = new ModalDataContainer(runData, null, null);
-			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
-			builder.BuildSimplePowertrainElectric(runData, TestContainer);
+			PowertrainBuilder.BuildSimplePowertrainElectric(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
 			TestContainerSuperCap = TestContainer.BatteryInfo as SuperCap;
 			TestContainerElectricSystemCharger = (TestContainer.ElectricSystemInfo as ElectricSystem)?.Charger.FirstOrDefault(x => x is SimpleCharger) as SimpleCharger ;
 			TestContainerElectricMotor =
-				TestContainer.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
+				TestContainer.ElectricMotorInfo(EMPos) as ElectricMotor;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
@@ -161,30 +160,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IList<ITransmissionInputData> gearData, Meter rDyn, double axleGearRatio, GearboxType gearboxType)
 		{
 			var retVal = new Dictionary<uint, ShiftPolygon>();
-			var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-			var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
-				new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					MotorSpeed = 0.RPMtoRad(),
-					FullDriveTorque = -em.Overload.ContinuousTorque,
-					FullGenerationTorque = em.Overload.ContinuousTorque
-				},
-				new ElectricMotorFullLoadCurve.FullLoadEntry() {
-					MotorSpeed = 1.1 * emFld.MaxSpeed,
-					FullDriveTorque = -em.Overload.ContinuousTorque,
-					FullGenerationTorque = em.Overload.ContinuousTorque
-				}
-			});
-			var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
-			var limitedEm = new ElectricMotorData() {
-				EfficiencyData = new VoltageLevelData() {
-					VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
-						new ElectricMotorVoltageLevelData() {
-							FullLoadCurve = limitedFld
+			for (var i = 0u; i < gearData.Count; i++) {
+				var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+				var contTqFld = new ElectricMotorFullLoadCurve(new List<ElectricMotorFullLoadCurve.FullLoadEntry>() {
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 0.RPMtoRad(),
+						FullDriveTorque = -em.Overload.ContinuousTorque,
+						FullGenerationTorque = em.Overload.ContinuousTorque
+					},
+					new ElectricMotorFullLoadCurve.FullLoadEntry() {
+						MotorSpeed = 1.1 * emFld.MaxSpeed,
+						FullDriveTorque = -em.Overload.ContinuousTorque,
+						FullGenerationTorque = em.Overload.ContinuousTorque
+					}
+				});
+				var limitedFld = AbstractSimulationDataAdapter.IntersectEMFullLoadCurves(emFld, contTqFld);
+				var limitedEm = new ElectricMotorData() {
+					EfficiencyData = new VoltageLevelData() {
+						VoltageLevels = new List<ElectricMotorVoltageLevelData>() {
+							new ElectricMotorVoltageLevelData() {
+								FullLoadCurve = limitedFld
+							}
 						}
 					}
-				}
-			};
-			for (var i = 0u; i < gearData.Count; i++) {
+				};
+
 				var shiftPolygon = ComputeDeclarationShiftPolygon((int)i,
 					gearData, axleGearRatio,
 					rDyn, limitedEm, shiftStrategyParameters.PEV_DeRatedDownshiftSpeedFactor * emFld.RatedSpeed,
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.VehicleInfo.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
 			var totalTransmissionRatio =
-				DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2).ElectricMotorSpeed /
+				DataBus.ElectricMotorInfo(EMPos).ElectricMotorSpeed /
 				DataBus.VehicleInfo.VehicleSpeed;
 
 			var results = new List<Tuple<GearshiftPosition, double>>();
@@ -352,10 +352,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio /
-						GearboxModelData.Gears[currentGear.Gear].Ratio *
-						GearboxModelData.Gears[tryNextGear.Gear].Ratio))
-					.Cast<PerSecond>();
+				var estimatedEngineSpeed = vehicleSpeedPostShift * (totalTransmissionRatio /
+						GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear.Gear].Ratio);
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
@@ -561,7 +559,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var engineSpeed = response.ElectricMotor.AngularVelocity;
 
 
-			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, true);
+			var fcCurRes = VoltageLevels.LookupElectricPower(DataBus.BatteryInfo.InternalVoltage, engineSpeed, tqCurrent / EMRatio, currentGear, true);
 			if (fcCurRes.Extrapolated) {
 				Log.Warn(
 					"EffShift Strategy: Extrapolation of power consumption for current gear! n: {0}, Tq: {1}",
@@ -597,15 +595,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
-			if (TestContainerElectricSystemCharger != null) {
-				TestContainerElectricSystemCharger.ChargingPower = (DataBus.ElectricSystemInfo.ChargePower);
-			}
+			TestContainerElectricSystemCharger?.UpdateFrom(DataBus.ElectricSystemInfo.ChargePower);
+
 
 			//var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
 			TestContainerElectricMotor.ThermalBuffer =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor).ThermalBuffer;
+				(DataBus.ElectricMotorInfo(EMPos) as ElectricMotor).ThermalBuffer;
 			TestContainerElectricMotor.DeRatingActive =
-				(DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor).DeRatingActive;
+				(DataBus.ElectricMotorInfo(EMPos) as ElectricMotor).DeRatingActive;
 
 			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
 			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
@@ -621,7 +618,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return InitStartGear(absTime, outTorque, outAngularVelocity);
 			}
 
-			var emE2 = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
+			var emE2 = DataBus.ElectricMotorInfo(EMPos) as ElectricMotor;
 			if (emE2 is null) {
 				throw new VectoException("PEV Shift Strategy requires electric motor at position E2");
 			}
@@ -654,7 +651,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var emSpeeds = new Dictionary<GearshiftPosition, Tuple<PerSecond, PerSecond, double>>();
 
 
-			var emE2 = DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2) as ElectricMotor;
+			var emE2 = DataBus.ElectricMotorInfo(EMPos) as ElectricMotor;
 			if (emE2 is null) {
 				throw new VectoException("PEV Shift Strategy requires electric motor at position E2");
 			}
@@ -790,7 +787,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return
 				(outAngularSpeed * GearboxModelData.Gears[gear.Gear].Ratio).IsGreaterOrEqual(VectoMath.Min(GearboxModelData.Gears[gear.Gear].MaxSpeed,
-					DataBus.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2).MaxSpeed));
+					DataBus.ElectricMotorInfo(EMPos).MaxSpeed));
 		}
 
 		public void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity) { }
@@ -827,7 +824,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				DataBus = dataBus;
 				ElectricMotorData = dataBus.RunData.ElectricMachinesData
-					.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2).Item2;
+					.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC).Item2;
 				GearboxModelData = dataBus.RunData.GearboxData;
 			}
 

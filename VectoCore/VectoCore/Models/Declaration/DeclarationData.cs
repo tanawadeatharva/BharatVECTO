@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
-				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !(bool)lowEntry) {
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
 						case 2: return 1.0.SI<Meter>();
 						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();
@@ -577,6 +577,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				switch (type) {
 					case GearboxType.AMT:
 					case GearboxType.APTN:
+					case GearboxType.IHPC:
 						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
 						return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT:

@@ -277,8 +277,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(new MockModalDataContainer());
-			builder.Build(data);
+			PowertrainBuilder.Build(data, new MockModalDataContainer());
 		}
 
 		/// <summary>
@@ -363,8 +362,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(new MockModalDataContainer());
-			var jobContainer = builder.Build(data);
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer());
 		}
 
 		private static void RunJob(string jobFile, string expectedModFile, string actualModFile, string expectedSumFile,

@@ -236,7 +236,7 @@ Examples:
 					}
 
 					fileWriter = new FileOutputWriter(file);
-					var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, fileWriter, null, null, true);
+					var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, dataProvider, fileWriter);
 					runsFactory.ModalResults1Hz = args.Contains("-1Hz");
 					runsFactory.WriteModalResults = args.Contains("-mod");

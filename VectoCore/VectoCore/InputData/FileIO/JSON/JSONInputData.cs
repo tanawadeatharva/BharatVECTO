@@ -1149,7 +1149,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// --------------------------
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+	public class JSONInputDataV12_IEPC : AbstractJSONInputData
+	{
+		public JSONInputDataV12_IEPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+			if (Body[JsonKeys.Vehicle_EngineFile] != null) {
+				Engine = ReadEngine();
+			}
+
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
+				//AxleGear = ReadGearbox() as IAxleGearInputData;
+				Gearbox = ReadGearbox();  // gearbox is not used, but required by GUI
+				AxleGear = Gearbox as IAxleGearInputData;
+			}
+		}
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
+	}
+
+	// --------------------------
+
+	public class JSONInputDataV13_IHPC : JSONInputDataV8_ParallelHybrid
+	{
+		public JSONInputDataV13_IHPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
+	}
+
+	// --------------------------
+
+		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

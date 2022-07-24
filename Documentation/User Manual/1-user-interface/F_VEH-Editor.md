@@ -155,13 +155,13 @@ Three options are available:
 
 
 
-## Vehicle Editor -- Electric Components Tab
+## Vehicle Editor -- Electric Machine Tab
 
-![](pics/VECTO_VehicleEditor_ParHyb_El.png)
+![](pics/VehicleForm_ElectricMachine.png)
 
-For hybrid vehicles and battery electric vehicles the input elements on the *electric components* tab are enabled. Here the component file for the eletric motor and battery pack can be loaded or created (see [Electric Motor Editor](#electric-motor-editor), [Electric Energy Storage Editor](#rechargeable-electric-energy-storage-editor))
+For hybrid vehicles and battery electric vehicles the input elements on the *electric machine* tab is enabled. Here the component file for the eletric motor can be loaded or created (see [Electric Motor Editor](#electric-motor-editor))
 
-The position where the electric machine is positioned in the powertrain can be selected. It is possible that the electric machine is connected to the powertrain via a fixed gear ratio.
+The position where the electric machine is located in the powertrain can be selected. It is possible that the electric machine is connected to the powertrain via a fixed gear ratio.
 At the moment electric machines are supported to be present at a single position only. It is not possible to have an electric motor at position P2 and another at position P4!
 However, it is possible that more than one electric machine is used at a certain position. 
 
@@ -169,6 +169,13 @@ The *Loss map EM ADC* can be used to consider the losses of a transmission step 
 
 In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the tranmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defeined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
+
+
+## Vehicle Editor -- REESS Tab
+
+![](pics/VehicleForm_REESS.png)
+
+For hybrid vehicles and battery electric vehicles the input elements on the *rechargeable electric energy storage system (REESS)* tab is enabled. Here the component file for the battery pack can be loaded or created (see [Electric Energy Storage Editor](#rechargeable-electric-energy-storage-editor))
 
 For the electric energy storage multiple battery packs can be configured either in series or in parallel and the initial state of charge of the whole battery system can be defined.  For every entry of a battery pack the number of packs (count) in series and a stream identifier need to be specified. Battery packs on the same stream are connected in series (e.g., two different battery packs on stream number 1 are in series) while all streams are then connected in parallel (see [Battery Model](#ress) for details). This is only supported for batteries and **not** for SuperCaps.
 
@@ -182,6 +189,25 @@ In the REESS Dialog the battery file itself and how it is connected to the elect
 
 ![](pics/BatteryPackDialog.png)
 
+## Vehicle Editor -- IEPC Tab
+
+![](pics/VehicleForm_IEPC.png)
+
+For battery electric vehicles of type IEPC-E or hybrid vehicles of type IEPC-S, the tab for the *integrated electric powertrain component (IEPC)* is visible. Here the component file for the IEPC can be loaded or created (see [IEPC Editor](#iepc-editor)).
+
+## Vehicle Editor -- IHPC Tab
+
+![](pics/VehicleForm_IHPC.png)
+
+For hybrid vehicles if type IHPC the input tab for *integrated hybrid powertrain component (IHPC)* is visible. Here the component file for the electric machine part of the IHPC can be loaded or created (see [IHPC Editor](#ihpc-editor))
+
+## Vehicle Editor -- GenSet Tab
+
+![](pics/VehicleForm_GenSet.png)
+
+For serial hybrid vehicles the *GenSet tab* is visible. On this tab the electric machine used as generator connected to the combustion engine can be specified (see [Electric Motor Editor](#electric-motor-editor)). It is possible to have multiple equal electric machines as generator. The electric machines can be connected via a transmission to the combustion engine.
+
+The *Loss map EM ADC* can be used to consider the losses of a transmission step between drivetrain and electric machine or to consider losses of a summation gear. The loss map has the same format as for all other transmission components (see [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)). For simplicity or if no such transmission step is used it is possible to enter the efficiency directly (i.e., "1" if no transmission step is used).
 
 ## Vehicle Editor -- Torque Limits Tab
 
@@ -194,7 +220,7 @@ In case that the gearbox' maximum torque is lower than the engine's maximum torq
 
 Next, the maximum available torque for the electric machine can be reduced at the vehicle level, both for propulsion and recuperation. The input file is the same as the maximum drive and maximum recuperation curve (see [Electric Motor Max Torque File](#electric-motor-max-torque-file-.vemp))
 
-Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehcle-boosing-limits-.vemp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
+Last, the overall propulsion of the vehicle (i.e., HEV Px, electric motor plus combustion engine) can be limited. The "Propulsion Torque Limit" curve limits the maximum effective torque at the gearbox input shaft over the input speed. This curve is added to the combustion engine's maximum torque curve (only positive values are allowed!). For details on the file format see [Vehicle Boosting Limits](#vehicle-boosting-limits-.vtqp). The propulsion torque limit has to be provided from 0 rpm to the maximum speed of the combustion engine. In case of P3 or P4 configuration, the torque at the gearbox input shaft is calculated assuming that the electric motor does not contribute to propelling the vehicle, considering the increased losses in the transmission components inbetween. For P2.5 powertrain configurations no special calculations are necessary as this architecture is internally anyhow modelled as P2 architecture.
 
 ## Vehicle Editor -- ADAS Tab
 

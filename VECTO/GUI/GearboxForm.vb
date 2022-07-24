@@ -89,7 +89,7 @@ Public Class GearboxForm
         Else
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission()) _
+                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         End If
         DeclInit()
@@ -140,7 +140,7 @@ Public Class GearboxForm
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
         If GearboxFileBrowser.OpenDialog(_gbxFile) Then
             Try
-                OpenGbx(GearboxFileBrowser.Files(0), VehicleCategory.RigidTruck)
+                OpenGbx(GearboxFileBrowser.Files(0), VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle)
             Catch ex As Exception
                 MsgBox("Failed to open Gearbox File: " + ex.Message)
             End Try
@@ -242,7 +242,7 @@ Public Class GearboxForm
     End Sub
 
     'Open file
-    Public Sub OpenGbx(file As String, vehicleCategory As VehicleCategory)
+    Public Sub OpenGbx(file As String, vehicleCategory As VehicleCategory, vehicleJobType As VectoSimulationJobType)
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -254,6 +254,7 @@ Public Class GearboxForm
 		Dim axlegear As IAxleGearInputData = vehicle.Components.AxleGearInputData
 
         _vehicleCategory = vehicleCategory
+        _vehicleJobType = vehicleJobType
 
         If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
             Select Case WrongMode()
@@ -512,7 +513,7 @@ Public Class GearboxForm
 
         Change()
 
-        Dim hasTorqueConverter = gStype.AutomaticTransmission() AndAlso gStype <> GearboxType.APTN
+        Dim hasTorqueConverter = gStype.AutomaticTransmission() AndAlso gStype <> GearboxType.APTN AndAlso gStype <> GearboxType.IHPC
         'ChTCon.Enabled = (GStype.AutomaticTransmission())
         gbTC.Enabled = hasTorqueConverter
         pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso hasTorqueConverter
@@ -713,6 +714,7 @@ Public Class GearboxForm
 
     Private _contextMenuFiles As String()
     Private _vehicleCategory As VehicleCategory
+    private _vehicleJobType as VectoSimulationJobType
 
     Private Sub OpenFiles(ParamArray files() As String)
 
@@ -1075,7 +1077,8 @@ Public Class GearboxForm
         Dim tmpRunData as VectoRunData = New VectoRunData() With {
             .GearboxData = New GearboxData() with {
                 .Type = CType(CbGStype.SelectedValue, GearboxType)
-            }
+            },
+            .JobType = _vehicleJobType
         }
         Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
             

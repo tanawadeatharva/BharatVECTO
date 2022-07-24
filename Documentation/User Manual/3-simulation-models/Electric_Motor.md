@@ -12,7 +12,7 @@ The electric motor is modeled by basically 4 map files:
  - Engine speed for overload torque  ($n_\textrm{T,ovl}$)
  - Maximum overload time ($t_\textrm{ovl}$)
 
-The first two curves are read from a .vemp file (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The drag curve is provided in a .vemd file (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd)) and the electric power map in a .vemo file (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo)).
+The first two curves are read from a .vemp file (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The drag curve is provided in a .vemd file (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd)) and the electric power map in a .vemo file (see [Electric Motor Map (.vemo)](#electric-motor-power-map-.vemo)).
 
 During the simulation the maximum drive torque, maximum generation torque, and electric power map is interpolated for both voltage levels and the actual value used is interpolated between both voltage levels with the current internal voltage of the REESS.
 

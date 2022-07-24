@@ -3,6 +3,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -71,12 +72,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = NextComponent.Request(absTime, Constants.SimulationSettings.TargetTimeInterval, inTorque, inAngularVelocity, true);
 
 			var eMotor = DataBus.ElectricMotorInfo(DataBus.PowertrainInfo.ElectricMotorPositions[0]);
-			var fullLoad = -eMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, inAngularVelocity);
+			var fullLoad = -eMotor.MaxPowerDrive(DataBus.BatteryInfo.InternalVoltage, inAngularVelocity, gear);
 
 			Gear = oldGear;
 			return new ResponseDryRun(this, response) {
 				ElectricMotor = { PowerRequest = response.ElectricMotor.PowerRequest },
-				Gearbox = { PowerRequest = outTorque * outAngularVelocity },
+				Gearbox = {
+					PowerRequest = outTorque * outAngularVelocity,
+					InputSpeed = inAngularVelocity,
+					InputTorque = inTorque,
+					OutputTorque = outTorque,
+					OutputSpeed = outAngularVelocity,
+				},
 				DeltaFullLoad = response.ElectricMotor.PowerRequest - fullLoad
 			};
 		}

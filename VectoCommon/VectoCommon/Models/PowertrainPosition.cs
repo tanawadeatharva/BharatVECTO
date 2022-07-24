@@ -18,6 +18,8 @@ namespace TUGraz.VectoCommon.InputData {
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
+		IEPC,
+		IHPC
 	}
 
 	public static class PowertrainPositionHelper
@@ -25,23 +27,33 @@ namespace TUGraz.VectoCommon.InputData {
 		public const string HybridPrefix = "Hybrid";
 		public const string BatteryElectriPrefix = "BatteryElectric";
 
-		public static PowertrainPosition Parse(string pos)
+		public static PowertrainPosition Parse(string prefix, string pos)
 		{
-			if (pos.EndsWith(nameof(PowertrainPosition.GEN))) {
+			if (pos.Equals(nameof(PowertrainPosition.GEN))) {
 				return PowertrainPosition.GEN;
 			}
-
-			if (pos.StartsWith("P",StringComparison.InvariantCultureIgnoreCase)) {
-				return (HybridPrefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
+			if (pos.Equals(nameof(PowertrainPosition.IHPC), StringComparison.InvariantCultureIgnoreCase)) {
+				return PowertrainPosition.IHPC;
 			}
 
-			if (pos.StartsWith("B", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectriPrefix + pos.Replace("B", "E")).ParseEnum<PowertrainPosition>();
+			if (prefix.Equals("P", StringComparison.InvariantCultureIgnoreCase)) {
+				return (HybridPrefix + prefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
-			if (pos.StartsWith("E", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectriPrefix + pos).ParseEnum<PowertrainPosition>();
+
+			if (prefix.Equals("B", StringComparison.InvariantCultureIgnoreCase) || prefix.Equals("E", StringComparison.InvariantCultureIgnoreCase)) {
+				return (BatteryElectricPrefix + (prefix + pos).Replace("B", "E")).ParseEnum<PowertrainPosition>();
 			}
+			
 			throw new VectoException("invalid powertrain position {0}", pos);
+		}
+
+		public static PowertrainPosition Parse(string pos)
+		{
+			if (pos.Length > 1 && pos[0].IsOneOf('B', 'P', 'E')) {
+				return Parse(pos.Substring(0, 1), pos.Substring(1));
+			}
+
+			return Parse("", pos);
 		}
 
 		public static string GetName(this PowertrainPosition pos)
@@ -72,6 +84,7 @@ namespace TUGraz.VectoCommon.InputData {
 				case PowertrainPosition.BatteryElectricE2:
 				case PowertrainPosition.BatteryElectricE3:
 				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.IEPC:
 					return true;
 				default:
 					return false;

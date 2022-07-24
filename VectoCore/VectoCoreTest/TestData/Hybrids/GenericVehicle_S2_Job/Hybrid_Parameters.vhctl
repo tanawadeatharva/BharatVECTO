@@ -7,7 +7,7 @@
   },
   "Body": {
     "----EquivalenceFactor": 2.0,
-    "MinSoC": 24.0,
+    "MinSoC": 30.0,
     "----MaxSoC": 80.0,
     "TargetSoC": 70.0,
     "----AuxBufferTime": 5.0,

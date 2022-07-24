@@ -78,7 +78,7 @@
     "EcoRoll": "None",
     "PredictiveCruiseControl": "None",
     "ATEcoRollReleaseLockupClutch": false,
-    "CdxA": 4.83,
+    "CdA": 4.83,
     "VehicleHeight": 3.0
   }
 }

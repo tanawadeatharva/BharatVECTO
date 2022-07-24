@@ -115,6 +115,18 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = True
             Case VectoSimulationJobType.EngineOnlySimulation
                 lblTitle.Text = prefix + "Engine Only"
+            Case VectoSimulationJobType.IEPC_E
+                lblTitle.Text = prefix + "IEPC-E Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            case VectoSimulationJobType.IEPC_S
+                lblTitle.Text = prefix + "IEPC-S Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.IHPC
+                lblTitle.Text = prefix + "IHPC Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False      
         End Select
     End Sub
 
@@ -318,19 +330,22 @@ Public Class VectoJobForm
             GearboxForm.BringToFront()
         End If
         Dim vehicleType As VehicleCategory
+        Dim jobType as VectoSimulationJobType
         Try
             If Not Trim(f) = "" Then
-                Dim vehInput As IVehicleDeclarationInputData =
+                Dim vehInput As IVehicleEngineeringInputData =
                         CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
                             IEngineeringInputDataProvider).JobInputData.Vehicle
                 vehicleType = vehInput.VehicleCategory
+                jobType = vehInput.VehicleType
             End If
 
         Catch ex As Exception
             vehicleType = VehicleCategory.RigidTruck
+            jobType = VectoSimulationJobType.ConventionalVehicle
         End Try
         Try
-            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
+            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType, jobType)
         Catch ex As Exception
             MsgBox("Failed to open Gearbox File: " + ex.Message)
         End Try
@@ -464,12 +479,12 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
 			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbENG.Text = ""
 		End If
-		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+		If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
 			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
 		Else
 			TbGBX.Text = ""
@@ -479,7 +494,7 @@ Public Class VectoJobForm
 		Else
 			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
 		End If
-		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle) Then
+		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC) Then
 			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
 		End If
 
@@ -526,7 +541,11 @@ Public Class VectoJobForm
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
                 Dim lv0 As ListViewItem = New ListViewItem
-                lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                if (sb.CycleData.SourceType = DataSourceType.Embedded) Then
+                    lv0.Text = sb.Name
+                else 
+                    lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                End If
                 LvCycles.Items.Add(lv0)
             Next
         Catch ex As Exception
@@ -1046,6 +1065,26 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = False
                 pnShiftParams.Enabled = True
                 gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IHPC
+                pnEngine.Enabled = True
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = True
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
+            Case VectoSimulationJobType.IEPC_E
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IEPC_S
+                pnEngine.Enabled = True
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
         End Select
     End Sub
 
@@ -1151,7 +1190,11 @@ Public Class VectoJobForm
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse  JobType = VectoSimulationJobType.IEPC_S) Then
+            TbGbxTxt.Text = $"IEPC {gearbox.Model}"
+        else
+            TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        End If
 
 	    If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count

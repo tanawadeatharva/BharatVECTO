@@ -37,9 +37,6 @@ namespace VECTO3GUI2020.Util.XML
 				{ V24, "v2.4"},
 				//{ V26, "v2.6"},
 				{ Di, "di"},
-				//{ V28, "v2.8"},
-				//{v2_10_2, "v2.10.2"},
-				//{v2_10_1, "v2.10.1"}
 			};
 
 		public static string GetPrefix(XNamespace xNamespace)
