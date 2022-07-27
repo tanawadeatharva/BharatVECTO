@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override List<ElectricMachineEntry<IElectricMotorDeclarationInputData>> GetEntries()
 		{
 			var machineEntry = new ElectricMachineEntry<IElectricMotorDeclarationInputData> {
-				Position = PowertrainPositionHelper.Parse(((XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01)_vehicle).PowertrainPositionPrefix +
+				Position = PowertrainPositionHelper.Parse(((XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01)_vehicle).PowertrainPositionPrefix,
 														GetString(XMLNames.ElectricMachine_PowertrainPosition)),
 				Count = XmlConvert.ToInt32(GetString(XMLNames.ElectricMachine_Count)),
 				ElectricMachine = ElectricMachineSystemReader.CreateElectricMachineSystem(GetNode(XMLNames.ElectricMachineSystem)),

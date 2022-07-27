@@ -32,11 +32,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GetElectricMachineType(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineData)
 		{
 			return new XElement(_vif + XMLNames.Component_ElectricMachine,
+				new XElement(_vif + XMLNames.ElectricMachine_PowertrainPosition,
+					electricMachineData.Position.ToXmlFormat()),
 				new XElement(_vif + XMLNames.ElectricMachine_Count, electricMachineData.Count),
 				_vifFactory.GetElectricMachineSystemType().GetElement(electricMachineData.ElectricMachine),
-				Get25GearRatio(electricMachineData.RatioPerGear),
 				GetADC(electricMachineData.ADC),
-				new XElement(_vif + XMLNames.ElectricMachine_PowertrainPosition, electricMachineData.Position.ToXmlFormat()));
+				Get25GearRatio(electricMachineData.RatioPerGear)
+			);
 		}
 
 		private XElement Get25GearRatio(double[] gearRatios)

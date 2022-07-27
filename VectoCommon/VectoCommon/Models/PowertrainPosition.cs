@@ -25,7 +25,7 @@ namespace TUGraz.VectoCommon.InputData {
 	public static class PowertrainPositionHelper
 	{
 		public const string HybridPrefix = "Hybrid";
-		public const string BatteryElectriPrefix = "BatteryElectric";
+		public const string BatteryElectricPrefix = "BatteryElectric";
 
 		public static PowertrainPosition Parse(string prefix, string pos)
 		{
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCommon.InputData {
 
 		public static string GetName(this PowertrainPosition pos)
 		{
-			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectriPrefix, "").Replace("_", ".");
+			return pos.ToString().Replace(HybridPrefix, "").Replace(BatteryElectricPrefix, "").Replace("_", ".");
 		}
 
 		public static string GetLabel(this PowertrainPosition pos)
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCommon.InputData {
 				case PowertrainPosition.GEN:
 					return nameof(PowertrainPosition.GEN);
 			}
-			return pos.ToString().Replace(BatteryElectriPrefix, "").Replace("B", "E");
+			return pos.ToString().Replace(BatteryElectricPrefix, "").Replace("B", "E");
 		}
 
 		public static bool IsBatteryElectric(this PowertrainPosition pos)
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCommon.InputData {
 
 		private static string GetPositionWithoutPrefix(string position)
 		{
-			return position.Replace(BatteryElectriPrefix, "").Replace("E", "").Replace(HybridPrefix, "").Replace("P", "")
+			return position.Replace(BatteryElectricPrefix, "").Replace("E", "").Replace(HybridPrefix, "").Replace("P", "")
 				.Replace("_", ".");
 		}
 		public static bool IsSerialHybrid(this PowertrainPosition pos)

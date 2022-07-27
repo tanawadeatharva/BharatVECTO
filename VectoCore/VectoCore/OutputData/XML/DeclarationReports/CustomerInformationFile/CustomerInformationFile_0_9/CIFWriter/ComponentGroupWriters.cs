@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			foreach (var electricMotorVoltageLevel in voltageLevels)
 			{
 				var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
-					new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+					voltageLevels.Count > 1 ? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)) : null,
 					new XElement(_cif + "MaxContinuousPropulsionPower",
 						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
 						.ToXMLFormat(0)));
@@ -178,14 +178,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var reess = inputData.JobInputData.Vehicle.Components.ElectricStorage;
 			var batteries = reess.ElectricStorageElements
 				.Where(es => es.REESSPack.StorageType == REESSType.Battery)
-				.Select(es => es.REESSPack as IBatteryPackDeclarationInputData);
-			var totalStorageCapacity = batteries
-				.Sum(bp => bp.Capacity);
-			var totalUsableCapacity = batteries.Sum(bp => bp.TotalUsableCapacityInSimulation());
+				.Select(es => es.REESSPack as IBatteryPackDeclarationInputData).ToArray();
+			var capacitors = reess.ElectricStorageElements.Where(es => es.REESSPack.StorageType == REESSType.SuperCap)
+				.Select(es => es.REESSPack as ISuperCapDeclarationInputData).ToArray();
+
+			var totalStorageCapacity =
+				(batteries.Length > 0 ? batteries.Sum(bp => bp.Capacity) : 0.SI<AmpereSecond>()) +
+				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<AmpereSecond>());
+			var totalUsableCapacity = (batteries.Length > 0
+										? batteries.Sum(bp => bp.TotalUsableCapacityInSimulation())
+										: 0.SI<AmpereSecond>()) +
+									(capacitors.Length > 0
+										? capacitors.Sum(cap => GetTotalUsableCapacityInSimulation(cap))
+										: 0.SI<AmpereSecond>());
+
 			return new List<XElement>() {
 				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("Ah", 0)),
 				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("Ah", 0))
 			};
+		}
+
+		private AmpereSecond GetTotalUsableCapacityInSimulation(ISuperCapDeclarationInputData cap)
+		{
+			return GetStorageCapacity(cap) * 0.8;
+		}
+
+		private AmpereSecond GetStorageCapacity(ISuperCapDeclarationInputData cap)
+		{
+			var voltageRange = cap.MaxVoltage - cap.MinVoltage;
+			var avgVoltage = (cap.MaxVoltage + cap.MinVoltage) / 2.0;
+			return cap.Capacity * voltageRange * voltageRange / 2.0 / avgVoltage;
 		}
 
 		#endregion
