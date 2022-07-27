@@ -140,6 +140,9 @@ namespace TUGraz.VectoMockup
 		{
 			var resultElement = GetResultElement(resultElementName, MockupResultHelper.GetResourceName(xmlName, result, ResultType.MRF, runData));
 			ReplaceMission(result, resultElement);
+			ReplaceGroup(result, resultElement);
+			ReplacePayload(result, resultElement);
+			ReplaceFuelMode(result, resultElement);
 			SetFuels(result, resultElement);
 			ClearGearboxAndAxleGearEntries(result, resultElement, runData);
 			
@@ -166,49 +169,32 @@ namespace TUGraz.VectoMockup
 			ReplaceGroup(result, resultElement);
 			ReplacePayload(result, resultElement);
 			ReplaceFuelMode(result,resultElement);
-			//SetFuels(result, resultElement);
+            SetFuels(result, resultElement);
 
-			//Results.Add(
-			//	new XElement(
-			//		tns + XMLNames.Report_Result_Result,
-			//		new XAttribute(
-			//			XMLNames.Report_Result_Status_Attr,
-			//			resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
-			//		new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, resultEntry.VehicleClass.GetClassNumber()),
-			//		new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
-			//		new XElement(
-			//			tns + XMLNames.Report_ResultEntry_SimulationParameters,
-			//			new XElement(
-			//				tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
-			//				XMLHelper.ValueAsUnit(resultEntry.TotalVehicleMass, XMLNames.Unit_kg, 2)),
-			//			new XElement(
-			//				tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(resultEntry.Payload, XMLNames.Unit_kg, 2)),
-			//			new XElement(
-			//				tns + XMLNames.Report_ResultEntry_PassengerCount,
-			//				resultEntry.PassengerCount?.ToXMLFormat(2) ?? "NaN"),
-			//			new XElement(
-			//				tns + XMLNames.Report_Result_FuelMode,
-			//				resultEntry.FuelData.Count > 1
-			//					? XMLNames.Report_Result_FuelMode_Val_Dual
-			//					: XMLNames.Report_Result_FuelMode_Val_Single)
-			//		),
-			//		GetResults(resultEntry)));
-
-			return resultElement;
+            return resultElement;
 		}
 
 
 
 		private static void ReplacePayload(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
-			var payload = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_ResultEntry_Payload}']");
-			payload.Single().Value = result.Payload.ToXMLFormat();
+			if (result.Payload == null) {
+				return;
+			}
+			var payload = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_ResultEntry_Payload}']").ToList();
+			if (!payload.Any()) {
+				return;
+			}
+			payload.ForEach(x => x.Value = result.Payload.ToXMLFormat());
 		}
 
 		private static void ReplaceGroup(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
-			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Vehicle_VehicleGroup}']");
-			groupElement.Single().Value = result.VehicleClass.GetClassNumber();
+			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Vehicle_VehicleGroup}']").ToList();
+			if (!groupElement.Any()) {
+				return;
+			}
+			groupElement.ForEach(x => x.Value = result.VehicleClass.GetClassNumber());
 		}
 
 		private static void ReplaceFuelMode(XMLDeclarationReport.ResultEntry result, XElement resultElement)
@@ -257,36 +243,18 @@ namespace TUGraz.VectoMockup
 		private static void SetFuels(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
 			//var tmpResultElement = new XElement(resultElement);
-			var fuelElements = resultElement.XPathSelectElements("//*[name()='Fuel']").ToList();
+			var fuelElements = resultElement.XPathSelectElements("//*[local-name()='Fuel']").ToList();
 			foreach (var fuelElement in fuelElements) {
-				XElement lastAdded = null;
+				var insertPos = fuelElement.NextNode as XElement;
+				;
 				foreach (var fuelProperties in result.FuelData)
 				{
-					Action<XElement> insertAction = (element) => {
-						//FuelElements added after this element
-						if (lastAdded != null) {
-							fuelElement.AddAfterSelf(element);
-							
-						} else if (fuelElement.PreviousNode != null) {
-							fuelElement.AddAfterSelf(element);
-							
-						} else {
-							fuelElement.Parent.AddFirst(element);
-						}
-						lastAdded = element;
-						fuelElement.Remove();
-					};
-
 					var fuelElementToAdd = new XElement(fuelElement); //deep copy of fuel element;
 					fuelElementToAdd.SetAttributeValue(XMLNames.Report_Results_Fuel_Type_Attr, fuelProperties.FuelType.ToXMLFormat());
 					ClearFuelConsumptionEntries(fuelProperties, fuelElementToAdd, result.VehicleClass);
-
-
-
-					insertAction(fuelElementToAdd);
-
-
+					insertPos.AddBeforeSelf(fuelElementToAdd);
 				}
+				fuelElement.Remove();
 			}
 		}
 
@@ -325,5 +293,7 @@ namespace TUGraz.VectoMockup
 				fuelElement.XPathSelectElements("//*[@unit='l/100km']").FirstOrDefault()?.Remove();
 			}
 		}
+
+		
 	}
 }

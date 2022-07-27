@@ -137,7 +137,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
+		public static string GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleCategory) {
+				case VehicleCategory.Van:
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+						vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating, vehicleData.CurbMassChassis,
+						vehicleData.VocationalVehicle);
+					return truckSegment.VehicleClass.GetClassNumber();
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
+						vehicleData.AxleConfiguration, vehicleData.Articulated);
+					return primarySegment.VehicleClass.GetClassNumber();
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
+						vehicleData.VehicleCode,
+						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
+						vehicleData.LowEntry);
+					return segment.VehicleClass.GetClassNumber();
+			}
 
+			throw new VectoException("No Group found for vehicle");
+		}
 
 
 		public static class BusAuxiliaries

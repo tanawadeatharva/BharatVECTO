@@ -111,7 +111,7 @@ namespace TUGraz.VectoMockup.Reports
 			Results.Add(new XElement(Tns + "Status", "success"));
 			Results.Add(new XElement(Tns + "ExemptedVehicle"));
 		}
-
+		
 
 		public void GenerateReport(XElement fullReportHash)
 		{ 

@@ -914,14 +914,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData MaxCurrentMap { get; }
 	}
 
-	public static class BatteryHelper
-	{
-		public static AmpereSecond TotalUsableCapacityInSimulation(this IBatteryPackDeclarationInputData batteryData)
-		{
-			return batteryData.Capacity;
-		}
-	}
-
 	public interface ISuperCapDeclarationInputData : IREESSPackInputData
 	{
 		Farad Capacity { get; }

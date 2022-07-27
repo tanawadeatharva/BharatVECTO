@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
@@ -34,8 +35,6 @@ namespace TUGraz.VectoMockup.Reports
 		{
 
 			Results.Add(MockupResultReader.GetMRFMockupResult(_outputData, resultValue, Mrf + "Result", _modelData));
-
-
 
 		}
 

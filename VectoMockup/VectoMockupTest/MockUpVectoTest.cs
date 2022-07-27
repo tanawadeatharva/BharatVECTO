@@ -50,8 +50,10 @@ namespace VectoMockupTest
 		//private ISimulatorFactory _simulatorFactory;
 		private IXMLInputDataReader _inputDataReader;
 
-		#region Lorry Testfiles
+		#region Heavy Lorry Testfiles
 		protected const string ConventionalHeavyLorry = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT.xml";
+		protected const string ConventionalHeavyLorry_DifferentTyres = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AMT_DifferentTyres.xml";
+		protected const string ConventionalHeavyLorry_AT_Angledrive = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AT_Angledrive.xml";
 		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
 		protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
 		protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
@@ -63,11 +65,39 @@ namespace VectoMockupTest
 		protected const string PEV_E4_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E4.xml";
 		protected const string PEV_IEPC_HeavyLorry = BasePath + @"HeavyLorry\IEPC_heavyLorry.xml";
 
+		protected const string HEV_IHPC_HeavyLorry = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_IHPC.xml";
+		protected const string HEV_Px_HeavyLorry_ADC = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_Px_ADC.xml";
+		protected const string HEV_S3_HeavyLorry_ADC = BasePathMockup + @"HeavyLorry\HEV-S_heavyLorry_S3_ADC_GenSetADC.xml";
+		protected const string HEV_Px_HeavyLorry_SuperCap = BasePathMockup + @"HeavyLorry\HEV_heavyLorry_Px_SuperCap.xml";
+
+		#endregion
+
+		#region Medium Lorry Testfiles
+
+		protected const string Conventional_mediumLorry_AMT = BasePath + @"MediumLorry/Conventional_mediumLorry_AMT.xml";
+		protected const string HEV_S_mediumLorry_AMT_S2 = BasePath + @"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml";
+		protected const string HEV_S_mediumLorry_IEPC_S = BasePath + @"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml";
+		protected const string HEV_S_mediumLorry_S3 = BasePath + @"MediumLorry/HEV-S_mediumLorry_S3.xml";
+		protected const string HEV_S_mediumLorry_S4 = BasePath + @"MediumLorry/HEV-S_mediumLorry_S4.xml";
+		protected const string HEV_mediumLorry_AMT_Px = BasePath + @"MediumLorry/HEV_mediumLorry_AMT_Px.xml";
+		protected const string IEPC_mediumLorry = BasePath + @"MediumLorry/IEPC_mediumLorry.xml";
+		protected const string PEV_mediumLorry_AMT_E2 = BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2.xml";
+		protected const string PEV_mediumLorry_AMT_E2_EM_Std = BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml";
+		protected const string PEV_mediumLorry_APT_N_E2 = BasePath + @"MediumLorry/PEV_mediumLorry_APT-N_E2.xml";
+		protected const string PEV_mediumLorry_E3 = BasePath + @"MediumLorry/PEV_mediumLorry_E3.xml";
+		protected const string PEV_mediumLorry_E4 = BasePath + @"MediumLorry/PEV_mediumLorry_E4.xml";
+
+		protected const string HEV_mediumLorry_IHPC = BasePathMockup + @"MediumLorry/HEV_mediumLorry_IHPC.xml";
+		protected const string HEV_mediumLorry_Px_SuperCap = BasePathMockup + @"MediumLorry/HEV_mediumLorry_Px_SuperCap.xml";
+		protected const string PEV_mediumLorry_AMT_E2_BatStd = BasePathMockup + @"MediumLorry/PEV_mediumLorry_AMT_E2_BatteryStd.xml";
+		//protected const string HEV_mediumLorry_Px_ADC = BasePathMockup + @"MediumLorry/HEV_heavyLorry_IHPC.xml";
+		//protected const string HEV_mediumLorry_S3_ADC_GenSetADC = BasePathMockup + @"MediumLorry/HEV_heavyLorry_IHPC.xml";
 		#endregion
 
 		#region PrimaryBus
 
 		protected const string Conventional_PrimaryBus = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT.xml";
+		protected const string Conventional_PrimaryBus_AT_Angledrive = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AT_Angledrive.xml";
 		protected const string Conventional_PrimaryBus_Tyres = BasePath + @"PrimaryBus\Conventional_primaryBus_AMT_DifferentTyres.xml";
 		protected const string HEV_Px_PrimaryBus = BasePath + @"PrimaryBus\HEV_primaryBus_AMT_Px.xml";
 		protected const string HEV_IHPC_PrimaryBus = BasePathMockup + @"PrimaryBus\HEV_primaryBus_AMT_IHPC.xml";
@@ -82,6 +112,10 @@ namespace VectoMockupTest
 		protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
 		protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
 		protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
+
+		protected const string PEV_E2_PrimaryBus_StdEM = BasePathMockup + @"PrimaryBus\PEV_primaryBus_AMT_E2_EMStd.xml";
+		protected const string PEV_E2_PrimaryBus_StdBat = BasePathMockup + @"PrimaryBus\PEV_primaryBus_AMT_E2_BatteryStd.xml";
+		protected const string Conventional_PrimaryBus_DF = BasePathMockup + @"PrimaryBus\Conventional_primaryBus_AMT_DF.xml";
 
 		#endregion
 
@@ -182,6 +216,22 @@ namespace VectoMockupTest
 				}
 			}
 		}
+
+		private string[] CopyInputFile(params string[] fileNames)
+		{
+			var subDirectory = Path.Combine( "MockupReports", TestContext.CurrentContext.Test.Name, "Input");
+			Directory.CreateDirectory(Path.GetFullPath(subDirectory));
+			var retVal = new List<string>();
+			foreach (var file in fileNames) {
+				var output = Path.Combine(subDirectory, Path.GetFileName(file));
+				File.Copy(file, output, true);
+				retVal.Add(output);
+			}
+
+			return retVal.ToArray();
+		}
+
+
 		public FileOutputWriter GetOutputFileWriter(string subDirectory, string originalFilePath)
 		{
 			subDirectory = Path.Combine("MockupReports",subDirectory);
@@ -195,6 +245,8 @@ namespace VectoMockupTest
 
 
 		[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
+		[TestCase(ConventionalHeavyLorry_DifferentTyres, TestName = "ConventionalHeavyLorry_DifferentTyres")]
+		[TestCase(ConventionalHeavyLorry_AT_Angledrive, TestName = "ConventionalHeavyLorry_AT_Angledrive")]
 		//[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
 		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
 		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
@@ -207,22 +259,30 @@ namespace VectoMockupTest
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
 		[TestCase(PEV_IEPC_HeavyLorry, TestName = "PEV_IEPC_HeavyLorry")]
 		[TestCase(HEV_IEPC_S_HeavyLorry, TestName = "HEV_IEPC_S_HeavyLorry")]
+        [TestCase(HEV_IHPC_HeavyLorry, TestName = "HEV_IHPC_HeavyLorry")]
+		[TestCase(HEV_Px_HeavyLorry_ADC, TestName = "HEV_Px_HeavyLorry_ADC")]
+		[TestCase(HEV_S3_HeavyLorry_ADC, TestName = "HEV_S3_HeavyLorry_ADC")]
+		[TestCase(HEV_Px_HeavyLorry_SuperCap, TestName = "HEV_Px_HeavyLorry_SuperCap")]
+
 		//[NonParallelizable]
-		[TestCase(BasePath + @"MediumLorry/Conventional_mediumLorry_AMT.xml", TestName="Conventional_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_AMT_S2.xml", TestName="HEV_S2_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_IEPC-S.xml", TestName="HEV_IEPC_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_S3.xml", TestName="HEV_S3_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/HEV-S_mediumLorry_S4.xml", TestName="HEV_S4_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/HEV_mediumLorry_AMT_Px.xml", TestName="HEV_Px_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/IEPC_mediumLorry.xml", TestName="PEV_IEPC_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2.xml", TestName="PEV_E2_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_AMT_E2_EM_Std.xml", TestName="PEV_E2_std_Medium_Lorry", Ignore="Segment not found")]
-		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_APT-N_E2.xml", TestName="PEV_E2_Medium_Lorry_2")]
-		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_E3.xml", TestName="PEV_E3_Medium_Lorry")]
-		[TestCase(BasePath + @"MediumLorry/PEV_mediumLorry_E4.xml", TestName="PEV_E4_Medium_Lorry")]
+		[TestCase(Conventional_mediumLorry_AMT, TestName = "Conventional_Medium_Lorry")]
+		[TestCase(HEV_S_mediumLorry_AMT_S2, TestName = "HEV_S2_Medium_Lorry")]
+		[TestCase(HEV_S_mediumLorry_IEPC_S, TestName = "HEV_IEPC_Medium_Lorry")]
+		[TestCase(HEV_S_mediumLorry_S3, TestName = "HEV_S3_Medium_Lorry")]
+		[TestCase(HEV_S_mediumLorry_S4, TestName = "HEV_S4_Medium_Lorry")]
+		[TestCase(HEV_mediumLorry_AMT_Px, TestName = "HEV_Px_Medium_Lorry")]
+		[TestCase(IEPC_mediumLorry, TestName = "PEV_IEPC_Medium_Lorry")]
+		[TestCase(PEV_mediumLorry_AMT_E2, TestName = "PEV_E2_Medium_Lorry")]
+		[TestCase(PEV_mediumLorry_AMT_E2_EM_Std, TestName = "PEV_E2_std_Medium_Lorry")]
+		[TestCase(PEV_mediumLorry_APT_N_E2, TestName = "PEV_E2_Medium_Lorry_2")]
+		[TestCase(PEV_mediumLorry_E3, TestName = "PEV_E3_Medium_Lorry")]
+		[TestCase(PEV_mediumLorry_E4, TestName = "PEV_E4_Medium_Lorry")]
+		[TestCase(HEV_mediumLorry_IHPC, TestName = "HEV_IHPC_MediumLorry")]
+		[TestCase(HEV_mediumLorry_Px_SuperCap, TestName = "HEV_Px_Medium_Lorry_SuperCap")]
+		[TestCase(PEV_mediumLorry_AMT_E2_BatStd, TestName = "PEV_E2_Medium_Lorry_BatteryStd")]
 		public void LorryMockupTest(string fileName, bool mockup = true)
 		{
-			
+			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
@@ -240,7 +300,10 @@ namespace VectoMockupTest
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
 		}
 
+
+
 		[TestCase(Conventional_PrimaryBus, TestName = "ConventionalPrimaryBus")]
+		[TestCase(Conventional_PrimaryBus_AT_Angledrive, TestName = "ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus_Tyres, TestName = "ConventionalPrimaryBus Tyres")]
         [TestCase(HEV_IEPC_S_PrimaryBus, TestName="HEV_IEPC_S_PrimaryBus")]
         [TestCase(HEV_Px_PrimaryBus, TestName="HEV_Px_PrimaryBus")]
@@ -255,8 +318,12 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, TestName = "PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, TestName = "PEV_E4_PrimaryBus")]
         [TestCase(PEV_IEPC_PrimaryBus, TestName="PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "PEV_E2_PrimaryBus_EM-Std")]
+		[TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "PEV_E2_PrimaryBus_Battery-Std")]
+		[TestCase(Conventional_PrimaryBus_DF, TestName = "ConventionalPrimaryBus_DualFuel")]
 		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
+			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
@@ -278,6 +345,7 @@ namespace VectoMockupTest
 		[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
 		public void InterimBusMockupTest(string vifInput, string stageInputFile)
 		{
+			CopyInputFile(vifInput);
 			//SimulatorFactory.MockUpRun = mockup;
 			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistageBusInputDataProvider;
 			Assert.NotNull(multistageBusInput);
@@ -304,6 +372,7 @@ namespace VectoMockupTest
 		[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
 		public void CompletedBusMockupTest(string fileName)
 		{
+			CopyInputFile(fileName);
 			//SimulatorFactory.MockUpRun = mockup;
 			XMLDeclarationVIFInputData input = null!;
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
@@ -329,6 +398,7 @@ namespace VectoMockupTest
         [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
 		public void PrimaryAndCompletedTest(string fileName)
 		{
+
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumWriter);
@@ -362,8 +432,10 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
+		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_AT_Angledrive")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV10, "Conventional", TestName = "InterimConventionalBusAirdrag_v1_0")]
 		[TestCase(Conventional_PrimaryBus, Conventional_InterimBusInput_AirdragV20, "Conventional", TestName = "InterimConventionalBusAirdrag_v2_0")]
+		[TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, "Conventional", TestName = "Interim_ConventionalPrimaryBus_DualFuel")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "Interim HEV_IEPC_S_Bus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_Px_Bus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "Interim HEV_IHPC_Bus")]
@@ -374,8 +446,10 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E3_Bus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E4_Bus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_Bus")]
+		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus_EM-Std")]
 		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
 		{
+			CopyInputFile(interimBusInput);
 			// VIF + interim input =>  VIF
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
@@ -397,7 +471,7 @@ namespace VectoMockupTest
 
 			CheckFileExists(fileWriter, checkCif: false, checkPrimaryReport: true, checkMrf: true);
 			File.Delete(fileWriter.XMLFullReportName);
-
+			CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
 			// done preparing testcase...
 
 			// this is the actual test: run completed simulation
@@ -417,6 +491,7 @@ namespace VectoMockupTest
 			interimJobContainer.WaitFinished();
 
 			// assertions
+			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
 			CheckFileExists(interimFileWriter, checkVif: true, checkMrf: false, checkCif: false);
 
@@ -424,6 +499,8 @@ namespace VectoMockupTest
 		}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_DF, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim ConventionalPrimaryBus_DualFuel")]
+		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "PrimaryAndInterim ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_InterimBusInput, "IEPC-S", "HEV", TestName = "PrimaryAndInterim HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_InterimBusInput, "Px", "HEV", TestName = "PrimaryAndInterim HEV_IHPC_PrimaryBus")]
@@ -434,14 +511,16 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus_EM-Std")]
 		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
 		{
+			var copied = CopyInputFile(primaryBusInput, interimInput);
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
 
 
-			var job = GenerateJsonJobCompleteBus(primaryBusInput, interimInput, TestContext.CurrentContext.Test.Name);
+			var job = GenerateJsonJobCompleteBus(copied[0], copied[1], TestContext.CurrentContext.Test.Name);
 			var input = JSONInputDataFactory.ReadJsonJob(job);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, interimInput);
 			var sumWriter = new SummaryDataContainer(null);
@@ -465,6 +544,8 @@ namespace VectoMockupTest
 		
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_DF, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_DualFuel")]
+		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_AT_Angledrive")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus")]
@@ -475,8 +556,10 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", "PEV", TestName = "Complete PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", "PEV", TestName = "Complete PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus_EM-Std")]
 		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
+			CopyInputFile(primaryBusInput, completeBusInput);
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
@@ -506,6 +589,8 @@ namespace VectoMockupTest
 
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus Different Tyres")]
+		[TestCase(Conventional_PrimaryBus_DF, Conventional_CompletedBusInput, "Conventional", TestName = "Completed ConventionalPrimaryBus_DualFuel")]
+		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_CompletedBusInput, "Conventional", TestName = "Completed Conventional Bus_AT_Angledrive")]
 		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Completed HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_IHPC_PrimaryBus")]
@@ -516,8 +601,10 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
 		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
+			CopyInputFile(completeBusInput);
 			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
@@ -539,7 +626,7 @@ namespace VectoMockupTest
 
 			CheckFileExists(fileWriter, checkCif: false, checkPrimaryReport: true, checkMrf: true);
 			File.Delete(fileWriter.XMLFullReportName);
-
+			CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
 			// done preparing testcase...
 
 			// this is the actual test: run completed simulation
@@ -559,6 +646,7 @@ namespace VectoMockupTest
 			completedJobContainer.WaitFinished();
 
 			// assertions
+			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
 			CheckFileExists(completedFileWriter, checkCif: true, checkMrf: true, checkVif:true);
 
@@ -583,19 +671,20 @@ namespace VectoMockupTest
 
 		private string GenerateJsonJobCompletedBus(string vif, string completeBusInput, string subDirectory)
 		{
+			subDirectory = Path.Combine("MockupReports", subDirectory, "Input");
+
 			var header = new Dictionary<string, object>() {
 				{ "FileVersion", 7 }
 			};
 			var body = new Dictionary<string, object>() {
-				{ "PrimaryVehicleResults", vif },
-				{ "CompletedVehicle", Path.GetFullPath(completeBusInput) }
+				{ "PrimaryVehicleResults", Path.GetRelativePath(subDirectory, Path.GetFullPath(vif)) },
+				{ "CompletedVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(completeBusInput)) }
 			};
 			var json = new Dictionary<string, object>() {
 				{"Header", header},
 				{"Body", body}
 			};
 
-			subDirectory = Path.Combine("MockupReports", subDirectory);
 			Directory.CreateDirectory(Path.GetFullPath(subDirectory));
 			var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), "completedJob.vecto");
 			var str = JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented);
@@ -606,19 +695,20 @@ namespace VectoMockupTest
 
 		private string GenerateJsonJobCompleteBus(string primaryBusInput, string completeBusInput, string subDirectory)
 		{
+			subDirectory = Path.Combine("MockupReports", subDirectory, "Input");
+
 			var header = new Dictionary<string, object>() {
 				{ "FileVersion", 10 }
 			};
 			var body = new Dictionary<string, object>() {
-				{ "PrimaryVehicle", Path.GetFullPath(primaryBusInput) },
-				{ "InterimStep", Path.GetFullPath(completeBusInput) }
+				{ "PrimaryVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(primaryBusInput)) },
+				{ "InterimStep", Path.GetRelativePath(subDirectory, Path.GetFullPath(completeBusInput)) }
 			};
 			var json = new Dictionary<string, object>() {
 				{"Header", header},
 				{"Body", body}
 			};
 
-			subDirectory = Path.Combine("MockupReports", subDirectory);
 			Directory.CreateDirectory(Path.GetFullPath(subDirectory));
 			var path = Path.Combine(Path.Combine(Path.GetFullPath(subDirectory)), "completeJob.vecto");
 			var str = JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented);

@@ -290,6 +290,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override string Clutch => null;
 
 		public override double Ratio => double.NaN;
+
+		#region Overrides of AbstractXMLDeclarationPrimaryBusAuxiliariesDataProviderV24
+
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -314,6 +320,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override string Clutch => null;
 
 		public override double Ratio => double.NaN;
+
+
+		public override ConsumerTechnology AdBlueDosing => ConsumerTechnology.Unknown;
+
 	}
 
 	// ---------------------------------------------------------------------------------------

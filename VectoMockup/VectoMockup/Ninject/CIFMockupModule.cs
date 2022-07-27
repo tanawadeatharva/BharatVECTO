@@ -143,7 +143,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetTransmissionGroup();
         }
 
-        public IReportOutputGroup GetAxleWheelsGroup()
+		public IReportOutputGroup GetTransmissionGroupNoGearbox()
+		{
+			return _cifFactory.GetTransmissionGroupNoGearbox();
+		}
+
+		public IReportOutputGroup GetAxleWheelsGroup()
         {
             return _cifFactory.GetAxleWheelsGroup();
         }
