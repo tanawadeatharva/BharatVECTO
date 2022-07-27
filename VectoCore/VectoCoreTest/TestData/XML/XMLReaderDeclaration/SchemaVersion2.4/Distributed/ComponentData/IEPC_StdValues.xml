@@ -9,7 +9,7 @@
 			<AppVersion>aaaaa</AppVersion>
 			<ElectricMachineType>ASM</ElectricMachineType>
 			<CertificationMethod>Standard values for all components</CertificationMethod>
-			<R85RatedPower>1</R85RatedPower>
+			<R85RatedPower>50000</R85RatedPower>
 			<RotationalInertia>0.10</RotationalInertia>
 			<DifferentialIncluded>false</DifferentialIncluded>
 			<DesignTypeWheelMotor>true</DesignTypeWheelMotor>

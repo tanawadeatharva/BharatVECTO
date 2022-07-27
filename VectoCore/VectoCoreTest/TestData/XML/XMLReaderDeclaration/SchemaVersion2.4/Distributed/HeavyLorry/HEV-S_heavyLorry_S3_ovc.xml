@@ -124,7 +124,7 @@
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
 						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>1</R85RatedPower>
+						<R85RatedPower>50000</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
@@ -280,12 +280,12 @@
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
 						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>1</R85RatedPower>
+						<R85RatedPower>50000</R85RatedPower>
 						<RotationalInertia>0.10</RotationalInertia>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
-							<Voltage>400</Voltage>
+							<Voltage>450</Voltage>
 							<ContinuousTorque>200.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
 							<OverloadTorque>400.00</OverloadTorque>
@@ -303,7 +303,7 @@
 							</PowerMap>
 						</VoltageLevel>
 						<VoltageLevel>
-							<Voltage>600</Voltage>
+							<Voltage>650</Voltage>
 							<ContinuousTorque>200.00</ContinuousTorque>
 							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
 							<OverloadTorque>400.00</OverloadTorque>
