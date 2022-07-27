@@ -24,8 +24,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (DataRow row in boostingLimitations.Rows)
 			{
 				boostingLimitationsXElement.Add(new XElement(_v24 + XMLNames.BoostingLimitation_Entry,
-					new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque]),
-					new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed])));
+					new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[XMLNames.BoostingLimitation_RotationalSpeed]),
+					new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[XMLNames.BoostingLimitation_BoostingTorque])
+				));
 			}
 			
 			return boostingLimitationsXElement;

@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetConventionalLorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetEngineGroup();
 		IReportOutputGroup GetTransmissionGroup();
+		IReportOutputGroup GetTransmissionGroupNoGearbox();
 		IReportOutputGroup GetAxleWheelsGroup();
 		IReportOutputGroup GetLorryAuxGroup();
 		IReportOutputGroup GetCompletedBusAuxGroup();

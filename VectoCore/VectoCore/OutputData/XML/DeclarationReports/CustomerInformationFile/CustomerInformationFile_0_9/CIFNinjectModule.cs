@@ -289,8 +289,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			#region ComponentGroups
 			Bind<IReportOutputGroup>().To<EngineGroup>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetEngineGroup());
-			Bind<IReportOutputGroup>().To<TransmissionGroup>().When(AccessedViaCIFFactory)
+			Bind<IReportOutputGroup>().To<TransmissionGroupWithGearbox>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetTransmissionGroup());
+			Bind<IReportOutputGroup>().To<TransmissionGroupWithoutGearbox>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetTransmissionGroupNoGearbox());
 			Bind<IReportOutputGroup>().To<AxleWheelsGroup>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetAxleWheelsGroup());
 			Bind<IReportOutputGroup>().To<ElectricMachineGroup>().When(AccessedViaCIFFactory)

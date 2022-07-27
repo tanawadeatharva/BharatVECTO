@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -48,9 +49,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 
-	public class TransmissionGroup : AbstractCIFGroupWriter
+	public class TransmissionGroupWithGearbox : AbstractCIFGroupWriter
 	{
-		public TransmissionGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public TransmissionGroupWithGearbox(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
 
@@ -61,6 +62,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "TransmissionValues", gearbox.CertificationMethod.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Gearbox_TransmissionType, gearbox.Type.ToXMLFormat()),
 				new XElement(_cif + "NrOfGears", gearbox.Gears.Count)
+			};
+		}
+
+		#endregion
+	}
+
+	public class TransmissionGroupWithoutGearbox : AbstractCIFGroupWriter
+	{
+		public TransmissionGroupWithoutGearbox(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData;
+			return new List<XElement>() {
+				new XElement(_cif + "NrOfGears", 1)
 			};
 		}
 
@@ -137,7 +155,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				voltageLevels = new List<IElectricMotorVoltageLevel>();
 				var propulsionElectricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
 					.Where(e => e.Position != PowertrainPosition.GEN);
-				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower));
+				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower * e.Count));
 				var groupedVoltageLevels = propulsionElectricMachines
 					.SelectMany(electricMachine => electricMachine.ElectricMachine.VoltageLevels).GroupBy((level => level.VoltageLevel));
 				foreach (IGrouping<Volt, IElectricMotorVoltageLevel> electricMotorVoltageLevels in groupedVoltageLevels) {
@@ -145,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				}
 			}
 
-			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
+			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW", 0)));
 
 			var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
 			result.Add(voltageLevelsXElement);
@@ -183,31 +201,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.Select(es => es.REESSPack as ISuperCapDeclarationInputData).ToArray();
 
 			var totalStorageCapacity =
-				(batteries.Length > 0 ? batteries.Sum(bp => bp.Capacity) : 0.SI<AmpereSecond>()) +
-				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<AmpereSecond>());
+				(batteries.Length > 0 ? batteries.Sum(bp => bp.TotalStorageCapacity()) : 0.SI<WattSecond>()) +
+				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<WattSecond>());
 			var totalUsableCapacity = (batteries.Length > 0
 										? batteries.Sum(bp => bp.TotalUsableCapacityInSimulation())
-										: 0.SI<AmpereSecond>()) +
+										: 0.SI<WattSecond>()) +
 									(capacitors.Length > 0
 										? capacitors.Sum(cap => GetTotalUsableCapacityInSimulation(cap))
-										: 0.SI<AmpereSecond>());
+										: 0.SI<WattSecond>());
 
 			return new List<XElement>() {
-				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("Ah", 0)),
-				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("Ah", 0))
+				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("kWh", 0)),
+				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("kWh", 0))
 			};
 		}
 
-		private AmpereSecond GetTotalUsableCapacityInSimulation(ISuperCapDeclarationInputData cap)
+		private WattSecond GetTotalUsableCapacityInSimulation(ISuperCapDeclarationInputData cap)
 		{
 			return GetStorageCapacity(cap) * 0.8;
 		}
 
-		private AmpereSecond GetStorageCapacity(ISuperCapDeclarationInputData cap)
+		private WattSecond GetStorageCapacity(ISuperCapDeclarationInputData cap)
 		{
-			var voltageRange = cap.MaxVoltage - cap.MinVoltage;
-			var avgVoltage = (cap.MaxVoltage + cap.MinVoltage) / 2.0;
-			return cap.Capacity * voltageRange * voltageRange / 2.0 / avgVoltage;
+            var voltageRange = cap.MaxVoltage - cap.MinVoltage;
+            //var avgVoltage = (cap.MaxVoltage + cap.MinVoltage) / 2.0;
+			return cap.Capacity * voltageRange * voltageRange / 2.0;
 		}
 
 		#endregion

@@ -36,34 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 							torque.CertificationNumber),
 					new XElement(_vif + XMLNames.Component_Date,
 						XmlConvert.ToString(torque.Date, XmlDateTimeSerializationMode.Utc)),
-					new XElement(_vif + XMLNames.Component_AppVersion, torque.AppVersion),
-					GetCharacteristics(torque.TCData)
+					new XElement(_vif + XMLNames.Component_AppVersion, torque.AppVersion)
 				));
-		}
-
-
-		private XElement GetCharacteristics(DataTable tcData)
-		{
-			if(tcData == null)
-				return null;
-
-			var entries = new List<XElement>();
-			for (int r = 0; r < tcData.Rows.Count; r++) {
-
-				var speedRatio = tcData.Rows[r][TorqueConverterDataReader.Fields.SpeedRatio];
-				var torqueRatio = tcData.Rows[r][TorqueConverterDataReader.Fields.TorqueRatio];
-				var inputTorqueRef = tcData.Rows[r][TorqueConverterDataReader.Fields.CharacteristicTorque];
-
-				var xElement = new XElement(_vif + XMLNames.TorqueConverter_Characteristics_Entry,
-					new XAttribute(XMLNames.TorqueConverterData_SpeedRatio_Attr, speedRatio),
-					new XAttribute(XMLNames.TorqueConverterData_TorqueRatio_Attr, torqueRatio),
-					new XAttribute(XMLNames.TorqueConverterDataMapping_InputTorqueRef_Attr, inputTorqueRef));
-
-				entries.Add(xElement);
-			}
-
-			return new XElement(_vif + XMLNames.TorqueConverter_Characteristics,
-				entries.Select(x => x));
 		}
 
 		#endregion

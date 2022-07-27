@@ -26,8 +26,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
 
 		public static XNamespace Cif_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
+
+
 		protected XElement Vehicle { get; set; }
 		protected XElement Results { get; set; }
+
+		protected XElement InputDataIntegrity { get; set; }
 
 		public abstract string OutputDataType { get; }
 
@@ -52,6 +57,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.Ocv;
 			Results = new XElement(Cif_0_9 + "Results");
+			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
+				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
 		public XDocument Report { get; protected set; }
@@ -75,6 +82,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(Cif + XMLNames.Report_DataWrap,
 					new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
 					Vehicle,
+					InputDataIntegrity,
 					new XElement(Cif_0_9 + XMLNames.Report_ResultData_Signature, resultSignature),
 					Results,
 					XMLHelper.GetApplicationInfo(Cif_0_9))

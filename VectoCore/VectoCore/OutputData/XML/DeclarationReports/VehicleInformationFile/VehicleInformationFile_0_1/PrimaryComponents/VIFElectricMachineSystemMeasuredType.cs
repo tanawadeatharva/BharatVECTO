@@ -71,15 +71,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (var voltageLevel in voltageLevels) {
 
 				var entry = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
-					certificationMethod == CertificationMethod.StandardValues 
-						? null 
-						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageLevel.VoltageLevel.ToXMLFormat(0)),
+					voltageLevels.Count > 1
+						? new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageLevel.VoltageLevel.ToXMLFormat(0))
+						: null,
 					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageLevel.ContinuousTorque.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageLevel.ContinuousTorqueSpeed.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageLevel.OverloadTorque.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageLevel.OverloadTestSpeed.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageLevel.OverloadTime.ToXMLFormat(2)),
-					GetMaxTorqueCurve(voltageLevel.FullLoadCurve)
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque,
+						voltageLevel.ContinuousTorqueSpeed.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque,
+						voltageLevel.OverloadTorque.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque,
+						voltageLevel.OverloadTestSpeed.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration,
+						voltageLevel.OverloadTime.ToXMLFormat(2)), GetMaxTorqueCurve(voltageLevel.FullLoadCurve)
 				);
 				result.Add(entry);
 			}

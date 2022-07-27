@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -35,8 +36,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.Component_CertificationNumber, battery.CertificationNumber),
 						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue?.DigestValue ?? ""),
 						new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
-						new XElement(_mrf + "TotalStorageCapacity", battery.Capacity.AsAmpHour.ToXMLFormat(0)),
-						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().AsAmpHour),
+						new XElement(_mrf + "TotalStorageCapacity", battery.TotalStorageCapacity().ValueAsUnit("kWh", 0)),
+						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().ValueAsUnit("kWh"), 0),
 						new XElement(_mrf + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat())
 						)
 					);

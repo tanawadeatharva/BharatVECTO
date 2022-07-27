@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, vehicleData.VehicleCategory.ToXMLFormat())
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData))
 
 			};
 			return result;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, consolidatedVehicleData.VehicleCategory.ToXMLFormat())
+				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData))
 			};
 			return result;
 		}
@@ -168,7 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
 			if (ovCc) {
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW")));
+				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
 			}
 			return result;
 		}
@@ -193,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			});
 			if (ovCc)
 			{
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW")));
+				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
 			}
 			return result;
 		}

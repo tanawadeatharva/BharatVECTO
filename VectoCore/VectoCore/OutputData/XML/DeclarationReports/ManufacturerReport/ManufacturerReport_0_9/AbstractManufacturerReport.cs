@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public static XNamespace Mrf => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput");
 
 		public static XNamespace Mrf_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
+		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
 
 
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
@@ -32,6 +33,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		protected XElement Results { get; set; }
 		protected XElement Vehicle { get; set; }
+
+		protected XElement InputDataIntegrity { get; set; }
 
 		protected XElement Signature { get; set; }
 
@@ -58,11 +61,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			_ovc = modelData.VehicleData.Ocv;
 			_modelData = modelData;
 			Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
+				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
 		public XDocument Report { get; protected set; }
 
 		private List<XMLDeclarationReport.ResultEntry> results = new List<XMLDeclarationReport.ResultEntry>();
+
 		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
 			
@@ -82,6 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(Mrf + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
 						Vehicle,
+						InputDataIntegrity,
 						Results,
 						XMLHelper.GetApplicationInfo(Mrf_0_9))
 					)

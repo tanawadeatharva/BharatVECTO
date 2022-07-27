@@ -153,6 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetEngineGroup().GetElements(inputData),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
@@ -178,6 +179,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetEngineGroup().GetElements(inputData),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
 				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
 			);
@@ -200,6 +202,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetEngineGroup().GetElements(inputData),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData, true),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
@@ -249,6 +252,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
@@ -273,6 +277,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
 
 				_cifFactory.GetLorryAuxGroup().GetElements(inputData)
@@ -295,6 +300,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				_cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
 				_cifFactory.GetREESSGroup().GetElements(inputData),
+				_cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
 				GetRetarder(inputData),
 				GetAxleRatio(inputData, true),
 				_cifFactory.GetAxleWheelsGroup().GetElements(inputData),
