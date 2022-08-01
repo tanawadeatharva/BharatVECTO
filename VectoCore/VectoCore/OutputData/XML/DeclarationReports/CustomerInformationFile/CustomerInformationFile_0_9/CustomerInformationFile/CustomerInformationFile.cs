@@ -208,30 +208,143 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
     }
 
-
-	public class HEV_CompletedBusCIF : CustomerInformationFile
+	public class HEV_Px_CompletedBusCIF : CustomerInformationFile
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
-		public HEV_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+
+		public HEV_Px_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
 		{
 		}
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetHEV_CompletedBusVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetHEV_Px_CompletedBusVehicleType().GetElement(inputData);
 		}
 	}
 
-	public class PEV_CompletedBusCIF : CustomerInformationFile
+    public class HEV_IHPC_CompletedBusCIF : CustomerInformationFile
+    {
+        public override string OutputDataType => "HEV_CompletedBusOutputType";
+
+        public HEV_IHPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+        {
+        }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.GetHEV_IHPC_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class HEV_S2_CompletedBusCIF : CustomerInformationFile
 	{
-		public override string OutputDataType => "PEV_CompletedBusOutputType";
-		public PEV_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		public override string OutputDataType => "HEV_CompletedBusOutputType";
+
+		public HEV_S2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
 		{
 		}
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetPEV_CompletedBusVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetHEV_S2_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class HEV_S3_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "HEV_CompletedBusOutputType";
+
+		public HEV_S3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_S3_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class HEV_S4_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "HEV_CompletedBusOutputType";
+
+		public HEV_S4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_S4_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class HEV_IEPC_S_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "HEV_CompletedBusOutputType";
+
+		public HEV_IEPC_S_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetHEV_IEPC_S_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class PEV_E2_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "PEV_CompletedBusOutputType";
+
+		public PEV_E2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetPEV_E2_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class PEV_E3_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "PEV_CompletedBusOutputType";
+
+		public PEV_E3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetPEV_E3_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class PEV_E4_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "PEV_CompletedBusOutputType";
+
+		public PEV_E4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetPEV_E4_CompletedBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	public class PEV_IEPC_CompletedBusCIF : CustomerInformationFile
+	{
+		public override string OutputDataType => "PEV_CompletedBusOutputType";
+
+		public PEV_IEPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetPEV_IEPC_CompletedBusVehicleType().GetElement(inputData);
 		}
 	}
 

@@ -27,6 +27,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public abstract IList<XElement> GetElements(IDeclarationInputDataProvider inputData);
 
 		#endregion
+
+		protected virtual IVehicleDeclarationInputData GetVehicle(IDeclarationInputDataProvider inputData)
+		{
+			if (inputData is IMultistageBusInputDataProvider multistep) {
+				return multistep.JobInputData.PrimaryVehicle.Vehicle;
+			} else {
+				return inputData.JobInputData.Vehicle;
+			}
+		}
 	}
 
 	public abstract class AbstractCifXmlType

@@ -149,10 +149,50 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
+			Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S4,
+					false,
+					false,
+					false)));
+
 			Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
-					ArchitectureID.UNKNOWN,
+					ArchitectureID.E2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E4,
 					false,
 					false,
 					false)));

@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
-	public class XMLElectricStorageSystemDeclarationInputData : AbstractCommonComponentType,
+	public class XMLElectricStorageSystemDeclarationInputDataV24 : AbstractCommonComponentType,
 		IXMLElectricStorageSystemDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricStorageDeclarationInputData> _electricStorageElements;
 		private IXMLDeclarationVehicleData _vehicle;
 		
-		public XMLElectricStorageSystemDeclarationInputData(
+		public XMLElectricStorageSystemDeclarationInputDataV24(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(componentNode, sourceFile)
 		{
@@ -84,14 +84,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLBatteryPackDeclarationDeclarationInputData : AbstractCommonComponentType,
+	public class XMLBatteryPackDeclarationDeclarationInputDataV24 : AbstractCommonComponentType,
 		IXMLBatteryPackDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSBatteryType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLBatteryPackDeclarationDeclarationInputData(XmlNode componentNode, string sourceFile) 
+		public XMLBatteryPackDeclarationDeclarationInputDataV24(XmlNode componentNode, string sourceFile) 
 			: base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -151,16 +151,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
-	
+
 	// ---------------------------------------------------------------------------------------
-	
-	public class XMLSuperCapDeclarationInputData : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
+
+	public class XMLBatteryPackDeclarationDeclarationInputDataV01 : XMLBatteryPackDeclarationDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "REESSBatteryType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLBatteryPackDeclarationDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLSuperCapDeclarationInputDataV24 : AbstractCommonComponentType, IXMLSuperCapDeclarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public const string XSD_TYPE = "REESSCapacitorType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		
-		public XMLSuperCapDeclarationInputData(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		public XMLSuperCapDeclarationInputDataV24(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
@@ -192,5 +205,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "REESSCapacitorType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+	}
+
+	//===================
+
+		public class XMLElectricStorageSystemDeclarationInputDataV01 : XMLElectricStorageSystemDeclarationInputDataV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricEnergyStorageType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		public XMLElectricStorageSystemDeclarationInputDataV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 }

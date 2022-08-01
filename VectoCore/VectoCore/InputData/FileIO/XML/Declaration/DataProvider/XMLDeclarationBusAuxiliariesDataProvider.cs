@@ -38,7 +38,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get
 			{
 				return GetNodes(new[] { "SteeringPump", XMLNames.Auxiliaries_Auxiliary_Technology })
-					.Cast<XmlNode>().Select(x => x.InnerText).ToList();
+					.Cast<XmlNode>().OrderBy(x => x.Attributes.GetNamedItem("axleNumber").InnerText.ToInt())
+					.Select(x => x.InnerText).ToList();
 			}
 		}
 

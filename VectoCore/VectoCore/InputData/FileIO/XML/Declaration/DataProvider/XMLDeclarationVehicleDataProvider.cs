@@ -551,16 +551,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
-		public TableData BoostingLimitations { get; }
+		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public virtual TableData BoostingLimitations { get; }
 
 		public virtual string VehicleTypeApprovalNumber { get; }
 
 
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
-		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
-		public Watt MaxChargingPower { get; }
+		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
+		public virtual bool OvcHev { get; }
+		public virtual Watt MaxChargingPower { get; }
 
 
 		#region  Non seeded Properties
@@ -667,7 +667,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 
 		public override string PowertrainPositionPrefix => "E";
 	}
@@ -686,7 +686,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) : base(busJobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ParallelHybridVehicle; }
+		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.SerialHybridVehicle; }
 
 		public override string PowertrainPositionPrefix => "S";
 	}

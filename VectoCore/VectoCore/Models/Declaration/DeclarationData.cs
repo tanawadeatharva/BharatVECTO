@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
-		public static string GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
+		public static VehicleClass GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
@@ -146,21 +146,48 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
 						vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating, vehicleData.CurbMassChassis,
 						vehicleData.VocationalVehicle);
-					return truckSegment.VehicleClass.GetClassNumber();
+					return truckSegment.VehicleClass;
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
 						vehicleData.AxleConfiguration, vehicleData.Articulated);
-					return primarySegment.VehicleClass.GetClassNumber();
+					return primarySegment.VehicleClass;
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
 						vehicleData.VehicleCode,
 						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
 						vehicleData.LowEntry);
-					return segment.VehicleClass.GetClassNumber();
+					return segment.VehicleClass;
 			}
 
 			throw new VectoException("No Group found for vehicle");
 		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleCategory) {
+				case VehicleCategory.Van:
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
+					var propulsionPower = (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
+										(vehicleData.Components?.ElectricMachines?.Entries
+											.Where(x => x.Position != PowertrainPosition.GEN)
+											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
+										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
+										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
+					var co2Group = WeightingGroup.Lookup(vehicleGroup, vehicleData.SleeperCab ?? false, propulsionPower);
+					return co2Group;
+				default:
+					return Declaration.WeightingGroup.Unknown;
+			}
+			//throw new VectoException("No CO2 Group found for vehicle");
+		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistageBusInputDataProvider multiStageInputDataProvider)
+		{
+			return Declaration.WeightingGroup.Unknown;
+		}
+
 
 
 		public static class BusAuxiliaries
@@ -1178,5 +1205,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const bool EngineStopStartDefault = false;
 			}
 		}
+
+
 	}
 }

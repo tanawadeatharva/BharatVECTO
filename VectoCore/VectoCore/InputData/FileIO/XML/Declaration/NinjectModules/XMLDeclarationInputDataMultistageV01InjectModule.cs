@@ -151,6 +151,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV01>().Named(XMLElectricMachineSystemReaderV01.QUALIFIED_XSD_TYPE);
 			Bind<IXMLElectricMachineSystemReader>().To<XMLElectricMachineSystemReaderV01>().Named(XMLElectricMachineSystemReaderV01.QUALIFIED_GEN_XSD_TYPE);
 
+			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputDataV01>()
+				.Named(XMLElectricStorageSystemDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLREESSReader>().To<XMLREESSReaderV01>().Named(XMLREESSReaderV01.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationDeclarationInputDataV01>()
+				.Named(XMLBatteryPackDeclarationDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV01>()
+				.Named(XMLSuperCapDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
+
+			//Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV23>()
+			//	.Named(XMLADCDeclarationInputDataV23.QUALIFIED_XSD_TYPE);
+
+
 
 			Bind<IXMLVehicleComponentsDeclaration>()
 				.To<XMLDeclarationComponentsMultistagePrimaryVehicleBus_Conventional_DataProviderV01>()

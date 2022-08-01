@@ -612,7 +612,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public const string XSD_TYPE = "ElectricEnergyStorageType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		[Inject] public IDeclarationInjectFactory Factory { protected get; set; }
+		[Inject] public virtual IDeclarationInjectFactory Factory { protected get; set; }
 
 		public XMLREESSReaderV24(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
 			string sourceFile) : base(vehicle, componentNode) { }
@@ -649,6 +649,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+	public class XMLREESSReaderV01 : XMLREESSReaderV24
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricEnergyStorageType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
+		public XMLREESSReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
 	}
 
 	// ---------------------------------------------------------------------------------------

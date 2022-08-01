@@ -1088,6 +1088,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		private ConsolidateElectricConsumerData _consolidateElectricConsumerData;
 		private ConsolidatedHVACBusAuxiliariesData _consolidatedHVACBusAuxiliariesData;
 		private XmlNode _xmlNode;
+		private IList<string> _consolidateSteeringPumpData;
 
 
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
@@ -1197,10 +1198,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 	}
+	
 
 	// ---------------------------------------------------------------------------------------
 
-	public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
+		public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
 	{
 		public ConsolidateElectricConsumerData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }
