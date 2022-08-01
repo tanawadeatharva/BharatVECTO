@@ -15,6 +15,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -42,6 +43,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -69,6 +71,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -96,6 +99,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -123,6 +127,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -150,6 +155,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -177,6 +183,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -204,6 +211,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -231,6 +239,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -258,6 +267,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -285,6 +295,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -312,6 +323,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-Px_IHPC-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -339,6 +351,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S2-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -366,6 +379,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S3-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -393,6 +407,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-S4-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -420,6 +435,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-IEPC-S-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -447,6 +463,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E2-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -474,6 +491,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E3-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -501,6 +519,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-E4-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -528,6 +547,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-IEPC-PrimaryBus-VehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -555,6 +575,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Conventional-CompletedBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -582,6 +603,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:HEV-CompletedBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -609,6 +631,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:PEV-CompletedBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -636,6 +659,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-LorryVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -663,6 +687,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-PrimaryBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -690,6 +715,7 @@
 			<xs:extension base="out:AbstractVectoOutputManufacturerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="mrf:Exempted-CompletedBusVehicleOutputType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="mrf:ResultsType"/>
 					<xs:element name="ApplicationInformation">
 						<xs:complexType>
@@ -750,7 +776,15 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
-			<xs:element name="OffVehicleChargingMaxPower" type="xs:int" minOccurs="0"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:double">
+							<xs:attribute name="unit" type="mrf:PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="ManufacturerGroup">
@@ -899,7 +933,7 @@
 	<xs:complexType name="HEV-Px_IHPC-LorryVehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-LorryVehicleOutputTypeGroup"/>
-			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
 			<xs:element name="Components" type="mrf:HEV-Px_IHPC-LorryComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1343,14 +1377,14 @@
 	<xs:complexType name="AbstractREESSType" abstract="true"/>
 	<xs:complexType name="REESSSpecificationsType">
 		<xs:sequence>
-			<xs:sequence>
+			<xs:choice>
 				<xs:sequence maxOccurs="unbounded">
 					<xs:element name="Battery" type="mrf:BatteryType"/>
 				</xs:sequence>
-				<xs:sequence minOccurs="0" maxOccurs="unbounded">
-					<xs:element name="SuperCap" type="mrf:CapacitorType"/>
+				<xs:sequence>
+					<xs:element name="Capacitor" type="mrf:CapacitorType"/>
 				</xs:sequence>
-			</xs:sequence>
+			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CapacitorType">
@@ -1379,8 +1413,24 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
 			<xs:element name="NominalVoltage" type="xs:int"/>
-			<xs:element name="TotalStorageCapacity" type="xs:int"/>
-			<xs:element name="TotalUsableCapacityInSimulation" type="xs:int"/>
+			<xs:element name="TotalStorageCapacity">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="mrf:EnergyUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TotalUsableCapacityInSimulation">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="unit" type="mrf:EnergyUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="CertificationMethod"/>
 		</xs:sequence>
 	</xs:group>
@@ -1557,9 +1607,6 @@
 			<xs:element name="CertificationMethod"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="EngineTorqueLimitationsGroup">
-		<xs:sequence/>
-	</xs:group>
 	<!--Axles-->
 	<xs:complexType name="AxleGearType">
 		<xs:sequence>
@@ -1640,7 +1687,7 @@
 	<xs:complexType name="TransmissionType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="Type" type="v1.0:GearboxTransmissionTypeType"/>
+			<xs:element name="Type" type="v2.3:GearboxTransmissionTypeType"/>
 			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType"/>
 			<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
@@ -1654,6 +1701,7 @@
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
 							<xs:attribute name="Gear" type="xs:int" use="required"/>
+							<xs:attribute name="unit" type="mrf:PercentType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -2232,6 +2280,11 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="kW"/>
 			<xs:enumeration value="W"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EnergyUnitType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="kWh"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="SpeedUnitType">

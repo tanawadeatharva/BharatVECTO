@@ -13,6 +13,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -45,6 +46,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -77,6 +79,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -109,6 +112,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -141,6 +145,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -173,6 +178,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -205,6 +211,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -237,6 +244,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -269,6 +277,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -301,6 +310,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -333,6 +343,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Conventional_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -364,7 +375,8 @@
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="HEV_CompletedBusVehicleType"/>
+					<xs:element name="Vehicle" type="Abstract_HEV_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -396,7 +408,8 @@
 		<xs:complexContent>
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
-					<xs:element name="Vehicle" type="PEV_CompletedBusVehicleType"/>
+					<xs:element name="Vehicle" type="Abstract_PEV_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -429,6 +442,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -461,6 +475,7 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
@@ -493,7 +508,7 @@
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:group ref="LorryGeneralVehicleSequenceGroup"/>
-			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
+			<xs:group ref="WHR_DualFuelSequenceGroup"/>
 			<xs:element name="ADAS" type="ConventionalADASType"/>
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="TransmissionGroup"/>
@@ -538,6 +553,7 @@
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -551,6 +567,7 @@
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
@@ -562,6 +579,7 @@
 			<xs:group ref="EngineGroup"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -587,6 +605,7 @@
 			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -599,6 +618,7 @@
 			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:group ref="AxleWheelsGroup"/>
 			<xs:group ref="LorryAuxGroup"/>
 		</xs:sequence>
@@ -609,6 +629,7 @@
 			<xs:element name="ADAS" type="PEVADASType"/>
 			<xs:group ref="ElectricMachineGroup"/>
 			<xs:group ref="REESSGroup"/>
+			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="Retarder"/>
 			<xs:element name="AxleRatio" minOccurs="0"/>
 			<xs:group ref="AxleWheelsGroup"/>
@@ -617,29 +638,182 @@
 	</xs:complexType>
 	<xs:complexType name="Conventional_CompletedBusVehicleType">
 		<xs:sequence>
-			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+			<xs:group ref="ConventionalCompletedBusVehicleTypeGroup"/>
 			<xs:element name="ADAS" type="ConventionalADASType"/>
-			<xs:group ref="CompletedBusAuxGroup"/>
+			<xs:group ref="EngineGroup"/>
+			<xs:group ref="TransmissionGroup"/>
+			<xs:element name="Retarder" type="xs:boolean"/>
+			<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+			<xs:group ref="AxleWheelsGroup"/>
+			<xs:group ref="ConventionalCompletedBusAuxGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="HEV_CompletedBusVehicleType">
-		<xs:sequence>
-			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="HEVADASType"/>
-			<xs:group ref="CompletedBusAuxGroup"/>
-		</xs:sequence>
+	<xs:complexType name="HEV_Px_IHPC_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="HEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="HEVADASType"/>
+					<xs:group ref="EngineGroup"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="TransmissionGroup"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Px_IHPC_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="PEV_CompletedBusVehicleType">
-		<xs:sequence>
-			<xs:group ref="CompletedBusVehicleTypeGroup"/>
-			<xs:element name="ADAS" type="PEVADASType"/>
-			<xs:group ref="CompletedBusAuxGroup"/>
-		</xs:sequence>
+	<xs:complexType name="HEV_S2_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="HEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="HEVADASType"/>
+					<xs:group ref="EngineGroup"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="TransmissionGroup"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV_S3_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="HEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="HEVADASType"/>
+					<xs:group ref="EngineGroup"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV_S4_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="HEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="HEVADASType"/>
+					<xs:group ref="EngineGroup"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV_IEPC-S_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_HEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="HEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="HEVADASType"/>
+					<xs:group ref="EngineGroup"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType" minOccurs="0"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV_E2_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_PEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="PEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="PEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:group ref="TransmissionGroup"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV_E3_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_PEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="PEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="PEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV_E4_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_PEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="PEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="PEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV_IEPC_CompletedBusVehicleType">
+		<xs:complexContent>
+			<xs:extension base="Abstract_PEV_CompletedBusVehicleType">
+				<xs:sequence>
+					<xs:group ref="PEVCompletedBusVehicleTypeGroup"/>
+					<xs:group ref="PEV_CompletedBusArchitectureGroup"/>
+					<xs:element name="ADAS" type="PEVADASType"/>
+					<xs:group ref="ElectricMachineGroup"/>
+					<xs:group ref="REESSGroup"/>
+					<xs:element name="NrOfGears" type="xs:int"/>
+					<xs:element name="Retarder" type="xs:boolean"/>
+					<xs:element name="AxleRatio" type="v1.0:AxlegearRatioType" minOccurs="0"/>
+					<xs:group ref="AxleWheelsGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryVehicleType">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
-			<xs:element name="VehicleGroupCO2"/>
 			<xs:element name="Manufacturer"/>
 			<xs:element name="ManufacturerAddress"/>
 			<xs:element name="Model"/>
@@ -651,7 +825,7 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted_CompletedBusVehicleType">
 		<xs:sequence>
-			<xs:group ref="CompletedBusVehicleTypeGroup"/>
+			<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="RatedPowerType">
@@ -675,11 +849,11 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="VehicleGroup" type="xs:string"/>
+			<xs:element name="VehicleGroupCO2" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="LorryGeneralVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="VehicleGroupCO2"/>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
 			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
 			<xs:element name="Model" type="v1.0:ModelType"/>
@@ -699,7 +873,7 @@
 			<xs:element name="HybridElectricHDV" type="v1.0:HybridElectricHDVType"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="Conventional_LorryVehicleSequenceGroup">
+	<xs:group name="WHR_DualFuelSequenceGroup">
 		<xs:sequence>
 			<xs:element name="WasteHeatRecovery" type="xs:boolean"/>
 			<xs:element name="DualFuelVehicle" type="xs:boolean"/>
@@ -707,14 +881,14 @@
 	</xs:group>
 	<xs:group name="HEV_VehicleSequenceGroup">
 		<xs:sequence>
-			<xs:group ref="Conventional_LorryVehicleSequenceGroup"/>
+			<xs:group ref="WHR_DualFuelSequenceGroup"/>
 			<xs:element name="HEVArchitecture"/>
 			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
 			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
 				<xs:complexType>
 					<xs:simpleContent>
-						<xs:extension base="xs:int">
-							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+						<xs:extension base="xs:double">
+							<xs:attribute name="unit" type="PowerUnitType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -725,7 +899,11 @@
 		<xs:sequence>
 			<xs:element name="PEVArchitecture"/>
 			<xs:element name="OffVehicleChargingCapability"/>
-			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEV_LorryVehicleTypeGroup">
@@ -742,7 +920,7 @@
 			<xs:group ref="PEV_VehicleSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="CompletedBusVehicleTypeGroup">
+	<xs:group name="ConventionalCompletedBusVehicleTypeGroup">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:sequence>
@@ -762,13 +940,78 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
+			<xs:element name="Model" type="xs:string"/>
 			<xs:sequence>
-				<xs:element name="CorrectedActualMass"/>
-				<xs:element name="ZeroEmissionVehicle"/>
-				<xs:element name="HybridElectricHDV"/>
-				<xs:element name="ClassBus"/>
-				<xs:element name="TotalNumberOfPassengers"/>
-				<xs:element name="VehicleTypeApprovalNumber" minOccurs="0"/>
+				<xs:element name="CorrectedActualMass" type="xs:int"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+				<xs:group ref="WHR_DualFuelSequenceGroup"/>
+				<xs:element name="ClassBus" type="xs:string"/>
+				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
+				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEVCompletedBusVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Manufacturer"/>
+										<xs:element name="ManufacturerAddress"/>
+									</xs:sequence>
+									<xs:attribute name="stepCount" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="Model" type="xs:string"/>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass" type="xs:int"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+				<xs:group ref="WHR_DualFuelSequenceGroup"/>
+				<xs:element name="ClassBus" type="xs:string"/>
+				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
+				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEVCompletedBusVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Manufacturer"/>
+										<xs:element name="ManufacturerAddress"/>
+									</xs:sequence>
+									<xs:attribute name="stepCount" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="Model" type="xs:string"/>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass" type="xs:int"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+				<xs:element name="ClassBus" type="xs:string"/>
+				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
+				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
 			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
@@ -808,8 +1051,8 @@
 	</xs:group>
 	<xs:group name="TransmissionGroup">
 		<xs:sequence>
-			<xs:element name="TransmissionValues"/>
-			<xs:element name="TransmissionType" type="v1.0:GearboxTransmissionTypeType"/>
+			<xs:element name="TransmissionValues" type="xs:string"/>
+			<xs:element name="TransmissionType" type="v2.3:GearboxTransmissionTypeType"/>
 			<xs:element name="NrOfGears" type="xs:int"/>
 		</xs:sequence>
 	</xs:group>
@@ -820,7 +1063,7 @@
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="TyreDimension" type="v2.3:TyreDimensionType"/>
-						<xs:element name="FuelEfficiencyClass"/>
+						<xs:element name="FuelEfficiencyClass" type="xs:string"/>
 						<xs:element name="TyreCertificationNumber" type="v1.0:CertificationNumberType"/>
 					</xs:sequence>
 					<xs:attribute name="axleNumber"/>
@@ -861,7 +1104,7 @@
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
-							<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+							<xs:attribute name="unit" type="EnergyUnitType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -870,7 +1113,7 @@
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:int">
-							<xs:attribute name="unit" type="out:StorageCapacityUnitType" use="required"/>
+							<xs:attribute name="unit" type="EnergyUnitType" use="required"/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -882,14 +1125,196 @@
 			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
 		</xs:sequence>
 	</xs:group>
-	<xs:group name="CompletedBusAuxGroup">
+	<xs:group name="ConventionalCompletedBusAuxGroup">
 		<xs:sequence>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
+			<xs:element name="ElectricSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AlternatorTechnology"/>
+						<xs:sequence minOccurs="0">
+							<xs:element name="MaxAlternatorPower">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ElectricStorageCapacity">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="EnergyUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PneumaticSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+						<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="HVAC">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="SystemConfiguration"/>
-						<xs:element name="AuxiliaryHeaterPower"/>
-						<xs:element name="DoubleGlazing"/>
+						<xs:element name="SystemConfiguration" type="xs:int"/>
+						<xs:element name="AuxiliaryHeaterPower">
+							<xs:complexType>
+								<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DoubleGlazing" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEV_Px_IHPC_CompletedBusAuxGroup">
+		<xs:sequence>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
+			<xs:element name="ElectricSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AlternatorTechnology"/>
+						<xs:sequence minOccurs="0">
+							<xs:element name="MaxAlternatorPower">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ElectricStorageCapacity">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="EnergyUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PneumaticSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+						<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HVAC">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemConfiguration" type="xs:int"/>
+						<xs:element name="AuxiliaryHeaterPower">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:int">
+										<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DoubleGlazing" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="HEV_Sx_CompletedBusAuxGroup">
+		<xs:sequence>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
+			<xs:element name="ElectricSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AlternatorTechnology"/>
+						<xs:sequence minOccurs="0">
+							<xs:element name="MaxAlternatorPower">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ElectricStorageCapacity">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:int">
+											<xs:attribute name="unit" type="EnergyUnitType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PneumaticSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HVAC">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemConfiguration" type="xs:int"/>
+						<xs:element name="AuxiliaryHeaterPower">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:int">
+										<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DoubleGlazing" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEV_CompletedBusAuxGroup">
+		<xs:sequence>
+			<xs:element name="SteeringPumpTechnology" type="v2.4:AuxSPTechnologyLorryType"/>
+			<xs:element name="PneumaticSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="HVAC">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemConfiguration" type="xs:int"/>
+						<xs:element name="AuxiliaryHeaterPower">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:int">
+										<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DoubleGlazing" type="xs:boolean"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1207,6 +1632,17 @@
 			<xs:enumeration value="km"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="PowerUnitType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="kW"/>
+			<xs:enumeration value="W"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EnergyUnitType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="kWh"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="EnergyConsumptionUnitType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="kWh/km"/>
@@ -1448,4 +1884,36 @@
 			<xs:element name="PredictiveCruiseControl" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
+	<xs:group name="HEV_CompletedBusArchitectureGroup">
+		<xs:sequence>
+			<xs:element name="HEVArchitecture" type="xs:string"/>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:double">
+							<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="PEV_CompletedBusArchitectureGroup">
+		<xs:sequence>
+			<xs:element name="PEVArchitecture" type="xs:string"/>
+			<xs:element name="OffVehicleChargingCapability" type="xs:boolean"/>
+			<xs:element name="OffVehicleChargingMaxPower" minOccurs="0">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:double">
+							<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="Abstract_HEV_CompletedBusVehicleType" abstract="true"/>
+	<xs:complexType name="Abstract_PEV_CompletedBusVehicleType" abstract="true"/>
 </xs:schema>

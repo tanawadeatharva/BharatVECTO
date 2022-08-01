@@ -163,11 +163,7 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="v1.0:AbstractAngledriveDataDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
+	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractAngledriveDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractAuxiliaryDataVIFType" abstract="true"/>
 	<xs:complexType name="AbstractAxlegearDataVIFType" abstract="true"/>
@@ -201,7 +197,6 @@
 	<xs:complexType name="ADCComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractADCDataDeclarationType"/>
-			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ADCDataDeclarationType">
@@ -242,13 +237,6 @@
 						<xs:annotation>
 							<xs:documentation>P258 - enum</xs:documentation>
 						</xs:annotation>
-					</xs:element>
-					<xs:element name="TorqueLossMap">
-						<xs:complexType>
-							<xs:sequence minOccurs="4" maxOccurs="unbounded">
-								<xs:element name="Entry" type="v2.0:AngledriveLossMapEntryType"/>
-							</xs:sequence>
-						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
 			</xs:extension>
@@ -1559,11 +1547,15 @@
 	<xs:complexType name="ElectricMachineSystemType">
 		<xs:sequence>
 			<xs:element name="Data" type="vif:AbstractElectricMachineSystemDataType"/>
-			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ElectricMachineType">
 		<xs:sequence>
+			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionDriveType">
+				<xs:annotation>
+					<xs:documentation>P403 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="Count">
 				<xs:annotation>
 					<xs:documentation>P404 - [-]</xs:documentation>
@@ -1593,11 +1585,6 @@
 						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
-			</xs:element>
-			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionDriveType">
-				<xs:annotation>
-					<xs:documentation>P403 - enum</xs:documentation>
-				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>

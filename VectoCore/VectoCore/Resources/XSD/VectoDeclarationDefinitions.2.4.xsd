@@ -405,6 +405,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_Conventional_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -567,6 +572,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -728,6 +738,11 @@ Changelog:
 							<xs:sequence>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
 								<xs:group ref="v2.4:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+								<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P316 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -3201,11 +3216,6 @@ Changelog:
 						<xs:enumeration value="electronically"/>
 					</xs:restriction>
 				</xs:simpleType>
-			</xs:element>
-			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P316 - bool</xs:documentation>
-				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
 	</xs:group>

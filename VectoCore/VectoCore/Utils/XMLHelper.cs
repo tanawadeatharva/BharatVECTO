@@ -97,6 +97,18 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
+		public static object[] ValueAsUnit(this WattSecond energy, string unit, uint? decimals = 0)
+		{
+			switch (unit) {
+				case "kWh":
+					return GetValueAsUnit(energy?.ConvertToKiloWattHour(), unit, decimals);
+				case "Wh":
+					return GetValueAsUnit(energy?.ConvertToWattHour(), unit, decimals);
+			}
+
+			throw new NotImplementedException($"unknown unit '{unit}'");
+		}
+
 		public static object[] ValueAsUnit(this AmpereSecond capacity, string unit, uint? decimals = 0)
 		{
 			switch (unit)
@@ -159,7 +171,7 @@ namespace TUGraz.VectoCore.Utils
 			throw new NotImplementedException($"unknown unit '{unit}'");
 		}
 
-		public static object[] ValueAsUnit(double value, string unit, uint? decimals)
+		public static object[] ValueAsUnit(this double value, string unit, uint? decimals)
 		{
 			switch (unit) {
 				case "%": return GetValueAsUnit(value * 100, unit, decimals);
@@ -167,7 +179,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static object[] GetValueAsUnit(double? value, string unit, uint? decimals)
+		private static object[] GetValueAsUnit(this double? value, string unit, uint? decimals)
 		{
 			if (value == null) {
 				return new object[0];
