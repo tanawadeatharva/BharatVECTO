@@ -24,12 +24,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			IEngineDeclarationInputData engine;
-			if (inputData is IMultistageBusInputDataProvider multistage) {
-				engine = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData;
-			} else {
-				engine = inputData.JobInputData.Vehicle.Components.EngineInputData;
-			}
+			var vehicle = GetVehicle(inputData);
+			var engine = vehicle.Components.EngineInputData;
 
 			var fuelTypesXElement = new XElement(_cif + XMLNames.Report_Vehicle_FuelTypes);
 
@@ -64,12 +60,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			IGearboxDeclarationInputData gearbox;
-			if (inputData is IMultistageBusInputDataProvider multistage) {
-				gearbox = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.GearboxInputData;
-			} else {
-				gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData;
-			}
+			var vehicle = GetVehicle(inputData);
+			var gearbox = vehicle.Components.GearboxInputData;
 
 			return new List<XElement>() {
 				new XElement(_cif + "TransmissionValues", gearbox.CertificationMethod.ToXMLFormat()),
@@ -93,6 +85,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			//var gearbox = vehicle.Components.GearboxInputData;
 			return new List<XElement>() {
 				new XElement(_cif + "NrOfGears", 1)
+			};
+		}
+
+		#endregion
+	}
+
+	public class IEPCTransmissionGroup : AbstractCIFGroupWriter
+	{
+		public IEPCTransmissionGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+            var vehicle = GetVehicle(inputData);
+            var iepc = vehicle.Components.IEPC;
+
+            return new List<XElement>() {
+				new XElement(_cif + "NrOfGears", iepc.Gears.Count)
 			};
 		}
 

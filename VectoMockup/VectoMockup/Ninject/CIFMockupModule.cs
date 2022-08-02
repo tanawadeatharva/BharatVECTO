@@ -269,7 +269,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetCompletedBusVehicleTypeGroup();
         }
 
-        public IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus()
+		public IReportOutputGroup GetExemptedCompletedBusVehicleTypeGroup()
+		{
+			return _cifFactory.GetExemptedCompletedBusVehicleTypeGroup();
+		}
+
+		public IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus()
         {
             return _cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus();
         }
@@ -292,6 +297,11 @@ namespace TUGraz.VectoMockup.Ninject
 		public IReportOutputGroup GetPEVCompletedBusVehicleTypeGroup()
 		{
 			return _cifFactory.GetPEVCompletedBusVehicleTypeGroup();
+		}
+
+		public IReportOutputGroup GetIEPCTransmissionGroup()
+		{
+			return _cifFactory.GetIEPCTransmissionGroup();
 		}
 
 		#endregion

@@ -829,7 +829,7 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted_CompletedBusVehicleType">
 		<xs:sequence>
-			<xs:group ref="HEVCompletedBusVehicleTypeGroup"/>
+			<xs:group ref="ExemptedCompletedBusVehicleTypeGroup"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="RatedPowerType">
@@ -1005,6 +1005,45 @@
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PEVCompletedBusVehicleTypeGroup">
+		<xs:sequence>
+			<xs:group ref="GeneralVehicleSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Manufacturer"/>
+										<xs:element name="ManufacturerAddress"/>
+									</xs:sequence>
+									<xs:attribute name="stepCount" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="Model" type="xs:string"/>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:int">
+								<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+				<xs:element name="ClassBus" type="xs:string"/>
+				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
+				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="ExemptedCompletedBusVehicleTypeGroup">
 		<xs:sequence>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
 			<xs:sequence>

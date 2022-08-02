@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return result;
 		}
 
-		private XElement GetManufacturers(IMultistageBusInputDataProvider completedBusData)
+		protected XElement GetManufacturers(IMultistageBusInputDataProvider completedBusData)
 		{
 			var manufacturers = new XElement(_cif + "Manufacturers",
 				GetManufacturerAndAddress(completedBusData.JobInputData.PrimaryVehicle.Vehicle.Manufacturer,
@@ -406,5 +406,43 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		#endregion
+	}
+
+
+	public class ExemptedCompletedBusVehicleTypeGroup : CompletedBusVehicleTypeGroup
+	{
+		public ExemptedCompletedBusVehicleTypeGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			if (completedBusData == null) {
+				throw new ArgumentException(
+					$"{nameof(inputData)} must implement {nameof(IMultistageBusInputDataProvider)}");
+			}
+			var result = new List<XElement>();
+			result.AddRange(
+				_cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus().GetElements(completedBusData));
+			result.Add(GetManufacturers(completedBusData));
+
+
+
+			var consolidatedVehicle = completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			result.AddRange(new List<XElement>() {
+				new XElement(_cif + XMLNames.Component_Model, consolidatedVehicle.Model),
+				new XElement(_cif + XMLNames.CorrectedActualMass, consolidatedVehicle.CurbMassChassis.ValueAsUnit("kg", 0)),
+				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicle.ZeroEmissionVehicle),
+				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, consolidatedVehicle.HybridElectricHDV),
+				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, consolidatedVehicle.RegisteredClass.ToXMLFormat()),
+				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck
+																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck
+																+ consolidatedVehicle.NumberPassengersStandingLowerDeck
+																+ consolidatedVehicle.NumberPassengersStandingUpperDeck),
+				!consolidatedVehicle.VehicleTypeApprovalNumber.IsNullOrEmpty() ? new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, consolidatedVehicle.VehicleTypeApprovalNumber) : null
+			});
+
+			return result;
+		}
+
 	}
 }
