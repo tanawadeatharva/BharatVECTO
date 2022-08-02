@@ -30,7 +30,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
 				new XElement(_v24 +  XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),
 				new XElement(_v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRoll == EcoRollType.WithEngineStop),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat())); 
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
+				adas.ATEcoRollReleaseLockupClutch.HasValue
+					? new XElement(_v24 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
+						adas.ATEcoRollReleaseLockupClutch.Value)
+					: null); 
 		}
 
 		#endregion
@@ -51,7 +55,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute("xmlns", _v24),
 				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_HEV_Type"),
 				new XElement(_v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()));
+				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
+				adas.ATEcoRollReleaseLockupClutch.HasValue
+					? new XElement(_v24 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
+						adas.ATEcoRollReleaseLockupClutch.Value)
+					: null);
 		}
 
 		#endregion
