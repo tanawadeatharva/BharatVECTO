@@ -26,6 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					vehicleComponents.GearboxInputData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
 					vehicleComponents.GearboxInputData.DigestValue?.DigestValue ?? ""),
+				new XElement(_mrf + XMLNames.Component_CertificationMethod, vehicleComponents.GearboxInputData.CertificationMethod.ToXMLFormat()),
 				new XElement(_mrf + "Type",
 					vehicleComponents.GearboxInputData.Type.ToXMLFormat()),
 				new XElement(_mrf + "NrOfGears", vehicleComponents.GearboxInputData.Gears.Count),

@@ -38,6 +38,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 		</Result>
 		<!-- END PEV Bus -->
 		<Summary xsi:type="ResultSummaryPEVType">
+			<AveragePayload unit="t">3.141</AveragePayload>
 			<ElectricEnergy>
 				<EnergyConsumption unit="kWh/km">7.101</EnergyConsumption>
 				<EnergyConsumption unit="kWh/p-km">7.111</EnergyConsumption>

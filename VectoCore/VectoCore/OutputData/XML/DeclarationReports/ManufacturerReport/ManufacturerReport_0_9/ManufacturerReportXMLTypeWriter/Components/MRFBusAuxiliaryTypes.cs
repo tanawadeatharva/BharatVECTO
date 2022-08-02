@@ -313,15 +313,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			var maxAlternatorPower = auxData.ElectricSupply.GetMaxAlternatorPower();
 			var electricStorageCapacity =
-				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
+				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem_AlternatorTechnology,
 					auxData.ElectricSupply.AlternatorTechnology.ToXMLFormat()),
-				(auxData.ElectricSupply.AlternatorTechnology == AlternatorType.None || maxAlternatorPower == null)
-					? null
-					: new XElement(_mrf + "MaxAlternatorPower", maxAlternatorPower.ToXMLFormat(0)),
+				(auxData.ElectricSupply.AlternatorTechnology == AlternatorType.Smart
+					? new XElement(_mrf + "MaxAlternatorPower", maxAlternatorPower.ToXMLFormat(0))
+					: null),
 
-			auxData.ElectricSupply.ElectricStorage == null || electricStorageCapacity == null ? null : new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat()));
+				auxData.ElectricSupply.AlternatorTechnology == AlternatorType.Smart
+					? new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat())
+					: null);
 		}
 
 		#endregion
@@ -352,10 +354,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, GetPneumaticSystemTechnology(auxData)),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem, auxData.PneumaticSupply.SmartAirCompression),
@@ -365,19 +367,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			);
 		}
 
+		protected virtual string GetPneumaticSystemTechnology(IBusAuxiliariesDeclarationData auxData)
+		{
+			return $"{auxData.PneumaticSupply.CompressorSize}, {auxData.PneumaticSupply.CompressorDrive.GetLabel()}, clutch: {auxData.PneumaticSupply.Clutch}";
+		}
+
 		#endregion
 	}
 
-	internal class MRFPrimaryBusPneumaticSystemType_HEV_S : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusPneumaticSystemType_HEV_S : MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px
 	{
 		public MRFPrimaryBusPneumaticSystemType_HEV_S(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public override XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, GetPneumaticSystemTechnology(auxData)),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
@@ -388,16 +395,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPrimaryBusPneumaticSystemType_PEV_IEPC : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusPneumaticSystemType_PEV_IEPC : MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px
 	{
 		public MRFPrimaryBusPneumaticSystemType_PEV_IEPC(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public override XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, GetPneumaticSystemTechnology(auxData)),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
 				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing == ConsumerTechnology.Pneumatically)

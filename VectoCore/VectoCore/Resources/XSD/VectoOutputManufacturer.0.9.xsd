@@ -768,6 +768,16 @@
 					<xs:documentation>1.1.7.Vehicle group (Annex 1)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="VehicleGroupCO2">
+				<xs:annotation>
+					<xs:documentation>1.1.7a (Sub)group for CO2 standards</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="OffVehicleChargingGroup">
@@ -819,16 +829,6 @@
 		<xs:sequence>
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
-			<xs:element name="CO2StandardGroup" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>1.1.7a (Sub)group for CO2 standards</xs:documentation>
-				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
 				<xs:annotation>
 					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
@@ -988,12 +988,14 @@
 	<xs:complexType name="Conventional-PrimaryBus-VehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:Conventional-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
 			<xs:element name="Components" type="mrf:Conventional-PrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HEV-Px_IHPC-PrimaryBus-VehicleOutputType">
 		<xs:sequence>
 			<xs:group ref="mrf:HEV-PrimaryBus-VehicleOutputTypeGroup"/>
+			<xs:element name="EngineTorqueLimitations" type="mrf:EngineTorqueLimitsType" minOccurs="0"/>
 			<xs:element name="Components" type="mrf:HEV-Px_IHPC-PrimaryBusComponentsType"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1431,7 +1433,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
 	<!--Auxiliaries-->
@@ -1574,8 +1576,8 @@
 	<xs:group name="ElectricMachineGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="ElectricMachineType"/>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="ElectricMachineType" type="xs:string"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
@@ -1604,7 +1606,7 @@
 			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="LowestTotalTransmissionRatio" type="v1.0:Double3"/>
 			<xs:element name="DifferentialIncluded" type="xs:boolean"/>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
 	<!--Axles-->
@@ -1675,18 +1677,19 @@
 	<xs:complexType name="TorqueConverterType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RetarderType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TransmissionType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 			<xs:element name="Type" type="v2.3:GearboxTransmissionTypeType"/>
 			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType"/>
@@ -1913,7 +1916,7 @@
 	<xs:complexType name="ADCType">
 		<xs:sequence>
 			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod"/>
+			<xs:element name="CertificationMethod" type="xs:string"/>
 			<xs:element name="Ratio" type="v1.0:AngledriveRatioType"/>
 		</xs:sequence>
 	</xs:complexType>

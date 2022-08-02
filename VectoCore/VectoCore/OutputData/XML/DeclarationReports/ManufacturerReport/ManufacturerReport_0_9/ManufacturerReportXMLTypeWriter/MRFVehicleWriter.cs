@@ -231,6 +231,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
 				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
@@ -249,6 +250,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetHEV_Px_IHPC_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
