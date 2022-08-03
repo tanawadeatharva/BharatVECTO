@@ -401,6 +401,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public WattSecond MissingElectricEnergy { get; set; }
 
 			public Watt ExcessiveDragPower = 0.SI<Watt>();
+
+			public BusAuxState Clone() => (BusAuxState)MemberwiseClone();
 		}
 
 		public class ElectricStorageWrapper : ISimpleBatteryInfo
@@ -438,5 +440,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			#endregion
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is BusAuxiliariesAdapter b) {
+				PreviousState = b.PreviousState.Clone();
+				return ElectricStorage.UpdateFrom(b.ElectricStorage);
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

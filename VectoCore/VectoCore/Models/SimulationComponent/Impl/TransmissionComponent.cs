@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public TransmissionLossMap.LossMapResult TorqueLossResult;
 			//public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
+			public new TransmissionState Clone() => (TransmissionState)MemberwiseClone();
 		}
 
 		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData) : base(container)

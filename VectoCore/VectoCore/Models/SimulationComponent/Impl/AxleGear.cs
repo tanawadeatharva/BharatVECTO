@@ -39,7 +39,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AxleGear : TransmissionComponent, IAxlegear
+	public class AxleGear : TransmissionComponent, IAxlegear, IUpdateable
 	{
 		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) { }
 
@@ -81,5 +81,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0, CurrentState.InTorque);
 
 		public double Ratio => ModelData.Ratio;
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is AxleGear g) {
+				PreviousState = g.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

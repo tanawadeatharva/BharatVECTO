@@ -48,7 +48,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 		
-	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo
+	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo, IUpdateable
 	{
 		// only CycleData Lookup is set / accessed...
 
@@ -315,6 +315,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return ClutchClosed(absTime);
 		}
 
+		public bool RequestAfterGearshift { get; set; }
+
 		#endregion
 
 		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
@@ -335,6 +337,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool HasElectricMotor { get; set; }
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
 		public VectoSimulationJobType VehicleArchitecutre { get; }
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			return false;
+		}
 
 		#endregion
 	}

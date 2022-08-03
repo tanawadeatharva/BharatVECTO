@@ -183,8 +183,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 			var xElement = vehicleWriter.GetElement();
-			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.v2_10_2);
-			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.v2_10_2).ToString());
+			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V24);
+			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V24).ToString());
 
 
 			var valid = false;

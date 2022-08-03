@@ -14,6 +14,14 @@
 	<DefineTrace>false</DefineTrace>
 	<DefineConstants />
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="nlog.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
  
   <ItemGroup>
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
