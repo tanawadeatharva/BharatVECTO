@@ -1298,6 +1298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				} else {
 					if (emRecuperationTq.IsGreater(0)) {
+						var voltage = DataBus.BatteryInfo.InternalVoltage;
+						var maxbatDragTq = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage,
+							response.ElectricSystem.MaxPowerDrag, response.ElectricMotor.AngularVelocity, dt, nextGear,
+							false);
 						eval.Add(
 							new HybridResultEntry {
 								ICEOff = !DataBus.EngineInfo.EngineOn,
@@ -1307,7 +1311,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 									GearboxInNeutral = false,
 									NextGear = nextGear,
 									MechanicalAssistPower = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> {
-										{ emPos, Tuple.Create(response.ElectricMotor.AngularVelocity, response.ElectricMotor.MaxRecuperationTorque) }
+										{ emPos, Tuple.Create(response.ElectricMotor.AngularVelocity, VectoMath.Min(maxbatDragTq, response.ElectricMotor.MaxRecuperationTorque)) }
 									}
 								}
 							});

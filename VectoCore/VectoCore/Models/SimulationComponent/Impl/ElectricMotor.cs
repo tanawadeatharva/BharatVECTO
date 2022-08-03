@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEmSpeed = (prevEmSpeed + emSpeed) / 2;
 			var inertiaTorqueEm = avgEmSpeed.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(avgEmSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
+				: Formulas.InertiaPower(emSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 
 			var maxDriveTorqueEmMap = GetMaxDriveTorque(voltage, dt, avgEmSpeed, gear);
 			var maxRecuperationTorqueEmMap = GetMaxRecuperationTorque(voltage, dt, avgEmSpeed, gear);

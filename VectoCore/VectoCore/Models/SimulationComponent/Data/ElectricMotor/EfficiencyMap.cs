@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 					},
 					searcher: this);
 				var tmp = LookupElectricPower(avgSpeed, retVal, true);
-				if ((tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
+				if (VectoMath.Abs(tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					// searched operating point is not accurate enough...
 					retVal = SearchAlgorithm.Search(
 						maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
