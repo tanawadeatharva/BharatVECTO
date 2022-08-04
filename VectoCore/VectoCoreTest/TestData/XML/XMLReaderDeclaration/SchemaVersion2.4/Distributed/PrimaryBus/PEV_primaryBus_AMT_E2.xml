@@ -14,7 +14,7 @@
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>E2</ArchitectureID>
 		<OvcHev>true</OvcHev>
 		<MaxChargingPower>30000</MaxChargingPower>

@@ -55,13 +55,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
 						new XAttribute(_xsi + XMLNames.XSIType, "CapacitorSystemDataType"),
 					new XElement(_vif + XMLNames.Component_Manufacturer, supercap.Manufacturer),
-					new XElement(_vif + XMLNames.Component_Model, supercap.Model), 
-					new XElement(_vif + XMLNames.Report_Component_CertificationNumber, supercap.CertificationNumber), 
+					new XElement(_vif + XMLNames.Component_Model, supercap.Model),
+					new XElement(_vif + XMLNames.Component_CertificationMethod, supercap.CertificationMethod.ToXMLFormat()),
+					supercap.CertificationMethod == CertificationMethod.StandardValues 
+						? null 
+						: new XElement(_vif + XMLNames.Report_Component_CertificationNumber, supercap.CertificationNumber), 
 					new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(supercap.Date, XmlDateTimeSerializationMode.Utc)),
 					new XElement(_vif + XMLNames.Component_AppVersion, supercap.AppVersion),
-					new XElement(_vif + XMLNames.Component_CertificationMethod, supercap.CertificationMethod.ToXMLFormat()),
 					new XElement(_vif + XMLNames.Capacitor_Capacitance, supercap.Capacity.ToXMLFormat(2)),
-					new XElement(_vif + XMLNames.Capacitor_InternalResistance, supercap.InternalResistance.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.Capacitor_InternalResistance, supercap.InternalResistance.AsMilliOhm.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MinVoltage, supercap.MinVoltage.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MaxVoltage, supercap.MaxVoltage.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.Capacitor_MaxChargingCurrent, supercap.MaxCurrentCharge.ToXMLFormat(2)),
@@ -100,13 +102,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(_xsi + XMLNames.XSIType, "BatterySystemDataType"),
 				new XElement(_vif + XMLNames.Component_Manufacturer, battery.Manufacturer),
 				new XElement(_vif + XMLNames.Component_Model, battery.Model),
-				new XElement(_vif + XMLNames.Report_Component_CertificationNumber, battery.CertificationNumber),
+				new XElement(_vif + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat()),
+				battery.CertificationMethod == CertificationMethod.StandardValues 
+					? null 
+					: new XElement(_vif + XMLNames.Report_Component_CertificationNumber, battery.CertificationNumber),
 				new XElement(_vif + XMLNames.Component_Date,
 					XmlConvert.ToString(battery.Date, XmlDateTimeSerializationMode.Utc)),
 				new XElement(_vif + XMLNames.Component_AppVersion, battery.AppVersion),
-				new XElement(_vif + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat()),
 				new XElement(_vif + XMLNames.REESS_BatteryType, battery.BatteryType.ToString()),
-				new XElement(_vif + XMLNames.REESS_RatedCapacity, battery.Capacity.ToXMLFormat(2)),
+				new XElement(_vif + XMLNames.REESS_RatedCapacity, battery.Capacity.AsAmpHour.ToXMLFormat(2)),
 				new XElement(_vif + XMLNames.REESS_ConnectorsSubsystemsIncluded, battery.ConnectorsSubsystemsIncluded),
 				new XElement(_vif + XMLNames.REESS_JunctionboxIncluded, battery.JunctionboxIncluded),
 				battery.TestingTemperature == null

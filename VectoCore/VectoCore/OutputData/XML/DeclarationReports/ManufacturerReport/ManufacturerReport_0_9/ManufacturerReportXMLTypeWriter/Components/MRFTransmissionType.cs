@@ -32,8 +32,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "NrOfGears", vehicleComponents.GearboxInputData.Gears.Count),
 				new XElement(_mrf + "FinalGearRatio",
 					vehicleComponents.GearboxInputData.Gears.Last().Ratio.ToXMLFormat(3)),
-				new XElement(_mrf + XMLNames.Vehicle_RetarderType,
-					vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
+				//new XElement(_mrf + XMLNames.Vehicle_RetarderType,
+				//	vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
 				(vehicleComponents.PTOTransmissionInputData != null ? new XElement(_mrf + "PowerTakeOff",
 					vehicleComponents.PTOTransmissionInputData.PTOTransmissionType != "None") : null));
 			return result;

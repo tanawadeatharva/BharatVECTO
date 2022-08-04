@@ -4336,6 +4336,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PrimaryVehicleSubgroup.
+        /// </summary>
+        public static string Report_Results_PrimaryVehicleSubgroup {
+            get {
+                return ResourceManager.GetString("Report_Results_PrimaryVehicleSubgroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summary.
         /// </summary>
         public static string Report_Results_Summary {

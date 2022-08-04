@@ -5,7 +5,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 	<Results>
 		<Status>success</Status>
 		<Result status="success">
-			<VehicleGroup>GRP</VehicleGroup>
+			<PrimaryVehicleSubgroup>GRP</PrimaryVehicleSubgroup>
 			<Mission>Long Haul</Mission>
 			<SimulationParameters>
 				<TotalVehicleMass unit="kg">15000</TotalVehicleMass>
@@ -15,7 +15,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
 			<Fuel type="NG CI">
 				<EnergyConsumption unit="MJ/km">20.71050</EnergyConsumption>
 			</Fuel>
-			<CO2 unit="g/km">1160.65</CO2>
 		</Result>
 	</Results>
 </vif:VectoMockResults>

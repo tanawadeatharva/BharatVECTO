@@ -366,6 +366,11 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetAngelDriveType();
 			}
 
+			public IXmlTypeWriter GetRetarderType()
+			{
+				return _vifReportFactoryImplementation.GetRetarderType();
+			}
+
 			public IXmlTypeWriter GetAuxiliaryType()
 			{
 				return _vifReportFactoryImplementation.GetAuxiliaryType();

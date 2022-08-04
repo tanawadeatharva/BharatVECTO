@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(_vif + XMLNames.Component_Model, transmission.Model),
 					new XElement(_vif + XMLNames.Component_Gearbox_CertificationMethod,
 						transmission.CertificationMethod.ToXMLFormat()),
-					transmission.CertificationNumber == null
+					transmission.CertificationMethod == CertificationMethod.StandardValues
 						? null
 						: new XElement(_vif + XMLNames.Component_CertificationNumber, transmission.CertificationNumber),
 					new XElement(_vif + XMLNames.Component_Date,

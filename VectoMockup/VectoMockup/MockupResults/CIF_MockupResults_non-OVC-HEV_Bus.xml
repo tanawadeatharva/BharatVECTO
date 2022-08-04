@@ -28,7 +28,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 		</Result>
 		<!-- END non-OCV HEV Bus -->
 		<Summary xsi:type="ResultSummaryNonOCVHEVType">
-			<AveragePayload unit="t">3.141</AveragePayload>
+			<AveragePassengerCount>3.141</AveragePassengerCount>
 			<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 				<FuelConsumption unit="g/km">6.1</FuelConsumption>
 				<FuelConsumption unit="g/p-km">6.21</FuelConsumption>

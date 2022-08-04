@@ -266,7 +266,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			var result =  new XElement(tns + XMLNames.Component_Auxiliaries,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(xsi + XMLNames.XSIType, "AUX_Convetional_PrimaryBusType"),
+					new XAttribute(xsi + XMLNames.XSIType, "AUX_Conventional_PrimaryBusType"),
 					//new XAttribute("xmlns", tns.NamespaceName), //automically created
 					new XElement(tns + XMLNames.BusAux_Fan, new XElement(tns + XMLNames.BusAux_Technology,  aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
@@ -545,7 +545,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
                     new XAttribute(
                         XMLNames.Report_Result_Status_Attr,
                         resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
-                    new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, resultEntry.VehicleClass.GetClassNumber()),
+                    new XElement(tns + XMLNames.Report_Results_PrimaryVehicleSubgroup, resultEntry.VehicleClass.GetClassNumber()),
                     new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
                     new XElement(
                         tns + XMLNames.Report_ResultEntry_SimulationParameters,

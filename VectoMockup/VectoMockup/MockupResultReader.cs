@@ -190,7 +190,7 @@ namespace TUGraz.VectoMockup
 
 		private static void ReplaceGroup(XMLDeclarationReport.ResultEntry result, XElement resultElement)
 		{
-			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Vehicle_VehicleGroup}']").ToList();
+			var groupElement = resultElement.XPathSelectElements($"//*[local-name()='{XMLNames.Report_Results_PrimaryVehicleSubgroup}']").ToList();
 			if (!groupElement.Any()) {
 				return;
 			}
@@ -252,7 +252,11 @@ namespace TUGraz.VectoMockup
 					var fuelElementToAdd = new XElement(fuelElement); //deep copy of fuel element;
 					fuelElementToAdd.SetAttributeValue(XMLNames.Report_Results_Fuel_Type_Attr, fuelProperties.FuelType.ToXMLFormat());
 					ClearFuelConsumptionEntries(fuelProperties, fuelElementToAdd, result.VehicleClass);
-					insertPos.AddBeforeSelf(fuelElementToAdd);
+					if (insertPos == null) {
+						resultElement.Add(fuelElementToAdd);
+					} else {
+						insertPos.AddBeforeSelf(fuelElementToAdd);
+					}
 				}
 				fuelElement.Remove();
 			}
@@ -263,7 +267,9 @@ namespace TUGraz.VectoMockup
 		{
 			var elementsToRemove = new List<XElement>();
 			if (runData.GearboxData == null) {
-				elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='GearshiftCount']"));
+				//elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='GearshiftCount']"));
+				var gearshiftCount = resultElement.XPathSelectElement("//*[name()='GearshiftCount']");
+				gearshiftCount.Value = "1";
 				elementsToRemove.AddRange(resultElement.XPathSelectElements("//*[name()='AverageGearboxEfficiency']"));
 			}
 
@@ -291,6 +297,7 @@ namespace TUGraz.VectoMockup
 				fuelElement.XPathSelectElements("//*[@unit='l/m³-km']").FirstOrDefault()?.Remove();
 				fuelElement.XPathSelectElements("//*[@unit='l/t-km']").FirstOrDefault()?.Remove();
 				fuelElement.XPathSelectElements("//*[@unit='l/100km']").FirstOrDefault()?.Remove();
+				fuelElement.XPathSelectElements("//*[@unit='l/p-km']").FirstOrDefault()?.Remove();
 			}
 		}
 

@@ -107,6 +107,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				voltageLevels.Add(new XMLElectricMotorIEPCIInputDataProviderV23(null, voltageLevelNode, null));
 			}
 
+			if (voltageLevels.Count > 1) {
+				voltageLevels = voltageLevels.OrderBy(x => x.VoltageLevel.Value()).ToList();
+			}
+
 			return voltageLevels;
 		}
 

@@ -38,6 +38,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					_vifReportFactory.GetTransmissionType().GetElement(inputData),
 					_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
 					_vifReportFactory.GetAngelDriveType().GetElement(inputData),
+					_vifReportFactory.GetRetarderType().GetElement(inputData), 
 					_vifReportFactory.GetAxlegearType().GetElement(inputData),
 					_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 					_vifReportFactory.GetAuxiliaryType().GetElement(inputData));
@@ -61,6 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryIEPC_SType().GetElement(inputData));
@@ -85,6 +87,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
 				_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
 				_vifReportFactory.GetAngelDriveType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryHevPType().GetElement(inputData));
@@ -110,6 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
 				_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
 				_vifReportFactory.GetAngelDriveType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
@@ -133,6 +137,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetElectricMachineGENType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
@@ -179,6 +184,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetTransmissionType().GetElement(inputData),
 				_vifReportFactory.GetTorqueConvertType().GetElement(inputData),
 				_vifReportFactory.GetAngelDriveType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryPEVType().GetElement(inputData));
@@ -200,6 +206,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-E3_ComponentsVIFType"),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryPEVType().GetElement(inputData));
@@ -241,6 +248,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV-IEPC_ComponentsVIFType"),
 				_vifReportFactory.GetIepcType().GetElement(inputData),
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+				_vifReportFactory.GetRetarderType().GetElement(inputData), 
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
 				_vifReportFactory.GetAuxiliaryIEPCType().GetElement(inputData));

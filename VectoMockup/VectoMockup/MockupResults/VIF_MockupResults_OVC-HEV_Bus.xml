@@ -4,7 +4,7 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xs
 	<Results>
 		<Status>success</Status>
 		<Result status="success">
-			<VehicleGroup>GRP</VehicleGroup>
+			<PrimaryVehicleSubgroup>GRP</PrimaryVehicleSubgroup>
 			<Mission>Long Haul</Mission>
 			<SimulationParameters>
 				<TotalVehicleMass unit="kg">15000</TotalVehicleMass>
@@ -18,7 +18,6 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xs
 				<ElectricEnergyConsumption>
 					<EnergyConsumption unit="MJ/km">20.71050</EnergyConsumption>
 				</ElectricEnergyConsumption>
-				<CO2 unit="g/km">1160.65</CO2>
 			</OVCMode>
 			<OVCMode type="charge sustaining">
 				<Fuel type="NG CI">
@@ -27,7 +26,6 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xs
 				<ElectricEnergyConsumption>
 					<EnergyConsumption unit="MJ/km">20.71050</EnergyConsumption>
 				</ElectricEnergyConsumption>
-				<CO2 unit="g/km">1160.65</CO2>
 			</OVCMode>
 		</Result>
 	</Results>

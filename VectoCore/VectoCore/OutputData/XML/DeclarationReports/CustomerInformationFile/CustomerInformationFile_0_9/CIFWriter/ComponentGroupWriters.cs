@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			return new List<XElement>() {
 				new XElement(_cif + "EngineRatedPower", engine.RatedPowerDeclared.ValueAsUnit("kW")),
-				new XElement(_cif + "EngineCapacity", engine.Displacement.ValueAsUnit("ltr")),
+				new XElement(_cif + "EngineCapacity", engine.Displacement.ValueAsUnit("ltr", 1)),
 				fuelTypesXElement
 			};
 		}

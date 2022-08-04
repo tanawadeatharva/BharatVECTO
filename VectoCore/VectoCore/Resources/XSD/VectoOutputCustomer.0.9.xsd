@@ -1856,19 +1856,59 @@
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="AbstractResultSummaryType" abstract="true"/>
+	<xs:complexType name="ResultSummaryConventionalType">
+		<xs:complexContent>
+			<xs:extension base="AbstractResultSummaryType">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="AveragePayload">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="unit" type="MassUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="AveragePassengerCount" type="xs:double"/>
+					</xs:choice>
+					<xs:element name="Fuel" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="type" type="xs:string" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ResultSummaryOCVHEVType">
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="AveragePayload">
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:double">
-									<xs:attribute name="unit" type="MassUnitType" use="required"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:choice>
+						<xs:element name="AveragePayload">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="unit" type="MassUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="AveragePassengerCount" type="xs:double"/>
+					</xs:choice>
 					<xs:element name="Fuel" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
@@ -1896,15 +1936,18 @@
 		<xs:complexContent>
 			<xs:extension base="AbstractResultSummaryType">
 				<xs:sequence>
-					<xs:element name="AveragePayload">
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:double">
-									<xs:attribute name="unit" type="MassUnitType" use="required"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:choice>
+						<xs:element name="AveragePayload">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="unit" type="MassUnitType" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="AveragePassengerCount" type="xs:double"/>
+					</xs:choice>
 					<xs:element name="ElectricEnergy" type="ElectricEnergyType"/>
 					<xs:sequence minOccurs="0">
 						<xs:element name="FC_ZEV_AuxHeater">
@@ -1932,40 +1975,6 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:group ref="ElectricRangeSequenceGroup"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ResultSummaryConventionalType">
-		<xs:complexContent>
-			<xs:extension base="AbstractResultSummaryType">
-				<xs:sequence>
-					<xs:element name="AveragePayload">
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:double">
-									<xs:attribute name="unit" type="MassUnitType" use="required"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="Fuel" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
-									<xs:annotation>
-										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="type" type="xs:string" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

@@ -1165,6 +1165,8 @@ namespace TUGraz.VectoCommon.Utils
 		private Ohm(double val) : base(val, Units) { }
 
 		public override string UnitString => "Ω";
+
+		public double AsMilliOhm => Val * 1000;
 	}
 
 	public class Farad : SIBase<Farad>

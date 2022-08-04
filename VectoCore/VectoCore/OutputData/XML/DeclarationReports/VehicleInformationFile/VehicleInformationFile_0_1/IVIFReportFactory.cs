@@ -119,6 +119,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IVIFFAdasType GetIEPCADASType();
 
 		IXmlTypeWriter GetAngelDriveType();
+
+		IXmlTypeWriter GetRetarderType();
 		IXmlTypeWriter GetAuxiliaryType();
 		IXmlTypeWriter GetAuxiliaryHevSType();
 

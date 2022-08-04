@@ -767,7 +767,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 			results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, "P31SD"),
+				new XElement(tns + XMLNames.Report_Results_PrimaryVehicleSubgroup, "P31SD"),
 				new XElement(tns + XMLNames.Report_Result_Mission, "Heavy Urban"),
 				new XElement(tns +
 							XMLNames.Report_ResultEntry_SimulationParameters,

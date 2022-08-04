@@ -1131,7 +1131,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:ConventionalLorryAuxOutputType"/>
@@ -1146,7 +1146,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
@@ -1161,7 +1161,7 @@
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="mrf:AngledriveType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
@@ -1173,7 +1173,7 @@
 			<xs:element name="Engine" type="mrf:EngineOutputType"/>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType"/>
@@ -1209,7 +1209,7 @@
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
 			<xs:element name="Transmission" type="mrf:TransmissionType"/>
 			<xs:element name="TorqueConverter" type="mrf:TorqueConverterType" minOccurs="0"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
@@ -1220,7 +1220,7 @@
 		<xs:sequence>
 			<xs:element name="ElectricMachines" type="mrf:xEV-ElectricMachinesType"/>
 			<xs:element name="REESSSpecifications" type="mrf:REESSSpecificationsType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0"/>
+			<xs:element name="Retarder" type="mrf:RetarderType"/>
 			<xs:element name="Axlegear" type="mrf:AxleGearType"/>
 			<xs:element name="AxleWheels" type="mrf:AxleWheelsType"/>
 			<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType"/>
@@ -1529,6 +1529,7 @@
 			<xs:element name="DoubleGlazing" type="xs:boolean"/>
 			<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
 			<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
+			<xs:element name="AuxiliaryHeaterPower" type="xs:int"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="PrimaryBusHVACGroup">
@@ -1582,7 +1583,7 @@
 	</xs:group>
 	<xs:group name="ElectricMachinePowerGroup">
 		<xs:sequence>
-			<xs:element name="RatedPower"/>
+			<xs:element name="RatedPower" type="mrf:RatedPowerType"/>
 			<xs:element name="VoltageLevels">
 				<xs:complexType>
 					<xs:sequence>
@@ -1606,6 +1607,7 @@
 			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="LowestTotalTransmissionRatio" type="v1.0:Double3"/>
 			<xs:element name="DifferentialIncluded" type="xs:boolean"/>
+			<xs:element name="DesignTypeWheelMotor" type="xs:boolean"/>
 			<xs:element name="CertificationMethod" type="xs:string"/>
 		</xs:sequence>
 	</xs:group>
@@ -1682,8 +1684,9 @@
 	</xs:complexType>
 	<xs:complexType name="RetarderType">
 		<xs:sequence>
-			<xs:group ref="mrf:ComponentCommonOutputGroup"/>
-			<xs:element name="CertificationMethod" type="xs:string"/>
+			<xs:element name="RetarderType" type="xs:string"/>
+			<xs:group ref="mrf:ComponentCommonOutputGroup" minOccurs="0"/>
+			<xs:element name="CertificationMethod" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TransmissionType">
@@ -1693,7 +1696,6 @@
 			<xs:element name="Type" type="v2.3:GearboxTransmissionTypeType"/>
 			<xs:element name="NrOfGears" type="xs:int"/>
 			<xs:element name="FinalGearRatio" type="v1.0:GearboxGearRatioType"/>
-			<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
 			<xs:element name="PowerTakeOff" type="xs:boolean" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1871,7 +1873,6 @@
 			<!-- <xs:element name="CompressorRatio" type="v1.0:Double3"/> -->
 			<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
 			<xs:element name="AirsuspensionControl" type="mrf:AirsuspensionControlType"/>
-			<xs:element name="ReagentDosing" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="HVACSystemType">
@@ -2392,7 +2393,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="GearshiftCount" type="xs:int" minOccurs="0">
+			<xs:element name="GearshiftCount" type="xs:int">
 				<xs:annotation>
 					<xs:documentation>I.2.2.7 / #66</xs:documentation>
 				</xs:annotation>
@@ -2500,7 +2501,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="GearshiftCount" type="xs:int" minOccurs="0">
+			<xs:element name="GearshiftCount" type="xs:int">
 				<xs:annotation>
 					<xs:documentation>I.2.2.7 / #66</xs:documentation>
 				</xs:annotation>
@@ -2611,7 +2612,7 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="SimulationParameters" type="mrf:SimulationParametersType"/>
-			<xs:element name="VehicleGroup" type="xs:string" minOccurs="0"/>
+			<xs:element name="PrimaryVehicleSubgroup" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="EnergyConsumptionType">

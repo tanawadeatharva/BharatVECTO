@@ -29,7 +29,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "ElectricMachineSystemDataDeclarationType"),
 					GetElectricMachineSystemCommon(em),
-					new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),
 					GetElectricMachineSystemPowerRange(em),
 					new XElement(_vif + XMLNames.ElectricMachine_DcDcConverterIncluded, em.DcDcConverterIncluded),
 					new XElement(_vif + XMLNames.ElectricMachine_IHPCType, em.IHPCType),
@@ -47,7 +46,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new List<XElement> {
 				new XElement(_vif + XMLNames.Component_Manufacturer, em.Manufacturer),
 				new XElement(_vif + XMLNames.Component_Model, em.Model),
-				new XElement(_vif + XMLNames.Component_CertificationNumber, em.CertificationNumber),
+				new XElement(_vif + XMLNames.Component_CertificationMethod, em.CertificationMethod.ToXMLFormat()),
+				em.CertificationMethod == CertificationMethod.StandardValues 
+					? null 
+					: new  XElement(_vif + XMLNames.Component_CertificationNumber, em.CertificationNumber),
 				new XElement(_vif + XMLNames.Component_Date,
 					XmlConvert.ToString(em.Date, XmlDateTimeSerializationMode.Utc)),
 				new XElement(_vif + XMLNames.Component_AppVersion, em.AppVersion),
