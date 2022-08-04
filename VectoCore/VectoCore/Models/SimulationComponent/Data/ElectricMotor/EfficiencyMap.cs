@@ -150,35 +150,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			}
 
 			try {
-				var retVal = SearchAlgorithm.Search(
-					maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
-					-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
-					getYValue: x => {
-						var myX = (EfficiencyResult)x;
-						return myX.ElectricalPower - batPower;
-					},
-					evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
-					criterion: x => {
-						var myX = (EfficiencyResult)x;
-						return (myX.ElectricalPower - batPower).Value();
-					},
-					searcher: this);
+				var retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM);
 				var tmp = LookupElectricPower(avgSpeed, retVal, true);
 				if (VectoMath.Abs(tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					// searched operating point is not accurate enough...
-					retVal = SearchAlgorithm.Search(
-						maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
-						-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
-						getYValue: x => {
-							var myX = (EfficiencyResult)x;
-							return (myX.ElectricalPower - batPower) * 1e3;
-						},
-						evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
-						criterion: x => {
-							var myX = (EfficiencyResult)x;
-							return (myX.ElectricalPower - batPower).Value() * 1e3;
-						},
-						searcher: this);
+					retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3);
+				}
+
+				if (maxEmTorque < 0) {
+					// propelling
+					if (retVal.IsSmaller(maxEmTorque)) {
+						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+					}
+				} else {
+					// recuperating
+					if (retVal.IsGreater(maxEmTorque)) {
+						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+					}
 				}
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {
@@ -186,6 +174,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			}
 
 			return null;
+		}
+
+		private NewtonMeter SearchTorqueForElectricPower(Watt batPower, PerSecond avgSpeed, NewtonMeter maxEmTorque,
+			EfficiencyResult elPowerMaxEM, double factor = 1.0, bool forceLinesearch = false)
+		{
+			var retVal = SearchAlgorithm.Search(
+				maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
+				-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
+				getYValue: x => {
+					var myX = (EfficiencyResult)x;
+					return (myX.ElectricalPower - batPower) * factor;
+				},
+				evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
+				criterion: x => {
+					var myX = (EfficiencyResult)x;
+					return (myX.ElectricalPower - batPower).Value() * factor;
+				},
+				searcher: this,
+				forceLineSearch: forceLinesearch);
+			return retVal;
 		}
 
 		public PerSecond MaxSpeed
