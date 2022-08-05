@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//throw new VectoException("No CO2 Group found for vehicle");
 		}
 
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistageBusInputDataProvider multiStageInputDataProvider)
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
 		{
 			return Declaration.WeightingGroup.Unknown;
 		}

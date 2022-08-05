@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationModeCompletedMultistageBusVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected readonly IMultistageBusInputDataProvider InputDataProvider;
+		protected readonly IMultistepBusInputDataProvider InputDataProvider;
 		protected IDeclarationReport Report;
 
 		protected Segment _segmentCompletedBus;
@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected DeclarationDataAdapterCompletedBusGeneric DataAdapterGeneric = new DeclarationDataAdapterCompletedBusGeneric();
 
 		public DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-			IMultistageBusInputDataProvider dataProvider, IDeclarationReport report)
+			IMultistepBusInputDataProvider dataProvider, IDeclarationReport report)
 		{
 
 			InputDataProvider = dataProvider;

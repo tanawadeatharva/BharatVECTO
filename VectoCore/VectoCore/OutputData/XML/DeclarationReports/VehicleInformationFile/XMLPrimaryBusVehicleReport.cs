@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
-			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
+			var vehicleId = $"{VectoComponents.VectoPrimaryVehicleInformation.HashIdPrefix()}{GetGUID()}";
 
 			var primaryVehicle = new XElement(tns + XMLNames.Bus_PrimaryVehicle,
 				new XElement(tns + XMLNames.Report_DataWrap,

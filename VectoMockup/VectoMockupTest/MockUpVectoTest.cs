@@ -347,7 +347,7 @@ namespace VectoMockupTest
 		{
 			CopyInputFile(vifInput);
 			//SimulatorFactory.MockUpRun = mockup;
-			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistageBusInputDataProvider;
+			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
 			Assert.NotNull(multistageBusInput);
 
 			var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
@@ -378,7 +378,7 @@ namespace VectoMockupTest
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			using (var reader = XmlReader.Create(fileName))
 			{
-				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistageBusInputDataProvider, null);
+				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
 				fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
 			}
 			var sumWriter = new SummaryDataContainer(null);
@@ -605,6 +605,7 @@ namespace VectoMockupTest
 		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
 			CopyInputFile(completeBusInput);
+			CopyInputFile(primaryBusInput);
 			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
@@ -625,7 +626,7 @@ namespace VectoMockupTest
 			jobContainer.WaitFinished();
 
 			CheckFileExists(fileWriter, checkCif: false, checkPrimaryReport: true, checkMrf: true);
-			File.Delete(fileWriter.XMLFullReportName);
+			//File.Delete(fileWriter.XMLFullReportName);
 			CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
 			// done preparing testcase...
 
@@ -646,7 +647,7 @@ namespace VectoMockupTest
 			completedJobContainer.WaitFinished();
 
 			// assertions
-			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
+			//File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
 			CheckFileExists(completedFileWriter, checkCif: true, checkMrf: true, checkVif:true);
 

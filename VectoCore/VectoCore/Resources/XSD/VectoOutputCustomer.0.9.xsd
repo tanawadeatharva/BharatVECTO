@@ -14,7 +14,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Conventional_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -47,7 +47,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_Px_IHPC_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -80,7 +80,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S2_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -113,7 +113,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S3_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -146,7 +146,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_S4_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -179,7 +179,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="HEV_IEPC_S_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -212,7 +212,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E2_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -245,7 +245,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E3_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -278,7 +278,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_E4_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -311,7 +311,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="PEV_IEPC_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -343,8 +343,14 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Abstract_Conventional_CompltededBusVehicleType"/>
+					<xs:element name="InputDataSignaturePrimaryVehicle" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignaturePrimaryVehicle" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -376,8 +382,14 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Abstract_HEV_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignaturePrimaryVehicle" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignaturePrimaryVehicle" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -409,8 +421,14 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Abstract_PEV_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignaturePrimaryVehicle" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignaturePrimaryVehicle" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -443,7 +461,7 @@
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_LorryVehicleType"/>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>
@@ -475,8 +493,14 @@
 			<xs:extension base="out:AbstractVectoOutputCustomerDataType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="Exempted_CompletedBusVehicleType"/>
+					<xs:element name="InputDataSignaturePrimaryVehicle" type="v1.0:SignatureType"/>
+					<xs:element name="ManufacturerRecordSignaturePrimaryVehicle" type="v1.0:SignatureType">
+						<xs:annotation>
+							<xs:documentation>II.3</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="InputDataSignature" type="v1.0:SignatureType"/>
-					<xs:element name="ResultDataSignature" type="v1.0:SignatureType">
+					<xs:element name="ManufacturerRecordSignature" type="v1.0:SignatureType">
 						<xs:annotation>
 							<xs:documentation>II.3</xs:documentation>
 						</xs:annotation>

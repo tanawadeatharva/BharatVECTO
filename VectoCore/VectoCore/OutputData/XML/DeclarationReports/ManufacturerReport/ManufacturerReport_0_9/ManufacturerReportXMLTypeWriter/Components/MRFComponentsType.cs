@@ -530,9 +530,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputData = inputData as IMultistageBusInputDataProvider;
+			var multistageInputData = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputData == null) {
-				throw new ArgumentException($"inputData must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputData must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData != null
@@ -552,9 +552,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputData = inputData as IMultistageBusInputDataProvider;
+			var multistageInputData = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputData == null) {
-				throw new ArgumentException($"inputData must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputData must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData != null
@@ -574,9 +574,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputData = inputData as IMultistageBusInputDataProvider;
+			var multistageInputData = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputData == null) {
-				throw new ArgumentException($"inputData must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputData must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Vehicle_Components,
 				multistageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.AirdragInputData != null

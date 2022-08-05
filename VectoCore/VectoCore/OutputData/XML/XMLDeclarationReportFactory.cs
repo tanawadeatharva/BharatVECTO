@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public IDeclarationReport CreateReport(IInputDataProvider input, IOutputDataWriter outputWriter)
 		{
 			switch (input) {
-				case IMultistageBusInputDataProvider multistageBusInputDataProvider:
+				case IMultistepBusInputDataProvider multistageBusInputDataProvider:
 					break;
 				case ISingleBusInputDataProvider singleBusInputDataProvider:
 					return new XMLDeclarationReport(outputWriter);

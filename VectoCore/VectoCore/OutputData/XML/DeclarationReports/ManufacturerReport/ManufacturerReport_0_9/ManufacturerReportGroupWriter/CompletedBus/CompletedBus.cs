@@ -20,9 +20,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multiStageInputData = inputData as IMultistageBusInputDataProvider;
+			var multiStageInputData = inputData as IMultistepBusInputDataProvider;
 			if (multiStageInputData == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
 			var result = new List<XElement>();
@@ -35,13 +35,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return result;
 		}
 
-		protected virtual XElement GetNGTankSystem(IMultistageBusInputDataProvider multiStageInputData)
+		protected virtual XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
 			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
 			return new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem);
 		}
 
-		protected virtual XElement GetManufacturers(IMultistageBusInputDataProvider multiStageInputData)
+		protected virtual XElement GetManufacturers(IMultistepBusInputDataProvider multiStageInputData)
 		{
 			var primaryVehicleData = multiStageInputData.JobInputData.PrimaryVehicle.Vehicle;
 			var manufacturers = new XElement(_mrf + "Manufacturers");
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of ConventionalCompletedBusGeneralVehicleOutputGroup
 
-		protected override XElement GetNGTankSystem(IMultistageBusInputDataProvider multiStageInputData)
+		protected override XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
 			return null;
 		}

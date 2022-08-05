@@ -42,11 +42,11 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 		}
 
 		private IXMLCustomerReport GetCompletedBusCustomerReport(string fileName,
-	out IMultistageBusInputDataProvider dataProvider)
+	out IMultistepBusInputDataProvider dataProvider)
 		{
 			Assert.IsFalse(string.IsNullOrEmpty(fileName));
 			var tmp = _xmlReader.CreateDeclaration(fileName);
-			dataProvider = tmp as IMultistageBusInputDataProvider;
+			dataProvider = tmp as IMultistepBusInputDataProvider;
 
 			var arch = dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
 

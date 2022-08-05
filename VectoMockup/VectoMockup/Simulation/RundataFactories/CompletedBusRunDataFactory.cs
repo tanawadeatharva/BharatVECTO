@@ -17,7 +17,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
     internal class MockupMultistageCompletedBusRunDataFactory : DeclarationModeCompletedMultistageBusVectoRunDataFactory
     {
-		public MockupMultistageCompletedBusRunDataFactory(IMultistageBusInputDataProvider dataProvider,
+		public MockupMultistageCompletedBusRunDataFactory(IMultistepBusInputDataProvider dataProvider,
 			IDeclarationReport report) : base(dataProvider, report)
 		{
 

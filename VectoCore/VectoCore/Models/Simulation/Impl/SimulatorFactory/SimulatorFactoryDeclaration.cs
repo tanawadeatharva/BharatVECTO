@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
                                     .GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
 
                                 var vifInputData = new XMLDeclarationVIFInputData(
-                                    primaryInputData as IMultistageBusInputDataProvider,
+                                    primaryInputData as IMultistepBusInputDataProvider,
                                     multiStagePrimaryAndStageInputData.StageInputData);
 
                                 var manStagesCount =

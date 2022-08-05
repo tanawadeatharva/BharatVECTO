@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected XElement GetRetarder(IDeclarationInputDataProvider inputData)
 		{
 			IRetarderInputData retarder;
-			if (inputData is IMultistageBusInputDataProvider multistage) {
+			if (inputData is IMultistepBusInputDataProvider multistage) {
 				retarder = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.RetarderInputData;
 			} else {
 				retarder = inputData.JobInputData.Vehicle.Components.RetarderInputData;
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected XElement GetAxleRatio(IDeclarationInputDataProvider inputData, bool optional = false)
 		{
 			IAxleGearInputData axlegear;
-			if (inputData is IMultistageBusInputDataProvider multistage) {
+			if (inputData is IMultistepBusInputDataProvider multistage) {
 				axlegear = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.AxleGearInputData;
 			} else {
 				axlegear = inputData.JobInputData.Vehicle.Components.AxleGearInputData;
@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new XElement(_cif + XMLNames.Component_Vehicle,
 				new XAttribute(_xsi + XMLNames.XSIType, "Conventional_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
-				_cifFactory.GetConventionalADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetConventionalADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"), 
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "HEV_Px_IHPC_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"), 
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -423,7 +423,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "HEV_S2_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "HEV_S3_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -483,7 +483,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "HEV_S4_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -511,7 +511,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "HEV_S4_CompletedBusVehicleType"),
 				_cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetHEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetEngineGroup().GetElements(inputData),
@@ -539,7 +539,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "PEV_E2_CompletedBusVehicleType"),
 				_cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetPEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
@@ -568,7 +568,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "PEV_E3_CompletedBusVehicleType"),
 				_cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetPEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
@@ -597,7 +597,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "PEV_E4_CompletedBusVehicleType"),
 				_cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetPEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				_cifFactory.GetElectricMachineGroup().GetElements(inputData),
@@ -626,7 +626,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(_xsi + XMLNames.XSIType, "PEV_IEPC_CompletedBusVehicleType"),
 				_cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
 				_cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
-				_cifFactory.GetPEVADASType().GetXmlType(((IMultistageBusInputDataProvider)inputData)
+				_cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
 					.JobInputData
 					.ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
 				//_cifFactory.GetEngineGroup().GetElements(inputData),

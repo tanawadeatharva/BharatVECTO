@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public abstract string OutputDataType { get; }
 
-		private bool _ovc = false;
+		protected bool _ovc = false;
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory)
 		{
 			_cifFactory = cifFactory;
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Implementation of IXMLCustomerReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.Ocv;
@@ -73,19 +73,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public void GenerateReport(XElement resultSignature)
 		{
 			var retVal = new XDocument(new XElement(Cif + "VectoCustomerInformation",
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(XNamespace.Xmlns + "cif", Cif.NamespaceName),
-				new XAttribute(XNamespace.Xmlns + "cif0.9", Cif_0_9.NamespaceName),
-				new XAttribute("xmlns", Cif_0_9),
-				new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation", $"{Cif.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputCustomer.xsd"),
-				
-				new XElement(Cif + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
-					Vehicle,
-					InputDataIntegrity,
-					new XElement(Cif_0_9 + XMLNames.Report_ResultData_Signature, resultSignature),
-					Results,
-					XMLHelper.GetApplicationInfo(Cif_0_9))
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
+					new XAttribute(XNamespace.Xmlns + "cif", Cif.NamespaceName),
+					new XAttribute(XNamespace.Xmlns + "cif0.9", Cif_0_9.NamespaceName),
+					new XAttribute("xmlns", Cif_0_9),
+					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation",
+						$"{Cif.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputCustomer.xsd"),
+
+					new XElement(Cif + XMLNames.Report_DataWrap,
+						new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
+						GetReportContents(resultSignature)
+					)
 				)
 			);
 
@@ -96,6 +94,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			stream.Seek(0, SeekOrigin.Begin);
 			var h = VectoHash.Load(stream);
 			Report = h.AddHash();
+		}
+
+		protected virtual IList<XElement> GetReportContents(XElement resultSignature)
+		{
+			return new[] {
+				Vehicle,
+				InputDataIntegrity,
+				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
+				Results,
+				XMLHelper.GetApplicationInfo(Cif_0_9)
+			};
 		}
 
 		#endregion

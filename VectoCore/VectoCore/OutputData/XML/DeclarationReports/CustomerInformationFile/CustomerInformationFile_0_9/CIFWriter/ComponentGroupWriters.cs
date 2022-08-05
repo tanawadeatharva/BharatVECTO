@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multistage = inputData as IMultistageBusInputDataProvider;
+			var multistage = inputData as IMultistepBusInputDataProvider;
 			if (multistage == null) {
 				throw new VectoException("BusAuxGroupWriter requires MultistepInputData");
 			}
@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multistage = inputData as IMultistageBusInputDataProvider;
+			var multistage = inputData as IMultistepBusInputDataProvider;
 			if (multistage == null) {
 				throw new VectoException("BusAuxGroupWriter requires MultistepInputData");
 			}

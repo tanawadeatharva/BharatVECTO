@@ -411,9 +411,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle, 
 				_mrfFactory.GetConventionalCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
@@ -434,9 +434,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
@@ -456,9 +456,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
@@ -478,10 +478,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null)
 			{
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			var primaryVehicleData = multistageInputdata.JobInputData.PrimaryVehicle.Vehicle;
 			var consolidatedVehicleData = multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle;

@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_Model, iepcData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber, iepcData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, iepcData.DigestValue?.DigestValue ?? ""),
-				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ToXMLFormat()));
+				new XElement(_mrf + XMLNames.Engine_RatedPower, iepcData.R85RatedPower.ConvertToKiloWatt().ToXMLFormat(0)));
 				//new XElement(_mrf + "MaxContinuousPower",(iepcData.ContinuousTorque*iepcData.ContinuousTorqueSpeed).ToXMLFormat()),
 
 			var voltageLevels = new XElement(_mrf + "VoltageLevels");
@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + "LowestTotalTransmissionRatio", (iepcData.Gears.OrderByDescending(g => g.GearNumber).First().Ratio
 																	* inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio).ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.IEPC_DifferentialIncluded, iepcData.DifferentialIncluded),
+				new XElement(_mrf + XMLNames.IEPC_DesignTypeWheelMotor, iepcData.DesignTypeWheelMotor),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, iepcData.CertificationMethod)
 			);
 

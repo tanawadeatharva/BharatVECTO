@@ -3958,6 +3958,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerRecordSignature.
+        /// </summary>
+        public static string Report_ManufacturerRecord_Signature {
+            get {
+                return ResourceManager.GetString("Report_ManufacturerRecord_Signature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EnergyConsumption.
         /// </summary>
         public static string Report_Result_EnergyConsumption {

@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
 {
@@ -15,15 +19,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
-		protected void GenerateReport(string outputDataType)
+		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
-			Report = new XDocument(new XElement(_mrf + "VectoOutput",
-				new XAttribute("xmlns", _mrf),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(xsi + XMLNames.XSIType, $"{outputDataType}"),
-				Vehicle,
-				new XElement(_mrf + "Results")));
+			InitializeVehicleData(modelData.InputData);
+			_ovc = modelData.VehicleData.Ocv;
+			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
+			if (inputData == null) {
+				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
+			}
+			Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
+				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
+					? XMLHelper.CreateDummySig(_di)
+					: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di));
 		}
+
 	}
 
 	internal class Conventional_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
@@ -33,6 +43,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#region Overrides of AbstractManufacturerReport
 
 		public override string OutputDataType => "ConventionalCompletedBusManufacturerOutputDataType";
+
+		
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

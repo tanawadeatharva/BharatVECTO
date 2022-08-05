@@ -38,7 +38,7 @@ namespace TUGraz.VectoMockup.Reports
 		{
             switch (input)
             {
-                case IMultistageBusInputDataProvider multistageBusInputDataProvider:
+                case IMultistepBusInputDataProvider multistageBusInputDataProvider:
                     break;
                 case ISingleBusInputDataProvider singleBusInputDataProvider:
                     return new XMLDeclarationReport(outputWriter);

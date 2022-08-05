@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		private XElement GenerateInputManufacturingStage()
 		{
 			var multistageId = $"{VectoComponents.VectoManufacturingStep.HashIdPrefix()}{GetGUID()}";
-			var vehicleId = $"{VectoComponents.Vehicle.HashIdPrefix()}{GetGUID()}";
+			var vehicleId = $"{VectoComponents.VectoInterimVehicleInformation.HashIdPrefix()}{GetGUID()}";
 
 			var stage = new XElement(tns + XMLNames.ManufacturingStep,
 				new XAttribute(XMLNames.ManufacturingStep_StepCount, GetStageNumber()),

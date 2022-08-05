@@ -1195,7 +1195,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = new MockCompletedBusInputData(modified);
 
-			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer, validate: false);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistepBusInputDataProvider, null), writer, validate: false);
 			factory.WriteModalResults = true;
 			//var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer) {
 			//	WriteModalResults = true,

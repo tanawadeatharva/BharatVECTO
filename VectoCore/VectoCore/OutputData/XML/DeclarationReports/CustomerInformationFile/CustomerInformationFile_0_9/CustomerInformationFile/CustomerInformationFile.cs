@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile
 {
@@ -194,7 +196,52 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 
 	#region CompletedBus
-	public class Conventional_CompletedBusCIF : CustomerInformationFile
+
+	public abstract class CustomerInformationFileCompletedBus : CustomerInformationFile
+	{
+		protected XElement InputDataIntegrityPrimaryVehicle { get; set; }
+
+		protected XElement ManufacturerReportIntegrityPrimaryVehicle { get; set; }
+
+		protected CustomerInformationFileCompletedBus(ICustomerInformationFileFactory cifFactory) :
+			base(cifFactory) { }
+
+		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			InitializeVehicleData(modelData.InputData);
+			_ovc = modelData.VehicleData.Ocv;
+
+			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
+			if (inputData == null) {
+				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
+			}
+			Results = new XElement(Cif_0_9 + "Results");
+			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
+				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
+					? XMLHelper.CreateDummySig(_di)
+					: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di));
+					//new XElement());
+			InputDataIntegrityPrimaryVehicle = new XElement(Cif_0_9 + "InputDataSignaturePrimaryVehicle",
+				inputData.JobInputData.PrimaryVehicle.PrimaryVehicleInputDataHash.ToXML(_di));
+			ManufacturerReportIntegrityPrimaryVehicle =
+				new XElement(Cif_0_9 + "ManufacturerRecordSignaturePrimaryVehicle", inputData.JobInputData.PrimaryVehicle.ManufacturerRecordHash.ToXML(_di));
+		}
+
+		protected override IList<XElement> GetReportContents(XElement resultSignature)
+		{
+			return new[] {
+				Vehicle,
+				InputDataIntegrityPrimaryVehicle,
+				ManufacturerReportIntegrityPrimaryVehicle,
+				InputDataIntegrity,
+				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
+				Results,
+				XMLHelper.GetApplicationInfo(Cif_0_9)
+			};
+		}
+	}
+
+	public class Conventional_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "Conventional_CompletedBusOutputType";
 
@@ -208,7 +255,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
     }
 
-	public class HEV_Px_CompletedBusCIF : CustomerInformationFile
+	public class HEV_Px_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
@@ -222,8 +269,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-    public class HEV_IHPC_CompletedBusCIF : CustomerInformationFile
-    {
+    public class HEV_IHPC_CompletedBusCIF : CustomerInformationFileCompletedBus
+	{
         public override string OutputDataType => "HEV_CompletedBusOutputType";
 
         public HEV_IHPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
@@ -236,7 +283,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         }
     }
 
-    public class HEV_S2_CompletedBusCIF : CustomerInformationFile
+    public class HEV_S2_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
@@ -250,7 +297,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class HEV_S3_CompletedBusCIF : CustomerInformationFile
+	public class HEV_S3_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
@@ -264,7 +311,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class HEV_S4_CompletedBusCIF : CustomerInformationFile
+	public class HEV_S4_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
@@ -278,7 +325,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class HEV_IEPC_S_CompletedBusCIF : CustomerInformationFile
+	public class HEV_IEPC_S_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "HEV_CompletedBusOutputType";
 
@@ -292,7 +339,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class PEV_E2_CompletedBusCIF : CustomerInformationFile
+	public class PEV_E2_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
@@ -306,7 +353,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class PEV_E3_CompletedBusCIF : CustomerInformationFile
+	public class PEV_E3_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
@@ -320,7 +367,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class PEV_E4_CompletedBusCIF : CustomerInformationFile
+	public class PEV_E4_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
@@ -334,7 +381,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
-	public class PEV_IEPC_CompletedBusCIF : CustomerInformationFile
+	public class PEV_IEPC_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public override string OutputDataType => "PEV_CompletedBusOutputType";
 
@@ -349,7 +396,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 
-	public class Exempted_CompletedBusCIF : CustomerInformationFile
+	public class Exempted_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public Exempted_CompletedBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 

@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Implementation of IReportCompletedBusOutputGroup
 
-		public IList<XElement> GetElements(IMultistageBusInputDataProvider multiStageInputDataProvider)
+		public IList<XElement> GetElements(IMultistepBusInputDataProvider multiStageInputDataProvider)
 		{
 			var consolidatedVehicleData = multiStageInputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
 			var primary = multiStageInputDataProvider.JobInputData.PrimaryVehicle.Vehicle;
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multistep = inputData as IMultistageBusInputDataProvider;
+			var multistep = inputData as IMultistepBusInputDataProvider;
 			if (multistep == null) {
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multistep = inputData as IMultistageBusInputDataProvider;
+			var multistep = inputData as IMultistepBusInputDataProvider;
 			if (multistep == null) {
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var multistep = inputData as IMultistageBusInputDataProvider;
+			var multistep = inputData as IMultistepBusInputDataProvider;
 			if (multistep == null) {
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
@@ -301,10 +301,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			var completedBusData = inputData as IMultistepBusInputDataProvider;
 			if (completedBusData == null) {
 				throw new ArgumentException(
-					$"{nameof(inputData)} must implement {nameof(IMultistageBusInputDataProvider)}");
+					$"{nameof(inputData)} must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			var result = new List<XElement>();
 			result.AddRange(
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return result;
 		}
 
-		protected XElement GetManufacturers(IMultistageBusInputDataProvider completedBusData)
+		protected XElement GetManufacturers(IMultistepBusInputDataProvider completedBusData)
 		{
 			var manufacturers = new XElement(_cif + "Manufacturers",
 				GetManufacturerAndAddress(completedBusData.JobInputData.PrimaryVehicle.Vehicle.Manufacturer,
@@ -363,10 +363,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			var completedBusData = inputData as IMultistepBusInputDataProvider;
 			if (completedBusData == null) {
 				throw new ArgumentException(
-					$"{nameof(inputData)} must implement {nameof(IMultistageBusInputDataProvider)}");
+					$"{nameof(inputData)} must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			var result = new List<XElement>();
 			result.AddRange(
@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return result;
 		}
 
-		private XElement GetManufacturers(IMultistageBusInputDataProvider completedBusData)
+		private XElement GetManufacturers(IMultistepBusInputDataProvider completedBusData)
 		{
 			var manufacturers = new XElement(_cif + "Manufacturers",
 				GetManufacturerAndAddress(completedBusData.JobInputData.PrimaryVehicle.Vehicle.Manufacturer,
@@ -415,10 +415,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var completedBusData = inputData as IMultistageBusInputDataProvider;
+			var completedBusData = inputData as IMultistepBusInputDataProvider;
 			if (completedBusData == null) {
 				throw new ArgumentException(
-					$"{nameof(inputData)} must implement {nameof(IMultistageBusInputDataProvider)}");
+					$"{nameof(inputData)} must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			var result = new List<XElement>();
 			result.AddRange(

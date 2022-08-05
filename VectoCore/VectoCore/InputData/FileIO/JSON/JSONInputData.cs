@@ -1030,7 +1030,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
             //PrimaryVehicle = CreateReader(primaryInputData);
 
             Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
-            PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IMultistageBusInputDataProvider);
+            PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IMultistepBusInputDataProvider);
             //JobName = Vehicle.VIN;
         }
 
@@ -1053,7 +1053,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         //#region Implementation of IDeclarationInputDataProvider
 
         //public IDeclarationJobInputData JobInputData => this;
-        public IMultistageBusInputDataProvider PrimaryVehicleData { get; }
+        public IMultistepBusInputDataProvider PrimaryVehicleData { get; }
         //public XElement XMLHash { get; }
 
         //#endregion
@@ -1070,7 +1070,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         #region Implementation of IMultistageVIFInputData
 
 		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
-		public IMultistageBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
+		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
 
 		#endregion
 	}

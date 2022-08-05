@@ -218,10 +218,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
 	{
-		private readonly IMultistageBusInputDataProvider _multistageJobInputData;
+		private readonly IMultistepBusInputDataProvider _multistageJobInputData;
 		private readonly IVehicleDeclarationInputData _vehicleInput;
 
-		public XMLDeclarationVIFInputData(IMultistageBusInputDataProvider multistageJobInputData,
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
 			IVehicleDeclarationInputData vehicleInput)
 		{
 			_multistageJobInputData = multistageJobInputData;
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
 
 		public DataSource DataSource { get; }
 	}

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleMultistageBusInput01()
 		{
 			var reader = XmlReader.Create(VIF01);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
 			TestManufacturingStages(inputDataProvider.JobInputData.ManufacturingStages);
 		}
@@ -670,7 +670,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleMultistageBusInput02()
 		{
 			var reader = XmlReader.Create(VIF02);
-			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistageBusInputDataProvider;
+			var inputDataProvider = _xmlInputReader.Create(reader) as IMultistepBusInputDataProvider;
 			TestPrimaryVehicleDataType(inputDataProvider.JobInputData.PrimaryVehicle);
 			TestManufacturingStageVIF02(inputDataProvider.JobInputData.ManufacturingStages);
 		}

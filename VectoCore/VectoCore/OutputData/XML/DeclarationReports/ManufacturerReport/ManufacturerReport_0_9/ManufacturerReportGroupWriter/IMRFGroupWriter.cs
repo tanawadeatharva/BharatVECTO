@@ -20,6 +20,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	public interface IReportCompletedBusOutputGroup
 	{
-		IList<XElement> GetElements(IMultistageBusInputDataProvider multiStageInputDataProvider);
+		IList<XElement> GetElements(IMultistepBusInputDataProvider multiStageInputDataProvider);
 	}
 }

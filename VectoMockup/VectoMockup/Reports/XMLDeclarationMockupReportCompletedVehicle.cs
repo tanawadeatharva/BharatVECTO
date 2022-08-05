@@ -113,7 +113,7 @@ namespace TUGraz.VectoMockup.Reports
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			if (_modelData.InputData is IMultistageBusInputDataProvider multistageInput) {
+			if (_modelData.InputData is IMultistepBusInputDataProvider multistageInput) {
 				var primaryResult = multistageInput.JobInputData.PrimaryVehicle.ResultsInputData.Results.FirstOrDefault();
 				var tankSystem = multistageInput.JobInputData.ConsolidateManufacturingStage.Vehicle.TankSystem;
 				result.FuelData = primaryResult.EnergyConsumption.Keys

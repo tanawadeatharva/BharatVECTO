@@ -1020,6 +1020,9 @@
   <data name="Report_ResultData_Signature" xml:space="preserve">
     <value>ResultDataSignature</value>
   </data>
+  <data name="Report_ManufacturerRecord_Signature" xml:space="preserve">
+    <value>ManufacturerRecordSignature</value>
+  </data>
   <data name="Report_Result_Payload" xml:space="preserve">
     <value>Payload</value>
   </data>

@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		protected virtual IVehicleDeclarationInputData GetVehicle(IDeclarationInputDataProvider inputData)
 		{
-			if (inputData is IMultistageBusInputDataProvider multistep) {
+			if (inputData is IMultistepBusInputDataProvider multistep) {
 				return multistep.JobInputData.PrimaryVehicle.Vehicle;
 			} else {
 				return inputData.JobInputData.Vehicle;
