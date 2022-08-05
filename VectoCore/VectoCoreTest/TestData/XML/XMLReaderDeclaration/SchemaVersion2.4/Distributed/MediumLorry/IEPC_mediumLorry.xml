@@ -36,7 +36,7 @@
 					<R85RatedPower>50000</R85RatedPower>
 					<RotationalInertia>0.10</RotationalInertia>
 					<DifferentialIncluded>false</DifferentialIncluded>
-					<DesignTypeWheelMotor>true</DesignTypeWheelMotor>
+					<DesignTypeWheelMotor>false</DesignTypeWheelMotor>
 					<Gears xsi:type="v2.3:IEPCGearsDeclarationType">
 						<Gear number="1">
 							<Ratio>3.000</Ratio>
