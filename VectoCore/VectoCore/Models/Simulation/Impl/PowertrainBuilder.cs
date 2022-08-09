@@ -276,8 +276,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("CycleType must be VTP.");
 			}
 
+			if ((data.ExecutionMode == ExecutionMode.Declaration) && data.VehicleData.VehicleCategory.IsBus()) {
+				throw new VectoException("VTP in Declaration mode is not allowed for buses.");
+			}
+
 			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
-			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+			var engine = new VTPCombustionEngine(container, data, pt1Disabled: true);
 
 			new VTPCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -328,7 +332,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var aux = CreateSpeedDependentAuxiliaries(data, container);
 			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
-			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
+			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry));
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,

@@ -1520,13 +1520,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 			public const double EvolutionCoefficient = 0.98;
 
-			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
 			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
 
 			public const MissionType SelectedMissionLowFloorBus = MissionType.Urban;
 			public const MissionType SelectedMissionHighFloorBus = MissionType.Coach;
 
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+
+			public static MissionType GetSelectedMissionHeavyLorry(VehicleClass vc)
+			{
+				return vc.IsOneOf(VehicleClass.Class1, VehicleClass.Class2, VehicleClass.Class3)
+					? MissionType.RegionalDelivery
+					: MissionType.LongHaul;
+			}
 
 			// verification of input data
 

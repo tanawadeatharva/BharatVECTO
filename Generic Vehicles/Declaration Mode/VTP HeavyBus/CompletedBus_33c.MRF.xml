@@ -394,7 +394,7 @@
         <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </di:Transforms>
       <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <di:DigestValue>USH/z15hZ/S2lM1itOACKUURCGhLIEm7c9qQxolr4tk=</di:DigestValue>
+      <di:DigestValue>yyP+aT4zk2kbBSLO8TLdEdwsDjGJtBaWZdtNEARdc3o=</di:DigestValue>
     </di:Reference>
   </mrf:Signature>
 </mrf:VectoOutput>
