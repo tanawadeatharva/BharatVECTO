@@ -432,19 +432,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		/// <summary>
-		/// Filters the gears based on disabling rule: If the last (or the second last) torque limit on vehicle level is 0, then the gear should be disabled.
+		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
 		/// </summary>
-		/// <remarks>VECTO-1628</remarks>
-		private static IList<ITransmissionInputData> FilterDisabledGears(IVehicleDeclarationInputData inputData, IGearboxDeclarationInputData gearbox) {
+		private static IList<ITransmissionInputData> FilterDisabledGears(IVehicleDeclarationInputData inputData, IGearboxDeclarationInputData gearbox)
+		{
 			var gearsInput = gearbox.Gears;
+			var lastGearNumber = gearsInput.Max(g => g.Gear);
 
-			// remove disabled gears (only the last or last two gears may be removed)
 			if (inputData.TorqueLimits != null) {
 				var toRemove = inputData.TorqueLimits
-					.Where(tqLimit => tqLimit.Gear >= gearsInput.Max(g => g.Gear) - 1 && tqLimit.MaxTorque.IsEqual(0))
-					.Select(tqLimit => gearsInput.First(g => g.Gear == tqLimit.Gear)).ToList();
+					.Where(tqLimit => tqLimit.Gear >= lastGearNumber - 1 && tqLimit.MaxTorque.IsEqual(0))
+					.Select(tqLimit => gearsInput.FirstOrDefault(g => g.Gear == tqLimit.Gear))
+					.Where(g => g != default)
+					.ToList();
+				
 				if (toRemove.Count > 0 && toRemove.Min(g => g.Gear) <= gearsInput.Count - toRemove.Count) {
-					throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.", toRemove.Min(), gearsInput.Count);
+					throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.", 
+						toRemove.Min(), gearsInput.Count);
 				}
 
 				foreach (var entry in toRemove) {
