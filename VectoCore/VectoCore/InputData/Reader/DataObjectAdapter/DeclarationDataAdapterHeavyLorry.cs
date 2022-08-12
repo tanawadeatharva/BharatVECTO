@@ -238,12 +238,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
+			
 			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ?? new Dictionary<int, ITorqueLimitInputData>();
-			var numGears = gearbox.Gears.Count;
+			var gears = FilterDisabledGears(vehicle.TorqueLimits, gearbox);
+			var numGears = gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
-			foreach (var gear in gearbox.Gears) {
+			foreach (var gear in gears) {
 				var maxTorque = VectoMath.Min(
 					GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
 					VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
@@ -356,7 +358,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
 			}
 
-			var gearsInput = FilterDisabledGears(inputData, gearbox);
+			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);
 			
 			if (gearsInput.Count < 1) {
 				throw new VectoSimulationException(
@@ -429,34 +431,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
             return retVal;
-		}
-
-		/// <summary>
-		/// Filters the gears based on disabling rule: Disable either the last 1 or 2 gears by setting their vehicle-level torque limit to 0.
-		/// </summary>
-		private static IList<ITransmissionInputData> FilterDisabledGears(IVehicleDeclarationInputData inputData, IGearboxDeclarationInputData gearbox)
-		{
-			var gearsInput = gearbox.Gears;
-			var lastGearNumber = gearsInput.Max(g => g.Gear);
-
-			if (inputData.TorqueLimits != null) {
-				var toRemove = inputData.TorqueLimits
-					.Where(tqLimit => tqLimit.Gear >= lastGearNumber - 1 && tqLimit.MaxTorque.IsEqual(0))
-					.Select(tqLimit => gearsInput.FirstOrDefault(g => g.Gear == tqLimit.Gear))
-					.Where(g => g != default)
-					.ToList();
-				
-				if (toRemove.Count > 0 && toRemove.Min(g => g.Gear) <= gearsInput.Count - toRemove.Count) {
-					throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.", 
-						toRemove.Min(), gearsInput.Count);
-				}
-
-				foreach (var entry in toRemove) {
-					gearsInput.Remove(entry);
-				}
-			}
-
-			return gearsInput;
 		}
 
 		protected virtual TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
