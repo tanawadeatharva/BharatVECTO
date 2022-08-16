@@ -193,13 +193,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
 			result.Add(voltageLevelsXElement);
 
-			foreach (var electricMotorVoltageLevel in voltageLevels)
-			{
+			foreach (var electricMotorVoltageLevel in voltageLevels) {
 				var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
-					voltageLevels.Count > 1 ? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)) : null,
+					voltageLevels.Count > 1
+						? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0))
+						: null,
 					new XElement(_cif + "MaxContinuousPropulsionPower",
 						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
-						.ToXMLFormat(0)));
+						.ValueAsUnit("kW", 0)));
+
 				voltageLevelsXElement.Add(voltageLevel);
 			}
 

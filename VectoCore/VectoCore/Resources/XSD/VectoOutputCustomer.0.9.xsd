@@ -856,9 +856,13 @@
 			<xs:group ref="ExemptedCompletedBusVehicleTypeGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="RatedPowerType">
-		<xs:restriction base="xs:int"/>
-	</xs:simpleType>
+	<xs:complexType name="RatedPowerType">
+		<xs:simpleContent>
+			<xs:extension base="xs:int">
+				<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 	<xs:simpleType name="LegislativeCategoryType">
 		<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
 	</xs:simpleType>
@@ -1184,6 +1188,7 @@
 							<xs:complexType>
 								<xs:sequence>
 									<xs:element name="MaxContinuousPropulsionPower" type="RatedPowerType"/>
+
 								</xs:sequence>
 								<xs:attribute name="voltage"/>
 							</xs:complexType>
