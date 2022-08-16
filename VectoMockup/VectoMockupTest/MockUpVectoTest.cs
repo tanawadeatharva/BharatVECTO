@@ -941,7 +941,8 @@ namespace VectoMockupTest
 		public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
 			bool checkPrimaryReport)
 		{
-			var inputProvider = _inputDataReader.Create(fileName);
+			CopyInputFile(fileName);
+            var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
