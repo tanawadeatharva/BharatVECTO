@@ -553,14 +553,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public virtual TableData BoostingLimitations { get; }
-
 		public virtual string VehicleTypeApprovalNumber { get; }
-
-
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
 		public virtual ArchitectureID ArchitectureID => ElementExists(XMLNames.Vehicle_ArchitectureID) ? ArchitectureIDHelper.Parse(GetString(XMLNames.Vehicle_ArchitectureID)) : ArchitectureID.UNKNOWN;
-		public virtual bool OvcHev { get; }
-		public virtual Watt MaxChargingPower { get; }
+		public virtual bool OvcHev => ElementExists(XMLNames.Vehicle_OvcHev) && GetBool(XMLNames.Vehicle_OvcHev);
+		public virtual Watt MaxChargingPower => ElementExists(XMLNames.Vehicle_MaxChargingPower) ? GetDouble(XMLNames.Vehicle_MaxChargingPower).SI<Watt>() : null;
 
 
 		#region  Non seeded Properties
