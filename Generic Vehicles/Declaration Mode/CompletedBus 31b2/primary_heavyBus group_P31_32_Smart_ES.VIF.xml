@@ -2,9 +2,9 @@
 <VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
   <PrimaryVehicle xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
     <Data id="VEH-88dcf76d37a64b5eaf70" xsi:type="PrimaryVehicleDataType">
-      <Vehicle xsi:type="VehiclePIFType">
-        <ManufacturerPrimaryVehicle>Generic Bus Manufacturer</ManufacturerPrimaryVehicle>
-        <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+      <Vehicle xsi:type="ConventionalVehicleVIFType">
+        <Manufacturer>Generic Bus Manufacturer</Manufacturer>
+        <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
         <Model>Generic Model</Model>
         <VIN>VEH-1234567890_nonSmart</VIN>
         <Date>2017-02-15T11:00:00Z</Date>
@@ -18,19 +18,19 @@
         <RetarderRatio>1.000</RetarderRatio>
         <AngledriveType>None</AngledriveType>
         <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-        <ADAS xmlns:adas="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xsi:type="adas:AdvancedDriverAssistantSystemsType">
-          <adas:EngineStopStart>false</adas:EngineStopStart>
-          <adas:EcoRollWithoutEngineStop>false</adas:EcoRollWithoutEngineStop>
-          <adas:EcoRollWithEngineStop>false</adas:EcoRollWithEngineStop>
-          <adas:PredictiveCruiseControl>none</adas:PredictiveCruiseControl>
+        <ADAS xsi:type="v2.4:ADAS_Conventional_Type">
+          <v2.4:EngineStopStart>false</v2.4:EngineStopStart>
+          <v2.4:EcoRollWithoutEngineStop>false</v2.4:EcoRollWithoutEngineStop>
+          <v2.4:EcoRollWithEngineStop>false</v2.4:EcoRollWithEngineStop>
+          <v2.4:PredictiveCruiseControl>none</v2.4:PredictiveCruiseControl>
         </ADAS>
         <TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
           <tcl:Entry gear="6" maxTorque="1800" />
           <tcl:Entry gear="1" maxTorque="2500" />
         </TorqueLimits>
-        <Components xsi:type="VehicleComponentsPIFType">
+        <Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
           <Engine>
-            <Data xsi:type="EngineDataPIFType">
+            <Data xsi:type="EngineDataVIFType">
               <Manufacturer>Generic Engine Manufacturer</Manufacturer>
               <Model>Generic primary bus 41 Engine</Model>
               <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -41,9 +41,9 @@
               <RatedPower>200000</RatedPower>
               <MaxEngineTorque>1100</MaxEngineTorque>
               <WHRType>
-                <v2.3:MechanicalOutputICE>false</v2.3:MechanicalOutputICE>
-                <v2.3:MechanicalOutputDrivetrain>false</v2.3:MechanicalOutputDrivetrain>
-                <v2.3:ElectricalOutput>false</v2.3:ElectricalOutput>
+                <MechanicalOutputICE>false</MechanicalOutputICE>
+                <MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+                <ElectricalOutput>false</ElectricalOutput>
               </WHRType>
               <Mode>
                 <IdlingSpeed>700</IdlingSpeed>
@@ -68,14 +68,14 @@
             </Data>
           </Engine>
           <Transmission>
-            <Data xsi:type="TransmissionDataPIFType">
+            <Data xsi:type="TransmissionDataVIFType">
               <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
               <Model>AT 6 Gear</Model>
               <MainCertificationMethod>Standard values</MainCertificationMethod>
               <Date>2017-01-11T11:00:00Z</Date>
               <AppVersion>3.0.1</AppVersion>
               <TransmissionType>APT-S</TransmissionType>
-              <Gears xsi:type="TransmissionGearsPIFType">
+              <Gears xsi:type="TransmissionGearsVIFType">
                 <Gear number="1">
                   <Ratio>3.364</Ratio>
                   <MaxTorque>1900</MaxTorque>
@@ -106,7 +106,7 @@
             </Data>
           </Transmission>
           <TorqueConverter>
-            <Data xsi:type="TorqueConverterDataPIFType">
+            <Data xsi:type="TorqueConverterDataVIFType">
               <Manufacturer>Some Manufacturer</Manufacturer>
               <Model>Some Model</Model>
               <CertificationMethod>Standard values</CertificationMethod>
@@ -115,7 +115,7 @@
             </Data>
           </TorqueConverter>
           <Axlegear>
-            <Data xsi:type="AxlegearDataPIFType">
+            <Data xsi:type="AxlegearDataVIFType">
               <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
               <Model>Generic primary bus 41 AxleGear</Model>
               <CertificationMethod>Standard values</CertificationMethod>
@@ -126,7 +126,7 @@
             </Data>
           </Axlegear>
           <AxleWheels>
-            <Data xsi:type="AxleWheelsDataPIFType">
+            <Data xsi:type="AxleWheelsDataVIFType">
               <Axles>
                 <Axle axleNumber="1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
                   <v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
@@ -186,7 +186,7 @@
             </Data>
           </AxleWheels>
           <Auxiliaries>
-            <Data xsi:type="AuxiliaryDataPIFType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
+            <Data xsi:type="AuxiliaryDataVIFType">
               <Fan>
                 <Technology>Hydraulic driven - Constant displacement pump</Technology>
               </Fan>

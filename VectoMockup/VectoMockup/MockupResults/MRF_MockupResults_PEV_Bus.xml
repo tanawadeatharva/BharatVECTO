@@ -13,6 +13,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\
 				<Payload unit="kg">2600</Payload>
 				<PassengerCount>13.75</PassengerCount>
 			</SimulationParameters>
+			<PrimaryVehicleSubgroup></PrimaryVehicleSubgroup>
 			<Total>
 				<VehiclePerformance>
 					<AverageSpeed unit="km/h">1.2</AverageSpeed>

@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
+	/// <summary>
+	/// Create MRF and VIF for primary bus
+	/// </summary>
 	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
 	{
-		private readonly ICustomerInformationFileFactory _cifFactory;
-		private readonly IManufacturerReportFactory _mrfFactory;
+				private readonly IManufacturerReportFactory _mrfFactory;
+		private readonly IVIFReportFactory _vifFactory;
 
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
-			bool writePIF = false) : base(writer, writePIF)
+			IVIFReportFactory vifFactory) : base(writer)
 		{
 			_mrfFactory = mrfFactory;
-			_cifFactory = cifFactory;
+			//_cifFactory = cifFactory;
+			_vifFactory = vifFactory;
 		}
 
 
@@ -40,20 +39,56 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var ihpc =
 				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
 
-			if (modelData.Exempted) {
-				PrimaryReport = new XMLExemptedPrimaryBusVehicleReport();
-			}
-			PrimaryReport = new XMLPrimaryBusVehicleReport();
-			
-			//PrimaryRpt = _vifFactory.GetVIF(vehicleData.VehicleCategory,
-			//	vehicleData.VehicleType,
-			//	vehicleData.ArchitectureID,
-			//	vehicleData.ExemptedVehicle,
-			//	iepc,
-			//	ihpc);
-
-
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(vehicleData.VehicleCategory,
+				vehicleData.VehicleType,
+				vehicleData.ArchitectureID,
+				vehicleData.ExemptedVehicle,
+				iepc,
+				ihpc);
+
+			VehicleInformationFile = _vifFactory.GetVIFReport(vehicleData.VehicleCategory,
+                vehicleData.VehicleType,
+                vehicleData.ArchitectureID,
+                vehicleData.ExemptedVehicle,
+                iepc,
+                ihpc);
+
+
+		}
+
+	}
+
+    // --------------------------------------------------
+
+    /// <summary>
+    /// Create VIF of an interim (or the complete(d) step
+    /// </summary>
+    public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport
+	{
+		protected readonly IVIFReportFactory _vifFactory;
+
+		protected IXMLMultistepIntermediateReport MultistepIntermediateBusReport;
+		protected readonly IVIFReportInterimFactory _interimFactory;
+
+		public XMLDeclarationReportInterimVehicle_09(IReportWriter writer,
+			IManufacturerReportFactory mrfFactory,
+			ICustomerInformationFileFactory cifFactory,
+			IVIFReportFactory vifFactory, IVIFReportInterimFactory interimFactory) : base(writer)
+		{
+			_vifFactory = vifFactory;
+			_interimFactory = interimFactory;
+		}
+
+		#region Overrides of XMLDeclarationReport
+
+		protected override void InstantiateReports(VectoRunData modelData)
+		{
+			var vehicleData = modelData.VehicleData.InputData;
+			var iepc = vehicleData.Components?.IEPC != null;
+			var ihpc =
+				vehicleData.Components?.ElectricMachines?.Entries?.Count(e => e.ElectricMachine.IHPCType != "None") > 0;
+
+			MultistepIntermediateBusReport = _interimFactory.GetInterimVIFReport(vehicleData.VehicleCategory,
 				vehicleData.VehicleType,
 				vehicleData.ArchitectureID,
 				vehicleData.ExemptedVehicle,
@@ -61,31 +96,91 @@ namespace TUGraz.VectoCore.OutputData.XML
 				ihpc);
 		}
 
+		#endregion
+
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			//_multistageBusReport =
+			//	modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();
+			
+			InstantiateReports(modelData);
+
+			MultistepIntermediateBusReport.Initialize(modelData);
+		}
+
+		protected override void GenerateReports()
+		{
+			MultistepIntermediateBusReport.GenerateReport();
+		}
+
+		protected override void OutputReports()
+		{
+			Writer.WriteReport(ReportType.DeclarationReportMultistageVehicleXML, MultistepIntermediateBusReport.Report);
+		}
+
 		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			base.DoStoreResult(entry, runData, modData);
+			throw new NotSupportedException();
 		}
-
 		protected override void WriteResult(ResultEntry result)
 		{
-
-			//if (Mockup)
-			//{
-
-			//	(ManufacturerRpt as IXMLMockupReport).WriteMockupResult(result);
-			//	(CustomerRpt as IXMLMockupReport).WriteMockupResult(result);
-
-			//}
-			//else
-			//{
-				base.WriteResult(result);
-			//}
+			throw new NotSupportedException();
 		}
-
-
 	}
 
 
+	// --------------------------------------------------
+
+	/// <summary>
+	/// Create MRF and CIF of the complete(d) step
+	/// </summary>
+	public class XMLDeclarationReportCompletedVehicle_09 : XMLDeclarationReportCompletedVehicle
+	{
+		protected readonly ICustomerInformationFileFactory _cifFactory;
+		protected readonly IManufacturerReportFactory _mrfFactory;
+
+		public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer, IManufacturerReportFactory mrfFactory,
+			ICustomerInformationFileFactory cifFactory,
+			IVIFReportFactory vifFactory) : base(writer)
+		{
+            _cifFactory = cifFactory;
+			_mrfFactory = mrfFactory;
+		}
+
+		#region Overrides of XMLDeclarationReportCompletedVehicle
+
+		protected override void InstantiateReports(VectoRunData modelData)
+		{
+			var inputData = modelData.InputData as IXMLMultistageInputDataProvider;
+			var primaryVehicle = inputData.JobInputData.PrimaryVehicle.Vehicle;
+
+			var ihpc = (primaryVehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+			var iepc = (primaryVehicle.Components?.IEPC != null);
+			ManufacturerRpt = _mrfFactory.GetManufacturerReport(
+				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
+				inputData.JobInputData.JobType,
+				primaryVehicle.ArchitectureID,
+				primaryVehicle.ExemptedVehicle,
+				iepc,
+				ihpc);
+
+			CustomerRpt = _cifFactory.GetCustomerReport(
+				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
+				inputData.JobInputData.JobType,
+				primaryVehicle.ArchitectureID,
+				primaryVehicle.ExemptedVehicle,
+				iepc,
+				ihpc);
+
+		}
+
+		#endregion
+	}
+	// --------------------------------------------------
+
+	/// <summary>
+	/// Create MRF and CIF for lorries
+	/// </summary>
 	public class XMLDeclarationReport09 : XMLDeclarationReport
 	{
 		private readonly IManufacturerReportFactory _mrfFactory;

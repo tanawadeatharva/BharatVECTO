@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehiclePrimaryBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehiclePrimaryBusType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
-				new XAttribute(xsi + "type", "ComponentsPrimaryBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ComponentsPrimaryBusType"),
 				GetEngineDescription(modelData.EngineData, fuelModes),
 				GetGearboxDescription(modelData.GearboxData),
 				GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			return new XElement(
 				tns + XMLNames.Component_Auxiliaries,
 				new XAttribute(XNamespace.Xmlns + auxPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
+				new XAttribute(xsi + XMLNames.XSIType, $"{auxPrefix}:{busAuxXML.FirstChild.SchemaInfo.SchemaType.QualifiedName.Name}"),
 				XElement.Parse(busAuxXML.InnerXml).Elements()
 			);
 		}

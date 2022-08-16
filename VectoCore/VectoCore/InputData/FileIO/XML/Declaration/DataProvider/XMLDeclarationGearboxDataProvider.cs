@@ -87,6 +87,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					case "APT-N":
 					case "APT-P":
 					case "AT - PowerSplit": return GearboxType.ATPowerSplit;
+					case "IHPC Type 1": return GearboxType.IHPC;
 				}
 
 				throw new ArgumentOutOfRangeException("GearboxType", value);

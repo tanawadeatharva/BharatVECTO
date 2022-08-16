@@ -14,7 +14,7 @@
       {
         "Ratio": 3.73,
         "LossMap": "Axle.vtlm"
-      },
+      }
     ],
     "TqReserve": 20.0,
     "ShiftTime": 2.0,

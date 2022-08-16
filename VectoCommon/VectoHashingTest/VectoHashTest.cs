@@ -640,7 +640,7 @@ namespace VectoHashingTest
 
 			var reader = XmlReader.Create(file);
 
-			var vif = xmlInputReader.CreateDeclaration(reader) as IMultistageBusInputDataProvider;
+			var vif = xmlInputReader.CreateDeclaration(reader) as IMultistepBusInputDataProvider;
 			var inputDataProvider = new XMLDeclarationVIFInputData(vif, null);
 
 

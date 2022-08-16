@@ -11,7 +11,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\
 			<SimulationParameters>
 				<TotalVehicleMass unit="kg">17200</TotalVehicleMass>
 				<Payload unit="kg">2600</Payload>
-				<!--<PassengerCount>13.75</PassengerCount>--><!-- only for buses -->
 			</SimulationParameters>
 			<Total>
 				<VehiclePerformance>

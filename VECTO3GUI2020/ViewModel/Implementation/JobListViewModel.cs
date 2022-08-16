@@ -284,7 +284,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			var documentType = XMLHelper.GetDocumentType(xElement?.DocumentElement?.LocalName);
 			if (documentType == XmlDocumentType.MultistepOutputData)
 			{
-				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistageBusInputDataProvider;
+				var inputDataProvider = _inputDataReader.Create(fileName) as IMultistepBusInputDataProvider;
 				return Task.FromResult(_multiStageViewModelFactory.GetMultiStageJobViewModel(inputDataProvider) as IDocumentViewModel);
 			}
 			else if (documentType == XmlDocumentType.DeclarationJobData)
@@ -495,7 +495,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 							} else if (XMLNames.VectoOutputMultistep.Equals(rootNode,
 								StringComparison.InvariantCultureIgnoreCase)) {
 								using (var reader = XmlReader.Create(fullFileName)) {
-									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistageBusInputDataProvider, null);
+									input = new XMLDeclarationVIFInputData(xmlReader.Create(fullFileName) as IMultistepBusInputDataProvider, null);
 									FileWriter = new FileOutputVIFWriter(fullFileName,
 										(jobEntry as MultiStageJobViewModel_v0_1).ManufacturingStages?.Count ?? 0);
 								}
@@ -518,7 +518,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 					}
 
 					var fileWriter = new FileOutputWriter(GetOutputDirectory(fullFileName));
-					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter, null, null, true);
+					var runsFactory = _simFactoryFactory.Factory(mode, input, fileWriter, null, null);
 					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter);
 					runsFactory.WriteModalResults = Settings.Default.WriteModalResults;
 					runsFactory.ModalResults1Hz = Settings.Default.ModalResults1Hz;

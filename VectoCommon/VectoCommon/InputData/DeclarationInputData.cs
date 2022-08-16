@@ -402,6 +402,9 @@ namespace TUGraz.VectoCommon.InputData
 		SquareMeter TransferredAirDragArea { get; } // P246
 
 		SquareMeter AirDragArea_0 { get; } // P245
+
+		XmlNode XMLSource { get; }
+
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -911,14 +914,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData MaxCurrentMap { get; }
 	}
 
-	public static class BatteryHelper
-	{
-		public static AmpereSecond TotalUsableCapacityInSimulation(this IBatteryPackDeclarationInputData batteryData)
-		{
-			return batteryData.Capacity;
-		}
-	}
-
 	public interface ISuperCapDeclarationInputData : IREESSPackInputData
 	{
 		Farad Capacity { get; }
@@ -1091,7 +1086,7 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
 		double PassengerCount { get; }
-		string FuelMode { get; }
+		//string FuelMode { get; }
 	}
 
 

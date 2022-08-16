@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public Kilogram TotalVehicleMass { get; internal set; }
 		public Kilogram Payload { get; internal set; }
 		public double PassengerCount { get; internal set; }
-		public string FuelMode { get; internal set; }
+		//public string FuelMode { get; internal set; }
 	}
 
 	public class ApplicationInformation : IApplicationInformation

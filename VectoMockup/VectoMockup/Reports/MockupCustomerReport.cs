@@ -16,7 +16,7 @@ namespace TUGraz.VectoMockup.Reports
     {
 		private readonly bool _exempted;
 		private readonly AbstractCustomerReport _originalCustomerReport;
-        private XNamespace Cif = AbstractCustomerReport.Cif;
+        private XNamespace Cif = AbstractCustomerReport.Cif_0_9;
         public MockupCustomerReport(IXMLCustomerReport originalReport, bool exempted)
         {
 			_exempted = exempted;

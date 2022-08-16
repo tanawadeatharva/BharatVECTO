@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
@@ -35,21 +36,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 						new XElement(_mrf + XMLNames.Component_CertificationNumber, battery.CertificationNumber),
 						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, battery.DigestValue?.DigestValue ?? ""),
 						new XElement(_mrf + XMLNames.BusAux_ElectricSystem_NominalVoltage, BatterySOCReader.Create(battery.VoltageCurve).Lookup(0.5).ToXMLFormat(0)),
-						new XElement(_mrf + "TotalStorageCapacity", battery.Capacity.AsAmpHour.ToXMLFormat(0)),
-						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().AsAmpHour),
+						new XElement(_mrf + "TotalStorageCapacity", battery.TotalStorageCapacity().ValueAsUnit("kWh", 0)),
+						new XElement(_mrf + "TotalUsableCapacityInSimulation", battery.TotalUsableCapacityInSimulation().ValueAsUnit("kWh"), 0),
 						new XElement(_mrf + XMLNames.Component_CertificationMethod, battery.CertificationMethod.ToXMLFormat())
 						)
 					);
-				}else if (electricStorage.REESSPack.StorageType == REESSType.SuperCap &&
+				} else if (electricStorage.REESSPack.StorageType == REESSType.SuperCap &&
 						electricStorage.REESSPack is ISuperCapDeclarationInputData superCap) {
-					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Capacitor),
-						new XElement(_mrf + XMLNames.Component_Model, superCap.Model),
-						new XElement(_mrf + XMLNames.Component_CertificationNumber, superCap.CertificationNumber),
-						new XElement(_mrf + XMLNames.Capacitor_Capacitance, superCap.Capacity.ToXMLFormat()),
-						new XElement(_mrf + XMLNames.Capacitor_MinVoltage, superCap.MinVoltage),
-						new XElement(_mrf + XMLNames.Capacitor_MaxVoltage, superCap.MinVoltage),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, superCap.DigestValue?.DigestValue ?? "")
-						);
+					result.Add(new XElement(_mrf + XMLNames.ElectricEnergyStorage_Capacitor,
+							new XElement(_mrf + XMLNames.Component_Model, superCap.Model),
+							new XElement(_mrf + XMLNames.Component_CertificationNumber, superCap.CertificationNumber),
+							new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
+								superCap.DigestValue?.DigestValue ?? ""),
+							new XElement(_mrf + XMLNames.Capacitor_Capacitance, superCap.Capacity.ToXMLFormat()),
+							new XElement(_mrf + XMLNames.Capacitor_MinVoltage, superCap.MinVoltage.ToXMLFormat(2)),
+							new XElement(_mrf + XMLNames.Capacitor_MaxVoltage, superCap.MaxVoltage.ToXMLFormat(2))
+						)
+					);
 				} else {
 					throw new VectoException("Invalid REESS type");
 				}

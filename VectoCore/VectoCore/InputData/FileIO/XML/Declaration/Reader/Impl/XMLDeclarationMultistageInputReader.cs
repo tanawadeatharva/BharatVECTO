@@ -592,8 +592,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				////return _manufacturingStages.Any(x => x.Vehicle.ExemptedVehicle);
 			}
 		}
-		public VehicleCategory VehicleCategory { get => VehicleDeclarationType == VehicleDeclarationType.final ? VehicleCategory.HeavyBusCompletedVehicle : VehicleCategory.HeavyBusInterimVehicle; }
-		public AxleConfiguration AxleConfiguration { get; }
+		public VehicleCategory VehicleCategory
+		{
+			get
+			{
+				if (ExemptedVehicle) {
+					return IsInputDataCompleteExempted(VectoSimulationJobType.ConventionalVehicle, false) 
+						? VehicleCategory.HeavyBusCompletedVehicle
+						: VehicleCategory.HeavyBusInterimVehicle;
+				}
+				return VehicleDeclarationType == VehicleDeclarationType.final
+					? VehicleCategory.HeavyBusCompletedVehicle
+					: VehicleCategory.HeavyBusInterimVehicle;
+			}
+		}
+
+		public AxleConfiguration AxleConfiguration => _primaryVehicle.Vehicle.AxleConfiguration;
 		public IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		public PerSecond EngineIdleSpeed { get; }
@@ -869,7 +883,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private bool PrimaryGearboxIsAT()
 		{
-			switch (_primaryVehicleData.Components.GearboxInputData.Type) {
+			switch (_primaryVehicleData.Components.GearboxInputData?.Type) {
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					return true;
@@ -1029,6 +1043,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
+		
+		public XmlNode XMLSource => AirdragEntry.XMLSource;
 
 		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }
@@ -1072,6 +1088,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		private ConsolidateElectricConsumerData _consolidateElectricConsumerData;
 		private ConsolidatedHVACBusAuxiliariesData _consolidatedHVACBusAuxiliariesData;
 		private XmlNode _xmlNode;
+		private IList<string> _consolidateSteeringPumpData;
 
 
 		public ConsolidatedBusAuxiliariesData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
@@ -1181,10 +1198,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 	}
+	
 
 	// ---------------------------------------------------------------------------------------
 
-	public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
+		public class ConsolidateElectricConsumerData : ConsolidatedDataBase, IElectricConsumersDeclarationData
 	{
 		public ConsolidateElectricConsumerData(IEnumerable<IManufacturingStageInputData> manufacturingStages)
 			: base(manufacturingStages) { }

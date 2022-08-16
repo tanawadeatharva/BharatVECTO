@@ -88,10 +88,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
+		public override bool HybridElectricHDV => true;
+
 		public override VectoSimulationJobType VehicleType
 		{
 			get => VectoSimulationJobType.ParallelHybridVehicle;
 		}
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -124,6 +127,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		{
 			get => VectoSimulationJobType.SerialHybridVehicle;
 		}
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -234,6 +240,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		{
 			get => VectoSimulationJobType.SerialHybridVehicle;
 		}
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------

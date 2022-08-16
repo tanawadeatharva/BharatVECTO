@@ -25,7 +25,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dataBus.RunData.VehicleData == null) {
 				return;
 			}
-			SetupVelocityDropPreprocessor(dataBus);
+
+			if (!dataBus.IsTestPowertrain) {
+				SetupVelocityDropPreprocessor(dataBus);
+			}
 		}
 
 		public new static string Name => "APT-N";

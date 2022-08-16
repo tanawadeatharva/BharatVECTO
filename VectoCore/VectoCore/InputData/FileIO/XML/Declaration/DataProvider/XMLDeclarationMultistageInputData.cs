@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public VectoSimulationJobType JobType => ConsolidateManufacturingStage.Vehicle.VehicleType;
 
 		public bool InputComplete => Reader.InputComplete;
 
@@ -153,8 +153,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			return ResultsInputData.Results.FirstOrDefault(
 				x => x.VehicleGroup == vehicleClass &&
-					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
-					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
+					// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
+					);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);
@@ -217,10 +218,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
 	{
-		private readonly IMultistageBusInputDataProvider _multistageJobInputData;
+		private readonly IMultistepBusInputDataProvider _multistageJobInputData;
 		private readonly IVehicleDeclarationInputData _vehicleInput;
 
-		public XMLDeclarationVIFInputData(IMultistageBusInputDataProvider multistageJobInputData,
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
 			IVehicleDeclarationInputData vehicleInput)
 		{
 			_multistageJobInputData = multistageJobInputData;
@@ -229,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
 
 		public DataSource DataSource { get; }
 	}

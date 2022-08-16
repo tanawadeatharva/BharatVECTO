@@ -244,6 +244,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public PerSecond AngularSpeed;
 			public Dictionary<string, Watt> PowerDemands;
+
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is EngineAuxiliary a) {
+				PreviousState = a.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

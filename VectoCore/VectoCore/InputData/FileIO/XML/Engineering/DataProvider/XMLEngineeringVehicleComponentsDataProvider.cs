@@ -93,12 +93,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual IElectricStorageSystemEngineeringInputData ElectricStorage => null;
 		public virtual IElectricMachinesEngineeringInputData ElectricMachines => null;
+		public IIEPCEngineeringInputData IEPCEngineeringInputData => null;
 
 		#endregion
 
 		#region Implementation of IXMLResource
 
-		
+
 		#endregion
 
 	}

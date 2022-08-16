@@ -49,6 +49,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		public const string EngineFile = @"TestData\Hybrids\GenericVehicle_Sx\Group2_6l.veng";
 
+		public const string SerialHybrid_S2_3Speed_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto";
+		public const string SerialHybrid_S2_12Speed_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto";
+		public const string SerialHybrid_S2_APTN_Job = @"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto";
+		public const string SerialHybrid_S2_APTS_Job = @"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto";
+		public const string SerialHybrid_S2_APTP_Job = @"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto";
+
+		public const string SerialHybrid_S2_3Speed_PTO_Job = @"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed_PTO.vecto";
 
 		public const bool PlotGraphs = true;
 
@@ -60,56 +67,65 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		// - - - - - - - - - - - - - - - - - - - - - - - - - 
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 0, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 2, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 3, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 4, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 5, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 6, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_3speed.vecto", 7, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Coach"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 0, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, LongHaul"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 1, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 2, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 3, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Construction"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 4, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Urban"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 5, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Suburban"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 6, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Interurban"),
+			TestCase(SerialHybrid_S2_3Speed_Job, 7, TestName = "Generic Serial Hybrid S2 AMT 3Speed Job, Coach"),
 		]
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 0, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 2, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 3, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 4, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 5, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 6, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2.vecto", 7, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Coach"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 0, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, LongHaul"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 1, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 2, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 3, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Construction"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 4, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Urban"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 5, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Suburban"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 6, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Interurban"),
+			TestCase(SerialHybrid_S2_12Speed_Job, 7, TestName = "Generic Serial Hybrid S2 AMT 12speed Job, Coach"),
 		]
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 0, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 1, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 2, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 3, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 4, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 5, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 6, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_APTN\HEV_S2_Group5LH_rl_APTN.vecto", 7, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Coach"),
+			TestCase(SerialHybrid_S2_APTN_Job, 0, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, LongHaul"),
+			TestCase(SerialHybrid_S2_APTN_Job, 1, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_APTN_Job, 2, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_APTN_Job, 3, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Construction"),
+			TestCase(SerialHybrid_S2_APTN_Job, 4, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Urban"),
+			TestCase(SerialHybrid_S2_APTN_Job, 5, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Suburban"),
+			TestCase(SerialHybrid_S2_APTN_Job, 6, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Interurban"),
+			TestCase(SerialHybrid_S2_APTN_Job, 7, TestName = "Generic Serial Hybrid S2 APT-N 3speed Job, Coach"),
 		]
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 0, TestName = "Generic Serial Hybrid S2 APT-S Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 1, TestName = "Generic Serial Hybrid S2 APT-S Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 2, TestName = "Generic Serial Hybrid S2 APT-S Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 3, TestName = "Generic Serial Hybrid S2 APT-S Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 4, TestName = "Generic Serial Hybrid S2 APT-S Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 5, TestName = "Generic Serial Hybrid S2 APT-S Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 6, TestName = "Generic Serial Hybrid S2 APT-S Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTS.vecto", 7, TestName = "Generic Serial Hybrid S2 APT-S Job, Coach"),
+			TestCase(SerialHybrid_S2_APTS_Job, 0, TestName = "Generic Serial Hybrid S2 APT-S Job, LongHaul"),
+			TestCase(SerialHybrid_S2_APTS_Job, 1, TestName = "Generic Serial Hybrid S2 APT-S Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_APTS_Job, 2, TestName = "Generic Serial Hybrid S2 APT-S Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_APTS_Job, 3, TestName = "Generic Serial Hybrid S2 APT-S Job, Construction"),
+			TestCase(SerialHybrid_S2_APTS_Job, 4, TestName = "Generic Serial Hybrid S2 APT-S Job, Urban"),
+			TestCase(SerialHybrid_S2_APTS_Job, 5, TestName = "Generic Serial Hybrid S2 APT-S Job, Suburban"),
+			TestCase(SerialHybrid_S2_APTS_Job, 6, TestName = "Generic Serial Hybrid S2 APT-S Job, Interurban"),
+			TestCase(SerialHybrid_S2_APTS_Job, 7, TestName = "Generic Serial Hybrid S2 APT-S Job, Coach"),
 		]
 		[
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 0, TestName = "Generic Serial Hybrid S2 APT-P Job, LongHaul"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 1, TestName = "Generic Serial Hybrid S2 APT-P Job, RegionalDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 2, TestName = "Generic Serial Hybrid S2 APT-P Job, UrbanDelivery"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 3, TestName = "Generic Serial Hybrid S2 APT-P Job, Construction"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 4, TestName = "Generic Serial Hybrid S2 APT-P Job, Urban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 5, TestName = "Generic Serial Hybrid S2 APT-P Job, Suburban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 6, TestName = "Generic Serial Hybrid S2 APT-P Job, Interurban"),
-			TestCase(@"TestData\Hybrids\GenericVehicle_S2_AT\HEV_S2_Group5LH_rl_APTP.vecto", 7, TestName = "Generic Serial Hybrid S2 APT-P Job, Coach"),
+			TestCase(SerialHybrid_S2_APTP_Job, 0, TestName = "Generic Serial Hybrid S2 APT-P Job, LongHaul"),
+			TestCase(SerialHybrid_S2_APTP_Job, 1, TestName = "Generic Serial Hybrid S2 APT-P Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_APTP_Job, 2, TestName = "Generic Serial Hybrid S2 APT-P Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_APTP_Job, 3, TestName = "Generic Serial Hybrid S2 APT-P Job, Construction"),
+			TestCase(SerialHybrid_S2_APTP_Job, 4, TestName = "Generic Serial Hybrid S2 APT-P Job, Urban"),
+			TestCase(SerialHybrid_S2_APTP_Job, 5, TestName = "Generic Serial Hybrid S2 APT-P Job, Suburban"),
+			TestCase(SerialHybrid_S2_APTP_Job, 6, TestName = "Generic Serial Hybrid S2 APT-P Job, Interurban"),
+			TestCase(SerialHybrid_S2_APTP_Job, 7, TestName = "Generic Serial Hybrid S2 APT-P Job, Coach"),
 		]
-
+		[
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 0, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, LongHaul"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 1, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, RegionalDelivery"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 2, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, UrbanDelivery"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 3, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Construction"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 4, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Urban"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 5, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Suburban"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 6, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Interurban"),
+			TestCase(SerialHybrid_S2_3Speed_PTO_Job, 7, TestName = "Generic Serial Hybrid S2 AMT 3Speed PTO Job, Coach"),
+		]
 		[
 			TestCase(@"TestData\Hybrids\GenericVehicle_S2_Job\SerialHybrid_S2_WHR.vecto", 1, TestName = "Generic Serial Hybrid S2 AMT WHR 12speed Job, RegionalDelivery"),
 		]
@@ -348,7 +364,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[
 			TestCase(30, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.7, level"),
 			TestCase(80, 0.7, 0, TestName = "S4 Serial Hybrid DriveOff 80km/h SoC: 0.7, level"),
-			TestCase(30, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.22, level")
+			TestCase(30, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 30km/h SoC: 0.22, level"),
+			TestCase(80, 0.22, 0, TestName = "S4 Serial Hybrid DriveOff 80km/h SoC: 0.22, level"),
 		]
 		public void S4HybridDriveOff(double vmax, double initialSoC, double slope)
 		{

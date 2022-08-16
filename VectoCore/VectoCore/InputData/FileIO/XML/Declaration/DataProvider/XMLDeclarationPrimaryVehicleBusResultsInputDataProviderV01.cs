@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IResult GetResult(XmlNode xmlNode)
 		{
 			var resultStatus = GetAttribute(xmlNode, XMLNames.Result_Status);
-			var vehicleGroup = GetString(XMLNames.Report_Vehicle_VehicleGroup, xmlNode);
+			var vehicleGroup = GetString(XMLNames.Report_Results_PrimaryVehicleSubgroup, xmlNode);
 			var mission = GetString(XMLNames.Report_Result_Mission, xmlNode).ParseEnum<MissionType>();
 			var simulationNode = GetNode(XMLNames.Report_ResultEntry_SimulationParameters, xmlNode);
 			var simulationParams = GetSimulationParameter(simulationNode);
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				TotalVehicleMass = GetString(XMLNames.Report_ResultEntry_TotalVehicleMass, xmlNode).ToDouble().SI<Kilogram>(),
 				Payload = GetString(XMLNames.Report_Result_Payload, xmlNode).ToDouble().SI<Kilogram>(),
 				PassengerCount = GetString(XMLNames.Bus_PassengerCount, xmlNode).ToDouble(),
-				FuelMode = GetString(XMLNames.Report_Result_FuelMode, xmlNode)
+				//FuelMode = GetString(XMLNames.Report_Result_FuelMode, xmlNode)
 			};
 		}
 	}

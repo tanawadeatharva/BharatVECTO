@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
-        private IMultistageBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
+        private IMultistepBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
 		{
 			var vifDataProvider = _xmlInputReader.Create(XmlReader.Create(vifPrimary));
 			//var completeDataProvider = _xmlInputReader.CreateDeclaration(comple);
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var completeDataProvider = _xmlInputReader.CreateDeclaration(modified);
 
-			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistageBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
+			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistepBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
 
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writer = new FileOutputVIFWriter(filename, 0);
@@ -157,13 +157,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var completedVif = _xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(completedVifXML.OuterXml)));
 			File.Delete(writer.XMLMultistageReportFileName);
 
-			return completedVif as IMultistageBusInputDataProvider;
+			return completedVif as IMultistepBusInputDataProvider;
 		}
 	}
 
-	public class MockCompletedBusInputData : IInputDataProvider, IMultistageBusInputDataProvider
+	public class MockCompletedBusInputData : IInputDataProvider, IMultistepBusInputDataProvider
 	{
-		private IMultistageBusInputDataProvider input;
+		private IMultistepBusInputDataProvider input;
 	
 		public MockCompletedBusInputData(XmlReader vif)
 		{
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var _xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
 
-			input = _xmlInputReader.CreateDeclaration(vif) as IMultistageBusInputDataProvider;
+			input = _xmlInputReader.CreateDeclaration(vif) as IMultistepBusInputDataProvider;
 			
 			//JobName = Vehicle.VIN;
 		}

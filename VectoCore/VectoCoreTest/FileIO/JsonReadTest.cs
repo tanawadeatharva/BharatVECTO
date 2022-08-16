@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -504,6 +505,110 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(true, busAux.HVACAux.AdjustableCoolantThermostat);
 			Assert.AreEqual(true, busAux.HVACAux.EngineWasteGasHeatExchanger);
+		}
+
+		[TestCase()]
+		public void JSON_Read_IEPC()
+		{
+			var inputProvider = new JSONComponentInputData(@"TestData\BatteryElectric\IEPC\GenericIEPC.viepc", null);
+			var iepcData = (IIEPCEngineeringInputData)inputProvider.IEPC;
+
+			Assert.AreEqual("3", iepcData.AppVersion);
+			Assert.AreEqual(DateTime.MinValue, iepcData.Date);
+
+			Assert.AreEqual(false, iepcData.SavedInDeclarationMode);
+			Assert.AreEqual("Generic IEPC", iepcData.Model);
+			Assert.AreEqual(0.15.SI<KilogramSquareMeter>(), iepcData.Inertia);
+			Assert.AreEqual(false, iepcData.DifferentialIncluded);
+			Assert.AreEqual(false, iepcData.DesignTypeWheelMotor);
+			Assert.AreEqual(1, iepcData.NrOfDesignTypeWheelMotorMeasured);
+			Assert.AreEqual(0.9, iepcData.OverloadRecoveryFactor);
+
+			TestIEPCGears(iepcData.Gears);
+			TestIEPCVoltageLevel(iepcData.VoltageLevels);
+			TestDragCurve(iepcData.DragCurves);
+		}
+
+		private void TestDragCurve(IList<IDragCurve> dragCurvesData)
+		{
+			Assert.AreEqual(3, dragCurvesData.Count);
+
+			var dragCurve = dragCurvesData[0];
+			Assert.AreEqual(1, dragCurve.Gear);
+			Assert.IsNotNull(dragCurve.DragCurve);
+
+			dragCurve = dragCurvesData[1];
+			Assert.AreEqual(2, dragCurve.Gear);
+			Assert.IsNotNull(dragCurve.DragCurve);
+
+			dragCurve = dragCurvesData[2];
+			Assert.AreEqual(3, dragCurve.Gear);
+			Assert.IsNotNull(dragCurve.DragCurve);
+		}
+
+		private void TestIEPCGears(IList<IGearEntry> gears)
+		{
+			Assert.AreEqual(3, gears.Count);
+
+			var gear = gears[0];
+			Assert.AreEqual(1, gear.GearNumber);
+			Assert.AreEqual(3.2, gear.Ratio);
+			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
+			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+
+			gear = gears[1];
+			Assert.AreEqual(2, gear.GearNumber);
+			Assert.AreEqual(1.6, gear.Ratio);
+			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
+			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+
+			gear = gears[2];
+			Assert.AreEqual(3, gear.GearNumber);
+			Assert.AreEqual(1.6, gear.Ratio);
+			Assert.AreEqual(10000.SI<NewtonMeter>(), gear.MaxOutputShaftTorque);
+			Assert.AreEqual(5000.SI<PerSecond>(), gear.MaxOutputShaftSpeed);
+		}
+		
+		private void TestIEPCVoltageLevel(IList<IElectricMotorVoltageLevel> voltageLevels)
+		{
+			Assert.AreEqual(2, voltageLevels.Count);
+			
+			var voltageLevel = voltageLevels[0];
+			Assert.AreEqual(400.SI<Volt>(), voltageLevel.VoltageLevel);
+			Assert.AreEqual(200.SI<NewtonMeter>(), voltageLevel.ContinuousTorque);
+			Assert.AreEqual(2000.RPMtoRad(), voltageLevel.ContinuousTorqueSpeed);
+			Assert.AreEqual(500.SI<NewtonMeter>(), voltageLevel.OverloadTorque);
+			Assert.AreEqual(2000.RPMtoRad(), voltageLevel.OverloadTestSpeed);
+			Assert.AreEqual(60.SI<Second>(), voltageLevel.OverloadTime);
+			Assert.IsNotNull(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
+
+			voltageLevel = voltageLevels[1];
+			Assert.AreEqual(800.SI<Volt>(), voltageLevel.VoltageLevel);
+			Assert.AreEqual(200.SI<NewtonMeter>(), voltageLevel.ContinuousTorque);
+			Assert.AreEqual(2000.RPMtoRad(), voltageLevel.ContinuousTorqueSpeed);
+			Assert.AreEqual(500.SI<NewtonMeter>(), voltageLevel.OverloadTorque);
+			Assert.AreEqual(2000.RPMtoRad(), voltageLevel.OverloadTestSpeed);
+			Assert.AreEqual(60.SI<Second>(), voltageLevel.OverloadTime);
+			Assert.IsNotNull(voltageLevel.FullLoadCurve);
+			TestPowerMap(voltageLevel.PowerMap);
+		}
+
+		private void TestPowerMap(IList<IElectricMotorPowerMap> powerMapData)
+		{
+			Assert.AreEqual(3, powerMapData.Count);
+
+			var powerMap = powerMapData[0];
+			Assert.AreEqual(1, powerMap.Gear);
+			Assert.IsNotNull(powerMap.PowerMap);
+
+			powerMap = powerMapData[1];
+			Assert.AreEqual(2, powerMap.Gear);
+			Assert.IsNotNull(powerMap.PowerMap);
+
+			powerMap = powerMapData[2];
+			Assert.AreEqual(3, powerMap.Gear);
+			Assert.IsNotNull(powerMap.PowerMap);
 		}
 	}
 

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public override DriverData CreateDriverData()
 		{
 			var retVal = base.CreateDriverData();
-			retVal.LookAheadCoasting.Enabled = false;
+			retVal.LookAheadCoasting.Enabled = true;
 			return retVal;
 		}
 

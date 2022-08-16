@@ -53,6 +53,19 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public static void AddAuxiliariesSerialHybrid(this CombustionEngine engine, IVehicleContainer container,
+			VectoRunData data)
+		{
+			// aux --> engine
+			if (data.BusAuxiliaries != null) {
+				engine.Connect(PowertrainBuilder.CreateAdvancedAuxiliaries(data, container).Port());
+			} else {
+				if (data.Aux != null) {
+					engine.Connect(PowertrainBuilder.CreateAuxiliariesSerialHybrid(data, container).Port());
+				}
+			}
+		}
+
 		public static IDriver AddComponent(this IDrivingCycleInProvider prev, IDriver next)
 		{
 			prev.InPort().Connect(next.OutPort());

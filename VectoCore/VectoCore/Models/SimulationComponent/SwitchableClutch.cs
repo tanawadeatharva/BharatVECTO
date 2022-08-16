@@ -142,5 +142,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		#endregion
 
 		#endregion
+
+		#region Implementation of IUpdateable
+
+		public override bool UpdateFrom(object other) {
+			if (other is SwitchableClutch c) {
+				PreviousState = c.PreviousState.Clone();
+				ClutchOpen = c.ClutchOpen;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

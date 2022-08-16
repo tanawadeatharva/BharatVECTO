@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Utils;
 
@@ -22,7 +24,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var engine = inputData.JobInputData.Vehicle.Components.EngineInputData;
+			var vehicle = GetVehicle(inputData);
+			var engine = vehicle.Components.EngineInputData;
+
 			var fuelTypesXElement = new XElement(_cif + XMLNames.Report_Vehicle_FuelTypes);
 
 			var fuelTypes = new HashSet<FuelType>();
@@ -39,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			return new List<XElement>() {
 				new XElement(_cif + "EngineRatedPower", engine.RatedPowerDeclared.ValueAsUnit("kW")),
-				new XElement(_cif + "EngineCapacity", engine.Displacement.ValueAsUnit("ltr")),
+				new XElement(_cif + "EngineCapacity", engine.Displacement.ValueAsUnit("ltr", 1)),
 				fuelTypesXElement
 			};
 		}
@@ -48,19 +52,58 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 
-	public class TransmissionGroup : AbstractCIFGroupWriter
+	public class TransmissionGroupWithGearbox : AbstractCIFGroupWriter
 	{
-		public TransmissionGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public TransmissionGroupWithGearbox(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData;
+			var vehicle = GetVehicle(inputData);
+			var gearbox = vehicle.Components.GearboxInputData;
+
 			return new List<XElement>() {
 				new XElement(_cif + "TransmissionValues", gearbox.CertificationMethod.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Gearbox_TransmissionType, gearbox.Type.ToXMLFormat()),
 				new XElement(_cif + "NrOfGears", gearbox.Gears.Count)
+			};
+		}
+
+		#endregion
+	}
+
+	public class TransmissionGroupWithoutGearbox : AbstractCIFGroupWriter
+	{
+		public TransmissionGroupWithoutGearbox(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			//var vehicle = GetVehicle(inputData);
+			//var gearbox = vehicle.Components.GearboxInputData;
+			return new List<XElement>() {
+				new XElement(_cif + "NrOfGears", 1)
+			};
+		}
+
+		#endregion
+	}
+
+	public class IEPCTransmissionGroup : AbstractCIFGroupWriter
+	{
+		public IEPCTransmissionGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of AbstractCIFGroupWriter
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+            var vehicle = GetVehicle(inputData);
+            var iepc = vehicle.Components.IEPC;
+
+            return new List<XElement>() {
+				new XElement(_cif + "NrOfGears", iepc.Gears.Count)
 			};
 		}
 
@@ -75,7 +118,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var axleWheels = inputData.JobInputData.Vehicle.Components.AxleWheels;
+			var vehicle = GetVehicle(inputData);
+			var axleWheels = vehicle.Components.AxleWheels;
 			double averageRRC = 0;
 			var result = new List<XElement>();
 			int axleCount = 0;
@@ -127,17 +171,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var result = new List<XElement>();
 			Watt totalRatedPropulsionPower = null;
 			IList<IElectricMotorVoltageLevel> voltageLevels = null;
-			if (inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.S_IEPC || inputData.JobInputData.Vehicle.ArchitectureID == ArchitectureID.E_IEPC)
-			{
-				totalRatedPropulsionPower = inputData.JobInputData.Vehicle.Components.IEPC.R85RatedPower;
-				voltageLevels = inputData.JobInputData.Vehicle.Components.IEPC.VoltageLevels.ToList();
+			var vehicle = GetVehicle(inputData);
+			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC) {
+				totalRatedPropulsionPower = vehicle.Components.IEPC.R85RatedPower;
+				voltageLevels = vehicle.Components.IEPC.VoltageLevels.ToList();
 
-			}
-			else {
+			} else {
 				voltageLevels = new List<IElectricMotorVoltageLevel>();
-				var propulsionElectricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries
+				var propulsionElectricMachines = vehicle.Components.ElectricMachines.Entries
 					.Where(e => e.Position != PowertrainPosition.GEN);
-				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower));
+				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower * e.Count));
 				var groupedVoltageLevels = propulsionElectricMachines
 					.SelectMany(electricMachine => electricMachine.ElectricMachine.VoltageLevels).GroupBy((level => level.VoltageLevel));
 				foreach (IGrouping<Volt, IElectricMotorVoltageLevel> electricMotorVoltageLevels in groupedVoltageLevels) {
@@ -145,7 +188,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				}
 			}
 
-			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW")));
+			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW", 0)));
 
 			var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
 			result.Add(voltageLevelsXElement);
@@ -153,7 +196,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			foreach (var electricMotorVoltageLevel in voltageLevels)
 			{
 				var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
-					new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+					voltageLevels.Count > 1 ? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)) : null,
 					new XElement(_cif + "MaxContinuousPropulsionPower",
 						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
 						.ToXMLFormat(0)));
@@ -175,40 +218,185 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var reess = inputData.JobInputData.Vehicle.Components.ElectricStorage;
+			var vehicle = GetVehicle(inputData);
+			var reess = vehicle.Components.ElectricStorage;
 			var batteries = reess.ElectricStorageElements
 				.Where(es => es.REESSPack.StorageType == REESSType.Battery)
-				.Select(es => es.REESSPack as IBatteryPackDeclarationInputData);
-			var totalStorageCapacity = batteries
-				.Sum(bp => bp.Capacity);
-			var totalUsableCapacity = batteries.Sum(bp => bp.TotalUsableCapacityInSimulation());
+				.Select(es => es.REESSPack as IBatteryPackDeclarationInputData).ToArray();
+			var capacitors = reess.ElectricStorageElements.Where(es => es.REESSPack.StorageType == REESSType.SuperCap)
+				.Select(es => es.REESSPack as ISuperCapDeclarationInputData).ToArray();
+
+			var totalStorageCapacity =
+				(batteries.Length > 0 ? batteries.Sum(bp => bp.TotalStorageCapacity()) : 0.SI<WattSecond>()) +
+				(capacitors.Length > 0 ? capacitors.Sum(cap => GetStorageCapacity(cap)) : 0.SI<WattSecond>());
+			var totalUsableCapacity = (batteries.Length > 0
+										? batteries.Sum(bp => bp.TotalUsableCapacityInSimulation())
+										: 0.SI<WattSecond>()) +
+									(capacitors.Length > 0
+										? capacitors.Sum(cap => GetTotalUsableCapacityInSimulation(cap))
+										: 0.SI<WattSecond>());
+
 			return new List<XElement>() {
-				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("Ah", 0)),
-				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("Ah", 0))
+				new XElement(_cif + "TotalStorageCapacity", totalUsableCapacity.ValueAsUnit("kWh", 0)),
+				new XElement(_cif + "UsableStorageCapacity", totalStorageCapacity.ValueAsUnit("kWh", 0))
 			};
+		}
+
+		private WattSecond GetTotalUsableCapacityInSimulation(ISuperCapDeclarationInputData cap)
+		{
+			return GetStorageCapacity(cap) * 0.8;
+		}
+
+		private WattSecond GetStorageCapacity(ISuperCapDeclarationInputData cap)
+		{
+            var voltageRange = cap.MaxVoltage - cap.MinVoltage;
+            //var avgVoltage = (cap.MaxVoltage + cap.MinVoltage) / 2.0;
+			return cap.Capacity * voltageRange * voltageRange / 2.0;
 		}
 
 		#endregion
 	}
 
-	public class CompletedBusAuxGroup : AbstractCIFGroupWriter
+	public class ConventionalCompletedBusAuxGroup : AbstractCIFGroupWriter
 	{
-		public CompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+		public ConventionalCompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		#region Overrides of AbstractCIFGroupWriter
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var consolidatedAuxData = ((IMultistageBusInputDataProvider)inputData).JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
-			return new List<XElement>() {
-				new XElement(_cif + XMLNames.BusAux_HVAC,
-					new XElement(_cif + XMLNames.Bus_SystemConfiguration,
-						consolidatedAuxData.HVACAux.SystemConfiguration.ToXmlFormat()),
-					new XElement(_cif + "AuxiliaryHeaterPower", consolidatedAuxData.HVACAux.AuxHeaterPower),
-					new XElement(_cif + XMLNames.Bus_DoubleGlazing, consolidatedAuxData.HVACAux.DoubleGlazing))
+			var multistage = inputData as IMultistepBusInputDataProvider;
+			if (multistage == null) {
+				throw new VectoException("BusAuxGroupWriter requires MultistepInputData");
+			}
+
+			var completedBusAux = multistage.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
+			var primaryBusAux = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.BusAuxiliaries;
+			var retVal = new List<XElement>();
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_SteeringPump, GetSteeringPumpTech(completedBusAux, primaryBusAux)));
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_ElectricSystem, GetElectricSystem(completedBusAux, primaryBusAux)));
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_PneumaticSystem, GetPneumaticSystem(completedBusAux, primaryBusAux)));
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_HVAC, GetHVAC(completedBusAux, primaryBusAux)));
+			return retVal;
+			
+		}
+
+		protected virtual IList<XElement> GetPneumaticSystem(
+			IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return new[] {
+				new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem,
+					primaryBusAux.PneumaticSupply.SmartAirCompression),
+				new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem,
+					primaryBusAux.PneumaticSupply.SmartRegeneration)
+			};
+		}
+
+		protected virtual IList<XElement> GetElectricSystem(
+			IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			var retVal = new List<XElement>() {
+				new XElement(_cif + "AlternatorTechnology", primaryBusAux.ElectricSupply.AlternatorTechnology.ToXMLFormat())
+			};
+			if (primaryBusAux.ElectricSupply.AlternatorTechnology == AlternatorType.Smart) {
+				retVal.Add(new XElement(_cif + "MaxAlternatorPower",
+					primaryBusAux.ElectricSupply.Alternators.Sum(x => x.RatedCurrent * x.RatedVoltage).ValueAsUnit("kW", 0)));
+				retVal.Add(new XElement(_cif + "ElectricStorageCapacity",
+					primaryBusAux.ElectricSupply.ElectricStorage.Sum(x => x.ElectricStorageCapacity).ValueAsUnit("kWh", 0)));
+			}
+
+			return retVal;
+		}
+
+		protected virtual IList<XElement> GetSteeringPumpTech(
+			IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return primaryBusAux.SteeringPumpTechnology.Select(x => new XElement(_cif + XMLNames.BusAux_Technology, x))
+				.ToArray();
+		}
+
+		protected virtual IList<XElement> GetHVAC(IBusAuxiliariesDeclarationData completedBusAux,
+			IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return new[] {
+				new XElement(_cif + XMLNames.Bus_SystemConfiguration,
+					completedBusAux.HVACAux.SystemConfiguration.ToXmlFormat()),
+				new XElement(_cif + "AuxiliaryHeaterPower",
+					completedBusAux.HVACAux.AuxHeaterPower.ValueAsUnit("kW", 0)),
+				new XElement(_cif + XMLNames.Bus_DoubleGlazing, completedBusAux.HVACAux.DoubleGlazing)
 			};
 		}
 
 		#endregion
 	}
+
+	public class HEV_Px_IHPCompletedBusAuxGroup : ConventionalCompletedBusAuxGroup
+	{
+		public HEV_Px_IHPCompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+	}
+
+	//public class HEV_Px_IHPCompleteHEV_Sx_CompletedBusAuxGroupdBusAuxGroup : ConventionalCompletedBusAuxGroup
+	//{
+	//	public HEV_Px_IHPCompleteHEV_Sx_CompletedBusAuxGroupdBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+	//}
+
+	public class HEV_Sx_CompletedBusAuxGroup : ConventionalCompletedBusAuxGroup
+	{
+		public HEV_Sx_CompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		protected override IList<XElement> GetPneumaticSystem(
+			IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return new[] {
+				//new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem,
+				//	primaryBusAux.PneumaticSupply.SmartAirCompression),
+				new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem,
+					primaryBusAux.PneumaticSupply.SmartRegeneration)
+			};
+		}
+	}
+
+	public class PEVCompletedBusAuxGroup : ConventionalCompletedBusAuxGroup
+	{
+		public PEVCompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+		#region Overrides of ConventionalCompletedBusAuxGroup
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var multistage = inputData as IMultistepBusInputDataProvider;
+			if (multistage == null) {
+				throw new VectoException("BusAuxGroupWriter requires MultistepInputData");
+			}
+
+			var completedBusAux = multistage.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
+			var primaryBusAux = multistage.JobInputData.PrimaryVehicle.Vehicle.Components.BusAuxiliaries;
+			var retVal = new List<XElement>();
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_SteeringPump, GetSteeringPumpTech(completedBusAux, primaryBusAux)));
+			//retVal.Add(new XElement(_cif + XMLNames.BusAux_ElectricSystem, GetElectricSystem(completedBusAux, primaryBusAux)));
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_PneumaticSystem, GetPneumaticSystem(completedBusAux, primaryBusAux)));
+			retVal.Add(new XElement(_cif + XMLNames.BusAux_HVAC, GetHVAC(completedBusAux, primaryBusAux)));
+			return retVal;
+
+		}
+
+		protected override IList<XElement> GetElectricSystem(IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return new XElement[] { };
+		}
+
+		protected override IList<XElement> GetPneumaticSystem(
+			IBusAuxiliariesDeclarationData completedBusAux, IBusAuxiliariesDeclarationData primaryBusAux)
+		{
+			return new[] {
+				//new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem,
+				//	primaryBusAux.PneumaticSupply.SmartAirCompression),
+				new XElement(_cif + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem,
+					primaryBusAux.PneumaticSupply.SmartRegeneration)
+			};
+		}
+
+		#endregion
+	}
+
 }

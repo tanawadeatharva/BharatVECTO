@@ -107,6 +107,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				voltageLevels.Add(new XMLElectricMotorIEPCIInputDataProviderV23(null, voltageLevelNode, null));
 			}
 
+			if (voltageLevels.Count > 1) {
+				voltageLevels = voltageLevels.OrderBy(x => x.VoltageLevel.Value()).ToList();
+			}
+
 			return voltageLevels;
 		}
 
@@ -186,7 +190,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData Conditioning => ElementExists(XMLNames.Conditioning) 
 			? ReadConditioning() : null;
 		
-		public virtual double OverloadRecoveryFactor { get; }
 
 		#endregion
 
@@ -463,5 +466,52 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override TableData Conditioning => null;
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLElectricMotorDeclarationInputDataProviderV01 : XMLCommonElectricMotorDeclarationInputData,
+		IXMLElectricMotorDeclarationInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "ElectricMachineSystemDataDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IList<IElectricMotorVoltageLevel> _voltageLevels;
+
+		public XMLElectricMotorDeclarationInputDataProviderV01(
+			XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+		#region Implementation of IElectricMotorDeclarationInputData
+
+		public bool DcDcConverterIncluded => GetBool(XMLNames.ElectricMachine_DcDcConverterIncluded);
+
+		public string IHPCType => GetString(XMLNames.ElectricMachine_IHPCType);
+
+		public IList<IElectricMotorVoltageLevel> VoltageLevels => 
+			_voltageLevels ?? (_voltageLevels = GetVoltageLevels());
+		public TableData DragCurve => ReadDragCurve();
+		public TableData Conditioning => ElementExists(XMLNames.Conditioning)
+			? ReadConditioning() : null;
+
+		#endregion
+
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		protected override DataSourceType SourceType { get; }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLElectricMotorIEPCIInputDataProviderV01 : XMLElectricMotorIEPCIInputDataProviderV23
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public const string XSD_TYPE = "IEPCMeasuredDataDeclarationType";
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public XMLElectricMotorIEPCIInputDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
 }

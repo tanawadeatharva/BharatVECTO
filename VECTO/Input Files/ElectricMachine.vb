@@ -97,7 +97,7 @@ Public Class ElectricMachine
             writer.SaveElectricMotor(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
-            MsgBox("Faled to write Engine file: " + ex.Message)
+            MsgBox("Failed to write Engine file: " + ex.Message)
             Return False
         End Try
         Return True

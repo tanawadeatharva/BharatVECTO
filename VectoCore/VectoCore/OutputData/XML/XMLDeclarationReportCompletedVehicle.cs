@@ -13,16 +13,12 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
 	{
-		public XMLDeclarationReportCompletedVehicle(IReportWriter writer, bool writePIF = false) : base(writer) { }
+		public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer) { }
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleReportInputData { get; set; }
 
 		#region Overrides of XMLDeclarationReport
 
-		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
-		{
-			//base.DoStoreResult(entry, runData, modData);
-		}
 
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
@@ -107,13 +103,5 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			}
 		}
 
-		#region Overrides of XMLDeclarationReport
-
-		protected override void WriteResult(ResultEntry result)
-		{
-			base.WriteResult(result);
-		}
-
-		#endregion
 	}
 }

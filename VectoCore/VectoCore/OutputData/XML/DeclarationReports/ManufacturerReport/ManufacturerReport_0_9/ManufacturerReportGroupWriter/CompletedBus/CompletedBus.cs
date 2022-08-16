@@ -11,52 +11,84 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle.CompletedBus
 {
-    internal class CompletedBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
+    internal class ConventionalCompletedBusGeneralVehicleOutputGroup : AbstractReportOutputGroup
     {
-		private XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		
+		public ConventionalCompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlGroup
+
+		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+			var multiStageInputData = inputData as IMultistepBusInputDataProvider;
+			if (multiStageInputData == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var result = new List<XElement>();
+			result.Add(GetManufacturers(multiStageInputData));
+			result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle));
+            result.AddRange(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+			result.AddRange(_mrfFactory.GetCompletedBusDimensionSequenceGroup().GetElements(consolidatedVehicleData));
+			result.Add(new XElement(_mrf + XMLNames.Bus_DoorDriveTechnology, consolidatedVehicleData.DoorDriveTechnology.ToXMLFormat()));
+			result.Add(GetNGTankSystem(multiStageInputData));
+			return result;
+		}
+
+		protected virtual XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
+		{
+			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			return new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem);
+		}
+
+		protected virtual XElement GetManufacturers(IMultistepBusInputDataProvider multiStageInputData)
+		{
+			var primaryVehicleData = multiStageInputData.JobInputData.PrimaryVehicle.Vehicle;
+			var manufacturers = new XElement(_mrf + "Manufacturers");
+			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress,
+				1));
+			foreach (var manufacturingStageInputData in multiStageInputData.JobInputData.ManufacturingStages) {
+				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
+					manufacturingStageInputData.Vehicle.ManufacturerAddress,
+					stepCount: manufacturingStageInputData.StepCount));
+			}
+
+			return manufacturers;
+		}
+
+		protected XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
 		{
 			return new XElement(_mrf + "Step",
 				new XAttribute("Count", stepCount),
 				new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturer),
 				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, address));
 		}
-		public CompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Overrides of AbstractMrfXmlGroup
+		#endregion
+	}
 
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+	internal class HEVCompletedBusGeneralVehicleOutputGroup : ConventionalCompletedBusGeneralVehicleOutputGroup
+	{
+
+		public HEVCompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) :
+			base(mrfFactory) { }
+
+	}
+
+
+
+	internal class PEVCompletedBusGeneralVehicleOutputGroup : ConventionalCompletedBusGeneralVehicleOutputGroup
+	{
+
+		public PEVCompletedBusGeneralVehicleOutputGroup(IManufacturerReportFactory mrfFactory) :
+			base(mrfFactory)
+		{ }
+
+		#region Overrides of ConventionalCompletedBusGeneralVehicleOutputGroup
+
+		protected override XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
-			var multiStageInputData = inputData as IMultistageBusInputDataProvider;
-			if (multiStageInputData == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
-			}
-			var primaryVehicleData = multiStageInputData.JobInputData.PrimaryVehicle.Vehicle;
-			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
-			var result = new List<XElement>();
-			var manufacturers = new XElement(_mrf + "Manufacturers");
-			result.Add(manufacturers);
-			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress, 1));
-			foreach (var manufacturingStageInputData in multiStageInputData.JobInputData.ManufacturingStages) {
-				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
-					manufacturingStageInputData.Vehicle.ManufacturerAddress,
-					stepCount: manufacturingStageInputData.StepCount));
-			}
-			//result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle));
-			result.AddRange(new List<XElement>() {
-				new XElement(_mrf + XMLNames.Component_Model, consolidatedVehicleData.Model),
-				new XElement(_mrf + XMLNames.Vehicle_VIN, consolidatedVehicleData.VIN),
-				consolidatedVehicleData.VehicleTypeApprovalNumber != null ? new XElement(_mrf + XMLNames.Vehicle_TypeApprovalNumber, consolidatedVehicleData.VehicleTypeApprovalNumber) : null,
-				new XElement(_mrf + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.Vehicle_AxleConfiguration, primaryVehicleData.AxleConfiguration.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.TPMLM, consolidatedVehicleData.GrossVehicleMassRating.ToXMLFormat(0)),
-				new XElement(_mrf + XMLNames.Report_Vehicle_VehicleGroup, consolidatedVehicleData.VehicleCategory.ToXMLFormat()),
-			});
-
-			result.AddRange(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
-			result.AddRange(_mrfFactory.GetCompletedBusDimensionSequenceGroup().GetElements(consolidatedVehicleData));
-			result.Add(new XElement(_mrf + XMLNames.Bus_DoorDriveTechnology, consolidatedVehicleData.DoorDriveTechnology.ToXMLFormat()));
-			result.Add(new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem));
-			return result;
+			return null;
 		}
 
 		#endregion

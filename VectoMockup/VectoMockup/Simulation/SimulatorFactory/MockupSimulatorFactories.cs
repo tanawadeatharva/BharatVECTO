@@ -33,7 +33,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
     {
 		private void CheckInputData(IInputDataProvider dataProvider)
 		{
-			if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus)) {
+			if (dataProvider is JSONFile json && !(dataProvider is JSONInputDataV10_PrimaryAndStageInputBus || dataProvider is JSONInputDataCompletedBusFactorMethodV7)) {
 				throw new VectoException($"JSON input data is not supported in Mockup Vecto");
 			}
 		}
@@ -121,6 +121,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 						_simFactoryFactory, 
 						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).MrfFactory,
 						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).CifFactory, 
+						((IMockupDeclarationReportFactory)_xmlDeclarationReportFactory).VifFactory,
 						_xmlInputDataReader, 
 						Validate);
 				case IMultistageVIFInputData multistageVifInputData:

@@ -7,23 +7,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
 	internal abstract class LorryManufacturerReportBase : AbstractManufacturerReport
 	{
-		
-
-
 		public LorryManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory)
 		{
 
 		}
 
-		protected void GenerateReport(string outputDataType)
-		{
-			Report = new XDocument(new XElement(Mrf + "VectoOutput",
-				new XAttribute("xmlns", Mrf),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-				new XAttribute(xsi + "type", $"{outputDataType}"),
-				Vehicle,
-				new XElement(Mrf + "Results")));
-		}
+		
 	}
 
 	internal class ConventionalLorryManufacturerReport : LorryManufacturerReportBase

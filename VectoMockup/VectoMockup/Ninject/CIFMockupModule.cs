@@ -103,15 +103,56 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetConventional_CompletedBusVehicleType();
         }
 
-        public IXmlTypeWriter GetHEV_CompletedBusVehicleType()
-        {
-            return _cifFactory.GetHEV_CompletedBusVehicleType();
-        }
+		public IXmlTypeWriter GetHEV_Px_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_Px_CompletedBusVehicleType();
+		}
 
-        public IXmlTypeWriter GetPEV_CompletedBusVehicleType()
-        {
-            return _cifFactory.GetPEV_CompletedBusVehicleType();
-        }
+		public IXmlTypeWriter GetHEV_IHPC_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_IHPC_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetHEV_S2_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_S2_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetHEV_S3_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_S3_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetHEV_S4_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_S4_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetHEV_IEPC_S_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetHEV_IEPC_S_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetPEV_E2_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetPEV_E2_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetPEV_E3_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetPEV_E3_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetPEV_E4_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetPEV_E4_CompletedBusVehicleType();
+		}
+
+		public IXmlTypeWriter GetPEV_IEPC_CompletedBusVehicleType()
+		{
+			return _cifFactory.GetPEV_IEPC_CompletedBusVehicleType();
+		}
+
 
 		public IXmlTypeWriter GetExemptedCompletedBusVehicleType()
 		{
@@ -133,7 +174,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetConventionalLorryVehicleSequenceGroupWriter();
         }
 
-        public IReportOutputGroup GetEngineGroup()
+		public IReportOutputGroup GetConventionalCompletedBusVehicleSequenceGroupWriter()
+		{
+			return _cifFactory.GetConventionalCompletedBusVehicleSequenceGroupWriter();
+		}
+
+		public IReportOutputGroup GetEngineGroup()
         {
             return _cifFactory.GetEngineGroup();
         }
@@ -143,7 +189,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetTransmissionGroup();
         }
 
-        public IReportOutputGroup GetAxleWheelsGroup()
+		public IReportOutputGroup GetTransmissionGroupNoGearbox()
+		{
+			return _cifFactory.GetTransmissionGroupNoGearbox();
+		}
+
+		public IReportOutputGroup GetAxleWheelsGroup()
         {
             return _cifFactory.GetAxleWheelsGroup();
         }
@@ -153,17 +204,37 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetLorryAuxGroup();
         }
 
-        public IReportOutputGroup GetCompletedBusAuxGroup()
+        public IReportOutputGroup GetConventionalCompletedBusAuxGroup()
         {
-            return _cifFactory.GetCompletedBusAuxGroup();
+            return _cifFactory.GetConventionalCompletedBusAuxGroup();
         }
 
-        public IReportOutputGroup GetHEV_VehicleSequenceGroupWriter()
+		public IReportOutputGroup GetHEV_Px_IHPC_CompletedBusAuxGroup()
+		{
+			return _cifFactory.GetHEV_Px_IHPC_CompletedBusAuxGroup();
+		}
+
+		public IReportOutputGroup GetHEV_Sx_CompletedBusAuxGroup()
+		{
+			return _cifFactory.GetHEV_Sx_CompletedBusAuxGroup();
+		}
+
+		public IReportOutputGroup GetPEV_CompletedBusAuxGroup()
+		{
+			return _cifFactory.GetPEV_CompletedBusAuxGroup();
+		}
+
+		public IReportOutputGroup GetHEV_LorryVehicleSequenceGroupWriter()
         {
-            return _cifFactory.GetHEV_VehicleSequenceGroupWriter();
+            return _cifFactory.GetHEV_LorryVehicleSequenceGroupWriter();
         }
 
-        public IReportOutputGroup GetHEV_LorryVehicleTypeGroup()
+		public IReportOutputGroup GetHEV_CompletedBusVehicleSequenceGroupWriter()
+		{
+			return _cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter();
+		}
+
+		public IReportOutputGroup GetHEV_LorryVehicleTypeGroup()
         {
             return _cifFactory.GetHEV_LorryVehicleTypeGroup();
         }
@@ -183,21 +254,56 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetPEV_LorryVehicleTypeGroup();
         }
 
-        public IReportOutputGroup GetPEV_VehicleSequenceGroupWriter()
+        public IReportOutputGroup GetPEV_LorryVehicleSequenceGroupWriter()
         {
-            return _cifFactory.GetPEV_VehicleSequenceGroupWriter();
+            return _cifFactory.GetPEV_LorryVehicleSequenceGroupWriter();
         }
 
-        public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
+		public IReportOutputGroup GetPEV_CompletedBusVehicleSequenceGroupWriter()
+		{
+			return _cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter();
+		}
+
+		public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
         {
             return _cifFactory.GetCompletedBusVehicleTypeGroup();
         }
 
-        public IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus()
+		public IReportOutputGroup GetExemptedCompletedBusVehicleTypeGroup()
+		{
+			return _cifFactory.GetExemptedCompletedBusVehicleTypeGroup();
+		}
+
+		public IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus()
         {
             return _cifFactory.GetGeneralVehicleSequenceGroupWriterCompletedBus();
         }
 
-        #endregion
+		public ICIFAdasType GetConventionalADASType()
+		{
+			return _cifFactory.GetConventionalADASType();
+		}
+
+		public ICIFAdasType GetHEVADASType()
+		{
+			return _cifFactory.GetHEVADASType();
+		}
+
+		public ICIFAdasType GetPEVADASType()
+		{
+			return _cifFactory.GetPEVADASType();
+		}
+
+		public IReportOutputGroup GetPEVCompletedBusVehicleTypeGroup()
+		{
+			return _cifFactory.GetPEVCompletedBusVehicleTypeGroup();
+		}
+
+		public IReportOutputGroup GetIEPCTransmissionGroup()
+		{
+			return _cifFactory.GetIEPCTransmissionGroup();
+		}
+
+		#endregion
     }
 }

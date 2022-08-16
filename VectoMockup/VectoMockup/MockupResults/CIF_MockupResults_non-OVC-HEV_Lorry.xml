@@ -31,6 +31,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 		</Result>
 		<!-- END non-OCV HEV Lorry -->
 		<Summary xsi:type="ResultSummaryNonOCVHEVType">
+			<AveragePayload unit="t">3.141</AveragePayload>
 			<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 				<FuelConsumption unit="g/km">6.1</FuelConsumption>
 				<FuelConsumption unit="g/t-km">6.20</FuelConsumption>

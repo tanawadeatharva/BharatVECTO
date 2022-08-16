@@ -11,6 +11,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class MRFConventionalAdasType : AbstractMrfXmlType, IMRFAdasType
     {
+		public MRFConventionalAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
 		#region Overrides of AbstractMRFComponentWriter
 
 		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData inputData)
@@ -27,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#endregion
 
-		public MRFConventionalAdasType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		
 	}
 
 	internal class MRFHevAdasType : AbstractMrfXmlType, IMRFAdasType

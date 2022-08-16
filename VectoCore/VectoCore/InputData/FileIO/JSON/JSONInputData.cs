@@ -836,7 +836,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				TotalVehicleMass = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
 				Payload = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
 				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']")?.InnerText.ToDouble() ?? 0,
-				FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
+				//FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
 			};
 		}
 
@@ -1012,7 +1012,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// --------------------------
 
-	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IMultistageVIFInputData //, IDeclarationInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		protected internal string PrimaryInputDataFile;
@@ -1027,12 +1027,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
 
-			//PrimaryVehicle = CreateReader(primaryInputData);
+            //PrimaryVehicle = CreateReader(primaryInputData);
 
-			Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
-			PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IPrimaryVehicleInformationInputDataProvider);
-			JobName = Vehicle.VIN;
-		}
+            Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
+            PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IMultistepBusInputDataProvider);
+            //JobName = Vehicle.VIN;
+        }
 
 
 		//private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
@@ -1048,22 +1048,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-		#endregion
+        #endregion
 
-		#region Implementation of IDeclarationInputDataProvider
+        //#region Implementation of IDeclarationInputDataProvider
 
-		public IDeclarationJobInputData JobInputData => this;
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
-		public XElement XMLHash { get; }
+        //public IDeclarationJobInputData JobInputData => this;
+        public IMultistepBusInputDataProvider PrimaryVehicleData { get; }
+        //public XElement XMLHash { get; }
 
-		#endregion
+        //#endregion
 
-		#region Implementation of IDeclarationJobInputData
+        //#region Implementation of IDeclarationJobInputData
 
-		public IVehicleDeclarationInputData Vehicle { get; }
-		public string JobName { get; }
-		
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+        public IVehicleDeclarationInputData Vehicle { get; }
+        //public string JobName { get; }
+
+        //public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+
+        //#endregion
+
+        #region Implementation of IMultistageVIFInputData
+
+		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
+		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
 
 		#endregion
 	}
@@ -1142,7 +1149,48 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// --------------------------
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+	public class JSONInputDataV12_IEPC : AbstractJSONInputData
+	{
+		public JSONInputDataV12_IEPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+			if (Body[JsonKeys.Vehicle_EngineFile] != null) {
+				Engine = ReadEngine();
+			}
+
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
+				//AxleGear = ReadGearbox() as IAxleGearInputData;
+				Gearbox = ReadGearbox();  // gearbox is not used, but required by GUI
+				AxleGear = Gearbox as IAxleGearInputData;
+			}
+		}
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
+	}
+
+	// --------------------------
+
+	public class JSONInputDataV13_IHPC : JSONInputDataV8_ParallelHybrid
+	{
+		public JSONInputDataV13_IHPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
+	}
+
+	// --------------------------
+
+		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

@@ -13,7 +13,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class SuperCap : StatefulVectoSimulationComponent<SuperCap.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class SuperCap : StatefulVectoSimulationComponent<SuperCap.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		private SuperCapData ModelData;
 
@@ -199,6 +199,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxChargePower;
 			public Watt MaxDischargePower;
 			public Watt InternalLoss;
+
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is SuperCap o) {
+				PreviousState = o.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

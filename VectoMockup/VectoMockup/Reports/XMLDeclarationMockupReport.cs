@@ -12,7 +12,10 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoMockup.Reports
 {
-    internal class XMLDeclarationMockupReport : XMLDeclarationReport09
+	/// <summary>
+	/// Create MRF and CIF for lorries
+	/// </summary>
+	internal class XMLDeclarationMockupReport : XMLDeclarationReport09
     {
 		private readonly bool _exempted;
 

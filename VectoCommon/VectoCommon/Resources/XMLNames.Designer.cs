@@ -1069,6 +1069,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clutch.
+        /// </summary>
+        public static string BusAux_Clutch {
+            get {
+                return ResourceManager.GetString("BusAux_Clutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ElectricSystem.
         /// </summary>
         public static string BusAux_ElectricSystem {
@@ -2464,6 +2473,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string ElectricMachine_P2_5GearRatios_Gear_Attr {
+            get {
+                return ResourceManager.GetString("ElectricMachine_P2_5GearRatios_Gear_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string ElectricMachine_Position {
@@ -3337,20 +3355,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerAddress.
+        /// </summary>
+        public static string ManufacturerAddress {
+            get {
+                return ResourceManager.GetString("ManufacturerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddressCompletedVehicle.
         /// </summary>
         public static string ManufacturerAddressCompletedVehicle {
             get {
                 return ResourceManager.GetString("ManufacturerAddressCompletedVehicle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ManufacturerAddressPrimaryVehicle.
-        /// </summary>
-        public static string ManufacturerAddressPrimaryVehicle {
-            get {
-                return ResourceManager.GetString("ManufacturerAddressPrimaryVehicle", resourceCulture);
             }
         }
         
@@ -3940,6 +3958,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerRecordSignature.
+        /// </summary>
+        public static string Report_ManufacturerRecord_Signature {
+            get {
+                return ResourceManager.GetString("Report_ManufacturerRecord_Signature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EnergyConsumption.
         /// </summary>
         public static string Report_Result_EnergyConsumption {
@@ -4314,6 +4341,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Results_FuelType {
             get {
                 return ResourceManager.GetString("Report_Results_FuelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryVehicleSubgroup.
+        /// </summary>
+        public static string Report_Results_PrimaryVehicleSubgroup {
+            get {
+                return ResourceManager.GetString("Report_Results_PrimaryVehicleSubgroup", resourceCulture);
             }
         }
         
@@ -5646,6 +5682,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string XMLManufacturerReport_torqueLimitPercent {
             get {
                 return ResourceManager.GetString("XMLManufacturerReport_torqueLimitPercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string XSIType {
+            get {
+                return ResourceManager.GetString("XSIType", resourceCulture);
             }
         }
     }

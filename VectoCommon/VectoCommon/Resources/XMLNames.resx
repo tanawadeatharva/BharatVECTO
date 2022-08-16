@@ -1020,6 +1020,9 @@
   <data name="Report_ResultData_Signature" xml:space="preserve">
     <value>ResultDataSignature</value>
   </data>
+  <data name="Report_ManufacturerRecord_Signature" xml:space="preserve">
+    <value>ManufacturerRecordSignature</value>
+  </data>
   <data name="Report_Result_Payload" xml:space="preserve">
     <value>Payload</value>
   </data>
@@ -1149,8 +1152,8 @@
   <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
     <value>Electrical</value>
   </data>
-  <data name="ManufacturerAddressPrimaryVehicle" xml:space="preserve">
-    <value>ManufacturerAddressPrimaryVehicle</value>
+  <data name="ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
   </data>
   <data name="Engine_WHRCorrectionFactors_Mechanical" xml:space="preserve">
     <value>Mechanical</value>
@@ -1979,5 +1982,17 @@
 </data>
 <data name="CIF_OutputDataType_Exempted_CompletedBusOutputType" xml:space="preserve">
 	<value>Exempted_CompletedBusOutputType</value>
+</data>
+<data name="BusAux_Clutch" xml:space="preserve">
+	<value>Clutch</value>
+</data>
+<data name="ElectricMachine_P2_5GearRatios_Gear_Attr" xml:space="preserve">
+	<value>gear</value>
+</data>
+<data name="XSIType" xml:space="preserve">
+	<value>type</value>
+</data>
+<data name="Report_Results_PrimaryVehicleSubgroup" xml:space="preserve">
+	<value>PrimaryVehicleSubgroup</value>
 </data>
 </root>

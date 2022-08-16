@@ -221,7 +221,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 		protected override void Initialize()
 		{
-			_defaultNamespace = XMLNamespaces.v2_10_2;
+			_defaultNamespace = XMLNamespaces.V24;
 
 			_Xelement = new XElement(XMLNamespaces.V20 + XMLNames.Component_Vehicle, 
 				new XAttribute("xmlns",  _defaultNamespace));

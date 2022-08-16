@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -230,6 +231,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
 				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
@@ -248,6 +250,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetHEV_Px_IHPC_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
@@ -408,12 +411,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle, 
-				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetConventionalCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetConventionalADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
 				_mrfFactory.GetConventional_CompletedBusComponentsType().GetElement(inputData)
 				);
@@ -431,7 +434,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetHEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
@@ -445,7 +456,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
@@ -459,16 +478,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null)
 			{
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
-			return new XElement(_mrf + XMLNames.Component_Vehicle,
-				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
-			);
+			var primaryVehicleData = multistageInputdata.JobInputData.PrimaryVehicle.Vehicle;
+			var consolidatedVehicleData = multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var result = new XElement(_mrf + XMLNames.Component_Vehicle);
+			var manufacturers = new XElement(_mrf + "Manufacturers");
+			result.Add(manufacturers);
+			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress, 1));
+			foreach (var manufacturingStageInputData in multistageInputdata.JobInputData.ManufacturingStages) {
+				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
+					manufacturingStageInputData.Vehicle.ManufacturerAddress,
+					stepCount: manufacturingStageInputData.StepCount));
+			}
+			result.Add(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle));
+			result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+			return result;
+
+			//return new XElement(_mrf + XMLNames.Component_Vehicle,
+			//	_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
+			//);
 		}
 
 		#endregion
+
+		protected XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		{
+			return new XElement(_mrf + "Step",
+				new XAttribute("Count", stepCount),
+				new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, address));
+		}
 	}
 }

@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     public abstract class AbstractCIFGroupWriter : IReportOutputGroup
     {
-		protected XNamespace _mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
+		//protected XNamespace _mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
 		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 
@@ -27,5 +27,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public abstract IList<XElement> GetElements(IDeclarationInputDataProvider inputData);
 
 		#endregion
+
+		protected virtual IVehicleDeclarationInputData GetVehicle(IDeclarationInputDataProvider inputData)
+		{
+			if (inputData is IMultistepBusInputDataProvider multistep) {
+				return multistep.JobInputData.PrimaryVehicle.Vehicle;
+			} else {
+				return inputData.JobInputData.Vehicle;
+			}
+		}
+	}
+
+	public abstract class AbstractCifXmlType
+	{
+		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		protected readonly ICustomerInformationFileFactory _cifFactory;
+
+		protected AbstractCifXmlType(ICustomerInformationFileFactory cifFactory)
+		{
+			_cifFactory = cifFactory;
+		}
 	}
 }
