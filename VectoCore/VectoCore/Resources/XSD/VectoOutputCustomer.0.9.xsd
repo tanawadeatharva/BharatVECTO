@@ -841,14 +841,22 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryVehicleType">
 		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>1.1.2. Vehicle model/Commercial Name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
-			<xs:element name="Manufacturer"/>
-			<xs:element name="ManufacturerAddress"/>
-			<xs:element name="Model"/>
-			<xs:element name="CorrectedActualMass"/>
-			<xs:element name="SleeperCab"/>
+			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+				<xs:annotation>
+					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
 			<xs:element name="ZeroEmissionVehicle"/>
-			<xs:element name="HybridElectricHDV"/>
+			<xs:element name="VehicleTechnologyExempted"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted_CompletedBusVehicleType">
