@@ -1098,6 +1098,7 @@
 					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
 			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
 					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
