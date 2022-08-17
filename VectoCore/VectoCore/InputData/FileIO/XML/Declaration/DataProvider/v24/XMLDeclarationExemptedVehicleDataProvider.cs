@@ -45,7 +45,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool VocationalVehicle => false;
 
-		public override bool? SleeperCab => false;
+		public override bool? SleeperCab =>
+			ElementExists(XMLNames.Vehicle_SleeperCab) && GetBool(XMLNames.Vehicle_SleeperCab);
 
 		public override TankSystem? TankSystem => null;
 
