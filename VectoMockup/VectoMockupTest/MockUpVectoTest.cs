@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using Newtonsoft.Json;
 using Ninject;
 using NUnit.Framework;
@@ -18,17 +14,12 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Tests.XML.Reports;
 using TUGraz.VectoCore.Utils;
-using VectoMockupTest.TestData;
-using Formatting = System.Xml.Formatting;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoMockupTest
