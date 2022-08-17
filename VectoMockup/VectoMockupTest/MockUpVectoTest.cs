@@ -343,94 +343,94 @@ namespace VectoMockupTest
 		}
 
 		
-		[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
-		public void InterimBusMockupTest(string vifInput, string stageInputFile)
-		{
-			CopyInputFile(vifInput);
-			//SimulatorFactory.MockUpRun = mockup;
-			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
-			Assert.NotNull(multistageBusInput);
+		//[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
+		//public void InterimBusMockupTest(string vifInput, string stageInputFile)
+		//{
+		//	CopyInputFile(vifInput);
+		//	//SimulatorFactory.MockUpRun = mockup;
+		//	var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
+		//	Assert.NotNull(multistageBusInput);
 
-			var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
+		//	var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
 
-			var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
+		//	var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
 
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
-
-
-		}
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
 
 
-		[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
-		public void CompletedBusMockupTest(string fileName)
-		{
-			CopyInputFile(fileName);
-			//SimulatorFactory.MockUpRun = mockup;
-			XMLDeclarationVIFInputData input = null!;
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			using (var reader = XmlReader.Create(fileName))
-			{
-				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
-				fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
-			}
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
-		}
-
-		[TestCase(CompleteDiesel, TestName="CompleteDiesel")]
-        [TestCase(CompleteExempted, TestName = "CompleteExempted Bus")]
-        [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
-		public void PrimaryAndCompletedTest(string fileName)
-		{
-
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-			var input = JSONInputDataFactory.ReadJsonJob(fileName);
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
-		}
+		//}
 
 
-		[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
-		public void PrimaryAndInterim(string fileName)
-		{
+		//[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
+		//public void CompletedBusMockupTest(string fileName)
+		//{
+		//	CopyInputFile(fileName);
+		//	//SimulatorFactory.MockUpRun = mockup;
+		//	XMLDeclarationVIFInputData input = null!;
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	using (var reader = XmlReader.Create(fileName))
+		//	{
+		//		input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
+		//		fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
+		//	}
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
 
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-			var input = JSONInputDataFactory.ReadJsonJob(fileName);
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+		//}
 
-		}
+		//[TestCase(CompleteDiesel, TestName="CompleteDiesel")]
+  //      [TestCase(CompleteExempted, TestName = "CompleteExempted Bus")]
+  //      [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
+		//public void PrimaryAndCompletedTest(string fileName)
+		//{
+
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
+		//}
+
+
+		//[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
+		//public void PrimaryAndInterim(string fileName)
+		//{
+
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
+
+		//}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_AT_Angledrive")]
