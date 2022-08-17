@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				// new XElement(mrf + "CO2StandardGroup", vehicle.) //CO2 Standardgroup
 				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ToXMLFormat(0)),
                 new XElement(_mrf + XMLNames.Vehicle_VocationalVehicle, vehicle.VocationalVehicle),
-                new XElement(_mrf + "ZeroEmissionHDV", vehicle.ZeroEmissionVehicle),
+                new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
                 new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, vehicle.HybridElectricHDV),
             });
 

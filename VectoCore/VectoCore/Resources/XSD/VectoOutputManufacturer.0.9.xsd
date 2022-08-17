@@ -839,7 +839,7 @@
 					<xs:documentation>1.1.9. Vocational Vehicle</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType">
+			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
 					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
 				</xs:annotation>
@@ -907,7 +907,7 @@
 	<xs:group name="CompletedBusSequenceGroup">
 		<xs:sequence>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
-			<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 			<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
 			<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
@@ -1099,7 +1099,7 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
-			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType">
+			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
 					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
 				</xs:annotation>
@@ -1683,7 +1683,7 @@
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:sequence>
-				<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 				<xs:element name="HybridElectricHDV"/>
 			</xs:sequence>
 		</xs:sequence>
