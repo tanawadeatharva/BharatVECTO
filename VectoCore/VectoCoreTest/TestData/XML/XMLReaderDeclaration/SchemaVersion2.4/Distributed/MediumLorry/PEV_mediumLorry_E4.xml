@@ -15,7 +15,7 @@
 		<!-- optional -->
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E4</ArchitectureID>
 		<OvcHev>true</OvcHev>

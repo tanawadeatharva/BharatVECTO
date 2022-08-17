@@ -14,7 +14,7 @@
 		<CargoVolume>20.300</CargoVolume><!-- optional -->
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E2</ArchitectureID>
 		<OvcHev>true</OvcHev>
