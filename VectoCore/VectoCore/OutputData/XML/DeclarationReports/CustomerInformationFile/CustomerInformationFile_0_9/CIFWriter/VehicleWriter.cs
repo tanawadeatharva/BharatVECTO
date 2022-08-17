@@ -334,15 +334,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
 			return new XElement(_cif + XMLNames.Component_Vehicle,
-				_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(vehicleData),
+				
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
 				new XElement(_cif + XMLNames.Component_ManufacturerAddress, vehicleData.ManufacturerAddress),
 				new XElement(_cif + XMLNames.Component_Model, vehicleData.Model),
-				
-				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis),
+				_cifFactory.GetGeneralVehicleSequenceGroupWriter().GetElements(vehicleData),
+
+                new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ToXMLFormat(0)),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
-				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV)
+				new XElement(_cif + "VehicleTechnologyExempted", vehicleData.ExemptedTechnology)
 			);
 		}
 

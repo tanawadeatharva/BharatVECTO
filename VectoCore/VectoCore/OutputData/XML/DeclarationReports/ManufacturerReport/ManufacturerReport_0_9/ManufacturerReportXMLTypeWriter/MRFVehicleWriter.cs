@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicle.SleeperCab),
 				new XElement(_mrf + "ZeroEmissionHDV", vehicle.ZeroEmissionVehicle),
 				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
-				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_W))
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
 			);
 		}
 
@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
-				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_W))
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
 			);
 		}
 
