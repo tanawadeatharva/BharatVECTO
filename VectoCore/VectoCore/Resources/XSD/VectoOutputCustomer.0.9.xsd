@@ -1115,7 +1115,6 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 				<xs:element name="ClassBus" type="xs:string"/>
 				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
 				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
