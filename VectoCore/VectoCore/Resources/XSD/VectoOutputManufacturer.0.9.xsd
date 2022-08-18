@@ -822,7 +822,15 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
-			<xs:group ref="mrf:CompletedBusSequenceGroup"/>
+			<xs:sequence>
+				<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+				<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
+				<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
+				<xs:element name="NumberPassengersLowerDeck" type="xs:int"/>
+				<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType"/>
+				<xs:element name="LowEntry" type="xs:boolean"/>
+			</xs:sequence>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="LorryGeneralVehicleOutputGroup">
