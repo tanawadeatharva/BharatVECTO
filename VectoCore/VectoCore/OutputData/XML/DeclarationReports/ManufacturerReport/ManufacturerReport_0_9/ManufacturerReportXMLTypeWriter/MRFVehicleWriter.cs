@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
 
@@ -501,7 +502,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					stepCount: manufacturingStageInputData.StepCount));
 			}
 			result.Add(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle));
-			result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+			result.Add(
+				new XElement(_mrf + XMLNames.CorrectedActualMass,
+					consolidatedVehicleData.CurbMassChassis.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicleData.ZeroEmissionVehicle),
+				new XElement(_mrf + XMLNames.Vehicle_RegisteredClass,
+					consolidatedVehicleData.RegisteredClass.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Bus_NumberPassengersUpperDeck,
+					consolidatedVehicleData.NumberPassengerSeatsUpperDeck +
+					consolidatedVehicleData.NumberPassengersStandingUpperDeck),
+				new XElement(_mrf + XMLNames.Bus_NumberPassengersLowerDeck,
+					consolidatedVehicleData.NumberPassengerSeatsLowerDeck +
+					consolidatedVehicleData.NumberPassengersStandingLowerDeck),
+				new XElement(_mrf + XMLNames.Vehicle_BodyworkCode, consolidatedVehicleData.VehicleCode.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry)
+				);
+			//result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			return result;
 
 			//return new XElement(_mrf + XMLNames.Component_Vehicle,

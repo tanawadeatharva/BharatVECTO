@@ -432,7 +432,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Component_Model, consolidatedVehicle.Model),
 				new XElement(_cif + XMLNames.CorrectedActualMass, consolidatedVehicle.CurbMassChassis.ValueAsUnit("kg", 0)),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicle.ZeroEmissionVehicle),
-				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, consolidatedVehicle.HybridElectricHDV),
 				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, consolidatedVehicle.RegisteredClass.ToXMLFormat()),
 				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck
 																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck
