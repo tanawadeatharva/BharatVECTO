@@ -58,8 +58,7 @@
 	</ItemGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
-         $(FinalDefineConstants), '^(.*,)*MOCKUP(,.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(FinalDefineConstants), '^(.*,)*MOCKUP(,.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
 
