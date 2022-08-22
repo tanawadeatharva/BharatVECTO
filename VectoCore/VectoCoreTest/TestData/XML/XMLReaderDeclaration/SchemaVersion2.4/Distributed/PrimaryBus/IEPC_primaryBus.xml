@@ -16,8 +16,6 @@
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>E-IEPC</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>30000</MaxChargingPower>
 		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
