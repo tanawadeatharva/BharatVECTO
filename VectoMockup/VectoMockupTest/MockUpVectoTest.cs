@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using Newtonsoft.Json;
 using Ninject;
 using NUnit.Framework;
@@ -18,16 +14,12 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Tests.XML.Reports;
 using TUGraz.VectoCore.Utils;
-using Formatting = System.Xml.Formatting;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoMockupTest
@@ -122,7 +114,8 @@ namespace VectoMockupTest
 		#region Complete(d) Bus Input
 
 		protected const string Conventional_CompletedBusInput = BasePath + @"CompletedBus\Conventional_completedBus_2.xml";
-		protected const string HEV_CompletedBusInput = BasePath + @"CompletedBus\HEV_completedBus_2.xml";
+		protected const string Conventional_CompletedBusInput_TypeApproval = BasePath + @"CompletedBus\Conventional_completedBus_2_TypeApprovalNumber.xml";
+        protected const string HEV_CompletedBusInput = BasePath + @"CompletedBus\HEV_completedBus_2.xml";
 		protected const string PEV_CompletedBusInput = BasePath + @"CompletedBus\PEV_completedBus_2.xml";
 		protected const string PEV_IEPC_CompletedBusInput = BasePath + @"CompletedBus\IEPC_completedBus_2.xml";
 
@@ -342,94 +335,94 @@ namespace VectoMockupTest
 		}
 
 		
-		[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
-		public void InterimBusMockupTest(string vifInput, string stageInputFile)
-		{
-			CopyInputFile(vifInput);
-			//SimulatorFactory.MockUpRun = mockup;
-			var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
-			Assert.NotNull(multistageBusInput);
+		//[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
+		//public void InterimBusMockupTest(string vifInput, string stageInputFile)
+		//{
+		//	CopyInputFile(vifInput);
+		//	//SimulatorFactory.MockUpRun = mockup;
+		//	var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
+		//	Assert.NotNull(multistageBusInput);
 
-			var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
+		//	var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
 
-			var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
+		//	var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
 
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
-
-
-		}
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
 
 
-		[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
-		public void CompletedBusMockupTest(string fileName)
-		{
-			CopyInputFile(fileName);
-			//SimulatorFactory.MockUpRun = mockup;
-			XMLDeclarationVIFInputData input = null!;
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			using (var reader = XmlReader.Create(fileName))
-			{
-				input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
-				fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
-			}
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: true, checkVif: false);
-		}
-
-		[TestCase(CompleteDiesel, TestName="CompleteDiesel")]
-        [TestCase(CompleteExempted, TestName = "CompleteExempted Bus")]
-        [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
-		public void PrimaryAndCompletedTest(string fileName)
-		{
-
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-			var input = JSONInputDataFactory.ReadJsonJob(fileName);
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
-		}
+		//}
 
 
-		[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
-		public void PrimaryAndInterim(string fileName)
-		{
+		//[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
+		//public void CompletedBusMockupTest(string fileName)
+		//{
+		//	CopyInputFile(fileName);
+		//	//SimulatorFactory.MockUpRun = mockup;
+		//	XMLDeclarationVIFInputData input = null!;
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	using (var reader = XmlReader.Create(fileName))
+		//	{
+		//		input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
+		//		fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
+		//	}
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
 
-			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-			var sumWriter = new SummaryDataContainer(null);
-			var jobContainer = new JobContainer(sumWriter);
-			var input = JSONInputDataFactory.ReadJsonJob(fileName);
-			var _simulatorFactory =
-				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-			Clearfiles(fileWriter);
-			jobContainer.AddRuns(_simulatorFactory);
-			jobContainer.Execute(false);
-			jobContainer.WaitFinished();
-			CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: true, checkVif: false);
+		//}
 
-		}
+		//[TestCase(CompleteDiesel, TestName="CompleteDiesel")]
+  //      [TestCase(CompleteExempted, TestName = "CompleteExempted Bus")]
+  //      [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
+		//public void PrimaryAndCompletedTest(string fileName)
+		//{
+
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
+		//}
+
+
+		//[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
+		//public void PrimaryAndInterim(string fileName)
+		//{
+
+		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
+		//	var sumWriter = new SummaryDataContainer(null);
+		//	var jobContainer = new JobContainer(sumWriter);
+		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
+		//	var _simulatorFactory =
+		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
+		//	Clearfiles(fileWriter);
+		//	jobContainer.AddRuns(_simulatorFactory);
+		//	jobContainer.Execute(false);
+		//	jobContainer.WaitFinished();
+		//	CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
+
+		//}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_AT_Angledrive")]
@@ -546,7 +539,8 @@ namespace VectoMockupTest
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_CompletedBusInput, "Conventional", TestName = "Complete Conventional Bus Different Tyres")]
 		[TestCase(Conventional_PrimaryBus_DF, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_DualFuel")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_CompletedBusInput, "Conventional", TestName = "Complete ConventionalPrimaryBus_AT_Angledrive")]
-		[TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
+		[TestCase(Conventional_PrimaryBus, Conventional_CompletedBusInput_TypeApproval, "Conventional", TestName = "Complete Conventional Bus Type Approval")]
+        [TestCase(HEV_IEPC_S_PrimaryBus, HEV_CompletedBusInput, "IEPC-S", "HEV", TestName = "Complete HEV_IEPC_S_PrimaryBus")]
 		[TestCase(HEV_Px_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_Px_PrimaryBus")]
 		[TestCase(HEV_IHPC_PrimaryBus, HEV_CompletedBusInput, "Px", "HEV", TestName = "Complete HEV_IHPC_PrimaryBus")]
 		[TestCase(HEV_S2_PrimaryBus, HEV_CompletedBusInput, "S2", "HEV", TestName = "Complete HEV_S2_PrimaryBus")]
@@ -584,6 +578,14 @@ namespace VectoMockupTest
 			CheckFileExists(completeFileWriter, checkPrimaryMrf: true, checkVif: true, checkCif: true, checkMrf: true);
 
 			CheckElementTypeNameContains(completeFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
+
+			//var xmlComparer = new XMLElementComparer();
+			//xmlComparer.AddDocument(primaryBusInput, XmlDocumentType.DeclarationJobData);
+			//xmlComparer.AddDocument(completeFileWriter.XMLFullReportName, XmlDocumentType.ManufacturerReport);
+			//Assert.IsTrue(xmlComparer.AreEqual(primaryBusInput, "/tns:VectoInputDeclaration/v2.0:Vehicle/ZeroEmissionVehicle", 
+			//	completeFileWriter.XMLFullReportName, "/mrf:VectoOutput/mrf:Data/Vehicle/ZeroEmissionHDV"));
+
+
 		}
 
 
@@ -692,8 +694,6 @@ namespace VectoMockupTest
 			File.WriteAllText(path, str);
 			return path;
 		}
-
-
 		private string GenerateJsonJobCompleteBus(string primaryBusInput, string completeBusInput, string subDirectory)
 		{
 			subDirectory = Path.Combine("MockupReports", subDirectory, "Input");
@@ -811,7 +811,6 @@ namespace VectoMockupTest
 		}
 		
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/Tractor_4x2_vehicle-class-5_5_t_0.xml", TestName="Schema10Test1")]
-        
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-new_parameters-sample.xml",TestName="Schema10_new_parameters", Ignore = "Invalid combination for ecoroll")]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-sample_LNG.xml", TestName="Schema10_vehicle_sample_lng")]
 		public void Schema1_0_Test(string fileName, bool mockup = true)
@@ -840,8 +839,6 @@ namespace VectoMockupTest
 		}
 		
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.0/Tractor_4x2_vehicle-class-5_5_t_0.xml", TestName="Schema20Test1")]
-		// [TestCase(@"", TestName="")]
-		// [TestCase(@"", TestName="")]
 		public void Schema2_0_Test(string fileName, bool mockup = true)
 		{
 			
@@ -868,10 +865,7 @@ namespace VectoMockupTest
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
 		}
 
-
-
-
-        [TestCase("TestData/Generic Vehicles/Declaration Mode/40t Long Haul Truck/40t_Long_Haul_Truck.vecto", TestName="JSON_40TLonghaul")]
+		[TestCase("TestData/Generic Vehicles/Declaration Mode/40t Long Haul Truck/40t_Long_Haul_Truck.vecto", TestName="JSON_40TLonghaul")]
 		[TestCase("TestData/Generic Vehicles/Declaration Mode/Class9_RigidTruck_6x2/Class9_RigidTruck_DECL.vecto", TestName="JSON_RigidTruckClass9")]
         [NonParallelizable]
 		public void JSONTest(string fileName, bool mockup = true)
@@ -919,7 +913,7 @@ namespace VectoMockupTest
 			//TestName="ExemptedCompletedBus2")]
 		[TestCase(BasePathExempted + "exempted_heavyLorry.xml", 
 			false, 
-			false,
+			true,
 			true,
 			false, 
 			false, 
@@ -941,7 +935,8 @@ namespace VectoMockupTest
 		public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
 			bool checkPrimaryReport)
 		{
-			var inputProvider = _inputDataReader.Create(fileName);
+			CopyInputFile(fileName);
+            var inputProvider = _inputDataReader.Create(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -964,12 +959,101 @@ namespace VectoMockupTest
 			if (checkCif) Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
 		}
 
-		public void ExemptedCompleteBusTest()
+		[TestCase(BasePathExempted + "exempted_primaryBus.xml", 
+			BasePathExempted + "exempted_completedBus_input_full.xml", 
+			"Exempted",
+			TestName="ExemptedCompleteBus")]
+		public void ExemptedCompleteBusTest(string primaryInput, string completeInput, params string[] expectedType)
 		{
-			var primaryInput = BasePathExempted + "exempted_primaryBus.xml";
-			var completeInput = BasePathExempted + "exempted_completedBus_input_full.xml";
+			CopyInputFile(primaryInput, completeInput);
+            var completeBus = GenerateJsonJobCompleteBus(primaryBusInput: primaryInput,
+				completeBusInput: completeInput, TestContext.CurrentContext.Test.Name);
 
+			
+			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
+			// (approach: first simulate primary on its own to have an up-to-date VIF
+			// (no need to maintain this in the testfiles)
+
+
+			var completeJob = GenerateJsonJobCompleteBus(primaryInput, completeInput, TestContext.CurrentContext.Test.Name);
+			var completeBusinput = JSONInputDataFactory.ReadJsonJob(completeJob);
+			var completeFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeInput);
+			var completeSumWriter = new SummaryDataContainer(null);
+			var completeJobContainer = new JobContainer(completeSumWriter);
+
+			var completedSimulatorFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, completeBusinput, completeFileWriter, null, null, true);
+
+			Clearfiles(completeFileWriter); //remove files from previous test runs
+			completeJobContainer.AddRuns(completedSimulatorFactory);
+			completeJobContainer.Execute(false);
+			completeJobContainer.WaitFinished();
+
+			// assertions
+
+			CheckFileExists(completeFileWriter, checkPrimaryMrf: true, checkVif: true, checkCif: true, checkMrf: true);
+
+			//CheckElementTypeNameContains(completeFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 
 		}
-	}
+
+
+		[TestCase(BasePathExempted + "exempted_primaryBus.xml",
+			BasePathExempted + "exempted_completedBus_input_full.xml",
+			"Exempted",
+			TestName = "ExemptedCompletedBus")]
+        public void ExemptedCompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
+        {
+            CopyInputFile(completeBusInput, completeBusInput);
+			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
+            // (approach: first simulate primary on its own to have an up-to-date VIF
+            // (no need to maintain this in the testfiles)
+
+            // setting up testcase 
+            // run primary simulation
+            var inputProvider = _inputDataReader.Create(primaryBusInput);
+            var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, primaryBusInput);
+            var sumWriter = new SummaryDataContainer(null);
+            var jobContainer = new JobContainer(sumWriter);
+
+            var _simulatorFactory =
+                _simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
+
+            Clearfiles(fileWriter); //remove files from previous test runs
+            jobContainer.AddRuns(_simulatorFactory);
+            jobContainer.Execute(false);
+            jobContainer.WaitFinished();
+
+            CheckFileExists(fileWriter, checkCif: false, checkPrimaryReport: true, checkMrf: true);
+            //File.Delete(fileWriter.XMLFullReportName);
+            CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
+            // done preparing testcase...
+
+            // this is the actual test: run completed simulation
+
+            var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeBusInput, TestContext.CurrentContext.Test.Name);
+            var completedInputData = JSONInputDataFactory.ReadJsonJob(completedJob);
+            var completedFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
+            var completedSumWriter = new SummaryDataContainer(null);
+            var completedJobContainer = new JobContainer(completedSumWriter);
+
+            var completedSimulatorFactory =
+                _simFactoryFactory.Factory(ExecutionMode.Declaration, completedInputData, completedFileWriter, null, null, true);
+
+            Clearfiles(completedFileWriter); //remove files from previous test runs
+            completedJobContainer.AddRuns(completedSimulatorFactory);
+            completedJobContainer.Execute(false);
+            completedJobContainer.WaitFinished();
+
+            // assertions
+            //File.Delete(fileWriter.XMLPrimaryVehicleReportName);
+
+            CheckFileExists(completedFileWriter, checkCif: true, checkMrf: true, checkVif: true);
+
+            CheckElementTypeNameContains(completedFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
+        }
+
+
+
+    }
 }

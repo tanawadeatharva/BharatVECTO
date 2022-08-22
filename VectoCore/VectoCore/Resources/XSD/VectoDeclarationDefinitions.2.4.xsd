@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -15,7 +15,7 @@ Changelog:
     12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
                 Remove BoostingLimitations for HEV-IEPC-S
 	14.04.2022: Added new RetarderTypeType definition to cover AxlegearInputRetarder (used only for E3, S3, S-IEPC, E-IEPC)
--->
+	17.08.2022 Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
@@ -1806,17 +1806,17 @@ Changelog:
 			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:group ref="v2.4:Vehicle_GeneralParametersSequenceGroup"/>
-					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryHeavyLorryDeclarationType">
+					<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P251 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationHeavyLorryDeclarationType">
+					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationHeavyLorryDeclarationType">
+					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationMediumLorryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>

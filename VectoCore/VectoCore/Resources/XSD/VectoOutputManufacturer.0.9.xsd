@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -839,7 +839,7 @@
 					<xs:documentation>1.1.9. Vocational Vehicle</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="ZeroEmissionHDV" type="v1.0:ZeroEmissionVehicleType">
+			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
 				<xs:annotation>
 					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
 				</xs:annotation>
@@ -907,7 +907,7 @@
 	<xs:group name="CompletedBusSequenceGroup">
 		<xs:sequence>
 			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
-			<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 			<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 			<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
 			<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
@@ -1091,7 +1091,19 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted-LorryVehicleOutputType">
 		<xs:sequence>
-			<xs:group ref="mrf:LorryGeneralVehicleOutputGroup"/>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+				<xs:annotation>
+					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
+			<xs:element name="ZeroEmissionVehicle" type="v1.0:ZeroEmissionVehicleType">
+				<xs:annotation>
+					<xs:documentation>1.1.10. Zero emission heavy-duty vehicle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="VehicleTechnologyExempted"/>
 			<xs:element name="SumNetPower">
 				<xs:complexType>
@@ -1121,7 +1133,30 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted-CompletedBusVehicleOutputType">
 		<xs:sequence>
-			<xs:group ref="mrf:CompletedBusGeneralVehicleOutputGroup"/>
+			<xs:sequence>
+				<xs:element name="Manufacturers">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Step">
+								<xs:complexType>
+									<xs:group ref="mrf:ManufacturerGroup"/>
+									<xs:attribute name="Count" type="xs:int"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+				<xs:sequence>
+					<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="ClassBus" type="v2.4:RegisteredClassType"/>
+					<xs:element name="NumberPassengersUpperDeck" type="xs:int"/>
+					<xs:element name="NumberPassengersLowerDeck" type="xs:int"/>
+					<xs:element name="BodyworkCode" type="v2.4:VehicleCodeType"/>
+					<xs:element name="LowEntry" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:sequence>
 		</xs:sequence>
 	</xs:complexType>
 	<!--Components-->
@@ -1671,7 +1706,7 @@
 			<xs:group ref="mrf:ManufacturerGroup"/>
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:sequence>
-				<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
+				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 				<xs:element name="HybridElectricHDV"/>
 			</xs:sequence>
 		</xs:sequence>
@@ -1801,10 +1836,6 @@
 	<xs:group name="PEV-PrimaryBus-VehicleOutputTypeGroup">
 		<xs:sequence>
 			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
-			<xs:sequence>
-				<xs:element name="ZeroEmissionHDV" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV"/>
-			</xs:sequence>
 			<xs:group ref="mrf:PEVVehicleSequenceGroup"/>
 		</xs:sequence>
 	</xs:group>

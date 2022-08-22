@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var result = new List<XElement>() {
 				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ToXMLFormat(0)),
-				new XElement(_mrf + "ZeroEmissionHDV", vehicleData.ZeroEmissionVehicle),
+				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
 				new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV),
 				new XElement(_mrf + XMLNames.Vehicle_RegisteredClass, vehicleData.RegisteredClass.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Bus_NumberPassengersUpperDeck, vehicleData.NumberPassengerSeatsUpperDeck + vehicleData.NumberPassengersStandingUpperDeck),

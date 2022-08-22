@@ -17,7 +17,7 @@
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
 		<!-- optional -->
 		<SleeperCab>false</SleeperCab>

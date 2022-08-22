@@ -1171,7 +1171,7 @@ namespace TUGraz.VectoCommon.InputData
 			switch (type)
 			{
 				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
-				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.mechanically);
 				default: return null;
 			}
 		}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -841,14 +841,22 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted_LorryVehicleType">
 		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType"/>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>1.1.2. Vehicle model/Commercial Name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:group ref="GeneralVehicleSequenceGroup"/>
-			<xs:element name="Manufacturer"/>
-			<xs:element name="ManufacturerAddress"/>
-			<xs:element name="Model"/>
-			<xs:element name="CorrectedActualMass"/>
-			<xs:element name="SleeperCab"/>
+			<xs:element name="CorrectedActualMass" type="v1.0:VehicleCurbMassChassisType">
+				<xs:annotation>
+					<xs:documentation>1.1.8 Corrected actual mass [kg]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SleeperCab" type="v1.0:SleeperCabType"/>
 			<xs:element name="ZeroEmissionVehicle"/>
-			<xs:element name="HybridElectricHDV"/>
+			<xs:element name="VehicleTechnologyExempted"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Exempted_CompletedBusVehicleType">
@@ -856,9 +864,13 @@
 			<xs:group ref="ExemptedCompletedBusVehicleTypeGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="RatedPowerType">
-		<xs:restriction base="xs:int"/>
-	</xs:simpleType>
+	<xs:complexType name="RatedPowerType">
+		<xs:simpleContent>
+			<xs:extension base="xs:int">
+				<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 	<xs:simpleType name="LegislativeCategoryType">
 		<xs:union memberTypes="v2.4:LegislativeCategoryHeavyLorryDeclarationType v2.4:LegislativeCategoryMediumLorryDeclarationType v2.4:LegislativeCategoryPrimaryBusDeclarationType"/>
 	</xs:simpleType>
@@ -1103,7 +1115,6 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 				<xs:element name="ClassBus" type="xs:string"/>
 				<xs:element name="TotalNumberOfPassengers" type="xs:int"/>
 				<xs:element name="VehicleTypeApprovalNumber" type="xs:string" minOccurs="0"/>
@@ -1171,9 +1182,7 @@
 			<xs:element name="TotalRatedPropulsionPower">
 				<xs:complexType>
 					<xs:simpleContent>
-						<xs:extension base="RatedPowerType">
-							<xs:attribute name="unit" type="out:PowerUnitType" use="required"/>
-						</xs:extension>
+						<xs:extension base="RatedPowerType"/>
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
