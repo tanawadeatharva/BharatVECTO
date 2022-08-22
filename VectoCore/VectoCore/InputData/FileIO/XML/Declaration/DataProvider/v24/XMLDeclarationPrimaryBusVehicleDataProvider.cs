@@ -169,6 +169,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
+		public override bool OvcHev => true;
+
+
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 	}
 
@@ -194,6 +197,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 
 		#endregion
+
+		public override bool OvcHev => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------

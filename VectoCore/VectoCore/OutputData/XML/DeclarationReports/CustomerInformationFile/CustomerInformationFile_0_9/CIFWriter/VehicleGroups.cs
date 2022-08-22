@@ -219,10 +219,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "PEVArchitecture", vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
-			if (ovCc)
-			{
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
 			return result;
 		}
 
@@ -277,9 +273,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "PEVArchitecture",  multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
-			if (ovCc) {
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", multistep.JobInputData.PrimaryVehicle.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
 			return result;
 		}
 
