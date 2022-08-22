@@ -23,8 +23,6 @@
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E3</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>

@@ -17,8 +17,6 @@
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E4</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="v2.4:ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
