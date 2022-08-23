@@ -17,6 +17,7 @@
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
+			<DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<MakeDir Directories="$(DeployPath)"/>
@@ -62,6 +63,8 @@
 			<Net48Vecto Include="$(SolutionDir)VECTO\bin\Release\net48\nlog.config"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.exe"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\net48\*.dll*"/>
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net48\*.exe"/>
@@ -76,6 +79,8 @@
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net48\nlog.config"/>
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.exe*" />
 			<Net48HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net48\*.dll*" />
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.exe"/>
+			<Net48HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net48\*.dll*"/>
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.exe*" />
 			<Net48VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\MockupRelease\net48\*.dll*" />
 			<Net48VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net48\*.exe*" />
@@ -99,6 +104,9 @@
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
 			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0\*.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0\*.dll*"/>
+			<HashingToolRuntimes  Include="$(SolutionDir)HashingTool\bin\Release\net6.0\runtimes\**\*.*"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\*.dll"/>
 			<VectoMultistageRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\runtimes\**\*.*"/>
@@ -117,6 +125,9 @@
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
 			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0\*.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0\*.dll*"/>
+			<HashingToolRuntimes  Include="$(SolutionDir)HashingTool\bin\Release\net6.0\runtimes\**\*.*"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\*.dll"/>
 			<VectoMultistageRuntimes Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\runtimes\**\*.*"/>
