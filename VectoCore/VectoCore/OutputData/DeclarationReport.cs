@@ -164,8 +164,10 @@ namespace TUGraz.VectoCore.OutputData
 					//runData.VehicleData.VehicleClass,
 					PassengerCount = runData.VehicleData.PassengerCount
 				};
-
-				Results.Add(entry);
+				lock (Results) {
+					Results.Add(entry);
+                }
+				
 				DoStoreResult(entry, runData, modData);
 			}
 
@@ -174,9 +176,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected virtual IEnumerable<T> OrderedResults
 		{
-			get {
-				return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
-							.ThenBy(x => x.LoadingType);
+			get
+			{
+				lock (Results) {
+					return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
+						.ThenBy(x => x.LoadingType);
+				}
 			}
 		}
 
