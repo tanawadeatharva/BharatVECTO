@@ -19,7 +19,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
     <!-- Set to true for VectoCore to fix Ninject version conflicts-->
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <DefineTrace>false</DefineTrace>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <DebugType>none</DebugType>
