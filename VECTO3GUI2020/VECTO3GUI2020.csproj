@@ -10,7 +10,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net60-windows</TargetFrameworks>
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
@@ -25,8 +25,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" NoWarn="NU1701" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" NoWarn="NU1701" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
@@ -39,15 +39,10 @@
   </ItemGroup>
 
 	<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(
-         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
+		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
 				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
-
 			</ItemGroup>
-			<!--<PropertyGroup>
-				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>-->
 		</When>
 	</Choose>
 

@@ -12,7 +12,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
@@ -883,7 +883,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get
 			{
-				return _newVifCommand ?? (_newVifCommand = new Microsoft.Toolkit.Mvvm.Input.RelayCommand<bool>((b) => {
+				return _newVifCommand ?? (_newVifCommand = new RelayCommand<bool>((b) => {
 					var newVifViewModel = _multiStageViewModelFactory.GetCreateNewVifViewModel(b);
 					lock (_jobsLock) {
 						_jobs.Add(newVifViewModel);

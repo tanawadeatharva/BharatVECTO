@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
+
 using Ninject;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;

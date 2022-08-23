@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -117,7 +117,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IRelayCommand SaveInputDataCommand =>
 			_saveInputDataCommand ??
-			new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
+			new CommunityToolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
 				() => _vehicleInputDataFilePath != null);
 
 		public ICommand SaveInputDataAsCommand =>
