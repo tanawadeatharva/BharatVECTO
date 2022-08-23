@@ -29,13 +29,13 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net45|AnyCPU'">
-	  <DebugType>embedded</DebugType>
+	  <DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net48|AnyCPU'">
-	  <DebugType>embedded</DebugType>
+	  <DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupRelease|net6.0|AnyCPU'">
-	  <DebugType>embedded</DebugType>
+	  <DebugType>full</DebugType>
 	</PropertyGroup>
 
 	<Choose>
