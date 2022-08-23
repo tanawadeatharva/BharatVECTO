@@ -874,13 +874,13 @@
 					<xs:documentation>1.1.13 Sleeper cab</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="PEVArchitecture"/>
+			<xs:element name="PEVArchitecture" type="xs:string"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="HEVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="HEVArchitecture" type="v2.4:ArchitectureIDType"/>
+			<xs:element name="HEVArchitecture" type="xs:string"/>
 			<xs:group ref="mrf:OffVehicleChargingGroup"/>
 			<xs:element name="ADAS" type="mrf:HEVADASType"/>
 			<xs:element name="BoostingLimitations" type="mrf:BoostingLimitationsType" minOccurs="0"/>
@@ -1118,7 +1118,7 @@
 	</xs:complexType>
 	<xs:complexType name="Exempted-PrimaryBusVehicleOutputType">
 		<xs:sequence>
-			<xs:group ref="mrf:PrimaryBusGeneralVehicleOutputGroup"/>
+			<xs:group ref="mrf:ExemptedPrimaryBusGeneralVehicleOutputGroup"/>
 			<xs:element name="VehicleTechnologyExempted" type="xs:string"/>
 			<xs:element name="SumNetPower">
 				<xs:complexType>
@@ -1707,8 +1707,15 @@
 			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
 			<xs:sequence>
 				<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-				<xs:element name="HybridElectricHDV"/>
+				<xs:element name="HybridElectricHDV" type="xs:boolean"/>
 			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="ExemptedPrimaryBusGeneralVehicleOutputGroup">
+		<xs:sequence>
+			<xs:group ref="mrf:ManufacturerGroup"/>
+			<xs:group ref="mrf:GeneralVehicleOutputGroup"/>
+			<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:complexType name="TorqueConverterType">

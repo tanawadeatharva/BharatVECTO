@@ -86,6 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IReportOutputGroup GetPEV_lorryVehicleOutputGroup();
 		IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetExemptedPrimaryBusGeneralVehicleOutputGroup();
 		IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup();
 
 

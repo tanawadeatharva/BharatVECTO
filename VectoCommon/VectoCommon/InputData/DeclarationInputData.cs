@@ -155,14 +155,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool HybridElectricHDV { get; }
 
-		bool DualFuelVehicle { get; }
+        bool DualFuelVehicle { get; }
 
-		Watt MaxNetPower1 { get; }
+        Watt MaxNetPower1 { get; }
 
 		Watt MaxNetPower2 { get; }
 
 		string ExemptedTechnology { get; }
 
+		// --- end
 
 		RegistrationClass? RegisteredClass { get; }
 

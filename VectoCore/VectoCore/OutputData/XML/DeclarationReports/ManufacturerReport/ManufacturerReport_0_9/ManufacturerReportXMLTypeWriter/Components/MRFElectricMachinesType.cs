@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue?.DigestValue ?? ""),
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
 					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
-					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)));
+					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ConvertToKiloWatt().ToXMLFormat(0)));
 
 				var voltageLevels = new XElement(_mrf + "VoltageLevels");
 				electricMachineSystem.Add(voltageLevels);
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 							: null,
 						new XElement(_mrf + "MaxContinuousPower",
 							(electricMotorVoltageLevel.ContinuousTorque *
-							electricMotorVoltageLevel.ContinuousTorqueSpeed)
+							electricMotorVoltageLevel.ContinuousTorqueSpeed).ConvertToKiloWatt()
 							.ToXMLFormat(0)));
 
 

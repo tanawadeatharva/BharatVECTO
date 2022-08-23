@@ -19,6 +19,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var torqueConverterInputData = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
+			if (torqueConverterInputData == null) {
+				return null;
+			}
 			return new XElement(_mrf + XMLNames.Component_TorqueConverter,
 				new XElement(_mrf + XMLNames.Component_Model, torqueConverterInputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationNumber,
