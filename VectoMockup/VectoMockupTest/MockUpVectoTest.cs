@@ -104,6 +104,7 @@ namespace VectoMockupTest
 		protected const string PEV_E3_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E3.xml";
 		protected const string PEV_E4_PrimaryBus = BasePath + @"PrimaryBus\PEV_primaryBus_E4.xml";
 		protected const string PEV_IEPC_PrimaryBus = BasePath + @"PrimaryBus\IEPC_primaryBus.xml";
+		protected const string PEV_IEPC_std_PrimaryBus = BasePathMockup + @"PrimaryBus\IEPC_primaryBus_StdValues.xml";
 
 		protected const string PEV_E2_PrimaryBus_StdEM = BasePathMockup + @"PrimaryBus\PEV_primaryBus_AMT_E2_EMStd.xml";
 		protected const string PEV_E2_PrimaryBus_StdBat = BasePathMockup + @"PrimaryBus\PEV_primaryBus_AMT_E2_BatteryStd.xml";
@@ -311,6 +312,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, TestName = "PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, TestName = "PEV_E4_PrimaryBus")]
         [TestCase(PEV_IEPC_PrimaryBus, TestName="PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, TestName = "PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "PEV_E2_PrimaryBus_EM-Std")]
 		[TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "PEV_E2_PrimaryBus_Battery-Std")]
 		[TestCase(Conventional_PrimaryBus_DF, TestName = "ConventionalPrimaryBus_DualFuel")]
@@ -439,6 +441,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E3_Bus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E4_Bus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_Bus")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC-std_Bus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus_EM-Std")]
 		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
 		{
@@ -504,6 +507,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus_EM-Std")]
 		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
 		{
@@ -550,6 +554,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", "PEV", TestName = "Complete PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", "PEV", TestName = "Complete PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus_EM-Std")]
 		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
@@ -603,6 +608,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
 		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
 		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{

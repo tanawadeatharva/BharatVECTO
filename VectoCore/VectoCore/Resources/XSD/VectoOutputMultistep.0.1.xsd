@@ -1467,7 +1467,7 @@
 							<xs:documentation>P466 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelMeasuredType" maxOccurs="unbounded"/>
+					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelType" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve">
 						<xs:complexType>
 							<xs:sequence>
@@ -1486,7 +1486,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemVoltageLevelMeasuredType">
+	<xs:complexType name="ElectricMachineSystemVoltageLevelType">
 		<xs:complexContent>
 			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
@@ -1521,53 +1521,6 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxTorqueCurve" type="vif:ElectricMachineSystemMaxTorqueCurveType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ElectricMachineSystemVoltageLevelStandardValuesType">
-		<xs:complexContent>
-			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
-				<xs:sequence>
-					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
-						<xs:annotation>
-							<xs:documentation>P459 - [Nm]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
-						<xs:annotation>
-							<xs:documentation>P460 - [1/min]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
-						<xs:annotation>
-							<xs:documentation>P461 - [Nm]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="TestSpeedOverloadTorque" type="v2.3:TestSpeedType">
-						<xs:annotation>
-							<xs:documentation>P462 - [1/min]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="OverloadDuration" type="v2.3:OverloadDurationType">
-						<xs:annotation>
-							<xs:documentation>P463 - [s]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="MaxTorqueCurve">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Entry" type="vif:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="PowerMap">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Entry" type="vif:ElectricMachineSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1914,21 +1867,15 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="IEPCMeasuredDataDeclarationType">
+	<xs:complexType name="IEPCDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractVIFIEPCDataType">
 				<xs:sequence>
 					<xs:group ref="vif:IEPCCommonParametersSequenceGroup"/>
-					<xs:element name="CertificationMethod">
+					<xs:element name="CertificationMethod" type="v2.3:IEPCCertificationMethodType">
 						<xs:annotation>
 							<xs:documentation>P484 - enum</xs:documentation>
 						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="v2.3:IEPCCertificationMethodType">
-								<xs:enumeration value="Measured for complete component"/>
-								<xs:enumeration value="Measured for EM and standard values for other components"/>
-							</xs:restriction>
-						</xs:simpleType>
 					</xs:element>
 					<xs:group ref="vif:IEPCPowerRatingsSequenceGroup"/>
 					<xs:element name="DifferentialIncluded" type="xs:boolean">
@@ -1959,7 +1906,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Gears" type="vif:AbstractIEPCGearsDeclarationType"/>
-					<xs:element name="VoltageLevel" type="vif:IEPCSystemVoltageLevelMeasuredType" minOccurs="2" maxOccurs="unbounded"/>
+					<xs:element name="VoltageLevel" type="vif:IEPCSystemVoltageLevelType" maxOccurs="unbounded"/>
 					<xs:element name="DragCurve" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
@@ -2009,11 +1956,11 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="IEPCSystemVoltageLevelMeasuredType">
+	<xs:complexType name="IEPCSystemVoltageLevelType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractElectricMachineSystemVoltageLevelType">
 				<xs:sequence>
-					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType">
+					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P500 - [V]</xs:documentation>
 						</xs:annotation>
@@ -2044,20 +1991,6 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="MaxTorqueCurve" type="v2.3:ElectricMachineSystemMaxTorqueCurveType"/>
-					<xs:element name="PowerMap" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Entry" type="v2.3:IEPCSystemPowerMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
-							</xs:sequence>
-							<xs:attribute name="gear" use="required">
-								<xs:simpleType>
-									<xs:restriction base="xs:int">
-										<xs:minInclusive value="1"/>
-									</xs:restriction>
-								</xs:simpleType>
-							</xs:attribute>
-						</xs:complexType>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
