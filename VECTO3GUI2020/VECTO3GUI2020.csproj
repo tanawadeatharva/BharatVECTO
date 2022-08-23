@@ -10,7 +10,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <TargetFrameworks>net60-windows</TargetFrameworks>
+    <TargetFrameworks>net48;net60-windows</TargetFrameworks>
     <DefineConstants />
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
@@ -54,7 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\GUILabels.Designer.cs">
+
+	  <Compile Update="Properties\GUILabels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GUILabels.resx</DependentUpon>
@@ -101,4 +102,24 @@
     <Resource Include="Resources\Images\JRC-About.png" />
     <Resource Include="Resources\Images\VECTO-About.png" />
   </ItemGroup>
+
+
+    <!--Workauround for build error-->
+	<!--https://github.com/dotnet/wpf/pull/6680-->
+    <!--https://github.com/dotnet/wpf/pull/6680#issuecomment-1183455941-->
+	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
+
+		<RemoveDuplicates Inputs="@(Analyzer)">
+			<Output
+				TaskParameter="Filtered"
+				ItemName="FilteredAnalyzer"/>
+		</RemoveDuplicates>
+
+		<ItemGroup>
+			<Analyzer Remove="@(Analyzer)" />
+			<Analyzer Include="@(FilteredAnalyzer)" />
+		</ItemGroup>
+	</Target>
+
+    <!--END-->
 </Project>
