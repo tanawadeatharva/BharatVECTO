@@ -17,6 +17,7 @@
 		<PropertyGroup>
 			<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 			<DeployPath>$(SolutionDir)Deploy\$(CurrentDate)-VECTO-$(Version)\</DeployPath>
+			<DeployPath Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)Deploy\$(CurrentDate)-VECTO_MOCKUP-$(Version)\</DeployPath>
 		</PropertyGroup>
   		<RemoveDir Directories="$(SolutionDir)Deploy" Condition="Exists('$(SolutionDir)Deploy')"/>
 		<MakeDir Directories="$(DeployPath)"/>
@@ -40,6 +41,7 @@
 			<!-- All files for net45 -->
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.exe*"/>
 			<Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\*.dll*"/>
+			<!-- <Net45VECTO Include="$(SolutionDir)VECTO\bin\MockupRelease\net45\nlog.config"/> -->
 			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.exe*"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net45\*.dll*"/>
 			<Net45HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net45\*.exe*"/>
@@ -130,7 +132,7 @@
 
 		<ItemGroup>
 			<!-- All files for the VECTO starters -->
-			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net45\VECTO.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\MockupDeploy\net45\VECTO.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net45\VECTOMultistage.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net45\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net45\HashingTool.exe" />
@@ -171,6 +173,11 @@
 		<Copy SourceFiles="@(VectoConfigurationSample)" DestinationFolder="$(DeployPath)"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Mission Profiles Directory.txt" DestinationFiles="$(DeployPath)Mission Profiles\!! README !!.TXT"/>
 		<Copy SourceFiles="$(SolutionDir)\Documentation\User Manual Source\README for Declaration Directory.txt" DestinationFiles="$(DeployPath)Declaration\!! README !!.TXT"/>
-		<ZipDirectory SourceDirectory="$(SolutionDir)Deploy\" DestinationFile="$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip" Overwrite="true"/>
+
+		<PropertyGroup>
+			<DestinationZip>$(SolutionDir)$(CurrentDate)-VECTO-$(Version).zip</DestinationZip>
+			<DestinationZip Condition="'$(Configuration)'=='MockupDeploy'">$(SolutionDir)$(CurrentDate)-VECTO_MOCKUP-$(Version).zip</DestinationZip>
+		</PropertyGroup>
+		<ZipDirectory SourceDirectory="$(SolutionDir)Deploy\" DestinationFile="$(DestinationZip)" Overwrite="true"/>
 	</Target>
 </Project>
