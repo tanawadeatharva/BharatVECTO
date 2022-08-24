@@ -78,7 +78,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				//	return null;
 
 				if (_followUpSimulatorFactoryCreator != null) {
-					return _followUpSimulatorFactoryCreator.GetNextFactory();
+					var retVal = _followUpSimulatorFactoryCreator.GetNextFactory();
+					retVal.SerializeVectoRunData = SerializeVectoRunData;
+
+					return retVal;
 				} else {
 					return null;
 				}

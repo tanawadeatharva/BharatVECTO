@@ -22,7 +22,7 @@ namespace VECTO3GUI2020.Helper.Converter
 			var attributes =
 				valueType.GetField(value.ToString())?.GetCustomAttributes( typeof(GuiLabelAttribute),false);
 
-			if (!(attributes?.First() is GuiLabelAttribute attribute)) {
+			if (!(attributes?.FirstOrDefault() is GuiLabelAttribute attribute)) {
 				return value;
 			} else {
 				return attribute.Label;
