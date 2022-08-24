@@ -76,15 +76,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			get
 			{
-				//if (!CreateFollowUpSimulatorFactory)
-				//	return null;
+			
 
-				if (_followUpSimulatorFactoryCreator != null) {
-					return _followUpSimulatorFactoryCreator.GetNextFactory();
-				} else {
-					return null;
-				}
-				//return _followingSimulatorFactoryCreator?.Invoke();
+				return _followUpSimulatorFactoryCreator?.GetNextFactory();
+
 
 			}
 		}
