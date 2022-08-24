@@ -163,49 +163,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				}
 				case IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData: {
 
-					throw new VectoException("Why are we here ? ");
-					
-                        //Create Temporary Writer to hold the files only in Memory
-#pragma warning disable 162
-						var tempOutputWriter = new TempFileOutputWriter(ReportWriter, ReportType.DeclarationReportManufacturerXML);
-                        var originalReportWriter = ReportWriter;
-                        ReportWriter = tempOutputWriter;
-                        var tempPrimaryReport = new XMLDeclarationReportPrimaryVehicle(tempOutputWriter);
-
-
-                        RunDataFactory = CreateRunDataReader(multiStagePrimaryAndStageInputData.PrimaryVehicle, tempPrimaryReport);
-
-
-                        CreateFollowUpSimulatorFactory = true;
-                        Func<ISimulatorFactory> _followingSimulatorFactoryCreator = () =>
-                        {
-                            try
-                            {
-                                var primaryInputData = _xmlInputDataReader.CreateDeclaration(tempOutputWriter
-                                    .GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader());
-
-                                var vifInputData = new XMLDeclarationVIFInputData(
-                                    primaryInputData as IMultistepBusInputDataProvider,
-                                    multiStagePrimaryAndStageInputData.StageInputData);
-
-                                var manStagesCount =
-                                    vifInputData.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
-
-                                originalReportWriter.NumberOfManufacturingStages = manStagesCount;
-
-                                return _simFactoryFactory.Factory(_mode, vifInputData, originalReportWriter, null,
-                                    vtpReport, Validate);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"Failed to create additional Simulation run: {ex.Message}");
-                                return null;
-                            }
-                        };
-                        return;
-#pragma warning restore 162
-
-					}
+					throw new VectoException("Simulation should be split up in separate steps");
+				}
 				default:
 					throw new VectoException("Unknown InputData for Declaration Mode!");
 			}
