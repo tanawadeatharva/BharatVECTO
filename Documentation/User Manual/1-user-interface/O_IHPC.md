@@ -51,7 +51,7 @@ Max. Drive and Max. Generation Torque Curve
 :   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The max drive and max generation torque have to be provided for two different voltage levels.
 
 Electric Power Consumption Map
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.viepco)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels and all gears.
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.viepco)](#electric-motor-power-map-.vemo)). The power map has to be provided for two different voltage levels and all gears.
 
 Voltage Level Low/High
 :    Applicable voltage level for the electric power consumption map and max drive/generation torque curve

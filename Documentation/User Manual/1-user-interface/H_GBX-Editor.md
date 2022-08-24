@@ -71,7 +71,7 @@ Automated Manual Transmission - Hybrid Electric vehicle
 :   Gearshift is handled by the hybrid controller. Shift lines (calculated in the same way as for conventional vehicles) are used as upper and lower boundary for allowed ICE operating points.
 
 Automated Manual Transmission - Pure Electric vehicle
-:   Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#FFOOO)
+:   Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#pev-gear-shift-model)
 
 Automatic Transmission - Conventional vehicle
 :   Efficiency shift. The calculation of gearshift lines and the gearshift rules are [described here](#shift-strategy-apt-gearshift-rules)
@@ -80,7 +80,7 @@ Automatic Transmission - Hybrid Electric vehicle
 :   Gearshift is handled by the hybrid controller. Shift lines (calculated in the same way as for conventional vehicles) are used as upper and lower boundary for allowed ICE operating points.
 
 Automatic Transmission (APT-N) - Pure Electric vehicle
-:    Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#FFOOO)
+:    Efficiency shift based strategy. The calculation of gearshift lines and the gearshift rules are [described here](#pev-gear-shift-model)
 
 <div class="engineering">
 

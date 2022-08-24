@@ -9,12 +9,14 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort
+	public class ElectricMotor : StatefulProviderComponent<ElectricMotorState, ITnOutPort, ITnInPort, ITnOutPort>, 
+		IPowerTrainComponent, IElectricMotor, ITnOutPort, ITnInPort, IUpdateable
 	{
 
 		protected internal IElectricSystem ElectricPower;
@@ -161,7 +163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEmSpeed = (prevEmSpeed + emSpeed) / 2;
 			var inertiaTorqueEm = avgEmSpeed.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(avgEmSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
+				: Formulas.InertiaPower(emSpeed, PreviousState.EMSpeed, ModelData.Inertia, dt) / avgEmSpeed;
 
 			var maxDriveTorqueEmMap = GetMaxDriveTorque(voltage, dt, avgEmSpeed, gear);
 			var maxRecuperationTorqueEmMap = GetMaxRecuperationTorque(voltage, dt, avgEmSpeed, gear);
@@ -576,6 +578,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return emSpeed / ModelData.RatioADC;
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is ElectricMotor e && Position == e.Position) {
+				ThermalBuffer = e.ThermalBuffer;
+				DeRatingActive = e.DeRatingActive;
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 
 	public class ElectricMotorState // : SimpleComponentState
@@ -603,5 +619,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public Watt ElectricPowerToBattery;
+
+		public ElectricMotorState Clone() => (ElectricMotorState)MemberwiseClone();
 	}
 }

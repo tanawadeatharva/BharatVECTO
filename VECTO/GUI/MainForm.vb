@@ -29,16 +29,14 @@
 '   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 '
 
-Imports System.Collections.Generic
+Imports System.Collections.Concurrent
 Imports System.ComponentModel
 Imports System.IO
-Imports System.Linq
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
 Imports System.Threading
 Imports System.Xml
-Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
@@ -50,7 +48,6 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -274,6 +271,10 @@ Public Class MainForm
         _genCheckAllLock = False
         _genChecked = 0
 
+        Dim logMessageTimer As New Windows.Forms.Timer(components)
+        logMessageTimer.Interval = 100
+        AddHandler logMessageTimer.Tick, AddressOf TimerLogMessages_Tick
+        logMessageTimer.Start()
 
         'Load Tabs properly (otherwise problem with ListViews)
         For x = 0 To TabControl1.TabCount - 1
@@ -1530,9 +1531,7 @@ lbFound:
         lv0.SubItems.Add(Now.ToString("HH:mm:ss.ff"))
         lv0.SubItems.Add(source)
 
-        If LvMsg.Items.Count > 9999 Then LvMsg.Items.RemoveAt(0)
-
-        LogFile.WriteToLog(id, msg & vbTab & source)
+        Task.Run(Sub() LogFile.WriteToLog(id, msg & vbTab & source))
 
         Select Case id
 
@@ -1561,10 +1560,26 @@ lbFound:
             lv0.Tag = link
         End If
 
+        _logItemQueue.Enqueue(lv0)
+    End Sub
 
-        LvMsg.Items.Add(lv0)
+    Private ReadOnly _logItemQueue As New ConcurrentQueue(Of ListViewItem)
 
-        lv0.EnsureVisible()
+    Private Sub TimerLogMessages_Tick(sender As Object, e As EventArgs)
+        If Not _logItemQueue.IsEmpty Then
+
+            LvMsg.BeginUpdate()
+            Dim item As ListViewItem = Nothing
+            While _logItemQueue.TryDequeue(item)
+                LvMsg.Items.Add(item)
+                If LvMsg.Items.Count > 9999 Then
+                    LvMsg.Items.RemoveAt(0)
+                End If
+            End While
+
+            LvMsg.Items(LvMsg.Items.Count - 1).EnsureVisible()
+            LvMsg.EndUpdate()
+        End If
     End Sub
 
 

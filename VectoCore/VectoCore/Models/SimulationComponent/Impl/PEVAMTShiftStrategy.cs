@@ -352,10 +352,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio /
-						GearboxModelData.Gears[currentGear.Gear].Ratio *
-						GearboxModelData.Gears[tryNextGear.Gear].Ratio))
-					.Cast<PerSecond>();
+				var estimatedEngineSpeed = vehicleSpeedPostShift * (totalTransmissionRatio /
+						GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear.Gear].Ratio);
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
@@ -597,9 +595,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			TestContainerSuperCap?.Initialize(DataBus.BatteryInfo.StateOfCharge);
 
-			if (TestContainerElectricSystemCharger != null) {
-				TestContainerElectricSystemCharger.ChargingPower = (DataBus.ElectricSystemInfo.ChargePower);
-			}
+			TestContainerElectricSystemCharger?.UpdateFrom(DataBus.ElectricSystemInfo.ChargePower);
+
 
 			//var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
 			TestContainerElectricMotor.ThermalBuffer =

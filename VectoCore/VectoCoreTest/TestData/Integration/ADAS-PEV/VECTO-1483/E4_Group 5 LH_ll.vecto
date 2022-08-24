@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehicleFile": "E4_Group5_LH_ll.vveh",
-    "Padd_electric": 3540.0,
+    "Padd_electric": 0.0,
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,

@@ -154,10 +154,10 @@ public class JSONFileWriter : IOutputFileWriter
 			var currentGear = new Dictionary<string, object> {
 				{ JsonKeys.Gearbox_Gear_Ratio, gear.Ratio }
 			};
-			if(gear.MaxOutputShaftSpeed != null)
+			if(gear.MaxOutputShaftTorque != null)
 				currentGear.Add(JsonKeys.Gearbox_Gear_MaxOutShaftTorque, gear.MaxOutputShaftTorque.Value());
 			if(gear.MaxOutputShaftSpeed != null)
-				currentGear.Add(JsonKeys.Gearbox_Gear_MaxOutShaftSpeed, gear.MaxOutputShaftSpeed.Value());
+				currentGear.Add(JsonKeys.Gearbox_Gear_MaxOutShaftSpeed, gear.MaxOutputShaftSpeed.AsRPM);
 			gears.Add(currentGear);
 		}
 

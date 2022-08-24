@@ -47,8 +47,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
-		IVehicle, IMileageCounter, IFvInPort,
-		IDriverDemandOutPort
+		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort, IUpdateable
 	{
 		internal readonly VehicleData ModelData;
 
@@ -280,6 +279,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				$"slope_res: {SlopeResistance}, " +
 				$"air_drag: {AirDragResistance}, " +
 				$"traction force: {VehicleTractionForce}";
+
+			public VehicleState Clone() => (VehicleState)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is Vehicle v) {
+				PreviousState = v.PreviousState.Clone();
+				MaxVehicleSpeed = v.MaxVehicleSpeed;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

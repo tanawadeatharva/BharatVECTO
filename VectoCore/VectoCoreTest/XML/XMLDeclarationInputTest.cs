@@ -859,7 +859,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lookup = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
 
 			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
-			Assert.AreEqual(1000, lookup.PowerDemand.Value());
+			Assert.AreEqual(350, lookup.PowerDemand.Value());
 		}
 
 		[TestCase]

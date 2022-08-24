@@ -14,7 +14,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort
+	public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		protected readonly BatteryData ModelData;
 
@@ -270,8 +270,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt MaxDischargePower;
 			public Watt BatteryLoss;
 			public Second PulseDuration;
+			public State Clone() => (State)MemberwiseClone();
 		}
 
 
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is Battery b) {
+				PreviousState = b.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

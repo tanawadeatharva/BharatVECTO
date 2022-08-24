@@ -133,6 +133,7 @@ Public Class HybridStrategyParamsForm
                 pnCostFactorSoCExponent.Enabled = True
                 pnGenset.Enabled = False
             Case VectoSimulationJobType.SerialHybridVehicle
+            case VectoSimulationJobType.IEPC_S
                 pnEquivFactor.Enabled = False
                 pnEquivFactorCharge.Enabled = False
                 pnMinSoC.Enabled = True
@@ -193,6 +194,7 @@ Public Class HybridStrategyParamsForm
                 tbCostFactorSoCExponent.Text = If(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
 
             Case VectoSimulationJobType.SerialHybridVehicle
+            Case VectoSimulationJobType.IEPC_S
                 tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
                 tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
 

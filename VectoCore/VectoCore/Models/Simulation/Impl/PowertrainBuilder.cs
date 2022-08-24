@@ -1627,28 +1627,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class SimpleCharger : IElectricChargerPort
+	public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
 		#region Implementation of IElectricChargerPort
+		private Watt _chargingPower;
+		public SimpleCharger() => _chargingPower = 0.SI<Watt>();
+		public Watt Initialize() => _chargingPower = 0.SI<Watt>();
+		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun) => _chargingPower;
+		#endregion
 
-		public Watt ChargingPower { get; set; }
-
-		public SimpleCharger()
+		#region Implementation of IUpdateable
+		public bool UpdateFrom(object other)
 		{
-			ChargingPower = 0.SI<Watt>();
-		}
+			if (other is IElectricSystemInfo es) {
+				_chargingPower = es.ChargePower;
+				return true;
+			}
 
-		public Watt Initialize()
-		{
-			ChargingPower = 0.SI<Watt>();
-			return ChargingPower;
-		}
+			if (other is Watt w) {
+				_chargingPower = w;
+				return true;
+			}
 
-		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
-		{
-			return ChargingPower;
+			return false;
 		}
-
 		#endregion
 	}
 
@@ -1854,6 +1856,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return true;
 		}
+
+		public bool RequestAfterGearshift { get; set; }
 
 		#endregion
 	}

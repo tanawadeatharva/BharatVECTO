@@ -130,9 +130,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio /
-						GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear.Gear].Ratio))
-					.Cast<PerSecond>();
+				var estimatedEngineSpeed = vehicleSpeedPostShift * (totalTransmissionRatio /
+						GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear.Gear].Ratio);
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}

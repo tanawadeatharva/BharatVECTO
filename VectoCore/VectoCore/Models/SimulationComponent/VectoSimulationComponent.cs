@@ -146,5 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			OutTorque = outTorque;
 			OutAngularVelocity = outAngularVelocity;
 		}
+
+		public SimpleComponentState Clone() => (SimpleComponentState)MemberwiseClone();
 	}
 }
