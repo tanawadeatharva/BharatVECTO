@@ -200,7 +200,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 				}
 
-				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
+				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData, false);
 
 
 				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer, null, null);
@@ -365,6 +365,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IMultistepBusInputDataProvider MultistageJobInputData => this;
 
+		public bool SimulateResultingVIF => throw new NotImplementedException();
 
 		#endregion
 

@@ -1017,6 +1017,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private readonly IXMLInputDataReader _xmlInputReader;
 		protected internal string PrimaryInputDataFile;
 		protected internal string CompletedInputDataFile;
+		protected internal bool RunSimulation;
 
 		public JSONInputDataCompletedBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -1026,6 +1027,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
+			RunSimulation = Body.GetEx<bool>(JsonKeys.BUS_RunSimulation);
+			
 
             //PrimaryVehicle = CreateReader(primaryInputData);
 
@@ -1071,6 +1074,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
 		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
+
+		public bool SimulateResultingVIF => RunSimulation;
 
 		#endregion
 	}
@@ -1212,9 +1217,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			:
 			null;
 
+		public bool SimulateResultingVIF => _simulateResultingVif;
 
 
 		private bool? _completed;
+		private bool _simulateResultingVif;
 
 		public bool? Completed
 		{
@@ -1232,6 +1239,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
 			_primaryVehicleInputDataPath = PathHelper.GetAbsolutePath(filename, _primaryVehicleInputDataPath);
+			_simulateResultingVif = Body.GetEx<bool>(JsonKeys.BUS_RunSimulation);
 			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStep);
 			_stageInputDataPath = PathHelper.GetAbsolutePath(filename, _stageInputDataPath);
 			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);

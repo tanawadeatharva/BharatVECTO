@@ -222,15 +222,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private readonly IVehicleDeclarationInputData _vehicleInput;
 
 		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
-			IVehicleDeclarationInputData vehicleInput)
+			IVehicleDeclarationInputData vehicleInput) : this(multistageJobInputData, vehicleInput, false) { }
+
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
+		IVehicleDeclarationInputData vehicleInput, bool runSimulation)
 		{
 			_multistageJobInputData = multistageJobInputData;
 			_vehicleInput = vehicleInput;
+			_simulateResultingVif = runSimulation;
 		}
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
 		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+
+		private readonly bool _simulateResultingVif;
+		bool IMultistageVIFInputData.SimulateResultingVIF => _simulateResultingVif;
 
 		public DataSource DataSource { get; }
 	}

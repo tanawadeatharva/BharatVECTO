@@ -684,7 +684,8 @@ namespace VectoMockupTest
 			};
 			var body = new Dictionary<string, object>() {
 				{ "PrimaryVehicleResults", Path.GetRelativePath(subDirectory, Path.GetFullPath(vif)) },
-				{ "CompletedVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(completeBusInput)) }
+				{ "CompletedVehicle", Path.GetRelativePath(subDirectory, Path.GetFullPath(completeBusInput)) },
+				{ "RunSimulation", true}
 			};
 			var json = new Dictionary<string, object>() {
 				{"Header", header},
