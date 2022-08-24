@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -16,14 +17,18 @@ namespace TUGraz.VectoCore.OutputData.XML
     {
 		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly ICustomerInformationFileFactory _cifFactory;
+		private readonly IVIFReportFactory _vifFactory;
+		private readonly IVIFReportInterimFactory _vifInterimFactory;
 
 		#region Implementation of IXMLDeclarationReportFactory
 
 		
-		public XMLDeclarationReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory)
+		public XMLDeclarationReportFactory(IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory, IVIFReportFactory vifFactory, IVIFReportInterimFactory vifInterimFactory)
 		{
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;
+			_vifFactory = vifFactory;
+			_vifInterimFactory = vifInterimFactory;
 		}
 		public IDeclarationReport CreateReport(IInputDataProvider input, IOutputDataWriter outputWriter)
 		{
@@ -64,14 +69,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			if (multistageVifInputData.VehicleInputData == null)
 			{
-				var reportCompleted = new XMLDeclarationReportCompletedVehicle(outputDataWriter)
+				var reportCompleted = new XMLDeclarationReportCompletedVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
 				{
 					PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
 				};
 				return reportCompleted;
 			}
 			else {
-				var report = new XMLDeclarationReportMultistageBusVehicle(outputDataWriter);
+				var report = new XMLDeclarationReportInterimVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory, _vifInterimFactory);
 				return report;
 			}
 		}
