@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "VehicleFile": "Class5_E4_PCC123.vveh",
-    "Padd_electric": 3540.0,
+    "Padd_electric": 0.0,
     "VACC": "Truck.vacc",
     "EngineStopStartAtVehicleStopThreshold": 2.0,
     "EngineStopStartMaxOffTimespan": 120.0,
