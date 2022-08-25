@@ -510,8 +510,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	public class XMLElectricMotorIEPCIInputDataProviderV01 : XMLElectricMotorIEPCIInputDataProviderV23
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		public const string XSD_TYPE = "IEPCMeasuredDataDeclarationType";
+		public const string XSD_TYPE = "IEPCDataDeclarationType";
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 		public XMLElectricMotorIEPCIInputDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLElectricMotorIEPCIInputDataProviderV23
+
+		protected override void ValidateGearCount()
+		{
+		}
+
+		#endregion
 	}
 }

@@ -16,8 +16,6 @@
 		<AngledriveType>Separate Angledrive</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>E-IEPC</ArchitectureID>
-		<OvcHev>true</OvcHev>
-		<MaxChargingPower>11</MaxChargingPower>
 		<ADAS xsi:type="ADAS_IEPC_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
@@ -256,7 +254,6 @@
 						<CompressorDrive>electrically</CompressorDrive>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
-						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>
 					<HVAC>
 						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

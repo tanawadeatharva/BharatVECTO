@@ -337,7 +337,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPrimaryBusGeneralVehicleOutputGroup();
         }
 
-        public IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup()
+		public IReportOutputGroup GetExemptedPrimaryBusGeneralVehicleOutputGroup()
+		{
+			return _manufacturerReportFactoryImplementation.GetExemptedPrimaryBusGeneralVehicleOutputGroup();
+		}
+
+		public IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup()
         {
             return _manufacturerReportFactoryImplementation.GetHEV_PrimaryBusVehicleOutputGroup();
         }

@@ -718,6 +718,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IReportOutputGroup>().To<PrimaryBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusGeneralVehicleOutputGroup());
 
+			Bind<IReportOutputGroup>().To<ExemptedPrimaryBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetExemptedPrimaryBusGeneralVehicleOutputGroup());
+
 			Bind<IReportOutputGroup>().To<HEVPrimaryBusVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusVehicleOutputGroup());
 

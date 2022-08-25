@@ -108,10 +108,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
+			var dualFuel = vehicleData.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
 			return new List<XElement>() {
 				new XElement(_cif + "WasteHeatRecovery",
 					vehicleData.Components.EngineInputData.WHRType != WHRType.None),
-				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, vehicleData.DualFuelVehicle)
+				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel)
 			};
 		}
 
@@ -131,10 +132,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				throw new VectoException("Completed Bus CIF requires bus input data");
 			}
 			var vehicleData = multistep.JobInputData.PrimaryVehicle.Vehicle;
+			var dualFuel = vehicleData.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
 			return new List<XElement>() {
 				new XElement(_cif + "WasteHeatRecovery",
 					vehicleData.Components.EngineInputData.WHRType != WHRType.None),
-				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, vehicleData.DualFuelVehicle)
+				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel)
 			};
 		}
 
@@ -190,8 +192,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var result = new List<XElement>();
 			var ovCc = inputData.JobInputData.Vehicle.OvcHev;
 			result.AddRange(_cifFactory.GetConventionalLorryVehicleSequenceGroupWriter().GetElements(inputData));
+			var vehicleData = inputData.JobInputData.Vehicle;
+			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
 			result.AddRange(new List<XElement>() {
-				new XElement(_cif + "HEVArchitecture", inputData.JobInputData.Vehicle.ArchitectureID.GetLabel()),
+				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
 			if (ovCc) {
@@ -219,10 +223,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "PEVArchitecture", vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
-			if (ovCc)
-			{
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
 			return result;
 		}
 
@@ -245,8 +245,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var result = new List<XElement>();
 			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OvcHev;
 			//result.AddRange(_cifFactory.GetConventionalCompletedBusVehicleSequenceGroupWriter().GetElements(inputData));
+			var vehicleData = multistep.JobInputData.PrimaryVehicle.Vehicle;
+			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
 			result.AddRange(new List<XElement>() {
-				new XElement(_cif + "HEVArchitecture", multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
+				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
 			if (ovCc) {
@@ -277,9 +279,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "PEVArchitecture",  multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
 			});
-			if (ovCc) {
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", multistep.JobInputData.PrimaryVehicle.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
 			return result;
 		}
 
@@ -314,13 +313,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	
 			var consolidatedVehicle = completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var dualFuel = completedBusData.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
+
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + XMLNames.Component_Model, consolidatedVehicle.Model),
 				new XElement(_cif + XMLNames.CorrectedActualMass, consolidatedVehicle.CurbMassChassis.ValueAsUnit("kg", 0)),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicle.ZeroEmissionVehicle),
 				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, consolidatedVehicle.HybridElectricHDV),
 				new XElement(_cif + "WasteHeatRecovery", completedBusData.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.WHRType != WHRType.None),
-				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, consolidatedVehicle.DualFuelVehicle),
+				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, consolidatedVehicle.RegisteredClass.ToXMLFormat()),
 				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck 
 																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck 

@@ -325,32 +325,6 @@
 					</di:Reference>
 				</v2.0:Signature>
 			</Gearbox>
-			<TorqueConverter>
-				<!-- optional -->
-				<v2.0:Data xsi:type="v1.0:TorqueConverterDataDeclarationType" id="TQ-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
-					<Manufacturer>Some Manufacturer</Manufacturer>
-					<Model>Some Model</Model>
-					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-					<Date>2017-02-15T11:00:00Z</Date>
-					<AppVersion>TC CalcApp 123</AppVersion>
-					<CertificationMethod>Standard values</CertificationMethod>
-					<Characteristics>
-						<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
-						<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
-						<Entry speedRatio="0.9000" torqueRatio="0.90" inputTorqueRef="200.00"/>
-					</Characteristics>
-				</v2.0:Data>
-				<v2.0:Signature>
-					<di:Reference URI="#TQ-1234">
-						<di:Transforms>
-							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-						</di:Transforms>
-						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>P8mKieew0dWJFSIPapRXdUf2FsYG4ONvolD5kjkYEkw=</di:DigestValue>
-					</di:Reference>
-				</v2.0:Signature>
-			</TorqueConverter>
 			<Angledrive>
 				<!-- optional -->
 				<v2.0:Data id="agl-vi2Oak2N" xsi:type="v2.0:AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">

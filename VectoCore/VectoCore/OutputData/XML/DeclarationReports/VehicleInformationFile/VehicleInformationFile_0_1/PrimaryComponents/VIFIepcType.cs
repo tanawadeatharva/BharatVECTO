@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + XMLNames.XSIType, "IEPCMeasuredDataDeclarationType"),
+						new XAttribute(_xsi + XMLNames.XSIType, "IEPCDataDeclarationType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, iepc.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, iepc.Model),
 						new XElement(_vif + XMLNames.Component_CertificationNumber, iepc.CertificationNumber),
@@ -94,14 +94,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			foreach (var voltageEntry in voltageData) {
 
 				var voltage = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
-					new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
+					voltageEntry.VoltageLevel == null 
+						? null 
+						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
 					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageEntry.ContinuousTorque.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageEntry.OverloadTime.ToXMLFormat(2)),
-					GetMaxTorqueCurve(voltageEntry.FullLoadCurve),
-					GetPowerMap(voltageEntry.PowerMap)
+					GetMaxTorqueCurve(voltageEntry.FullLoadCurve)
+					//GetPowerMap(voltageEntry.PowerMap)
 				);
 
 				voltageLevels.Add(voltage);

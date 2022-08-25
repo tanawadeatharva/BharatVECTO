@@ -17,7 +17,6 @@
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E2</ArchitectureID>
-		<OvcHev>false</OvcHev>
 		<ADAS xsi:type="ADAS_PEV_Type">
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>

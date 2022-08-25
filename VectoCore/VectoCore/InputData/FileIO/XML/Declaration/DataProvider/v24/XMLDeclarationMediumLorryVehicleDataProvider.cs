@@ -183,6 +183,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
+		public override bool OvcHev => true;
+
 		#endregion
 	}
 
@@ -212,6 +214,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
+
+		public override bool OvcHev => true;
+
 
 		#endregion
 	}

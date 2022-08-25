@@ -234,9 +234,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
+			var vehicle = inputData.JobInputData.Vehicle;
+			var dualFuel = vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
-				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
+				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
@@ -401,7 +403,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
-				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetExemptedPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
 				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
 			);

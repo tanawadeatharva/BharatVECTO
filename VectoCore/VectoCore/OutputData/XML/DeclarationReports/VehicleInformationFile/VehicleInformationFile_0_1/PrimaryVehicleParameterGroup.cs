@@ -94,9 +94,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			var result = new List<XElement> {
 				new XElement(_vif + XMLNames.Vehicle_OvcHev, vehicle.OvcHev),
-				vehicle.OvcHev
-					? new XElement(_vif + XMLNames.Vehicle_MaxChargingPower, vehicle.MaxChargingPower.ToXMLFormat(0))
-					: null,
 			};
 			return result;
 		}
