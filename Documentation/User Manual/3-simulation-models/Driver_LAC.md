@@ -34,7 +34,7 @@ Parameters in [Job File](#job-file):
 
 In engineering mode the parameters can be freely chosen while in declaration mode the default values are used.
 
-![](pics/Vecto-UI_LAC.svg)
+![](pics/Vecto-UI_LAC.png)
 
 #### Decision Factor for target velocity lookup (DF~vel~)
 
