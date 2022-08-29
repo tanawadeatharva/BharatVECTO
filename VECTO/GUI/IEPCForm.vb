@@ -289,8 +289,8 @@ Public Class IEPCForm
 		tbInertia.Text = ""
 		cbDifferentialIncluded.Checked = False
 		cbDesignTypeWheelMotor.Checked = False
-		tbNumberOfDesignTypeWheelMotor.Text = ""
-		tbThermalOverload.Text = ""
+        tbNumberOfDesignTypeWheelMotor.Text = "0"
+        tbThermalOverload.Text = ""
 
 		tbVoltage1.Text = ""
 		tbContinousTorque1.Text = ""
