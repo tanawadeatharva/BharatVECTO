@@ -1109,24 +1109,23 @@ lbFound:
             Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
             Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-            sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
+           
+                sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
                                   New VectoProgress With {.Target = "Status",
                                      .Message = $"Duration: {duration:0}s, Current Progress: {(sumProgress/progress.Count):P} ({ _
                                      String.Join(", ", progress.Select(Function(pair) $"{pair.Value.Progress,4:P}"))})"})
 
-            Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
-                    progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
-                    ToDictionary(
-                        Function(pair) pair.Key, Function(pair) pair.Value)
+            Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) = New Dictionary(Of Integer,JobContainer.ProgressEntry)(
+                progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value))
+                    
             PrintRuns(justFinished, fileWriters)
             finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
             Thread.Sleep(100)
         End While
 
-        Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) =
-                jobContainer.GetProgress().Where(
-                    Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
-                ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+        Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = New Dictionary(Of Integer,JobContainer.ProgressEntry)(jobContainer.GetProgress().Where(
+            Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value))
+                
         PrintRuns(remainingRuns, fileWriters)
 
         finishedRuns.Clear()
@@ -1206,9 +1205,10 @@ lbFound:
     Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
                                  fileWriters As Dictionary(Of Integer, FileOutputWriter))
         For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
-            Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+            Dim modFilename As String = if(fileWriters.ContainsKey(p.Key) , fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
                                                                               p.Value.RunSuffix +
-                                                                              If(Cfg.Mod1Hz, "_1Hz", ""))
+                                                                              If(Cfg.Mod1Hz, "_1Hz", "")) , "")
+
 
             Dim runName As String = $"{p.Value.RunName} {p.Value.CycleName} {p.Value.RunSuffix}"
 
