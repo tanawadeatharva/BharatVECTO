@@ -8,7 +8,7 @@ using VECTO3GUI2020.ViewModel.Interfaces.Document;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Document
 {
-	public class SimulationOnlyDeclarationJob : ViewModelBase, IDocumentViewModel, IJobViewModel
+	public class SimulationOnlyDeclarationJob : ViewModelBase, IJobViewModel
 	{
 		#region Implementation of IDocumentViewModel
 

@@ -472,6 +472,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 								case IMultistagePrimaryAndStageInputDataProvider primaryAndStage:
 									mode = ExecutionMode.Declaration;
 									break;
+								case IMultistageVIFInputData vifInputData:
+									mode = ExecutionMode.Declaration;
+									break;
 								default:
 									input = null;
 
