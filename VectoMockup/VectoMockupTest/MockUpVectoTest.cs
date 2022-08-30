@@ -469,12 +469,12 @@ namespace VectoMockupTest
 
 			CheckFileExists(fileWriter, CifShouldExist: false, PrimaryReportShouldExist: true, MrfShouldExist: true);
 			File.Delete(fileWriter.XMLFullReportName);
-			CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
+			var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName)[0];
 			// done preparing testcase...
 
 			// this is the actual test: run completed simulation
 
-			var interimJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, interimCopy, TestContext.CurrentContext.Test.Name);
+			var interimJob = GenerateJsonJobCompletedBus(primaryVif, interimCopy, TestContext.CurrentContext.Test.Name);
 			var interimInputData = JSONInputDataFactory.ReadJsonJob(interimJob);
 			var interimFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, interimBusInput);
 			
@@ -1076,12 +1076,12 @@ namespace VectoMockupTest
 
             CheckFileExists(fileWriter, CifShouldExist: false, PrimaryReportShouldExist: true, MrfShouldExist: true);
             //File.Delete(fileWriter.XMLFullReportName);
-            CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
+            var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName)[0];
             // done preparing testcase...
 
             // this is the actual test: run completed simulation
 
-            var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeCopy, TestContext.CurrentContext.Test.Name);
+            var completedJob = GenerateJsonJobCompletedBus(primaryVif, completeCopy, TestContext.CurrentContext.Test.Name);
             var completedInputData = JSONInputDataFactory.ReadJsonJob(completedJob);
             var completedFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
             var completedSumWriter = new SummaryDataContainer(null);
