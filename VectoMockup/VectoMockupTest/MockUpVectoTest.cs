@@ -447,7 +447,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus_EM-Std")]
 		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
 		{
-			CopyInputFile(interimBusInput);
+			var interimCopy = CopyInputFile(interimBusInput)[0];
 			// VIF + interim input =>  VIF
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
@@ -474,7 +474,7 @@ namespace VectoMockupTest
 
 			// this is the actual test: run completed simulation
 
-			var interimJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, interimBusInput, TestContext.CurrentContext.Test.Name);
+			var interimJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, interimCopy, TestContext.CurrentContext.Test.Name);
 			var interimInputData = JSONInputDataFactory.ReadJsonJob(interimJob);
 			var interimFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, interimBusInput);
 			
@@ -561,13 +561,13 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus_EM-Std")]
 		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
-			CopyInputFile(primaryBusInput, completeBusInput);
+			var copied = CopyInputFile(primaryBusInput, completeBusInput);
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
 			// (approach: first simulate primary on its own to have an up-to-date VIF
 			// (no need to maintain this in the testfiles)
 
 			
-			var completeJob = GenerateJsonJobCompleteBus(primaryBusInput, completeBusInput, TestContext.CurrentContext.Test.Name);
+			var completeJob = GenerateJsonJobCompleteBus(copied[0], copied[1], TestContext.CurrentContext.Test.Name);
 			var completeBusinput = JSONInputDataFactory.ReadJsonJob(completeJob);
 			var completeFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
 			var completeSumWriter = new SummaryDataContainer(null);
@@ -615,7 +615,7 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
 		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
-			CopyInputFile(completeBusInput);
+			var completeCopy = CopyInputFile(completeBusInput)[0];
 			CopyInputFile(primaryBusInput);
 			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
 			// (approach: first simulate primary on its own to have an up-to-date VIF
@@ -638,12 +638,12 @@ namespace VectoMockupTest
 
 			CheckFileExists(fileWriter, CifShouldExist: false, PrimaryReportShouldExist: true, MrfShouldExist: true);
 			//File.Delete(fileWriter.XMLFullReportName);
-			CopyInputFile(fileWriter.XMLPrimaryVehicleReportName);
+			var primaryVif = CopyInputFile(fileWriter.XMLPrimaryVehicleReportName)[0];
 			// done preparing testcase...
 
 			// this is the actual test: run completed simulation
 
-			var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeBusInput, TestContext.CurrentContext.Test.Name);
+			var completedJob = GenerateJsonJobCompletedBus(primaryVif, completeCopy, TestContext.CurrentContext.Test.Name);
 			var completedInputData = JSONInputDataFactory.ReadJsonJob(completedJob);
 			var completedFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
 			var completedSumWriter = new SummaryDataContainer(null);
@@ -855,7 +855,8 @@ namespace VectoMockupTest
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
 		}
-		
+
+		[Ignore("1.0 Schema ignored")]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/Tractor_4x2_vehicle-class-5_5_t_0.xml", TestName="Schema10Test1")]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-new_parameters-sample.xml",TestName="Schema10_new_parameters", Ignore = "Invalid combination for ecoroll")]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion1.0/vecto_vehicle-sample_LNG.xml", TestName="Schema10_vehicle_sample_lng")]
@@ -1013,9 +1014,9 @@ namespace VectoMockupTest
 			TestName="ExemptedCompleteBus")]
 		public void ExemptedCompleteBusTest(string primaryInput, string completeInput, params string[] expectedType)
 		{
-			CopyInputFile(primaryInput, completeInput);
-            var completeBus = GenerateJsonJobCompleteBus(primaryBusInput: primaryInput,
-				completeBusInput: completeInput, TestContext.CurrentContext.Test.Name);
+			var copied = CopyInputFile(primaryInput, completeInput);
+			var completeCopy = copied[1];
+
 
 			
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
@@ -1023,7 +1024,7 @@ namespace VectoMockupTest
 			// (no need to maintain this in the testfiles)
 
 
-			var completeJob = GenerateJsonJobCompleteBus(primaryInput, completeInput, TestContext.CurrentContext.Test.Name);
+			var completeJob = GenerateJsonJobCompleteBus(primaryInput, completeCopy, TestContext.CurrentContext.Test.Name);
 			var completeBusinput = JSONInputDataFactory.ReadJsonJob(completeJob);
 			var completeFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeInput);
 			var completeSumWriter = new SummaryDataContainer(null);
@@ -1052,7 +1053,8 @@ namespace VectoMockupTest
 			TestName = "ExemptedCompletedBus")]
         public void ExemptedCompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
         {
-            CopyInputFile(completeBusInput, completeBusInput);
+            var copied = CopyInputFile(primaryBusInput, completeBusInput);
+			var completeCopy = copied[1];
 			// completed: VIF + complete input (full) =>  VIF , MRF Completed, CIF Completed
             // (approach: first simulate primary on its own to have an up-to-date VIF
             // (no need to maintain this in the testfiles)
@@ -1079,7 +1081,7 @@ namespace VectoMockupTest
 
             // this is the actual test: run completed simulation
 
-            var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeBusInput, TestContext.CurrentContext.Test.Name);
+            var completedJob = GenerateJsonJobCompletedBus(fileWriter.XMLPrimaryVehicleReportName, completeCopy, TestContext.CurrentContext.Test.Name);
             var completedInputData = JSONInputDataFactory.ReadJsonJob(completedJob);
             var completedFileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, completeBusInput);
             var completedSumWriter = new SummaryDataContainer(null);
