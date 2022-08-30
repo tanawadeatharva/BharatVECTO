@@ -123,7 +123,7 @@
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
 			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0-windows\runtimes\**\*.*"/>
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\*.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\HashingTool.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\*.dll*"/>
 			<HashingToolRuntimes  Include="$(SolutionDir)HashingTool\bin\Release\net6.0\runtimes\**\*.*"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\Release\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
@@ -144,7 +144,7 @@
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\hashingcmd.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\*.dll"/>
 			<HashingToolRuntimes Include="$(SolutionDir)HashingCmd\bin\Release\net6.0\runtimes\**\*.*"/>
-			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\*.exe"/>
+			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\HashingTool.*" Exclude="*.dev.json"/>
 			<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\*.dll*"/>
 			<HashingToolRuntimes  Include="$(SolutionDir)HashingTool\bin\Release\net6.0-windows\runtimes\**\*.*"/>
 			<VectoMultistage Include="$(SolutionDir)VECTO3GUI2020\bin\MockupRelease\net6.0-windows\VECTOMultistage.*" Exclude="*.dev.json"/>
