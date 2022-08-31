@@ -13,7 +13,7 @@
     "GearboxFile": "Axlegear.vgbx",
     "TCU": "../Common/ShiftParameters.vtcu",
     "HybridStrategyParams": "../Common/Hybrid_Parameters.vhctl", 
-    "Padd_electric": 3540.0,
+    "Padd_electric": 0.0,
 
     "VACC": "../Common/Truck.vacc",
 
