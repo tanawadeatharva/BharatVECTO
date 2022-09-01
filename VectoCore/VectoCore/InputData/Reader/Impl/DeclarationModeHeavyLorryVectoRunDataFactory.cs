@@ -233,9 +233,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 
 
-
-	public class DeclarationModeHeavyLorryRunDataFactory
+	/// <summary>
+	/// This class is just used to improve the readability
+	/// </summary>
+	public abstract class DeclarationModeHeavyLorryRunDataFactory
 	{
+		
 		
 		public abstract class LorryBase : IVectoRunDataFactory
 		{
@@ -248,7 +251,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			#endregion
 		}
-
 
 		public class Conventional : LorryBase
 		{
@@ -266,6 +268,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		public class HEV_S4 : LorryBase
+		{
+
+		}
+
+		public class HEV_S_IEPC : LorryBase
 		{
 
 		}
@@ -295,8 +302,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		}
 
+		public class PEV_E2 : LorryBase
+		{
 
+		}
 
+		public class PEV_E3 : LorryBase
+		{
+
+		}
+
+		public class PEV_E4 : LorryBase
+        {
+        }
+
+        public class PEV_E_IEPC : LorryBase
+		{
+
+		}
 	}
 
 

@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 {
 	public interface IInternalRunDataFactoryFactory
 	{
+		IVectoRunDataFactory CreateDeclarationCompletedBusRunDataFactory(VehicleCategory vehicleType, VectoSimulationJobType jobType,
+			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 	}
@@ -60,10 +62,19 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
 		{
+			var vehicle = multistageVifInputData.MultistageJobInputData.PrimaryVehicleData.Vehicle;
 			if (multistageVifInputData.VehicleInputData == null) {
-				return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-					multistageVifInputData.MultistageJobInputData,
-					report);
+				var ihpc = (vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+				var iepc = (vehicle.Components?.IEPC != null);
+				return _internalFactory.CreateDeclarationRunDataFactory(vehicle.VehicleCategory,
+					vehicle.VehicleType,
+					vehicle.ArchitectureID,
+					vehicle.ExemptedVehicle, iepc, ihpc);
+
+
+				//return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
+				//	multistageVifInputData.MultistageJobInputData,
+				//	report);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
@@ -72,21 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider, IDeclarationReport report)
 		{
-			//var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
-			//if (vehicleCategory.IsLorry()) {
-			//	return new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
-			//}
-
-			//if (vehicleCategory.IsBus())
-			//	switch (declDataProvider.JobInputData.Vehicle.VehicleCategory)
-			//	{
-			//		case VehicleCategory.HeavyBusCompletedVehicle:
-			//			return new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, report);
-			//		case VehicleCategory.HeavyBusPrimaryVehicle:
-			//			return new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, report);
-			//		default:
-			//			break;
-			//	}
+			//TODO: encapsulate arguments into object
 			var vehicle = declDataProvider.JobInputData.Vehicle;
 			try {
 				

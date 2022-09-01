@@ -291,5 +291,39 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return simulationRunData;
 		}
 
+
+	}
+
+
+	public abstract class DeclarationModeCompletedBusRunDataFactory
+	{
+		public abstract class CompletedBusBase : IVectoRunDataFactory
+		{
+			#region Implementation of IVectoRunDataFactory
+
+			public IEnumerable<VectoRunData> NextRun()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+		}
+
+
+		public class Conventional : CompletedBusBase { }
+		public class HEV_S2 : CompletedBusBase { }
+		public class HEV_S3 : CompletedBusBase { }
+		public class HEV_S4 : CompletedBusBase { }
+		public class HEV_S_IEPC : CompletedBusBase { }
+		public class HEV_P1 : CompletedBusBase { }
+		public class HEV_P2 : CompletedBusBase { }
+		public class HEV_P2_5 : CompletedBusBase { }
+		public class HEV_P3 : CompletedBusBase { }
+		public class HEV_P4 : CompletedBusBase { }
+		public class PEV_E1 : CompletedBusBase { }
+		public class PEV_E2 : CompletedBusBase { }
+		public class PEV_E3 : CompletedBusBase { }
+		public class PEV_E4 : CompletedBusBase { }
+		public class PEV_E_IEPC : CompletedBusBase { }
 	}
 }
