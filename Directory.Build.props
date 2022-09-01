@@ -18,7 +18,8 @@
     <Copyright>Copyright © 2012-$([System.DateTime]::UtcNow.Year)</Copyright>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <!-- Set to true for VectoCore to fix Ninject version conflicts-->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <DefineTrace>false</DefineTrace>
     <RemoveIntegerChecks>true</RemoveIntegerChecks>
     <DebugType>none</DebugType>

@@ -160,6 +160,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
 		public GenSetData GenSet { get; set; }
+		[JsonIgnore]
+		public IDeclarationInputDataProvider InputData { get; internal set; }
 
 		public class AuxData
 		{

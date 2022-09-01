@@ -117,5 +117,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool OvcHev { get; }
 
 		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 	}
 }

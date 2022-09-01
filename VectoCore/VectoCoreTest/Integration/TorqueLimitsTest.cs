@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputDataProvider = JSONInputDataFactory.ReadJsonJob(GearboxLimitJobDecl_865);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
 
-			var run = factory.DataReader.NextRun().First();
+			var run = factory.RunDataFactory.NextRun().First();
 
 			var engineData = run.EngineData;
 
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputDataProvider = JSONInputDataFactory.ReadJsonJob(GearboxLimitJobDecl_800);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
 
-			var run = factory.DataReader.NextRun().First();
+			var run = factory.RunDataFactory.NextRun().First();
 
 			var engineData = run.EngineData;
 
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputDataProvider = JSONInputDataFactory.ReadJsonJob(VehicleLimitJobDecl_910);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
 
-			var run = factory.DataReader.NextRun().First();
+			var run = factory.RunDataFactory.NextRun().First();
 
 			var engineData = run.EngineData;
 
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputDataProvider = JSONInputDataFactory.ReadJsonJob(VehicleLimitJobDecl_850);
 			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
 
-			var run = factory.DataReader.NextRun().First();
+			var run = factory.RunDataFactory.NextRun().First();
 
 			var engineData = run.EngineData;
 

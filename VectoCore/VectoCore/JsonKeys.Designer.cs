@@ -70,6 +70,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RunSimulation.
+        /// </summary>
+        internal static string BUS_RunSimulation {
+            get {
+                return ResourceManager.GetString("BUS_RunSimulation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         internal static string Completed {

@@ -1,5 +1,6 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 
 namespace VECTO3GUI2020.ViewModel.Implementation
 {

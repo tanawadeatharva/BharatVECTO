@@ -9,17 +9,17 @@ xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
 xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
   <PrimaryVehicle xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
     <Data id="VEH-4cb168560c0d4b3d886d" xsi:type="PrimaryVehicleDataType">
-      <Vehicle xsi:type="VehicleExemptedPrimaryBusType">
-        <ManufacturerPrimaryVehicle>Some Manufacturer</ManufacturerPrimaryVehicle>
-        <ManufacturerAddressPrimaryVehicle>Infinite Loop 1</ManufacturerAddressPrimaryVehicle>
+      <Vehicle xsi:type="Exempted_VehicleVIFType">
+        <Manufacturer>Some Manufacturer</Manufacturer>
+        <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
         <Model>Sample Bus Model</Model>
         <VIN>VEH-1234567890</VIN>
         <Date>2017-02-15T11:00:00Z</Date>
-        <LegislativeCategory>N2</LegislativeCategory>
+        <LegislativeCategory>M3</LegislativeCategory>
         <ChassisConfiguration>Bus</ChassisConfiguration>
         <AxleConfiguration>6x2</AxleConfiguration>
         <Articulated>false</Articulated>
-        <TechnicalPermissibleMaximumLadenMass unit="kg">15400.0</TechnicalPermissibleMaximumLadenMass>
+        <TechnicalPermissibleMaximumLadenMass>15400</TechnicalPermissibleMaximumLadenMass>
         <ZeroEmissionVehicle>true</ZeroEmissionVehicle>
         <SumNetPower unit="W">350000</SumNetPower>
         <Technology>Fuel cell vehicle</Technology>

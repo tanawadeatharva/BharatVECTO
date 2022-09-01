@@ -69,4 +69,5 @@ Public Class MockVehicleInputData
     Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
     Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
     Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
+    Public ReadOnly Property VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 End Class

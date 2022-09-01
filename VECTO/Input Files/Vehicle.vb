@@ -439,8 +439,9 @@ Public Class Vehicle
 
 	Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
 	Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
+    Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
 
-	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
+    Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IAxlesEngineeringInputData.AxlesEngineering
 		Get
 			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()
@@ -935,6 +936,7 @@ end Property
 	Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
 	Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
 	Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
+	Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
 	Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
 		Get

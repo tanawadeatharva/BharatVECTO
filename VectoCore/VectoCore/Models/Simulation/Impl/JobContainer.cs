@@ -362,13 +362,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			try {
 				_runContainerMap.TryGetValue(runContainerId, out var runContainer);
 				var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory();
-				if (additionalSimulatorFactory == null)
+				if (additionalSimulatorFactory == null) {
 					return;
+				}
+					
 
 				AddRuns(additionalSimulatorFactory);
 				Execute(_multithreaded);
 			} catch (Exception ex) {
+				
 				Log.Error(ex.Message);
+				throw;
 			}
 			
 		}

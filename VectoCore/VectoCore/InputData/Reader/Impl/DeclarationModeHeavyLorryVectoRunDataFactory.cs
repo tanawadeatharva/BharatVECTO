@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		DeclarationDataAdapterHeavyLorry _dao = new DeclarationDataAdapterHeavyLorry();
 
 		internal DeclarationModeTruckVectoRunDataFactory(
-			IDeclarationInputDataProvider dataProvider, IDeclarationReport report) : base(dataProvider, report)
+			IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true) : base(dataProvider, report, checkJobType)
 		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -97,6 +97,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//if (InitException != null) {
 			//	throw InitException;
 			//}
+			
+
+
+
+
 
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
 				yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
@@ -111,18 +116,49 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> VectoRunDataTruckNonExempted()
 		{
+			switch (InputDataProvider.JobInputData.JobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return VectoRunDataConventionalTruckNonExempted();
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return VectoRunDataBatteryElectricVehicle();
+				case VectoSimulationJobType.EngineOnlySimulation:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			return VectoRunDataConventionalTruckNonExempted();
+
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataBatteryElectricVehicle()
+		{
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			foreach (var mission in _segment.Missions) {
+				foreach (var loading in mission.Loadings)
+				{
+					var simulationRunData = CreateVectoRunData(vehicle, 0, mission, loading);
+					yield return simulationRunData;
+				}
+				
+			}
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataConventionalTruckNonExempted()
+		{
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 
-			for(var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
-				
+			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 				foreach (var mission in _segment.Missions) {
 					if (mission.MissionType.IsEMS() &&
 						engine.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
 						continue;
 					}
+
 					foreach (var loading in mission.Loadings) {
 						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
 						yield return simulationRunData;
@@ -136,13 +172,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
 		{
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				return new VectoRunData {
+				var runData =  new VectoRunData {
+					InputData = InputDataProvider,
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
 					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(), null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad, Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
 					InputDataHash = InputDataProvider.XMLHash
 				};
+				runData.VehicleData.InputData = vehicle;
+				return runData;
 			}
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
@@ -180,9 +219,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				InputDataHash = InputDataProvider.XMLHash,
 				SimulationType = SimulationType.DistanceCycle,
 				GearshiftParameters = _gearshiftData,
+				InputData = InputDataProvider
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+			simulationRunData.VehicleData.InputData = vehicle;
 			return simulationRunData;
 		}
 

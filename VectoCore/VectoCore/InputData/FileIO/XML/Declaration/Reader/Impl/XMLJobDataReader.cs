@@ -137,11 +137,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 	
-	public class XMLJobDataMultistagePrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
+	public class XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VehiclePIFType";
+		public const string XSD_TYPE = "ConventionalVehicleVIFType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private readonly IXMLPrimaryVehicleBusJobInputData _primaryBusJobData;
 
-		public XMLJobDataMultistagePrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+		public XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
 			: base(busJobData, jobNode)
 		{
 			_primaryBusJobData = busJobData;
@@ -173,11 +173,86 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLJobDataMultistageExemptedPrimaryVehicleReaderV01 : XMLJobDataMultistagePrimaryVehicleReaderV01
+	public class XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "HEV-Px_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "HEV-Sx_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataMultistage_HEV_IEPC_S_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "HEV-IEPC-S_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_HEV_IEPC_S_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "PEV_Ex_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public const string XSD_TYPE = "IEPC_VehicleVIFType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataMultistageExemptedPrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "VehicleExemptedPrimaryBusType";
+		public new const string XSD_TYPE = "Exempted_VehicleVIFType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 

@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}VTPReport.xsd"),
 					new XElement(
 						rootNS + "Data",
-						new XAttribute(xsi + "type", "VTPReportDataType"),
+						new XAttribute(xsi + XMLNames.XSIType, "VTPReportDataType"),
 						new XElement(GeneralPart),
 						new XElement(VehiclePart),
 						new XElement(DataIntegrityPart),
@@ -355,7 +355,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress));
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				VehiclePart.Add(
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
-						new XAttribute(xsi + "type", "ComponentsTruckFWDType"),
+						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckFWDType"),
 						GetEngineDescription(modelData.EngineData, fuelModes),
 						GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData.AxleGear.Ratio),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
@@ -385,7 +385,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				VehiclePart.Add(
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
-						new XAttribute(xsi + "type", "ComponentsTruckType"),
+						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
 						GetEngineDescription(modelData.EngineData, fuelModes),
 						GetGearboxDescription(modelData.GearboxData),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),

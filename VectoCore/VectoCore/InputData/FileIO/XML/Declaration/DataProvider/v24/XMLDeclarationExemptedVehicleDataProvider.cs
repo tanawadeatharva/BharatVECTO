@@ -11,11 +11,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 {
-	public abstract class AbtractXMLDeclarationExemptedVehicleDataProviderV24 : XMLDeclarationVehicleDataProviderV20
+	public abstract class AbstractXMLDeclarationExemptedVehicleDataProviderV24 : XMLDeclarationVehicleDataProviderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
-		public AbtractXMLDeclarationExemptedVehicleDataProviderV24(
+		public AbstractXMLDeclarationExemptedVehicleDataProviderV24(
 			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override VehicleCategory VehicleCategory => VehicleCategory.HeavyBusPrimaryVehicle;
+		public override VehicleCategory VehicleCategory => VehicleCategoryHelper.Parse(GetString(XMLNames.ChassisConfiguration));
 
 		public override bool ExemptedVehicle => true;
 
@@ -45,7 +45,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool VocationalVehicle => false;
 
-		public override bool? SleeperCab => false;
+		public override bool? SleeperCab =>
+			ElementExists(XMLNames.Vehicle_SleeperCab) && GetBool(XMLNames.Vehicle_SleeperCab);
 
 		public override TankSystem? TankSystem => null;
 
@@ -78,10 +79,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override double RetarderRatio => 0;
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+
+		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 	}
 
 	// ---------------------------------------------------------------------------------------
-	public class XMLDeclarationExemptedHeavyLorryDataProviderV24 : AbtractXMLDeclarationExemptedVehicleDataProviderV24
+	public class XMLDeclarationExemptedHeavyLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -90,12 +93,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationExemptedHeavyLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationExemptedHeavyLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+			: base(jobData, xmlNode, sourceFile) { }
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+	
+
+		#endregion
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbtractXMLDeclarationExemptedVehicleDataProviderV24
+	public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -109,7 +120,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedPrimaryBusDataProviderV24 : AbtractXMLDeclarationExemptedVehicleDataProviderV24
+	public class XMLDeclarationExemptedPrimaryBusDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
@@ -129,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedCompletedBusDataProviderV24 : AbtractXMLDeclarationExemptedVehicleDataProviderV24
+	public class XMLDeclarationExemptedCompletedBusDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_Exempted_CompletedBusDeclarationType";

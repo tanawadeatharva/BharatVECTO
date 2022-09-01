@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -56,6 +57,23 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
+	//public interface IPowertrainBuilderFactory
+	//{
+	//	PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null);
+
+	//}
+
+	//public class PowertrainBuilderFactory : IPowertrainBuilderFactory
+	//{
+	//	#region Implementation of IPowertrainBuilderFactory
+
+	//	public PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
+	//	{
+	//		return new PowertrainBuilder(modData, sumWriter);
+	//	}
+
+	//	#endregion
+	//}
 	/// <summary>
 	/// Provides Methods to build a simulator with a powertrain step by step.
 	/// </summary>

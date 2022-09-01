@@ -969,7 +969,9 @@ Partial Class MainForm
         Me.MinimumSize = New System.Drawing.Size(1170, 725)
         Me.Name = "MainForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+
         Me.Text = "VECTO"
+
         Me.StatusBAR.ResumeLayout(false)
         Me.StatusBAR.PerformLayout
         Me.TabControl1.ResumeLayout(false)

@@ -12,12 +12,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 	public class BackingStorage<T> : ObservableObject 
 		where T : INotifyPropertyChanged
 	{
-
-		delegate object GetterDelegate();
+		private delegate object GetterDelegate();
 		private IReadOnlyCollection<string> _observedProperties;
 		private T _observedObject;
 
-		private Dictionary<string, GetterDelegate> _getterDelegatesMap = new Dictionary<string, GetterDelegate>();
+		private Dictionary<string, MethodInfo> _getterMethodInfos = new Dictionary<string, MethodInfo>();
 		private Dictionary<string, Type> _propertyTypesMap = new Dictionary<string, Type>();
 		private IDictionary<string, IEqualityComparer> _equalityComparers = new Dictionary<string, IEqualityComparer>();
 
@@ -31,6 +30,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 			_observedProperties = new HashSet<string>(observedProperties);
 			_observedObject = observedObject;
 			observedObject.PropertyChanged += OnObservedPropertyChanged;
+			var list = new List<object>() {
+				true,
+				"Hi"
+			};
 		}
 
 		public bool UnsavedChanges
@@ -57,7 +60,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 				return;
 			}
 
-			if (!_getterDelegatesMap.ContainsKey(propertyName)) {
+			if (!_getterMethodInfos.ContainsKey(propertyName)) {
 				StorePropertyInfo(propertyName);
 			}
 
@@ -66,9 +69,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 		private void UpdateValue(string propertyName)
 		{
-			
-			var newValue = _getterDelegatesMap[propertyName]();
-			_currentValues[propertyName] = newValue;
+
+            //var newValue = ((GetterDelegate)_getterDelegatesMap[propertyName])();
+			var newValue = _getterMethodInfos[propertyName].Invoke(_observedObject, new object[] { });
+            _currentValues[propertyName] = newValue;
 			if (ValueHasChanged(newValue, propertyName)) {
 				_unsavedChanges[propertyName] = newValue;
 			} else {
@@ -111,8 +115,10 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Common
 
 
 			var getMethod = propInfo.GetGetMethod();
-			var getterDelegate = (GetterDelegate)getMethod.CreateDelegate(typeof(GetterDelegate), _observedObject);
-			_getterDelegatesMap[propertyName] = getterDelegate;
+			
+			
+			//var getterDelegate = getMethod.CreateDelegate(typeof(Delegate), _observedObject);
+			_getterMethodInfos[propertyName] = getMethod;
 
 
 		}
