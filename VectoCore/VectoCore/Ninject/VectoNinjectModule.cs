@@ -29,10 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader;
@@ -63,6 +59,7 @@ namespace TUGraz.VectoCore
 		private readonly bool _mockup;
 
 		#region Overrides of NinjectModule
+
 		
 
 		public VectoNinjectModule()
@@ -96,8 +93,7 @@ namespace TUGraz.VectoCore
 			LoadModule<VIFNinjectModule>();
 			
 
-
-#if (MOCKUP)  //TODO: add second constant for release
+#if (MOCKUP)  
 			var compiledModuleLoaderPlugin = new CompiledModuleLoaderPlugin(Kernel, new AssemblyNameRetriever());
 			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
 			//var assembly = Assembly.LoadFile("VectoMockup.dll");
