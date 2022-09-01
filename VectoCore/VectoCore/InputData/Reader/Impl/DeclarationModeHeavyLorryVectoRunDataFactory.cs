@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -229,4 +228,76 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		
 	}
+
+
+
+
+
+
+	public class DeclarationModeHeavyLorryRunDataFactory
+	{
+		
+		public abstract class LorryBase : IVectoRunDataFactory
+		{
+			#region Implementation of IVectoRunDataFactory
+
+			public IEnumerable<VectoRunData> NextRun()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+		}
+
+
+		public class Conventional : LorryBase
+		{
+			
+		}
+		
+		public class HEV_S2 : LorryBase
+		{
+
+		}
+
+		public class HEV_S3 : LorryBase
+		{
+
+		}
+
+		public class HEV_S4 : LorryBase
+		{
+
+		}
+
+		public class HEV_P1 : LorryBase
+		{
+
+		}
+
+		public class HEV_P2 : LorryBase
+		{
+
+		}
+
+		public class HEV_P2_5 : LorryBase
+		{
+
+		}
+
+		public class HEV_P3 : LorryBase
+		{
+
+		}
+
+		public class HEV_P4 : LorryBase
+		{
+
+		}
+
+
+
+	}
+
+
 }
