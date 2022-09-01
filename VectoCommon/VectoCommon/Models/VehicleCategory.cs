@@ -30,7 +30,7 @@
 */
 
 using System;
-using Microsoft.Win32.SafeHandles;
+using System.Collections.Generic;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -51,10 +51,18 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class VehicleCategoryHelper
 	{
+
+
 		public static string PrimaryBus = "PrimaryBus";
 		public static string Lorry = "Lorry";
 		public static string CompletedBus = "CompletedBus";
 		public static string Van = "Van";
+		public static HashSet<string> SuperCategories { get; } = new HashSet<string>() {
+			PrimaryBus,
+			Lorry,
+			CompletedBus,
+			Van
+		};
 		public static string GetVehicleType(this VehicleCategory category)
 		{
 			switch (category) {
