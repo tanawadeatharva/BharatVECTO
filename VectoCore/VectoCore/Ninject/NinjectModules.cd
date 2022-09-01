@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TUGraz.VectoCore.AbstractNinjectModule" Collapsed="true">
+    <Position X="4.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Ninject\VectoNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.VectoNinjectModule" Collapsed="true">
+    <Position X="4.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ninject\VectoNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.Models.Simulation.SimulatorFactoryNinjectModule" Collapsed="true">
+    <Position X="4.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Simulation\SimulationFactoryNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.FileIO.XML.XMLInputDataNinjectModule" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\FileIO\XML\XMLInputDataNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.ComponentWriter.ComponentWriterNinjectModule" Collapsed="true">
+    <Position X="8.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>OutputData\XML\ComponentWriter\ComponentWriterNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.MRFNinjectModule" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAgAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>OutputData\XML\DeclarationReports\ManufacturerReport\ManufacturerReport_0_9\MRFNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.GroupWriter.GroupWriterNinjectModule" Collapsed="true">
+    <Position X="13.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>OutputData\XML\GroupWriter\XMLGroupWriterNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.XMLDeclarationReportFactoryNinjectModule" Collapsed="true">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OutputData\XML\XMLDeclarationReportFactoryNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFNinjectModule" Collapsed="true">
+    <Position X="10" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OutputData\XML\DeclarationReports\CustomerInformationFile\CustomerInformationFile_0_9\CIFNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.VIFNinjectModule" Collapsed="true">
+    <Position X="12.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OutputData\XML\DeclarationReports\VehicleInformationFile\VehicleInformationFile_0_1\VIFNinjectModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
