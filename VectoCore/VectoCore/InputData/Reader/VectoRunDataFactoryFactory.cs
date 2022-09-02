@@ -16,13 +16,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 {
 	public interface IInternalRunDataFactoryFactory
 	{
-		IVectoRunDataFactory CreateDeclarationCompletedBusRunDataFactory(VehicleCategory vehicleType, VectoSimulationJobType jobType,
-			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
-		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleCategory vehicleType, VectoSimulationJobType jobType,
-			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
 			IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report);
+
+		IVectoRunDataFactory CreateDeclarationCompletedBusRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
+			IMultistageVIFInputData dataProvider,
 			IDeclarationReport report);
 
 	}
@@ -67,19 +67,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport report)
 		{
-			var vehicle = multistageVifInputData.MultistageJobInputData.PrimaryVehicleData.Vehicle;
 			if (multistageVifInputData.VehicleInputData == null) {
-				var ihpc = (vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-				var iepc = (vehicle.Components?.IEPC != null);
-				return _internalFactory.CreateDeclarationRunDataFactory(vehicle.VehicleCategory,
-					vehicle.VehicleType,
-					vehicle.ArchitectureID,
-					vehicle.ExemptedVehicle, iepc, ihpc);
-
-
-				//return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-				//	multistageVifInputData.MultistageJobInputData,
-				//	report);
+				return _internalFactory.CreateDeclarationCompletedBusRunDataFactory(
+					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(
+						multistageVifInputData), multistageVifInputData, report);
 			}
 			else {
 				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);

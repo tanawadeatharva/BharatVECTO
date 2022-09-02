@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
+	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry.Conventional
 	{
 		#region Overrides of DeclarationDataAdapterHeavyLorry
 

@@ -929,7 +929,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			return new CrosswindCorrectionCdxALookup(
 				  aerodynamicDragArea,
-				  DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+				  DeclarationDataAdapterHeavyLorry.Conventional.GetDeclarationAirResistanceCurve(
 					  crossWindCorrectionParams,
 					  aerodynamicDragArea,
 					  vehicleHeight),

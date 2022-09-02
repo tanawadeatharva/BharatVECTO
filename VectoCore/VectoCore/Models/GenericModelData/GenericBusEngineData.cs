@@ -70,8 +70,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (var gear in gearbox.Gears) {
 				var maxTorque = VectoMath.Min(
-					DeclarationDataAdapterHeavyLorry.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
-					DeclarationDataAdapterHeavyLorry.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+					DeclarationDataAdapterHeavyLorry.Conventional.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
+					DeclarationDataAdapterHeavyLorry.Conventional.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
 

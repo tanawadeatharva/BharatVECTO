@@ -266,7 +266,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
         {
             var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				DeclarationDataAdapterHeavyLorry.Conventional.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
                     height.SI<Meter>()),
                 CrossWindCorrectionMode.DeclarationModeCorrection);
 

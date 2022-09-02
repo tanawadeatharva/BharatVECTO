@@ -136,15 +136,32 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				JobType = jobType;
 			}
 
-			public VehicleClassification(IVehicleDeclarationInputData inputData)
+			public VehicleClassification(IVehicleDeclarationInputData inputData) : this()
 			{
-				Iepc = (inputData.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
-				Ihpc = (inputData.Components?.IEPC != null);
+				//Iepc = (inputData.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+				//Ihpc = (inputData.Components?.IEPC != null);
+				Iepc = false;
+				Ihpc = false;
 				Exempted = inputData.ExemptedVehicle;
 				VehicleType = inputData.VehicleCategory.GetVehicleType();
 				ArchId = inputData.ArchitectureID;
 				JobType = inputData.VehicleType;
 				
+			}
+
+
+			public VehicleClassification(IMultistageVIFInputData inputData) : this()
+			{
+				//Iepc = (inputData.MultistageJobInputData..Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
+				//Ihpc = (inputData.Components?.IEPC != null);
+				Iepc = false;
+				Ihpc = false;
+				Exempted = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle;
+				VehicleType = inputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory.GetVehicleType();
+				ArchId = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
+				JobType = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.VehicleType;
+
+				//inputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage.
 			}
 
 			public bool Equals(VehicleClassification other)

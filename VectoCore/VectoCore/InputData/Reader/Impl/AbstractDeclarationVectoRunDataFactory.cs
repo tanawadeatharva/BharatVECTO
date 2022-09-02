@@ -84,38 +84,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				return;
 			}
 
-			_segment = GetSegment(vehicle);
-			_driverdata = DataAdapter.CreateDriverData();
-			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
-													_segment.Missions.First().Loadings.First(), _allowVocational);
-			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
-												_segment.Missions.First(), _segment);
-			if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
-				_axlegearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
-			} else { 
-				_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
-			} 
-			_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
-			var tmpRunData = new VectoRunData() {
-				GearboxData =  new GearboxData() {
-					Type = vehicle.Components.GearboxInputData.Type,
-				}
-			};
-			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-			var tmpEngine = DataAdapter.CreateEngineData(
-				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
-			_gearboxData = DataAdapter.CreateGearboxData(
-				vehicle, new VectoRunData() { EngineData = tmpEngine, AxleGearData = _axlegearData, VehicleData = tempVehicle },
-				tmpStrategy);
-				
-			_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
-
-			_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
-
-			_municipalPtoTransmissionData = CreateDefaultPTOData();
-			_gearshiftData = DataAdapter.CreateGearshiftData(
-				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), tmpEngine.IdleSpeed);
 
 		}
 
