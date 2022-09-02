@@ -795,9 +795,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
-			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']").InnerText.ToDouble().SI<Meter>();
+			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
 			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
-			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']").InnerText.ParseEnum<VehicleCode>();
+			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
 		}
 	}
 

@@ -764,7 +764,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				rdSwpAux = new RoadSweeperAuxiliary(container);
 				pto.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
 			}
 
 			if (data.ExecutionMode == ExecutionMode.Engineering &&
@@ -775,17 +775,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
 				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 			if (data.PTO != null) {
 				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).TorqueLoss);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 

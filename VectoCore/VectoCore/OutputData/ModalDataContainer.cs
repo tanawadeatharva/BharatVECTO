@@ -191,6 +191,10 @@ namespace TUGraz.VectoCore.OutputData
 			if (_runData.Cycle.CycleType == CycleType.EngineOnly) {
 				return null;
 			}
+
+			if (!Data.Columns.Contains(ModalResultField.P_wheel_in.GetName())) {
+				return null;
+			}
 			if (_vehLine.TryGetValue(fuel.FuelType, out var value)) {
 				return value;
 			}

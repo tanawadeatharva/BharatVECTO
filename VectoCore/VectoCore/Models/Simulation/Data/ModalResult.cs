@@ -326,6 +326,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			switch (component) {
 				case ICombustionEngine c1: CreateCombustionEngineColumns(runData); break;
+				case BusAuxiliariesAdapter _: CreateColumns(BusAuxiliariesSignals); break;
+				case PWheelCycle _: CreateColumns(WheelSignals); CreateColumns(DriverSignals); break;
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
@@ -343,13 +345,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case Retarder _: CreateColumns(RetarderSignals); break;
 				case IWheels _: CreateColumns(WheelSignals); break;
 				case IBrakes _: CreateColumns(BrakeSignals); break;
-				case IDriver _: CreateColumns(DriverSignals); break;
+				case IDriverInfo _: CreateColumns(DriverSignals); break;
 				case IVehicle _: CreateColumns(VehicleSignals); break;
 				case IElectricMotor c3 when c3.Position == PowertrainPosition.IEPC: 
-					CreateElectricMotorColumns(c3, runData, IEPCSignals);
+					CreateElectricMotorColumns(c3.Position, runData, IEPCSignals);
 					break;
 				case IElectricMotor c4 when c4.Position != PowertrainPosition.IEPC:
-					CreateElectricMotorColumns(c4, runData, ElectricMotorSignals);
+					CreateElectricMotorColumns(c4.Position, runData, ElectricMotorSignals);
 					break;
 				case IElectricEnergyStorage c5 when c5 is BatterySystem: CreateBatteryColumns(runData);
 					break;
@@ -385,12 +387,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 	
 
-		private void CreateElectricMotorColumns(IElectricMotor em, VectoRunData runData,
+		protected internal void CreateElectricMotorColumns(PowertrainPosition emPos, VectoRunData runData,
 			ModalResultField[] signals)
 		{
-			ElectricMotors.Add(em.Position);
+			ElectricMotors.Add(emPos);
 			foreach (var entry in signals) {
-				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, em.Position.GetName()), typeof(SI));
+				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, emPos.GetName()), typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					entry.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
@@ -403,9 +405,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		protected internal void CreateCombustionEngineColumns(VectoRunData runData)
 		{
 			CreateColumns(CombustionEngineSignals);
-			if (runData.BusAuxiliaries != null) {
-				CreateColumns(BusAuxiliariesSignals);
-			}
+			//if (runData.BusAuxiliaries != null) {
+			//	CreateColumns(BusAuxiliariesSignals);
+			//}
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
 			var fuels = runData.EngineData?.Fuels ?? new List<CombustionEngineFuelData>();
 			foreach (var fuel in fuels) {

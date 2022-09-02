@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), container => {});
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), new MockSumWriter());
 		}
 
 		/// <summary>

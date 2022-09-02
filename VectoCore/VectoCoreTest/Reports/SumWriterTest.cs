@@ -86,19 +86,31 @@ namespace TUGraz.VectoCore.Tests.Reports
 						FuelData = FuelData.Diesel,
 						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
 					}}.ToList(),
-					IdleSpeed = 600.RPMtoRad()
+					IdleSpeed = 600.RPMtoRad(),
+					RatedPowerDeclared = 300000.SI<Watt>(),
+					RatedSpeedDeclared = 2000.RPMtoRad(),
+					Displacement = 7.SI(Unit.SI.Liter).Cast<CubicMeter>()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+					CycleType = CycleType.DistanceBased
 				},
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
-				}
-            };
+				},
+			};
 			var modData = new ModalDataContainer(rundata, writer, null);
-
+			modData.Data.CreateCombustionEngineColumns(rundata);
+			modData.Data.CreateColumns(ModalResults.VehicleSignals);
+			modData.Data.CreateColumns(ModalResults.BrakeSignals);
+			modData.Data.CreateColumns(ModalResults.DriverSignals);
+			modData.Data.CreateColumns(ModalResults.WheelSignals);
 			modData.AddAuxiliary("FAN");
+			sumWriter.AddAuxiliary("FAN");
+			sumWriter.CreateColumns(SummaryDataContainer.VehilceColumns);
+			sumWriter.CreateColumns(SummaryDataContainer.BrakeColumns);
+			sumWriter.UpdateTableColumns(rundata.EngineData);
 
 			for (var i = 0; i < 500; i++) {
 				modData[ModalResultField.simulationInterval] = 1.SI<Second>();
@@ -122,6 +134,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.P_ice_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
 
 				modData[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
+				modData[ModalResultField.P_veh_inertia] = 0.SI<Watt>();
+				modData[ModalResultField.P_wheel_inertia] = 0.SI<Watt>();
 
 				modData.CommitSimulationStep();
 			}
@@ -163,18 +177,31 @@ namespace TUGraz.VectoCore.Tests.Reports
 						FuelData = FuelData.Diesel,
 						ConsumptionMap = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vmap")
 					}}.ToList(),
-					IdleSpeed = 600.RPMtoRad()
+					IdleSpeed = 600.RPMtoRad(),
+					RatedPowerDeclared = 300000.SI<Watt>(),
+					RatedSpeedDeclared = 2000.RPMtoRad(),
+					Displacement = 7.SI(Unit.SI.Liter).Cast<CubicMeter>()
 				},
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+					CycleType = CycleType.DistanceBased
 				},
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData()
-				}
+				},
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
+			modData.Data.CreateCombustionEngineColumns(rundata);
+			modData.Data.CreateColumns(ModalResults.VehicleSignals);
+			modData.Data.CreateColumns(ModalResults.BrakeSignals);
+			modData.Data.CreateColumns(ModalResults.DriverSignals);
+			modData.Data.CreateColumns(ModalResults.WheelSignals);
 			modData.AddAuxiliary("FAN");
+			sumWriter.AddAuxiliary("FAN");
+			sumWriter.CreateColumns(SummaryDataContainer.VehilceColumns);
+			sumWriter.CreateColumns(SummaryDataContainer.BrakeColumns);
+			sumWriter.UpdateTableColumns(rundata.EngineData);
 
 			var timeSteps = new[]
 			{ 0.5.SI<Second>(), 0.3.SI<Second>(), 1.2.SI<Second>(), 12.SI<Second>(), 0.1.SI<Second>() };

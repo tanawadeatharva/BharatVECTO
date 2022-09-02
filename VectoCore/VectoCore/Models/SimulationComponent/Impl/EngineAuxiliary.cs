@@ -100,8 +100,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction, string columnName = null)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
-			(DataBus as IVehicleContainer)?.ModalData?.AddAuxiliary(auxId, columnName);
-			(DataBus as IVehicleContainer)?.SumData?.AddAuxiliary(auxId);
+			(DataBus as IVehicleContainer)?.AddAuxiliary(auxId, columnName);
+			//(DataBus as IVehicleContainer)?.SumData?.AddAuxiliary(auxId);
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)

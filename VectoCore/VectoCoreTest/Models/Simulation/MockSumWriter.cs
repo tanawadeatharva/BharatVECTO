@@ -39,5 +39,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public override void Write(IModalDataContainer modData, VectoRunData runData) {}
 
 		public override void Finish() {}
+		public MockSumWriter(ISummaryWriter writer = null) : base(writer) { }
 	}
 }

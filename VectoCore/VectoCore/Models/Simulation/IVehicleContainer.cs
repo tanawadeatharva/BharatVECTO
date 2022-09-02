@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <param name="component"></param>
 		void AddComponent(VectoSimulationComponent component);
 
+		void AddAuxiliary(string id, string columnName = null);
+
 		/// <summary>
 		/// Commits the current simulation step.
 		/// </summary>

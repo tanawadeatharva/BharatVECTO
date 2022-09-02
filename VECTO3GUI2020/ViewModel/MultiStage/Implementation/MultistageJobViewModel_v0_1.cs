@@ -207,7 +207,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 					FileHelper.CreateDirectory(outputFile);
 
-					var jobContainer = new JobContainer(new NullSumWriter());
+					var jobContainer = new JobContainer(new NullSumWriter(writer));
 
 					jobContainer.AddRuns(factory);
 					jobContainer.Execute();
@@ -433,5 +433,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public override void Write(IModalDataContainer modData, VectoRunData runData) { }
 
 		public override void Finish() { }
+		public NullSumWriter(ISummaryWriter writer) : base(writer) { }
 	}
 }

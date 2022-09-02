@@ -836,11 +836,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
-			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
-		}
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+        }
 
 		// =================================================
 

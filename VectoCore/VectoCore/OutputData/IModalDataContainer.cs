@@ -101,12 +101,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		void SetDataValue(string fieldName, object value);
 
-		void AddAuxiliary(string id, string columnName = null);
+        void AddAuxiliary(string id, string columnName = null);
 
-		/// <summary>
-		/// Finishes the writing of the DataWriter.
-		/// </summary>
-		void Finish(VectoRun.Status runStatus, Exception exception = null);
+        /// <summary>
+        /// Finishes the writing of the DataWriter.
+        /// </summary>
+        void Finish(VectoRun.Status runStatus, Exception exception = null);
 
 		/// <summary>
 		/// clear the modal data after the simulation

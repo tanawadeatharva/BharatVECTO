@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IModalDataContainer ModData;
 
-		internal ISumData WriteSumData;
+		protected ISumData WriteSumData;
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
@@ -202,6 +202,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			WriteSumData?.RegisterComponent(component, RunData);
 		}
+
+		public void AddAuxiliary(string id, string columnName = null)
+		{
+			ModalData?.AddAuxiliary(id, columnName);
+			WriteSumData?.AddAuxiliary(id);
+		}
+
 		private List<(IUpdateable, object)> ComponentUpdateList = new List<(IUpdateable, object)>();
 
 		protected void UpdateComponentsInternal(IDataBus realContainer)

@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			new MockEngine(container);
 
 			aux.AddCycle("CYCLE");
-			container.ModalData.AddAuxiliary("CYCLE");
+			container.AddAuxiliary("CYCLE");
 
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();

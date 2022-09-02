@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData
 	/// </summary>
 	public class SummaryDataContainer : LoggingObject, ISumData, IDisposable
 	{
-		protected readonly string[] FcColumns = {
+		public static readonly string[] FcColumns = {
 			SumDataFields.FCMAP_H, SumDataFields.FCMAP_KM,
 			SumDataFields.FCNCVC_H, SumDataFields.FCNCVC_KM,
 			SumDataFields.FCWHTCC_H, SumDataFields.FCWHTCC_KM,
@@ -83,12 +83,21 @@ namespace TUGraz.VectoCore.OutputData
 			SumDataFields.SPECIFIC_FC, SumDataFields.K_VEHLINE, SumDataFields.K_ENGLINE
 		};
 
-		public static Tuple<string, Type>[] CommonColumns = {
+		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
 			Tuple.Create(SumDataFields.JOB, typeof(string)),
 			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
 			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
 			Tuple.Create(SumDataFields.STATUS, typeof(string)),
+			Tuple.Create(SumDataFields.CURB_MASS, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.LOADING, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.TIME, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.DISTANCE, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.SPEED, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ALTITUDE_DELTA, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ACC, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ACC_POS, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ACC_NEG, typeof(ConvertedSI)),
 			// Engine Infos
 			Tuple.Create(SumDataFields.ENGINE_MANUFACTURER, typeof(string)),
 			Tuple.Create(SumDataFields.ENGINE_MODEL, typeof(string)),
@@ -168,9 +177,14 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.CARGO_VOLUME, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.COASTING_TIME_SHARE, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.BRAKING_TIME_SHARE, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.ACC_TIMESHARE, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.DEC_TIMESHARE, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.CRUISE_TIMESHARE, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.STOP_TIMESHARE, typeof(ConvertedSI)),
+
 		};
 
-		public static Tuple<string, Type>[] CombustionEngineColumns = {
+		public static readonly Tuple<string, Type>[] CombustionEngineColumns = {
 			Tuple.Create(SumDataFields.ICE_FULL_LOAD_TIME_SHARE, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.ICE_OFF_TIME_SHARE, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.NUM_ICE_STARTS, typeof(ConvertedSI)),
@@ -180,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_FCMAP_NEG, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] VehilceColumns = {
+		public static readonly Tuple<string, Type>[] VehilceColumns = {
 			Tuple.Create(SumDataFields.E_VEHICLE_INERTIA, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_AIR, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_ROLL, typeof(ConvertedSI)),
@@ -188,43 +202,43 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_POWERTRAIN_INERTIA, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] ClutchColumns = {
+		public static readonly Tuple<string, Type>[] ClutchColumns = {
 			Tuple.Create(SumDataFields.E_CLUTCH_LOSS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] GearboxColumns = {
+		public static readonly Tuple<string, Type>[] GearboxColumns = {
 			Tuple.Create(SumDataFields.NUM_GEARSHIFTS, typeof(ConvertedSI)),
-			
+			Tuple.Create(SumDataFields.E_GBX_LOSS, typeof(ConvertedSI))
 		};
 
-		public static Tuple<string, Type>[] IEPCTransmissionColumns = { };
+		public static readonly Tuple<string, Type>[] IEPCTransmissionColumns = { };
 
-		public static Tuple<string, Type>[] TorqueConverterColumns = {
+		public static readonly Tuple<string, Type>[] TorqueConverterColumns = {
 			Tuple.Create(SumDataFields.E_TC_LOSS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] AngledriveColumns = {
+		public static readonly Tuple<string, Type>[] AngledriveColumns = {
 			Tuple.Create(SumDataFields.E_ANGLE_LOSS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] AxlegearColumns = {
+		public static readonly Tuple<string, Type>[] AxlegearColumns = {
 			Tuple.Create(SumDataFields.E_AXL_LOSS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] RetarderColumns = {
+		public static readonly Tuple<string, Type>[] RetarderColumns = {
 			Tuple.Create(SumDataFields.E_RET_LOSS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] WheelColumns = {
+		public static readonly Tuple<string, Type>[] WheelColumns = {
 			Tuple.Create(SumDataFields.P_WHEEL, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.P_WHEEL_POS, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] BrakeColumns = {
+		public static readonly Tuple<string, Type>[] BrakeColumns = {
 			Tuple.Create(SumDataFields.E_BRAKE, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] BatteryColumns = {
+		public static readonly Tuple<string, Type>[] BatteryColumns = {
 			Tuple.Create(SumDataFields.REESS_StartSoC, typeof(double)),
 			Tuple.Create(SumDataFields.REESS_EndSoC, typeof(double)),
 			Tuple.Create(SumDataFields.REESS_DeltaEnergy, typeof(ConvertedSI)),
@@ -235,7 +249,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_REESS_int_dischg, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] ElectricMotorColumns = {
+		public static readonly Tuple<string, Type>[] ElectricMotorColumns = {
 			Tuple.Create(SumDataFields.EM_AVG_SPEED_FORMAT, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_EM_Mot_DRIVE_FORMAT, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_EM_Mot_GENERATE_FORMAT, typeof(ConvertedSI)),
@@ -252,7 +266,7 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_EM_OFF_TIME_SHARE, typeof(ConvertedSI)),
 		};
 
-		public static Tuple<string, Type>[] IEPCColumns = {
+		public static readonly Tuple<string, Type>[] IEPCColumns = {
 			Tuple.Create(SumDataFields.IEPC_AVG_SPEED_FORMAT, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_IEPC_DRIVE_FORMAT, typeof(ConvertedSI)),
 			Tuple.Create(SumDataFields.E_IEPC_GENERATE_FORMAT, typeof(ConvertedSI)),
@@ -263,11 +277,21 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.E_IEPC_OFF_TIME_SHARE, typeof(ConvertedSI)),
 		};
 
+		public static readonly Tuple<string, Type>[] CO2Columns = {
+			Tuple.Create(SumDataFields.CO2_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.CO2_TKM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.CO2_M3KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.CO2_PKM, typeof(ConvertedSI)),
+		};
+
+		public static readonly Tuple<string, Type>[] VTPCycleColumns = {
+			Tuple.Create(SumDataFields.E_WHEEL, typeof(ConvertedSI)),
+		};
+
 		private object _tableLock = new object();
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
-
-		protected SummaryDataContainer() { }
+		private List<string> fcCols = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
@@ -279,6 +303,7 @@ namespace TUGraz.VectoCore.OutputData
 			Table = new DataTable();
 			//InitTableColumns();
 			CreateColumns(CommonColumns);
+			CreateColumns(CO2Columns);
 		}
 
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
@@ -286,6 +311,7 @@ namespace TUGraz.VectoCore.OutputData
 			switch (component) {
 				case ICombustionEngine _:
 					CreateColumns(CombustionEngineColumns);
+					UpdateTableColumns(runData.EngineData);
 					break;
 				case EngineAuxiliary _:
 					break;
@@ -299,6 +325,10 @@ namespace TUGraz.VectoCore.OutputData
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_E:
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_S:
 					CreateColumns(IEPCTransmissionColumns);
+					CreateGearTimeShareColumns(runData.GearboxData.GearList);
+					break;
+				case VTPCycle _:
+					CreateColumns(VTPCycleColumns);
 					break;
 				case ITorqueConverter _:
 					CreateColumns(TorqueConverterColumns);
@@ -380,7 +410,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void CreateColumns(Tuple<string, Type>[] cols)
+		protected internal void CreateColumns(Tuple<string, Type>[] cols)
 		{
 			lock (Table) {
 				Table.Columns.AddRange(cols.Where(x => !Table.Columns.Contains(x.Item1))
@@ -460,19 +490,23 @@ namespace TUGraz.VectoCore.OutputData
 				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
 				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
 				Constants.Auxiliaries.IDs.PneumaticSystem, Constants.Auxiliaries.IDs.ElectricSystem
-			}.Select(x => string.Format(SumDataFields.AUX_TECH_FORMAT, x)));
+			}.Select(x => string.Format(SumDataFields.E_AUX_FORMAT, x)));
 
 			cols.AddRange(new[] {
-				SumDataFields.TCU_MODEL, 
-				SumDataFields.ADAS_TECHNOLOGY_COMBINATION, 
-				SumDataFields.PTO_TECHNOLOGY, 
+				SumDataFields.TCU_MODEL,
+				SumDataFields.ADAS_TECHNOLOGY_COMBINATION,
+				SumDataFields.PTO_TECHNOLOGY,
 				SumDataFields.REESS_CAPACITY,
 				SumDataFields.CARGO_VOLUME,
-				SumDataFields.TIME, 
-				SumDataFields.DISTANCE, 
+				SumDataFields.TIME,
+				SumDataFields.DISTANCE,
 				SumDataFields.SPEED,
 				SumDataFields.ALTITUDE_DELTA,
+			});
 
+			cols.AddRange(fcCols);
+
+            cols.AddRange(new[] {
 				SumDataFields.CO2_KM, 
 				SumDataFields.CO2_TKM, 
 				SumDataFields.CO2_M3KM, 
@@ -706,20 +740,20 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void UpdateTableColumns(ICollection<IFuelProperties> modDataFuelData,
-			bool engineDataMultipleEngineFuelModes)
+		protected internal void UpdateTableColumns(CombustionEngineData engineData)
 		{
-			foreach (var entry in modDataFuelData) {
+			foreach (var entry in engineData.Fuels) {
 				foreach (var column in FcColumns.Reverse()) {
 					var colName = string.Format(column,
-						modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes
+						engineData.Fuels.Count <= 1 && !engineData.MultipleEngineFuelModes
 							? ""
-							: "_" + entry.FuelType.GetLabel());
+							: "_" + entry.FuelData.FuelType.GetLabel());
 					lock (Table) {
 						if (!Table.Columns.Contains(colName)) {
 							var col = new DataColumn(colName, typeof(ConvertedSI));
 							Table.Columns.Add(col);
 							col.SetOrdinal(Table.Columns.IndexOf(SumDataFields.ALTITUDE_DELTA) + 1);
+							fcCols.Add(colName);
 						}
 					}
 				}
@@ -747,11 +781,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected Dictionary<string, object> GetResultDictionary(IModalDataContainer modData, VectoRunData runData)
 		{
-			if (modData.HasCombustionEngine) {
-				lock (_tableLock) {
-					UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
-				}
-			}
+			//if (modData.HasCombustionEngine) {
+			//	lock (_tableLock) {
+			//		UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
+			//	}
+			//}
 
 			return new Dictionary<string, object>();
 		}
