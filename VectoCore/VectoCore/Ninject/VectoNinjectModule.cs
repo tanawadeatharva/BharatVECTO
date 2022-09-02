@@ -29,6 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+#if(MOCKUP)
+using System.IO;
+using System.Reflection;
+#endif
 using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader;
@@ -98,12 +102,6 @@ namespace TUGraz.VectoCore
 			var assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"VectoMockup.dll"));
 			//var assembly = Assembly.LoadFile("VectoMockup.dll");
 			Kernel.Load(new Assembly[]{assembly});
-			
-
-
-
-
-
 #endif
 
 

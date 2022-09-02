@@ -20,6 +20,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 			ArchitectureID archId, bool exempted, bool iepc, bool ihpc);
+
+		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
+			IDeclarationInputDataProvider dataProvider,
+			IDeclarationReport report);
+
 	}
 
 
@@ -86,13 +91,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 			//TODO: encapsulate arguments into object
 			var vehicle = declDataProvider.JobInputData.Vehicle;
 			try {
-				
-				var ihpc = (vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None")  > 0;
-				var iepc = (vehicle.Components?.IEPC != null);
-				return _internalFactory.CreateDeclarationRunDataFactory(declDataProvider.JobInputData.Vehicle.VehicleCategory, 
-					declDataProvider.JobInputData.JobType,
-					declDataProvider.JobInputData.Vehicle.ArchitectureID,
-					declDataProvider.JobInputData.Vehicle.ExemptedVehicle, iepc, ihpc);
+				return _internalFactory.CreateDeclarationRunDataFactory(
+					new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(vehicle), declDataProvider,
+					report);
+				//var ihpc = (vehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None")  > 0;
+				//var iepc = (vehicle.Components?.IEPC != null);
+				//return _internalFactory.CreateDeclarationRunDataFactory(declDataProvider.JobInputData.Vehicle.VehicleCategory, 
+				//	declDataProvider.JobInputData.JobType,
+				//	declDataProvider.JobInputData.Vehicle.ArchitectureID,
+				//	declDataProvider.JobInputData.Vehicle.ExemptedVehicle, iepc, ihpc, declDataProvider, report);
 			} catch (Exception ex) {
 				throw new Exception(
 					$"Could not create RunDataFactory for Vehicle Category{declDataProvider.JobInputData.Vehicle.VehicleCategory} {declDataProvider.JobInputData.Vehicle.ArchitectureID}", ex);

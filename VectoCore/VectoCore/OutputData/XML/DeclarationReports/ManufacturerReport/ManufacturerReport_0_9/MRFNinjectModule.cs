@@ -34,8 +34,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void Load()
 		{
 			LoadModule<ContextPreservationModule>();
-			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(VehicleTypeAndArchitectureStringHelper.CreateName, 
-				6, 6, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
+			Bind<IManufacturerReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					combineToNameDelegate = VehicleTypeAndArchitectureStringHelper.CreateName,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(IManufacturerReportFactory).GetMethod(
+							nameof(IManufacturerReportFactory.GetManufacturerReport))
+					}
+				})).InSingletonScope();
+
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryManufacturerReport());
 

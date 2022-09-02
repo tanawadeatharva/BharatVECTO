@@ -25,8 +25,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void Load()
 		{
 			LoadModule<ContextPreservationModule>();
-			Bind<ICustomerInformationFileFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName, 6, 6, typeof(ICustomerInformationFileFactory).GetMethod(nameof(ICustomerInformationFileFactory
-					.GetCustomerReport)))).InSingletonScope();
+			Bind<ICustomerInformationFileFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings()
+				{
+					combineToNameDelegate = VehicleTypeAndArchitectureStringHelper.CreateName,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(ICustomerInformationFileFactory).GetMethod(
+							nameof(ICustomerInformationFileFactory.GetCustomerReport))
+					}
+				})).InSingletonScope();
 
 			#region Lorry CIF
 			Bind<IXMLCustomerReport>().To<ConventionalLorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ConventionalVehicle,

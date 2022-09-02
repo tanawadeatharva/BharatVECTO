@@ -8,6 +8,7 @@ using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.Reader
@@ -15,7 +16,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 	public class VectoRunDataFactoryNinjectModule : AbstractNinjectModule
 	{
 
-		private IVehicleTypeAndArchitectureStringHelper _vehicleStringHelper = new VehicleTypeAndArchitectureStringHelperRundata();
+		private VehicleTypeAndArchitectureStringHelperRundata _vehicleStringHelper = new VehicleTypeAndArchitectureStringHelperRundata();
+
 
 		#region Overrides of NinjectModule
 
@@ -26,17 +28,34 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			Bind<IInternalRunDataFactoryFactory>().ToFactory(
 					() => new CombineArgumentsToNameInstanceProvider(
-										_vehicleStringHelper.CreateName,
-										6, 6,
-										typeof(IInternalRunDataFactoryFactory)
-											.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationRunDataFactory)), 
-										typeof(IInternalRunDataFactoryFactory)
-											.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationCompletedBusRunDataFactory))
-										)
-				)
-				.InSingletonScope();
+							new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+								combineToNameDelegate = _vehicleStringHelper.CreateName,
+								methods = new [] {
+									typeof(IInternalRunDataFactoryFactory)
+										.GetMethod(nameof(IInternalRunDataFactoryFactory
+											.CreateDeclarationRunDataFactory),
+											new []
+											{
+												typeof(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification),
+												typeof(IDeclarationInputDataProvider),
+												typeof(IDeclarationReport)
+											}
+										),
+									typeof(IInternalRunDataFactoryFactory)
+										.GetMethod(nameof(IInternalRunDataFactoryFactory
+											.CreateDeclarationCompletedBusRunDataFactory)//, 
+											//new []
+											//{
+											//	typeof(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification),
+											//	typeof(IDeclarationInputDataProvider),
+											//	typeof(IDeclarationReport)
+											//}
+											)
+								},
+								skipArguments = 1,
+								takeArguments = 1,
+							}
+						)).InSingletonScope();
 
 
 			#region Lorries

@@ -22,13 +22,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			LoadModule<ContextPreservationModule>();
 
-			Bind<IVIFReportInterimFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(VehicleTypeAndArchitectureStringHelper.CreateName,
-				6, 6, 
-				typeof(IVIFReportInterimFactory).GetMethod(nameof(IVIFReportInterimFactory.GetInterimVIFReport)) )).InSingletonScope();
+			Bind<IVIFReportInterimFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings()
+				{
+					combineToNameDelegate = VehicleTypeAndArchitectureStringHelper.CreateName,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(IVIFReportInterimFactory).GetMethod(
+							nameof(IVIFReportInterimFactory.GetInterimVIFReport))
+					}
+				})).InSingletonScope();
 
-			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(VehicleTypeAndArchitectureStringHelper.CreateName,
-				6, 6, typeof(IVIFReportFactory).GetMethod(nameof(IVIFReportFactory.GetVIFReport))
-				)).InSingletonScope();
+
+			Bind<IVIFReportFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings()
+				{
+					combineToNameDelegate = VehicleTypeAndArchitectureStringHelper.CreateName,
+					skipArguments = 6,
+					takeArguments = 6,
+					methods = new[] {
+						typeof(IVIFReportFactory).GetMethod(
+							nameof(IVIFReportFactory.GetVIFReport))
+					}
+				})).InSingletonScope();
+
 			
 			
 			#region Primary Vehicle Information File Reports
