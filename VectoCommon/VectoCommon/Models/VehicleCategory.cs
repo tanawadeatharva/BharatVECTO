@@ -63,6 +63,11 @@ namespace TUGraz.VectoCommon.Models
 			CompletedBus,
 			Van
 		};
+		/// <summary>
+		/// Returns the SuperCategory for the VehicleCategory
+		/// </summary>
+		/// <param name="category"></param>
+		/// <returns></returns>
 		public static string GetVehicleType(this VehicleCategory category)
 		{
 			switch (category) {
