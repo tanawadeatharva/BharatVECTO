@@ -24,11 +24,15 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
+#if (MOCKUP)
+			Assert.Ignore("Tests not meaningful in mockup mode");
+#endif
 			var kernel = new StandardKernel(new VectoNinjectModule()) {
 
 			};
 			_runDataFactoryFactory = kernel.Get<IVectoRunDataFactoryFactory>();
 			Assert.IsTrue(_runDataFactoryFactory.GetType() == typeof(VectoRunDataFactoryFactory));
+
 		}
 
 		private void CreateRunDataFactory(Mock<IDeclarationInputDataProvider> inputMock, Type expectedType)
@@ -38,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			Assert.IsTrue(result.GetType() == expectedType);
 		}
 
-		#region HeavyLorry
+#region HeavyLorry
 		[TestCase()]
 		public void ConventionalHeavyLorryTest()
 		{
@@ -162,8 +166,8 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		}
 
 
-		#endregion HeavyLorry
-		#region PrimaryBus
+#endregion HeavyLorry
+#region PrimaryBus
 		[TestCase()]
 		public void ConventionalPrimaryBus()
 		{
@@ -295,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC));
 		}
 
-		#endregion PrimaryBus
+#endregion PrimaryBus
 
 		[TestCase()]
 		public void ConventionalCompletedBus()
@@ -435,24 +439,39 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		{
 			mock.Setup(provider => provider.JobInputData.JobType)
 				.Returns(VectoSimulationJobType.ConventionalVehicle);
-			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).Returns(ArchitectureID.UNKNOWN);
-			
+
+			mock.Setup(provider => provider.JobInputData.Vehicle.VehicleType).
+				Returns(VectoSimulationJobType.ConventionalVehicle);
+
+			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
+				Returns(ArchitectureID.UNKNOWN);
+
 			return mock;
 		}
 
 		internal static Mock<IDeclarationInputDataProvider> HEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
-			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).Returns(arch);
-			mock.Setup(p => p.JobInputData.JobType).Returns(arch.ToString().StartsWith("P")
+			var type = arch.ToString().StartsWith("P")
 				? VectoSimulationJobType.ParallelHybridVehicle
-				: VectoSimulationJobType.SerialHybridVehicle);
+				: VectoSimulationJobType.SerialHybridVehicle;
+			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
+				Returns(arch);
+			mock.Setup(p => p.JobInputData.JobType).
+				Returns(type);
+			mock.Setup(p => p.JobInputData.Vehicle.VehicleType).
+				Returns(type);
 			return mock;
 		}
 
 		internal static Mock<IDeclarationInputDataProvider> PEV(this Mock<IDeclarationInputDataProvider> mock, ArchitectureID arch)
 		{
-			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).Returns(arch);
-			mock.Setup(p => p.JobInputData.JobType).Returns(
+			mock.Setup(p => p.JobInputData.Vehicle.ArchitectureID).
+				Returns(arch);
+			mock.Setup(p => p.JobInputData.JobType).
+				Returns(
+				VectoSimulationJobType.BatteryElectricVehicle);
+			mock.Setup(p => p.JobInputData.Vehicle.VehicleType).
+				Returns(
 				VectoSimulationJobType.BatteryElectricVehicle);
 			return mock;
 		}
@@ -465,13 +484,15 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		internal static Mock<IDeclarationInputDataProvider> PrimaryBus(this Mock<IDeclarationInputDataProvider> mock)
 		{
-			mock.Setup(p => p.JobInputData.Vehicle.VehicleCategory).Returns(VehicleCategory.HeavyBusPrimaryVehicle);
+			mock.Setup(p => p.JobInputData.Vehicle.VehicleCategory).
+				Returns(VehicleCategory.HeavyBusPrimaryVehicle);
 			return mock;
 		}
 
 		internal static Mock<IDeclarationInputDataProvider> CompletedBus(this Mock<IDeclarationInputDataProvider> mock)
 		{
-			mock.Setup(p => p.JobInputData.Vehicle.VehicleCategory).Returns(VehicleCategory.HeavyBusCompletedVehicle);
+			mock.Setup(p => p.JobInputData.Vehicle.VehicleCategory).
+				Returns(VehicleCategory.HeavyBusCompletedVehicle);
 			return mock;
 		}
 
