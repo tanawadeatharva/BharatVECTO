@@ -19,11 +19,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		}
 
 
-
-
 		public class HEV_S_IEPC : SerialHybrid
 		{
-
 		}
     }
 }
