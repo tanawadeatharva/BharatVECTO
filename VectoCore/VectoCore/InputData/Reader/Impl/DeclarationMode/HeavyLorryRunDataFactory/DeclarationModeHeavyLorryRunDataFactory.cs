@@ -27,10 +27,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 	{
 		public abstract class LorryBase : IVectoRunDataFactory
 		{
-
 			public IDeclarationDataAdapter DataAdapter { get; }
 			public IDeclarationInputDataProvider InputDataProvider { get; }
-
 			public IDeclarationReport Report { get; }
 
 			protected Segment _segment;

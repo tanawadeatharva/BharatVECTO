@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;

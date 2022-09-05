@@ -15,6 +15,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;

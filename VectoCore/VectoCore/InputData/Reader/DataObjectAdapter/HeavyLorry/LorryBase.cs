@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -16,9 +17,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			#region Implementation of IDeclarationDataAdapter
 
-			public virtual DriverData CreateDriverData()
+			private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
+
+			public DriverData CreateDriverData()
 			{
-				throw new NotImplementedException();
+				return _driverDataAdapter.CreateDriverData();
 			}
 
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment,

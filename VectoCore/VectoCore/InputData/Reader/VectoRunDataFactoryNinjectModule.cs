@@ -8,7 +8,9 @@ using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 
@@ -173,6 +175,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E_IEPC));
+
+			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.Exempted>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, true));
 			#endregion
 
 

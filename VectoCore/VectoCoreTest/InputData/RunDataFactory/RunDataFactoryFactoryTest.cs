@@ -12,9 +12,14 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 
 namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 {
@@ -45,7 +50,8 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		}
 
-		private void CreateRunDataFactory(Mock inputMock, Type expectedRunDataType, Type expectedDeclarationDataAdapterType = null)
+		private IVectoRunDataFactory CreateRunDataFactory(Mock inputMock, Type expectedRunDataType,
+			Type expectedDeclarationDataAdapterType = null)
 		{
 			var s = inputMock.Object;
 			var result = _runDataFactoryFactory.CreateDeclarationRunDataFactory((IInputDataProvider)inputMock.Object, null,
@@ -53,8 +59,25 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			Assert.IsTrue(result.GetType() == expectedRunDataType, $"Invalid type of RunDataFactory! Expected {expectedRunDataType} got {result.GetType()}");
 			if (expectedDeclarationDataAdapterType != null) {
 				dynamic concreteResult = result;
-				Assert.IsTrue(concreteResult.DeclarationDataAdapter.GetType() == expectedDeclarationDataAdapterType, $"Invalid type of DeclarationDataAdapter! Expected {expectedDeclarationDataAdapterType} got {concreteResult.DeclarationDataAdapter.GetType()}");
+				Assert.IsTrue(concreteResult.DataAdapter.GetType() == expectedDeclarationDataAdapterType, $"Invalid type of DeclarationDataAdapter! Expected {expectedDeclarationDataAdapterType} got {concreteResult.DataAdapter.GetType()}");
 			}
+
+			return result;
+		}
+
+		private void CheckCompletedBusAdapters(IVectoRunDataFactory runDataResult, Type genericDataAdapter,
+			Type specificDataAdapter)
+		{
+
+			var genericPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.GenericDataAdapter));
+			var generic = genericPropertyInfo.GetValue(runDataResult, null);
+
+			
+			var specificPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.SpecificDataAdapter));
+			var specific = specificPropertyInfo.GetValue(runDataResult, null);
+
+            Assert.AreEqual(genericDataAdapter, generic.GetType());
+			Assert.AreEqual(specificDataAdapter, specific.GetType());
 		}
 
 #region HeavyLorry
@@ -197,13 +220,16 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		}
 
-		[TestCase()]
-		public void Exempted_HeavyLorryTest(Type expectedDataAdapter = null)
+		[Test]
+		public void Exempted_HeavyLorryTest([Values]ArchitectureID architectureId, [Values]VectoSimulationJobType simType)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.Exempted()
 				.Lorry();
-			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted), expectedDataAdapter);
+
+			input.Setup(m => m.JobInputData.JobType).Returns(simType);
+			input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
+			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted), null);
 
 		}
 
@@ -211,264 +237,379 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
         #endregion HeavyLorry
         #region PrimaryBus
         [TestCase()]
-		public void ConventionalPrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.Conventional))]
+        public void ConventionalPrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.Conventional()
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Conventional));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Conventional), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_S2_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_S2))]
+        public void HEV_S2_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.S2)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S2));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S2), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_S3_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_S3))]
+        public void HEV_S3_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.S3)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S3));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S3), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_S4_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_S4))]
+        public void HEV_S4_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.S4)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S4));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S4), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_S_IEPC_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_S_IEPC))]
+        public void HEV_S_IEPC_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.S_IEPC)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S_IEPC));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S_IEPC), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_P1_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_P1))]
+        public void HEV_P1_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.P1)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P1));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P1), expectedDataAdapter);
 		}
 
 
 		[TestCase()]
-		public void HEV_P2_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_P2))]
+        public void HEV_P2_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
-				.HEV(ArchitectureID.S2)
+				.HEV(ArchitectureID.P2)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S2));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P2), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_P2_5_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_P2_5))]
+		public void HEV_P2_5_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.P2_5)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P2_5));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P2_5), expectedDataAdapter);
 		}
 
         [TestCase()]
-		public void HEV_P3_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_P3))]
+        public void HEV_P3_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.P3)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P3));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P3), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void HEV_P4_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.HEV_P4))]
+        public void HEV_P4_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.HEV(ArchitectureID.P4)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P4));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P4), expectedDataAdapter);
 		}
 
 
 		[TestCase()]
-		public void PEV_E2_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.PEV_E2))]
+        public void PEV_E2_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.PEV(ArchitectureID.E2)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E2));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E2), expectedDataAdapter);
 		}
 
 
 		[TestCase()]
-		public void PEV_E3_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.PEV_E3))]
+        public void PEV_E3_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.PEV(ArchitectureID.E3)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E3));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E3), expectedDataAdapter);
 		}
 		[TestCase()]
-		public void PEV_E4_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.PEV_E4))]
+        public void PEV_E4_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.PEV(ArchitectureID.E4)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E4));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E4), expectedDataAdapter);
 		}
 
 		[TestCase()]
-		public void PEV_E_IEPC_PrimaryBus()
+		[TestCase(typeof(DeclarationDataAdapterPrimaryBus.PEV_E_IEPC))]
+        public void PEV_E_IEPC_PrimaryBus(Type expectedDataAdapter = null)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.PEV(ArchitectureID.E_IEPC)
 				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC));
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC), expectedDataAdapter);
 		}
 
+
+		[Test]
+		public void Exempted_PrimaryBusTest([Values] ArchitectureID architectureId, [Values] VectoSimulationJobType simType)
+		{
+			var input = new Mock<IDeclarationInputDataProvider>()
+				.Exempted()
+				.PrimaryBus();
+
+			input.Setup(m => m.JobInputData.JobType).Returns(simType);
+			input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Exempted), null);
+
+		}
+
+
         #endregion PrimaryBus
-		#region CompletedBus
+        #region CompletedBus
         [TestCase()]
-        public void ConventionalCompletedBus()
+		[TestCase(true)]
+        public void ConventionalCompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .Conventional()
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.Conventional));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.Conventional));
+			if(checkCompletedBusAdapters){
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.Conventional), 
+				typeof(DeclarationDataAdapterSpecificCompletedBus.Conventional));
+			}
+
         }
 
         [TestCase()]
-        public void HEV_S2_CompletedBus()
+		[TestCase(true)]
+        public void HEV_S2_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.S2)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S2));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S2));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S2),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S2));
+			}
+
         }
 
         [TestCase()]
-        public void HEV_S3_CompletedBus()
+		[TestCase(true)]
+        public void HEV_S3_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.S3)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S3));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S3));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S3),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S3));
+			}
         }
 
         [TestCase()]
-        public void HEV_S4_CompletedBus()
+		[TestCase(true)]
+        public void HEV_S4_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.S4)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S4));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S4));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S4),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S4));
+			}
         }
 
         [TestCase()]
-        public void HEV_S_IEPC_CompletedBus()
+		[TestCase(true)]
+        public void HEV_S_IEPC_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.S_IEPC)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S_IEPC),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S_IEPC));
+			}
         }
 
         [TestCase()]
-        public void HEV_P1_CompletedBus()
+		[TestCase(true)]
+        public void HEV_P1_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.P1)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P1));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P1));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P1),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P1));
+			}
         }
 
 
         [TestCase()]
-        public void HEV_P2_CompletedBus()
+		[TestCase(true)]
+        public void HEV_P2_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.S2)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S2));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P2),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P2));
+			}
         }
 
 
         [TestCase()]
-        public void HEV_P3_CompletedBus()
+		[TestCase(true)]
+        public void HEV_P3_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.P3)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P3));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P3));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P3),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P3));
+			}
         }
 
 
         [TestCase()]
-        public void HEV_P2_5_CompletedBus()
+		[TestCase(true)]
+        public void HEV_P2_5_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.P2_5)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2_5));
+			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2_5));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P2_5),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P2_5));
+			}
         }
 
 
         [TestCase()]
-        public void HEV_P4_CompletedBus()
+		[TestCase(true)]
+        public void HEV_P4_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .HEV(ArchitectureID.P4)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P4));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P4));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P4),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P4));
+			}
         }
 
 
         [TestCase()]
-        public void PEV_E2_CompletedBus()
+		[TestCase(true)]
+        public void PEV_E2_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .PEV(ArchitectureID.E2)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E2));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E2));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E2),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E2));
+			}
         }
 
 
         [TestCase()]
-        public void PEV_E3_CompletedBus()
+		[TestCase(true)]
+        public void PEV_E3_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .PEV(ArchitectureID.E3)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E3));
+			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E3));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E3),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E3));
+			}
         }
         [TestCase()]
-        public void PEV_E4_CompletedBus()
+		[TestCase(true)]
+        public void PEV_E4_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .PEV(ArchitectureID.E4)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E4));
+			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E4));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E4),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E4));
+			}
         }
 
         [TestCase()]
-        public void PEV_E_IEPC_CompletedBus()
+		[TestCase(true)]
+        public void PEV_E_IEPC_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
                 .PEV(ArchitectureID.E_IEPC)
                 .CompletedBus();
-            CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC));
+            var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC));
+			if (checkCompletedBusAdapters)
+			{
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E_IEPC),
+					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E_IEPC));
+			}
+
         }
         #endregion CompletedBus
     }

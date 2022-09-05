@@ -17,16 +17,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter {
 		AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData);
 		AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData);
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode, Mission mission);
-
 		GearboxData CreateGearboxData(
 			IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc);
-
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
-
 		RetarderData CreateRetarderData(IRetarderInputData retarderData);
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles);
 		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
+	}
+
+	public interface IGenericCompletedBusDataAdapter : IDeclarationDataAdapter
+	{
+
+	}
+
+	public interface ISpecificCompletedBusDataAdapter : IDeclarationDataAdapter
+	{
+
 	}
 }

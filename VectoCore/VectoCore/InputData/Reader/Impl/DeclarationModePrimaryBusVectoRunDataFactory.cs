@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -172,97 +173,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(
 				mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			return simulationRunData;
-		}
-
-
-
-	}
-
-
-
-	public abstract class DeclarationModePrimaryBusRunDataFactory
-	{
-		public abstract class PrimaryBusBase : IVectoRunDataFactory
-		{
-			#region Implementation of IVectoRunDataFactory
-
-			public IEnumerable<VectoRunData> NextRun()
-			{
-				throw new NotImplementedException();
-			}
-
-			#endregion
-		}
-
-		public class Conventional : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_S2 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_S3 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_S4 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_S_IEPC : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_P1 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_P2 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_P2_5 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_P3 : PrimaryBusBase
-		{
-
-		}
-
-		public class HEV_P4 : PrimaryBusBase
-		{
-
-		}
-
-
-		public class PEV_E2 : PrimaryBusBase
-		{
-
-		}
-
-		public class PEV_E3 : PrimaryBusBase
-		{
-
-		}
-
-		public class PEV_E4 : PrimaryBusBase
-		{
-
-		}
-
-		public class PEV_E_IEPC : PrimaryBusBase
-		{
-
 		}
 	}
 }

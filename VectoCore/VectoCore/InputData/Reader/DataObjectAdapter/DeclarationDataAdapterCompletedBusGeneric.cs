@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterPrimaryBus
 
-		public override DriverData CreateDriverData()
+		public new DriverData CreateDriverData()
 		{
 			var retVal = base.CreateDriverData();
 			retVal.LookAheadCoasting.Enabled = false;
