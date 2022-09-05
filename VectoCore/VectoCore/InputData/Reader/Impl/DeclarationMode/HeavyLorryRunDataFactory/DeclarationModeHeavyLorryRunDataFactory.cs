@@ -43,6 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected PTOData _ptoTransmissionData;
 			protected PTOData _municipalPtoTransmissionData;
 			protected ShiftStrategyParameters _gearshiftData;
+			private bool _allowVocational;
 
 
 			protected LorryBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
@@ -99,6 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
 				_segment = GetSegment(vehicle, out var allowVocational);
+				_allowVocational = allowVocational;
 				_driverdata = DataAdapter.CreateDriverData();
 				_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 				var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
@@ -157,7 +159,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 							CycleType.PTO, "PTO", false)
 				};
 			}
-			protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
+			protected virtual VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			{
+				throw new NotImplementedException();
+			}
 
 			public virtual void InitializeReport()
 			{
@@ -166,14 +171,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
 				if (vehicle.ExemptedVehicle)
 				{
-					powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+					powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), _allowVocational);
 					fuels = new List<List<FuelData.Entry>>();
 				}
 				else
 				{
 					powertrainConfig = _segment.Missions.Select(
 							mission => CreateVectoRunData(
-								vehicle, 0, mission, mission.Loadings.First()))
+								vehicle, 0, mission, mission.Loadings.First(), _allowVocational))
 						.FirstOrDefault(x => x != null);
 					fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
 						.ToList();

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry">
+    <Position X="1" Y="2.75" Width="6" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.Conventional" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\Conventional.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_P4">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_P4.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_S4" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_S4.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_P1">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_P1.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_P2_5">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_P2_5.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_P2">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_P2.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_S2" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_S2.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_P3">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_P3.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_S3" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_S3.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.PEV_E2" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\PEV_E2.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.PEV_E3" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\PEV_E3.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.PEV_E4" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\PEV_E4.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.LorryBase" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\LorryBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.PEV_E_IEPC" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\PEV_E_IEPC.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry.HEV_S_IEPC" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>InputData\Reader\DataObjectAdapter\HeavyLorry\HEV_S_IEPC.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAgCAgAAAAAAEAEgIAAAAAACAEAAAAQQABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\HeavyLorry\DeclarationDataAdapterHeavyLorry.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.AbstractSimulationDataAdapter">
+    <Position X="8.25" Y="0.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAggAEAAEAAABAAAAAAAAhAEABEAAgAMAAgAAAAADAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.DeclarationDataAdapterPrimaryBus">
+    <Position X="7.25" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAgDAgAAAAAAAIAgIASABgAqIgEAAAAAABQAQ=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ElectricConsumerEntry">
+    <Position X="10.5" Y="6" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAEEAAAAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IDeclarationDataAdapter">
+    <Position X="6" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAgCAgAAAAAAEAAgIAAAAAAAAEAAAAQAABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

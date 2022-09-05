@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCore.InputData.Reader.Impl;
-
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+﻿namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
     public partial class DeclarationDataAdapterHeavyLorry
     {

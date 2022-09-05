@@ -117,7 +117,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E_IEPC));
 
-
+			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.Exempted>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, exempted: true));
 			#endregion
 
 			#region PrimaryBus

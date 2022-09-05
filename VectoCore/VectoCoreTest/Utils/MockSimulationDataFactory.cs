@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.FileIO;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 
 namespace TUGraz.VectoCore.Tests.Utils

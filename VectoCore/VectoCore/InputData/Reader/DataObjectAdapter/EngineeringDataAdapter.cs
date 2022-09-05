@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 						airDragArea,
-						DeclarationDataAdapterHeavyLorry.Conventional.GetDeclarationAirResistanceCurve(
+						HeavyLorry.DeclarationDataAdapterHeavyLorry.Conventional.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(
 								data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count, data.GrossVehicleMassRating), airDragArea,
 							height),

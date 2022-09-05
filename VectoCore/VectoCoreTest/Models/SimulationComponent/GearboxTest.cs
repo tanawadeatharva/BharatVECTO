@@ -53,6 +53,7 @@ using System.IO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable

@@ -16,7 +16,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
 	public partial class DeclarationDataAdapterHeavyLorry
 	{
@@ -76,10 +76,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					WarnDeclarationMode("VehicleData");
 				}
 
-				return data.ExemptedVehicle
-					? CreateExemptedVehicleData(data)
-					: CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2,
-						allowVocational);
+				//return data.ExemptedVehicle
+				//	? CreateExemptedVehicleData(data)
+				//	: CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2,
+				//		allowVocational);
+				return CreateNonExemptedVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2, allowVocational);
 			}
 
 			protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data,

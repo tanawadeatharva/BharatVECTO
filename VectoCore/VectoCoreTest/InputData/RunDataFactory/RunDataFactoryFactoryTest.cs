@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 
@@ -196,10 +197,20 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 		}
 
-
-#endregion HeavyLorry
-#region PrimaryBus
 		[TestCase()]
+		public void Exempted_HeavyLorryTest(Type expectedDataAdapter = null)
+		{
+			var input = new Mock<IDeclarationInputDataProvider>()
+				.Exempted()
+				.Lorry();
+			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted), expectedDataAdapter);
+
+		}
+
+
+        #endregion HeavyLorry
+        #region PrimaryBus
+        [TestCase()]
 		public void ConventionalPrimaryBus()
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
@@ -263,17 +274,6 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_S2));
 		}
 
-
-		[TestCase()]
-		public void HEV_P3_PrimaryBus()
-		{
-			var input = new Mock<IDeclarationInputDataProvider>()
-				.HEV(ArchitectureID.P3)
-				.PrimaryBus();
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P3));
-		}
-
-
 		[TestCase()]
 		public void HEV_P2_5_PrimaryBus()
 		{
@@ -283,6 +283,14 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P2_5));
 		}
 
+        [TestCase()]
+		public void HEV_P3_PrimaryBus()
+		{
+			var input = new Mock<IDeclarationInputDataProvider>()
+				.HEV(ArchitectureID.P3)
+				.PrimaryBus();
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.HEV_P3));
+		}
 
 		[TestCase()]
 		public void HEV_P4_PrimaryBus()
@@ -331,7 +339,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		}
 
         #endregion PrimaryBus
-        #region CompletedBus
+		#region CompletedBus
         [TestCase()]
         public void ConventionalCompletedBus()
         {
@@ -521,6 +529,13 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			return mock;
 		}
 
+		internal static Mock<IDeclarationInputDataProvider> Exempted(this Mock<IDeclarationInputDataProvider> mock)
+		{
+			mock.Setup(p => p.JobInputData.Vehicle.ExemptedVehicle)
+				.Returns(true);
+			return mock;
+		}
+
 		internal static Mock<IMultistageVIFInputData> Conventional(this Mock<IMultistageVIFInputData> mock)
 		{
 			mock.Setup(p => p.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.VehicleType)
@@ -563,6 +578,13 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 				Returns(type);
 			return mock;
 		}
+
+		internal static Mock<IMultistageVIFInputData> Exempted(this Mock<IMultistageVIFInputData> mock)
+		{
+			mock.Setup(p => p.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle).Returns(true);
+			return mock;
+		}
+
 
 
 

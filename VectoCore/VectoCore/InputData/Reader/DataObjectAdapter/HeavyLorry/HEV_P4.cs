@@ -1,9 +1,9 @@
 ﻿
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
 	public partial class DeclarationDataAdapterHeavyLorry
 	{
-		public class HEV_P4 : DataObjectAdapter.DeclarationDataAdapterHeavyLorry.LorryBase
+		public class HEV_P4 : LorryBase
 		{
 
 		}

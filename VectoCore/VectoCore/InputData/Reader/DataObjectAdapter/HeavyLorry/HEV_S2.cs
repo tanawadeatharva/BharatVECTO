@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
 	public partial class DeclarationDataAdapterHeavyLorry
 	{
