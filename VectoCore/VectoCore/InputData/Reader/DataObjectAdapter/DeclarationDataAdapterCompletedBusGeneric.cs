@@ -58,18 +58,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterHeavyLorry
 
-		public override AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
+		public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 		{
 			return _genericPowertrainData.CreateGenericBusAxlegearData(axlegearData);
 		}
 
-		public override AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
 		{
 			return _genericPowertrainData.CreateGenericBusAngledriveData(data);
 		}
 
 
-		public override RetarderData CreateRetarderData(IRetarderInputData retarder)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
 			return _genericRetarderData.CreateGenericBusRetarderData(retarder);
 		}
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear : GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
 		}
 
-		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		protected void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
 			//gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
@@ -102,6 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected override TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
 			ITorqueConverterDeclarationInputData torqueConverter, double ratio, CombustionEngineData engineData)
 		{
+			
 			if (torqueConverter != null && torqueConverter.TCData != null) {
 				return TorqueConverterDataReader.Create(
 					torqueConverter.TCData,

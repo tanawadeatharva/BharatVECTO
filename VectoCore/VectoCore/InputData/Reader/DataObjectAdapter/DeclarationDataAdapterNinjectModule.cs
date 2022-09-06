@@ -1,7 +1,6 @@
 ﻿using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
@@ -56,6 +55,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IDeclarationDataAdapter>().To<HeavyLorry.DeclarationDataAdapterHeavyLorry.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.PEV_E_IEPC>();
+
+			Bind<IDeclarationDataAdapter>().To<HeavyLorry.DeclarationDataAdapterHeavyLorry.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.Exempted>();
 			#endregion HeavyLorry
 
 			#region PrimaryBus
@@ -101,6 +103,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.PEV_E_IEPC>();
+
+			Bind<IDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.Exempted>();
 
 			#endregion
 

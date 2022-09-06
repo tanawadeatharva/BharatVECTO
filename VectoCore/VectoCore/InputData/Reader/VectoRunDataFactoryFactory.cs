@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 {
 	public interface IInternalRunDataFactoryFactory
 	{
-
+		IVectoRunDataFactory CreateSingleBusRunDataFactory();
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
 			IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report);
@@ -119,7 +119,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(ISingleBusInputDataProvider singleBusProvider, IDeclarationReport report)
 		{
-			return new DeclarationModeSingleBusVectoRunDataFactory(singleBusProvider, report);
+			throw new NotImplementedException();
+			//return new DeclarationModeSingleBusVectoRunDataFactory(singleBusProvider, report);
 		}
 
 

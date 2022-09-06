@@ -33,27 +33,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 					() => new CombineArgumentsToNameInstanceProvider(
 							new CombineArgumentsToNameInstanceProvider.MethodSettings() {
 								combineToNameDelegate = _vehicleStringHelper.CreateName,
-								methods = new [] {
+								methods = new [] { 
 									typeof(IInternalRunDataFactoryFactory)
 										.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationRunDataFactory),
-											new []
-											{
-												typeof(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification),
-												typeof(IDeclarationInputDataProvider),
-												typeof(IDeclarationReport)
-											}
-										),
+											.CreateDeclarationRunDataFactory)), 
 									typeof(IInternalRunDataFactoryFactory)
 										.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationCompletedBusRunDataFactory)//, 
-											//new []
-											//{
-											//	typeof(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification),
-											//	typeof(IDeclarationInputDataProvider),
-											//	typeof(IDeclarationReport)
-											//}
-											)
+											.CreateDeclarationCompletedBusRunDataFactory))
 								},
 								skipArguments = 1,
 								takeArguments = 1,

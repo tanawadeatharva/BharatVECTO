@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{
+			
 			var retVal = base.CreateVehicleData(data, segment, mission, loading, allowVocational);
 			if (data.ExemptedVehicle) {
 				return retVal;
@@ -41,38 +42,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			retVal.CurbMass = mission.CurbMass;
 			retVal.GrossVehicleMass = 40000.SI<Kilogram>();
 			return retVal;
-		}
-
-		protected override VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
-		{
-			var exempted = new VehicleData {
-				InputData = data,
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Manufacturer = data.Manufacturer,
-				ModelName = data.Model,
-				Date = data.Date,
-				//CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
-				VehicleCategory = data.VehicleCategory,
-				//CurbMass = data.CurbMassChassis,
-				GrossVehicleMass = data.GrossVehicleMassRating,
-				AirDensity = Physics.AirDensity,
-			};
-			exempted.VIN = data.VIN;
-			exempted.ManufacturerAddress = data.ManufacturerAddress;
-			exempted.LegislativeClass = data.LegislativeClass;
-			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
-			exempted.HybridElectricHDV = data.HybridElectricHDV;
-			exempted.DualFuelVehicle = data.DualFuelVehicle;
-			exempted.MaxNetPower1 = data.MaxNetPower1;
-			exempted.MaxNetPower2 = data.MaxNetPower2;
-			exempted.AxleConfiguration = data.AxleConfiguration;
-			return exempted;
-		}
-
-		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
-		{
-			return null;
 		}
 
 		public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
@@ -170,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			return  DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup("default");
 		}
 
-		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
+		protected virtual Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations, VehicleClass vehicleClass)
 		{
 			var retVal = GetDefaultElectricConsumers(mission, vehicleData, actuations);
 
@@ -181,10 +150,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			return retVal;
 		}
 
-		protected virtual Dictionary<string, ElectricConsumerEntry> GetDefaultElectricConsumers(
+		protected virtual Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetDefaultElectricConsumers(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
-			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
@@ -211,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					current = 0.SI<Ampere>();
 				}
 
-				retVal[consumer.ConsumerName] = new ElectricConsumerEntry {
+				retVal[consumer.ConsumerName] = new AuxiliaryDataAdapter.ElectricConsumerEntry {
 					BaseVehicle = consumer.BaseVehicle,
 					Current = current
 				};
@@ -244,13 +213,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			return mission.BusParameter.ElectricalConsumers.GetVECTOValueOrDefault(consumer.ConsumerName, 0);
 		}
 
-		protected virtual Dictionary<string, ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected virtual Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
-			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 			var spPower = DeclarationData.SteeringPumpBus.LookupElectricalPowerDemand(
 				mission.MissionType, busAux.SteeringPumpTechnology,
 				vehicleData.Length ?? mission.BusParameter.VehicleLength);
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry {
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry {
 				ActiveDuringEngineStopStandstill = false,
 				BaseVehicle = false,
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
@@ -258,7 +227,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
 				vehicleClass, mission.MissionType, busAux.FanTechnology);
-			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
+			retVal[Constants.Auxiliaries.IDs.Fan] = new AuxiliaryDataAdapter.ElectricConsumerEntry {
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,
 				BaseVehicle = false,
@@ -480,20 +449,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 		}
 
 
-		public abstract class PrimaryBusBase : IDeclarationDataAdapter
+		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
 		{
 			#region Implementation of IDeclarationDataAdapter
 
 			private readonly IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
+			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
+			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapterBase();
+			protected readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterBus();
+			protected readonly IAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
+			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
+
 			public DriverData CreateDriverData()
 			{
 				return _driverDataAdapter.CreateDriverData();
 			}
 
-			public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				throw new NotImplementedException();
+				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+					loading.Value.Item2, allowVocational);
 			}
 
 			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
@@ -503,7 +479,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 			{
-				throw new NotImplementedException();
+				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
 			}
 
 			public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
@@ -511,37 +487,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				throw new NotImplementedException();
 			}
 
-			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
+			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
 				Mission mission)
 			{
 				throw new NotImplementedException();
 			}
 
-			public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				throw new NotImplementedException();
 			}
 
-			public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
 			{
 				throw new NotImplementedException();
 			}
 
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData)
 			{
-				throw new NotImplementedException();
+				return _retarderDataAdapter.CreateRetarderData(retarderData);
 			}
 
 			public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
 			{
-				throw new NotImplementedException();
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
 			}
 
 			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
 			{
-				throw new NotImplementedException();
+				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
+					numSteeredAxles);
 			}
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
@@ -549,12 +526,40 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				throw new NotImplementedException();
 			}
 
+			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData vehicleData,
+				VectoRunData runData)
+			{
+				return _auxDataAdapter.CreateBusAuxiliariesData(mission, vehicleData, runData);
+			}
+
 			#endregion
 		}
 
 		public class Conventional : PrimaryBusBase
 		{
+			protected IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
+			protected IGearboxDataAdapter _gearboxDataAdapter =
+				new GearboxDataAdapter(new TorqueConverterDataAdapter());
+			#region Overrides of PrimaryBusBase
 
+			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
+				Mission mission)
+			{
+				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
+			}
+
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
+			}
+
+			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			{
+				return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+			}
+
+			#endregion
 		}
 
 		public class HEV_S2 : PrimaryBusBase
@@ -627,23 +632,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class Exempted : PrimaryBusBase
 		{
+			#region Overrides of PrimaryBusBase
 
+			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			{
+				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
+			}
+
+			#endregion
 		}
     }
 
-	public class ElectricConsumerEntry {
+	//public class ElectricConsumerEntry {
 
-		public ElectricConsumerEntry()
-		{
-			ActiveDuringEngineStopStandstill = true;
-			ActiveDuringEngineStopDriving = true;
-		}
+	//	public ElectricConsumerEntry()
+	//	{
+	//		ActiveDuringEngineStopStandstill = true;
+	//		ActiveDuringEngineStopDriving = true;
+	//	}
 
-		public bool ActiveDuringEngineStopDriving { get; set; }
+	//	public bool ActiveDuringEngineStopDriving { get; set; }
 
-		public bool ActiveDuringEngineStopStandstill { get; set; }
+	//	public bool ActiveDuringEngineStopStandstill { get; set; }
 
-		public bool BaseVehicle { get; set; }
-		public Ampere Current { get; set; }
-	}
+	//	public bool BaseVehicle { get; set; }
+	//	public Ampere Current { get; set; }
+	//}
 }

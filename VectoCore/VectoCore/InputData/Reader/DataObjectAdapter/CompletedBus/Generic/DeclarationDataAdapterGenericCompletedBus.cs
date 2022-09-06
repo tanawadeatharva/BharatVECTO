@@ -15,6 +15,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 	{
 		public abstract class CompletedBusBase : IGenericCompletedBusDataAdapter
 		{
+			private readonly IRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
             #region Implementation of IDeclarationDataAdapter
 
 			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
@@ -62,9 +63,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             }
 
             public RetarderData CreateRetarderData(IRetarderInputData retarderData)
-            {
-                throw new NotImplementedException();
-            }
+			{
+				return _retarderDataAdapter.CreateRetarderData(retarderData);
+			}
 
             public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
             {

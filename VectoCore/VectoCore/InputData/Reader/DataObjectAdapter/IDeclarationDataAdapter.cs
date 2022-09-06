@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -27,12 +28,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter {
 		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 	}
 
-	public interface IGenericCompletedBusDataAdapter : IDeclarationDataAdapter
+	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
+	{
+		IAuxiliaryConfig CreateBusAuxiliariesData(
+			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
+	}
+
+	public interface IGenericCompletedBusDataAdapter : IPrimaryBusDeclarationDataAdapter
 	{
 
 	}
 
-	public interface ISpecificCompletedBusDataAdapter : IDeclarationDataAdapter
+	public interface ISpecificCompletedBusDataAdapter : IPrimaryBusDeclarationDataAdapter
 	{
 
 	}

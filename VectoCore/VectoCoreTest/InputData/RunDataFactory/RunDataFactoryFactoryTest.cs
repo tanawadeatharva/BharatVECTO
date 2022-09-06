@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,6 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
@@ -24,6 +24,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFa
 namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 {
     [TestFixture]
+	[Parallelizable(ParallelScope.All)]
     internal class RunDataFactoryFactoryTest
 	{
 		private IVectoRunDataFactoryFactory _runDataFactoryFactory;
@@ -221,7 +222,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 		}
 
 		[Test]
-		public void Exempted_HeavyLorryTest([Values]ArchitectureID architectureId, [Values]VectoSimulationJobType simType)
+		public void Exempted_HeavyLorryTest([Values]ArchitectureID architectureId, [Values]VectoSimulationJobType simType, [Values]bool checkDeclarationDataAdapter)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.Exempted()
@@ -229,7 +230,8 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 			input.Setup(m => m.JobInputData.JobType).Returns(simType);
 			input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
-			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted), null);
+			CreateRunDataFactory(input, typeof(DeclarationModeHeavyLorryRunDataFactory.Exempted), 
+				checkDeclarationDataAdapter ? typeof(DeclarationDataAdapterHeavyLorry.Exempted) : null);
 
 		}
 
@@ -380,7 +382,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 
 		[Test]
-		public void Exempted_PrimaryBusTest([Values] ArchitectureID architectureId, [Values] VectoSimulationJobType simType)
+		public void Exempted_PrimaryBusTest([Values] ArchitectureID architectureId, [Values] VectoSimulationJobType simType, [Values] bool checkDeclarationDataAdapter)
 		{
 			var input = new Mock<IDeclarationInputDataProvider>()
 				.Exempted()
@@ -388,7 +390,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 
 			input.Setup(m => m.JobInputData.JobType).Returns(simType);
 			input.Setup(m => m.JobInputData.Vehicle.ArchitectureID).Returns(architectureId);
-			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Exempted), null);
+			CreateRunDataFactory(input, typeof(DeclarationModePrimaryBusRunDataFactory.Exempted), checkDeclarationDataAdapter ? typeof(DeclarationDataAdapterPrimaryBus.Exempted) : null);
 
 		}
 
