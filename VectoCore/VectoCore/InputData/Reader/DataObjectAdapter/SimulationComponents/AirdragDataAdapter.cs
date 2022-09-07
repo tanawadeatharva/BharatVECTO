@@ -14,18 +14,17 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
-	internal interface IAirdragDataAdapter
+	public interface IAirdragDataAdapter
 	{
 		AirdragData CreateAirdragData(
 			IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment);
 	}
 
-	internal class AirdragDataAdapter : IAirdragDataAdapter
+	public class AirdragDataAdapter : IAirdragDataAdapter
 	{
-		public List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry>
-	GetDeclarationAirResistanceCurve(
-		string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)
+		public List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
+			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)
 		{
 			var startSpeed = Constants.SimulationSettings.CrosswindCorrection.MinVehicleSpeed;
 			var maxSpeed = Constants.SimulationSettings.CrosswindCorrection.MaxVehicleSpeed;

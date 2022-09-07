@@ -835,7 +835,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				var gbxType = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type;
 				Assert.AreEqual(gearboxType, gbxType.ToXMLFormat());
-				Assert.IsTrue(DeclarationDataAdapterHeavyLorry.SupportedGearboxTypes.Contains(gbxType));
+				Assert.IsTrue(DeclarationDataAdapterHeavyLorry.Conventional.SupportedGearboxTypes.Contains(gbxType));
 			}
 		}
 

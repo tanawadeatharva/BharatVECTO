@@ -16,6 +16,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -1051,24 +1052,24 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			return retVal;
 		}
 
-		private static Dictionary<string, ElectricConsumerEntry> GetElectricConsumers(Ampere currentDemand, Ampere currentDemandEngineOffDriving, Ampere currentDemandEngineOffStandstill)
+		private static IDictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricConsumers(Ampere currentDemand, Ampere currentDemandEngineOffDriving, Ampere currentDemandEngineOffStandstill)
 		{
-			var retVal = new Dictionary<string, ElectricConsumerEntry>();
+			var retVal = new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 
 			var iBase = currentDemandEngineOffStandstill;
 			var iSP = currentDemandEngineOffDriving -
 					currentDemandEngineOffStandstill;
 			var iFan = currentDemand - currentDemandEngineOffDriving;
 
-			retVal["BaseLoad"] = new ElectricConsumerEntry() {
+			retVal["BaseLoad"] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iBase,
 				BaseVehicle = true
 			};
-			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.SteeringPump] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iSP,
 				ActiveDuringEngineStopStandstill = false,
 			};
-			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry() {
+			retVal[Constants.Auxiliaries.IDs.Fan] = new AuxiliaryDataAdapter.ElectricConsumerEntry() {
 				Current = iFan,
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,

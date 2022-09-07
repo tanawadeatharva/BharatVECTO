@@ -70,11 +70,11 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			Type specificDataAdapter)
 		{
 
-			var genericPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.GenericDataAdapter));
+			var genericPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.DataAdapterGeneric));
 			var generic = genericPropertyInfo.GetValue(runDataResult, null);
 
 			
-			var specificPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.SpecificDataAdapter));
+			var specificPropertyInfo = runDataResult.GetType().GetProperty(nameof(DeclarationModeCompletedBusRunDataFactory.CompletedBusBase.DataAdapterSpecific));
 			var specific = specificPropertyInfo.GetValue(runDataResult, null);
 
             Assert.AreEqual(genericDataAdapter, generic.GetType());
@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
                 .CompletedBus();
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.Conventional));
 			if(checkCompletedBusAdapters){
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.Conventional), 
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional), 
 				typeof(DeclarationDataAdapterSpecificCompletedBus.Conventional));
 			}
 
@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S2));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S2),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S2),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S2));
 			}
 
@@ -438,7 +438,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S3));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S3),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S3),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S3));
 			}
         }
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S4));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S4),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S4),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S4));
 			}
         }
@@ -468,7 +468,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_S_IEPC),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S_IEPC),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_S_IEPC));
 			}
         }
@@ -483,7 +483,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P1));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P1),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P1),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P1));
 			}
         }
@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P2),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P2),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P2));
 			}
         }
@@ -515,7 +515,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P3));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P3),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P3),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P3));
 			}
         }
@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2_5));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P2_5),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P2_5),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P2_5));
 			}
         }
@@ -547,7 +547,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P4));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.HEV_P4),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P4),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.HEV_P4));
 			}
         }
@@ -563,7 +563,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E2));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E2),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E2),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E2));
 			}
         }
@@ -579,7 +579,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E3));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E3),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E3),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E3));
 			}
         }
@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
 			var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E4));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E4),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E4),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E4));
 			}
         }
@@ -608,7 +608,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC));
 			if (checkCompletedBusAdapters)
 			{
-				CheckCompletedBusAdapters(fact, typeof(DeclarationDataAdapterGenericCompletedBus.PEV_E_IEPC),
+				CheckCompletedBusAdapters(fact, typeof(DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E_IEPC),
 					typeof(DeclarationDataAdapterSpecificCompletedBus.PEV_E_IEPC));
 			}
 

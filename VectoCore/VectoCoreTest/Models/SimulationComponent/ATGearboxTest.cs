@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gbxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
 
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var vehicleInput = new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxInput

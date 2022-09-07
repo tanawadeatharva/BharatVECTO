@@ -13,6 +13,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public interface IAngledriveDataAdapter
 	{
 		AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback);
+		AngledriveData CreateAngledriveData(IAngledriveInputData data);
 	}
 
 	public class AngledriveDataAdapter : IAngledriveDataAdapter
@@ -61,6 +62,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoException("Error while reading Angledrive data: {0}", e.Message, e);
 			}
 		}
+
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		{
+			return CreateAngledriveData(data, false);
+		}
 	}
 
 	public class GenericAngledriveDataAdapter : IAngledriveDataAdapter
@@ -71,6 +77,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
 		{
 			return _genericPowertrainData.CreateGenericBusAngledriveData(data);
+		}
+
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		{
+			return CreateAngledriveData(data, false);
 		}
 
 		#endregion

@@ -31,9 +31,11 @@
 
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -100,7 +102,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (provider == null) {
 				throw new VectoException("Failed to cast to Declaration InputDataProvider");
 			}
-			var reader = new DeclarationModeTruckVectoRunDataFactory(provider, null);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var reader = kernel.Get<IVectoRunDataFactoryFactory>()
+				.CreateDeclarationRunDataFactory(provider, null, null);
 
 			if (!shouldFail) {
 				var runData = reader.NextRun().First();

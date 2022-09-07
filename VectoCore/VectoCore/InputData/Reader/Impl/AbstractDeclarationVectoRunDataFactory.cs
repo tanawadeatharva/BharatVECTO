@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
-		protected abstract IDeclarationDataAdapter DataAdapter { get; }
+		//protected abstract IDeclarationDataAdapter DataAdapter { get; }
 
 		protected Segment _segment;
 
@@ -77,17 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract IEnumerable<VectoRunData> GetNextRun();
 
-		protected virtual void Initialize()
-		{
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			if (vehicle.ExemptedVehicle) {
-				return;
-			}
-
-
-		}
-
-		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
+		protected abstract void Initialize();
 
 		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
 
@@ -110,15 +101,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			Report.InitializeReport(powertrainConfig, fuels);
 		}
 
-		protected virtual PTOData CreateDefaultPTOData()
-		{
-			return new PTOData() {
-				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
-				LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
-				PTOCycle =
-					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
-														CycleType.PTO, "PTO", false)
-			};
-		}
+		//protected virtual PTOData CreateDefaultPTOData()
+		//{
+		//	return new PTOData() {
+		//		TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
+		//		LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
+		//		PTOCycle =
+		//			DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
+		//												CycleType.PTO, "PTO", false)
+		//	};
+		//}
 	}
 }

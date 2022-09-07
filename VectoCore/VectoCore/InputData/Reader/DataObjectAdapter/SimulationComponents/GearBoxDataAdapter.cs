@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return null;
 		}
-		public static void CreateTCSecondGearATSerial(GearData gearData,
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
 			ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = gearData.Ratio;
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		public static void CreateTCFirstGearATSerial(GearData gearData,
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
 			ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = gearData.Ratio;
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		public static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
 			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, $"TCGear {i + 1}");
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 		}
 
-		public static TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
 			bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
 		{
 			if (gear.LossMap != null)
@@ -376,6 +376,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			return retVal;
+		}
+
+		#endregion
+	}
+
+	public class GenericCompletedBusGearboxDataAdapter : GearboxDataAdapter
+	{
+		public const double GearEfficiencyDirectGear = 0.98;
+		public const double GearEfficiencyIndirectGear = 0.96;
+		public const double GearEfficiencyAT = 0.925;
+		public GenericCompletedBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(
+			torqueConverterDataAdapter)
+		{
+
+		}
+
+		#region Overrides of GearboxDataAdapterBase
+
+		protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+			VehicleCategory vehicleCategory, GearboxType gearboxType)
+		{
+			if (gearboxType.AutomaticTransmission())
+			{
+				return TransmissionLossMapReader.Create(GearEfficiencyAT, gear.Ratio, $"Gear {i + 1}");
+			}
+			return TransmissionLossMapReader.Create(
+				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear : GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
+		}
+
+		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			//gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1.0, 1, $"TCGear {i + 1}");
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
 		#endregion

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -69,6 +70,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			CheckDeclarationMode(data, "Vehicle");
 			return DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+		}
+		public VehicleData CreateVehicleData(IVehicleDeclarationInputData data,
+			Segment segment,
+			Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			bool allowVocational)
+		{
+			CheckDeclarationMode(data, "Vehicle");
+			return DoCreateVehicleData(data, segment, mission, loading.Value.Item1, loading.Value.Item2, allowVocational);
 		}
 		protected abstract VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data,
 			Segment segment,
@@ -243,5 +253,35 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return exempted;
 		}
 
+	}
+
+	internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+	{
+		#region Overrides of PrimaryBusVehicleDataAdapter
+
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+			double? passengerCount, bool allowVocational)
+		{
+			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+			retVal.GrossVehicleMass = data.GrossVehicleMassRating;
+			if (retVal.TotalVehicleMass.IsGreater(retVal.GrossVehicleMass))
+			{
+				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);
+			}
+			return retVal;
+		}
+
+		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		{
+			var retVal = base.DoCreateExemptedVehicleData(data);
+			retVal.GrossVehicleMass = data.GrossVehicleMassRating;
+			if (retVal.TotalVehicleMass.IsGreater(retVal.GrossVehicleMass))
+			{
+				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);
+			}
+			return retVal;
+		}
+
+		#endregion
 	}
 }

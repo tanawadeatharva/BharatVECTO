@@ -23,6 +23,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -930,7 +931,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			return new CrosswindCorrectionCdxALookup(
 				  aerodynamicDragArea,
-				  DeclarationDataAdapterHeavyLorry.Conventional.GetDeclarationAirResistanceCurve(
+				  new AirdragDataAdapter().GetDeclarationAirResistanceCurve(
 					  crossWindCorrectionParams,
 					  aerodynamicDragArea,
 					  vehicleHeight),

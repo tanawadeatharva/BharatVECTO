@@ -50,15 +50,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
-	public partial class DeclarationDataAdapterHeavyLorry : AbstractSimulationDataAdapter, IDeclarationDataAdapter
+	public partial class DeclarationDataAdapterHeavyLorry
 	{
-		public abstract class LorryBase : AbstractSimulationDataAdapter, IDeclarationDataAdapter
+		public abstract class LorryBase : AbstractSimulationDataAdapter, ILorryDeclarationDataAdapter
 		{
 			#region Implementation of IDeclarationDataAdapter
 
 			private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
 			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
-			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapterBase();
+			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterLorry();
@@ -144,25 +144,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _engineDataAdapter.CreateEngineData(vehicle, mode, mission);
 			}
 
-
-
-			public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
-			protected virtual TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
-				ITorqueConverterDeclarationInputData torqueConverter, double ratio,
-				CombustionEngineData componentsEngineInputData)
-			{
-				return TorqueConverterDataReader.Create(
-					torqueConverter.TCData,
-					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
-					ExecutionMode.Declaration, ratio,
-					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
-					DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
-			}
 
 			#region Overrides of LorryBase
 

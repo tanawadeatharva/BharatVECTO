@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -13,93 +14,70 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 {
 	public abstract class DeclarationDataAdapterSpecificCompletedBus
 	{
-		public abstract class CompletedBusBase : ISpecificCompletedBusDataAdapter
+		public abstract class CompletedBusDeclarationBase : AbstractSimulationDataAdapter, ISpecificCompletedBusDeclarationDataAdapter
         {
 			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusSpecificDriverDataAdapter();
-            #region Implementation of IDeclarationDataAdapter
 
+			private readonly ICompletedBusAuxiliaryDataAdapter _auxDataAdapter =
+				new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
 
-            public DriverData CreateDriverData()
+			#region Implementation of ISpecificCompletedBusDeclarationDataAdapter
+
+			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle,
+				IVehicleDeclarationInputData completedVehicle, VectoRunData runData)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				throw new NotImplementedException();
 			}
 
-            public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-                KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-            {
-                throw new NotImplementedException();
-            }
+			public VehicleData CreateVehicleData(IVehicleDeclarationInputData primaryVehicle,
+				IVehicleDeclarationInputData completedVehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			{
+				throw new NotImplementedException();
+			}
 
-            public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
-            {
-                throw new NotImplementedException();
-            }
+			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			{
+				throw new NotImplementedException();
+			}
 
-            public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
-            {
-                throw new NotImplementedException();
-            }
+			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+			{
+				throw new NotImplementedException();
+			}
 
-            public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
-            {
-                throw new NotImplementedException();
-            }
+			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+			{
+				throw new NotImplementedException();
+			}
 
-            public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
-                Mission mission)
-            {
-                throw new NotImplementedException();
-            }
+			#endregion
 
-            public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-                IShiftPolygonCalculator shiftPolygonCalc)
-            {
-                throw new NotImplementedException();
-            }
+			#region Implementation of IDeclarationDataAdapter
 
-            public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
-            {
-                throw new NotImplementedException();
-            }
+			public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			{
+				throw new NotImplementedException();
+			}
 
-            public RetarderData CreateRetarderData(IRetarderInputData retarderData)
-            {
-                throw new NotImplementedException();
-            }
-
-            public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-                MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
-            {
-                throw new NotImplementedException();
-            }
-
-            public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
-            {
-                throw new NotImplementedException();
-            }
-
-            #endregion
-        }
+			#endregion
+		}
 
 
-        public class Conventional : CompletedBusBase { }
-        public class HEV_S2 : CompletedBusBase { }
-        public class HEV_S3 : CompletedBusBase { }
-        public class HEV_S4 : CompletedBusBase { }
-        public class HEV_S_IEPC : CompletedBusBase { }
-        public class HEV_P1 : CompletedBusBase { }
-        public class HEV_P2 : CompletedBusBase { }
-        public class HEV_P2_5 : CompletedBusBase { }
-        public class HEV_P3 : CompletedBusBase { }
-        public class HEV_P4 : CompletedBusBase { }
-        public class PEV_E2 : CompletedBusBase { }
-        public class PEV_E3 : CompletedBusBase { }
-        public class PEV_E4 : CompletedBusBase { }
-        public class PEV_E_IEPC : CompletedBusBase { }
+        public class Conventional : CompletedBusDeclarationBase { }
+        public class HEV_S2 : CompletedBusDeclarationBase { }
+        public class HEV_S3 : CompletedBusDeclarationBase { }
+        public class HEV_S4 : CompletedBusDeclarationBase { }
+        public class HEV_S_IEPC : CompletedBusDeclarationBase { }
+        public class HEV_P1 : CompletedBusDeclarationBase { }
+        public class HEV_P2 : CompletedBusDeclarationBase { }
+        public class HEV_P2_5 : CompletedBusDeclarationBase { }
+        public class HEV_P3 : CompletedBusDeclarationBase { }
+        public class HEV_P4 : CompletedBusDeclarationBase { }
+        public class PEV_E2 : CompletedBusDeclarationBase { }
+        public class PEV_E3 : CompletedBusDeclarationBase { }
+        public class PEV_E4 : CompletedBusDeclarationBase { }
+        public class PEV_E_IEPC : CompletedBusDeclarationBase { }
 	}
 }

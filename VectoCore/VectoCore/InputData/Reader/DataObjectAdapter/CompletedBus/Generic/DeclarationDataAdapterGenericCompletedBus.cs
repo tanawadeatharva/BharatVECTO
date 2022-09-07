@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -11,93 +12,115 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic
 {
-	public abstract class DeclarationDataAdapterGenericCompletedBus
+	public abstract class DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration
 	{
-		public abstract class CompletedBusBase : IGenericCompletedBusDataAdapter
+		public abstract class CompletedBusDeclarationBase : IGenericCompletedBusDeclarationDataAdapter
 		{
+			private static readonly GearboxType[] SupportedGearboxTypes =
+				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
+
+			#region ComponentDataAdapter
+			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
-            #region Implementation of IDeclarationDataAdapter
-
+			private readonly IEngineDataAdapter _engineDataAdapter = new GenericCombustionEngineComponentDataAdapter();
+			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IDriverDataAdapter _driverDataAdapter = new CompletedBusGenericDriverDataAdapter();
-            public DriverData CreateDriverData()
-            {
-                return _driverDataAdapter.CreateDriverData();
-            }
+			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new GenericCompletedBusAxleGearDataAdapter();
+			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new GenericAngledriveDataAdapter();
+			private readonly IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new GenericCompletedBusTorqueConverterDataAdapter());
+			private readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
+			#endregion
 
-            public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
-                KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
-            {
-                throw new NotImplementedException();
-            }
+			#region Implementation of IGenericCompletedBusDeclarationDataAdapter
+			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			{
+				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
+					loading.Value.Item2, allowVocational);
+			}
 
-            public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
-            {
-                throw new NotImplementedException();
-            }
+			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			{
+				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+			}
 
-            public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
-            {
-                throw new NotImplementedException();
-            }
+			public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+			{
+				return _engineDataAdapter.CreateEngineData(primaryVehicle, modeIdx, mission);
+			}
 
-            public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
-            {
-                throw new NotImplementedException();
-            }
+			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			{
+				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
+					numSteeredAxles);
+			}
 
-            public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
-                Mission mission)
-            {
-                throw new NotImplementedException();
-            }
+			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
+			{
+				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
+			}
 
-            public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-                IShiftPolygonCalculator shiftPolygonCalc)
-            {
-                throw new NotImplementedException();
-            }
+			public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
+			{
+				return _angledriveDataAdapter.CreateAngledriveData(angledriveData);
+			}
 
-            public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
-            {
-                throw new NotImplementedException();
-            }
+			public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, supportedGearboxTypes:SupportedGearboxTypes);
+			}
 
-            public RetarderData CreateRetarderData(IRetarderInputData retarderData)
+			public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			{
+				return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+			}
+
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData)
 			{
 				return _retarderDataAdapter.CreateRetarderData(retarderData);
 			}
 
-            public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
-            {
-                throw new NotImplementedException();
-            }
+			public DriverData CreateDriverData()
+			{
+				return _driverDataAdapter.CreateDriverData();
+			}
 
-            public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-                MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
-            {
-                throw new NotImplementedException();
-            }
-
-            public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
-            {
-                throw new NotImplementedException();
-            }
-
-            #endregion
+			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData vehicleData,
+				VectoRunData runData)
+			{
+				return _auxDataAdapter.CreateBusAuxiliariesData(mission, vehicleData, runData);
+			}
+			#endregion
 		}
-		public class Conventional : CompletedBusBase { }
-		public class HEV_S2 : CompletedBusBase { }
-		public class HEV_S3 : CompletedBusBase { }
-		public class HEV_S4 : CompletedBusBase { }
-		public class HEV_S_IEPC : CompletedBusBase { }
-		public class HEV_P1 : CompletedBusBase { }
-		public class HEV_P2 : CompletedBusBase { }
-		public class HEV_P2_5 : CompletedBusBase { }
-		public class HEV_P3 : CompletedBusBase { }
-		public class HEV_P4 : CompletedBusBase { }
-		public class PEV_E2 : CompletedBusBase { }
-		public class PEV_E3 : CompletedBusBase { }
-		public class PEV_E4 : CompletedBusBase { }
-		public class PEV_E_IEPC : CompletedBusBase { }
-    }
+
+		public class Conventional : CompletedBusDeclarationBase { }
+		public class HEV_S2 : CompletedBusDeclarationBase { }
+		public class HEV_S3 : CompletedBusDeclarationBase { }
+		public class HEV_S4 : CompletedBusDeclarationBase { }
+		public class HEV_S_IEPC : CompletedBusDeclarationBase { }
+		public class HEV_P1 : CompletedBusDeclarationBase { }
+		public class HEV_P2 : CompletedBusDeclarationBase { }
+		public class HEV_P2_5 : CompletedBusDeclarationBase { }
+		public class HEV_P3 : CompletedBusDeclarationBase { }
+		public class HEV_P4 : CompletedBusDeclarationBase { }
+		public class PEV_E2 : CompletedBusDeclarationBase { }
+		public class PEV_E3 : CompletedBusDeclarationBase { }
+		public class PEV_E4 : CompletedBusDeclarationBase { }
+		public class PEV_E_IEPC : CompletedBusDeclarationBase { }
+
+		public class Exempted : CompletedBusDeclarationBase
+		{
+			#region Overrides of CompletedBusBase
+
+			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+			{
+				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
+			}
+
+			#endregion
+		}
+	}
 }

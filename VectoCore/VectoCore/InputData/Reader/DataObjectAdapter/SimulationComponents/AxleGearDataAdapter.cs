@@ -1,6 +1,7 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
@@ -12,7 +13,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 	}
 
-	public class AxleGearDataAdapterBase : IAxleGearDataAdapter
+	public class AxleGearDataAdapter : IAxleGearDataAdapter
 	{
 		public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 		{
@@ -68,12 +69,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				AxleGear = new GearData { Ratio = data.Ratio }
 			};
 		}
-		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
+		public virtual AxleGearData CreateAxleGearData(IAxleGearInputData data)
 		{
 			
 			var retVal = SetCommonAxleGearData(data);
 			retVal.AxleGear.LossMap = ReadAxleLossMap(data, false);
 			return retVal;
 		}
+	}
+
+	public class GenericCompletedBusAxleGearDataAdapter : AxleGearDataAdapter
+	{
+		#region Overrides of AxleGearDataAdapterBase
+		private readonly GenericTransmissionComponentData _genericPowertrainData = new GenericTransmissionComponentData();
+		public override AxleGearData CreateAxleGearData(IAxleGearInputData data)
+		{
+			return _genericPowertrainData.CreateGenericBusAxlegearData(data);
+		}
+
+		#endregion
 	}
 }

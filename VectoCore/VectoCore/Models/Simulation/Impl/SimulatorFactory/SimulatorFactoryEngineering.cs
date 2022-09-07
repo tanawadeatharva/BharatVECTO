@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Exceptions;
+﻿using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -17,10 +18,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			switch (dataProvider) {
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
-					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
+					throw new NotImplementedException();
+					//RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 					return;
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
-					RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+					throw new NotImplementedException();
+					//RunDataFactory = new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
 					return;
 				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
 					RunDataFactory = new EngineOnlyVectoRunDataFactory(engDataProvider);

@@ -100,16 +100,17 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(IVTPDeclarationInputDataProvider vtpProvider, IDeclarationReport report)
 		{
+			throw new NotImplementedException();
 			var vtpReport = CastReport<IVTPReport>(report);
 
 			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry())
 			{
-				return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, vtpReport);
+				//return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, vtpReport);
 			}
 
 			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus())
 			{
-				return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, vtpReport);
+				//return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, vtpReport);
 			}
 			
 

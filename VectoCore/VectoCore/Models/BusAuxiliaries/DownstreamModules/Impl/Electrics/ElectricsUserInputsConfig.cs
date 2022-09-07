@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public AlternatorType AlternatorType { get; set; }
 
 		[JsonIgnore]
-		public Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> ElectricalConsumers { get; set; }
+		public IDictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> ElectricalConsumers { get; set; }
 
 		public string[] ElectricalConsumersSerialized
 		{

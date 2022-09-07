@@ -15,8 +15,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 	public interface IEngineDataAdapter
 	{
-		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
+		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle,
 			IEngineModeDeclarationInputData mode, Mission mission);
+
+		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission);
 	}
 	public abstract class EngineComponentDataAdapter : ComponentDataAdapterBase, IEngineDataAdapter
 	{
@@ -142,12 +144,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		#region Implementation of IEngineDataAdapter
 
-		public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode,
+		public CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, IEngineModeDeclarationInputData mode,
 			Mission mission)
 		{
-			CheckDeclarationMode(vehicle.Components.EngineInputData, "EngineData");
-			return DoCreateEngineData(vehicle, mode, mission);
+			CheckDeclarationMode(primaryVehicle.Components.EngineInputData, "EngineData");
+			return DoCreateEngineData(primaryVehicle, mode, mission);
 		}
+
+		public abstract CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx,
+			Mission mission);
 
 		protected abstract CombustionEngineData DoCreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission);
 
@@ -157,6 +162,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class CombustionEngineComponentDataAdapter : EngineComponentDataAdapter
 	{
 		#region Overrides of EngineDataAdapter
+
+		public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+		{
+			throw new NotImplementedException();
+		}
 
 		protected override CombustionEngineData DoCreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
 		{
@@ -217,6 +227,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			return retVal;
+		}
+
+
+		#endregion
+	}
+
+	public class GenericCombustionEngineComponentDataAdapter : EngineComponentDataAdapter
+	{
+		GenericBusEngineData busEngineData = GenericBusEngineData.Instance;
+		#region Overrides of EngineComponentDataAdapter
+
+		protected override CombustionEngineData DoCreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode,
+			Mission mission)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData primaryVehicle, int modeIdx, Mission mission)
+		{
+			return busEngineData.CreateGenericBusEngineData(primaryVehicle, modeIdx, mission);
 		}
 
 		#endregion

@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1.1,
 				WHTCUrban = 1.1
 			};
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 
 			var dummyGearbox = new DummyGearboxData() {
 				Type = GearboxType.AMT,

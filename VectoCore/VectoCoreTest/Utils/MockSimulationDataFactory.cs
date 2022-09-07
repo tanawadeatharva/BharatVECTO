@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gearBoxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapterHeavyLorry();
+				var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 				var vehicleInput = new MockDeclarationVehicleInputData() {
 					EngineInputData = engineInput,
 					GearboxInputData = gearboxInput
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile, bool declarationMode = true)
 		{
 			if (declarationMode) {
-				var dao = new DeclarationDataAdapterHeavyLorry();
+				var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
 				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
 			} else {
