@@ -844,6 +844,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = new BatterySystemData();
+			var batteryCount = 0;
 			foreach (var entry in bat) {
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
 				if (b == null) {
@@ -859,7 +860,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						InternalResistance =
 							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
-						BatteryId = i
+						BatteryId = batteryCount++,
 					}));
 				}
 			}
