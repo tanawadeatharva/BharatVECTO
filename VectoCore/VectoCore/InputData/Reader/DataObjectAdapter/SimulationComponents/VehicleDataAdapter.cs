@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
 			double? passengerCount, bool allowVocational)
 		{
-			var retVal = base.CreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+			var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 			if (data.ExemptedVehicle)
 			{ 
 				System.Diagnostics.Debug.Assert( false, "CreateExemptedVehicleData should be used");
