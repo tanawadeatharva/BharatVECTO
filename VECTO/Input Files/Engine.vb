@@ -20,6 +20,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -225,7 +226,7 @@ Public Class Engine
 					.EngineInputData = engine,
 					.TankSystem = TankSystem.Compressed
 				}
-				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
+				engineData = New CombustionEngineComponentDataAdapter().CreateEngineData(dummyVehicle, engine.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Dim dummyVehicle As IVehicleEngineeringInputData = New DummyVehicle() With {

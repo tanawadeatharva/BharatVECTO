@@ -6,6 +6,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.Declaration
@@ -88,9 +89,9 @@ Namespace UnitTests
             .MissionType = MissionType.Urban
             }
 
-            Dim auxInput as IBusAuxiliariesDeclarationData = nothing
+            Dim auxInput as IBusAuxiliariesDeclarationData = Nothing
 
-            Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
+            Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
             Dim target As ISSMDeclarationInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel, LoadingType.ReferenceLoad)
 
             If section = "BusParameterisation" Then
@@ -595,9 +596,9 @@ Namespace UnitTests
                     }
                     }
 
-            Dim auxInput as IBusAuxiliariesDeclarationData = nothing
+            Dim auxInput as IBusAuxiliariesDeclarationData = Nothing
 
-            Dim dao = New DeclarationDataAdapterCompletedBusGeneric()
+            Dim dao = New GenericCompletedBusAuxiliaryDataAdapter()
             Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(auxInput, mission,
                                                                              FuelData.Diesel, LoadingType.ReferenceLoad))
 

@@ -22,6 +22,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -198,8 +199,8 @@ Public Class Gearbox
                         VectoValidationModeServiceContainer)
         Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
         Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
-        Dim jobType as VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
-        Dim emPos as PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
+        Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+        Dim emPos As PowertrainPosition? = If(modeService Is Nothing, PowertrainPosition.HybridPositionNotSet, modeService.EMPowertrainPosition)
 
 
         Dim axlegearData As AxleGearData
@@ -214,37 +215,38 @@ Public Class Gearbox
             'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
             Dim engine As CombustionEngineData
             Dim vehiclecategory As VehicleCategory
-            Dim rdyn As Meter = 0.5.SI (Of Meter)()
+            Dim rdyn As Meter = 0.5.SI(Of Meter)()
             Try
                 vehiclecategory = inputData.JobInputData.Vehicle.VehicleCategory
             Catch ex As Exception
-                vehiclecategory = vehiclecategory.RigidTruck
+                vehiclecategory = VehicleCategory.RigidTruck
             End Try
             If mode = ExecutionMode.Declaration Then
                 Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 
                 Try
-                    engine = doa.CreateEngineData(inputData.JobInputData.Vehicle,
+                    engine = New CombustionEngineComponentDataAdapter().CreateEngineData(inputData.JobInputData.Vehicle,
                                                   inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.
                                                      First(), New Mission() With {.MissionType = MissionType.LongHaul})
                 Catch
                     engine = GetDefaultEngine(gearbox.Gears)
                 End Try
 
-                axlegearData = doa.CreateAxleGearData(gearbox)
-                gearboxData = doa.CreateGearboxData(
-                    new MockVehicleInputData() _
-                                                       With { _
+                axlegearData = New AxleGearDataAdapter().CreateAxleGearData(gearbox)
+                gearboxData = New GearboxDataAdapter(New TorqueConverterDataAdapter()).CreateGearboxData(
+                    New MockVehicleInputData() _
+                                                       With {
                                                        .Components =
                                                        New MockComponents() _
-                                                       With {.GearboxInputData =  gearbox,
-                                                       .TorqueConverterInputData = gearbox }},
+                                                       With {.GearboxInputData = gearbox,
+                                                       .TorqueConverterInputData = gearbox}},
                     New VectoRunData() _
                                                        With {.AxleGearData = axlegearData, .EngineData = engine,
                                                        .VehicleData =
                                                        New VehicleData() _
-                                                       With { .DynamicTyreRadius = rdyn,
-                                                       .VehicleCategory = vehiclecategory}}, Nothing)
+                                                       With {.DynamicTyreRadius = rdyn,
+                                                       .VehicleCategory = vehiclecategory}},
+                    Nothing, DeclarationDataAdapterHeavyLorry.Conventional.SupportedGearboxTypes)
             Else
 
                 Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
