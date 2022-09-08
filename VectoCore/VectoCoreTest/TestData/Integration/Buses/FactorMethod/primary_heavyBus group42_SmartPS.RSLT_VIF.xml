@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
+<VectoOutputMultistep xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
+    xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
+     xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
+     xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
+      xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+      xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 ./../../../../../VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
   <PrimaryVehicle>
     <Data id="VEH-dda89003b1894b738e01" xsi:type="PrimaryVehicleDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1">
-      <Vehicle xsi:type="VehiclePIFType">
-        <ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
-        <ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+      <Vehicle xsi:type="ConventionalVehicleVIFType">
+        <Manufacturer>Generic Truck Manufacturer</Manufacturer>
+        <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
         <Model>Generic Model Primary</Model>
         <VIN>VEH-1234567890_SmartPS</VIN>
         <Date>2017-02-15T11:00:00Z</Date>
@@ -31,7 +38,7 @@
         </vif0.1:TorqueLimits>
         <Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
           <Engine>
-            <Data xsi:type="EngineDataPIFType">
+            <Data xsi:type="EngineDataVIFType">
               <Manufacturer>Generic Engine Manufacturer Primary</Manufacturer>
               <Model>Bus 6x2 Engine</Model>
               <CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -67,14 +74,14 @@
             </Data>
           </Engine>
           <Transmission>
-            <Data xsi:type="TransmissionDataPIFType">
+            <Data xsi:type="TransmissionDataVIFType">
               <Manufacturer>Generic Gearbox Manufacturer Primary</Manufacturer>
               <Model>Generic 40t Long Haul Truck Gearbox Primary</Model>
               <MainCertificationMethod>Standard values</MainCertificationMethod>
               <Date>2017-01-11T11:00:00Z</Date>
               <AppVersion>3.0.1</AppVersion>
               <TransmissionType>AMT</TransmissionType>
-              <Gears xsi:type="TransmissionGearsPIFType">
+              <Gears xsi:type="TransmissionGearsVIFType">
                 <Gear number="1">
                   <Ratio>14.930</Ratio>
                   <MaxTorque>1900</MaxTorque>
@@ -128,7 +135,7 @@
             </Data>
           </Transmission>
           <Axlegear>
-            <Data xsi:type="AxlegearDataPIFType">
+            <Data xsi:type="AxlegearDataVIFType">
               <Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
               <Model>Generic 40t Long Haul Truck AxleGear Primary</Model>
               <CertificationMethod>Standard values</CertificationMethod>
@@ -139,7 +146,7 @@
             </Data>
           </Axlegear>
           <AxleWheels>
-            <Data xsi:type="AxleWheelsDataPIFType">
+            <Data xsi:type="AxleWheelsDataVIFType">
               <Axles>
                 <Axle axleNumber="1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="v2.0:AxleDataDeclarationType">
                   <v2.0:AxleType>VehicleNonDriven</v2.0:AxleType>
@@ -226,7 +233,7 @@
             </Data>
           </AxleWheels>
           <Auxiliaries>
-            <Data xsi:type="AuxiliaryDataPIFType">
+            <Data xsi:type="AUX_Conventional_PrimaryBusType" >
               <Fan>
                 <Technology>Hydraulic driven - Constant displacement pump</Technology>
               </Fan>
