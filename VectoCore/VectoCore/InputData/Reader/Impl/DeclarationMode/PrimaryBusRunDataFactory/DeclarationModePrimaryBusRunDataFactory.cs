@@ -140,6 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				{
 					return new VectoRunData
 					{
+						InputData = DataProvider,
 						Exempted = true,
 						Report = Report,
 						Mission = new Mission { MissionType = MissionType.ExemptedMission },
@@ -159,6 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var simulationRunData = new VectoRunData
 				{
+					InputData = DataProvider,
 					Loading = loading.Key,
 					VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),
 					VehicleDesignSpeed = _segment.DesignSpeed,

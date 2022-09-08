@@ -16,7 +16,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 {
 	public interface IInternalRunDataFactoryFactory
 	{
-		IVectoRunDataFactory CreateSingleBusRunDataFactory();
+		IVectoRunDataFactory CreateSingleBusRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification, 
+			ISingleBusInputDataProvider dataProvider, 
+			IDeclarationReport report);
+
 		IVectoRunDataFactory CreateDeclarationRunDataFactory(VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification vehicleClassification,
 			IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report);
@@ -105,12 +108,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry())
 			{
-				//return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, vtpReport);
+				return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, vtpReport);
 			}
 
 			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus())
 			{
-				//return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, vtpReport);
+				return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, vtpReport);
 			}
 			
 
@@ -120,8 +123,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private IVectoRunDataFactory CreateRunDataReader(ISingleBusInputDataProvider singleBusProvider, IDeclarationReport report)
 		{
-			throw new NotImplementedException();
-			//return new DeclarationModeSingleBusVectoRunDataFactory(singleBusProvider, report);
+
+			return _internalFactory.CreateSingleBusRunDataFactory(new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(singleBusProvider), singleBusProvider, report);
 		}
 
 

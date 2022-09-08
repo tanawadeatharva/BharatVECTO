@@ -34,6 +34,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			protected readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterBus();
 			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
 			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
+			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
+			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
+			private readonly IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
 
 			public DriverData CreateDriverData()
 			{
@@ -49,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
 			{
-				throw new NotImplementedException();
+				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
@@ -59,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
 			{
-				throw new NotImplementedException();
+				return _angledriveDataAdapter.CreateAngledriveData(angledriveData);
 			}
 
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,

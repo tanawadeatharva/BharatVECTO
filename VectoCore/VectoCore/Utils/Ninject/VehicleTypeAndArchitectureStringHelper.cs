@@ -119,8 +119,12 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			return GetName(vehicleType, VectoSimulationJobType.ConventionalVehicle, exempted: exempted);
 		}
 
-		#endregion
+		public string GetSingleBusName(VectoSimulationJobType jobType, ArchitectureID archId, bool exempted = false)
+		{
+			return GetName(new VehicleClassification(jobType, archId, null, exempted, false, false, true));
+		}
 
+		#endregion
 		public struct VehicleClassification
 		{
 			private readonly VectoSimulationJobType _jobType;
@@ -171,14 +175,19 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 			private bool Ihpc => _ihpc;
 
-			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, bool exempted, bool iepc, bool ihpc)
+			private readonly bool _isSingleBus;
+			private const string _singlebus = "SingleBus";
+			private bool IsSingleBus => _isSingleBus;
+
+			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, bool exempted, bool iepc, bool ihpc, bool singleBus = false)
 			{
 				_iepc = iepc;
 				_ihpc = ihpc;
 				_exempted = exempted;
-				_vehicleType = vehicleType;
+				_vehicleType = singleBus ? _singlebus : vehicleType;
 				_archId = archId;
 				_jobType = jobType;
+				_isSingleBus = singleBus;
 			}
 
 			public VehicleClassification(IVehicleDeclarationInputData inputData) : this()
@@ -191,7 +200,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				_vehicleType = inputData.VehicleCategory.GetVehicleType();
 				_archId = inputData.ArchitectureID;
 				_jobType = inputData.VehicleType;
-				
+				_isSingleBus = false;
 			}
 
 
@@ -205,8 +214,16 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				_vehicleType = inputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory.GetVehicleType();
 				_archId = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID;
 				_jobType = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle.VehicleType;
-
+				_isSingleBus = false;
 				//inputData.MultistageJobInputData.JobInputData.ConsolidateManufacturingStage.
+			}
+
+			public VehicleClassification(ISingleBusInputDataProvider singleBus) : this()
+			{
+				_isSingleBus = true;
+				_vehicleType = _singlebus;
+				_archId = singleBus.PrimaryVehicle.ArchitectureID;
+				_jobType = singleBus.PrimaryVehicle.VehicleType;
 			}
 
 			public bool Equals(VehicleClassification other)

@@ -7,6 +7,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		protected void CheckDeclarationMode(IComponentInputData component, string componentName)
 		{
+			if (component == null) {
+				return;
+			}
 			if (!component.SavedInDeclarationMode)
 			{
 				Log.Warn("{0} not in Declaration Mode!", componentName);
@@ -14,6 +17,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 		protected void CheckDeclarationMode(IAuxiliariesDeclarationInputData aux, string componentName)
 		{
+			if (aux == null) {
+				return;
+			}
 			if (!aux.SavedInDeclarationMode)
 			{
 				Log.Warn("{0} not in Declaration Mode!", componentName);

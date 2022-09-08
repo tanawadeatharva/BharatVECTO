@@ -3,35 +3,42 @@
   <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IDeclarationDataAdapter">
     <Position X="0.5" Y="1.5" Width="13" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAgAgCAAAAAAAAAAAgAAAAAAAAAAAAAAQAABAAA=</HashCode>
       <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ILorryDeclarationDataAdapter">
-    <Position X="0.5" Y="7.25" Width="13" />
+    <Position X="0.5" Y="5.25" Width="13" />
     <TypeIdentifier>
-      <HashCode>AAEAAAgAACAgAAAAAAEAAgIAAAAAAAAEAAAAQAABQAA=</HashCode>
+      <HashCode>AAEAAAAAACAgAAAAAAEAAAIAAAAAAAAEAAAAAAAAQAA=</HashCode>
       <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IPrimaryBusDeclarationDataAdapter">
-    <Position X="0.5" Y="5.25" Width="13" />
+    <Position X="14" Y="5.25" Width="13" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAABQAA=</HashCode>
+      <HashCode>AAEAAAAAAAAgAAAAAAEAAAIAAAAAAAAEAAAAAAAAQAA=</HashCode>
       <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.IGenericCompletedBusDeclarationDataAdapter">
-    <Position X="1.25" Y="10.75" Width="12.25" />
+    <Position X="0.5" Y="8.25" Width="13" />
     <TypeIdentifier>
-      <HashCode>AAEAAAgAACAgAAAAAAEAAgAAAAAAAAAAAAAAQAABQAA=</HashCode>
+      <HashCode>AAEAAAgAACAgAAAAAAEAAgAAAAAAAAAAAAAAAAABQAA=</HashCode>
       <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ISpecificCompletedBusDeclarationDataAdapter">
-    <Position X="2.75" Y="3" Width="10.75" />
+    <Position X="14" Y="8.25" Width="10.75" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAABQAA=</HashCode>
+      <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.ISingleBusDeclarationDataAdapter">
+    <Position X="16.5" Y="1" Width="8.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAACAgAAAAAAEAAgIAAAAAAAAEAAAAQAABQAA=</HashCode>
       <FileName>InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs</FileName>
     </TypeIdentifier>
   </Interface>

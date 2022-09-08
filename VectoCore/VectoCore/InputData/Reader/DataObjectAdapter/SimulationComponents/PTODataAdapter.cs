@@ -46,6 +46,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	public class PTODataAdapterBus : IPTODataAdapter
 	{
+		public static PTOData DefaultPTOData()
+		{
+			return null;
+		}
 		#region Implementation of IPTODataAdapter
 
 		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
@@ -55,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		public PTOData CreateDefaultPTOData()
 		{
-			return null;
+			return DefaultPTOData();
 		}
 
 		#endregion

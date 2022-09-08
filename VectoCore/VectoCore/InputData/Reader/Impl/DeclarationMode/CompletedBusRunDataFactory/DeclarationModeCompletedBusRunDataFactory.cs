@@ -114,6 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				var simulationRunData = new VectoRunData
 				{
+					InputData = DataProvider.MultistageJobInputData,
 					Loading = loading.Key,
 					VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false),
 					AirdragData = DataAdapterGeneric.CreateAirdragData(null, mission, new Segment()),
@@ -152,6 +153,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				var simulationRunData = new VectoRunData
 				{
+					InputData = DataProvider.MultistageJobInputData,
 					Loading = loading.Key,
 					VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segmentCompletedBus,
 						mission, loading),

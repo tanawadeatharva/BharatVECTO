@@ -856,7 +856,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return _primaryBusDataAdapter.SelectBenefitForFloorType(completedVehicle.VehicleCode.GetFloorType(), onVehicle);
 		}
 
-		protected Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
+		protected override Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> GetElectricAuxConsumers(Mission mission, IVehicleDeclarationInputData vehicleData, VehicleClass vehicleClass, IBusAuxiliariesDeclarationData busAux)
 		{
 			return new Dictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry>();
 		}
@@ -891,7 +891,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected virtual ElectricsUserInputsConfig CreateElectricsUserInputsConfig(IVehicleDeclarationInputData primaryVehicle,
 			IVehicleDeclarationInputData completedVehicle, Mission mission, IActuations actuations, VehicleClass vehicleClass)
 		{
-			var currentDemand = _primaryBusDataAdapter.GetElectricConsumers(mission, completedVehicle, actuations, vehicleClass);
+			var currentDemand = GetElectricConsumers(mission, completedVehicle, actuations, vehicleClass);
 
 			// add electrical steering pump or electric fan defined in primary vehicle
 			foreach (var entry in GetElectricAuxConsumersPrimary(mission, completedVehicle, vehicleClass, primaryVehicle.Components.BusAuxiliaries))
@@ -899,7 +899,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				currentDemand[entry.Key] = entry.Value;
 			}
 
-			var retVal = _primaryBusDataAdapter.GetDefaultElectricalUserConfig();
+			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 			retVal.AlternatorType = primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;

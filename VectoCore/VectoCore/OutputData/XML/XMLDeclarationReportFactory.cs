@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				case IMultistepBusInputDataProvider multistageBusInputDataProvider:
 					break;
 				case ISingleBusInputDataProvider singleBusInputDataProvider:
-					return new XMLDeclarationReport(outputWriter);
+					return new XMLDeclarationReport09(outputWriter, _mrfFactory, _cifFactory);
 				case IDeclarationInputDataProvider declarationInputDataProvider:
 					return CreateDeclarationReport(declarationInputDataProvider, outputWriter);
 				case IMultiStageTypeInputData multiStageTypeInputData:
@@ -94,12 +94,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				switch (declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory)
 				{
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
+						return new XMLDeclarationReportCompletedVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory)
 											{
 												PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
 											};
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter);
+						return new XMLDeclarationReportPrimaryVehicle_09(outputDataWriter, _mrfFactory, _cifFactory, _vifFactory);
 
 					default:
 						break;
