@@ -156,26 +156,26 @@ Partial Class IHPCForm
         Me.FlowLayoutPanel1.Controls.Add(Me.tbModel)
         Me.FlowLayoutPanel1.Location = New System.Drawing.Point(12, 77)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(242, 26)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(513, 26)
         Me.FlowLayoutPanel1.TabIndex = 100
         '
         'Label49
         '
         Me.Label49.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label49.AutoSize = true
+        Me.Label49.AutoSize = True
         Me.Label49.Location = New System.Drawing.Point(3, 6)
         Me.Label49.Name = "Label49"
-        Me.Label49.Size = New System.Drawing.Size(36, 13)
+        Me.Label49.Size = New System.Drawing.Size(87, 13)
         Me.Label49.TabIndex = 43
-        Me.Label49.Text = "Model"
+        Me.Label49.Text = "Make and Model"
         '
         'tbModel
         '
         Me.tbModel.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.tbModel.Location = New System.Drawing.Point(45, 3)
+        Me.tbModel.Location = New System.Drawing.Point(96, 3)
         Me.tbModel.Margin = New System.Windows.Forms.Padding(3, 3, 0, 3)
         Me.tbModel.Name = "tbModel"
-        Me.tbModel.Size = New System.Drawing.Size(194, 20)
+        Me.tbModel.Size = New System.Drawing.Size(417, 20)
         Me.tbModel.TabIndex = 0
         '
         'FlowLayoutPanel6
@@ -191,7 +191,7 @@ Partial Class IHPCForm
         'Label51
         '
         Me.Label51.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label51.AutoSize = true
+        Me.Label51.AutoSize = True
         Me.Label51.Location = New System.Drawing.Point(3, 6)
         Me.Label51.Name = "Label51"
         Me.Label51.Size = New System.Drawing.Size(36, 13)
@@ -209,7 +209,7 @@ Partial Class IHPCForm
         'lblinertiaUnit
         '
         Me.lblinertiaUnit.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.lblinertiaUnit.AutoSize = true
+        Me.lblinertiaUnit.AutoSize = True
         Me.lblinertiaUnit.Location = New System.Drawing.Point(108, 6)
         Me.lblinertiaUnit.Name = "lblinertiaUnit"
         Me.lblinertiaUnit.Size = New System.Drawing.Size(36, 13)
@@ -229,7 +229,7 @@ Partial Class IHPCForm
         'Label52
         '
         Me.Label52.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label52.AutoSize = true
+        Me.Label52.AutoSize = True
         Me.Label52.Location = New System.Drawing.Point(3, 6)
         Me.Label52.Margin = New System.Windows.Forms.Padding(3, 0, 0, 0)
         Me.Label52.Name = "Label52"
@@ -249,7 +249,7 @@ Partial Class IHPCForm
         'Label10
         '
         Me.Label10.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label10.AutoSize = true
+        Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(242, 6)
         Me.Label10.Margin = New System.Windows.Forms.Padding(2, 0, 3, 0)
         Me.Label10.Name = "Label10"
@@ -272,7 +272,7 @@ Partial Class IHPCForm
         'Label1
         '
         Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label1.AutoSize = true
+        Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(3, 6)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3, 0, 6, 0)
         Me.Label1.Name = "Label1"
@@ -292,13 +292,13 @@ Partial Class IHPCForm
         'btDragCurve
         '
         Me.btDragCurve.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.btDragCurve.Image = CType(resources.GetObject("btDragCurve.Image"),System.Drawing.Image)
+        Me.btDragCurve.Image = CType(resources.GetObject("btDragCurve.Image"), System.Drawing.Image)
         Me.btDragCurve.Location = New System.Drawing.Point(394, 1)
         Me.btDragCurve.Margin = New System.Windows.Forms.Padding(0)
         Me.btDragCurve.Name = "btDragCurve"
         Me.btDragCurve.Size = New System.Drawing.Size(24, 24)
         Me.btDragCurve.TabIndex = 4
-        Me.btDragCurve.UseVisualStyleBackColor = true
+        Me.btDragCurve.UseVisualStyleBackColor = True
         '
         'btDragCurveOpen
         '
@@ -308,8 +308,8 @@ Partial Class IHPCForm
         Me.btDragCurveOpen.Name = "btDragCurveOpen"
         Me.btDragCurveOpen.Size = New System.Drawing.Size(24, 24)
         Me.btDragCurveOpen.TabIndex = 84
-        Me.btDragCurveOpen.TabStop = false
-        Me.btDragCurveOpen.UseVisualStyleBackColor = true
+        Me.btDragCurveOpen.TabStop = False
+        Me.btDragCurveOpen.UseVisualStyleBackColor = True
         '
         'tcVoltageLevels
         '
@@ -333,7 +333,7 @@ Partial Class IHPCForm
         Me.tpFirstVoltageLevel.Size = New System.Drawing.Size(509, 313)
         Me.tpFirstVoltageLevel.TabIndex = 0
         Me.tpFirstVoltageLevel.Text = "Voltage Level Low"
-        Me.tpFirstVoltageLevel.UseVisualStyleBackColor = true
+        Me.tpFirstVoltageLevel.UseVisualStyleBackColor = True
         '
         'lvPowerMap
         '
@@ -343,15 +343,15 @@ Partial Class IHPCForm
         Me.lvPowerMap.Name = "lvPowerMap"
         Me.lvPowerMap.Size = New System.Drawing.Size(500, 180)
         Me.lvPowerMap.TabIndex = 107
-        Me.lvPowerMap.TabStop = false
+        Me.lvPowerMap.TabStop = False
         Me.lvPowerMap.Text = "Power Map Per Gear"
         '
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TableLayoutPanel3.ColumnCount = 2
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 359!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 359.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.lvPowerMap1, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.FlowLayoutPanel11, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 1, 1)
@@ -365,21 +365,21 @@ Partial Class IHPCForm
         '
         'lvPowerMap1
         '
-        Me.lvPowerMap1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.lvPowerMap1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvPowerMap1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader5})
         Me.TableLayoutPanel3.SetColumnSpan(Me.lvPowerMap1, 2)
-        Me.lvPowerMap1.FullRowSelect = true
-        Me.lvPowerMap1.GridLines = true
-        Me.lvPowerMap1.HideSelection = false
+        Me.lvPowerMap1.FullRowSelect = True
+        Me.lvPowerMap1.GridLines = True
+        Me.lvPowerMap1.HideSelection = False
         Me.lvPowerMap1.Location = New System.Drawing.Point(3, 3)
-        Me.lvPowerMap1.MultiSelect = false
+        Me.lvPowerMap1.MultiSelect = False
         Me.lvPowerMap1.Name = "lvPowerMap1"
         Me.lvPowerMap1.Size = New System.Drawing.Size(482, 119)
         Me.lvPowerMap1.TabIndex = 77
-        Me.lvPowerMap1.TabStop = false
-        Me.lvPowerMap1.UseCompatibleStateImageBehavior = false
+        Me.lvPowerMap1.TabStop = False
+        Me.lvPowerMap1.UseCompatibleStateImageBehavior = False
         Me.lvPowerMap1.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader4
@@ -408,7 +408,7 @@ Partial Class IHPCForm
         Me.btAddPowerMap1.Name = "btAddPowerMap1"
         Me.btAddPowerMap1.Size = New System.Drawing.Size(24, 24)
         Me.btAddPowerMap1.TabIndex = 38
-        Me.btAddPowerMap1.UseVisualStyleBackColor = true
+        Me.btAddPowerMap1.UseVisualStyleBackColor = True
         '
         'btRemovePowerMap1
         '
@@ -417,12 +417,12 @@ Partial Class IHPCForm
         Me.btRemovePowerMap1.Name = "btRemovePowerMap1"
         Me.btRemovePowerMap1.Size = New System.Drawing.Size(24, 24)
         Me.btRemovePowerMap1.TabIndex = 39
-        Me.btRemovePowerMap1.UseVisualStyleBackColor = true
+        Me.btRemovePowerMap1.UseVisualStyleBackColor = True
         '
         'Label7
         '
-        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label7.AutoSize = true
+        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label7.AutoSize = True
         Me.Label7.Location = New System.Drawing.Point(379, 125)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(106, 13)
@@ -444,7 +444,7 @@ Partial Class IHPCForm
         'Label2
         '
         Me.Label2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label2.AutoSize = true
+        Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(6, 6)
         Me.Label2.Margin = New System.Windows.Forms.Padding(6, 0, 9, 0)
         Me.Label2.Name = "Label2"
@@ -464,13 +464,13 @@ Partial Class IHPCForm
         'btFLCurveFile1
         '
         Me.btFLCurveFile1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.btFLCurveFile1.Image = CType(resources.GetObject("btFLCurveFile1.Image"),System.Drawing.Image)
+        Me.btFLCurveFile1.Image = CType(resources.GetObject("btFLCurveFile1.Image"), System.Drawing.Image)
         Me.btFLCurveFile1.Location = New System.Drawing.Point(426, 1)
         Me.btFLCurveFile1.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile1.Name = "btFLCurveFile1"
         Me.btFLCurveFile1.Size = New System.Drawing.Size(24, 24)
         Me.btFLCurveFile1.TabIndex = 37
-        Me.btFLCurveFile1.UseVisualStyleBackColor = true
+        Me.btFLCurveFile1.UseVisualStyleBackColor = True
         '
         'btFLCurve1
         '
@@ -480,19 +480,19 @@ Partial Class IHPCForm
         Me.btFLCurve1.Name = "btFLCurve1"
         Me.btFLCurve1.Size = New System.Drawing.Size(24, 24)
         Me.btFLCurve1.TabIndex = 85
-        Me.btFLCurve1.TabStop = false
-        Me.btFLCurve1.UseVisualStyleBackColor = true
+        Me.btFLCurve1.TabStop = False
+        Me.btFLCurve1.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 7
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label11, 2, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label4, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label13, 5, 0)
@@ -514,16 +514,16 @@ Partial Class IHPCForm
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 7)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 3
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(496, 82)
         Me.TableLayoutPanel1.TabIndex = 105
         '
         'Label11
         '
         Me.Label11.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label11.AutoSize = true
+        Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(202, 34)
         Me.Label11.Margin = New System.Windows.Forms.Padding(0)
         Me.Label11.Name = "Label11"
@@ -534,7 +534,7 @@ Partial Class IHPCForm
         'Label4
         '
         Me.Label4.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label4.AutoSize = true
+        Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(207, 7)
         Me.Label4.Margin = New System.Windows.Forms.Padding(0)
         Me.Label4.Name = "Label4"
@@ -545,18 +545,18 @@ Partial Class IHPCForm
         'Label13
         '
         Me.Label13.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label13.AutoSize = true
-        Me.Label13.Location = New System.Drawing.Point(422, 7)
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(428, 7)
         Me.Label13.Margin = New System.Windows.Forms.Padding(0)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(30, 13)
+        Me.Label13.Size = New System.Drawing.Size(18, 13)
         Me.Label13.TabIndex = 65
-        Me.Label13.Text = "[sec]"
+        Me.Label13.Text = "[s]"
         '
         'Label43
         '
         Me.Label43.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label43.AutoSize = true
+        Me.Label43.AutoSize = True
         Me.Label43.Location = New System.Drawing.Point(281, 7)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(76, 13)
@@ -566,7 +566,7 @@ Partial Class IHPCForm
         'Label37
         '
         Me.Label37.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label37.AutoSize = true
+        Me.Label37.AutoSize = True
         Me.Label37.Location = New System.Drawing.Point(94, 7)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(43, 13)
@@ -594,7 +594,7 @@ Partial Class IHPCForm
         'Label39
         '
         Me.Label39.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label39.AutoSize = true
+        Me.Label39.AutoSize = True
         Me.Label39.Location = New System.Drawing.Point(40, 34)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(97, 13)
@@ -604,7 +604,7 @@ Partial Class IHPCForm
         'Label3
         '
         Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label3.AutoSize = true
+        Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(6, 61)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(131, 13)
@@ -632,7 +632,7 @@ Partial Class IHPCForm
         'Label15
         '
         Me.Label15.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label15.AutoSize = true
+        Me.Label15.AutoSize = True
         Me.Label15.Location = New System.Drawing.Point(202, 61)
         Me.Label15.Margin = New System.Windows.Forms.Padding(0)
         Me.Label15.Name = "Label15"
@@ -643,7 +643,7 @@ Partial Class IHPCForm
         'Label42
         '
         Me.Label42.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label42.AutoSize = true
+        Me.Label42.AutoSize = True
         Me.Label42.Location = New System.Drawing.Point(236, 61)
         Me.Label42.Name = "Label42"
         Me.Label42.Size = New System.Drawing.Size(121, 13)
@@ -653,7 +653,7 @@ Partial Class IHPCForm
         'Label14
         '
         Me.Label14.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label14.AutoSize = true
+        Me.Label14.AutoSize = True
         Me.Label14.Location = New System.Drawing.Point(422, 61)
         Me.Label14.Margin = New System.Windows.Forms.Padding(0)
         Me.Label14.Name = "Label14"
@@ -672,7 +672,7 @@ Partial Class IHPCForm
         'Label41
         '
         Me.Label41.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.Label41.AutoSize = true
+        Me.Label41.AutoSize = True
         Me.Label41.Location = New System.Drawing.Point(270, 34)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(87, 13)
@@ -690,7 +690,7 @@ Partial Class IHPCForm
         'Label12
         '
         Me.Label12.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label12.AutoSize = true
+        Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(422, 34)
         Me.Label12.Margin = New System.Windows.Forms.Padding(0)
         Me.Label12.Name = "Label12"
@@ -709,7 +709,7 @@ Partial Class IHPCForm
         Me.tpVoltageLevel.Size = New System.Drawing.Size(509, 313)
         Me.tpVoltageLevel.TabIndex = 1
         Me.tpVoltageLevel.Text = "Voltage Level High"
-        Me.tpVoltageLevel.UseVisualStyleBackColor = true
+        Me.tpVoltageLevel.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
@@ -719,15 +719,15 @@ Partial Class IHPCForm
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(496, 180)
         Me.GroupBox1.TabIndex = 122
-        Me.GroupBox1.TabStop = false
+        Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Power Map Per Gear"
         '
         'TableLayoutPanel2
         '
         Me.TableLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TableLayoutPanel2.ColumnCount = 2
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 359!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 359.0!))
         Me.TableLayoutPanel2.Controls.Add(Me.lvPowerMap2, 0, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.FlowLayoutPanel4, 0, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.Label5, 1, 1)
@@ -741,21 +741,21 @@ Partial Class IHPCForm
         '
         'lvPowerMap2
         '
-        Me.lvPowerMap2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
-            Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.lvPowerMap2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lvPowerMap2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
         Me.TableLayoutPanel2.SetColumnSpan(Me.lvPowerMap2, 2)
-        Me.lvPowerMap2.FullRowSelect = true
-        Me.lvPowerMap2.GridLines = true
-        Me.lvPowerMap2.HideSelection = false
+        Me.lvPowerMap2.FullRowSelect = True
+        Me.lvPowerMap2.GridLines = True
+        Me.lvPowerMap2.HideSelection = False
         Me.lvPowerMap2.Location = New System.Drawing.Point(3, 3)
-        Me.lvPowerMap2.MultiSelect = false
+        Me.lvPowerMap2.MultiSelect = False
         Me.lvPowerMap2.Name = "lvPowerMap2"
         Me.lvPowerMap2.Size = New System.Drawing.Size(482, 119)
         Me.lvPowerMap2.TabIndex = 77
-        Me.lvPowerMap2.TabStop = false
-        Me.lvPowerMap2.UseCompatibleStateImageBehavior = false
+        Me.lvPowerMap2.TabStop = False
+        Me.lvPowerMap2.UseCompatibleStateImageBehavior = False
         Me.lvPowerMap2.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader1
@@ -784,7 +784,7 @@ Partial Class IHPCForm
         Me.btAddPowerMap2.Name = "btAddPowerMap2"
         Me.btAddPowerMap2.Size = New System.Drawing.Size(24, 24)
         Me.btAddPowerMap2.TabIndex = 48
-        Me.btAddPowerMap2.UseVisualStyleBackColor = true
+        Me.btAddPowerMap2.UseVisualStyleBackColor = True
         '
         'btRemovePowerMap2
         '
@@ -793,12 +793,12 @@ Partial Class IHPCForm
         Me.btRemovePowerMap2.Name = "btRemovePowerMap2"
         Me.btRemovePowerMap2.Size = New System.Drawing.Size(24, 24)
         Me.btRemovePowerMap2.TabIndex = 49
-        Me.btRemovePowerMap2.UseVisualStyleBackColor = true
+        Me.btRemovePowerMap2.UseVisualStyleBackColor = True
         '
         'Label5
         '
-        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label5.AutoSize = true
+        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(379, 125)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(106, 13)
@@ -819,7 +819,7 @@ Partial Class IHPCForm
         'Label28
         '
         Me.Label28.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label28.AutoSize = true
+        Me.Label28.AutoSize = True
         Me.Label28.Location = New System.Drawing.Point(6, 6)
         Me.Label28.Margin = New System.Windows.Forms.Padding(6, 0, 9, 0)
         Me.Label28.Name = "Label28"
@@ -839,13 +839,13 @@ Partial Class IHPCForm
         'btFLCurveFile2
         '
         Me.btFLCurveFile2.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.btFLCurveFile2.Image = CType(resources.GetObject("btFLCurveFile2.Image"),System.Drawing.Image)
+        Me.btFLCurveFile2.Image = CType(resources.GetObject("btFLCurveFile2.Image"), System.Drawing.Image)
         Me.btFLCurveFile2.Location = New System.Drawing.Point(426, 1)
         Me.btFLCurveFile2.Margin = New System.Windows.Forms.Padding(0)
         Me.btFLCurveFile2.Name = "btFLCurveFile2"
         Me.btFLCurveFile2.Size = New System.Drawing.Size(24, 24)
         Me.btFLCurveFile2.TabIndex = 47
-        Me.btFLCurveFile2.UseVisualStyleBackColor = true
+        Me.btFLCurveFile2.UseVisualStyleBackColor = True
         '
         'btFLCurve2
         '
@@ -855,20 +855,20 @@ Partial Class IHPCForm
         Me.btFLCurve2.Name = "btFLCurve2"
         Me.btFLCurve2.Size = New System.Drawing.Size(24, 24)
         Me.btFLCurve2.TabIndex = 86
-        Me.btFLCurve2.TabStop = false
-        Me.btFLCurve2.UseVisualStyleBackColor = true
+        Me.btFLCurve2.TabStop = False
+        Me.btFLCurve2.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel4
         '
         Me.TableLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.TableLayoutPanel4.ColumnCount = 7
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 59.0!))
         Me.TableLayoutPanel4.Controls.Add(Me.Label17, 2, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label18, 2, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label26, 5, 0)
@@ -890,16 +890,16 @@ Partial Class IHPCForm
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(6, 7)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
         Me.TableLayoutPanel4.RowCount = 3
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(496, 82)
         Me.TableLayoutPanel4.TabIndex = 120
         '
         'Label17
         '
         Me.Label17.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label17.AutoSize = true
+        Me.Label17.AutoSize = True
         Me.Label17.Location = New System.Drawing.Point(202, 34)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0)
         Me.Label17.Name = "Label17"
@@ -910,7 +910,7 @@ Partial Class IHPCForm
         'Label18
         '
         Me.Label18.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label18.AutoSize = true
+        Me.Label18.AutoSize = True
         Me.Label18.Location = New System.Drawing.Point(207, 7)
         Me.Label18.Margin = New System.Windows.Forms.Padding(0)
         Me.Label18.Name = "Label18"
@@ -921,13 +921,13 @@ Partial Class IHPCForm
         'Label26
         '
         Me.Label26.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Label26.AutoSize = true
-        Me.Label26.Location = New System.Drawing.Point(422, 7)
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(428, 7)
         Me.Label26.Margin = New System.Windows.Forms.Padding(0)
         Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(30, 13)
+        Me.Label26.Size = New System.Drawing.Size(18, 13)
         Me.Label26.TabIndex = 65
-        Me.Label26.Text = "[sec]"
+        Me.Label26.Text = "[s]"
         '
         'Label19
         '
