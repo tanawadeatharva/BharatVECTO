@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public const string E_BusAux_PS_corr = "E_BusAux_PS_corr [kWh]";
 		public const string E_BusAux_ES_mech_corr = "E_BusAux_ES_mech_corr [kWh]";
-		public const string E_BusAux_AuxHeater = "E_BusAux_AuxhHeater [kWh]";
+		public const string E_BusAux_AuxHeater = "E_BusAux_AuxHeater [kWh]";
 
 		public const string E_AIR = "E_air [kWh]";
 		public const string E_ROLL = "E_roll [kWh]";
@@ -330,8 +330,8 @@ namespace TUGraz.VectoCore.OutputData
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
 
 			{ TIME, SumFunc((r,m) => (ConvertedSI)m.Duration)},
-			{ DISTANCE, SumFunc((r, m) => m.Distance.ConvertToKiloMeter())},
-			{ SPEED, SumFunc((r, m) => m.Speed().ConvertToKiloMeterPerHour())},
+			{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter())},
+			{ SPEED, SumFunc((r, m) => m.Speed()?.ConvertToKiloMeterPerHour())},
 			{ ALTITUDE_DELTA, SumFunc((r, m) => (ConvertedSI)m.AltitudeDelta())},
 
 

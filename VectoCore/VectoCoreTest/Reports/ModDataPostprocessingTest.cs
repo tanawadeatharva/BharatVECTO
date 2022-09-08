@@ -1805,6 +1805,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new ModalDataContainer(runData, writer, null) {
 				WriteModalResults = true
 			};
+			modData.Data.CreateCombustionEngineColumns(runData);
+			modData.Data.CreateColumns(ModalResults.DriverSignals);
+			modData.Data.CreateColumns(ModalResults.WheelSignals);
+			modData.Data.CreateColumns(ModalResults.DCDCConverterSignals);
+			modData.Data.CreateColumns(ModalResults.BusAuxiliariesSignals);
+			modData.Data.CreateElectricMotorColumns(runData.ElectricMachinesData.FirstOrDefault().Item1, null, ModalResults.ElectricMotorSignals);
+			modData.Data.CreateColumns(ModalResults.BatterySignals);
 
 			var fuel = runData.EngineData.Fuels[0];
 

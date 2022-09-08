@@ -90,6 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				Cycle = new DrivingCycleData() {
 					Name = "MockCycle",
+					CycleType = CycleType.DistanceBased
 				},
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData(),
@@ -103,10 +104,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			modData.AddAuxiliary("STP");
 			modData.AddAuxiliary("ES");
 			modData.AddAuxiliary("AC");
-			modData.Data.CreateColumns(ModalResults.DriverSignals);
+			//modData.Data.CreateColumns(ModalResults.DriverSignals);
 			modData.Data.CreateCombustionEngineColumns(runData);
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
+			sumWriter.UpdateTableColumns(runData.EngineData);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
 				sumWriter) { RunData = runData};
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);

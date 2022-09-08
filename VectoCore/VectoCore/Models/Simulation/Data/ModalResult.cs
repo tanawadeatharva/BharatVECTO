@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -116,13 +117,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_gbx_in,
 			ModalResultField.P_gbx_inertia,
 			ModalResultField.P_gbx_loss,
-			ModalResultField.P_gbx_shift_loss,
+			//ModalResultField.P_gbx_shift_loss,   // only for APT-S and APT-P
 			ModalResultField.T_gbx_in,
 			ModalResultField.T_gbx_out,
 			ModalResultField.n_gbx_out_avg,
 
 			ModalResultField.Gear
 		};
+
+		public static readonly ModalResultField[] GearboxSignals_AT =
+			GearboxSignals.Concat(new[] { ModalResultField.P_gbx_shift_loss }).ToArray();
 
 		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] TorqueConverterSignals = {
@@ -331,8 +335,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
-				case IGearbox _ when runData.JobType != VectoSimulationJobType.IEPC_E && runData.JobType != VectoSimulationJobType.IEPC_S: 
-					CreateColumns(GearboxSignals); 
+				case IGearbox _ when runData.JobType != VectoSimulationJobType.IEPC_E && runData.JobType != VectoSimulationJobType.IEPC_S:
+					CreateColumns(runData.GearboxData.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)
+						? GearboxSignals_AT
+						: GearboxSignals);
 					break;
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_E:
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_S:
