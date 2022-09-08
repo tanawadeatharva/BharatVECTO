@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			private ICompletedBusAuxiliaryDataAdapter _busAuxiliaryDataAdapter =
 				new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
 
-			private IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
+			private SingleBusVehicleDataAdapter _vehicleDataAdapter = new SingleBusVehicleDataAdapter();
 			private IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			private IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
@@ -39,11 +39,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			#region Implementation of IDeclarationDataAdapter
 
-			public VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
+			public VehicleData CreateVehicleData(ISingleBusInputDataProvider vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
-				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading.Value.Item1,
-					loading.Value.Item2, allowVocational);
+				return _vehicleDataAdapter.CreateVehicleData(vehicle, segment, mission, loading
+					, allowVocational);
 			}
 
 

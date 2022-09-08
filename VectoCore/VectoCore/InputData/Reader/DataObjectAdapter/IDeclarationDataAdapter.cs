@@ -14,8 +14,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 	public interface IDeclarationDataAdapter
 	{
 		//DriverData CreateDriverData();
-		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
-        //AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+		//AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
         //AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData);
         //AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData);
         //CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode, Mission mission);
@@ -27,7 +26,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         //PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
         //IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles);
         //AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
-    }
+		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
+	}
 
 	public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
 	{
@@ -60,6 +60,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
 			Meter vehicleLength, int? numSteeredAxles);
+
+		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -93,6 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Meter vehicleLength, int? numSteeredAxles);
 
 		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
+		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -125,6 +128,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
+
+		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
 	}
 
 	public interface ISpecificCompletedBusDeclarationDataAdapter
@@ -146,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Mission mission);
 	}
 
-	public interface ISingleBusDeclarationDataAdapter : IDeclarationDataAdapter
+	public interface ISingleBusDeclarationDataAdapter
 	{
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
@@ -163,5 +168,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
 		IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxInput, MissionType mission, VehicleClass segment, Meter vehicleLength, int? numSteeredAxles);
 		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData simulationRunData);
+
+		VehicleData CreateVehicleData(ISingleBusInputDataProvider vehicle, Segment segment, Mission mission,
+			KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
 	}
 }

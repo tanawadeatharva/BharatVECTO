@@ -36,8 +36,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			return null;
-		}
-		protected readonly IADASDataAdapter _adasDataAdapter = new ADASDataAdapter();
+		} 
+		internal static IADASDataAdapter _adasDataAdapter = new ADASDataAdapter();
 		internal static VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
 		{
 			var retVal = new VehicleData
@@ -95,12 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		protected abstract VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data);
 
-		#endregion
-	}
-
-	internal class LorryVehicleDataAdapter : VehicleDataAdapter
-	{
-		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data,
+		protected static VehicleData GetVehicleData(IVehicleDeclarationInputData data,
 			Segment segment, Mission mission, Kilogram loading, double? passengerCount, bool allowVocational)
 		{
 			var retVal = SetCommonVehicleData(data);
@@ -188,6 +183,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.AxleData = axleData;
 			return retVal;
 		}
+		#endregion
+	}
+
+	internal class LorryVehicleDataAdapter : VehicleDataAdapter
+	{
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data,
+			Segment segment, Mission mission, Kilogram loading, double? passengerCount, bool allowVocational)
+		{
+			return GetVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+		}
 
 		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
 		{
@@ -203,7 +208,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return exempted;
 		}
 	}
-
 
 	internal class PrimaryBusVehicleDataAdapter : LorryVehicleDataAdapter
 	{
@@ -280,6 +284,57 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoException("Total Vehicle Mass exceeds Gross Vehicle Mass for completed bus generic ({0}/{1})", retVal.TotalVehicleMass, retVal.GrossVehicleMass);
 			}
 			return retVal;
+		}
+
+		#endregion
+	}
+
+	internal class SingleBusVehicleDataAdapter : VehicleDataAdapter
+	{
+		#region Overrides of VehicleDataAdapter
+
+		public VehicleData CreateVehicleData(ISingleBusInputDataProvider data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
+		{
+			var completedVehicle = data.CompletedVehicle;
+			var vehicle = data.JobInputData.Vehicle;
+			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(
+				completedVehicle.Length,
+				completedVehicle.Width);
+			var passengerCountRef = busFloorArea * (loading.Key == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
+			var passengerCountDecl = completedVehicle.NumberPassengerSeatsUpperDeck +
+									completedVehicle.NumberPassengerSeatsLowerDeck
+									+ (mission.MissionType == MissionType.Coach
+										? 0
+										: completedVehicle.NumberPassengersStandingLowerDeck +
+										completedVehicle.NumberPassengersStandingUpperDeck);
+
+			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
+			if (loading.Key != LoadingType.ReferenceLoad && loading.Key != LoadingType.LowLoading)
+			{
+				throw new VectoException("Unhandled loading type: {0}", loading.Key);
+			}
+
+			var passengerCountCalc = loading.Key == LoadingType.ReferenceLoad
+				? VectoMath.Min(passengerCountRef, (int)passengerCountDecl)
+				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus();
+			var payload = passengerCountCalc * mission.MissionType.GetAveragePassengerMass();
+
+			var retVal = DoCreateVehicleData(vehicle, segment, mission, payload, passengerCountCalc, allowVocational);
+			retVal.CurbMass = completedVehicle.CurbMassChassis;
+			return retVal;
+		}
+
+		protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+			double? passengerCount, bool allowVocational)
+		{
+			return VehicleDataAdapter.GetVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
+		}
+
+		protected override VehicleData DoCreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				_segment = GetSegment(DataProvider);
 				_driverdata = DataAdapter.CreateDriverData(); //PrimaryBus
 				_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-				var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
+				var tempVehicle = DataAdapter.CreateVehicleData(DataProvider, _segment, _segment.Missions.First(),
 														_segment.Missions.First().Loadings.First(), _allowVocational);
 				if (vehicle.AxleConfiguration.AxlegearIncludedInGearbox())
 				{
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				{
 					InputData = DataProvider,
 					Loading = loading.Key,
-					VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational), //Primary
+					VehicleData = DataAdapter.CreateVehicleData(singleBus, _segment, mission, loading, _allowVocational), //Primary
 					AirdragData = DataAdapter.CreateAirdragData(completedVehicle, mission), //Single
 					EngineData = DataAdapter.CreateEngineData(vehicle, engineMode, mission), //Primary
 					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
