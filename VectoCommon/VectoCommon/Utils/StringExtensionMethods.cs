@@ -105,6 +105,6 @@ namespace TUGraz.VectoCommon.Utils
 			new MemoryStream(Encoding.UTF8.GetBytes(self));
 
 		public static string RemoveWhitespace(this string self) => 
-			string.Concat(self.Split());
+			string.IsNullOrEmpty(self) ? "" : string.Concat(self.Split());
 	}
 }

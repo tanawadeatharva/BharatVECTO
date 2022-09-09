@@ -1,7 +1,7 @@
 ## CSV
-Many data files in Vecto use CSV (Comma Separated Values) as common file format. They consist of a header which defines the columns and data entries which are separated by a comma (",").
+Many data files in VECTO use CSV (Comma Separated Values) as common file format. They consist of a header which defines the columns and data entries which are separated by a comma (",").
 
-In Vecto 3 the order of the columns is arbitrary if the column header matches the header definitions described in this user manual. If the column header does not match, a warning is written to the log file and the columns are parsed in the sequence as described in this manual as a fall-back.
+In VECTO 3 the order of the columns is arbitrary if the column header matches the header definitions described in this user manual. If the column header does not match, a warning is written to the log file and the columns are parsed in the sequence as described in this manual as a fall-back.
 
 
 ### Definition###
@@ -9,17 +9,17 @@ In Vecto 3 the order of the columns is arbitrary if the column header matches th
 
 |                         |                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Header:**             | Vecto CSV needs exactly one header line with the definition of the columns at the beginning of the file. <br>Columns can be surrounded with "\<" and "\>" to mark them as identifiers (which makes them position independent). In Vecto 3.x every column is seen as identifier, regardless of "\<\>". <br>Columns may be succeded with unit information (enclosed in "[" and "]") for documentation purposes. |
+| **Header:**             | VECTO CSV needs exactly one header line with the definition of the columns at the beginning of the file. <br>Columns can be surrounded with "\<" and "\>" to mark them as identifiers (which makes them position independent). In VECTO 3.x every column is seen as identifier, regardless of "\<\>". <br>Columns may be succeded with unit information (enclosed in "[" and "]") for documentation purposes. |
 | **Column Separator:**   | **,** (Comma. Separates the columns of a data line.)                                                                                                                                                                                                                                                                                                                                               |
 | **Decimal-Mark:**       | **.** (Dot. Splits numbers into integer part and decimal part.)                                                                                                                                                                                                                                                                                                                                    |
-| **Thousand-Separator:** | Vecto CSV does not allow a thousand-separator.                                                                                                                                                                                                                                                                                                                                                     |
+| **Thousand-Separator:** | VECTO CSV does not allow a thousand-separator.                                                                                                                                                                                                                                                                                                                                                     |
 | **Comments:**           | **#** (Number sign. Declares text coming afterwards in the current line as comment.)                                                                                                                                                                                                                                                                                                               |
 | **Whitespace:**         | Whitespaces between columns will be stripped away. Therefore it is possible to align the columns for better readability, if desired.                                                                                                                                                                                                                                                               |
 
 
 **Note:** All column headers are case insensitive.
 
-**Note:** Unit information in the column header (enclosed in "[" and "]") are only information for the user. Vecto does **not** read the unit string nor convert between units. The values are expected to be in the units as specified in the user manual. 
+**Note:** Unit information in the column header (enclosed in "[" and "]") are only information for the user. VECTO does **not** read the unit string nor convert between units. The values are expected to be in the units as specified in the user manual. 
 
 
 Following files use the csv:
