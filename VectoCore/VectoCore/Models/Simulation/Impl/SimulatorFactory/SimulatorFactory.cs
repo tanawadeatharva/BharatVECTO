@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		public IEnumerable<IVectoRun> SimulationRuns()
 		{
 			var i = 0;
+			bool firstRun = true;
 			var warning1Hz = false;
 			if (!_simulate) {
 				yield break;
@@ -159,7 +160,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				var current = i++;
 				var d = data;
 				data.JobRunId = current;
-				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
+				yield return (data.Exempted || data.MultistageRun) ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz, ref firstRun);
 			}
 		}
 
@@ -176,7 +177,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			});
 		}
 
-		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
+		protected virtual IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
@@ -207,10 +208,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				}
 			});
 
-			if (Validate) {
+			if (Validate && firstRun) {
 				ValidateVectoRunData(
 					run, data.JobType, data.ElectricMachinesData.FirstOrDefault()?.Item1, data.GearboxData?.Type,
 					data.Mission != null && data.Mission.MissionType.IsEMS());
+				firstRun = false;
 			}
 			return run;
 		}
@@ -222,7 +224,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				: null;
 
 			if (ActualModalData) {
-				modDataFilter = new IModalDataFilter[] { new ActualModalDataFilter(), };
+				modDataFilter = new IModalDataFilter[] { new ActualModalDataFilter(), }; 
 			}
 			return data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null;
 		}
@@ -230,6 +232,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private void ValidateVectoRunData(VectoRun run, VectoSimulationJobType jobType, PowertrainPosition? emPosition, GearboxType? gearboxtype, bool isEms)
 		{
 			var validationErrors = run.Validate(_mode, jobType, emPosition, gearboxtype, isEms);
+			//  TODO cleanup of object cache
+
+			ValidationHelper.ClearValHistory();
+
 			if (validationErrors.Any()) {
 				throw new VectoException("Validation of Run-Data Failed: " +
 										$"{validationErrors.Select(r => r.ErrorMessage + r.MemberNames.Join("; ")).Join("\n")}");

@@ -5,7 +5,7 @@
 
 ### Description
 
-Integrated electric powertrain component (IEPC) means a combined system of an electric machine system together with the funcitonality of either a single- or multi-speed gearbox or a differential or both. 
+Integrated electric powertrain component (IEPC) means a combined system of an electric machine system together with the functionality of either a single- or multi-speed gearbox or a differential or both. 
 
 An IEPC can be of design-type wheel motor which means that the output shaft (or two output shafts) are directly connected to the wheel hub(s). The IEPC component file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
 
@@ -15,7 +15,7 @@ An IEPC may have several shiftable transmission steps or only a single gear stag
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
 
-VECTO automatically uses relative paths if the input file (e.g. elctric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. electric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
 
 
 ### Main Parameters
@@ -32,28 +32,28 @@ Gears
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously
 
-Test Speed Continous Torque \[rpm\]
-:    Angular speed at which the continouos torque can be provided
+Continuous Torque Speed \[rpm\]
+:    Angular speed at which the continuous torque can be provided
 
 Overload Torque \[Nm\]
 :    Maximum torque above the continuous torque the electric motor can provide for a certain time
 
-Test Speed Overload Torque \[rpm\]
+Overload Torque Speed\[rpm\]
 :    Angular speed at which the overload torque was measured
 
 Overload Duration \[s\]
 :    The time interval the electric machine can operate at its peak performance
 
-Thermal Overload Recovery Factor
+Thermal Overload Recovery Factor  \[-\]
 :    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
 
-Drag Torque Curve
-:   The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [IEPC Drag Curve File (.viepcd)](#iepc-drag-curve-file-.viepcd))
+Full Load Curve
+:	TODO    
 
-Max. Drive and Max. Generation Torque Curve
-:   Torque over engine speed the electric motor can apply on its output shaft. (see [IEPC Max Torque File (.vemp)](#iepc-max-torque-file-.viepcp)). The max drive and max generation torque have to be provided for two different voltage levels.
+Drag Curves
+:	The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd))
 
-Electric Power Consumption Map
+Power Map Per Gear
 :   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [IEPC Map (.viepco)](#iepc-power-map-.viepco)). The power map has to be provided for two different voltage levels and all gears.
 
 Voltage Level Low/High

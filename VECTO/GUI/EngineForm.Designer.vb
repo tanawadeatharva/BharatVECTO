@@ -767,10 +767,10 @@ Partial Class EngineForm
         '
         Me.tbDualFuel.Controls.Add(Me.tpPrimaryfuel)
         Me.tbDualFuel.Controls.Add(Me.tpSecondaryFuel)
-        Me.tbDualFuel.Location = New System.Drawing.Point(12, 268)
+        Me.tbDualFuel.Location = New System.Drawing.Point(12, 287)
         Me.tbDualFuel.Name = "tbDualFuel"
         Me.tbDualFuel.SelectedIndex = 0
-        Me.tbDualFuel.Size = New System.Drawing.Size(481, 279)
+        Me.tbDualFuel.Size = New System.Drawing.Size(481, 260)
         Me.tbDualFuel.TabIndex = 11
         '
         'tpPrimaryfuel
@@ -785,10 +785,10 @@ Partial Class EngineForm
         Me.tpPrimaryfuel.Location = New System.Drawing.Point(4, 22)
         Me.tpPrimaryfuel.Name = "tpPrimaryfuel"
         Me.tpPrimaryfuel.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpPrimaryfuel.Size = New System.Drawing.Size(473, 253)
+        Me.tpPrimaryfuel.Size = New System.Drawing.Size(473, 234)
         Me.tpPrimaryfuel.TabIndex = 0
         Me.tpPrimaryfuel.Text = "Primary Fuel"
-        Me.tpPrimaryfuel.UseVisualStyleBackColor = true
+        Me.tpPrimaryfuel.UseVisualStyleBackColor = True
         '
         'tpSecondaryFuel
         '
@@ -802,20 +802,20 @@ Partial Class EngineForm
         Me.tpSecondaryFuel.Location = New System.Drawing.Point(4, 22)
         Me.tpSecondaryFuel.Name = "tpSecondaryFuel"
         Me.tpSecondaryFuel.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpSecondaryFuel.Size = New System.Drawing.Size(473, 253)
+        Me.tpSecondaryFuel.Size = New System.Drawing.Size(473, 234)
         Me.tpSecondaryFuel.TabIndex = 1
         Me.tpSecondaryFuel.Text = "Secondary Fuel"
-        Me.tpSecondaryFuel.UseVisualStyleBackColor = true
+        Me.tpSecondaryFuel.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.pnWhtcFuel2)
         Me.GroupBox1.Controls.Add(Me.pnEngCFFuel2)
-        Me.GroupBox1.Location = New System.Drawing.Point(3, 85)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 94)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(462, 135)
         Me.GroupBox1.TabIndex = 4
-        Me.GroupBox1.TabStop = false
+        Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Fuel Consumption Correction Factors"
         '
         'pnWhtcFuel2
@@ -838,7 +838,7 @@ Partial Class EngineForm
         '
         'Label27
         '
-        Me.Label27.AutoSize = true
+        Me.Label27.AutoSize = True
         Me.Label27.Location = New System.Drawing.Point(296, 49)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(89, 13)
@@ -854,7 +854,7 @@ Partial Class EngineForm
         '
         'Label28
         '
-        Me.Label28.AutoSize = true
+        Me.Label28.AutoSize = True
         Me.Label28.Location = New System.Drawing.Point(42, 49)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(177, 13)
@@ -870,7 +870,7 @@ Partial Class EngineForm
         '
         'Label29
         '
-        Me.Label29.AutoSize = true
+        Me.Label29.AutoSize = True
         Me.Label29.Location = New System.Drawing.Point(3, 23)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(72, 13)
@@ -879,7 +879,7 @@ Partial Class EngineForm
         '
         'Label30
         '
-        Me.Label30.AutoSize = true
+        Me.Label30.AutoSize = True
         Me.Label30.Location = New System.Drawing.Point(151, 23)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(68, 13)
@@ -888,7 +888,7 @@ Partial Class EngineForm
         '
         'Label31
         '
-        Me.Label31.AutoSize = true
+        Me.Label31.AutoSize = True
         Me.Label31.Location = New System.Drawing.Point(1, 1)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(242, 13)
@@ -897,7 +897,7 @@ Partial Class EngineForm
         '
         'Label32
         '
-        Me.Label32.AutoSize = true
+        Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(296, 23)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(89, 13)
@@ -944,7 +944,7 @@ Partial Class EngineForm
         '
         'Label33
         '
-        Me.Label33.AutoSize = true
+        Me.Label33.AutoSize = True
         Me.Label33.Location = New System.Drawing.Point(156, 6)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(63, 13)
@@ -953,15 +953,15 @@ Partial Class EngineForm
         '
         'tbMapFuel2
         '
-        Me.tbMapFuel2.Location = New System.Drawing.Point(6, 54)
+        Me.tbMapFuel2.Location = New System.Drawing.Point(6, 57)
         Me.tbMapFuel2.Name = "tbMapFuel2"
         Me.tbMapFuel2.Size = New System.Drawing.Size(406, 20)
         Me.tbMapFuel2.TabIndex = 1
         '
         'Label34
         '
-        Me.Label34.AutoSize = true
-        Me.Label34.Location = New System.Drawing.Point(6, 38)
+        Me.Label34.AutoSize = True
+        Me.Label34.Location = New System.Drawing.Point(6, 41)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(115, 13)
         Me.Label34.TabIndex = 56
@@ -970,33 +970,33 @@ Partial Class EngineForm
         'btMapFuel2
         '
         Me.btMapFuel2.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btMapFuel2.Location = New System.Drawing.Point(418, 52)
+        Me.btMapFuel2.Location = New System.Drawing.Point(418, 55)
         Me.btMapFuel2.Name = "btMapFuel2"
         Me.btMapFuel2.Size = New System.Drawing.Size(24, 24)
         Me.btMapFuel2.TabIndex = 2
-        Me.btMapFuel2.UseVisualStyleBackColor = true
+        Me.btMapFuel2.UseVisualStyleBackColor = True
         '
         'btMapOpenFuel2
         '
         Me.btMapOpenFuel2.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btMapOpenFuel2.Location = New System.Drawing.Point(441, 52)
+        Me.btMapOpenFuel2.Location = New System.Drawing.Point(441, 55)
         Me.btMapOpenFuel2.Name = "btMapOpenFuel2"
         Me.btMapOpenFuel2.Size = New System.Drawing.Size(24, 24)
         Me.btMapOpenFuel2.TabIndex = 3
-        Me.btMapOpenFuel2.UseVisualStyleBackColor = true
+        Me.btMapOpenFuel2.UseVisualStyleBackColor = True
         '
         'cbFuelType2
         '
-        Me.cbFuelType2.FormattingEnabled = true
-        Me.cbFuelType2.Location = New System.Drawing.Point(71, 6)
+        Me.cbFuelType2.FormattingEnabled = True
+        Me.cbFuelType2.Location = New System.Drawing.Point(71, 10)
         Me.cbFuelType2.Name = "cbFuelType2"
         Me.cbFuelType2.Size = New System.Drawing.Size(143, 21)
         Me.cbFuelType2.TabIndex = 0
         '
         'Label35
         '
-        Me.Label35.AutoSize = true
-        Me.Label35.Location = New System.Drawing.Point(11, 9)
+        Me.Label35.AutoSize = True
+        Me.Label35.Location = New System.Drawing.Point(11, 13)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(54, 13)
         Me.Label35.TabIndex = 57
