@@ -31,7 +31,8 @@
 
 using System;
 
-namespace TUGraz.VectoCore.InputData.Reader.Impl {
+namespace TUGraz.VectoCore.InputData.Reader.Impl 
+{
 	[Flags]
 	public enum SimulationType
 	{
@@ -41,5 +42,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		MeasuredSpeedCycle = 1 << 2,
 		PWheel = 1 << 3,
 		VerificationTest = 1 << 4
+	}
+
+	public static class SimulationTypeExtension
+	{
+		public static bool Contains(this SimulationType self, params SimulationType[] candidates)
+		{
+			var matching = 0;
+			foreach (var candidate in candidates) {
+				matching += (int)(self & candidate);
+			}
+			return matching != 0;
+		}
 	}
 }

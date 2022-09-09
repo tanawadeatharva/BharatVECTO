@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -63,7 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 		// ------------------------------------------------------------------------------------
-		public static readonly ModalResultField[] CommonSignals = {
+		public static readonly ModalResultField[] DistanceCycleSignals = {
 			ModalResultField.time,
 			ModalResultField.simulationInterval,
 			ModalResultField.dist,
@@ -75,6 +76,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.grad,
 			ModalResultField.altitude,
 
+			ModalResultField.drivingBehavior,
+		};
+
+		public static readonly ModalResultField[] TimeCycleSignals = {
+			ModalResultField.time,
+			ModalResultField.simulationInterval,
+			ModalResultField.dist,
+			ModalResultField.simulationDistance,
+
+			ModalResultField.v_act,
+			ModalResultField.v_targ,
+
+			ModalResultField.grad,
+			ModalResultField.altitude,
+
+			ModalResultField.drivingBehavior,
+		};
+
+		public static readonly ModalResultField[] EngineOnlySignals = {
+			ModalResultField.time,
+			ModalResultField.simulationInterval,
 			ModalResultField.drivingBehavior,
 		};
 
@@ -310,7 +332,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public ModalResults()
 		{
-			CreateColumns(CommonSignals);
+			//CreateColumns(CommonSignals);
 		}
 
 		protected internal void CreateColumns(ModalResultField[] columns, Func<ModalResultField, string> nameFunc = null, Func<ModalResultField, string> captionFunc = null)
@@ -329,6 +351,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
 		{
 			switch (component) {
+				case IDrivingCycle _ when runData.SimulationType.Contains(SimulationType.DistanceCycle):
+					CreateColumns(DistanceCycleSignals);
+					break;
+				case IDrivingCycle _ when runData.SimulationType.Contains(SimulationType.MeasuredSpeedCycle, SimulationType.PWheel, SimulationType.VerificationTest) :
+					CreateColumns(TimeCycleSignals);
+					break;
+				case IDrivingCycleInfo _ when runData.SimulationType.Contains(SimulationType.EngineOnly):
+					CreateColumns(EngineOnlySignals);
+					break;
 				case ICombustionEngine c1: CreateCombustionEngineColumns(runData); break;
 				case BusAuxiliariesAdapter _: CreateColumns(BusAuxiliariesSignals); break;
 				case PWheelCycle _: CreateColumns(WheelSignals); CreateColumns(DriverSignals); break;

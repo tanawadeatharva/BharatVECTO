@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public delegate object WriteAuxEntry(VectoRunData r, IModalDataContainer m, DataColumn aux);
 
-		private static Tuple<ModalResultField[], WriteSumEntry> SumFunc(ModalResultField[] mrf, WriteSumEntry w)
+		private static Tuple<ModalResultField[], WriteSumEntry> SumFunc(WriteSumEntry w, params ModalResultField[] mrf)
 		{
 			return Tuple.Create(mrf, w);
 		}
@@ -329,16 +329,16 @@ namespace TUGraz.VectoCore.OutputData
 			{ CYCLE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name + Constants.FileExtensions.CycleFile))},
 			{ STATUS, SumFunc((r, m) => m.RunStatus)},
 
-			{ TIME, SumFunc((r,m) => (ConvertedSI)m.Duration)},
-			{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter())},
-			{ SPEED, SumFunc((r, m) => m.Speed()?.ConvertToKiloMeterPerHour())},
-			{ ALTITUDE_DELTA, SumFunc((r, m) => (ConvertedSI)m.AltitudeDelta())},
+			{ TIME, SumFunc((r,m) => (ConvertedSI)m.Duration, ModalResultField.time)},
+			{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter(), ModalResultField.dist)},
+			{ SPEED, SumFunc((r, m) => m.Speed()?.ConvertToKiloMeterPerHour(), ModalResultField.dist, ModalResultField.time)},
+			{ ALTITUDE_DELTA, SumFunc((r, m) => (ConvertedSI)m.AltitudeDelta(), ModalResultField.altitude)},
 
 
 			// Vehicle 
 			{ VEHICLE_FUEL_TYPE, SumFunc((r, m) => m.FuelData.Select(x => x.GetLabel()).Join())},
-			{ P_WHEEL_POS, SumFunc((r, m) => m.PowerWheelPositive().ConvertToKiloWatt())},
-			{ P_WHEEL, SumFunc((r, m) => m.PowerWheel().ConvertToKiloWatt())},
+			{ P_WHEEL_POS, SumFunc((r, m) => m.PowerWheelPositive().ConvertToKiloWatt(), ModalResultField.P_wheel_in)},
+			{ P_WHEEL, SumFunc((r, m) => m.PowerWheel().ConvertToKiloWatt(), ModalResultField.P_wheel_in)},
 			{ VEHICLE_MANUFACTURER, SumFunc((r, m) => r.VehicleData?.Manufacturer ?? Constants.NOT_AVAILABLE)},
 			{ VIN_NUMBER, SumFunc((r, m) => r.VehicleData?.VIN ?? Constants.NOT_AVAILABLE)},
 			{ VEHICLE_MODEL, SumFunc((r, m) => r.VehicleData?.ModelName ?? Constants.NOT_AVAILABLE)},
@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.OutputData
 			// air drag infos
 			{ AIRDRAG_MODEL, SumFunc((r, m) => r.AirdragData?.ModelName ?? Constants.NOT_AVAILABLE)},
 			{ AIRDRAG_CERTIFICATION_METHOD, SumFunc((r, m) => r.AirdragData?.CertificationMethod.GetName()  ?? Constants.NOT_AVAILABLE)},
-			{ AIRDRAG_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AirdragData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AirdragData.CertificationNumber)},
+			{ AIRDRAG_CERTIFICATION_NUMBER, SumFunc((r, m) => r.AirdragData?.CertificationMethod == CertificationMethod.StandardValues ? "" : r.AirdragData?.CertificationNumber)},
 			{ CD_x_A_DECLARED, SumFunc((r, m) => (ConvertedSI)r.AirdragData?.DeclaredAirdragArea)},
 			{ CD_x_A, SumFunc((r, m) => (ConvertedSI)r.AirdragData?.CrossWindCorrectionCurve.AirDragArea)},
 			
@@ -448,12 +448,12 @@ namespace TUGraz.VectoCore.OutputData
 			{ TORQUE_CONVERTER_CERTIFICATION_METHOD, SumFunc((r, m) => r.GearboxData?.TorqueConverterData?.CertificationMethod.GetName() ?? "")},
 
 			// engine 
-			{ P_FCMAP_POS, SumFunc((r, m) => m.TotalPowerEnginePositiveAverage().ConvertToKiloWatt())},
-			{ P_FCMAP, SumFunc((r, m) => m.TotalPowerEngineAverage().ConvertToKiloWatt())},
+			{ P_FCMAP_POS, SumFunc((r, m) => m.TotalPowerEnginePositiveAverage().ConvertToKiloWatt(), ModalResultField.P_ice_fcmap, ModalResultField.simulationInterval)},
+			{ P_FCMAP, SumFunc((r, m) => m.TotalPowerEngineAverage().ConvertToKiloWatt(), ModalResultField.P_ice_fcmap, ModalResultField.simulationInterval)},
 
-			{ E_FCMAP_POS, SumFunc((r, m) => m.TotalEngineWorkPositive().ConvertToKiloWattHour())},
-			{ E_FCMAP_NEG, SumFunc((r, m) => (-m.TotalEngineWorkNegative()).ConvertToKiloWattHour())},
-			{ E_ICE_START, SumFunc((r, m) =>  m.WorkEngineStart().ConvertToKiloWattHour())},
+			{ E_FCMAP_POS, SumFunc((r, m) => m.TotalEngineWorkPositive().ConvertToKiloWattHour(), ModalResultField.P_ice_fcmap)},
+			{ E_FCMAP_NEG, SumFunc((r, m) => (-m.TotalEngineWorkNegative()).ConvertToKiloWattHour(), ModalResultField.P_ice_fcmap)},
+			{ E_ICE_START, SumFunc((r, m) =>  m.WorkEngineStart().ConvertToKiloWattHour(), ModalResultField.P_ice_start)},
 
 			{ E_WHR_EL, SumFunc((r, m) => m.CorrectedModalData.WorkWHREl.ConvertToKiloWattHour())},
 			{ E_WHR_MECH, SumFunc((r, m) => m.CorrectedModalData.WorkWHRMech.ConvertToKiloWattHour())},
@@ -462,66 +462,66 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_BusAux_AuxHeater, SumFunc((r, m) => m.CorrectedModalData.AuxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour())},
 
 			
-			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour())},
+			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour(), ModalResultField.P_ice_inertia, ModalResultField.P_gbx_inertia)},
 			
-			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour())},
-			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_aux_el).ConvertToKiloWattHour())},
-			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour())},
-			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour())},
-			{ E_SHIFT_LOSS, SumFunc((r, m) => m.WorkGearshift().ConvertToKiloWattHour())},
-			{ E_GBX_LOSS, SumFunc((r, m) => m.WorkGearbox().ConvertToKiloWattHour())},
-			{ E_RET_LOSS, SumFunc((r, m) => m.WorkRetarder().ConvertToKiloWattHour())},
-			{ E_AXL_LOSS, SumFunc((r, m) => m.WorkAxlegear().ConvertToKiloWattHour())},
-			{ E_ANGLE_LOSS, SumFunc((r, m) => m.WorkAngledrive().ConvertToKiloWattHour())},
-			{ E_BRAKE, SumFunc((r, m) => m.WorkTotalMechanicalBrake().ConvertToKiloWattHour())},
-			{ E_VEHICLE_INERTIA, SumFunc((r, m) => m.WorkVehicleInertia().ConvertToKiloWattHour())},
-			{ E_AIR, SumFunc((r, m) => m.WorkAirResistance().ConvertToKiloWattHour())},
-			{ E_ROLL, SumFunc((r, m) => m.WorkRollingResistance().ConvertToKiloWattHour())},
-			{ E_GRAD, SumFunc((r, m) => m.WorkRoadGradientResistance().ConvertToKiloWattHour())},
+			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_mech)},
+			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_aux_el).ConvertToKiloWattHour(), ModalResultField.P_aux_el)},
+			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour(), ModalResultField.P_clutch_loss)},
+			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour(), ModalResultField.P_TC_loss)},
+			{ E_SHIFT_LOSS, SumFunc((r, m) => m.WorkGearshift().ConvertToKiloWattHour(), ModalResultField.P_gbx_shift_loss)},
+			{ E_GBX_LOSS, SumFunc((r, m) => m.WorkGearbox().ConvertToKiloWattHour(), ModalResultField.P_gbx_loss)},
+			{ E_RET_LOSS, SumFunc((r, m) => m.WorkRetarder().ConvertToKiloWattHour(), ModalResultField.P_ret_loss)},
+			{ E_AXL_LOSS, SumFunc((r, m) => m.WorkAxlegear().ConvertToKiloWattHour(), ModalResultField.P_axle_loss)},
+			{ E_ANGLE_LOSS, SumFunc((r, m) => m.WorkAngledrive().ConvertToKiloWattHour(), ModalResultField.P_angle_loss)},
+			{ E_BRAKE, SumFunc((r, m) => m.WorkTotalMechanicalBrake().ConvertToKiloWattHour(), ModalResultField.P_brake_loss)},
+			{ E_VEHICLE_INERTIA, SumFunc((r, m) => m.WorkVehicleInertia().ConvertToKiloWattHour(), ModalResultField.P_veh_inertia, ModalResultField.P_wheel_inertia)},
+			{ E_AIR, SumFunc((r, m) => m.WorkAirResistance().ConvertToKiloWattHour(), ModalResultField.P_air)},
+			{ E_ROLL, SumFunc((r, m) => m.WorkRollingResistance().ConvertToKiloWattHour(), ModalResultField.P_roll)},
+			{ E_GRAD, SumFunc((r, m) => m.WorkRoadGradientResistance().ConvertToKiloWattHour(), ModalResultField.P_slope)},
 			{ E_AUX_ESS_missing, SumFunc((r, m) => m.CorrectedModalData.WorkESSMissing.ConvertToKiloWattHour())},
 
 
-			{E_WHEEL, SumFunc((r, m) => m.WorkWheels().ConvertToKiloWattHour())},
+			{E_WHEEL, SumFunc((r, m) => m.WorkWheels().ConvertToKiloWattHour(), ModalResultField.P_wheel_in)},
 			
 			// BusAux
-			{ AirGenerated, SumFunc((r, m) => (ConvertedSI)m.AirGenerated())},
-			{ AirConsumed, SumFunc((r, m) => (ConvertedSI)m.AirConsumed())},
-			{ E_PS_CompressorOff, SumFunc((r, m) => m.EnergyPneumaticCompressorPowerOff().ConvertToKiloWattHour())},
-			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour())},
-			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour())},
-			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour())},
+			{ AirGenerated, SumFunc((r, m) => (ConvertedSI)m.AirGenerated(), ModalResultField.Nl_busAux_PS_generated)},
+			{ AirConsumed, SumFunc((r, m) => (ConvertedSI)m.AirConsumed(), ModalResultField.Nl_busAux_PS_consumer)},
+			{ E_PS_CompressorOff, SumFunc((r, m) => m.EnergyPneumaticCompressorPowerOff().ConvertToKiloWattHour(), ModalResultField.P_busAux_PS_generated_dragOnly)},
+			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour(), ModalResultField.Nl_busAux_PS_generated)},
+			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_generated)},
+			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_consumer_sum)},
 			{ Delta_E_BusAux_Battery, SumFunc((r, m) => (r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 					? m.DeltaSOCBusAuxBattery() * r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
 					: 0.SI<WattSecond>())
 				.ConvertToKiloWattHour()) },
-			{ E_BusAux_HVAC_Mech, SumFunc(new[] {ModalResultField.P_busAux_HVACmech_consumer}, (r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour())}, 
-			{ E_BusAux_HVAC_El, SumFunc(new[] {ModalResultField.P_busAux_ES_HVAC}, (r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour())},
+			{ E_BusAux_HVAC_Mech, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour(), ModalResultField.P_busAux_HVACmech_consumer)}, 
+			{ E_BusAux_HVAC_El, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_HVAC)},
 
 			// REESS
-			{ E_REESS_LOSS, SumFunc((r, m) => m.REESSLoss().ConvertToKiloWattHour())},
-			{ E_REESS_T_chg, SumFunc((r, m) => m.WorkREESSChargeTerminal().ConvertToKiloWattHour())},
-			{ E_REESS_T_dischg, SumFunc((r, m) => m.WorkREESSDischargeTerminal().ConvertToKiloWattHour())},
-			{ E_REESS_int_chg, SumFunc((r, m) => m.WorkREESSChargeInternal().ConvertToKiloWattHour())},
-			{ E_REESS_int_dischg, SumFunc((r, m) => m.WorkREESSDischargeInternal().ConvertToKiloWattHour())},
+			{ E_REESS_LOSS, SumFunc((r, m) => m.REESSLoss().ConvertToKiloWattHour(), ModalResultField.P_reess_loss)},
+			{ E_REESS_T_chg, SumFunc((r, m) => m.WorkREESSChargeTerminal().ConvertToKiloWattHour(), ModalResultField.P_reess_terminal)},
+			{ E_REESS_T_dischg, SumFunc((r, m) => m.WorkREESSDischargeTerminal().ConvertToKiloWattHour(), ModalResultField.P_reess_terminal)},
+			{ E_REESS_int_chg, SumFunc((r, m) => m.WorkREESSChargeInternal().ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
+			{ E_REESS_int_dischg, SumFunc((r, m) => m.WorkREESSDischargeInternal().ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
 
-			{ REESS_StartSoC, SumFunc((r, m) => r.BatteryData != null ? r.BatteryData.InitialSoC * 100 : r.SuperCapData.InitialSoC * 100)},
-			{ REESS_EndSoC, SumFunc((r, m) => m.REESSEndSoC())},
-			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour())},
+			{ REESS_StartSoC, SumFunc((r, m) => r.BatteryData != null ? r.BatteryData.InitialSoC * 100 : r.SuperCapData != null ? r.SuperCapData.InitialSoC * 100 : double.NaN)},
+			{ REESS_EndSoC, SumFunc((r, m) => m.REESSEndSoC(), ModalResultField.REESSStateOfCharge)},
+			{ REESS_DeltaEnergy, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int.GetName()).ConvertToKiloWattHour(), ModalResultField.P_reess_int)},
 
 			// performance entries
-			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage())},
-			{ ACC_POS, SumFunc((r, m) => (ConvertedSI)m.AccelerationsPositive())},
-			{ ACC_NEG, SumFunc((r, m) => (ConvertedSI)m.AccelerationsNegative())},
-			{ ACC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.AccelerationTimeShare())},
-			{ DEC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.DecelerationTimeShare())},
-			{ CRUISE_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.CruiseTimeShare())},
-			{ STOP_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.StopTimeShare())},
-			{ MAX_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxSpeed().AsKmph.SI<Scalar>())},
-			{ MAX_ACCELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxAcceleration())},
-			{ MAX_DECELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxDeceleration())},
-			{ AVG_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.AvgEngineSpeed().AsRPM.SI<Scalar>())},
-			{ MAX_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxEngineSpeed().AsRPM.SI<Scalar>())},
-			{ AVERAGE_POS_ACC, SumFunc((r, m) => (ConvertedSI)m.AverageAccelerationBelowTargetSpeed())},
+			{ ACC, SumFunc((r, m) => (ConvertedSI)m.AccelerationAverage(), ModalResultField.acc)},
+			{ ACC_POS, SumFunc((r, m) => (ConvertedSI)m.AccelerationsPositive(), ModalResultField.acc)},
+			{ ACC_NEG, SumFunc((r, m) => (ConvertedSI)m.AccelerationsNegative(), ModalResultField.acc)},
+			{ ACC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.AccelerationTimeShare(), ModalResultField.acc)},
+			{ DEC_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.DecelerationTimeShare(), ModalResultField.acc)},
+			{ CRUISE_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.CruiseTimeShare(), ModalResultField.v_act, ModalResultField.acc)},
+			{ STOP_TIMESHARE, SumFunc((r, m) => (ConvertedSI)m.StopTimeShare(), ModalResultField.v_act)},
+			{ MAX_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxSpeed().AsKmph.SI<Scalar>(), ModalResultField.v_act)},
+			{ MAX_ACCELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxAcceleration(), ModalResultField.acc)},
+			{ MAX_DECELERATION, SumFunc((r, m) => (ConvertedSI)m.MaxDeceleration(), ModalResultField.acc)},
+			{ AVG_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.AvgEngineSpeed().AsRPM.SI<Scalar>(), ModalResultField.n_ice_avg)},
+			{ MAX_ENGINE_SPEED, SumFunc((r, m) => (ConvertedSI)m.MaxEngineSpeed().AsRPM.SI<Scalar>(), ModalResultField.n_ice_avg)},
+			{ AVERAGE_POS_ACC, SumFunc((r, m) => (ConvertedSI)m.AverageAccelerationBelowTargetSpeed(), ModalResultField.acc, ModalResultField.v_act, ModalResultField.v_targ)},
 
 			{ AVERAGE_ENGINE_EFFICIENCY, SumFunc((r, m) => {
 				var eFC = 0.SI<Joule>();
@@ -530,21 +530,21 @@ namespace TUGraz.VectoCore.OutputData
 				}
 				var eIcePos = m.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x > 0);
 				return eFC.IsEqual(0, 1e-9) ? 0 : (eIcePos / eFC).Value();
-			}) },
-			{ AVERAGE_GEARBOX_EFFICIENCY, SumFunc(new[] { ModalResultField.P_gbx_in }, (r, m) => {
+			}, ModalResultField.FCFinal, ModalResultField.P_ice_fcmap) },
+			{ AVERAGE_GEARBOX_EFFICIENCY, SumFunc((r, m) => {
 				var gbxOutSignal = r.Retarder != null && r.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
 					: (r.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 				var eGbxIn = m.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
 				var eGbxOut = m.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
 				return eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
-			})},
-			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP, SumFunc(new[] { ModalResultField.P_gbx_in, ModalResultField.P_TC_in }, (r, m) => {
+			}, ModalResultField.P_gbx_in)},
+			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP, SumFunc((r, m) => {
 				var eTcIn = m.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
 				var eTcOut = m.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);;
 				return eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
-			})},
-			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, SumFunc(new[] {ModalResultField.P_TC_in, ModalResultField.P_TC_out, ModalResultField.TC_Locked}, (r, m) => {
+			}, ModalResultField.P_gbx_in, ModalResultField.P_TC_in)},
+			{ AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, SumFunc((r, m) => {
 					var tcData = m.GetValues(
 						x => new {
 							dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()),
@@ -560,44 +560,42 @@ namespace TUGraz.VectoCore.OutputData
 					}
 
 					return eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
-				}
-			)},
-			{ AVERAGE_ANGLEDRIVE_EFFICIENCY, SumFunc(new[] {ModalResultField.P_angle_in, ModalResultField.P_axle_in},(r, m) => {
-				if (r.AngledriveData == null) {
-					return null;
-				}
-				var eAngleIn = m.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
-				var eAngleOut = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
-				return (eAngleOut / eAngleIn).Value();
-			})
+				}, ModalResultField.P_TC_in, ModalResultField.P_TC_out, ModalResultField.TC_Locked)},
+			{ AVERAGE_ANGLEDRIVE_EFFICIENCY, SumFunc((r, m) => {
+					if (r.AngledriveData == null) {
+						return null;
+					}
+					var eAngleIn = m.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
+					var eAngleOut = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+					return (eAngleOut / eAngleIn).Value();
+				}, new[] {ModalResultField.P_angle_in, ModalResultField.P_axle_in})
 			},
-			{ AVERAGE_AXLEGEAR_EFFICIENCY, SumFunc(new[] {ModalResultField.P_axle_in, ModalResultField.P_brake_in},
-				(r, m) => {
+			{ AVERAGE_AXLEGEAR_EFFICIENCY, SumFunc((r, m) => {
 					if (r.AxleGearData == null) {
 						return null;
 					}
 					var eAxlIn = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
 					var eAxlOut = m.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
 					return eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
-				})
+				}, ModalResultField.P_axle_in, ModalResultField.P_brake_in)
 			},
 
 			{ NUM_GEARSHIFTS, SumFunc((r, m) => ((uint?)r.GearboxData?.Gears.Count ?? 0u) == 1 ? 0.SI<Scalar>() : (ConvertedSI)m.GearshiftCount())},
 			
-			{ COASTING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.CoastingTimeShare()) },
-			{ BRAKING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.BrakingTimeShare()) },
-			{ ICE_FULL_LOAD_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEMaxLoadTimeShare()) },
-			{ ICE_OFF_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEOffTimeShare()) },
-			{ NUM_ICE_STARTS, SumFunc((r, m) => (ConvertedSI)m.NumICEStarts().SI<Scalar>()) },
+			{ COASTING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.CoastingTimeShare(), ModalResultField.drivingBehavior) },
+			{ BRAKING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.BrakingTimeShare(), ModalResultField.drivingBehavior) },
+			{ ICE_FULL_LOAD_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEMaxLoadTimeShare(), ModalResultField.T_ice_fcmap, ModalResultField.T_ice_full) },
+			{ ICE_OFF_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.ICEOffTimeShare(), ModalResultField.ICEOn) },
+			{ NUM_ICE_STARTS, SumFunc((r, m) => (ConvertedSI)m.NumICEStarts().SI<Scalar>(), ModalResultField.ICEOn) },
 
 			// CO2
-			{ CO2_KM, SumFunc((r, m) => m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter()) },
-			{ CO2_TKM, SumFunc((r, m) => r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer()) },
-			{ CO2_M3KM, SumFunc((r, m) => r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter()) },
-			{ CO2_PKM, SumFunc((r, m) => r.VehicleData?.PassengerCount == null ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter()) },
+			{ CO2_KM, SumFunc((r, m) => m.CorrectedModalData.KilogramCO2PerMeter.ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
+			{ CO2_TKM, SumFunc((r, m) => r.VehicleData?.Loading == null || r.VehicleData.Loading.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.Loading).ConvertToGrammPerTonKilometer(), ModalResultField.dist) },
+			{ CO2_M3KM, SumFunc((r, m) => r.VehicleData?.CargoVolume == null || r.VehicleData.CargoVolume.IsEqual(0) ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.CargoVolume).ConvertToGrammPerCubicMeterKiloMeter(), ModalResultField.dist) },
+			{ CO2_PKM, SumFunc((r, m) => r.VehicleData?.PassengerCount == null ? null : (m.CorrectedModalData.KilogramCO2PerMeter / r.VehicleData.PassengerCount.Value).ConvertToGrammPerKiloMeter(), ModalResultField.dist) },
 
 			// electric consumption
-			{ ElectricEnergyConsumptionPerKm, SumFunc(new[] {ModalResultField.P_reess_int}, (r, m) => (-m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / m.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter())},
+			{ ElectricEnergyConsumptionPerKm, SumFunc((r, m) => (-m.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / m.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter(), ModalResultField.P_reess_int)},
 
 			//			{, SumFunc((r, m) =>)},
 
@@ -611,7 +609,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ FCNCVC_KM, FuelFunc((r, m, f) => m.FuelConsumptionPerMeter(ModalResultField.FCNCVc, f)?.ConvertToGrammPerKiloMeter())},
 			{ FCWHTCC_H, FuelFunc((r, m, f) => m.FuelConsumptionPerSecond(ModalResultField.FCWHTCc, f)?.ConvertToGrammPerHour())},
 			{ FCWHTCC_KM, FuelFunc((r, m, f) => m.FuelConsumptionPerMeter(ModalResultField.FCWHTCc, f)?.ConvertToGrammPerKiloMeter())},
-			{ K_ENGLINE, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).EngineLineCorrectionFactor.ConvertToGramPerKiloWattHour())},
+			{ K_ENGLINE, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).EngineLineCorrectionFactor?.ConvertToGramPerKiloWattHour())},
 			{ K_VEHLINE, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).VehicleLine?.ConvertToGramPerKiloWattHour())},
 			{ FCESS_H, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_H?.ConvertToGrammPerHour())},
 			{ FCESS_H_CORR, FuelFunc((r, m, f) => m.CorrectedModalData.FuelConsumptionCorrection(f).FC_ESS_CORR_H?.ConvertToGrammPerHour())},

@@ -127,21 +127,21 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		[TestCase]
 		public void Class5_E2_NoADAS_CaseJ() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),
-			(0, 4794, OutsideSegment, Accelerate),        // len: 4794m
-			(4794, 4805, OutsideSegment, Roll),           // len: 11m
+			(0, 4795, OutsideSegment, Accelerate),        // len: 4795m
+			(4795, 4805, OutsideSegment, Roll),           // len: 10m
 			(4805, 4837, OutsideSegment, Accelerate),     // len: 32m
 			(4837, 4845, OutsideSegment, Roll),           // len: 8m
-			(4845, 4881, OutsideSegment, Accelerate),     // len: 36m
-			(4881, 4887, OutsideSegment, Roll),           // len: 6m
-			(4887, 5088, OutsideSegment, Accelerate),     // len: 201m
+			(4845, 4885, OutsideSegment, Accelerate),     // len: 40m
+			(4885, 4891, OutsideSegment, Roll),           // len: 6m
+			(4891, 5088, OutsideSegment, Accelerate),     // len: 197m
 			(5088, 5103, OutsideSegment, Roll),           // len: 15m
-			(5103, 5143, OutsideSegment, Accelerate),     // len: 40m
-			(5143, 5159, OutsideSegment, Roll),           // len: 16m
-			(5159, 5431, OutsideSegment, Accelerate),     // len: 272m
-			(5431, 5526, OutsideSegment, Coast),          // len: 95m
-			(5526, 6090, OutsideSegment, Brake),          // len: 564m
-			(6090, 6364, OutsideSegment, Coast),          // len: 274m
-			(6364, 1e6, OutsideSegment, Accelerate));
+			(5103, 5142, OutsideSegment, Accelerate),     // len: 39m
+			(5142, 5159, OutsideSegment, Roll),           // len: 17m
+			(5159, 5442, OutsideSegment, Accelerate),     // len: 283m
+			(5442, 5537, OutsideSegment, Coast),          // len: 95m
+			(5537, 6089, OutsideSegment, Brake),          // len: 552m
+			(6089, 6363, OutsideSegment, Coast),          // len: 274m
+			(6363, 1e6, OutsideSegment, Accelerate));
 
 		[TestCase]
 		public void Class5_E2_NoADAS_CrestCoast1() => TestPCC(MethodBase.GetCurrentMethod().Name.Split('_').Slice(0, -1).Join("_"), MethodBase.GetCurrentMethod().Name.Split('_').Last(),

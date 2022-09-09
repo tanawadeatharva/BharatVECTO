@@ -125,6 +125,8 @@ namespace TUGraz.VectoCore.OutputData
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return new SerialHybridModalDataPostprocessingCorrection();
+				case VectoSimulationJobType.EngineOnlySimulation:
+					return new EngineOnlyPostprocessingCorrection();
 				default:
 					return new ModalDataPostprocessingCorrection();
 			}
@@ -461,21 +463,6 @@ namespace TUGraz.VectoCore.OutputData
 			var integral = GetValues(x => x.Field<PerSecond>(string.Format(field.GetCaption(), emPos.GetName())).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
 			return (integral / Duration.Value()).SI<PerSecond>();
-		}
-
-		public double REESSStartSoC()
-		{
-			return (Data.AsEnumerable().First().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
-		}
-
-		public double REESSEndSoC()
-		{
-			return (Data.AsEnumerable().Last().Field<SI>(ModalResultField.REESSStateOfCharge.GetName())?.Value() ?? 0) * 100;
-		}
-
-		public WattSecond REESSLoss()
-		{
-			return TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
 		}
 
 		public ICorrectedModalData CorrectedModalData => _correctedModalData ?? (_correctedModalData = PostProcessingCorrection.ApplyCorrection(this, _runData));

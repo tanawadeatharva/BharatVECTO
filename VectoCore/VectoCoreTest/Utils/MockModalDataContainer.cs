@@ -329,21 +329,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public double REESSStartSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public double REESSEndSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public WattSecond REESSLoss()
-		{
-			throw new NotImplementedException();
-		}
-
 		public ICorrectedModalData CorrectedModalData { get; }
 		public void RegisterComponent(VectoSimulationComponent component)
 		{
