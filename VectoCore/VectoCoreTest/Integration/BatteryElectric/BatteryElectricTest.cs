@@ -890,6 +890,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				//AxleGearData = axleGearData,
 				//GearboxData = gearboxData,
