@@ -52,6 +52,7 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
@@ -87,12 +88,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var runData = new VectoRunData() {
 				JobName = "Coach_MinimalPowertrain_Coasting",
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				EngineData = engineData,
-				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
-            };
+				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+				GearboxData = new GearboxData() { Type = GearboxType.AMT }
+			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData,
@@ -156,9 +159,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var runData = new VectoRunData()
 			{
 				JobName = "Coach_MinimalPowertrain_Coasting",
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				VehicleData = vehicleData,
 				EngineData = engineData,
+				GearboxData = new GearboxData() { Type = GearboxType.AMT }
+
+
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
@@ -228,11 +235,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var runData = new VectoRunData()
 			{
 				JobName = "Coach_MinimalPowertrain",
+				SimulationType = SimulationType.DistanceCycle,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				EngineData = engineData,
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
 				DriverData = driverData,
+				GearboxData = new GearboxData() { Type = GearboxType.AMT }
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
             var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {

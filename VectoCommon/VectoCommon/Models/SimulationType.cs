@@ -44,15 +44,4 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		VerificationTest = 1 << 4
 	}
 
-	public static class SimulationTypeExtension
-	{
-		public static bool Contains(this SimulationType self, params SimulationType[] candidates)
-		{
-			var matching = 0;
-			foreach (var candidate in candidates) {
-				matching += (int)(self & candidate);
-			}
-			return matching != 0;
-		}
-	}
 }

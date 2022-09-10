@@ -660,6 +660,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.SerialHybridVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,

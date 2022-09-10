@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
             };
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
@@ -74,6 +75,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
             var entries = new[] {
@@ -101,6 +103,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
@@ -129,6 +132,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
@@ -156,6 +160,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
@@ -185,6 +190,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {
@@ -213,6 +219,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				JobName = "GearshiftRun"
 			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateColumns(ModalResults.GearboxSignals);
 
 			var entries = new[] {

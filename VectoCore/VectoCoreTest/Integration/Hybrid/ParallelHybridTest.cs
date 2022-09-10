@@ -1594,6 +1594,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.ParallelHybridVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
@@ -1749,6 +1750,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var runData = new VectoRunData() {
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,

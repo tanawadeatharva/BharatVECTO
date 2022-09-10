@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				},
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateCombustionEngineColumns(rundata);
 			modData.Data.CreateColumns(ModalResults.VehicleSignals);
 			modData.Data.CreateColumns(ModalResults.BrakeSignals);
@@ -192,6 +193,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				},
 			};
 			var modData = new ModalDataContainer(rundata, writer, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.Data.CreateCombustionEngineColumns(rundata);
 			modData.Data.CreateColumns(ModalResults.VehicleSignals);
 			modData.Data.CreateColumns(ModalResults.BrakeSignals);

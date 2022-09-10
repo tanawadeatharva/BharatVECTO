@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -351,23 +352,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
 		{
 			switch (component) {
-				case IDrivingCycle _ when runData.SimulationType.Contains(SimulationType.DistanceCycle):
+				case IDrivingCycleInfo d when (d is DistanceBasedDrivingCycle || d is MockDrivingCycle):
 					CreateColumns(DistanceCycleSignals);
 					break;
-				case IDrivingCycle _ when runData.SimulationType.Contains(SimulationType.MeasuredSpeedCycle, SimulationType.PWheel, SimulationType.VerificationTest) :
+				case IDrivingCycleInfo t when t is MeasuredSpeedDrivingCycle:
 					CreateColumns(TimeCycleSignals);
+					CreateColumns(DriverSignals);
 					break;
-				case IDrivingCycleInfo _ when runData.SimulationType.Contains(SimulationType.EngineOnly):
+				case IDrivingCycleInfo v when v is VTPCycle:
+				case IDrivingCycleInfo p when p is PWheelCycle:
+					CreateColumns(TimeCycleSignals);
+					CreateColumns(WheelSignals);
+					CreateColumns(DriverSignals);
+					break;
+				case IDrivingCycleInfo e when e is PowertrainDrivingCycle:
 					CreateColumns(EngineOnlySignals);
 					break;
 				case ICombustionEngine c1: CreateCombustionEngineColumns(runData); break;
 				case BusAuxiliariesAdapter _: CreateColumns(BusAuxiliariesSignals); break;
-				case PWheelCycle _: CreateColumns(WheelSignals); CreateColumns(DriverSignals); break;
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
 				case IGearbox _ when runData.JobType != VectoSimulationJobType.IEPC_E && runData.JobType != VectoSimulationJobType.IEPC_S:
-					CreateColumns(runData.GearboxData.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)
+					CreateColumns(runData.GearboxData?.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial) ?? false
 						? GearboxSignals_AT
 						: GearboxSignals);
 					break;

@@ -99,6 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var modData = new ModalDataContainer(runData, fileWriter, null) {
 				WriteModalResults = true,
 			};
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
