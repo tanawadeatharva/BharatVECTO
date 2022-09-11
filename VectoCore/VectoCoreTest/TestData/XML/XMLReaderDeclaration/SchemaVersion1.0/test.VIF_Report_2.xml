@@ -37,7 +37,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
           <tcl:Entry gear="6" maxTorque="1800" />
           <tcl:Entry gear="1" maxTorque="2500" />
         </vif0.1:TorqueLimits>
-        <vif0.1:Components xsi:type="VehicleComponentsPIFType">
+        <vif0.1:Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
           <vif0.1:Engine>
             <vif0.1:Data xsi:type="EngineDataPIFType">
               <vif0.1:Manufacturer>Generic Engine Manufacturer</vif0.1:Manufacturer>

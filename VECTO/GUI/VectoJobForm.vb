@@ -1390,10 +1390,10 @@ Public Class VectoJobForm
 		End If
 
 		PicVehicle.Image = ConvPicPath(HDVclass, False) _
-		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+        'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = $"HDV Group {HDVclass}"
-	    TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
+        TbHVCclass.Text = $"{HDVclass}"
+        TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
 	End Sub
@@ -1433,14 +1433,187 @@ Public Class VectoJobForm
 #End Region
 
 
-	Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
-		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
-			Then _
-			tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
-																	GetPath(VectoFile))
-	End Sub
+#Region "TextBox Validation OnLeave"
 
-	Private Sub btnDfVelocityDrop_Click_1(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
+    Private Function TextboxValidation(text As String) As Boolean
+        If text = "" Then
+            Return True
+        End If
+        If Not IsNumeric(text) Then
+            Return False
+        End If
+
+        If Not 0 < Convert.ToDouble(text) Then
+            Return False
+        End If
+
+        Return True
+    End Function
+
+
+    Private Sub tbEngineStopStartActivationDelay_Leave(sender As Object, e As System.EventArgs) Handles tbEngineStopStartActivationDelay.Leave
+        If Not TextboxValidation(tbEngineStopStartActivationDelay.Text) Then
+            MsgBox("Invalid input value for 'Engine-off'!", vbExclamation, "Warning")
+            tbEngineStopStartActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbMaxEngineOffTimespan_Leave(sender As Object, e As System.EventArgs) Handles tbMaxEngineOffTimespan.Leave
+        If Not TextboxValidation(tbMaxEngineOffTimespan.Text) Then
+            MsgBox("Invalid input value for 'Max. engine-off time:'!", vbExclamation, "Warning")
+            tbMaxEngineOffTimespan.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollMinSpeed.Leave
+        If Not TextboxValidation(tbEcoRollMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Minimum Speed'!", vbExclamation, "Warning")
+            tbEcoRollMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollActivationDelay_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollActivationDelay.Leave
+        If Not TextboxValidation(tbEcoRollActivationDelay.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Activation Delay'!", vbExclamation, "Warning")
+            tbEcoRollActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollMaxAcc_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollMaxAcc.Leave
+        If Not TextboxValidation(tbEcoRollMaxAcc.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Upper Accelaration Limit'!", vbExclamation, "Warning")
+            tbEcoRollActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollUnderspeed_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollUnderspeed.Leave
+        If Not TextboxValidation(tbEcoRollUnderspeed.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Underspeed threshold'!", vbExclamation, "Warning")
+            tbEcoRollUnderspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCUnderspeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCUnderspeed.Leave
+        If Not TextboxValidation(tbPCCUnderspeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control -  Allowed Underspeed'!", vbExclamation, "Warning")
+            tbPCCUnderspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCOverspeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCOverspeed.Leave
+        If Not TextboxValidation(tbPCCOverspeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Allowed Overspeed'!", vbExclamation, "Warning")
+            tbPCCOverspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCEnableSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCEnableSpeed.Leave
+        If Not TextboxValidation(tbPCCEnableSpeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - PCC enabling velocity'!", vbExclamation, "Warning")
+            tbPCCEnableSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCMinSpeed.Leave
+        If Not TextboxValidation(tbPCCMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Minimum Speed'!", vbExclamation, "Warning")
+            tbPCCMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCPreviewUseCase1_Leave(sender As Object, e As System.EventArgs) Handles tbPCCPreviewUseCase1.Leave
+        If Not TextboxValidation(tbPCCPreviewUseCase1.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Preview Distance use case 1'!", vbExclamation, "Warning")
+            tbPCCPreviewUseCase1.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbtbPCCPreviewUseCase2_Leave(sender As Object, e As System.EventArgs) Handles tbPCCPreviewUseCase2.Leave
+        If Not TextboxValidation(tbPCCPreviewUseCase2.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Preview Distance use case 2'!", vbExclamation, "Warning")
+            tbPCCPreviewUseCase2.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbAuxPAuxICEOn_Leave(sender As Object, e As System.EventArgs) Handles TbAuxPAuxICEOn.Leave
+        If Not TextboxValidation(TbAuxPAuxICEOn.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (ICE On)'!", vbExclamation, "Warning")
+            TbAuxPAuxICEOn.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPAuxDrivingICEOff_Leave(sender As Object, e As System.EventArgs) Handles tbPAuxDrivingICEOff.Leave
+        If Not TextboxValidation(tbPAuxDrivingICEOff.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (Driving, ICE Off)'!", vbExclamation, "Warning")
+            tbPAuxDrivingICEOff.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPAuxStandstillICEOff_Leave(sender As Object, e As System.EventArgs) Handles tbPAuxStandstillICEOff.Leave
+        If Not TextboxValidation(tbPAuxStandstillICEOff.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (Standstill, ICE Off)'!", vbExclamation, "Warning")
+            tbPAuxStandstillICEOff.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbOverspeed_Leave(sender As Object, e As System.EventArgs) Handles TbOverspeed.Leave
+        If Not TextboxValidation(TbOverspeed.Text) Then
+            MsgBox("Invalid input value for 'Driver Model - 'Maximum Overspeed'!", vbExclamation, "Warning")
+            TbOverspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbVmin_Leave(sender As Object, e As System.EventArgs) Handles TbVmin.Leave
+        If Not TextboxValidation(TbVmin.Text) Then
+            MsgBox("Invalid input value for 'Driver Model - 'Minimum Speed'!", vbExclamation, "Warning")
+            TbVmin.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbLacMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbLacMinSpeed.Leave
+        If Not TextboxValidation(tbLacMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Look-Ahead Coasting - 'Min. Velocity'!", vbExclamation, "Warning")
+            tbLacMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbLacPreviewFactor_Leave(sender As Object, e As System.EventArgs) Handles tbLacPreviewFactor.Leave
+        If Not TextboxValidation(tbLacPreviewFactor.Text) Then
+            MsgBox("Invalid input value for 'Look-Ahead Coasting - 'Preview distance factor'!", vbExclamation, "Warning")
+            tbLacPreviewFactor.Focus()
+            Return
+        End If
+    End Sub
+
+
+#End Region
+
+    Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
+        If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
+            Then _
+            tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
+                                                                    GetPath(VectoFile))
+    End Sub
+
+    Private Sub btnDfVelocityDrop_Click_1(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
 		If DriverDecisionFactorVelocityDropFileBrowser.OpenDialog(FileRepl(tbLacDfVelocityDropFile.Text, GetPath(VectoFile))) _
 			Then _
 			tbLacDfVelocityDropFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorVelocityDropFileBrowser.Files(0),
@@ -1568,6 +1741,9 @@ Public Class VectoJobForm
         End If
     End Sub
 
+    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
+
+    End Sub
 End Class
 
 

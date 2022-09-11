@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationModeCompletedMultistageBusVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected readonly IMultistageBusInputDataProvider InputDataProvider;
+		protected readonly IMultistepBusInputDataProvider InputDataProvider;
 		protected IDeclarationReport Report;
 
 		protected Segment _segmentCompletedBus;
@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected DeclarationDataAdapterCompletedBusGeneric DataAdapterGeneric = new DeclarationDataAdapterCompletedBusGeneric();
 
 		public DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-			IMultistageBusInputDataProvider dataProvider, IDeclarationReport report)
+			IMultistepBusInputDataProvider dataProvider, IDeclarationReport report)
 		{
 
 			InputDataProvider = dataProvider;
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
 		}
 
-		private VectoRunData GetExemptedVectoRunData()
+		protected virtual VectoRunData GetExemptedVectoRunData()
 		{
 			return new VectoRunData() {
 				Exempted = true,
@@ -92,7 +92,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Report = Report,
 				Mission = new Mission() {
 					MissionType = MissionType.ExemptedMission
-				}
+				},
+				InputData = InputDataProvider
 			};
 		}
 
@@ -147,63 +148,71 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		private IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
+		protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-			var engineModes = InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.EngineModes;
+			if (InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.VehicleType ==
+				VectoSimulationJobType.BatteryElectricVehicle) {
+				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, ""))
+					yield return vectoRunData;
+			} else {
+				var engineModes = InputDataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData
+					?.EngineModes;
 
-			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++)
-			{
-				var fuelMode = "single fuel mode";
-				if (engineModes[modeIdx].Fuels.Count > 1)
-				{
-					fuelMode = "dual fuel mode";
+				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+					var fuelMode = "single fuel mode";
+					if (engineModes[modeIdx].Fuels.Count > 1) {
+						fuelMode = "dual fuel mode";
+					}
+
+					foreach (var vectoRunData in CreateVectoRunDataForMissions(modeIdx, fuelMode))
+						yield return vectoRunData;
 				}
-				foreach (var mission in _segmentCompletedBus.Missions)
-				{
-					foreach (var loading in mission.Loadings)
-					{
-						var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
-						if (simulationRunData != null)
-						{
-							yield return simulationRunData;
-						}
+			}
+		}
 
-						var primarySegment = GetPrimarySegment(PrimaryVehicle);
-						var primaryMission = primarySegment.Missions.Where(
-							m => {
-								return m.BusParameter.DoubleDecker ==
-										CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
-										m.MissionType == mission.MissionType &&
-										m.BusParameter.FloorType == CompletedVehicle.VehicleCode.GetFloorType();
-							}).First();
-						simulationRunData = CreateVectoRunDataGeneric(
-							primaryMission,
-							new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key, primaryMission.Loadings[loading.Key]),
-							primarySegment, modeIdx);
-
-						var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
-							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-							simulationRunData.VehicleData.Loading);
-						if (primaryResult == null || !primaryResult.ResultStatus.Equals("success"))
-						{
-							throw new VectoException(
-								"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
-								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-								simulationRunData.VehicleData.Loading);
-						}
-
-						if (primaryResult.ResultStatus != "success")
-						{
-							throw new VectoException(
-								"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
-								simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-								simulationRunData.VehicleData.Loading);
-						}
-
-						simulationRunData.PrimaryResult = primaryResult;
-
+		private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
+		{
+			foreach (var mission in _segmentCompletedBus.Missions) {
+				foreach (var loading in mission.Loadings) {
+					var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
+					if (simulationRunData != null) {
 						yield return simulationRunData;
 					}
+
+					var primarySegment = GetPrimarySegment(PrimaryVehicle);
+					var primaryMission = primarySegment.Missions.Where(
+						m => {
+							return m.BusParameter.DoubleDecker ==
+									CompletedVehicle.VehicleCode.IsDoubleDeckerBus() &&
+									m.MissionType == mission.MissionType &&
+									m.BusParameter.FloorType == CompletedVehicle.VehicleCode.GetFloorType();
+						}).First();
+					simulationRunData = CreateVectoRunDataGeneric(
+						primaryMission,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
+							primaryMission.Loadings[loading.Key]),
+						primarySegment, modeIdx);
+
+					var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
+						simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+						simulationRunData.VehicleData.Loading);
+					if (primaryResult == null || !primaryResult.ResultStatus.Equals("success")) {
+						throw new VectoException(
+							"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+					}
+
+					if (primaryResult.ResultStatus != "success") {
+						throw new VectoException(
+							"Simulation results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3} not finished successfully.",
+							simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
+							simulationRunData.VehicleData.Loading);
+					}
+
+					simulationRunData.PrimaryResult = primaryResult;
+
+					yield return simulationRunData;
 				}
 			}
 		}
@@ -235,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 
-		protected VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
+		protected virtual VectoRunData CreateVectoRunDataSpecific(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int modeIdx)
 		{
 			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			
@@ -274,7 +283,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		
-		protected VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
+		protected virtual VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
 		{
 			var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
 			

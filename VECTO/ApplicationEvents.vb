@@ -84,8 +84,8 @@ Namespace My
 			'Log
 			LogFile = New FileLogger
 			If Not LogFile.StartLog() Then
-				MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
-				e.Cancel = True
+                MsgBox("Error! Can't access log file. Application folder needs read/write permissions! Check if VECTO is already running.")
+                e.Cancel = True
 			End If
 
 			If Not Directory.Exists(MyConfPath) Then

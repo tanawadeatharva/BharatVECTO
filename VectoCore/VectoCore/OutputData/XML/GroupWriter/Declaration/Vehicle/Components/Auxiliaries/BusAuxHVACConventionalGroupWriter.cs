@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 			var elements = new List<XElement>();
 
 			elements.Add(new XElement(_writerNamespace + XMLNames.Bus_SystemConfiguration, 
-				aux.HVACAux.SystemConfiguration.GetXmlFormat()));
+				aux.HVACAux.SystemConfiguration.ToXmlFormat()));
 
 			elements.AddRange(_groupWriterFactory
 				.GetBusAuxiliariesDeclarationGroupWriter(GroupNames.BusAuxHVACHeatPumpSequenceGroup, _writerNamespace)

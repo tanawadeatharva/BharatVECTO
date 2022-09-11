@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -66,6 +66,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _completed, value);
 		}
 
+		private bool _runSimulation;
+
+		public bool RunSimulation
+		{
+			get => _runSimulation;
+			set => SetProperty(ref _runSimulation, value);
+		}
+
 		#region Labeling
 
 		private  string _vifType;
@@ -96,7 +104,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_additionalJobInfo = additionalJobInfo;
 			SetupBackingStorage();
 			additionalJobInfo.SetParent(this);
-
+			
 
 			UpdateTitleAndDocumentName();
 			(this as INotifyPropertyChanged).PropertyChanged += CreateVifViewModel_PropertyChanged;
@@ -106,7 +114,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			_backingStorage = new BackingStorage<CreateVifViewModel>(this,
 				nameof(this.PrimaryInputPath),
-				nameof(this.StageInputPath));
+				nameof(this.StageInputPath), nameof(RunSimulation));
 			_backingStorage.PropertyChanged += (object s, PropertyChangedEventArgs e) => {
 				OnPropertyChanged(nameof(UnsavedChanges));
 			};
@@ -141,7 +149,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			IAdditionalJobInfoViewModel additionalJobInfo) : this(dialogHelper, inputDataReader, additionalJobInfo)
 		{
 			_completed = completed;
-		}
+			_runSimulation = completed;
+			UpdateTitleAndDocumentName();
+        }
 
 
 		private void SetInputData(IInputDataProvider inputData)
@@ -163,7 +173,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			}
 			
 
-			Completed = inputDataProvider.Completed ?? false;
+			Completed = inputDataProvider?.Completed ?? false;
+			RunSimulation = inputDataProvider?.SimulateResultingVIF ?? false;
 
 			DataSource = inputData.DataSource;
 			UpdateTitleAndDocumentName();
@@ -292,7 +303,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				},
 				Body = new JSONJobBody() {
 					PrimaryVehicle = PathHelper.GetRelativePath(path, PrimaryInputPath),
-					InterimStep = PathHelper.GetRelativePath(path, StageInputPath)
+					InterimStep = PathHelper.GetRelativePath(path, StageInputPath),
+					Completed = Completed,
+					RunSimulation = RunSimulation,
 				}
 			};
 

@@ -35,6 +35,7 @@ namespace VECTO3GUI2020.Util.XML
 				{ V21, "v2.1"},
 				{ V23, "v2.3"},
 				{ V24, "v2.4"},
+				//{ V26, "v2.6"},
 				{ Di, "di"},
 			};
 

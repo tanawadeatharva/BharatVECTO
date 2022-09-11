@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			return new ResponseCycleFinished(this);
 		}
 
-		private void CheckValidInput()
+		protected virtual void CheckValidInput()
 		{
 			if (Container.RunData.MultistageRun) {
 				return;

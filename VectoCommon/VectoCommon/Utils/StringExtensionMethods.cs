@@ -87,6 +87,16 @@ namespace TUGraz.VectoCommon.Utils
 			return int.Parse(self) != 0;
 		}
 
+		public static bool IsNullOrEmpty(this string self)
+		{
+			return string.IsNullOrEmpty(self);
+		}
+
+		public static bool IsNullOrWhiteSpace(this string self)
+		{
+			return string.IsNullOrWhiteSpace(self);
+		}
+
 		public static double IndulgentParse(this string self) =>
 			double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
 				CultureInfo.InvariantCulture);
@@ -95,6 +105,6 @@ namespace TUGraz.VectoCommon.Utils
 			new MemoryStream(Encoding.UTF8.GetBytes(self));
 
 		public static string RemoveWhitespace(this string self) => 
-			string.Concat(self.Split());
+			string.IsNullOrEmpty(self) ? "" : string.Concat(self.Split());
 	}
 }

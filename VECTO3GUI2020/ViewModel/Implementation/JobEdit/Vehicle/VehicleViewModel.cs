@@ -361,6 +361,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 
 		public virtual ConsumerTechnology DoorDriveTechnology
 		{

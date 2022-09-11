@@ -19,7 +19,7 @@ namespace TUGraz.VectoCommon.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class XMLNames {
@@ -1069,6 +1069,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clutch.
+        /// </summary>
+        public static string BusAux_Clutch {
+            get {
+                return ResourceManager.GetString("BusAux_Clutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ElectricSystem.
         /// </summary>
         public static string BusAux_ElectricSystem {
@@ -1470,6 +1479,114 @@ namespace TUGraz.VectoCommon.Resources {
         public static string ChassisConfiguration {
             get {
                 return ResourceManager.GetString("ChassisConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalLorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_ConventionalLorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_ConventionalLorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exempted_CompletedBusOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_Exempted_CompletedBusOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_Exempted_CompletedBusOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exempted_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_Exempted_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_Exempted_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_IEPC_S_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_IEPC_S_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_S_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_Px_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_Px_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_Px_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S2_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S2_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S2_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S3_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S3_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S3_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_S4_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_S4_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_S4_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV_E2_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_PEV_E2_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_PEV_E2_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV_E3_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_PEV_E3_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_PEV_E3_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV_E4_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_PEV_E4_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_PEV_E4_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV_IEPC_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_PEV_IEPC_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_PEV_IEPC_LorryOutputType", resourceCulture);
             }
         }
         
@@ -2356,6 +2473,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string ElectricMachine_P2_5GearRatios_Gear_Attr {
+            get {
+                return ResourceManager.GetString("ElectricMachine_P2_5GearRatios_Gear_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
         public static string ElectricMachine_Position {
@@ -3229,20 +3355,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerAddress.
+        /// </summary>
+        public static string ManufacturerAddress {
+            get {
+                return ResourceManager.GetString("ManufacturerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddressCompletedVehicle.
         /// </summary>
         public static string ManufacturerAddressCompletedVehicle {
             get {
                 return ResourceManager.GetString("ManufacturerAddressCompletedVehicle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ManufacturerAddressPrimaryVehicle.
-        /// </summary>
-        public static string ManufacturerAddressPrimaryVehicle {
-            get {
-                return ResourceManager.GetString("ManufacturerAddressPrimaryVehicle", resourceCulture);
             }
         }
         
@@ -3360,6 +3486,105 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Missions_Cycle {
             get {
                 return ResourceManager.GetString("Missions_Cycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalLorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConventionalPrimaryBusManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-IEPC-S_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-Px_IHPCLorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S2_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S3_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV-S4_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV-E2_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV-E3_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV-E4_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PEV-IEPC_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
         
@@ -3729,6 +3954,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_InputDataSignature {
             get {
                 return ResourceManager.GetString("Report_InputDataSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ManufacturerRecordSignature.
+        /// </summary>
+        public static string Report_ManufacturerRecord_Signature {
+            get {
+                return ResourceManager.GetString("Report_ManufacturerRecord_Signature", resourceCulture);
             }
         }
         
@@ -4107,6 +4341,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Results_FuelType {
             get {
                 return ResourceManager.GetString("Report_Results_FuelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryVehicleSubgroup.
+        /// </summary>
+        public static string Report_Results_PrimaryVehicleSubgroup {
+            get {
+                return ResourceManager.GetString("Report_Results_PrimaryVehicleSubgroup", resourceCulture);
             }
         }
         
@@ -5439,6 +5682,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string XMLManufacturerReport_torqueLimitPercent {
             get {
                 return ResourceManager.GetString("XMLManufacturerReport_torqueLimitPercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string XSIType {
+            get {
+                return ResourceManager.GetString("XSIType", resourceCulture);
             }
         }
     }

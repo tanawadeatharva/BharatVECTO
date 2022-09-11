@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -124,6 +125,10 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//string Rim { get; }  // deprecated
 
+		/// <summary>
+		/// P196, P197  TorqueLimits: Gear [-], MaxTorque [Nm]
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		/// <summary>
@@ -154,14 +159,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool HybridElectricHDV { get; }
 
-		bool DualFuelVehicle { get; }
+        bool DualFuelVehicle { get; }
 
-		Watt MaxNetPower1 { get; }
+        Watt MaxNetPower1 { get; }
 
 		Watt MaxNetPower2 { get; }
 
 		string ExemptedTechnology { get; }
 
+		// --- end
 
 		RegistrationClass? RegisteredClass { get; }
 
@@ -210,6 +216,8 @@ namespace TUGraz.VectoCommon.InputData
 		bool OvcHev { get; }
 
 		Watt MaxChargingPower { get; }
+
+		VectoSimulationJobType VehicleType { get; }
 
 	}
 
@@ -399,6 +407,9 @@ namespace TUGraz.VectoCommon.InputData
 		SquareMeter TransferredAirDragArea { get; } // P246
 
 		SquareMeter AirDragArea_0 { get; } // P245
+
+		XmlNode XMLSource { get; }
+
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -963,6 +974,15 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IBusAuxElectricStorageDeclarationInputData> ElectricStorage { get; }
 	}
 
+	public static class ElectricSupplyDeclarationDataHelper
+	{
+		public static Watt GetMaxAlternatorPower(this IElectricSupplyDeclarationData electricSupply)
+		{
+			return electricSupply.Alternators?.Select(alt => alt.RatedCurrent * alt.RatedVoltage)?
+				.Max();
+		}
+	}
+
 	public interface IElectricConsumersDeclarationData
 	{
 		bool? InteriorLightsLED { get; }
@@ -1071,7 +1091,7 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
 		double PassengerCount { get; }
-		string FuelMode { get; }
+		//string FuelMode { get; }
 	}
 
 
@@ -1156,7 +1176,7 @@ namespace TUGraz.VectoCommon.InputData
 			switch (type)
 			{
 				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
-				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.mechanically);
 				default: return null;
 			}
 		}
@@ -1179,6 +1199,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum ArchitectureID
 	{
+		UNKNOWN,
 		E2,
 		E3,
 		E4,

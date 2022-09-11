@@ -596,7 +596,10 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			_addReportResult(this);
+			if (_addReportResult != null) {
+				_addReportResult(this);
+			}
+			
 		}
 
 		private IList<string> GetOutputColumnsOrdered()

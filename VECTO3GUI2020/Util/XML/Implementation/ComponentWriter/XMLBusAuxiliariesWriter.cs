@@ -93,7 +93,7 @@ namespace VECTO3GUI2020.Util.XML.Implementation.ComponentWriter
 
 			if (_inputData.HVACAux != null) {
 				var hvacElement = new XElement(_defaultNamespace + "HVAC");
-				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.GetXmlFormat()));
+				hvacElement.Add(new XElement(_defaultNamespace + XMLNames.Bus_SystemConfiguration, _inputData.HVACAux.SystemConfiguration.ToXmlFormat()));
 
 				hvacElement.Add(GetHeatPumpGroupElement(
 					xmlNameWrapper:XMLNames.Bus_HeatPumpTypeDriver,

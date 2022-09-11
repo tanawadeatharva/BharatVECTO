@@ -1,6 +1,6 @@
 ## Engine: Transient Full Load
 
-The engine implements a PT1 behaviour to model transient torque build up:
+The engine implements a PT1 behavior to model transient torque build up:
 
 $P_{fld\ dyn_{i}} = \frac{1}{T(n_{i})+1} \cdot \left(P_{fld\ stat}(n_{i})+T(n_{i}) \cdot P_{act_{i-1}}\right)$
 
@@ -12,7 +12,7 @@ with:
 * P~act\ i-1~ ... Engine power in previous time step
 
 
-Vecto 3.x uses basically the same PT1 behavior to model transient torque build up. However, due to the dynamic time steps the formula is implemented as follows:
+VECTO 3.x uses basically the same PT1 behavior to model transient torque build up. However, due to the dynamic time steps the formula is implemented as follows:
 
 $P_{fld\ dyn_{i}} = P_{fld\ stat}(n_i) \cdot \left(1 - e^{-\frac{t_i^*}{\mathit{PT1}}}\right)$
 

@@ -300,12 +300,12 @@ Public Class BatteryForm
         superCap.MinV = _tbSuperCapMinV.Text.ToDouble(0)
         superCap.MaxV = tbSuperCapMaxV.Text.ToDouble(0)
 
-        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble()
-        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble()
+        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble(0)
+        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble(0)
         Return superCap
     End Function
 
-    Private Function FillBattery(file As string) As Battery
+    Private Function FillBattery(file As String) As Battery
         Dim battery As Battery = New Battery
         battery.FilePath = file
 
@@ -323,7 +323,47 @@ Public Class BatteryForm
         battery.PathMaxCurrentCurve = tbMaxCurrentMap.Text
         Return battery
     End Function
+    Private Sub tbCapacity_Leave(sender As Object, e As System.EventArgs) Handles tbCapacity.Leave
 
+        If Not IsNumeric(tbCapacity.Text) Then
+            MsgBox("Invalid capacity value")
+            tbCapacity.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbCapacity.Text) Then
+            MsgBox("Input has to be positive")
+            tbCapacity.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMin_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMin.Leave
+
+        If Not IsNumeric(tbSoCMin.Text) Then
+            MsgBox("Invalid SoC Min value")
+            tbSoCMin.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMin.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMin.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMax_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMax.Leave
+
+        If Not IsNumeric(tbSoCMax.Text) Then
+            MsgBox("Invalid SoC Max value")
+            tbSoCMax.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMax.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMax.Focus()
+            Return
+        End If
+    End Sub
 
 #Region "Track changes"
 

@@ -5,11 +5,13 @@ using System.IO;
 using System.ServiceModel.Syndication;
 using System.Threading;
 using System.Threading.Tasks;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
@@ -18,6 +20,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 namespace TUGraz.VectoCore.Tests.Integration.Multistage
 {
 	[TestFixture]
+	[NonParallelizable]
 	public class MultistageMultipleRunsTest
 	{
 		private const string TestDataDir = "TestData\\Integration\\Multistage\\";
@@ -39,18 +42,21 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		private SummaryDataContainer _sumContainer;
 		private JobContainer _jobContainer;
 
-		private FileOutputWriter _fileoutputWriter;
-		private TempFileOutputWriter _tempFileOutputWriter;
 		private ExecutionMode _mode = ExecutionMode.Declaration;
 
 		private string _outputDirectory;
 
 		private Stopwatch _stopWatch;
 
+		private IKernel _kernel;
+		private ISimulatorFactoryFactory _simFactoryFactory;
+
+
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
 		}
 
 		[SetUp]
@@ -62,6 +68,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 			_sumFileWriter = new FileOutputWriter(_outputDirectory);
 			_sumContainer = new SummaryDataContainer(_sumFileWriter);
 			_jobContainer = new JobContainer(_sumContainer);
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			_simFactoryFactory = _kernel.Get<ISimulatorFactoryFactory>();
 		}
 
 		[TearDown]
@@ -74,45 +82,49 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndCompletedTest()
 		{
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+            StartSimulation(CompletedExempted, tempFileOutputWriter, fileOutputWriter);
 
-			StartSimulation(CompletedExempted);
-
-			var writtenFiles = GetWrittenFiles();
+            var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 		}
 
 		[Test]
 		public void ExemptedPrimaryAndCompletedWithoutTPMLMTest()
 		{
-
-			StartSimulation(CompletedExemptedWithoutTPMLM);
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+			StartSimulation(CompletedExemptedWithoutTPMLM, tempFileOutputWriter, fileOutputWriter);
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 		}
 
 		[Test]//, Timeout(3000)]
 		public void ExemptedPrimaryAndInterimTest()
 		{
-			StartSimulation(InterimExempted);
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+            StartSimulation(InterimExempted, tempFileOutputWriter, fileOutputWriter); 
 			
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 
 		}
 
@@ -129,17 +141,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 		//SpecialCase II
 		[Test, Timeout(1000 * 20 * 60)]
+        [NonParallelizable]
 		public void PrimaryAndCompletedTest()
 		{
-			StartSimulation(CompletedDiesel);
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+			StartSimulation(CompletedDiesel, tempFileOutputWriter, fileOutputWriter);
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 
 
 		}
@@ -147,51 +162,56 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 		[Test]
 		public void PrimaryAndCompletedWithoutADASAndTPMLM()
 		{
-			StartSimulation(CompletedWithoutADAS);
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+            StartSimulation(CompletedWithoutADAS, tempFileOutputWriter, fileOutputWriter);
 
-			var writtenFiles = GetWrittenFiles();
+            var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
 
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 
 		}
 
 		//SpecialCase I
-		[Test, Timeout(1000 * 10 * 60)]
+		[Test]//, Timeout(1000 * 10 * 60)]
 		public void PrimaryAndInterimTest()
 		{
-			StartSimulation(InterimDiesel);
+
+			var fileOutputWriter = new FileOutputWriter(_outputDirectory);
+			var tempFileOutputWriter = new TempFileOutputWriter(fileOutputWriter);
+            StartSimulation(InterimDiesel, tempFileOutputWriter, fileOutputWriter);
 
 
 			var writtenFiles = GetWrittenFiles();
 			ShowWrittenFiles(writtenFiles);
-
-			Assert.IsTrue(writtenFiles.Contains(_tempFileOutputWriter.XMLFullReportName));
-			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLFullReportName));
-			Assert.IsFalse(writtenFiles.Contains(_fileoutputWriter.XMLCustomerReportName));
-			Assert.IsTrue(writtenFiles.Contains(_fileoutputWriter.XMLMultistageReportFileName));
+			Assert.IsTrue(writtenFiles.Contains(tempFileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(fileOutputWriter.XMLFullReportName));
+			Assert.IsFalse(writtenFiles.Contains(fileOutputWriter.XMLCustomerReportName));
+			Assert.IsTrue(writtenFiles.Contains(fileOutputWriter.XMLMultistageReportFileName));
 		}
 
-		private void StartSimulation(string path)
+		private void StartSimulation(string path, TempFileOutputWriter tempFileOutputWriter, FileOutputWriter fileOutputWriter, bool multithreaded = true)
 		{
 			var inputFile = Path.GetFullPath(path);
 			var input = JSONInputDataFactory.ReadJsonJob(inputFile);
 
 
-			StartSimulation(input);
+			StartSimulation(input, tempFileOutputWriter, fileOutputWriter, multithreaded:multithreaded);
 
 			_jobContainer.WaitFinished();
 		}
 
 
-		private void StartSimulation(IInputDataProvider input)
+		private void StartSimulation(IInputDataProvider input,  TempFileOutputWriter tempFileOutputWriter, FileOutputWriter fileOutputWriter, bool multithreaded = true)
 		{
-			_fileoutputWriter = new FileOutputWriter(_outputDirectory);
-			_tempFileOutputWriter = new TempFileOutputWriter(_fileoutputWriter);
-			var runsFactory = SimulatorFactory.CreateSimulatorFactory(_mode, input, _fileoutputWriter);
+			
+			//var runsFactory = SimulatorFactory.CreateSimulatorFactory(_mode, input, _fileoutputWriter);
+			var runsFactory =
+				_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileOutputWriter, null, null, true);
 			runsFactory.WriteModalResults = true;
 			runsFactory.ModalResults1Hz = true;
 			runsFactory.Validate = true;
@@ -202,7 +222,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Multistage
 
 
 			_jobContainer.AddRuns(runsFactory);
-			_jobContainer.Execute();
+			_jobContainer.Execute(multithreaded);
 		}
 
 		private void ShowWrittenFiles(IList<string> writtenFiles)

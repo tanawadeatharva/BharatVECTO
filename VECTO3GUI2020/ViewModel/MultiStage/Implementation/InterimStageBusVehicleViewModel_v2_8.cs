@@ -812,6 +812,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public ArchitectureID ArchitectureID { get; }
 		public bool OvcHev { get; }
 		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 
 		#endregion
 

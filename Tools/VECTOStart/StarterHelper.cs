@@ -3,30 +3,53 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace TUGraz.VECTO
 {
 	class StarterHelper
 	{
-		public static void StartVECTO(string[] args, params string[] validVersions)
+		public static void StartVECTO(string[] cmdArguments, params string[] validVersions)
+		{
+			StartVECTO(cmdArguments, false, validVersions);
+		}
+
+        public static void StartVECTO(string[] cmdArguments, bool consoleApp, params string[] validVersions)
 		{
 			var path = "No path found.";
 			string version = "No version found.";
 			if (validVersions is null || validVersions.Length == 0) {
 				validVersions = new[] { "net45", "net48", "net60" };
 			}
+
+			//var versionArgument = cmdArguments.FirstOrDefault(arg => arg.StartsWith("net"));
 			try {
-				if (args.Length > 0) {
-					version = args[0].ToLower();
-				} else {
-					version = GetHighestNETVersion();
-				}
+				version = GetHighestNETVersion();
+				
 
 				path = $"{version}\\{Assembly.GetExecutingAssembly().GetName().Name}.exe";
-				Process.Start(new ProcessStartInfo(path) {
-					WorkingDirectory = Directory.GetCurrentDirectory()
-				});
+
+				string argumentsString = "";
+				if (cmdArguments.Length > 0) {
+					foreach (var cmdArgument in cmdArguments) {
+						argumentsString += "\"" +  cmdArgument + "\" ";
+					}
+				}
+
+				var processInfo = new ProcessStartInfo(path) {
+					WorkingDirectory = Directory.GetCurrentDirectory(),
+					Arguments = argumentsString,
+				};
+				
+
+				if (consoleApp) {
+					processInfo.UseShellExecute = consoleApp ? false : processInfo.UseShellExecute;
+                    Process.Start(processInfo)?.WaitForExit();
+                } else {
+					Process.Start(processInfo);
+				}
+				
 				ValidateVersion(version, validVersions);
 			} catch (Exception e) {
 				var message = $"Error during starting VECTO.\nDetected .NET version: {version}\nTried to open path: {path}\n{e.Message}";

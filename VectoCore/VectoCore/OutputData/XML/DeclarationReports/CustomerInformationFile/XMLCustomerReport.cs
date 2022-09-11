@@ -49,6 +49,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 {
+    
 	public class XMLCustomerReport : IXMLCustomerReport
 	{
 		public const string CURRENT_SCHEMA_VERSION = "0.8";
@@ -99,12 +100,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			);
 
 			if (exempted) {
-				VehiclePart.Add(new XAttribute(xsi + "type", "ExemptedVehicleType"), 
+				VehiclePart.Add(new XAttribute(xsi + XMLNames.XSIType, "ExemptedVehicleType"), 
 					ExemptedData(modelData));
 				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
 			} else {
 				VehiclePart.Add(
-					new XAttribute(xsi + "type", "VehicleType"),
+					new XAttribute(xsi + XMLNames.XSIType, "VehicleType"),
 					new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
@@ -204,7 +205,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			return new XElement(tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "error"),
-				new XAttribute(xsi + "type", "ResultErrorType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultErrorType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 				content);
 		}
@@ -214,7 +215,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new XElement(
 				tns + XMLNames.Report_Result_Result,
 				new XAttribute(XMLNames.Report_Result_Status_Attr, "success"),
-				new XAttribute(xsi + "type", "ResultSuccessType"),
+				new XAttribute(xsi + XMLNames.XSIType, "ResultSuccessType"),
 				new XElement(tns + XMLNames.Report_Result_Mission, result.Mission.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(result.TotalVehicleMass, XMLNames.Unit_kg)),
@@ -275,7 +276,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XAttribute(xsi + "schemaLocation",
 					$"{rootNS} {AbstractXMLWriter.SchemaLocationBaseUrl}DEV/VectoOutputCustomer.xsd"),
 				new XElement(rootNS + XMLNames.Report_DataWrap,
-					new XAttribute(xsi + "type", "VectoOutputDataType"),
+					new XAttribute(xsi + XMLNames.XSIType, "VectoOutputDataType"),
 					vehicle,
 					new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
 					results,

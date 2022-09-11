@@ -38,6 +38,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 				: (TankSystem?)null;
 
 		#endregion
+
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.ConventionalVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -81,6 +87,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 				: null;
 
 		#endregion
+
+		public override bool HybridElectricHDV => true;
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.ParallelHybridVehicle;
+		}
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -108,6 +122,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.SerialHybridVehicle;
+		}
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -138,9 +160,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override CubicMeter CargoVolume => null;
 
+		public override bool OvcHev => true;
+
 		#endregion
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.BatteryElectricVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -161,12 +190,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		
-		
+		public override bool OvcHev => true;
 
 		#endregion
 
-
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.BatteryElectricVehicle;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -205,6 +236,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override TableData BoostingLimitations => null;
 
 		#endregion
+
+		public override VectoSimulationJobType VehicleType
+		{
+			get => VectoSimulationJobType.SerialHybridVehicle;
+		}
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------

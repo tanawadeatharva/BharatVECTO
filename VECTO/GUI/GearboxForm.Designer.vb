@@ -782,9 +782,9 @@ Partial Class GearboxForm
         Me.Label14.AutoSize = true
         Me.Label14.Location = New System.Drawing.Point(357, 3)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(40, 13)
+        Me.Label14.Size = New System.Drawing.Size(30, 13)
         Me.Label14.TabIndex = 41
-        Me.Label14.Text = "[1/min]"
+        Me.Label14.Text = "[rpm]"
         '
         'BtTCShiftFileBrowse
         '
