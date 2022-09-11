@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				RunData = runData,
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -172,6 +173,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				RunData = runData
 			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -250,6 +252,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var cycleData = DrivingCycleDataReader.ReadFromStream("s,v,grad,stop\n0,0,0,10\n10,20,0,0\n20,21,0,0\n30,22,0,0\n40,23,0,0\n50,24,0,0\n60,25,0,0\n70,26,0,0\n80,27,0,0\n90,28,0,0\n100,29,0,0".ToStream(), CycleType.DistanceBased, "DummyCycle", false);
 			var cycle = new MockDrivingCycle(vehicleContainer, cycleData);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			
 			var brakes = new Brakes(vehicleContainer);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 

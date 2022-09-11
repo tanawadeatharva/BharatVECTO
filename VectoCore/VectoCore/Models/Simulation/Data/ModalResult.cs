@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public void RegisterComponent(VectoSimulationComponent component, VectoRunData runData)
 		{
 			switch (component) {
-				case IDrivingCycleInfo d when (d is DistanceBasedDrivingCycle || d is MockDrivingCycle):
+				case IDrivingCycleInfo d when d is DistanceBasedDrivingCycle:
 					CreateColumns(DistanceCycleSignals);
 					break;
 				case IDrivingCycleInfo t when t is MeasuredSpeedDrivingCycle:
