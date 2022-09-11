@@ -394,6 +394,14 @@ namespace TUGraz.VectoCore.OutputData
 		#endregion
 	}
 
+	public class EngineOnlyPostprocessingCorrection : IModalDataPostProcessor
+	{
+		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		{
+			return new NoCorrectionModalData(modData);
+		}
+	}
+
 	public class CorrectedModalData : ICorrectedModalData
 	{
 		public SI kAir { get; set; }

@@ -6,9 +6,11 @@
     "FileVersion": 10
   },
   "Body": {
-    "PrimaryVehicle": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.4\\vecto_vehicle-primary_heavyBus-sample.xml",
-    "InterimStep": "..\\..\\XML\\XMLReaderDeclaration\\SchemaVersion2.4\\vecto_vehicle-stage_input_full-sample.xml",
+    "PrimaryVehicle": "vecto_vehicle-primary_heavyBus-sample.xml",
+    "InterimStep": "vecto_vehicle-stage_input_full-sample.xml",
     "Completed": false,
     "RunSimulation": true
   }
 }
+
+

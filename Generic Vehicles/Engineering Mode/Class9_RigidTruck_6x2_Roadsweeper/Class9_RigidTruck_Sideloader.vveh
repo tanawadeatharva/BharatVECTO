@@ -69,6 +69,9 @@
     "EngineSpeedDuringPTODrive": 999.99999999999989,
     "GearDuringPTODrive": 4,
     "CdA": 5.2,
-    "VehicleHeight": 0.0
+    "VehicleHeight": 4.0,
+	"EngineStopStart": false,
+	"EcoRoll": "None",
+	"PredictiveCruiseControl": "None"
   }
 }

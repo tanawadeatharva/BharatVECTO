@@ -266,8 +266,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			//optional test
 			if (testDir == Optional_TESTS_DIR) {
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 			}
 			else {

@@ -165,7 +165,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						IdleSpeed = 560.RPMtoRad(),
 						Inertia = 1.SI<KilogramSquareMeter>(),
 						EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
-						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
+						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } },
+						Fuels = new List<CombustionEngineFuelData>() {
+							new CombustionEngineFuelData() {
+								FuelData = FuelData.Diesel
+							}
+						}
 					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
 				Retarder = new RetarderData(),
@@ -179,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), container => {});
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), new MockSumWriter());
 		}
 
 		/// <summary>
