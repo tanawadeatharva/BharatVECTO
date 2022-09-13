@@ -140,63 +140,107 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			#endregion
 		}
 
-		public class HEV_S2 : PrimaryBusBase
+		public abstract class Hybrid : PrimaryBusBase
+		{
+			private CombustionEngineComponentDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
+
+			#region Overrides of PrimaryBusBase
+
+			public override CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
+				Mission mission)
+			{
+				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
+			}
+
+			
+
+			#endregion
+		}
+
+		public abstract class SerialHybrid : Hybrid
 		{
 
 		}
 
-		public class HEV_S3 : PrimaryBusBase
+		public class HEV_S2 : SerialHybrid
 		{
 
 		}
 
-		public class HEV_S4 : PrimaryBusBase
+		public class HEV_S3 : SerialHybrid
 		{
 
 		}
 
-		public class HEV_S_IEPC : PrimaryBusBase
+		public class HEV_S4 : SerialHybrid
 		{
 
 		}
 
-		public class HEV_P1 : PrimaryBusBase
+		public class HEV_S_IEPC : SerialHybrid
 		{
 
 		}
 
-		public class HEV_P2 : PrimaryBusBase
+		public abstract class ParallelHybrid : Hybrid
+		{
+			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
+			{
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc,
+					supportedGearboxTypes: SupportedGearboxTypes);
+			}
+
+			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			{
+				return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+			}
+		}
+
+		public class HEV_P1 : ParallelHybrid
 		{
 
 		}
 
-		public class HEV_P2_5 : PrimaryBusBase
+		public class HEV_P2 : ParallelHybrid
 		{
 
 		}
 
-		public class HEV_P3 : PrimaryBusBase
+		public class HEV_P2_5 : ParallelHybrid
 		{
 
 		}
 
-		public class HEV_P4 : PrimaryBusBase
+		public class HEV_P3 : ParallelHybrid
 		{
 
 		}
 
-		public class PEV_E2 : PrimaryBusBase
+		public class HEV_P4 : ParallelHybrid
 		{
 
 		}
 
-		public class PEV_E3 : PrimaryBusBase
+		public abstract class BatteryElectric : PrimaryBusBase
 		{
 
 		}
 
 
-		public class PEV_E4 : PrimaryBusBase
+		public class PEV_E2 : BatteryElectric
+		{
+
+		}
+
+		public class PEV_E3 : BatteryElectric
+		{
+
+		}
+
+
+		public class PEV_E4 : BatteryElectric
 		{
 
 		}

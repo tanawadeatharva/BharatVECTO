@@ -200,19 +200,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return dao.CreateDriverData(engineeringJob.DriverInputData);
 		}
 
-		public static List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
+		public static IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMotorData(string file, int count,
 			PowertrainPosition pos, double ratio, double efficiency)
 		{
 			var inputData = JSONInputDataFactory.ReadElectricMotorData(file, false);
-			return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData() {
-				Entries = new[] {
-					new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
-					{
-						Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
-					}
-				}
-			}, null, null);
-		}
+            
+
+            return new EngineeringDataAdapter().CreateElectricMachines(new MockElectricMachinesInputData()
+            {
+                Entries = new[] {
+                    new ElectricMachineEntry<IElectricMotorEngineeringInputData>()
+                    {
+                        Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
+                    }
+                }
+            }, null, null);
+        }
 	
 
 		public static BatterySystemData CreateBatteryData(string file, double initialSoC)
@@ -296,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }

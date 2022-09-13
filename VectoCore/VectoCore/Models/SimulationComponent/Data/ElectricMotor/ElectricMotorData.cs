@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public KilogramSquareMeter Inertia { get; internal set; }
 
 		[SIRange(0, 1)]
-		public double OverloadRegenerationFactor { get; internal set; }
+		public double OverloadRecoveryFactor { get; internal set; }
 
 		public double RatioADC { get; internal set; }
 

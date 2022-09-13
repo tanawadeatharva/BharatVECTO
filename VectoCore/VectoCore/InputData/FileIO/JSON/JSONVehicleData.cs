@@ -181,10 +181,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 		//	throw new NotImplementedException();
-		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 			Body["EMTorqueLimits"] == null
 				? null
-				: new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>() {
+				: new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
 					{
 						GetElectricMachines().Entries.First().Position,
 						new List<Tuple<Volt, TableData>>() {
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Meter Height => Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
 		
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		
 		public virtual TableData BoostingLimitations => null;
 		

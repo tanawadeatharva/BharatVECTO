@@ -249,6 +249,16 @@ namespace TUGraz.VectoCore.Utils.Ninject
 					return hashCode;
 				}
 			}
+
+			#region Overrides of ValueType
+
+			public override string ToString()
+			{
+				return string.Join("\n", VehicleType, JobType, ArchId, Exempted ? "Exempted" : "Non Exempted",
+					IsSingleBus ? "Single Bus" : "");
+			}
+
+			#endregion
 		}
 	}
 }

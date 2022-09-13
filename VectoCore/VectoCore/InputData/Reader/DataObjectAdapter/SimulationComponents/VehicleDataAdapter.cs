@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				CurbMass = data.CurbMassChassis,
 				GrossVehicleMass = data.GrossVehicleMassRating,
 				AirDensity = Physics.AirDensity,
+				
 			};
 
 			return retVal;

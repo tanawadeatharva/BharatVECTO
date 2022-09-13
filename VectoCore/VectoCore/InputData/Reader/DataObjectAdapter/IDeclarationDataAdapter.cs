@@ -8,6 +8,8 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -45,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
 
-		RetarderData CreateRetarderData(IRetarderInputData retarderData);
+		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
 
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
 
@@ -60,8 +62,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
 			Meter vehicleLength, int? numSteeredAxles);
-
-		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
+		
+		
+		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
+		BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData);
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter

@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		public virtual TableData BoostingLimitations => null;
 
 
@@ -551,7 +551,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
-		public virtual Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public virtual TableData BoostingLimitations { get; }
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual IVehicleComponentsDeclaration Components => _components ?? (_components = ComponentReader.ComponentInputData);
@@ -808,7 +808,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 			=> ElementExists(XMLNames.ElectricMotorTorqueLimits) ? ReadElectricMotorTorqueLimits() : null;
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV20
@@ -820,10 +820,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
-		private Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
+		private IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ReadElectricMotorTorqueLimits()
 		{
 			var torqueLimitNodes = GetNodes(XMLNames.ElectricMotorTorqueLimits);
-			var motorTorqueLimits = new Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>>();
+			var motorTorqueLimits = new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>();
 
 			foreach (XmlNode torqueLimitNode in torqueLimitNodes)
 			{

@@ -42,6 +42,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle);
 	}
 
+
+	
+
 	public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
 	{
 		public class ElectricConsumerEntry

@@ -73,6 +73,7 @@ namespace TUGraz.VectoCommon.Models
 			switch (category) {
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
+				case VehicleCategory.Van:
 					return Lorry;
 					break;
 				case VehicleCategory.HeavyBusPrimaryVehicle:
@@ -81,8 +82,8 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.HeavyBusCompletedVehicle:
 					return CompletedBus;
 					break;
-				case VehicleCategory.Van:
-					return Van;
+				//case VehicleCategory.Van:
+				//	return Van;
 				default:
 					return category.GetLabel();
 			}

@@ -195,15 +195,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					});
 			}
 
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox?.Type ?? GearboxType.NoGearbox);
+			//retVal.Inertia = engine.Inertia +
+			//				(gbx != null && gbx.Type.AutomaticTransmission()
+			//					? (gbx.Type == GearboxType.APTN || gbx.Type == GearboxType.IHPC ? 0.SI<KilogramSquareMeter>() : torqueConverter.Inertia)
+			//					: 0.SI<KilogramSquareMeter>());
+
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ??
 						new Dictionary<int, ITorqueLimitInputData>();
-			var numGears = gearbox.Gears.Count;
+			var numGears = gearbox?.Gears.Count ?? 0;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
-			foreach (var gear in gearbox.Gears)
+			foreach (var gear in gearbox?.Gears ?? new List<ITransmissionInputData>(0))
 			{
 				var maxTorque = VectoMath.Min(
 					GearboxDataAdapterBase.GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),

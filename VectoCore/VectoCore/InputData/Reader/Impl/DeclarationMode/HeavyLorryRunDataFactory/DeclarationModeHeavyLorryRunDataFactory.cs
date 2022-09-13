@@ -26,7 +26,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public IDeclarationInputDataProvider InputDataProvider { get; }
 			public IDeclarationReport Report { get; }
 
-			protected Segment _segment;
 			protected DriverData _driverdata;
 			protected AirdragData _airdragData;
 			protected AxleGearData _axlegearData;
@@ -46,6 +45,52 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				InputDataProvider = dataProvider;
 				Report = report;
 			}
+			/// <summary>
+			/// Sets <see cref="VectoRunData.Loading"/>
+			///  ,<see cref="VectoRunData.JobName"/>
+			///  ,<see cref="VectoRunData.JobType"/>
+			///  ,<see cref="VectoRunData.Mission"/>
+			///  ,<see cref="VectoRunData.Report"/>
+			///  ,<see cref="VectoRunData.ExecutionMode"/>
+			///  ,<see cref="VectoRunData.Cycle"/>
+			///  ,<see cref="VectoRunData.SimulationType"/>
+			///  ,<see cref="VectoRunData.InputData"/>
+			///  ,<see cref="VectoRunData.ModFileSuffix"/>
+			///  ,<see cref="VectoRunData.VehicleDesignSpeed"/>
+			///  ,<see cref="VectoRunData.InputDataHash"/>
+			/// </summary>
+			/// <param name="vehicle"></param>
+			/// <param name="modeIdx"></param>
+			/// <param name="mission"></param>
+			/// <param name="loading"></param>
+			/// <param name="engineModes"></param>
+			/// <param name="segment"></param>
+			/// <returns></returns>
+			protected VectoRunData CreateCommonRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				IList<IEngineModeDeclarationInputData> engineModes,
+				Segment segment)
+			{
+				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
+					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+				var simulationRunData = new VectoRunData
+				{
+					Loading = loading.Key,
+					JobName = InputDataProvider.JobInputData.JobName,
+					JobType = vehicle.VehicleType,
+					Mission = mission,
+					Report = Report,
+					ExecutionMode = ExecutionMode.Declaration,
+					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+					SimulationType = SimulationType.DistanceCycle,
+					InputData = InputDataProvider,
+					ModFileSuffix = (engineModes.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
+					VehicleDesignSpeed = segment.DesignSpeed,
+					InputDataHash = InputDataProvider.XMLHash,
+				};
+				return simulationRunData;
+			}
+
 
 			protected override void Initialize()
 			{
@@ -137,17 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return segment;
 			}
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
-				Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
-			{
-				throw new NotImplementedException();
-			}
 
-
-			protected override IEnumerable<VectoRunData> GetNextRun()
-			{
-				throw new NotImplementedException();
-			}
 			#endregion
 		}
 
@@ -179,6 +214,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 			}
 
+			
+
 
 			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
@@ -187,122 +224,95 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx];
 
-				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType,
-					_ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
+				var simulationRunData = CreateCommonRunData(vehicle, modeIdx, mission, loading, engineModes, _segment);
 
-				var simulationRunData = new VectoRunData {
-					Loading = loading.Key,
-					VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational),
-					VehicleDesignSpeed = _segment.DesignSpeed,
-					AirdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
-					EngineData =
-						DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode,
-							mission), // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
-					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-					GearboxData = _gearboxData,
-					AxleGearData = _axlegearData,
-					AngledriveData = _angledriveData,
-					Aux = DataAdapter.CreateAuxiliaryData(
-						vehicle.Components.AuxiliaryInputData,
-						vehicle.Components.BusAuxiliaries, mission.MissionType,
-						_segment.VehicleClass, vehicle.Length,
-						vehicle.Components.AxleWheels.NumSteeredAxles),
-					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-					Retarder = _retarderData,
-					DriverData = _driverdata,
-					ExecutionMode = ExecutionMode.Declaration,
-					JobName = InputDataProvider.JobInputData.JobName,
-					ModFileSuffix = (engineModes.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
-					Report = Report,
-					Mission = mission,
-					PTO = mission.MissionType == MissionType.MunicipalUtility
-						? _municipalPtoTransmissionData
-						: _ptoTransmissionData,
-					InputDataHash = InputDataProvider.XMLHash,
-					SimulationType = SimulationType.DistanceCycle,
-					GearshiftParameters = _gearshiftData,
-					InputData = InputDataProvider
-				};
+
+
+				simulationRunData.VehicleData =
+				DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
+
+				simulationRunData.AirdragData =
+					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
+
+				simulationRunData.EngineData =
+					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode,
+						mission); // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
+
+				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
+				simulationRunData.GearboxData = _gearboxData;
+				simulationRunData.AxleGearData = _axlegearData;
+				simulationRunData.AngledriveData = _angledriveData;
+				simulationRunData.Aux = DataAdapter.CreateAuxiliaryData(
+					vehicle.Components.AuxiliaryInputData,
+					vehicle.Components.BusAuxiliaries, mission.MissionType,
+					_segment.VehicleClass, vehicle.Length,
+					vehicle.Components.AxleWheels.NumSteeredAxles);
+
+				simulationRunData.Retarder = _retarderData;
+				simulationRunData.DriverData = _driverdata;
+				simulationRunData.PTO = mission.MissionType == MissionType.MunicipalUtility
+					? _municipalPtoTransmissionData
+					: _ptoTransmissionData;
+				
+
+
+				simulationRunData.GearshiftParameters = _gearshiftData;
+				
+			
 				simulationRunData.EngineData.FuelMode = modeIdx;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 				simulationRunData.VehicleData.InputData = vehicle;
 				return simulationRunData;
 			}
+
+			
 			#endregion
 		}
-		public class HEV_S2 : LorryBase
+
+
+
+		public abstract class BatteryElectric : LorryBase
 		{
-			public HEV_S2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
+			public BatteryElectric(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report,
+				declarationDataAdapter)
+			{
+
+			}
+			#region Overrides of AbstractDeclarationVectoRunDataFactory
+
+			protected override IEnumerable<VectoRunData> GetNextRun()
+			{
+				throw new NotImplementedException();
+			}
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 
-		public class HEV_S3 : LorryBase
-		{
-			public HEV_S3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_S4 : LorryBase
-		{
-			public HEV_S4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_S_IEPC : LorryBase
-		{
-			public HEV_S_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_P1 : LorryBase
-		{
-			public HEV_P1(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_P2 : LorryBase
-		{
-			public HEV_P2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_P2_5 : LorryBase
-		{
-			public HEV_P2_5(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_P3 : LorryBase
-		{
-			public HEV_P3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class HEV_P4 : LorryBase
-		{
-			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
-		}
-
-		public class PEV_E2 : LorryBase
+		public class PEV_E2 : BatteryElectric
 		{
 			public PEV_E2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class PEV_E3 : LorryBase
+		public class PEV_E3 : BatteryElectric
 		{
 			public PEV_E3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class PEV_E4 : LorryBase
+		public class PEV_E4 : BatteryElectric
 		{
 			public PEV_E4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class PEV_E_IEPC : LorryBase
+		public class PEV_E_IEPC : BatteryElectric
 		{
 			public PEV_E_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
@@ -312,6 +322,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		{
 			public Exempted(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
+
+			#region Overrides of AbstractDeclarationVectoRunDataFactory
+
+			protected override IEnumerable<VectoRunData> GetNextRun()
+			{
+				throw new NotImplementedException();
+			}
+
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission,
+				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 		
 	}

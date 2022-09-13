@@ -17,8 +17,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 {
 	public abstract class DeclarationDataAdapterSingleBus
 	{
-
-
 		public abstract class SingleBusBase : ISingleBusDeclarationDataAdapter
 		{
 			public static readonly GearboxType[] SupportedGearboxTypes =
@@ -126,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 		public class Conventional : SingleBusBase { }
 
-		public class Hybrid : SingleBusBase { }
+		public abstract class Hybrid : SingleBusBase { }
 
 		public class SerialHybrid : Hybrid { }
 

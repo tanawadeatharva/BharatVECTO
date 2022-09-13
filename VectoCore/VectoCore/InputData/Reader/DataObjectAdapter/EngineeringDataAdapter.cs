@@ -897,9 +897,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
+		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 			IElectricMachinesEngineeringInputData electricMachines,
-			Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
 			GearList gearlist = null)
 		{
 			if (electricMachines == null) {
@@ -923,7 +923,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,
 			IElectricMotorEngineeringInputData motorData, int count,
 			double ratio, double[] ratioPerGear, double efficiency, TableData adcLossMap,
-			List<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
+			IList<Tuple<Volt, TableData>> torqueLimits, Volt averageVoltage, GearList gearList)
 		{
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
 
@@ -958,7 +958,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels},
 				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
-				OverloadRegenerationFactor = motorData.OverloadRecoveryFactor,
+				OverloadRecoveryFactor = motorData.OverloadRecoveryFactor,
 				RatioADC = ratio,
 				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap,
@@ -1218,7 +1218,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EfficiencyData = new VoltageLevelData() { VoltageLevels = voltageLevels },
 				IEPCDragCurves = dragCurves,
 				Inertia = iepc.Inertia * count,
-				OverloadRegenerationFactor = iepc.OverloadRecoveryFactor,
+				OverloadRecoveryFactor = iepc.OverloadRecoveryFactor,
 				RatioADC = 1,
 				RatioPerGear = null,
 				TransmissionLossMap = TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC LossMap Eff"),

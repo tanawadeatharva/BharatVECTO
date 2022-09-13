@@ -1208,18 +1208,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public static class SuperCap
+		{
+			public const double SocMin = 0.45;
+		}
+
+
 		public static class Battery
 		{
 			/// <summary>
 			/// Percentage of the maximum voltage of the battery
 			/// </summary>
-			private const double SOCMinHP = 0.3;
-			private const double SOCMaxHP = 0.7;
+			private const double SOCMinHP = 0.2;
+			private const double SOCMaxHP = 0.8;
 
-			private const double SOCMinHE = 0.1;
-			private const double SOCMaxHE = 0.9;
+			private const double SOCMinHE = 0.05;
+			private const double SOCMaxHE = 0.95;
 
-			public static double GetDefaultMinSoc(BatteryType type)
+			public static double GetMinSoc(BatteryType type)
 			{
 				switch (type) {
 					case BatteryType.HPBS:
@@ -1233,7 +1239,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double GetDefaultMaxSoc(BatteryType type)
+
+			public static double GetMaxSoc(BatteryType type)
 			{
 				switch (type)
 				{
