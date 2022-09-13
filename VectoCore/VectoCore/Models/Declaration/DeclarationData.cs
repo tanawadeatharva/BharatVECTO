@@ -102,6 +102,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public const double WHRChargerEfficiency = 0.98;
 
+		public const double OverloadRecoveryFactor = 0.9;
+
 		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
 			new ConcurrentDictionary<MissionType, DrivingCycleData>();
 
@@ -1206,6 +1208,45 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public static class Battery
+		{
+			/// <summary>
+			/// Percentage of the maximum voltage of the battery
+			/// </summary>
+			private const double SOCMinHP = 0.3;
+			private const double SOCMaxHP = 0.7;
 
+			private const double SOCMinHE = 0.1;
+			private const double SOCMaxHE = 0.9;
+
+			public static double GetDefaultMinSoc(BatteryType type)
+			{
+				switch (type) {
+					case BatteryType.HPBS:
+						return SOCMinHP;
+						break;
+					case BatteryType.HEBS:
+						return SOCMinHE;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(type), type, null);
+				}
+			}
+
+			public static double GetDefaultMaxSoc(BatteryType type)
+			{
+				switch (type)
+				{
+					case BatteryType.HPBS:
+						return SOCMaxHP;
+						break;
+					case BatteryType.HEBS:
+						return SOCMaxHE;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(type), type, null);
+				}
+			}
+		}
 	}
 }
