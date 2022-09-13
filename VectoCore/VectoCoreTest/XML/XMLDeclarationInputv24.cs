@@ -12,6 +12,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -612,10 +613,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestInternalResistanceTableRow(string soc, string r2, string r10, string r20, DataRow row)
 		{
-			Assert.AreEqual(soc, row[XMLNames.REESS_InternalResistanceCurve_SoC]);
-			Assert.AreEqual(r2, row[XMLNames.REESS_InternalResistanceCurve_R2]);
-			Assert.AreEqual(r10, row[XMLNames.REESS_InternalResistanceCurve_R10]);
-			Assert.AreEqual(r20, row[XMLNames.REESS_InternalResistanceCurve_R20]);
+			Assert.AreEqual(soc, row[BatteryInternalResistanceReader.Fields.StateOfCharge]);
+			Assert.AreEqual(r2, row[BatteryInternalResistanceReader.Fields.InternalResistance_2]);
+			Assert.AreEqual(r10, row[BatteryInternalResistanceReader.Fields.InternalResistance_10]);
+			Assert.AreEqual(r20, row[BatteryInternalResistanceReader.Fields.InternalResistance_20]);
 		}
 		
 		private void TestCurrentLimitsTableRow(string soc, string maxChargingCurrent, string maxDischargingCurrent,
@@ -631,7 +632,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#region Test Electric Motor TorqueLimits Reader
 
-		private void TestElectricMotorTorqueLimits(Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> limits)
+		private void TestElectricMotorTorqueLimits(IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> limits)
 		{
 			Assert.IsNotNull(limits);
 			Assert.AreEqual(1, limits.Count);
