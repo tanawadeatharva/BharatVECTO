@@ -16,14 +16,14 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		
 		public RatedPoint(PerSecond nRated, NewtonMeter tRated)
 		{
-			PRated = GetPRated(nRated, tRated);
 			NRated = nRated;
 			TRated = tRated;
+			PRated = GetPRated();
 		}
 
-		private Watt GetPRated(PerSecond nRated, NewtonMeter tRated)
+		private Watt GetPRated()
 		{
-			return (nRated.Value() * tRated.Value() * Math.PI / 30000).SI<Watt>(); 
+			return (NRated.Value() * TRated.Value() * Math.PI / 30000).SI<Watt>();
 		}
 	}
 
@@ -72,16 +72,31 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		private static List<SlopeValueEntry> slopeValueEntries;
 		
 
-		public static RatedPoint GetRatedPointOfFullLoadCurve(TableData fullLoadCurve)
+		public static RatedPoint GetRatedPointOfFullLoadCurveAtEM(TableData fullLoadCurve)
 		{
 			SetCurveValues(fullLoadCurve);
 			var ratedIndex = FindRowOfRatedPoint();
-			var nRated = fullLoadCurveEntries[ratedIndex].MotorSpeed;
-			var tRated = GetHighestTorque();
+			var n = fullLoadCurveEntries[ratedIndex].MotorSpeed;
+			var tDrive = GetHighestTorque();
 
-			return new RatedPoint (nRated, tRated);
+			return new RatedPoint (n, tDrive);
 		}
 
+		public static RatedPoint GetRatedPointOfFullLoadCurveAtIEPC(TableData fullLoadCurve,
+			double axleRatio, double gearRatio,
+			double gearEfficiency, double axleEfficiency)
+		{
+
+			SetCurveValues(fullLoadCurve);
+			var ratedIndex = FindRowOfRatedPoint();
+			var n = fullLoadCurveEntries[ratedIndex].MotorSpeed;
+			var tDrive = GetHighestTorque();
+
+			var nRated = GetNRatedAtIEPC(n, axleRatio, gearRatio);
+			var tRated = GetTRatedAtIEPC(tDrive, gearRatio, gearEfficiency, axleRatio, axleEfficiency);
+
+			return new RatedPoint(nRated, tRated);
+		}
 
 		private static void SetCurveValues(TableData fullLoadCurve)
 		{
@@ -135,6 +150,18 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			}
 
 			return -1;
+		}
+
+
+		private static PerSecond GetNRatedAtIEPC(PerSecond n, double axleRatio, double gearRatio)
+		{
+			return (n.Value() * axleRatio * gearRatio).SI<PerSecond>();
+		}
+
+		private static NewtonMeter GetTRatedAtIEPC(NewtonMeter tDrive, double gearRatio, double gearEfficiency,
+			double axleRatio, double axleEfficiency)
+		{
+			return (tDrive.Value() / gearRatio / gearEfficiency / axleRatio / axleEfficiency).SI<NewtonMeter>();
 		}
 	}
 }
