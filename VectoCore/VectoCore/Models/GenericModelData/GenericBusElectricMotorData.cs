@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -12,22 +11,19 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.GenericModelData
 {
-	public class GenericBusElectricMotorData
+	public class GenericBusElectricMotorData : GenericBusEMBase
 	{
 		#region Constants
-
-		public const string MotorSpeedNorm = "n_norm";
-		public const string TorqueNorm = "T_norm";
-		public const string PowerElectricalNorm = "Pel_norm";
 		
-		private static string GenericEfficiencyMap_ASM =
+		public new static string GenericEfficiencyMap_ASM =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_ASM_normalized.vmap";
 
-		private static string GenericEfficiencyMap_PSM =
+		public new static string GenericEfficiencyMap_PSM =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_PSM_normalized.vmap";
 
+		#endregion
 
-		public ElectricMotorData CreateGenericBusEMData(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry, 
+		public ElectricMotorData CreateGenericElectricMotorData(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry, 
 			ElectricMachineType electricMachineType)
 		{
 			
@@ -60,21 +56,6 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			};
 		}
 
-
-		private TableData GetNormalizedEfficiencyMap(ElectricMachineType electricMachineType)
-		{
-			switch (electricMachineType) {
-				case ElectricMachineType.ASM:
-				case ElectricMachineType.ESM:
-				case ElectricMachineType.RM:
-					return ReadCsvResource(GenericEfficiencyMap_ASM);
-				case ElectricMachineType.PSM:
-					return ReadCsvResource(GenericEfficiencyMap_PSM);
-				default:
-					return null;
-			}
-		}
-		
 
 		private List<ElectricMotorVoltageLevelData> GetElectricMotorVoltageLevelData(IList<IElectricMotorVoltageLevel> voltageLevels, int count, TableData normalizedMap)
 		{
@@ -135,21 +116,5 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			
 			return result;
 		}
-
-
-		private static TableData ReadCsvResource(string ressourceId)
-		{
-			var tmp = ressourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
-			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
-			if (File.Exists(fileName))
-			{
-				return VectoCSVFile.Read(fileName);
-			}
-
-			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
-		}
-
-		#endregion
 	}
 }

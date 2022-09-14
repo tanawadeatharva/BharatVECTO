@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -14,20 +13,16 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.GenericModelData
 {
-	public class GenericBusIEPCData
+	public class GenericBusIEPCData : GenericBusEMBase
 	{
 		#region Constant
 
 		public const double GearEfficiency = 0.95;
-
-		public const string MotorSpeedNorm = "n_norm";
-		public const string TorqueNorm = "T_norm";
-		public const string PowerElectricalNorm = "Pel_norm";
-
-		private static string GenericEfficiencyMap_IEPC_ASM =
+		
+		public new static string GenericEfficiencyMap_ASM =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_ASM_normalized.vmap";
 
-		private static string GenericEfficiencyMap_IEPC_PSM =
+		public new static string GenericEfficiencyMap_PSM =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_PSM_normalized.vmap";
 
 		#endregion
@@ -38,12 +33,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		private KeyValuePair<int, double> gearRatioAtMeasurement;
 
 
-		public IEPCElectricMotorData GetIEPCElectricMotorData(IIEPCDeclarationInputData iepcData, IAxleGearInputData axleGearData)
+		public IEPCElectricMotorData CreateIEPCElectricMotorData(IIEPCDeclarationInputData iepcData, IAxleGearInputData axleGearData)
 		{
 			InitData(iepcData, axleGearData);
 
 			var count = iepcData.DesignTypeWheelMotor && iepcData.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1; //? also for declaration mode valid
-
+			
 			var iepcEM = new IEPCElectricMotorData {
 				IEPCDragCurves = GetIEPCDragCurves(iepcData, count),
 				EfficiencyData = GetIEPCVoltageLevelData(iepcData.VoltageLevels, count, iepcData.ElectricMachineType),
@@ -89,10 +84,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			var result = new List<ElectricMotorVoltageLevelData>();
 			foreach (var entry in voltageLevels.OrderBy(x => x.VoltageLevel)) {
 
-				var iepcVoltageLevel = new IEPCVoltageLevelData();
-				iepcVoltageLevel.EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType);
-				iepcVoltageLevel.Voltage = entry.VoltageLevel;
-				iepcVoltageLevel.FullLoadCurve = GetElectricMotorFullLoadCurve(entry, count);
+				var iepcVoltageLevel = new IEPCVoltageLevelData {
+					EfficiencyMaps = GetEfficiencyMaps(entry, count, electricMachineType),
+					Voltage = entry.VoltageLevel,
+					FullLoadCurve = GetElectricMotorFullLoadCurve(entry, count)
+				};
+				result.Add(iepcVoltageLevel);
 			}
 
 			return result;
@@ -179,36 +176,6 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			}
 
 			return result;
-		}
-
-
-		private TableData GetNormalizedEfficiencyMap(ElectricMachineType electricMachineType)
-		{
-			switch (electricMachineType)
-			{
-				case ElectricMachineType.ASM:
-				case ElectricMachineType.ESM:
-				case ElectricMachineType.RM:
-					return ReadCsvResource(GenericEfficiencyMap_IEPC_ASM);
-				case ElectricMachineType.PSM:
-					return ReadCsvResource(GenericEfficiencyMap_IEPC_PSM);
-				default:
-					return null;
-			}
-		}
-
-
-		private static TableData ReadCsvResource(string ressourceId)
-		{
-			var tmp = ressourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
-			var parts = tmp.Split('.');
-			var fileName = Path.Combine("Declaration", string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]));
-			if (File.Exists(fileName))
-			{
-				return VectoCSVFile.Read(fileName);
-			}
-
-			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(ressourceId), source: ressourceId);
 		}
 	}
 }
