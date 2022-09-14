@@ -54,9 +54,17 @@ using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
+
+
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
+		public enum OvcHevMode
+		{
+			NotApplicable,
+			ChargeSustaining,
+			ChargeDepleting,
+		}
 
 		public VectoRunData()
 		{

@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		[TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
 		TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml"),
+		TestCase(@"HeavyLorry\HEV-S_heavyLorry_AMT_S2_ovc.xml"),
 		TestCase(@"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml"),
 		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S3.xml"),
 		TestCase(@"HeavyLorry\HEV-S_heavyLorry_S4.xml"),
@@ -53,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
 		TestCase(@"MediumLorry\Conventional_mediumLorry_AMT.xml"),
 		TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2.xml"),
+		TestCase(@"MediumLorry\HEV-S_mediumLorry_AMT_S2_ovc.xml"),
 		TestCase(@"MediumLorry\HEV-S_mediumLorry_IEPC-S.xml"),
 		TestCase(@"MediumLorry\HEV-S_mediumLorry_S3.xml"),
 		TestCase(@"MediumLorry\HEV-S_mediumLorry_S4.xml"),
@@ -86,6 +88,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			ReadDeclarationJob(jobFile);
 		}
+
 
 		[TestCase(@"CompletedBus\Conventional_completedBus_1.xml"),
 		TestCase(@"CompletedBus\HEV_completedBus_1.xml"),

@@ -80,7 +80,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract void Initialize();
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading);
+		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
 
 		protected virtual void InitializeReport()
 		{

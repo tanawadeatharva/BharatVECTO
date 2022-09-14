@@ -774,10 +774,14 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter OverloadTorque { get; }
 
 		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-
-		Second OverloadTime { get; } //OverloadDuration
-
-		TableData FullLoadCurve { get; } //MaxTorqueCurve
+		/// <summary>
+		/// OverloadDuration
+		/// </summary>
+		Second OverloadTime { get; }
+		/// <summary>
+		/// MaxTorqueCurve
+		/// </summary>
+		TableData FullLoadCurve { get; }
 
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}

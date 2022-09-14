@@ -124,8 +124,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				CombustionEngineData tmpEngine, VehicleData tempVehicle);
 
 			#endregion
-			protected override VectoRunData CreateVectoRunData(
-			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading)
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+				Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle)
 				{

@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
@@ -18,7 +19,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null)
 		{
-			var result = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 			if (electricMachines == null) {
 				return null;
 			}
@@ -26,13 +26,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
+			CheckTorqueLimits(electricMachines, torqueLimits);
 
 			return electricMachines.Entries
-				.Select(x => Tuple.Create(x.Position,
-					CreateElectricMachine(x.Position, x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
-						x.MechanicalTransmissionLossMap, torqueLimits?.First(t => t.Key == x.Position).Value, averageVoltage, gearlist))).ToList();
+				.Select(m => Tuple.Create(m.Position,
+					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear, m.MechanicalTransmissionEfficiency,
+						m.MechanicalTransmissionLossMap, torqueLimits?.First(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
-			return result;
+		}
+
+		private void CheckTorqueLimits(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		{
+			
+			foreach (var torqueLimit  in torqueLimits.OrderBy(x => x.Key)) {
+				
+				//E-machines at position
+				foreach(var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(e => e.ElectricMachine))
+				{
+					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
+						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
+							throw new VectoException(
+								$"Voltage level {torqueLimitVoltageLevel} not found in {eMachine.ElectricMachineType} at position {torqueLimit.Key}");
+						}
+					}
+				}
+			}
 		}
 
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition, 
