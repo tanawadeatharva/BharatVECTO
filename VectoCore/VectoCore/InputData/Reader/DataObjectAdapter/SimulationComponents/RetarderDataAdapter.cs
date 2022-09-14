@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	}
 	public class RetarderDataAdapter : IRetarderDataAdapter
 	{
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 		{
 			return SetCommonRetarderData(retarder);
 		}
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class GenericRetarderDataAdapter : IRetarderDataAdapter
 	{
 		private readonly GenericBusRetarderData _genericRetarderData = new GenericBusRetarderData();
-		public  RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position)
+		public  RetarderData CreateRetarderData(IRetarderInputData retarder, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 		{
 			return _genericRetarderData.CreateGenericBusRetarderData(retarder);
 		}
