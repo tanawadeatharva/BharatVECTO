@@ -2,7 +2,7 @@
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 	public class APTNShiftStrategy : PEVAMTShiftStrategy
 	{

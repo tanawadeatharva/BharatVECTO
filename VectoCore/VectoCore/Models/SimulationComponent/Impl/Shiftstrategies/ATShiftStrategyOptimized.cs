@@ -10,16 +10,42 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
+	public class ATShiftStrategyOptimizedPolygonCalculator : IShiftPolygonCalculator
+	{
+		public ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
+			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+		{
+			var shiftLine = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
+				Math.Max(i, 2), engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+
+			var upshift = new List<ShiftPolygon.ShiftPolygonEntry>();
+
+			if (i < gearboxGears.Count - 1)
+			{
+				var maxDragTorque = engineDataFullLoadCurve.MaxDragTorque * 1.1;
+				var maxTorque = engineDataFullLoadCurve.MaxTorque * 1.1;
+
+				var speed = engineData.FullLoadCurves[0].NP98hSpeed / gearboxGears[i].Ratio * gearboxGears[i + 1].Ratio;
+
+				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, speed));
+				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxTorque, speed));
+			}
+
+			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
+		}
+
+	}
+
 	public class ATShiftStrategyOptimized : ATShiftStrategy
 	{
 		private List<CombustionEngineFuelData> fcMap;
@@ -34,12 +60,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
 		private ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
+		private IShiftPolygonCalculator _shiftPolygonCalculator;
 
 		public new static string Name => "AT - EffShift";
 
 		public ATShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{
 			var runData = dataBus.RunData;
+	
 			if (runData.EngineData == null) {
 				return;
 			}
@@ -48,6 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			fld = runData.EngineData.FullLoadCurves;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
 			shiftStrategyParameters = runData.GearshiftParameters;
+			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, shiftStrategyParameters);
 
 			MinMass = runData.VehicleData.MinimumVehicleMass;
 			MaxMass = runData.VehicleData.MaximumVehicleMass;
@@ -461,27 +490,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Overrides of ATShiftStrategy
 
-		public override ShiftPolygon ComputeDeclarationShiftPolygon(
-			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
-			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
-			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
+			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius,
+			ElectricMotorData electricMotorData = null)
 		{
-			var shiftLine = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-				Math.Max(i, 2), engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
-
-			var upshift = new List<ShiftPolygon.ShiftPolygonEntry>();
-
-			if (i < gearboxGears.Count - 1) {
-				var maxDragTorque = engineDataFullLoadCurve.MaxDragTorque * 1.1;
-				var maxTorque = engineDataFullLoadCurve.MaxTorque * 1.1;
-
-				var speed = engineData.FullLoadCurves[0].NP98hSpeed / gearboxGears[i].Ratio * gearboxGears[i + 1].Ratio;
-
-				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, speed));
-				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxTorque, speed));
-			}
-
-			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
+			return _shiftPolygonCalculator.ComputeDeclarationShiftPolygon(gearboxType,
+				i,
+				engineDataFullLoadCurve,
+				gearboxGears, 
+				engineData,
+				axlegearRatio, 
+				dynamicTyreRadius, electricMotorData);
 		}
 
 		#endregion

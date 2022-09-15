@@ -13,15 +13,28 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public class AMTShiftStrategyOptimizedPolygonCalculator : IShiftPolygonCalculator
+	{
+		public ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
+		{
+			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+		}
+	}
 	public class AMTShiftStrategyOptimized : AMTShiftStrategy
 	{
+		
+
 		private List<CombustionEngineFuelData> fcMap;
 		private Dictionary<uint, EngineFullLoadCurve> fld;
-		private ShiftStrategyParameters shiftStrategyParameters;
+		private ShiftStrategyParameters _shiftStrategyParameters;
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 
@@ -29,9 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//private AccelerationCurveData accCurve;
 
 		private Kilogram vehicleMass;
-		
+		private readonly IShiftPolygonCalculator _shiftPolygonCalculator;
 
-		
 
 		public AMTShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{
@@ -42,18 +54,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			fcMap = runData.EngineData.Fuels;
 			fld = runData.EngineData.FullLoadCurves;
-			shiftStrategyParameters = runData.GearshiftParameters;
+			_shiftStrategyParameters = runData.GearshiftParameters;
+			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, _shiftStrategyParameters);
 			//accCurve = runData.DriverData.AccelerationCurve;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
-			if (shiftStrategyParameters == null) {
+			if (_shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
 			SetupVelocityDropPreprocessor(dataBus);
 
-			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
+			if (_shiftStrategyParameters.AllowedGearRangeFC > 2 || _shiftStrategyParameters.AllowedGearRangeFC < 1) {
 				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
-				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
+				_shiftStrategyParameters.AllowedGearRangeFC = _shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
 			}
 		}
 
@@ -101,17 +114,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var vDrop = DataBus.VehicleInfo.VehicleSpeed - estimatedVelocityPostShift;
-			var vehicleSpeedPostShift = DataBus.VehicleInfo.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
+			var vehicleSpeedPostShift = DataBus.VehicleInfo.VehicleSpeed - vDrop * _shiftStrategyParameters.VelocityDropFactor;
 
 			var totalTransmissionRatio = DataBus.EngineInfo.EngineSpeed / DataBus.VehicleInfo.VehicleSpeed;
 
 			//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 			foreach (var tryNextGear in Gears.IterateGears(Gears.Successor(currentGear),
-				Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
+				Gears.Successor(currentGear, (uint)_shiftStrategyParameters.AllowedGearRangeFC))) {
 				//var tryNextGear = (uint)(currentGear.Gear + i);
 
 				if (tryNextGear == null ||
-					!(GearboxModelData.Gears[tryNextGear.Gear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
+					!(GearboxModelData.Gears[tryNextGear.Gear].Ratio < _shiftStrategyParameters.RatioEarlyUpshiftFC)) {
 					continue;
 				}
 
@@ -132,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var estimatedEngineSpeed = vehicleSpeedPostShift * (totalTransmissionRatio /
 						GearboxModelData.Gears[currentGear.Gear].Ratio * GearboxModelData.Gears[tryNextGear.Gear].Ratio);
-				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
+				if (estimatedEngineSpeed.IsSmaller(_shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
 
@@ -153,7 +166,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var accelerationFactor = outAngularVelocity * GearboxModelData.Gears[currentGear.Gear].Ratio < fld[0].NTq98hSpeed
 						? 1.0
 						: VectoMath.Interpolate(
-							fld[0].NTq98hSpeed, fld[0].NP98hSpeed, 1.0, shiftStrategyParameters.AccelerationFactor,
+							fld[0].NTq98hSpeed, fld[0].NP98hSpeed, 1.0, _shiftStrategyParameters.AccelerationFactor,
 							outAngularVelocity * GearboxModelData.Gears[currentGear.Gear].Ratio);
 					if (accelerationFactor.IsEqual(1, 1e-9)) {
 						continue;
@@ -188,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcNext = GetFCRating(response.Engine.EngineSpeed, tqNext);
 				
 				if (reserve < GearshiftParams.TorqueReserve ||
-					!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
+					!fcNext.IsSmaller(fcCurrent * _shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
 					continue;
 				}
 
@@ -253,10 +266,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 			foreach (var tryNextGear in Gears.IterateGears(Gears.Predecessor(currentGear),
-				Gears.Predecessor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
+				Gears.Predecessor(currentGear, (uint)_shiftStrategyParameters.AllowedGearRangeFC))) {
 				//var tryNextGear = (uint)(currentGear.Gear - i);
 
-				if (tryNextGear == null || !(GearboxModelData.Gears[tryNextGear.Gear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)) {
+				if (tryNextGear == null || !(GearboxModelData.Gears[tryNextGear.Gear].Ratio <= _shiftStrategyParameters.RatioEarlyDownshiftFC)) {
 					continue;
 				}
 
@@ -283,7 +296,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						fld[tryNextGear.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed),
 						fld[tryNextGear.Gear].FullLoadStationaryTorque(response.Engine.EngineSpeed)));
 
-				if (!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) ||
+				if (!fcNext.IsSmaller(fcCurrent * _shiftStrategyParameters.RatingFactorCurrentGear) ||
 					!fcNext.IsSmaller(minFc)) {
 					continue;
 				}
@@ -338,8 +351,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,
 			Meter dynamicTyreRadius, ElectricMotorData electricMotorData = null)
 		{
-			return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
-				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+			return _shiftPolygonCalculator.ComputeDeclarationShiftPolygon(gearboxType, i, engineDataFullLoadCurve,
+				gearboxGears,
+				engineData, axlegearRatio, dynamicTyreRadius, electricMotorData);
 		}
 
 		#endregion
