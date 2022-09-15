@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase(@"HeavyLorry\HEV_heavyLorry_AMT_Px.xml"),
 		TestCase(@"HeavyLorry\IEPC_heavyLorry.xml"),
 		TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2.xml"),
+		TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
 		TestCase(@"HeavyLorry\PEV_heavyLorry_APT-N_E2.xml"),
 		TestCase(@"HeavyLorry\PEV_heavyLorry_E3.xml"),
 		TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
