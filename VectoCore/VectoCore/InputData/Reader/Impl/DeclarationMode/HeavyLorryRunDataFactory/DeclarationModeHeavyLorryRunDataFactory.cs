@@ -119,7 +119,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 				}
 				_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
-				SetGearboxAndGearshiftData(vehicle, _axlegearData, _angledriveData);
+				
+				
 
 				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
@@ -206,6 +207,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 						foreach (var loading in mission.Loadings) {
 							var simulationRunData = CreateVectoRunData(vehicle, mission, loading, modeIdx);
+							
 							yield return simulationRunData;
 						}
 					}
@@ -261,8 +263,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						mission); // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
-				simulationRunData.GearboxData = _gearboxData;
+				simulationRunData.GearshiftParameters =
+					DataAdapter.CreateGearshiftData(
+						simulationRunData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						null,
+						vehicle.Components.GearboxInputData.Type,
+						vehicle.Components.GearboxInputData.Gears.Count
+					);
+
+
+				var shiftStrategyName =
+					PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
+						vehicle.VehicleType);
 				simulationRunData.AxleGearData = _axlegearData;
+
+				simulationRunData.GearboxData = DataAdapter.CreateGearboxData(vehicle, simulationRunData,
+					ShiftPolygonCalculator.Create(shiftStrategyName, simulationRunData.GearshiftParameters));
 				simulationRunData.AngledriveData = _angledriveData;
 				simulationRunData.Aux = DataAdapter.CreateAuxiliaryData(
 					vehicle.Components.AuxiliaryInputData,
@@ -276,9 +292,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					? _municipalPtoTransmissionData
 					: _ptoTransmissionData;
 				
-
-
-				simulationRunData.GearshiftParameters = _gearshiftData;
 				
 			
 				simulationRunData.EngineData.FuelMode = modeIdx.Value;
@@ -317,6 +330,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					foreach (var loading in mission.Loadings)
 					{
 						var simulationRunData = CreateVectoRunData(vehicle, mission, loading);
+						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeSustainingBattery = true);
 						yield return simulationRunData;
 					}
 				}

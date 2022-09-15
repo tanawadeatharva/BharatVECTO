@@ -300,11 +300,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var shiftPolygon = shiftPolygonCalculator != null
 					? shiftPolygonCalculator.ComputeDeclarationShiftPolygon(
 						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
-						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault().Item2)
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
 						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1],
 						gearsInput, engine,
-						axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault().Item2);
+						axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 
 				var gearData = new GearData
 				{

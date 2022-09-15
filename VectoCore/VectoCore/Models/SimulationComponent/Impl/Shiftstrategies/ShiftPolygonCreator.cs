@@ -14,6 +14,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return new AMTShiftStrategyOptimizedPolygonCalculator();
 			}
 
+			if (name == AMTShiftStrategy.Name) {
+				return new AMTShiftStrategyPolygonCalculator();
+			}
+
 			if (name == PEVAMTShiftStrategy.Name) {
 				if (shiftStrategyParameters == null) {
 					throw new ArgumentException($"{nameof(shiftStrategyParameters)} required for {name}");
