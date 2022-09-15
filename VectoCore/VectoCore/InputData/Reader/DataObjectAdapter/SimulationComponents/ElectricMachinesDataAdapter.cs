@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return electricMachines.Entries
 				.Select(m => Tuple.Create(m.Position,
 					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear, m.MechanicalTransmissionEfficiency,
-						m.MechanicalTransmissionLossMap, torqueLimits?.First(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
+						m.MechanicalTransmissionLossMap, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
 		}
 
@@ -40,6 +40,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			if (torqueLimits == null) {
 				return;
 			}
+			
+
 			foreach (var torqueLimit  in torqueLimits.OrderBy(x => x.Key)) {
 				
 				//E-machines at position
