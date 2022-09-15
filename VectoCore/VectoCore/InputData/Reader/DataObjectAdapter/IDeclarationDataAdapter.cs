@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
 
-		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
+		ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 
         //VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
         //    KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational);
@@ -68,6 +68,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
 		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData);
+		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter

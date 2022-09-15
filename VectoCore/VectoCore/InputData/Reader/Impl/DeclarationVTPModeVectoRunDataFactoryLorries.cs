@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
             GearshiftData = DataAdapter.CreateGearshiftData(
-                GearboxData, AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed);
+                 AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed, GearboxData.Type, GearboxData.Gears.Count);
 
             AuxVTP = CreateVTPAuxData(vehicle);
         }

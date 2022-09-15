@@ -37,7 +37,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		private void CheckTorqueLimits(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
 		{
-			
+			if (torqueLimits == null) {
+				return;
+			}
 			foreach (var torqueLimit  in torqueLimits.OrderBy(x => x.Key)) {
 				
 				//E-machines at position
@@ -93,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
 				: adcLossMap != null
 					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
-					: TransmissionLossMapReader.CreateEmADCLossMap(efficiency, ratio, "EM ADC LossMap Eff");
+					: TransmissionLossMapReader.CreateEmADCLossMap(1, ratio, "EM ADC LossMap Eff");
 
 			var retVal = new ElectricMotorData()
 			{

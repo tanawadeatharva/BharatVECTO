@@ -6,6 +6,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
@@ -43,20 +44,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						foreach (var loading in mission.Loadings)
 						{
 							if (vehicle.OvcHev) {
-								yield return CreateVectoRunData(vehicle, modeIdx, mission, loading, VectoRunData.OvcHevMode.ChargeDepleting);
-								yield return CreateVectoRunData(vehicle, modeIdx, mission, loading, VectoRunData.OvcHevMode.ChargeSustaining);
+								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeDepleting);
+								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx, VectoRunData.OvcHevMode.ChargeSustaining);
 
 							} else {
-								yield return CreateVectoRunData(vehicle, modeIdx, mission, loading);
+								yield return CreateVectoRunData(vehicle, mission, loading, modeIdx);
 							}
 						}
 					}
 				}
 			}
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 				throw new NotImplementedException();
@@ -72,16 +74,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of Hybrid
 
-			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+				int? modeIdx,
 				VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable)
 			{
 
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
-				var engineMode = engineModes[modeIdx];
-				var runData = CreateCommonRunData(vehicle, modeIdx, mission, loading, engineModes, _segment);
+				var engineMode = engineModes[modeIdx.Value];
+				var runData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 				runData.VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 				runData.EngineData = DataAdapter.CreateEngineData(vehicle, engineMode, mission);
 				runData.BatteryData = DataAdapter.CreateBatteryData(vehicle.Components.ElectricStorage);
@@ -98,11 +101,30 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#endregion
 
+			#region Overrides of LorryBase
+
+			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData,
+				AngledriveData angledriveData)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 
 		public class ParallelHybrid : Hybrid
 		{
 			public ParallelHybrid(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
+
+			#region Overrides of LorryBase
+
+			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData,
+				AngledriveData angledriveData)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 
 		public class HEV_S2 : SerialHybrid
@@ -131,31 +153,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class HEV_P1 : Hybrid
+		public class HEV_P1 : ParallelHybrid
 		{
 			public HEV_P1(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class HEV_P2 : Hybrid
+		public class HEV_P2 : ParallelHybrid
 		{
 			public HEV_P2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class HEV_P2_5 : Hybrid
+		public class HEV_P2_5 : ParallelHybrid
 		{
 			public HEV_P2_5(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class HEV_P3 : Hybrid
+		public class HEV_P3 : ParallelHybrid
 		{
 			public HEV_P3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }
 		}
 
-		public class HEV_P4 : Hybrid
+		public class HEV_P4 : ParallelHybrid
 		{
 			public HEV_P4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report, declarationDataAdapter) { }

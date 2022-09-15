@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			try
 			{
-				var retarder = new RetarderData { Type = retarderInputData.Type };
+				var retarder = new RetarderData { Type = retarderInputData?.Type ?? RetarderType.None};
 
 				switch (retarder.Type)
 				{

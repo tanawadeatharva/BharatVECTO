@@ -21,8 +21,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
 
-		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-			PerSecond engineIdlingSpeed);
+		ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount);
 	}
 
 	public abstract class GearboxDataAdapterBase : ComponentDataAdapterBase, IGearboxDataAdapter
@@ -155,8 +155,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
 
 
-		public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-			PerSecond engineIdlingSpeed)
+		public ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+			PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 		{
 			var retVal = new ShiftStrategyParameters
 			{
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
 				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
-				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
+				RatingFactorCurrentGear = gearboxType.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
 				AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
@@ -213,8 +213,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
-				AllowedGearRangeFC = gbx.Type.AutomaticTransmission()
-					? (gbx.Gears.Count > DeclarationData.GearboxTCU.ATSkipGearsThreshold
+				AllowedGearRangeFC = gearboxType.AutomaticTransmission()
+					? (gearsCount > DeclarationData.GearboxTCU.ATSkipGearsThreshold
 						? DeclarationData.GearboxTCU.AllowedGearRangeFCATSkipGear
 						: DeclarationData.GearboxTCU.AllowedGearRangeFCAT)
 					: DeclarationData.GearboxTCU.AllowedGearRangeFCAMT,
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
-				ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
+				ShiftSpeedsTCToLocked = engineIdlingSpeed == null ? null : DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
 					.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 			};
 
@@ -280,13 +280,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			SetDeclarationData(retVal);
-
+			
 			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
-			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
+			var tcShiftPolygon = engine?.FullLoadCurves != null ? DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]) : null;
+
+			
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
 				: inputData.VehicleCategory;
@@ -297,12 +299,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				var shiftPolygon = shiftPolygonCalculator != null
 					? shiftPolygonCalculator.ComputeDeclarationShiftPolygon(
-						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
-						dynamicTyreRadius)
+						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
+						dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault().Item2)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
-						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+						gearbox.Type, (int)i, engine?.FullLoadCurves[i + 1],
 						gearsInput, engine,
-						axlegearRatio, dynamicTyreRadius, null);
+						axlegearRatio, dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault().Item2);
 
 				var gearData = new GearData
 				{

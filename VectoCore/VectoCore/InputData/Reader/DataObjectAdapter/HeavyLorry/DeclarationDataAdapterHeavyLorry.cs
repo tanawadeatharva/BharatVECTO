@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -102,6 +103,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
+			public virtual ShiftStrategyParameters CreateDummyGearshiftStrategy()
+			{
+				throw new NotImplementedException();
+			}
+
 			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission,
 				Segment segment)
 			{
@@ -132,8 +138,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
-			public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
-				PerSecond engineIdlingSpeed)
+			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio,
+				PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
 				throw new NotImplementedException();
 			}
@@ -183,9 +189,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			#region Overrides of LorryBase
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
-				return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
 			#endregion
@@ -259,11 +265,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			private ParallelHybridStrategyParameterDataAdapter _hybridStrategyDataAdapter =
 				new ParallelHybridStrategyParameterDataAdapter();
+
+			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			#region Overrides of LorryBase
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType type, int gearsCount)
 			{
-				throw new NotImplementedException();
+
+				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, type, gearsCount);
 			}
 
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
@@ -284,15 +293,43 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			#region Overrides of LorryBase
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
+			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
+			public static readonly GearboxType[] SupportedGearboxTypes =
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
+			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+				IShiftPolygonCalculator shiftPolygonCalc)
 			{
-				throw new NotImplementedException();
+				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, new[] { GearboxType.AMT });
+			}
+
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
+			{
+				System.Diagnostics.Debug.Assert(engineIdlingSpeed == null);
+				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, null, gearboxType, gearsCount);
 			}
 
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
 			{
 				throw new NotImplementedException();
+			}
+
+			public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+				Volt averageVoltage, GearList gears = null)
+			{
+				return _electricMachineAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
+			}
+
+			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
+			{
+				return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage);
+			}
+
+			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
+			{
+				return _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
 			}
 
 			#endregion
@@ -310,9 +347,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearBoxDataAdaper.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
-				return _gearBoxDataAdaper.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+				return _gearBoxDataAdaper.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
 
 			#endregion
@@ -328,7 +365,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		public class PEV_E2 : BatteryElectric { }
 		public class PEV_E3 : BatteryElectric { }
 		public class PEV_E4 : BatteryElectric { }
-		public class PEV_E_IEPC : BatteryElectric { }
+
+		public class PEV_E_IEPC : BatteryElectric
+		{
+
+		}
 		public class Exempted : LorryBase
 		{
 			#region Overrides of LorryBase
@@ -339,7 +380,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
 			}
 
-			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
 				throw new NotImplementedException();
 			}
