@@ -72,6 +72,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _driverDataAdapter.CreateDriverData();
 			}
 
+			protected abstract GearboxType[] SupportedGearboxTypes { get; }
+
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment,
 				Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
@@ -168,7 +170,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 		public class Conventional : LorryBase
 		{
-			public static readonly GearboxType[] SupportedGearboxTypes =
+			public static GearboxType[] SupportsGearboxTypes = { GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType
+				.ATSerial};
+
+			protected override GearboxType[] SupportedGearboxTypes => new []
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
 			private IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
@@ -250,7 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			#region Overrides of LorryBase
 
-			
+			protected override GearboxType[] SupportedGearboxTypes { get; }
 
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
@@ -266,6 +271,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private ParallelHybridStrategyParameterDataAdapter _hybridStrategyDataAdapter =
 				new ParallelHybridStrategyParameterDataAdapter();
 
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			#region Overrides of LorryBase
 
@@ -293,11 +300,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		{
 			#region Overrides of LorryBase
 
+			protected override GearboxType[] SupportedGearboxTypes { get; }
+
 			private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
-			public static readonly GearboxType[] SupportedGearboxTypes =
-				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
@@ -338,7 +345,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		public class HEV_S2 : SerialHybrid
 		{
 			#region Overrides of LorryBase
-			public static readonly GearboxType[] SupportedGearboxTypes =
+			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
 			private GearboxDataAdapter _gearBoxDataAdaper = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
@@ -357,12 +364,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		public class HEV_S3 : SerialHybrid { }
 		public class HEV_S4 : SerialHybrid { }
 		public class HEV_S_IEPC : SerialHybrid { }
-		public class HEV_P1 : ParallelHybrid { }
-		public class HEV_P2 : ParallelHybrid { }
-		public class HEV_P2_5 : ParallelHybrid { }
+
+		public class HEV_P1 : ParallelHybrid
+		{
+			
+		}
+
+		public class HEV_P2 : ParallelHybrid
+		{
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.IHPC, };
+		}
+
+		public class HEV_P2_5 : ParallelHybrid
+		{
+
+		}
 		public class HEV_P3 : ParallelHybrid { }
 		public class HEV_P4 : ParallelHybrid { }
-		public class PEV_E2 : BatteryElectric { }
+
+		public class PEV_E2 : BatteryElectric
+		{
+			#region Overrides of BatteryElectric
+
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
+
+			#endregion
+		}
 		public class PEV_E3 : BatteryElectric { }
 		public class PEV_E4 : BatteryElectric { }
 
@@ -373,6 +402,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 		public class Exempted : LorryBase
 		{
 			#region Overrides of LorryBase
+
+			protected override GearboxType[] SupportedGearboxTypes { get; }
 
 			public override VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
