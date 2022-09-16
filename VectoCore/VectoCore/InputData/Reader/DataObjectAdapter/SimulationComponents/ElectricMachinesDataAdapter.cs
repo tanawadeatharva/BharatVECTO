@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components;
+
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
@@ -27,10 +27,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoException("multiple electric propulsion motors are not supported at the moment");
 			}
 			CheckTorqueLimitVoltageLevels(electricMachines, torqueLimits);
-
+			
 			return electricMachines.Entries
 				.Select(m => Tuple.Create(m.Position,
-					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.RatioADC, m.RatioPerGear, m.MechanicalTransmissionEfficiency,
+					CreateElectricMachine(m.Position, m.ElectricMachine, m.Count, m.ADC?.Ratio ?? 1.0, m.RatioPerGear, m.MechanicalTransmissionEfficiency,
 						m.MechanicalTransmissionLossMap, torqueLimits?.FirstOrDefault(t => t.Key == m.Position).Value, averageVoltage, gearlist))).ToList();
 
 		}
@@ -60,12 +60,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition, 
 			IElectricMotorDeclarationInputData motorData,
 			int count, 
-			double ratio,
+			double adcRatio,
 			double[] ratioPerGear,
 			double efficiency,
 			TableData adcLossMap,
 			IList<Tuple<Volt, TableData>> torqueLimits,
-			Volt averageVoltage, GearList gearList)
+			Volt averageVoltage,
+			GearList gearList)
 		{
 
 			var voltageLevels = new List<ElectricMotorVoltageLevelData>();
@@ -101,8 +102,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var lossMap = powertrainPosition == PowertrainPosition.IHPC
 				? TransmissionLossMapReader.CreateEmADCLossMap(1.0, 1.0, "EM ADC IHPC LossMap Eff")
 				: adcLossMap != null
-					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, ratio, "EM ADC LossMap")
-					: TransmissionLossMapReader.CreateEmADCLossMap(1, ratio, "EM ADC LossMap Eff");
+					? TransmissionLossMapReader.CreateEmADCLossMap(adcLossMap, adcRatio, "EM ADC LossMap")
+					: TransmissionLossMapReader.CreateEmADCLossMap(1, adcRatio, "EM ADC LossMap Eff");
+			
 
 			var retVal = new ElectricMotorData()
 			{
@@ -110,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				EMDragCurve = ElectricMotorDragCurveReader.Create(motorData.DragCurve, count),
 				Inertia = motorData.Inertia * count,
 				OverloadRecoveryFactor = DeclarationData.OverloadRecoveryFactor,
-				RatioADC = ratio,
+				RatioADC = adcRatio,
 				RatioPerGear = ratioPerGear,
 				TransmissionLossMap = lossMap,
 			};

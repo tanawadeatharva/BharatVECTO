@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     vehicle.CurbMassChassis,
                     false);
             }
-            Driverdata = DataAdapter.CreateDriverData();
+            Driverdata = DataAdapter.CreateDriverData(Segment);
             Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
             var tempVehicle = Dao.CreateVehicleData(
                 vehicle, Segment, Segment.Missions.First(),

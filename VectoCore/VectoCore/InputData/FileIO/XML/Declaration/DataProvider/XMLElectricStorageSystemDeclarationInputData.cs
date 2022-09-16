@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -122,26 +123,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					? GetDouble(XMLNames.REESS_TestingTemperature).DegCelsiusToKelvin() : null;
 
 		public virtual TableData InternalResistanceCurve => ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
-			new Dictionary<string, string> {
-				{BatteryInternalResistanceReader.Fields.StateOfCharge, XMLNames.REESS_InternalResistanceCurve_SoC},
-				{BatteryInternalResistanceReader.Fields.InternalResistance_2, XMLNames.REESS_InternalResistanceCurve_R2},
-				{BatteryInternalResistanceReader.Fields.InternalResistance_10, XMLNames.REESS_InternalResistanceCurve_R10},
-				{BatteryInternalResistanceReader.Fields.InternalResistance_20, XMLNames.REESS_InternalResistanceCurve_R20},
-				{BatteryInternalResistanceReader.Fields.InternalResistance_120, XMLNames.REESS_InternalResistanceCurve_R120}
-			});
+			AttributeMappings.InternalResistanceMap);
 		
 		public virtual TableData VoltageCurve => ReadTableData(XMLNames.REESS_OCV, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_OCV_SoC, XMLNames.REESS_OCV_SoC},
-				{XMLNames.REESS_OCV_OCV, XMLNames.REESS_OCV_OCV}
-		});
+			AttributeMappings.VoltageMap);
 		
 		public virtual TableData MaxCurrentMap => ReadTableData(XMLNames.REESS_CurrentLimits, XMLNames.REESS_MapEntry, 
-			new Dictionary<string, string> {
-				{XMLNames.REESS_CurrentLimits_SoC, XMLNames.REESS_CurrentLimits_SoC},
-				{XMLNames.REESS_CurrentLimits_MaxChargingCurrent, XMLNames.REESS_CurrentLimits_MaxChargingCurrent},
-				{XMLNames.REESS_CurrentLimits_MaxDischargingCurrent, XMLNames.REESS_CurrentLimits_MaxDischargingCurrent}
-		});
+			AttributeMappings.MaxCurrentMap);
 
 		#endregion
 

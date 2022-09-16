@@ -83,9 +83,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				return _retarderDataAdapter.CreateRetarderData(retarderData);
 			}
 
-			public DriverData CreateDriverData()
+			public DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
 			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData vehicleData,

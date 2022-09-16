@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public DriverData CreateDriverData()
+			public DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData)

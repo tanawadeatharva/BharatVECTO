@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.OutputData
 			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
 			IModalDataContainer modData)
 		{
+			return;
 			if (mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T {
 					Mission = mission.MissionType,

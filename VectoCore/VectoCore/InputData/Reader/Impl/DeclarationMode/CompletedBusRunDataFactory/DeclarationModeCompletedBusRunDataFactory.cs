@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				_retarderData = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 
 
-				_driverData = DataAdapterGeneric.CreateDriverData();
+				_driverData = DataAdapterGeneric.CreateDriverData(_segmentCompletedBus);
 				_driverData.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segmentCompletedBus.AccelerationFile);
 			}
 

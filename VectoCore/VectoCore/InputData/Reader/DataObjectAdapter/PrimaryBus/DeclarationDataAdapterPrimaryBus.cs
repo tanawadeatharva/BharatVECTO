@@ -38,9 +38,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
 			private readonly IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
 
-			public DriverData CreateDriverData()
+			public DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
 			public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
@@ -98,6 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
 					numSteeredAxles);
 			}
+
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 			{

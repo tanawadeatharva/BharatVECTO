@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 	public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
 	{
-		DriverData CreateDriverData();
+		DriverData CreateDriverData(Segment segment);
 
 		AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData);
 
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
 
-		DriverData CreateDriverData();
+		DriverData CreateDriverData(Segment segment);
 
 		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 		AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData);
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		RetarderData CreateRetarderData(IRetarderInputData retarderData);
 
-		DriverData CreateDriverData();
+		DriverData CreateDriverData(Segment segment);
 
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData);
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission);
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
 			IEngineModeDeclarationInputData engineMode, Mission mission);
-		DriverData CreateDriverData();
+		DriverData CreateDriverData(Segment segment);
 		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData);
 		AxleGearData CreateAxleGearData(IAxleGearInputData axleGearInputData);
 		AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData);

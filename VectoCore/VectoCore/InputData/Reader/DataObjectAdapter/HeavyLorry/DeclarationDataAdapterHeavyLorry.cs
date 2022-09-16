@@ -67,9 +67,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 			private readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterLorry();
 			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
-			public DriverData CreateDriverData()
+			public DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
 			protected abstract GearboxType[] SupportedGearboxTypes { get; }

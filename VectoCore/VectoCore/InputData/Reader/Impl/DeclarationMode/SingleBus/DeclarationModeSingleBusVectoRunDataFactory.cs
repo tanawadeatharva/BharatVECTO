@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				}
 
 				_segment = GetSegment(DataProvider);
-				_driverdata = DataAdapter.CreateDriverData(); //PrimaryBus
+				_driverdata = DataAdapter.CreateDriverData(_segment); //PrimaryBus
 				_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 				var tempVehicle = DataAdapter.CreateVehicleData(DataProvider, _segment, _segment.Missions.First(),
 														_segment.Missions.First().Loadings.First(), _allowVocational);

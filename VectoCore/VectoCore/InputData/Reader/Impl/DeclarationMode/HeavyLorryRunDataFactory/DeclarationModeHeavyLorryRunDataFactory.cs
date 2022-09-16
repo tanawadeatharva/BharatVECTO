@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 				_segment = GetSegment(vehicle);
-				_driverdata = DataAdapter.CreateDriverData();
+				_driverdata = DataAdapter.CreateDriverData(_segment);
 				_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 				
 				_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var result = CreateCommonRunData(vehicle, mission, loading, _segment);
 				result.AirdragData =
 					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
-				result.DriverData = DataAdapter.CreateDriverData();
+				result.DriverData = DataAdapter.CreateDriverData(_segment);
 				result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage);
 				result.SuperCapData = DataAdapter.CreateSuperCapData(componentsElectricStorage: vehicle.Components.ElectricStorage);
 				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
@@ -375,11 +375,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						ShiftPolygonCalculator.Create(shiftStrategyName, result.GearshiftParameters));
 
 
+				} else {
+					result.GearshiftParameters = new ShiftStrategyParameters()
+					{
+						StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+						StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+					};
 				}
 
 
-				
 
+				result.Aux = new List<VectoRunData.AuxData>(); //TODO: Remove
 
 
 
