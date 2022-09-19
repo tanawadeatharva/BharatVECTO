@@ -274,6 +274,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				SimulationType = SimulationType.DistanceCycle,
 				VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
 				GearshiftParameters = _gearshiftData,
+				InputData = InputDataProvider
 			};
 			simulationRunData.EngineData.FuelMode = 0;
 			simulationRunData.VehicleData.VehicleClass = _segmentCompletedBus.VehicleClass;

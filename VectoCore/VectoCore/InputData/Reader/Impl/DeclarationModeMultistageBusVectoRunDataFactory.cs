@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Report = Report,
 				Mission = new Mission { MissionType = MissionType.ExemptedMission },
 				VehicleData = CreateVehicleData(InputDataProvider.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle),
-				MultistageVIFInputData = InputDataProvider
+				MultistageVIFInputData = InputDataProvider,
 			};
 		}
 		
