@@ -48,14 +48,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AMTShiftStrategyOptimized(IVehicleContainer dataBus) : base(dataBus)
 		{
 			var runData = dataBus.RunData;
+			_shiftStrategyParameters = runData.GearshiftParameters;
+			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, _shiftStrategyParameters);
 			if (runData.EngineData == null) {
 				return;
 			}
 
 			fcMap = runData.EngineData.Fuels;
 			fld = runData.EngineData.FullLoadCurves;
-			_shiftStrategyParameters = runData.GearshiftParameters;
-			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, _shiftStrategyParameters);
+
+			
 			//accCurve = runData.DriverData.AccelerationCurve;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
 			if (_shiftStrategyParameters == null) {

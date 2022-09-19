@@ -82,9 +82,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				throw new NotImplementedException();
 			}
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData)
+
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
 			public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
@@ -135,8 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public override ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
 			{
-				throw new NotImplementedException();
-				//return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
+				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
 			}
 
 			#endregion

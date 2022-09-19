@@ -78,9 +78,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				//return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
 			}
 
-			public RetarderData CreateRetarderData(IRetarderInputData retarderData)
+			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData);
+				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
 			public DriverData CreateDriverData(Segment segment)

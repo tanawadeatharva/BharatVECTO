@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
+		public static readonly Watt MinEnginePowerForEMS_PEV = 300e3.SI<Watt>();
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
 		public static readonly PrimaryBusSegments PrimaryBusSegments = new PrimaryBusSegments();
