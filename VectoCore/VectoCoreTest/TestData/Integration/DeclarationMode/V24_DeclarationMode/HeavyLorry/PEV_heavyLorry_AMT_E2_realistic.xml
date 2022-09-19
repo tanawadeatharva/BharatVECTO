@@ -40,7 +40,7 @@
 		<Components xsi:type="Components_PEV-E2_LorryType">
 			<ElectricMachine>
 				<PowertrainPosition>2</PowertrainPosition>
-				<Count>1</Count>
+				<Count>2</Count>
 				<ElectricMachineSystem>
 					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 						<Manufacturer>a</Manufacturer>
@@ -50,16 +50,16 @@
 						<AppVersion>aaaaa</AppVersion>
 						<ElectricMachineType>ASM</ElectricMachineType>
 						<CertificationMethod>Measured</CertificationMethod>
-						<R85RatedPower>50000</R85RatedPower>
-						<RotationalInertia>0.10</RotationalInertia>
+						<R85RatedPower>350000</R85RatedPower>
+						<RotationalInertia>0.23</RotationalInertia>
 						<DcDcConverterIncluded>true</DcDcConverterIncluded>
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>400</Voltage>
-							<ContinuousTorque>200.00</ContinuousTorque>
+							<ContinuousTorque>23873.24</ContinuousTorque>
 							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-							<OverloadTorque>400.00</OverloadTorque>
-							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadTorque>25873.24</OverloadTorque>
+							<TestSpeedOverloadTorque>2500.00</TestSpeedOverloadTorque>
 							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
@@ -2085,10 +2085,10 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
-							<ContinuousTorque>200.00</ContinuousTorque>
+							<ContinuousTorque>23873.24</ContinuousTorque>
 							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-							<OverloadTorque>400.00</OverloadTorque>
-							<TestSpeedOverloadTorque>2000.00</TestSpeedOverloadTorque>
+							<OverloadTorque>25873.24</OverloadTorque>
+							<TestSpeedOverloadTorque>2500.00</TestSpeedOverloadTorque>
 							<OverloadDuration>30.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
@@ -4114,7 +4114,7 @@
 						</VoltageLevel>
 						<DragCurve>
 							<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
-							<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
+							<Entry outShaftSpeed="7363.00" dragTorque="30.00"/>
 						</DragCurve>
 						<Conditioning>
 							<Entry coolantTempInlet="30" coolingPower="5000"/>
@@ -4221,6 +4221,8 @@
 				  <Gears xsi:type="GearsDeclarationType">
 					<Gear number="1">
 					  <Ratio>14.930</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -4458,6 +4460,8 @@
 					</Gear>
 					<Gear number="2">
 					  <Ratio>11.640</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -4695,6 +4699,8 @@
 					</Gear>
 					<Gear number="3">
 					  <Ratio>9.020</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -4932,6 +4938,8 @@
 					</Gear>
 					<Gear number="4">
 					  <Ratio>7.040</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -5169,6 +5177,8 @@
 					</Gear>
 					<Gear number="5">
 					  <Ratio>5.640</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -5406,6 +5416,8 @@
 					</Gear>
 					<Gear number="6">
 					  <Ratio>4.400</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -5643,6 +5655,8 @@
 					</Gear>
 					<Gear number="7">
 					  <Ratio>3.390</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -5880,6 +5894,8 @@
 					</Gear>
 					<Gear number="8">
 					  <Ratio>2.650</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -6117,6 +6133,8 @@
 					</Gear>
 					<Gear number="9">
 					  <Ratio>2.050</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -6354,6 +6372,8 @@
 					</Gear>
 					<Gear number="10">
 					  <Ratio>1.600</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -6591,6 +6611,8 @@
 					</Gear>
 					<Gear number="11">
 					  <Ratio>1.280</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="239.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="219.20" />
@@ -6828,6 +6850,8 @@
 					</Gear>
 					<Gear number="12">
 					  <Ratio>1.000</Ratio>
+					  <MaxTorque>5000</MaxTorque>
+					  <MaxSpeed>2900</MaxSpeed>
 					  <TorqueLossMap>
 						<Entry inputSpeed="0.00" inputTorque="-5500.00" torqueLoss="74.20" />
 						<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="69.20" />
@@ -7425,7 +7449,6 @@
 						<Entry inputSpeed="1853.00" inputTorque="2098.00" torqueLoss="64.00"/>
 						<Entry inputSpeed="1853.00" inputTorque="2515.00" torqueLoss="73.00"/>
 						<Entry inputSpeed="1853.00" inputTorque="2928.00" torqueLoss="79.00"/>
-						
 					</TorqueLossMap>
 				</v2.0:Data>
 				<v2.0:Signature>

@@ -44,7 +44,7 @@ public class HeavyLorrySimulation
 		var jobContainer = new JobContainer(new MockSumWriter()) { };
 		jobContainer.AddRuns(runsFactory);
 		PrintRuns(jobContainer);
-		jobContainer.Execute(true);
+		jobContainer.Execute(false);
 		jobContainer.WaitFinished();
 		PrintRuns(jobContainer);
 
