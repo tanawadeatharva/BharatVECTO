@@ -395,27 +395,27 @@ Partial Class ElectricMotorForm
         'btnMaxTorqueCurveOpenHi
         '
         Me.btnMaxTorqueCurveOpenHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.btnMaxTorqueCurveOpenHi.Location = New System.Drawing.Point(441, 49)
+        Me.btnMaxTorqueCurveOpenHi.Location = New System.Drawing.Point(441, 48)
         Me.btnMaxTorqueCurveOpenHi.Name = "btnMaxTorqueCurveOpenHi"
         Me.btnMaxTorqueCurveOpenHi.Size = New System.Drawing.Size(24, 24)
         Me.btnMaxTorqueCurveOpenHi.TabIndex = 46
-        Me.btnMaxTorqueCurveOpenHi.TabStop = false
-        Me.btnMaxTorqueCurveOpenHi.UseVisualStyleBackColor = true
+        Me.btnMaxTorqueCurveOpenHi.TabStop = False
+        Me.btnMaxTorqueCurveOpenHi.UseVisualStyleBackColor = True
         '
         'btnBrowseMaxTorqueHi
         '
         Me.btnBrowseMaxTorqueHi.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btnBrowseMaxTorqueHi.Location = New System.Drawing.Point(419, 49)
+        Me.btnBrowseMaxTorqueHi.Location = New System.Drawing.Point(419, 48)
         Me.btnBrowseMaxTorqueHi.Name = "btnBrowseMaxTorqueHi"
         Me.btnBrowseMaxTorqueHi.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseMaxTorqueHi.TabIndex = 45
-        Me.btnBrowseMaxTorqueHi.TabStop = false
-        Me.btnBrowseMaxTorqueHi.UseVisualStyleBackColor = true
+        Me.btnBrowseMaxTorqueHi.TabStop = False
+        Me.btnBrowseMaxTorqueHi.UseVisualStyleBackColor = True
         '
         'lblMaxTorqueHi
         '
-        Me.lblMaxTorqueHi.AutoSize = true
-        Me.lblMaxTorqueHi.Location = New System.Drawing.Point(5, 35)
+        Me.lblMaxTorqueHi.AutoSize = True
+        Me.lblMaxTorqueHi.Location = New System.Drawing.Point(5, 34)
         Me.lblMaxTorqueHi.Name = "lblMaxTorqueHi"
         Me.lblMaxTorqueHi.Size = New System.Drawing.Size(222, 13)
         Me.lblMaxTorqueHi.TabIndex = 47
@@ -423,16 +423,16 @@ Partial Class ElectricMotorForm
         '
         'tbMaxTorqueHi
         '
-        Me.tbMaxTorqueHi.Location = New System.Drawing.Point(5, 51)
+        Me.tbMaxTorqueHi.Location = New System.Drawing.Point(5, 50)
         Me.tbMaxTorqueHi.Name = "tbMaxTorqueHi"
         Me.tbMaxTorqueHi.Size = New System.Drawing.Size(406, 20)
         Me.tbMaxTorqueHi.TabIndex = 44
         '
         'lblTitle
         '
-        Me.lblTitle.AutoSize = true
+        Me.lblTitle.AutoSize = True
         Me.lblTitle.BackColor = System.Drawing.Color.White
-        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTitle.Location = New System.Drawing.Point(119, 34)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(190, 29)
@@ -447,7 +447,7 @@ Partial Class ElectricMotorForm
         Me.PicBox.Name = "PicBox"
         Me.PicBox.Size = New System.Drawing.Size(382, 266)
         Me.PicBox.TabIndex = 49
-        Me.PicBox.TabStop = false
+        Me.PicBox.TabStop = False
         '
         'Panel1
         '
@@ -461,7 +461,7 @@ Partial Class ElectricMotorForm
         '
         'lblContTq
         '
-        Me.lblContTq.AutoSize = true
+        Me.lblContTq.AutoSize = True
         Me.lblContTq.Location = New System.Drawing.Point(3, 7)
         Me.lblContTq.Name = "lblContTq"
         Me.lblContTq.Size = New System.Drawing.Size(100, 13)
@@ -470,7 +470,7 @@ Partial Class ElectricMotorForm
         '
         'lblContTqUnit
         '
-        Me.lblContTqUnit.AutoSize = true
+        Me.lblContTqUnit.AutoSize = True
         Me.lblContTqUnit.Location = New System.Drawing.Point(182, 8)
         Me.lblContTqUnit.Name = "lblContTqUnit"
         Me.lblContTqUnit.Size = New System.Drawing.Size(29, 13)
@@ -496,7 +496,7 @@ Partial Class ElectricMotorForm
         '
         'lblOvlTime
         '
-        Me.lblOvlTime.AutoSize = true
+        Me.lblOvlTime.AutoSize = True
         Me.lblOvlTime.Location = New System.Drawing.Point(3, 7)
         Me.lblOvlTime.Name = "lblOvlTime"
         Me.lblOvlTime.Size = New System.Drawing.Size(96, 13)
@@ -505,7 +505,7 @@ Partial Class ElectricMotorForm
         '
         'lblOvltimeUnit
         '
-        Me.lblOvltimeUnit.AutoSize = true
+        Me.lblOvltimeUnit.AutoSize = True
         Me.lblOvltimeUnit.Location = New System.Drawing.Point(180, 7)
         Me.lblOvltimeUnit.Name = "lblOvltimeUnit"
         Me.lblOvltimeUnit.Size = New System.Drawing.Size(18, 13)
@@ -531,7 +531,7 @@ Partial Class ElectricMotorForm
         '
         'lblOvlRecovery
         '
-        Me.lblOvlRecovery.AutoSize = true
+        Me.lblOvlRecovery.AutoSize = True
         Me.lblOvlRecovery.Location = New System.Drawing.Point(-2, 8)
         Me.lblOvlRecovery.Name = "lblOvlRecovery"
         Me.lblOvlRecovery.Size = New System.Drawing.Size(176, 13)
@@ -540,7 +540,7 @@ Partial Class ElectricMotorForm
         '
         'lblOvlRecoveryFactorUnit
         '
-        Me.lblOvlRecoveryFactorUnit.AutoSize = true
+        Me.lblOvlRecoveryFactorUnit.AutoSize = True
         Me.lblOvlRecoveryFactorUnit.Location = New System.Drawing.Point(230, 7)
         Me.lblOvlRecoveryFactorUnit.Name = "lblOvlRecoveryFactorUnit"
         Me.lblOvlRecoveryFactorUnit.Size = New System.Drawing.Size(16, 13)
@@ -566,7 +566,7 @@ Partial Class ElectricMotorForm
         '
         'lblRatedSpeed
         '
-        Me.lblRatedSpeed.AutoSize = true
+        Me.lblRatedSpeed.AutoSize = True
         Me.lblRatedSpeed.Location = New System.Drawing.Point(3, 7)
         Me.lblRatedSpeed.Name = "lblRatedSpeed"
         Me.lblRatedSpeed.Size = New System.Drawing.Size(158, 13)
@@ -575,7 +575,7 @@ Partial Class ElectricMotorForm
         '
         'lblRatedSpeedUnit
         '
-        Me.lblRatedSpeedUnit.AutoSize = true
+        Me.lblRatedSpeedUnit.AutoSize = True
         Me.lblRatedSpeedUnit.Location = New System.Drawing.Point(229, 7)
         Me.lblRatedSpeedUnit.Name = "lblRatedSpeedUnit"
         Me.lblRatedSpeedUnit.Size = New System.Drawing.Size(30, 13)
@@ -601,7 +601,7 @@ Partial Class ElectricMotorForm
         '
         'lblOverloadTq
         '
-        Me.lblOverloadTq.AutoSize = true
+        Me.lblOverloadTq.AutoSize = True
         Me.lblOverloadTq.Location = New System.Drawing.Point(3, 7)
         Me.lblOverloadTq.Name = "lblOverloadTq"
         Me.lblOverloadTq.Size = New System.Drawing.Size(90, 13)
@@ -610,7 +610,7 @@ Partial Class ElectricMotorForm
         '
         'lblOverloadTqUnit
         '
-        Me.lblOverloadTqUnit.AutoSize = true
+        Me.lblOverloadTqUnit.AutoSize = True
         Me.lblOverloadTqUnit.Location = New System.Drawing.Point(182, 8)
         Me.lblOverloadTqUnit.Name = "lblOverloadTqUnit"
         Me.lblOverloadTqUnit.Size = New System.Drawing.Size(29, 13)
@@ -636,7 +636,7 @@ Partial Class ElectricMotorForm
         '
         'lblOverloadSpeed
         '
-        Me.lblOverloadSpeed.AutoSize = true
+        Me.lblOverloadSpeed.AutoSize = True
         Me.lblOverloadSpeed.Location = New System.Drawing.Point(3, 7)
         Me.lblOverloadSpeed.Name = "lblOverloadSpeed"
         Me.lblOverloadSpeed.Size = New System.Drawing.Size(148, 13)
@@ -645,7 +645,7 @@ Partial Class ElectricMotorForm
         '
         'lblOverloadSpeedUnit
         '
-        Me.lblOverloadSpeedUnit.AutoSize = true
+        Me.lblOverloadSpeedUnit.AutoSize = True
         Me.lblOverloadSpeedUnit.Location = New System.Drawing.Point(229, 7)
         Me.lblOverloadSpeedUnit.Name = "lblOverloadSpeedUnit"
         Me.lblOverloadSpeedUnit.Size = New System.Drawing.Size(30, 13)
@@ -661,8 +661,8 @@ Partial Class ElectricMotorForm
         '
         'lblVoltageHi
         '
-        Me.lblVoltageHi.AutoSize = true
-        Me.lblVoltageHi.Location = New System.Drawing.Point(11, 10)
+        Me.lblVoltageHi.AutoSize = True
+        Me.lblVoltageHi.Location = New System.Drawing.Point(11, 9)
         Me.lblVoltageHi.Name = "lblVoltageHi"
         Me.lblVoltageHi.Size = New System.Drawing.Size(43, 13)
         Me.lblVoltageHi.TabIndex = 48
@@ -670,7 +670,7 @@ Partial Class ElectricMotorForm
         '
         'lblVoltageHiUnit
         '
-        Me.lblVoltageHiUnit.AutoSize = true
+        Me.lblVoltageHiUnit.AutoSize = True
         Me.lblVoltageHiUnit.Location = New System.Drawing.Point(188, 10)
         Me.lblVoltageHiUnit.Name = "lblVoltageHiUnit"
         Me.lblVoltageHiUnit.Size = New System.Drawing.Size(20, 13)
@@ -679,14 +679,14 @@ Partial Class ElectricMotorForm
         '
         'tbVoltageHi
         '
-        Me.tbVoltageHi.Location = New System.Drawing.Point(135, 8)
+        Me.tbVoltageHi.Location = New System.Drawing.Point(135, 7)
         Me.tbVoltageHi.Name = "tbVoltageHi"
         Me.tbVoltageHi.Size = New System.Drawing.Size(49, 20)
         Me.tbVoltageHi.TabIndex = 49
         '
         'lblVoltageLow
         '
-        Me.lblVoltageLow.AutoSize = true
+        Me.lblVoltageLow.AutoSize = True
         Me.lblVoltageLow.Location = New System.Drawing.Point(11, 9)
         Me.lblVoltageLow.Name = "lblVoltageLow"
         Me.lblVoltageLow.Size = New System.Drawing.Size(43, 13)
@@ -695,7 +695,7 @@ Partial Class ElectricMotorForm
         '
         'lblVoltageLowUnit
         '
-        Me.lblVoltageLowUnit.AutoSize = true
+        Me.lblVoltageLowUnit.AutoSize = True
         Me.lblVoltageLowUnit.Location = New System.Drawing.Point(188, 9)
         Me.lblVoltageLowUnit.Name = "lblVoltageLowUnit"
         Me.lblVoltageLowUnit.Size = New System.Drawing.Size(20, 13)
@@ -711,7 +711,7 @@ Partial Class ElectricMotorForm
         '
         'lblMaxTorqueLow
         '
-        Me.lblMaxTorqueLow.AutoSize = true
+        Me.lblMaxTorqueLow.AutoSize = True
         Me.lblMaxTorqueLow.Location = New System.Drawing.Point(5, 34)
         Me.lblMaxTorqueLow.Name = "lblMaxTorqueLow"
         Me.lblMaxTorqueLow.Size = New System.Drawing.Size(222, 13)
@@ -727,7 +727,7 @@ Partial Class ElectricMotorForm
         '
         'lblDragTorque
         '
-        Me.lblDragTorque.AutoSize = true
+        Me.lblDragTorque.AutoSize = True
         Me.lblDragTorque.Location = New System.Drawing.Point(17, 145)
         Me.lblDragTorque.Name = "lblDragTorque"
         Me.lblDragTorque.Size = New System.Drawing.Size(98, 13)
@@ -741,8 +741,8 @@ Partial Class ElectricMotorForm
         Me.btnBrowseDragCurve.Name = "btnBrowseDragCurve"
         Me.btnBrowseDragCurve.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseDragCurve.TabIndex = 6
-        Me.btnBrowseDragCurve.TabStop = false
-        Me.btnBrowseDragCurve.UseVisualStyleBackColor = true
+        Me.btnBrowseDragCurve.TabStop = False
+        Me.btnBrowseDragCurve.UseVisualStyleBackColor = True
         '
         'btnDragCurveOpen
         '
@@ -751,8 +751,8 @@ Partial Class ElectricMotorForm
         Me.btnDragCurveOpen.Name = "btnDragCurveOpen"
         Me.btnDragCurveOpen.Size = New System.Drawing.Size(24, 24)
         Me.btnDragCurveOpen.TabIndex = 7
-        Me.btnDragCurveOpen.TabStop = false
-        Me.btnDragCurveOpen.UseVisualStyleBackColor = true
+        Me.btnDragCurveOpen.TabStop = False
+        Me.btnDragCurveOpen.UseVisualStyleBackColor = True
         '
         'tbMapLow
         '
@@ -763,7 +763,7 @@ Partial Class ElectricMotorForm
         '
         'lblPowerMapLow
         '
-        Me.lblPowerMapLow.AutoSize = true
+        Me.lblPowerMapLow.AutoSize = True
         Me.lblPowerMapLow.Location = New System.Drawing.Point(5, 74)
         Me.lblPowerMapLow.Name = "lblPowerMapLow"
         Me.lblPowerMapLow.Size = New System.Drawing.Size(163, 13)
@@ -777,8 +777,8 @@ Partial Class ElectricMotorForm
         Me.btnBrowseEmMapLow.Name = "btnBrowseEmMapLow"
         Me.btnBrowseEmMapLow.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseEmMapLow.TabIndex = 41
-        Me.btnBrowseEmMapLow.TabStop = false
-        Me.btnBrowseEmMapLow.UseVisualStyleBackColor = true
+        Me.btnBrowseEmMapLow.TabStop = False
+        Me.btnBrowseEmMapLow.UseVisualStyleBackColor = True
         '
         'btnEmMapOpenLow
         '
@@ -787,8 +787,8 @@ Partial Class ElectricMotorForm
         Me.btnEmMapOpenLow.Name = "btnEmMapOpenLow"
         Me.btnEmMapOpenLow.Size = New System.Drawing.Size(24, 24)
         Me.btnEmMapOpenLow.TabIndex = 42
-        Me.btnEmMapOpenLow.TabStop = false
-        Me.btnEmMapOpenLow.UseVisualStyleBackColor = true
+        Me.btnEmMapOpenLow.TabStop = False
+        Me.btnEmMapOpenLow.UseVisualStyleBackColor = True
         '
         'tbMaxTorqueLow
         '
@@ -804,8 +804,8 @@ Partial Class ElectricMotorForm
         Me.btnMaxTorqueCurveOpenLow.Name = "btnMaxTorqueCurveOpenLow"
         Me.btnMaxTorqueCurveOpenLow.Size = New System.Drawing.Size(24, 24)
         Me.btnMaxTorqueCurveOpenLow.TabIndex = 46
-        Me.btnMaxTorqueCurveOpenLow.TabStop = false
-        Me.btnMaxTorqueCurveOpenLow.UseVisualStyleBackColor = true
+        Me.btnMaxTorqueCurveOpenLow.TabStop = False
+        Me.btnMaxTorqueCurveOpenLow.UseVisualStyleBackColor = True
         '
         'btnBrowseMaxTorqueLow
         '
@@ -814,15 +814,15 @@ Partial Class ElectricMotorForm
         Me.btnBrowseMaxTorqueLow.Name = "btnBrowseMaxTorqueLow"
         Me.btnBrowseMaxTorqueLow.Size = New System.Drawing.Size(24, 24)
         Me.btnBrowseMaxTorqueLow.TabIndex = 45
-        Me.btnBrowseMaxTorqueLow.TabStop = false
-        Me.btnBrowseMaxTorqueLow.UseVisualStyleBackColor = true
+        Me.btnBrowseMaxTorqueLow.TabStop = False
+        Me.btnBrowseMaxTorqueLow.UseVisualStyleBackColor = True
         '
         'tcVoltageLevels
         '
         Me.tcVoltageLevels.Controls.Add(Me.tpVoltageLow)
         Me.tcVoltageLevels.Controls.Add(Me.tpVoltageHigh)
         Me.tcVoltageLevels.Location = New System.Drawing.Point(12, 189)
-        Me.tcVoltageLevels.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tcVoltageLevels.Margin = New System.Windows.Forms.Padding(2)
         Me.tcVoltageLevels.Name = "tcVoltageLevels"
         Me.tcVoltageLevels.SelectedIndex = 0
         Me.tcVoltageLevels.Size = New System.Drawing.Size(501, 246)
@@ -847,13 +847,13 @@ Partial Class ElectricMotorForm
         Me.tpVoltageLow.Controls.Add(Me.lblPowerMapLow)
         Me.tpVoltageLow.Controls.Add(Me.tbMapLow)
         Me.tpVoltageLow.Location = New System.Drawing.Point(4, 22)
-        Me.tpVoltageLow.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tpVoltageLow.Margin = New System.Windows.Forms.Padding(2)
         Me.tpVoltageLow.Name = "tpVoltageLow"
-        Me.tpVoltageLow.Padding = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tpVoltageLow.Padding = New System.Windows.Forms.Padding(2)
         Me.tpVoltageLow.Size = New System.Drawing.Size(493, 220)
         Me.tpVoltageLow.TabIndex = 0
         Me.tpVoltageLow.Text = "Voltage Level Low"
-        Me.tpVoltageLow.UseVisualStyleBackColor = true
+        Me.tpVoltageLow.UseVisualStyleBackColor = True
         '
         'tpVoltageHigh
         '
@@ -874,9 +874,9 @@ Partial Class ElectricMotorForm
         Me.tpVoltageHigh.Controls.Add(Me.lblPowerMapHi)
         Me.tpVoltageHigh.Controls.Add(Me.tbMapHi)
         Me.tpVoltageHigh.Location = New System.Drawing.Point(4, 22)
-        Me.tpVoltageHigh.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tpVoltageHigh.Margin = New System.Windows.Forms.Padding(2)
         Me.tpVoltageHigh.Name = "tpVoltageHigh"
-        Me.tpVoltageHigh.Padding = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tpVoltageHigh.Padding = New System.Windows.Forms.Padding(2)
         Me.tpVoltageHigh.Size = New System.Drawing.Size(493, 220)
         Me.tpVoltageHigh.TabIndex = 1
         Me.tpVoltageHigh.Text = "Voltage Level High"

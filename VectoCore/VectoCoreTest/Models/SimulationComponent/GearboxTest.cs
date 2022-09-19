@@ -615,6 +615,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CycleData = new CycleData() {
 					LeftSample = cycleData.Entries.First(),
 				},
+				ElectricMotorPositions = new PowertrainPosition[]{},
 				HasCombustionEngine = true
 			};
 			var cycle = new MockDrivingCycle(container, cycleData);

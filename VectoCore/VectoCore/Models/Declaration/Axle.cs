@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			try {
 				DeclarationData.Wheels.Lookup(axle.WheelsDimension);
 			} catch (Exception) {
-				return new ValidationResult($"Unknown Tyre dimenstion '{axle.WheelsDimension}'");
+				return new ValidationResult($"Unknown Tyre dimension '{axle.WheelsDimension}'");
 			}
 			return ValidationResult.Success;
 		}

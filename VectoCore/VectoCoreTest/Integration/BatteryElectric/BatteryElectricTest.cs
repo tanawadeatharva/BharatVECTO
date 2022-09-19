@@ -837,11 +837,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
-			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
-		}
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+        }
 
 		// =================================================
 
@@ -891,6 +891,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				//AxleGearData = axleGearData,
 				//GearboxData = gearboxData,
@@ -921,7 +922,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			}
 
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
+				ExecutionMode.Engineering, modData, sumData) {
 				RunData = runData
 			};
 
@@ -1006,7 +1007,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			//ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);

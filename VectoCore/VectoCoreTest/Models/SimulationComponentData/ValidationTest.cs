@@ -34,6 +34,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -212,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					new Axle {
 						AxleType = AxleType.VehicleNonDriven,
 						AxleWeightShare = 0.4,
-						Inertia = 0.5.SI<KilogramSquareMeter>(),
+							Inertia = 0.5.SI<KilogramSquareMeter>(),
 						RollResistanceCoefficient = 0.00555,
 						TyreTestLoad = 33000.SI<Newton>()
 					},
@@ -227,9 +228,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var result = vehicleData.Validate(ExecutionMode.Engineering, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
-
+			// Clear of History -> Normally happens inside the SimulatorFactory
+			ValidationHelper.ClearValHistory();
 			result = vehicleData.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
-			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
+			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded." + string.Concat(result));
 		}
 
 		/// <summary>
@@ -347,8 +349,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
 			var results = data.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
+
+			stopwatch.Stop();
+			Console.WriteLine(stopwatch.Elapsed + " " + stopwatch.ElapsedMilliseconds);
 		}
 
 		/// <summary>
@@ -376,6 +383,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var results = container.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
 			Assert.AreEqual(1, results.Count);
+		}
+
+		[TestCase]
+		public void ValidateDoubleErrorTest()
+		{
+			var wrap = new WrapperObject() { Value = 101 };
+			var container = new ContainerObject()
+			{
+				Elements = new Dictionary<int, WrapperObject>() {
+					{ 1, wrap },
+					{ 2, wrap }
+				}
+			};
+
+			var results = container.Validate(ExecutionMode.Declaration, VectoSimulationJobType.ConventionalVehicle, null, null, false);
+			Assert.AreEqual(1, results.Count);
+
 		}
 
 		/// <summary>

@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());
 			engine.Connect(aux.Port());
-			container.ModalData.AddAuxiliary("ZERO");
+			container.AddAuxiliary("ZERO");
 
 			return container;
 		}

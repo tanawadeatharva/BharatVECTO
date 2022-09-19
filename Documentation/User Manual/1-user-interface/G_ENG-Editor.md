@@ -15,7 +15,7 @@ VECTO automatically uses relative paths if the input file (e.g. FC Map) is in th
 
 ### Main Engine Parameters
 
-Make and Model \[text]\
+Make and Model 
 :   Free text defining the engine model, type, etc.
 
 Idling Engine Speed \[rpm\]
@@ -30,13 +30,13 @@ Inertia including Flywheel \[kgm²\]
 Rated Speed \[rpm\]
 : This value represents the characteristic rated speed of the engine. It is not used in the simulation as the rated speed is derived from the full-load curve
 
-Rated Power \[rpm\]
+Rated Power \[kW\]
 : This value represents the characteristic rated power of the engine. It is not used in the simulation as the rated power is derived from the full-load curve
 
-Max Torque \[rpm\]
+Max Torque \[Nm\]
 : This value represents the characteristic maximum torque of the engine. It is not used in the simulation as the maximum torque is derived from the full-load curve
 
-Dual Fuel
+Dual Fuel Engine
 : If enabled, a secondary fuel can be specified. 
 
 ### Primary/Secondary Fuel
@@ -66,7 +66,7 @@ In engineering a single correction factor for correcting WHTC, Cold/Hot Balancin
 
 ### Dual Fuel Engines
 
-If the engine is operated in dual-fuel mode, enabling the checkbox "Dual Fuel Engine" shows an additional tab for providing the fuel type, fuel consumption map, and fuelconsumption correction factors for the second fuel. For dual-fuel engines the result files (.vmod, .vsum, XML reports) contain the fuel consumption for each fuel separately and the total CO2 emissions.
+If the engine is operated in dual-fuel mode, enabling the checkbox "Dual Fuel Engine" shows an additional tab for providing the fuel type, fuel consumption map, and fuel consumption correction factors for the second fuel. For dual-fuel engines the result files (.vmod, .vsum, XML reports) contain the fuel consumption for each fuel separately and the total CO2 emissions.
 
 ### Waste Heat Recovery
 

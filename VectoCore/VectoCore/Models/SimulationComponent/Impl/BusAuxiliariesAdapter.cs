@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public BusAuxiliariesAdapter(
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
 		{
-			container.AddComponent(this);
+			//container.AddComponent(this);
 
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineInfo.EngineIdleSpeed };
@@ -254,7 +254,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//var newSOC = Auxiliaries.BatterySOC;
 
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
-			container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			if (container.HasCombustionEngine) {
+				container[ModalResultField.P_aux_mech] = CurrentState.PowerDemand;
+			}
 
 			container[ModalResultField.P_busAux_ES_HVAC] = /*essUtilityFactor **/ Auxiliaries.HVACElectricalPowerConsumer;
 			container[ModalResultField.P_busAux_ES_other] = /*essUtilityFactor **/ Auxiliaries.ElectricPowerConsumer;

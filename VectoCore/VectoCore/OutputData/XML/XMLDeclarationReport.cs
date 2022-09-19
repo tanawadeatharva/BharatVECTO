@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
 				var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-				AverageAxlegearEfficiency = eAxlOut / eAxlIn;
+				AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
 
 				WeightingFactor = weightingFactor;
 

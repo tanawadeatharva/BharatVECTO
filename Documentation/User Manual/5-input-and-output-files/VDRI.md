@@ -1,7 +1,7 @@
 ## Driving Cycles (.vdri)
 
-A Driving Cycle defines the parameters of a simulated route in Vecto. It is either time-based or distance-based and has different fields depending on the driving cycle type.
-The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". A Job must have at least one driving cycle (except in Declaration mode, where the driving cycles are predefined).
+A Driving Cycle defines the parameters of a simulated route in VECTO. It is either time-based or distance-based and has different fields depending on the driving cycle type.
+The basic file format is [VECTO-CSV](#csv) and the file type ending is ".vdri". A Job must have at least one driving cycle (except in Declaration mode, where the driving cycles are predefined).
 
 ### Driving Cycle Types
 - **Declaration Mode**: [Target speed, distance-based](#declaration-mode-cycles)
@@ -66,7 +66,7 @@ t [s]              , v [km/h]    , n_eng [rpm] , n_fan [rpm] , tq_left [Nm] , tq
 
 
 ### Engineering Mode: Target-Speed, Distance-Based Cycle
-This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.
+This driving cycle defines the target speed over distance. VECTO tries to achieve and maintain this target speed.
 
 Header: **s, v, stop***\[, Padd]\[, grad]\[, PTO]\[, vair\_res, vair\_beta]*
 
@@ -130,7 +130,7 @@ t [s]     v [km/h] , grad [%]    , Padd [kW]
 ### Engineering Mode: Measured-Speed With Gear, Time-Based Cycle
 
 This driving cycle defines the actual measured speed of the vehicle, the gear, and the engine speed over time.
-It overrides the shift strategy of Vecto and also directly sets the engine speed.
+It overrides the shift strategy of VECTO and also directly sets the engine speed.
 
 
 Header: **t, v, gear***\[, tc\_active, grad]\[, Padd]\[, vair\_res, vair\_beta]\[, Aux\_ID\]*
@@ -160,7 +160,7 @@ t [s]              , v [km/h]    , gear [-]    , grad [%]    , Padd [kW]
 ~~~
 
 ### Engineering Mode: Pwheel (SiCo), Time-Based
-This driving cycle defines the power measured at the wheels over time. Vecto tries to simulate the vehicle with this power requirement.
+This driving cycle defines the power measured at the wheels over time. VECTO tries to simulate the vehicle with this power requirement.
 
 Header: **t, Pwheel, gear, n***\[, Padd]*
 
@@ -187,7 +187,7 @@ t [s]              , Pwheel [kW] , gear [-]    , n [rpm]     , Padd [kW]
 
 ### Engine Only Mode: Engine Only Driving Cycle
 
-This driving cycle directly defines the engine's power or torque at the output shaft over time. Vecto adds the engine's inertia to the given power demand and simulates the engine.
+This driving cycle directly defines the engine's power or torque at the output shaft over time. VECTO adds the engine's inertia to the given power demand and simulates the engine.
 
 Header: **t, n, (Pe|Me)***\[, Padd]*
 

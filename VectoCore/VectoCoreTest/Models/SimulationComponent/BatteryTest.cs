@@ -232,6 +232,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var container = new MockVehicleContainer();
+			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
@@ -248,8 +249,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 				
 				absTime += dt.SI<Second>();
@@ -260,8 +261,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r2 - r1) / (10 - 2);
 				var r = slope * absTime.Value() + r1 - slope * 2;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -274,8 +275,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r3 - r2) / (20 - 10);
 				var r = slope * absTime.Value() + r2 - slope * 10;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -288,8 +289,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();
@@ -346,15 +347,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					})
 				}
 			};
-
+			var modData = new MockModalDataContainer();
 			var container = new MockVehicleContainer();
+			container.ModalData = modData;
+
+			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
 
-			var modData = new MockModalDataContainer();
+			
 
 			var absTime = 0.SI<Second>();
 
@@ -372,8 +376,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();
@@ -384,8 +388,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r2 - r1) / (10 - 2);
 				var r = slope * (absTime.Value() - 5.5) + r1 - slope * 2;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -398,8 +402,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r3 - r2) / (20 - 10);
 				var r = slope * (absTime.Value() - 5.5) + r2 - slope * 10;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -412,8 +416,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();

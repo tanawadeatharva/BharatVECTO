@@ -942,7 +942,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
 
-				container.ModalData?.AddAuxiliary(id);
+				container.AddAuxiliary(id);
 			}
 
 			return aux;

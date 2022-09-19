@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestPrimaryBusParametersSequenceGroup(vehicle);
 			Assert.AreEqual(600.RPMtoRad(), vehicle.EngineIdleSpeed);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 		}
 		

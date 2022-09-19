@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			container.AddComponent(this); // We have to do this again because in the base class the position is unknown!
+			container?.AddComponent(this); // We have to do this again because in the base class the position is unknown!
 
 			if (ModelData.Overload.OverloadBuffer.IsSmallerOrEqual(0) && !(container is SimplePowertrainContainer)) {
 				Log.Error("Overload buffer for thermal de-rating is zero or negative! Please check electric motor data!");
