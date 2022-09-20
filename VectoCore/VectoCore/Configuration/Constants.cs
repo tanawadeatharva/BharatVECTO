@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Configuration
 				public const string PTODuringDrive = "PTO_DuringDrive";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
+				public const string SteeringPump_el = "STP";
 				public const string ElectricSystem = "ES";
 				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";

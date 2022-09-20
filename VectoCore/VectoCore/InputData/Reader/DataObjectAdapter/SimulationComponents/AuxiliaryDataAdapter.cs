@@ -141,57 +141,90 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				switch (auxType)
 				{
 					case AuxiliaryType.Fan:
-						if (!DeclarationData.Fan.IsApplicable(hdvClass, jobType, auxData.Technology.FirstOrDefault())) {
-							throw new VectoException(
-								$"Fan technology '{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
-						}
-						aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
-						aux.ID = Constants.Auxiliaries.IDs.Fan;
-						aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
+						AddFan(mission, hdvClass, jobType, auxData, aux, retVal);
 						break;
 					case AuxiliaryType.SteeringPump:
-						if (!DeclarationData.SteeringPump.IsApplicable(auxData.Technology, jobType)) {
-							throw new VectoException(
-								$"At least one steering pump technology of '{string.Join(",", auxData.Technology)}' is not applicable for '{jobType}'");
-						}
-
-						if (numSteeredAxles.HasValue && auxData.Technology.Count != numSteeredAxles.Value)
-						{
-							throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
-						}
-						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hdvClass, auxData.Technology);
-						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
+						AddSteeringPumps(mission, hdvClass, numSteeredAxles, jobType, auxData, aux, retVal);
 						break;
 					case AuxiliaryType.HVAC:
-						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(
-							mission,
-							auxData.Technology.FirstOrDefault(), hdvClass).PowerDemand;
-						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
+						AddHVAC(mission, hdvClass, aux, auxData,retVal);
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						if (!DeclarationData.PneumaticSystem.IsApplicable(jobType,
-								auxData.Technology.FirstOrDefault()))
-						{
-							throw new VectoException(
-								$"Pneumatic system technology'{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
-						}
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault())
-														.PowerDemand;
-						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
+						AddPneumaticSystem(mission, jobType, auxData, aux,retVal);
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
-						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+						AddElectricSystem(mission, aux, auxData, retVal);
 						break;
 					default: continue;
 				}
-
-				retVal.Add(aux);
 			}
 
 			return retVal;
 		}
 
+		private static void AddElectricSystem(MissionType mission, VectoRunData.AuxData aux,
+			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
+		{
+			aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+		}
+
+		private static void AddPneumaticSystem(MissionType mission, VectoSimulationJobType jobType,
+			IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux, List<VectoRunData.AuxData> auxDataList)
+		{
+			if (!DeclarationData.PneumaticSystem.IsApplicable(jobType,
+					auxData.Technology.FirstOrDefault())) {
+				throw new VectoException(
+					$"Pneumatic system technology'{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
+			}
+
+			aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault())
+				.PowerDemand;
+			aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
+		}
+
+		private static void AddHVAC(MissionType mission, VehicleClass hdvClass, VectoRunData.AuxData aux,
+			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
+		{
+			aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(
+				mission,
+				auxData.Technology.FirstOrDefault(), hdvClass).PowerDemand;
+			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
+			return;
+		}
+
+		private static void AddSteeringPumps(MissionType mission, VehicleClass hdvClass, int? numSteeredAxles,
+			VectoSimulationJobType jobType, IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux,
+			List<VectoRunData.AuxData> auxDataList)
+		{
+			if (!DeclarationData.SteeringPump.IsApplicable(auxData.Technology, jobType)) {
+				throw new VectoException(
+					$"At least one steering pump technology of '{string.Join(",", auxData.Technology)}' is not applicable for '{jobType}'");
+			}
+
+			if (numSteeredAxles.HasValue && auxData.Technology.Count != numSteeredAxles.Value) {
+				throw new VectoException(
+					$"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
+			}
+
+			aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hdvClass, auxData.Technology).mech;
+			aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
+		}
+
+		private static void AddFan(MissionType mission, VehicleClass hdvClass, VectoSimulationJobType jobType,
+			IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux, List<VectoRunData.AuxData> auxDataList)
+		{
+			if (!DeclarationData.Fan.IsApplicable(hdvClass, jobType, auxData.Technology.FirstOrDefault())) {
+				throw new VectoException(
+					$"Fan technology '{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
+			}
+
+			aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
+			aux.ID = Constants.Auxiliaries.IDs.Fan;
+			aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
+
+			auxDataList.Add(aux);
+		}
 
 		#endregion
 	}
