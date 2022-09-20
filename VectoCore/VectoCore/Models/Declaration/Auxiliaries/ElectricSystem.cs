@@ -34,10 +34,9 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
 	public sealed class ElectricSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{

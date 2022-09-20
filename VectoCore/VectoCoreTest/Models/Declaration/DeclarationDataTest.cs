@@ -575,7 +575,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             AssertHelper.AreRelativeEqual(expected,
                 DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                    new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
+                    new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()).mech);
         }
 
         [TestCase]
@@ -586,7 +586,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             const MissionType mission = MissionType.LongHaul;
             const VehicleClass hdvClass = VehicleClass.Class5;
             var first = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+                new[] { axle1 }.TakeWhile(a => a != null).ToArray()).mech;
 
             for (var i = 0; i < 10; i++)
             {
@@ -595,7 +595,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             }
 
             var last = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
-                new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+                new[] { axle1 }.TakeWhile(a => a != null).ToArray()).mech;
 
             Assert.AreEqual(first.Value(), last.Value(), 1e-3);
         }

@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;

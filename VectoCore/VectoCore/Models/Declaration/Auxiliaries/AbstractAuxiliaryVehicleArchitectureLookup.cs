@@ -4,10 +4,9 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
 	/// <summary>
 	/// Maps the first columns of an auxiliary csv to a dictionary Dictionary<string technology, string arch>

@@ -36,10 +36,9 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
 
 	public class Fan : IDeclarationAuxiliaryTable
@@ -130,6 +129,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var lookup = Tuple.Create(mission, technology, electrical);
 			return Data.GetVECTOValueOrDefault(lookup, new AuxDemandEntry { PowerDemand = 0.SI<Watt>() });
+		}
+
+		public bool IsFullyElectric(string technology)
+		{
+			return FullyElectricTechnologies().Contains(technology);
 		}
 
 		public string[] FullyElectricTechnologies() => Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();

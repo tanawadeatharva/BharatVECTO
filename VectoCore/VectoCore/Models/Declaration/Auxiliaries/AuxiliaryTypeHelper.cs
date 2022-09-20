@@ -35,7 +35,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
 	public static class AuxiliaryTypeHelper
 	{

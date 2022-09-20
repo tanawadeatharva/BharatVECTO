@@ -34,15 +34,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
-	public sealed class SteeringPump : IDeclarationAuxiliaryTable
+	public sealed class SteeringPump : IDeclarationAuxiliaryTable, IDeclarationAuxiliaryFullyElectricTable
 	{
 		private readonly SteeringPumpBaseLine _baseLookup = new SteeringPumpBaseLine();
 		private readonly SteeringPumpAxles _axleLookup = new SteeringPumpAxles();
@@ -51,27 +51,63 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public (Watt mech, Watt electric) Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
 			var baseLine = _baseLookup.Lookup(mission, hdvClass);
-			var power = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
-			var factors = new SteeringPumpValues<double>(0, 0, 0);
+			var powerMech = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
+			var powerEl = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
+			var factorsMech = new SteeringPumpValues<double>(0, 0, 0);
+			var factorsEl = new SteeringPumpValues<double>(0, 0, 0);
 			var i = 0;
+			var numberMech = 0;
+			var numberEl = 0;
+			if (!technologies.Any()) {
+				throw new VectoException("No technology specified for steering pump");
+			}
 			foreach (var technology in technologies) {
 				i++;
-				var axles = _axleLookup.Lookup(mission, i);
-				power.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
-				power.Banking += baseLine.Banking * axles.Banking;
-				power.Steering += baseLine.Steering * axles.Steering;
 
+					
+				var axles = _axleLookup.Lookup(mission, i);
 				var f = _techLookup.Lookup(technology, mission);
-				factors.UnloadedFriction += f.UnloadedFriction;
-				factors.Banking += f.Banking;
-				factors.Steering += f.Steering;
+
+				if (!_techLookup.GetTechnologies().Contains(technology)) {
+					throw new VectoException($"Steering pump technology '{technology}' not found");
+				}
+				if (_techLookup.IsFullyElectric(technology)) {
+					numberEl++;
+					powerEl.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
+					powerEl.Banking += baseLine.Banking * axles.Banking;
+					powerEl.Steering += baseLine.Steering * axles.Steering;
+
+
+					factorsEl.UnloadedFriction += f.UnloadedFriction;
+					factorsEl.Banking += f.Banking;
+					factorsEl.Steering += f.Steering;
+				} else {
+					numberMech++;
+					powerMech.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
+					powerMech.Banking += baseLine.Banking * axles.Banking;
+					powerMech.Steering += baseLine.Steering * axles.Steering;
+
+					factorsMech.UnloadedFriction += f.UnloadedFriction;
+					factorsMech.Banking += f.Banking;
+					factorsMech.Steering += f.Steering;
+				}
 			}
 
-			power.UnloadedFriction *= factors.UnloadedFriction / i;
-			power.Banking *= factors.Banking / i;
-			power.Steering *= factors.Steering / i;
+			if (numberMech > 0) {
+				powerMech.UnloadedFriction *= factorsMech.UnloadedFriction / numberMech;
+				powerMech.Banking *= factorsMech.Banking / numberMech;
+				powerMech.Steering *= factorsMech.Steering / numberMech;
+			}
 
-			return (power.UnloadedFriction + power.Banking + power.Steering, 0.SI<Watt>());
+			if (numberEl > 0) {
+				powerEl.UnloadedFriction *= factorsEl.UnloadedFriction / numberEl;
+				powerEl.Banking *= factorsEl.Banking / numberEl;
+				powerEl.Steering *= factorsEl.Steering / numberEl;
+			}
+			
+		
+
+			return (powerMech.UnloadedFriction + powerMech.Banking + powerMech.Steering, powerEl.UnloadedFriction + powerEl.Banking + powerEl.Steering);
 		}
 
 		public bool IsApplicable(IEnumerable<string> technologies, VectoSimulationJobType jobType)
@@ -107,9 +143,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>, IDeclarationAuxiliaryArchitectureTable
+		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>, IDeclarationAuxiliaryArchitectureTable, IDeclarationAuxiliaryFullyElectricTable
 		{
 			private readonly IDeclarationAuxiliaryArchitectureTable _declarationAuxiliaryArchitectureTableImplementation = new SteeringPumpArchitectureTable();
+			private readonly IDeclarationAuxiliaryFullyElectricTable _declarationAuxiliaryFullyElectricTableImplementation = new SteeringPumpFullyElectricTable();
 			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv";
 
 			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for SteeringPump Technology. Key: '{0}'";
@@ -159,6 +196,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 				#endregion
 			}
 
+			private class SteeringPumpFullyElectricTable : AbstractAuxiliaryFullyElectricLookup
+			{
+				#region Overrides of LookupData
+
+				protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv";
+
+				#endregion
+			}
+
+			#endregion
+
+			#region Implementation of IDeclarationAuxiliaryFullyElectricTable
+
+			public bool IsFullyElectric(string technology)
+			{
+				return _declarationAuxiliaryFullyElectricTableImplementation.IsFullyElectric(technology);
+			}
+
+			public string[] FullyElectricTechnologies()
+			{
+				return _declarationAuxiliaryFullyElectricTableImplementation.FullyElectricTechnologies();
+			}
 
 			#endregion
 		}
@@ -208,5 +267,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			return _techLookup.GetTechnologies();
 		}
+
+		#region Implementation of IDeclarationAuxiliaryFullyElectricTable
+
+		public bool IsFullyElectric(string technology)
+		{
+			return _techLookup.IsFullyElectric(technology);
+		}
+
+		public string[] FullyElectricTechnologies()
+		{
+			return _techLookup.FullyElectricTechnologies();
+		}
+
+		#endregion
 	}
 }

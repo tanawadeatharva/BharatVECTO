@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.OutputData;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 
 public class JSONFileWriter : IOutputFileWriter
 {

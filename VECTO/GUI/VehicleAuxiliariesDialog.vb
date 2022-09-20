@@ -14,6 +14,7 @@ Imports System.Linq
 Imports System.Windows.Forms
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 
 
 ''' <summary>

@@ -49,6 +49,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;

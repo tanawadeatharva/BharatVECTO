@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						break;
 					default: continue;
 				}
+				
 			}
 
 			return retVal;
@@ -197,6 +198,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			VectoSimulationJobType jobType, IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux,
 			List<VectoRunData.AuxData> auxDataList)
 		{
+			
+
 			if (!DeclarationData.SteeringPump.IsApplicable(auxData.Technology, jobType)) {
 				throw new VectoException(
 					$"At least one steering pump technology of '{string.Join(",", auxData.Technology)}' is not applicable for '{jobType}'");
@@ -207,8 +210,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					$"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
 			}
 
-			aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hdvClass, auxData.Technology).mech;
-			aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
+			
+			var powerDemand = DeclarationData.SteeringPump.Lookup(mission, hdvClass, auxData.Technology);
+			if (powerDemand.mech != 0.SI<Watt>()) {
+				var spMech = new VectoRunData.AuxData
+				{
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = auxData.Technology.Where(tech => !DeclarationData.SteeringPump.IsFullyElectric(tech))
+						.ToList(),
+					IsFullyElectric = true,
+					ID = Constants.Auxiliaries.IDs.SteeringPump,
+					PowerDemand = powerDemand.mech,
+				};
+
+				auxDataList.Add(spMech);
+			}
+
+			if (powerDemand.electric != 0.SI<Watt>()) {
+				var spElectric = new VectoRunData.AuxData
+				{
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = auxData.Technology.Where(tech => DeclarationData.SteeringPump.IsFullyElectric(tech))
+						.ToList(),
+					IsFullyElectric = true,
+					ID = Constants.Auxiliaries.IDs.SteeringPump_el,
+					PowerDemand = powerDemand.electric
+				};
+
+				auxDataList.Add(spElectric);
+			}
+
 		}
 
 		private static void AddFan(MissionType mission, VehicleClass hdvClass, VectoSimulationJobType jobType,
@@ -218,6 +249,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				throw new VectoException(
 					$"Fan technology '{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
 			}
+
+
+
+
 
 			aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
 			aux.ID = Constants.Auxiliaries.IDs.Fan;

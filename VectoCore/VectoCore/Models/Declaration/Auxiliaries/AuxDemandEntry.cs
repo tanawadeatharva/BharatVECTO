@@ -31,7 +31,7 @@
 
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
 	public struct AuxDemandEntry
 	{

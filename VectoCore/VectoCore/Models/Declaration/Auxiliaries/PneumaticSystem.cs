@@ -35,14 +35,14 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable
+	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable, IDeclarationAuxiliaryFullyElectricTable
 	{
 		private IDeclarationAuxiliaryArchitectureTable _declarationAuxiliaryArchitectureTableImplementation = new PneumaticSystemArchitectureTable();
+		private IDeclarationAuxiliaryFullyElectricTable _declarationAuxiliaryFullyElectricTableImplementation = new PneumaticSystemFullyElectricTable();
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
 
 		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Pneumatic System. Mission: '{0}', Technology: '{1}'";
@@ -73,8 +73,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _declarationAuxiliaryArchitectureTableImplementation.IsApplicable(simType, technology);
 		}
 
-		#endregion
-
 		private class PneumaticSystemArchitectureTable : AbstractAuxiliaryVehicleArchitectureLookup
 		{
 			#region Overrides of LookupData
@@ -84,5 +82,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 			#endregion
 		}
 
+
+		#endregion
+
+		#region Implementation of IDeclarationAuxiliaryFullyElectricTable
+
+		public bool IsFullyElectric(string technology)
+		{
+			return _declarationAuxiliaryFullyElectricTableImplementation.IsFullyElectric(technology);
+		}
+
+		public string[] FullyElectricTechnologies()
+		{
+			return _declarationAuxiliaryFullyElectricTableImplementation.FullyElectricTechnologies();
+		}
+
+		private class PneumaticSystemFullyElectricTable : AbstractAuxiliaryFullyElectricLookup
+		{
+			#region Overrides of LookupData
+
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
+
+			#endregion
+		}
+
+		#endregion
 	}
 }
