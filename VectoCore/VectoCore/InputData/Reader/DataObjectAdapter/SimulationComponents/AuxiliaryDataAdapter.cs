@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure.Language;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-			int? numSteeredAxles);
+			int? numSteeredAxles, VectoSimulationJobType jobType);
 	}
 
 	public interface ICompletedBusAuxiliaryDataAdapter : IPrimaryBusAuxiliaryDataAdapter
@@ -65,10 +66,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-			int? numSteeredAxles)
+			int? numSteeredAxles, VectoSimulationJobType jobType)
 		{
 			CheckDeclarationMode(auxInputData, "AuxiliariesData");
-			return DoCreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength, numSteeredAxles);
+			return DoCreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength, numSteeredAxles, jobType);
 		}
 
 		public abstract AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData);
@@ -76,13 +77,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected abstract IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hdvClass, Meter vehicleLength,
-			int? numSteeredAxles);
+			int? numSteeredAxles, VectoSimulationJobType jobType);
 
 
 	}
 
+	public class HeavyLorryPEVAuxiliaryDataAdapter : HeavyLorryAuxiliaryDataAdapter
+	{
+		protected override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			AuxiliaryType.ElectricSystem,
+			AuxiliaryType.HVAC,
+			AuxiliaryType.PneumaticSystem,
+			AuxiliaryType.SteeringPump
+		};
+	}
+
 	public class HeavyLorryAuxiliaryDataAdapter : AuxiliaryDataAdapter
 	{
+		protected virtual HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			AuxiliaryType.ElectricSystem,
+			AuxiliaryType.HVAC,
+			AuxiliaryType.PneumaticSystem,
+			AuxiliaryType.Fan,
+			AuxiliaryType.SteeringPump
+		};
 		#region Overrides of AuxiliaryDataAdapter
 
 		public override AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData)
@@ -90,20 +108,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			throw new System.NotImplementedException();
 		}
 
-		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
-			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles)
+		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
+			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
+			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles,
+			VectoSimulationJobType jobType)
 		{
 			var retVal = new List<VectoRunData.AuxData>();
 
-			if (auxInputData.Auxiliaries.Count != 5)
+			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes))
 			{
 				Log.Error(
-					"In Declaration Mode exactly 5 Auxiliaries must be defined: Fan, Steering pump, HVAC, Electric System, Pneumatic System.");
+					"In Declaration Mode exactly 4 Auxiliaries must be defined for battery electric vehicles: Steering pump, HVAC, Electric System, Pneumatic System.");
 				throw new VectoException(
-					"In Declaration Mode exactly 5 Auxiliaries must be defined: Fan, Steering pump, HVAC, Electric System, Pneumatic System.");
+					"In Declaration Mode exactly 4 Auxiliaries must be defined for battery electric vehicles: Steering pump, HVAC, Electric System, Pneumatic System.");
 			}
 
-			foreach (var auxType in EnumHelper.GetValues<AuxiliaryType>())
+			foreach (var auxType in AuxiliaryTypes)
 			{
 				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
 				if (auxData == null)
@@ -114,17 +134,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var aux = new VectoRunData.AuxData
 				{
 					DemandType = AuxiliaryDemandType.Constant,
-					Technology = auxData.Technology
+					Technology = auxData.Technology,
 				};
 
 				mission = mission.GetNonEMSMissionType();
 				switch (auxType)
 				{
 					case AuxiliaryType.Fan:
+						if (!DeclarationData.Fan.IsApplicable(hdvClass, jobType, auxData.Technology.FirstOrDefault())) {
+							throw new VectoException(
+								$"Fan technology '{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
+						}
 						aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
+						aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
 						break;
 					case AuxiliaryType.SteeringPump:
+						if (!DeclarationData.SteeringPump.IsApplicable(auxData.Technology, jobType)) {
+							throw new VectoException(
+								$"At least one steering pump technology of '{string.Join(",", auxData.Technology)}' is not applicable for '{jobType}'");
+						}
+
 						if (numSteeredAxles.HasValue && auxData.Technology.Count != numSteeredAxles.Value)
 						{
 							throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
@@ -139,6 +169,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
+						if (!DeclarationData.PneumaticSystem.IsApplicable(jobType,
+								auxData.Technology.FirstOrDefault()))
+						{
+							throw new VectoException(
+								$"Pneumatic system technology'{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
+						}
 						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault())
 														.PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
@@ -156,8 +192,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
+
 		#endregion
 	}
+
+
 
 	public class PrimaryBusAuxiliaryDataAdapter : AuxiliaryDataAdapter, IPrimaryBusAuxiliaryDataAdapter
 	{
@@ -541,8 +580,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
-			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles)
+		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
+			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
+			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles,
+			VectoSimulationJobType jobType)
 		{
 			if (auxInputData != null)
 			{

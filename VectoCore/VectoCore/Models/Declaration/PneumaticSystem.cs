@@ -32,14 +32,16 @@
 using System;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
+	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable
 	{
+		private IDeclarationAuxiliaryArchitectureTable _declarationAuxiliaryArchitectureTableImplementation = new PneumaticSystemArchitectureTable();
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
 
 		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Pneumatic System. Mission: '{0}', Technology: '{1}'";
@@ -48,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			foreach (DataRow row in table.Rows) {
 				var technology = row.Field<string>("technology");
-				foreach (DataColumn col in table.Columns) {
+				foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(table.Columns.IndexOf("fullyelectric") + 1)) {
 					if (col.Caption != "technology") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = new AuxDemandEntry() {
 							PowerDemand = row.ParseDouble(col.Caption).SI<Watt>()
@@ -62,5 +64,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
+
+		#region Implementation of IDeclarationAuxiliaryArchitectureTable
+
+		public bool IsApplicable(VectoSimulationJobType simType, string technology)
+		{
+			return _declarationAuxiliaryArchitectureTableImplementation.IsApplicable(simType, technology);
+		}
+
+		#endregion
+
+		private class PneumaticSystemArchitectureTable : AbstractAuxiliaryVehicleArchitectureLookup
+		{
+			#region Overrides of LookupData
+
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
+
+			#endregion
+		}
+
 	}
 }

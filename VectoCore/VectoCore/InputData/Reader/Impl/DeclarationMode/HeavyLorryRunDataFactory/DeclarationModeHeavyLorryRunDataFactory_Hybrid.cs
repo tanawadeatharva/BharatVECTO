@@ -94,7 +94,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.AirdragData = _airdragData;
 				runData.AngledriveData = _angledriveData;
 				runData.HybridStrategyParameters = DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData);
-				runData.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length, vehicle.Components.AxleWheels.NumSteeredAxles);
+				runData.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
+					vehicle.Components.BusAuxiliaries,
+					mission.MissionType,
+					_segment.VehicleClass, 
+					vehicle.Length, 
+					vehicle.Components.AxleWheels.NumSteeredAxles, 
+					vehicle.VehicleType);
 
 				return runData;
 			}

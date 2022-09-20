@@ -30,9 +30,11 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -78,6 +80,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 				: fanHeavyLorries.Lookup(mission, technology, true)).PowerDemand;
 		}
 
+		public bool IsApplicable(VehicleClass vehicleClass, VectoSimulationJobType jobType, string technology)
+		{
+			return vehicleClass.IsMediumLorry()
+				? fanMediumLorries.IsApplicable(jobType, technology)
+				: fanHeavyLorries.IsApplicable(jobType, technology);
+		}
+
+		public bool IsFullyElectric(VehicleClass vehicleClass, string technology)
+		{
+			var tech = vehicleClass.IsMediumLorry()
+				? fanMediumLorries.FullyElectricTechnologies()
+				: fanHeavyLorries.FullyElectricTechnologies();
+			return tech.Contains(technology);
+		}
+
 		public string[] FullyElectricTechnologies()
 		{
 			return fanHeavyLorries.FullyElectricTechnologies();
@@ -86,8 +103,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public string[] GetTechnologies() => fanHeavyLorries.GetTechnologies();
 	}
 
-	public abstract class AbstractFan : LookupData<MissionType, string, bool, AuxDemandEntry>, IDeclarationAuxiliaryTable
+	public abstract class AbstractFan : LookupData<MissionType, string, bool, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable
 	{
+
+
 		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'";
 
 		protected override void ParseData(DataTable table)
@@ -96,12 +115,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var name = row.Field<string>("technology");
 				var electric = row.ParseBoolean("fullyelectric");
 
-				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "technology" && col.Caption != "fullyelectric") {
+				foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(table.Columns.IndexOf("fullyelectric") + 1))
+				{
+					//if (col.Caption != "technology" && col.Caption != "fullyelectric") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name, electric)] = new AuxDemandEntry {
 							PowerDemand = row.ParseDouble(col).SI<Watt>(),
 						};
-					}
+					//}
 				}
 			}
 		}
@@ -111,20 +131,115 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var lookup = Tuple.Create(mission, technology, electrical);
 			return Data.GetVECTOValueOrDefault(lookup, new AuxDemandEntry { PowerDemand = 0.SI<Watt>() });
 		}
-		
+
 		public string[] FullyElectricTechnologies() => Data.Keys.Where(x => x.Item3).Select(x => x.Item2).Distinct().ToArray();
 
 		public string[] GetTechnologies() => Data.Keys.Select(x => x.Item2).Distinct().ToArray();
+
+		protected abstract IDeclarationAuxiliaryArchitectureTable archMapping { get; }
+
+		public  bool IsApplicable(VectoSimulationJobType simType, string technology)
+		{
+			return archMapping.IsApplicable(simType, technology);
+		}
+
 	}
 
 
 	public sealed class FanMediumLorries : AbstractFan
 	{
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv";
+
+		#region Overrides of AbstractFan
+
+		protected override IDeclarationAuxiliaryArchitectureTable archMapping => new
+			FanMediumLorriesVehicleArchitecture();
+
+		
+		#endregion
 	}
 
 	public sealed class FanHeavyLorries : AbstractFan
 	{
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv";
+
+		protected override IDeclarationAuxiliaryArchitectureTable archMapping => new
+			FanHeavyLorriesVehicleArchitecture();
+
 	}
+
+
+	/// <summary>
+	/// Maps the first columns of an auxiliary csv to a dictionary Dictionary<string technology, string arch>
+	/// </summary>
+	public abstract class AbstractAuxiliaryVehicleArchitectureLookup : LookupData<string, string, bool>, IDeclarationAuxiliaryArchitectureTable
+	{
+		public static Dictionary<VectoSimulationJobType, string> ArchitectureNameMapping =
+			new Dictionary<VectoSimulationJobType, string>() {
+				{VectoSimulationJobType.BatteryElectricVehicle, "pev"},
+				{VectoSimulationJobType.SerialHybridVehicle, "s-hev"},
+				{VectoSimulationJobType.ParallelHybridVehicle, "p-hev"},
+				{VectoSimulationJobType.ConventionalVehicle, "conventional"},
+				{VectoSimulationJobType.IEPC_S, "s-hev"},
+				{VectoSimulationJobType.IEPC_E, "pev"},
+			};
+
+		protected override string ErrorMessage =>
+			"Auxiliary Lookup Error: No value found for Fan. Technology: '{0}', Architecture: '{1}'";
+		#region Overrides of LookupData
+
+		protected override void ParseData(DataTable table)
+		{
+			foreach (DataRow row in table.Rows) {
+				var name = row["technology"].ToString();
+				foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(1).Take(4)) {
+					Data[Tuple.Create(name, col.Caption)] = row.ParseBoolean(col.Caption);
+				}
+			}
+		}
+
+		#endregion
+
+		#region Implementation of IDeclarationAuxiliaryTable
+
+		public string[] GetTechnologies() => Data.Keys.Select(x => x.Item1).Distinct().ToArray();
+
+
+		public bool IsApplicable(VectoSimulationJobType simType, string technology)
+		{
+			if (!GetTechnologies().Contains(technology)) {
+				throw new VectoException($"Auxiliary Lookup Error: Unknown technology: '{technology}'");
+			}
+
+			if (!ArchitectureNameMapping.ContainsKey(simType)) {
+				throw new VectoException($"No Architecture mapping for {simType.ToString()}");
+			}
+
+			var arch = ArchitectureNameMapping[simType];
+			return Lookup(technology, arch);
+		}
+
+		#endregion
+	}
+
+	public sealed class FanMediumLorriesVehicleArchitecture : AbstractAuxiliaryVehicleArchitectureLookup
+	{
+		#region Overrides of LookupData
+
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv";
+
+
+		#endregion
+	}
+
+	public sealed class FanHeavyLorriesVehicleArchitecture : AbstractAuxiliaryVehicleArchitectureLookup
+	{
+		#region Overrides of LookupData
+
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv";
+
+
+		#endregion
+	}
+
 }

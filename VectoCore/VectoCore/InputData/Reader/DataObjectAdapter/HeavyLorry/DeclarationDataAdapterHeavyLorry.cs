@@ -158,7 +158,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public abstract IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles);
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType);
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 			{
@@ -207,10 +208,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
 				IAuxiliariesDeclarationInputData auxInputData,
 				IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass,
-				Meter vehicleLength, int? numSteeredAxles)
+				Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
 			{
 				return _auxAdapter.CreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength,
-					numSteeredAxles);
+					numSteeredAxles, jobType);
 			}
 		}
 
@@ -257,8 +258,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
 			{
 				throw new NotImplementedException();
 			}
@@ -282,8 +285,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, type, gearsCount);
 			}
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
 			{
 				throw new NotImplementedException();
 			}
@@ -317,8 +322,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, null, gearboxType, gearsCount);
 			}
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
 			{
 				throw new NotImplementedException();
 			}
@@ -416,8 +423,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
 			{
 				throw new NotImplementedException();
 			}

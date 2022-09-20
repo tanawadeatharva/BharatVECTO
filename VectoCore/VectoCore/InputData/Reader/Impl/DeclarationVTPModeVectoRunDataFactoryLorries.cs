@@ -124,14 +124,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 JobInputData.Vehicle.Components.BusAuxiliaries,
                 missionType,
                 Segment.VehicleClass, JobInputData.Vehicle.Length,
-                JobInputData.Vehicle.Components.AxleWheels.NumSteeredAxles);
+                JobInputData.Vehicle.Components.AxleWheels.NumSteeredAxles, JobInputData.Vehicle.VehicleType);
         }
 
         protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
         {
             var numSteered = vehicle.Components.AxleWheels.NumSteeredAxles;
             var auxRD = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
                             .ToList();
             foreach (var entry in auxRD)
             {
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             }
 
             var auxLH = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length, numSteered)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
                             .ToList();
             foreach (var entry in auxLH)
             {
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             }
 
             var auxUD = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length, numSteered)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
                             .ToList();
             foreach (var entry in auxUD)
             {

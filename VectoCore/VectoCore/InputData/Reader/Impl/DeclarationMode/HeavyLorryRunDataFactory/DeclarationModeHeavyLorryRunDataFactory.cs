@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					vehicle.Components.AuxiliaryInputData,
 					vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, vehicle.Length,
-					vehicle.Components.AxleWheels.NumSteeredAxles);
+					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
 				simulationRunData.Retarder = _retarderData;
 				simulationRunData.DriverData = _driverdata;

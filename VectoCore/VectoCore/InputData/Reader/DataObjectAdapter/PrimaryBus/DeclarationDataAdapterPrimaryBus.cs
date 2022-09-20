@@ -93,11 +93,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
 			}
 
-			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles)
+			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
 			{
 				return _auxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
-					numSteeredAxles);
+					numSteeredAxles, jobType);
 			}
 
 

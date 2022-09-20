@@ -430,7 +430,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var container = new VehicleContainer(data.ExecutionMode, modData, _sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
@@ -557,7 +557,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
 				: new SerialHybridStrategy(data, container);
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
@@ -692,9 +692,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new BatteryElectricMotorController(container, es);
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
+
 
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
@@ -763,6 +764,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
+			} else {
+				var dcdc = new DCDCConverter(container, 1);
+				es.Connect(dcdc);
+				dcdc.Connect(new ElectricAuxiliaries(container));
 			}
 
 			return container;
@@ -884,7 +889,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new BatteryElectricMotorController(container, es);
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
@@ -977,7 +982,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var idleController = engine.IdleController;
 			ctl.Engine = engine;
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
@@ -1102,7 +1107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public static void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 			es.Connect(new GensetChargerAdapter(null));
@@ -1187,7 +1192,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public static void BuildSimpleIEPCHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 			es.Connect(new GensetChargerAdapter(null));
@@ -1257,7 +1262,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public static void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 
@@ -1348,7 +1353,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public static void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
 			es.Connect(new SimpleCharger());

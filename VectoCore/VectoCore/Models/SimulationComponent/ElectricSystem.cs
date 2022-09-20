@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, 
+	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnector, 
 		IElectricChargerConnector, IBatteryConnector, IUpdateable
 	{
 

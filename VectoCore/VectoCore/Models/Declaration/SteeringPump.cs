@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -72,6 +73,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return power.UnloadedFriction + power.Banking + power.Steering;
 		}
 
+		public bool IsApplicable(IEnumerable<string> technologies, VectoSimulationJobType jobType)
+		{
+			foreach (var technology in technologies) {
+				if (!_techLookup.IsApplicable(jobType, technology)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		private sealed class SteeringPumpBaseLine : LookupData<MissionType, VehicleClass, SteeringPumpValues<Watt>>
 		{
 			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Table.csv";
@@ -95,8 +106,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>
+		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>, IDeclarationAuxiliaryArchitectureTable
 		{
+			private readonly IDeclarationAuxiliaryArchitectureTable _declarationAuxiliaryArchitectureTableImplementation = new SteeringPumpArchitectureTable();
 			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv";
 
 			protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for SteeringPump Technology. Key: '{0}'";
@@ -129,6 +141,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				return Data.Keys.Distinct().ToArray();
 			}
+
+			#region Implementation of IDeclarationAuxiliaryArchitectureTable
+
+			public bool IsApplicable(VectoSimulationJobType simType, string technology)
+			{
+				return _declarationAuxiliaryArchitectureTableImplementation.IsApplicable(simType, technology);
+			}
+
+			private class SteeringPumpArchitectureTable : AbstractAuxiliaryVehicleArchitectureLookup
+			{
+				#region Overrides of LookupData
+
+				protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv";
+
+				#endregion
+			}
+
+
+			#endregion
 		}
 
 		private sealed class SteeringPumpAxles : LookupData<MissionType, int, SteeringPumpValues<double>>

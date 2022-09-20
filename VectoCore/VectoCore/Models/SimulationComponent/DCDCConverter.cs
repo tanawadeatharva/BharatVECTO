@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -25,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			PreviousState.ConsumedEnergy = 0.SI<WattSecond>();
 			CurrentState.ConsumedEnergy = 0.SI<WattSecond>();
-
+			_electricConsumers.ForEach(aux => aux.Initialize());
 			return 0.SI<Watt>();
 		}
 
@@ -34,6 +36,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
 			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
 			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency;
+
+			PreviousState.ConsumedEnergy += _electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)) * dt;
+			
+
 			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
 				return PreviousState.ConsumedEnergy / dt * efficiency;
 			}
@@ -102,6 +108,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			}
 			return false;
 		}
+		#endregion
+
+		#region Implementation of IElectricAuxConnector
+
+		private List<IElectricAuxPort> _electricConsumers = new List<IElectricAuxPort>();
+
+		public void Connect(IElectricAuxPort aux)
+		{
+			_electricConsumers.Add(aux);
+		}
+
 		#endregion
 	}
 }

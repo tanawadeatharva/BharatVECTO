@@ -29,10 +29,19 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.InputData;
+
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public interface IDeclarationAuxiliaryTable
 	{
 		string[] GetTechnologies();
+
+
+	}
+
+	public interface IDeclarationAuxiliaryArchitectureTable
+	{
+		bool IsApplicable(VectoSimulationJobType simType, string technology);
 	}
 }

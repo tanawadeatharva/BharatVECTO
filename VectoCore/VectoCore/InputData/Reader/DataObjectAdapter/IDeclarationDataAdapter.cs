@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 		
 		
 		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
 		AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment);
 	}
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
 
 		AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData);
 
@@ -172,7 +172,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		RetarderData CreateRetarderData(IRetarderInputData retarderData);
 
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
-		IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxInput, MissionType mission, VehicleClass segment, Meter vehicleLength, int? numSteeredAxles);
+		IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
+			IBusAuxiliariesDeclarationData busAuxInput, MissionType mission, VehicleClass segment, Meter vehicleLength,
+			int? numSteeredAxles, VectoSimulationJobType jobType);
 		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData simulationRunData);
 
 		VehicleData CreateVehicleData(ISingleBusInputDataProvider vehicle, Segment segment, Mission mission,
