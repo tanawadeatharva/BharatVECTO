@@ -57,37 +57,35 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		{
 			var vNominal = GetNominalVoltage(battery.VoltageCurve);
 			var resistance = 0.0;
-			if (battery.BatteryType == BatteryType.HEBS)
-				resistance = GetHEBSResistance(battery.Capacity.AsAmpHour, vNominal);
-			else if (battery.BatteryType == BatteryType.HPBS)
-				resistance = GetHPBSResistance(battery.Capacity.AsAmpHour, vNominal);
 
-			var columnNumber = battery.InternalResistanceCurve.Columns.Count;
-			return BatteryInternalResistanceReader.Create(GetGenericResistanceDataTable(columnNumber, resistance), true);
+			if (battery.BatteryType == BatteryType.HPBS)
+				resistance = GetHPBSResistance(battery.Capacity.AsAmpHour, vNominal);
+			else if (battery.BatteryType == BatteryType.HEBS)
+				resistance = GetHEBSResistance(battery.Capacity.AsAmpHour, vNominal);
+
+			return BatteryInternalResistanceReader.Create(GetGenericResistanceDataTable(battery.BatteryType, resistance), true);
 		}
 
-		private DataTable GetGenericResistanceDataTable(int columnNumber, double resistance)
+		private DataTable GetGenericResistanceDataTable(BatteryType batteryType, double resistance)
 		{
 			var result = new DataTable();
+			result.Columns.Add(BatteryInternalResistanceReader.Fields.StateOfCharge);
+			result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_2);
+			result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_10);
+			result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_20);
+			
+			if (batteryType == BatteryType.HEBS)
+				result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_120);
 
 			for (int r = 0; r < 2; r++) {
-				if (r == 0) {
-					result.Columns.Add(BatteryInternalResistanceReader.Fields.StateOfCharge);
-					result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_2);
-					result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_10);
-					result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_20);
-					if (columnNumber == 5) 
-						result.Columns.Add(BatteryInternalResistanceReader.Fields.InternalResistance_120);
-				}
 
 				var soc = r == 0 ? 0 : 100;
-
 				result.Rows.Add(result.NewRow());
 				result.Rows[r][BatteryInternalResistanceReader.Fields.StateOfCharge] = soc;
 				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_2] = resistance;
 				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_10] = resistance;
 				result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_20] = resistance;
-				if (columnNumber == 5)
+				if (batteryType == BatteryType.HEBS)
 					result.Rows[r][BatteryInternalResistanceReader.Fields.InternalResistance_120] = resistance;
 			}
 			
