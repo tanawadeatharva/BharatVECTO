@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"  xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
-	<v2.0:Vehicle xsi:type="Vehicle_PEV_HeavyLorryDeclarationType" id="a">
+	<v2.0:Vehicle xsi:type="Vehicle_PEV_HeavyLorryDeclarationType" id="PEV_E3_HeavyLorry">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
@@ -25,15 +25,15 @@
 		<ADAS xsi:type="ADAS_PEV_Type">
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
-		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
-			<!-- optional -->
-			<!-- should be ignored in this case -->
+		<!--<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
+			--><!-- optional --><!--
+			--><!-- should be ignored in this case --><!--
 			<ElectricMachine>
 				<Position>2</Position>
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
-						<v2.3:Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
+						<v2.3:Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-200.00"/>
 						<v2.3:Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
 					</MaxTorqueCurve>
 				</VoltageLevel>
@@ -45,7 +45,7 @@
 					</MaxTorqueCurve>
 				</VoltageLevel>
 			</ElectricMachine>
-		</ElectricMotorTorqueLimits>
+		</ElectricMotorTorqueLimits>-->
 		<Components xsi:type="Components_PEV-E3_LorryType">
 			<ElectricMachine>
 				<PowertrainPosition>3</PowertrainPosition>
@@ -65,11 +65,11 @@
 						<IHPCType>None</IHPCType>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
-							<ContinuousTorque>143.24</ContinuousTorque>
-							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-							<OverloadTorque>153.24</OverloadTorque>
+							<ContinuousTorque>350.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2400.00</TestSpeedContinuousTorque>
+							<OverloadTorque>470.00</OverloadTorque>
 							<TestSpeedOverloadTorque>2500.00</TestSpeedOverloadTorque>
-							<OverloadDuration>30.00</OverloadDuration>
+							<OverloadDuration>120.00</OverloadDuration>
 							<MaxTorqueCurve>
 <Entry outShaftSpeed="0.00" maxTorque="485.00" minTorque="-485.00"/>
 <Entry outShaftSpeed="2461.16" maxTorque="485.00" minTorque="-485.00"/>
@@ -2165,11 +2165,11 @@
 						</VoltageLevel>
 						<VoltageLevel>
 							<Voltage>600</Voltage>
-							<ContinuousTorque>143.24</ContinuousTorque>
-							<TestSpeedContinuousTorque>2000.00</TestSpeedContinuousTorque>
-							<OverloadTorque>153.24</OverloadTorque>
+							<ContinuousTorque>350.00</ContinuousTorque>
+							<TestSpeedContinuousTorque>2400.00</TestSpeedContinuousTorque>
+							<OverloadTorque>470.00</OverloadTorque>
 							<TestSpeedOverloadTorque>2500.00</TestSpeedOverloadTorque>
-							<OverloadDuration>30.00</OverloadDuration>
+							<OverloadDuration>120.00</OverloadDuration>
 							<MaxTorqueCurve>
 								<Entry outShaftSpeed="0.00" maxTorque="485.00" minTorque="-485.00"/>
 								<Entry outShaftSpeed="2461.16" maxTorque="485.00" minTorque="-485.00"/>
@@ -4308,7 +4308,7 @@
 				</P2.5GearRatios> -->
 			</ElectricMachine>
 			<ElectricEnergyStorage>
-				<Battery>
+				<!--<Battery>
 					<StringID>0</StringID>
 					<REESS>
 						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
@@ -4349,9 +4349,9 @@
 					</REESS>
 					<SOCmin>20</SOCmin>
 					<SOCmax>80</SOCmax>
-				</Battery>
+				</Battery>-->
 				<Battery>
-					<StringID>1</StringID>
+					<StringID>0</StringID>
 					<REESS>
 						<v2.4:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
 							<Manufacturer>a</Manufacturer>
@@ -4361,21 +4361,21 @@
 							<AppVersion>aaaaa</AppVersion>
 							<CertificationMethod>Measured</CertificationMethod>
 							<BatteryType>HPBS</BatteryType>
-							<RatedCapacity>72.00</RatedCapacity>
+							<RatedCapacity>324.00</RatedCapacity>
 							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
 							<JunctionboxIncluded>true</JunctionboxIncluded>
 							<TestingTemperature>20</TestingTemperature>
 							<OCV>
-								<Entry SoC="0" OCV="620.00"/>
-								<Entry SoC="100" OCV="640.00"/>
+								<Entry SoC="0" OCV="673.50"/>
+								<Entry SoC="100" OCV="750.20"/>
 							</OCV>
 							<InternalResistance>
 								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
 								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
 							</InternalResistance>
 							<CurrentLimits>
-								<Entry SoC="0" maxChargingCurrent="50.00" maxDischargingCurrent="0.00"/>
-								<Entry SoC="100" maxChargingCurrent="0.00" maxDischargingCurrent="50.00"/>
+								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
 							</CurrentLimits>
 						</v2.4:Data>
 						<Signature>
