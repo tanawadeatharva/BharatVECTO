@@ -296,14 +296,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond AccelerationAverage(this IModalDataContainer data)
 		{
+			if (data.Duration == 0.SI<Second>()) {
+				return null;
+			}
 			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration;
 		}
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)
 		{
 			var altitudes = data.GetValues<Meter>(ModalResultField.altitude).ToList();
-			var first = altitudes.First();
-			var last = altitudes.Last();
+			var first = altitudes.FirstOrDefault();
+			var last = altitudes.LastOrDefault();
 			return first == null || last == null ? null : last - first;
 		}
 
@@ -665,6 +668,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Scalar CoastingTimeShare(this IModalDataContainer data)
 		{
+			if (data.Duration == 0.SI<Second>()) {
+				return null;
+			}
 			var sum = data.GetValues(x => new {
 				DrivingBehavior = x.Field<DrivingBehavior>(ModalResultField.drivingBehavior.GetName()),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())

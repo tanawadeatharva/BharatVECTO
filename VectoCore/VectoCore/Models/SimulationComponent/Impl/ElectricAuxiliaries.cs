@@ -1,35 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 
-
-	public class ElectricAuxiliaries : IElectricAuxPort
+	/// <summary>
+	/// Container Class for Auxiliaries which are connected to the DCDC system.
+	/// </summary>
+	public class ElectricAuxiliaries : VectoSimulationComponent, IElectricAuxPort
 	{
 		private IEnumerable<VectoRunData.AuxData> _auxData;
 
 		#region Implementation of IElectricAuxPort
 
 
-		public ElectricAuxiliaries(IVehicleContainer container)
+		public ElectricAuxiliaries(IVehicleContainer container) : base(container)// : base(container)
 		{
 			
-			DataBus = container;
+			VehicleContainer = container;
 
 		}
 
-		private IVehicleContainer DataBus { get; set; }
+		private IVehicleContainer VehicleContainer { get; set; }
 
 		public Watt Initialize()
 		{
-			_auxData = DataBus.RunData.Aux.Where(aux => aux.MissionType == DataBus.RunData.Mission.MissionType);
+			
+			_auxData = VehicleContainer.RunData.Aux.Where(aux => aux.MissionType == VehicleContainer.RunData.Mission.MissionType && aux.IsFullyElectric);
 			foreach (var auxData in _auxData) {
 				//auxData.
 			}
@@ -39,17 +46,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			var left = DataBus.DrivingCycleInfo.CycleData.LeftSample;
+			var left = VehicleContainer.DrivingCycleInfo.CycleData.LeftSample;
 			var sum = 0.SI<Watt>();
 			foreach (var auxData in _auxData) {
 				if (auxData.DemandType == AuxiliaryDemandType.Constant) {
-					sum += auxData.PowerDemand;
+					sum += auxData.PowerDemandMech;
 				} else {
-					sum += auxData.PowerDemandFunc(left);
+					sum += auxData.PowerDemandMechFunc(left);
+					throw new NotImplementedException("only constant electric auxiliaries implemented");
 				}
 			}
 
 			return sum;
+		}
+
+		#endregion
+
+		#region Overrides of VectoSimulationComponent
+
+		//protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		//{
+		//	return;
+		//}
+
+		//protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		//{
+		//	return;
+		//}
+
+		#endregion
+
+		#region Overrides of VectoSimulationComponent
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+            //foreach (var aux in _auxData)
+            //{
+            //    container[aux.ID] = aux.PowerDemand;
+            //}
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			
 		}
 
 		#endregion

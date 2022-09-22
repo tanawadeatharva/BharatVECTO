@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -18,6 +19,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			Efficiency = efficiency;
 			PreviousState.ConsumedEnergy = 0.SI<WattSecond>();
+			CurrentState.ConsumedEnergy = 0.SI<WattSecond>();
+			PreviousState.stateCount = 0;
+			CurrentState.stateCount = 1;
 		}
 
 
@@ -33,15 +37,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
+			
 			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
 			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
 			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency;
 
-			PreviousState.ConsumedEnergy += _electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)) * dt;
 			
+			
+
+			if (!dryRun) {
+				CurrentState.ConsumedEnergy += _electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0) * dt;
+			}
 
 			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
 				return PreviousState.ConsumedEnergy / dt * efficiency;
+			
 			}
 
 			// write in mod-file for post-processing correction
@@ -63,39 +73,61 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			if (CurrentState.MissingEnergy.IsEqual(0)) {
 				container[ModalResultField.P_DCDC_In] =
 					PreviousState.ConsumedEnergy / simulationInterval / Efficiency;
+					
 				container[ModalResultField.P_DCDC_Out] =
 					PreviousState.ConsumedEnergy / simulationInterval;
-				container[ModalResultField.P_DCDC_missing] = 0.SI<Watt>();
+				
+
 			} else {
 				container[ModalResultField.P_DCDC_In] = 0.SI<Watt>();
 				container[ModalResultField.P_DCDC_Out] = 0.SI<Watt>();
 				container[ModalResultField.P_DCDC_missing] = CurrentState.MissingEnergy / simulationInterval;
+
 			}
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
+			var prevState = CurrentState.stateCount;
 			AdvanceState();
+			CurrentState.stateCount = ++prevState;
 		}
 
 		#endregion
 
 		public void ConsumerEnergy(WattSecond electricConsumerEnergy, bool dryRun)
 		{
-			if (!dryRun) {
-				CurrentState.ConsumedEnergy = electricConsumerEnergy;
-			}
-		}
+            if (!dryRun)
+            {
+                CurrentState.ConsumedEnergy += electricConsumerEnergy;
+            }
+        }
 
 		public class State
 		{
 			public State()
 			{
 				MissingEnergy = 0.SI<WattSecond>();
+				ConsumedEnergy = 0.SI<WattSecond>();
+				simInterval = 0.SI<Second>();
 			}
 
-			public WattSecond ConsumedEnergy { get; set; }
+			public WattSecond ConsumedEnergy
+			{
+				get; 
+				set;
+			}
+
 			public WattSecond MissingEnergy { get; set; }
+
+			//Debug
+			public ulong stateCount { get; set; }
+
+			public Second simInterval { get;set; }
+			
+
+
+			//
 			
 			public State Clone() => (State)MemberwiseClone();
 		}

@@ -27,15 +27,19 @@ public class HeavyLorrySimulation
 	}
 
 	[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
+	TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
+	TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml", false),
+	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
+	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
-	public void HeavyLorrySimulationTest(string jobFile)
+	public void HeavyLorrySimulationTest(string jobFile, bool multiThreaded = true)
 	{
-		RunSimulation(jobFile);
+		RunSimulation(jobFile, multiThreaded);
 	}
 
 
-	public void RunSimulation(string jobFile)
+	public void RunSimulation(string jobFile, bool multiThreaded = true)
 	{
 		var filePath = Path.Combine(BASE_DIR, jobFile);
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
@@ -44,7 +48,7 @@ public class HeavyLorrySimulation
 		var jobContainer = new JobContainer(new MockSumWriter()) { };
 		jobContainer.AddRuns(runsFactory);
 		PrintRuns(jobContainer);
-		jobContainer.Execute(false);
+		jobContainer.Execute(multiThreaded);
 		jobContainer.WaitFinished();
 		PrintRuns(jobContainer);
 

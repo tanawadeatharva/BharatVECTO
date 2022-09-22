@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 		public bool IsApplicable(VectoSimulationJobType simType, string technology)
 		{
 			if (!GetTechnologies().Contains(technology)) {
-				throw new VectoException($"Auxiliary Lookup Error: Unknown technology: '{technology}'");
+				throw new VectoException($"Auxiliary Lookup Error: Unknown technology: '{technology}' valid technologies are '{string.Join(",", GetTechnologies())}'");
 			}
 
 			if (!ArchitectureNameMapping.ContainsKey(simType)) {

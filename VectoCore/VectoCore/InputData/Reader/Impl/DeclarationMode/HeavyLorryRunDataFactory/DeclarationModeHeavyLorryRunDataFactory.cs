@@ -392,11 +392,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				}
 
-
-
-
-				result.Aux = new List<VectoRunData.AuxData>(); //TODO: Remove
-
+				result.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null,
+					mission.MissionType, _segment.VehicleClass, vehicle.Length,
+					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
 
 

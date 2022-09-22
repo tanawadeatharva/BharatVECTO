@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     DemandType = AuxiliaryDemandType.Constant,
                     Technology = JobInputData.Vehicle.Components.BusAuxiliaries.SteeringPumpTechnology,
                     ID = Constants.Auxiliaries.IDs.SteeringPump,
-                    PowerDemand = spPowerDemand
+                    PowerDemandMech = spPowerDemand
                 });
 
             retVal.Add(
@@ -146,14 +146,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     DemandType = AuxiliaryDemandType.Constant,
                     Technology = new List<string>() { "default" },
                     ID = Constants.Auxiliaries.IDs.ElectricSystem,
-                    PowerDemand = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
+                    PowerDemandMech = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
                 });
             retVal.Add(new VectoRunData.AuxData()
             {
                 DemandType = AuxiliaryDemandType.Constant,
                 Technology = new List<string>() { "default" },
                 ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
-                PowerDemand = 350.SI<Watt>()
+                PowerDemandMech = 350.SI<Watt>()
             });
 
             var busAux = vehicle.Components.BusAuxiliaries;
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { busAux.PneumaticSupply.CompressorSize + " / " + busAux.PneumaticSupply.Clutch },
                 ID = Constants.Auxiliaries.IDs.PneumaticSystem,
-                PowerDemandFunc = cycleEntry =>
+                PowerDemandMechFunc = cycleEntry =>
                 {
                     var cmp = psCompressor.Interpolate(cycleEntry.EngineSpeed * busAux.PneumaticSupply.Ratio);
                     return cycleEntry.VTPPSCompressorActive ? cmp.PowerOn : cmp.PowerOff;
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { "default" },
                 ID = Constants.Auxiliaries.IDs.Fan,
-                PowerDemandFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
+                PowerDemandMechFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
             });
 
             return retVal;

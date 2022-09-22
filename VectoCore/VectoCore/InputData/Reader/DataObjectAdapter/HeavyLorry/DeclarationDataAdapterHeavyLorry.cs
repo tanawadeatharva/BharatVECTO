@@ -310,6 +310,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
+
+			private readonly HeavyLorryPEVAuxiliaryDataAdapter
+				_auxDataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
@@ -327,7 +330,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
 				VectoSimulationJobType jobType)
 			{
-				throw new NotImplementedException();
+				return _auxDataAdapter.CreateAuxiliaryData(auxData, null, missionType, vehicleClass, vehicleLength, numSteeredAxles,
+					jobType);
 			}
 
 			public override IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,

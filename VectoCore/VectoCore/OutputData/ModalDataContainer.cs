@@ -546,6 +546,10 @@ namespace TUGraz.VectoCore.OutputData
 			if (time.Count == 1) {
 				return time.First();
 			}
+
+			if (time.Count == 0) {
+				return 0.SI<Second>();
+			}
 			return time.Last() - time.First() + dt.First() / 2 + dt.Last() / 2;
 		}
 
@@ -561,7 +565,7 @@ namespace TUGraz.VectoCore.OutputData
 					vact = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
 					acc = r.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()),
 					dt = r.Field<Second>(ModalResultField.simulationInterval.GetName())
-				}).First();
+				}).FirstOrDefault();
 			var min = 0.SI<Meter>();
 			if (first != null && first.vact != null && first.acc != null && first.dt != null) {
 				min = first.dist - first.vact * first.dt - first.acc * first.dt * first.dt / 2.0;
@@ -710,6 +714,11 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_DCDC_In,
 					ModalResultField.P_DCDC_Out,
 					ModalResultField.P_DCDC_missing,
+
+					//ModalResultField.SimIntervalCurrent_,
+					//ModalResultField.SimIntervalPrev_,
+					//ModalResultField.DCDCStateCount_,
+
 					// TC Operating point
 					ModalResultField.TorqueConverterSpeedRatio,
 					ModalResultField.TorqueConverterTorqueRatio,

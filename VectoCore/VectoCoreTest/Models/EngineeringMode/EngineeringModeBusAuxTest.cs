@@ -936,7 +936,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
@@ -955,9 +955,9 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 			var fanDemand = pwrICEOn - pwrICEOffDriving;
 
 			var auxList = new List<VectoRunData.AuxData>() {
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemand = baseDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemand = stpDemand},
-				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemand = fanDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_BASE, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = baseDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = stpDemand},
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, DemandType = AuxiliaryDemandType.Constant, PowerDemandMech = fanDemand},
 			};
 
 			return auxList;

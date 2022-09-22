@@ -30,10 +30,10 @@ Large Supply + mech. clutch + AMS          ,           1 ,    1 ,    1 ,  0 ,   
 Vacuum pump                                ,           1 ,    1 ,    1 ,  0 ,             0 ,      190 ,              160 ,            130 ,              130 ,         130
 Small + elec. driven                       ,           1 ,    1 ,    1 ,  1 ,             1 ,     1071 ,             1071 ,           1161 ,             1161 ,        1071
 Small + elec. driven + AMS                 ,           1 ,    1 ,    1 ,  1 ,             1 ,      357 ,              357 ,            625 ,              625 ,         357
-Medium supply 1 stage + elec. driven       ,           1 ,    1 ,    1 ,  1 ,             1 ,     1071 ,              982 ,            982 ,              982 ,        1071
-Medium supply 1 stage + elec. driven + AMS ,           1 ,    1 ,    1 ,  1 ,             1 ,      357 ,              625 ,            625 ,              625 ,         357
-Medium supply 2 stage + elec. driven       ,           1 ,    1 ,    1 ,  1 ,             1 ,     1250 ,             1161 ,           1071 ,             1071 ,        1429
-Medium supply 2 stage + elec. driven + AMS ,           1 ,    1 ,    1 ,  1 ,             1 ,      536 ,              804 ,            714 ,              714 ,         536
-Large supply + elec. driven                ,           1 ,    1 ,    1 ,  1 ,             1 ,     1429 ,             1429 ,           1250 ,             1250 ,        1607
-Large supply + elec. driven + AMS          ,           1 ,    1 ,    1 ,  1 ,             1 ,      536 ,              893 ,            893 ,              893 ,         714
+Medium Supply 1-stage + elec. driven       ,           1 ,    1 ,    1 ,  1 ,             1 ,     1071 ,              982 ,            982 ,              982 ,        1071
+Medium Supply 1-stage + elec. driven + AMS ,           1 ,    1 ,    1 ,  1 ,             1 ,      357 ,              625 ,            625 ,              625 ,         357
+Medium Supply 2-stage + elec. driven       ,           1 ,    1 ,    1 ,  1 ,             1 ,     1250 ,             1161 ,           1071 ,             1071 ,        1429
+Medium Supply 2-stage + elec. driven + AMS ,           1 ,    1 ,    1 ,  1 ,             1 ,      536 ,              804 ,            714 ,              714 ,         536
+Large Supply + elec. driven                ,           1 ,    1 ,    1 ,  1 ,             1 ,     1429 ,             1429 ,           1250 ,             1250 ,        1607
+Large Supply + elec. driven + AMS          ,           1 ,    1 ,    1 ,  1 ,             1 ,      536 ,              893 ,            893 ,              893 ,         714
 Vacuum pump + elec. driven                 ,           1 ,    1 ,    1 ,  1 ,             1 ,      339 ,              286 ,            232 ,              232 ,         232

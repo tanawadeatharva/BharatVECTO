@@ -414,6 +414,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 
+		//[ModalResultField(typeof(ulong), caption: "debug_dcdc_state")] DCDCStateCount_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_current")] SimIntervalCurrent_,
+		//[ModalResultField(typeof(SI), caption: "sim_interval_prev")] SimIntervalPrev_,
+
+
+
 
 		// only for graphDrawing Testcase
 		[ModalResultField(typeof(SI), caption: "P_P1_mech [kW]", outputFactor: 1e-3)]

@@ -135,6 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				{
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = auxData.Technology,
+					MissionType = mission,
 				};
 
 				mission = mission.GetNonEMSMissionType();
@@ -160,14 +161,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				
 			}
 
+			
+
 			return retVal;
 		}
 
 		private static void AddElectricSystem(MissionType mission, VectoRunData.AuxData aux,
 			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
 		{
-			aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+			auxDataList.Add(aux);
 		}
 
 		private static void AddPneumaticSystem(MissionType mission, VectoSimulationJobType jobType,
@@ -179,18 +183,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					$"Pneumatic system technology'{auxData.Technology.FirstOrDefault()}' is not applicable for '{jobType}'");
 			}
 
-			aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault())
+			aux.PowerDemandMech = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault())
 				.PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
+			aux.IsFullyElectric = DeclarationData.PneumaticSystem.IsFullyElectric(auxData.Technology.FirstOrDefault());
+			auxDataList.Add(aux);
 		}
 
 		private static void AddHVAC(MissionType mission, VehicleClass hdvClass, VectoRunData.AuxData aux,
 			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
 		{
-			aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(
+			aux.PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(
 				mission,
 				auxData.Technology.FirstOrDefault(), hdvClass).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
+			auxDataList.Add(aux);
 			return;
 		}
 
@@ -218,9 +225,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = auxData.Technology.Where(tech => !DeclarationData.SteeringPump.IsFullyElectric(tech))
 						.ToList(),
-					IsFullyElectric = true,
+					IsFullyElectric = false,
 					ID = Constants.Auxiliaries.IDs.SteeringPump,
-					PowerDemand = powerDemand.mech,
+					PowerDemandMech = powerDemand.mech,
+					MissionType = mission,
 				};
 
 				auxDataList.Add(spMech);
@@ -234,7 +242,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						.ToList(),
 					IsFullyElectric = true,
 					ID = Constants.Auxiliaries.IDs.SteeringPump_el,
-					PowerDemand = powerDemand.electric
+					PowerDemandMech = powerDemand.electric,
+					MissionType = mission,
 				};
 
 				auxDataList.Add(spElectric);
@@ -254,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 
-			aux.PowerDemand = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
+			aux.PowerDemandMech = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
 			aux.ID = Constants.Auxiliaries.IDs.Fan;
 			aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
 
@@ -670,7 +679,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemand = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
+					PowerDemandMech = DeclarationData.Fan.LookupMechanicalPowerDemand(hdvClass, mission, busAuxData.FanTechnology)
 				});
 			retVal.Add(
 				new VectoRunData.AuxData()
@@ -678,7 +687,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = busAuxData.SteeringPumpTechnology,
 					ID = Constants.Auxiliaries.IDs.SteeringPump,
-					PowerDemand = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(
+					PowerDemandMech = DeclarationData.SteeringPumpBus.LookupMechanicalPowerDemand(
 						mission, busAuxData.SteeringPumpTechnology, vehicleLength)
 				});
 			return retVal;

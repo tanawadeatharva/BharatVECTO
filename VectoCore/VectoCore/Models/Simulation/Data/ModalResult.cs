@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -319,7 +320,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public static readonly ModalResultField[] DCDCConverterSignals = {
 			ModalResultField.P_DCDC_In,
 			ModalResultField.P_DCDC_Out,
-			ModalResultField.P_DCDC_missing
+			ModalResultField.P_DCDC_missing,
+
+			//Debug
+			ModalResultField.DCDCStateCount_,
+			ModalResultField.SimIntervalCurrent_,
+			ModalResultField.SimIntervalPrev_
 		};
 
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
@@ -407,7 +413,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
 					break;
+				case ElectricAuxiliaries elAux:
+					CreateElectricAuxColumns(elAux);
+					break;
 			}
+		}
+
+		private void CreateElectricAuxColumns(ElectricAuxiliaries elAux)
+		{
+			
 		}
 
 		private void CreateBatteryColumns(VectoRunData vectoRunData)

@@ -227,13 +227,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					case AuxiliaryDemandType.Direct:
-						if (auxData.PowerDemandFunc == null) {
+						if (auxData.PowerDemandMechFunc == null) {
 							aux.AddCycle(id);
 						} else {
-							aux.AddCycle(id, auxData.PowerDemandFunc);
+							aux.AddCycle(id, auxData.PowerDemandMechFunc);
 						}
 						break;
 					default:
@@ -765,10 +765,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				es.Connect(dcdc);
 				em.BusAux = busAux;
 			} else {
-				var dcdc = new DCDCConverter(container, 1);
-				es.Connect(dcdc);
+                var dcdc = new DCDCConverter(container, 1);
+                es.Connect(dcdc);
 				dcdc.Connect(new ElectricAuxiliaries(container));
-			}
+				dcdc.Initialize();
+            }
 
 			return container;
 		}
@@ -1451,7 +1452,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					case AuxiliaryDemandType.Direct:
 						aux.AddCycle(id);
@@ -1511,7 +1512,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					case AuxiliaryDemandType.Direct:
 						aux.AddCycle(id);
@@ -1543,14 +1544,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			aux.AddCycle(auxId, entry => {
 				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.HighwaySpeedThreshold) {
-					return motorway.PowerDemand;
+					return motorway.PowerDemandMech;
 				}
 
 				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.RuralSpeedThreshold) {
-					return rural.PowerDemand;
+					return rural.PowerDemandMech;
 				}
 
-				return urban.PowerDemand;
+				return urban.PowerDemandMech;
 			});
 		}
 

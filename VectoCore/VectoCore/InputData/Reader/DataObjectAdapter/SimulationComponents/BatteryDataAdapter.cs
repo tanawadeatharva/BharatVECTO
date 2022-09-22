@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =
-							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, true),
 						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
 					};
 
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private double CalculateInitialSoc(BatterySystemData battery)
 		{
 			var socLimits = battery.GetSocLimits();
-			return (socLimits.MaxSoc - socLimits.MinSoc) / 2;
+			return (socLimits.MaxSoc + socLimits.MinSoc) / 2;
 		}
 
 		public SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData)

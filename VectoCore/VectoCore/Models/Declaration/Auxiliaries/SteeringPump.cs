@@ -55,34 +55,38 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 			var powerEl = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
 			var factorsMech = new SteeringPumpValues<double>(0, 0, 0);
 			var factorsEl = new SteeringPumpValues<double>(0, 0, 0);
-			var i = 0;
+			var axleCount = 0;
 			var numberMech = 0;
 			var numberEl = 0;
 			if (!technologies.Any()) {
 				throw new VectoException("No technology specified for steering pump");
 			}
 			foreach (var technology in technologies) {
-				i++;
 
-					
-				var axles = _axleLookup.Lookup(mission, i);
-				var f = _techLookup.Lookup(technology, mission);
-
-				if (!_techLookup.GetTechnologies().Contains(technology)) {
+				if (!_techLookup.GetTechnologies().Contains(technology))
+				{
 					throw new VectoException($"Steering pump technology '{technology}' not found");
 				}
+				axleCount++;
+
+					
+				var axles = _axleLookup.Lookup(mission, axleCount);
+				var f = _techLookup.Lookup(technology, mission);
+
+				
 				if (_techLookup.IsFullyElectric(technology)) {
 					numberEl++;
+
 					powerEl.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
 					powerEl.Banking += baseLine.Banking * axles.Banking;
 					powerEl.Steering += baseLine.Steering * axles.Steering;
-
 
 					factorsEl.UnloadedFriction += f.UnloadedFriction;
 					factorsEl.Banking += f.Banking;
 					factorsEl.Steering += f.Steering;
 				} else {
 					numberMech++;
+
 					powerMech.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
 					powerMech.Banking += baseLine.Banking * axles.Banking;
 					powerMech.Steering += baseLine.Steering * axles.Steering;
@@ -104,10 +108,9 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 				powerEl.Banking *= factorsEl.Banking / numberEl;
 				powerEl.Steering *= factorsEl.Steering / numberEl;
 			}
-			
-		
 
-			return (powerMech.UnloadedFriction + powerMech.Banking + powerMech.Steering, powerEl.UnloadedFriction + powerEl.Banking + powerEl.Steering);
+			return (powerMech.UnloadedFriction + powerMech.Banking + powerMech.Steering, 
+				powerEl.UnloadedFriction + powerEl.Banking + powerEl.Steering);
 		}
 
 		public bool IsApplicable(IEnumerable<string> technologies, VectoSimulationJobType jobType)

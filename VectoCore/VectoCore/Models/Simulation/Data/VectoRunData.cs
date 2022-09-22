@@ -183,10 +183,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			public IList<string> Technology;
 
-			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandMech;
 
 			[JsonIgnore]
-			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechFunc;
 
 			[Required] public AuxiliaryDemandType DemandType;
 
@@ -195,6 +195,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required] public bool IsFullyElectric;
 
 			public MissionType? MissionType;
+
+			public double AlternatorEfficiency { get; }
+
+
 		}
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory
