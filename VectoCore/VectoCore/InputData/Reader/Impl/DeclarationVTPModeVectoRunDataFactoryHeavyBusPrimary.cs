@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { busAux.PneumaticSupply.CompressorSize + " / " + busAux.PneumaticSupply.Clutch },
                 ID = Constants.Auxiliaries.IDs.PneumaticSystem,
-                PowerDemandMechFunc = cycleEntry =>
+                PowerDemandMechCycleFunc = cycleEntry =>
                 {
                     var cmp = psCompressor.Interpolate(cycleEntry.EngineSpeed * busAux.PneumaticSupply.Ratio);
                     return cycleEntry.VTPPSCompressorActive ? cmp.PowerOn : cmp.PowerOff;
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 DemandType = AuxiliaryDemandType.Direct,
                 Technology = new List<string>() { "default" },
                 ID = Constants.Auxiliaries.IDs.Fan,
-                PowerDemandMechFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
+                PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed)
             });
 
             return retVal;

@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IEnumerable<VectoRunData.AuxData> _auxData;
 
 		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
+		private IDictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
 		#region Implementation of IElectricAuxPort
 
@@ -50,22 +51,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			var left = VehicleContainer.DrivingCycleInfo.CycleData.LeftSample;
+			
 			
 			var sum = 0.SI<Watt>();
-			foreach (var auxData in _auxData) {
-				if (auxData.DemandType == AuxiliaryDemandType.Constant) {
-					sum += auxData.PowerDemandElectric;
-				} else {
-					sum += auxData.PowerDemandMechFunc(left);
-					throw new NotImplementedException("only constant electric auxiliaries implemented");
+			foreach (var aux in _auxData) {
+				var powerDemand = 0.SI<Watt>(); 
+				if (aux.DemandType == AuxiliaryDemandType.Constant) {
+					powerDemand = aux.PowerDemandElectric;
+				} else if(aux.DemandType == AuxiliaryDemandType.Dynamic) {
+					powerDemand = aux.PowerDemandDataBusFunc(DataBus);
 				}
+
+
+				if (!dryRun) {
+					_powerDemands[aux.ID] = powerDemand;
+				}
+
+				sum += powerDemand;
 			}
 
 			return sum;
-
-			//VehicleContainer.EngineInfo.EngineOn
-			VehicleContainer.ElectricMotorInfo(PowertrainPosition.BatteryElectricE3)
 		}
 
 		#endregion
@@ -78,15 +83,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
             foreach (var aux in _auxData)
             {
-				if (aux.DemandType == AuxiliaryDemandType.Constant) {
-					container[_auxColumnName[aux.ID]] = aux.PowerDemandElectric;
-				}
+				
+				container[_auxColumnName[aux.ID]] = _powerDemands[aux.ID];
+				
 			}
-        }
+		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
-			
+			_powerDemands.Clear();
 		}
 
 		#endregion

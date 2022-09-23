@@ -45,6 +45,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -187,7 +188,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandElectric;
 
 			[JsonIgnore]
-			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechFunc;
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
+
+			[JsonIgnore] public Func<IDataBus, Watt> PowerDemandDataBusFunc;
 
 
 

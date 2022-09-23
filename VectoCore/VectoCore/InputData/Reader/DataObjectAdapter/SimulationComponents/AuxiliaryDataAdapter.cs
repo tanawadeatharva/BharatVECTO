@@ -15,6 +15,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -44,8 +45,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	}
 
 
-	
-
 	public abstract class AuxiliaryDataAdapter : ComponentDataAdapterBase, IAuxiliaryDataAdapter
 	{
 		public class ElectricConsumerEntry
@@ -65,8 +64,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			public Ampere Current { get; set; }
 		}
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
-			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-			int? numSteeredAxles, VectoSimulationJobType jobType)
+			IBusAuxiliariesDeclarationData busAuxData, 
+			MissionType mission, 
+			VehicleClass hvdClass, 
+			Meter vehicleLength,
+			int? numSteeredAxles, 
+			VectoSimulationJobType jobType)
 		{
 			CheckDeclarationMode(auxInputData, "AuxiliariesData");
 			return DoCreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength, numSteeredAxles, jobType);
@@ -79,7 +82,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hdvClass, Meter vehicleLength,
 			int? numSteeredAxles, VectoSimulationJobType jobType);
 
-
+		protected static bool CreateConditioningAux(VectoSimulationJobType jobType)
+		{
+			if (jobType == VectoSimulationJobType.ConventionalVehicle) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 	}
 
 	public class HeavyLorryPEVAuxiliaryDataAdapter : HeavyLorryAuxiliaryDataAdapter
@@ -107,6 +117,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			throw new System.NotImplementedException();
 		}
+
+		
 
 		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
@@ -161,13 +173,75 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						break;
 					default: continue;
 				}
-				
 			}
+
+			if (CreateConditioningAux(jobType)) {
+				AddConditioning(mission, jobType, retVal, hdvClass);
+			}
+
 
 			
 
 			return retVal;
 		}
+
+		private static void AddConditioning(MissionType mission, VectoSimulationJobType jobType, List<VectoRunData.AuxData> auxDataList, VehicleClass hdv)
+		{
+
+
+			var aux = new VectoRunData.AuxData()
+			{
+				IsFullyElectric = true,
+				MissionType = mission,
+				DemandType = AuxiliaryDemandType.Dynamic,
+				ID = "Cond"
+			};
+
+
+			Func<IDataBus, Watt> parallelHybridPowerDemand = (dataBus) => {
+				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
+				var iceInfo = dataBus.EngineInfo;
+				var emPower = elInfo.ElectricMotorSpeed * elInfo.ElectricMotorTorque;
+				var icePower = iceInfo.EngineSpeed * iceInfo.EngineTorque;
+
+				var xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
+				return DeclarationData.Conditioning.LookupPowerDemand(hdv, mission) * xFactor;
+			};
+
+			Func<IDataBus, Watt> powerDemandFunc = (dataBus) => {
+				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
+				if (elInfo.EmOff)
+				{
+					return 0.SI<Watt>();
+				}
+				else
+				{
+					return DeclarationData.Conditioning.LookupPowerDemand(hdv, mission);
+				}
+			};
+			
+
+
+			switch (jobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+					throw new VectoException("Should not be created for conventional vehicles");
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					aux.PowerDemandDataBusFunc = powerDemandFunc;
+					break;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+					aux.PowerDemandDataBusFunc = parallelHybridPowerDemand;
+					break;
+				case VectoSimulationJobType.EngineOnlySimulation:
+				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.IHPC:
+				default:
+					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
+			}
+			auxDataList.Add(aux);
+		}
+
 
 		private static void AddElectricSystem(MissionType mission, VectoRunData.AuxData aux,
 			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)

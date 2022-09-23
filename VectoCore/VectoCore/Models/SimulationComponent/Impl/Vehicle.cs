@@ -142,6 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient,
 			bool dryRun = false)
 		{
+
 			Log.Debug("Vehicle: acceleration: {0}", acceleration);
 			CurrentState.SimulationInterval = dt;
 			CurrentState.Acceleration = acceleration;

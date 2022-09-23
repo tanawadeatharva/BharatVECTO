@@ -27,6 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		
 		public bool DeRatingActive { get; protected internal set; }
+		public bool EmOff => PreviousState.EMTorque == null ? true : false;
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
@@ -84,6 +85,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return tqDt;
 
 		}
+
+
+
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -568,6 +572,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public PerSecond ElectricMotorSpeed => PreviousState.EMSpeed;
+		public NewtonMeter ElectricMotorTorque => PreviousState.EMTorque;
 
 		public void Connect(IElectricSystem powersupply)
 		{

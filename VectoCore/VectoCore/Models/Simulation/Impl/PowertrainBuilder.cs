@@ -230,10 +230,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						aux.AddConstant(id, auxData.PowerDemandMech);
 						break;
 					case AuxiliaryDemandType.Direct:
-						if (auxData.PowerDemandMechFunc == null) {
+						if (auxData.PowerDemandMechCycleFunc == null) {
 							aux.AddCycle(id);
 						} else {
-							aux.AddCycle(id, auxData.PowerDemandMechFunc);
+							aux.AddCycle(id, auxData.PowerDemandMechCycleFunc);
 						}
 						break;
 					default:

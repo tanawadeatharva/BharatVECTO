@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
+		public static readonly Conditioning Conditioning = new Conditioning();
 		public static readonly Payloads Payloads = new Payloads();
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
