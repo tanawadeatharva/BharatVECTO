@@ -123,6 +123,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					"In Declaration Mode exactly 4 Auxiliaries must be defined for battery electric vehicles: Steering pump, HVAC, Electric System, Pneumatic System.");
 			}
 
+			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
+
 			foreach (var auxType in AuxiliaryTypes)
 			{
 				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
@@ -142,19 +144,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				switch (auxType)
 				{
 					case AuxiliaryType.Fan:
-						AddFan(mission, hdvClass, jobType, auxData, aux, retVal);
+						AddFan(mission, hdvClass, jobType, auxData, aux, alternatorEfficiency, retVal);
 						break;
 					case AuxiliaryType.SteeringPump:
-						AddSteeringPumps(mission, hdvClass, numSteeredAxles, jobType, auxData, aux, retVal);
+						AddSteeringPumps(mission, hdvClass, numSteeredAxles, jobType, auxData, alternatorEfficiency, aux, retVal);
 						break;
 					case AuxiliaryType.HVAC:
-						AddHVAC(mission, hdvClass, aux, auxData,retVal);
+						AddHVAC(mission, hdvClass, aux, auxData, alternatorEfficiency ,retVal);
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						AddPneumaticSystem(mission, jobType, auxData, aux,retVal);
+						AddPneumaticSystem(mission, jobType, auxData, alternatorEfficiency, aux,retVal);
 						break;
 					case AuxiliaryType.ElectricSystem:
-						AddElectricSystem(mission, aux, auxData, retVal);
+						AddElectricSystem(mission, aux, auxData, alternatorEfficiency, retVal);
 						break;
 					default: continue;
 				}
@@ -167,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		private static void AddElectricSystem(MissionType mission, VectoRunData.AuxData aux,
-			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
+			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)
 		{
 			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
@@ -175,7 +177,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		private static void AddPneumaticSystem(MissionType mission, VectoSimulationJobType jobType,
-			IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux, List<VectoRunData.AuxData> auxDataList)
+			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, VectoRunData.AuxData aux,
+			List<VectoRunData.AuxData> auxDataList)
 		{
 			if (!DeclarationData.PneumaticSystem.IsApplicable(jobType,
 					auxData.Technology.FirstOrDefault())) {
@@ -187,22 +190,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				.PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 			aux.IsFullyElectric = DeclarationData.PneumaticSystem.IsFullyElectric(auxData.Technology.FirstOrDefault());
+			if (aux.IsFullyElectric) {
+				aux.PowerDemandElectric =
+					DeclarationData.PneumaticSystem.GetElectricPowerDemand(mission,
+						auxData.Technology.FirstOrDefault());
+			} else {
+				aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
+			}
 			auxDataList.Add(aux);
 		}
 
 		private static void AddHVAC(MissionType mission, VehicleClass hdvClass, VectoRunData.AuxData aux,
-			IAuxiliaryDeclarationInputData auxData, List<VectoRunData.AuxData> auxDataList)
+			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)
 		{
 			aux.PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(
 				mission,
 				auxData.Technology.FirstOrDefault(), hdvClass).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
+			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency; //TODO: calculate electrical power demand
 			auxDataList.Add(aux);
 			return;
 		}
 
 		private static void AddSteeringPumps(MissionType mission, VehicleClass hdvClass, int? numSteeredAxles,
-			VectoSimulationJobType jobType, IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux,
+			VectoSimulationJobType jobType, IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency,
+			VectoRunData.AuxData aux,
 			List<VectoRunData.AuxData> auxDataList)
 		{
 			
@@ -219,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			
 			var powerDemand = DeclarationData.SteeringPump.Lookup(mission, hdvClass, auxData.Technology);
-			if (powerDemand.mech != 0.SI<Watt>()) {
+			if (powerDemand.mechanicalPumps != 0.SI<Watt>()) {
 				var spMech = new VectoRunData.AuxData
 				{
 					DemandType = AuxiliaryDemandType.Constant,
@@ -227,14 +239,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						.ToList(),
 					IsFullyElectric = false,
 					ID = Constants.Auxiliaries.IDs.SteeringPump,
-					PowerDemandMech = powerDemand.mech,
+					PowerDemandMech = powerDemand.mechanicalPumps,
 					MissionType = mission,
 				};
 
 				auxDataList.Add(spMech);
 			}
 
-			if (powerDemand.electric != 0.SI<Watt>()) {
+			if (powerDemand.electricPumps != 0.SI<Watt>()) {
 				var spElectric = new VectoRunData.AuxData
 				{
 					DemandType = AuxiliaryDemandType.Constant,
@@ -242,7 +254,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						.ToList(),
 					IsFullyElectric = true,
 					ID = Constants.Auxiliaries.IDs.SteeringPump_el,
-					PowerDemandMech = powerDemand.electric,
+					PowerDemandElectric = powerDemand.electricPumps * alternatorEfficiency,
+					PowerDemandMech = powerDemand.electricPumps / alternatorEfficiency, //in case the fully electric pumps are connected to a Conventional vehicle
 					MissionType = mission,
 				};
 
@@ -252,7 +265,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		private static void AddFan(MissionType mission, VehicleClass hdvClass, VectoSimulationJobType jobType,
-			IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux, List<VectoRunData.AuxData> auxDataList)
+			IAuxiliaryDeclarationInputData auxData, VectoRunData.AuxData aux, double alternatorEfficiency,
+			List<VectoRunData.AuxData> auxDataList)
 		{
 			if (!DeclarationData.Fan.IsApplicable(hdvClass, jobType, auxData.Technology.FirstOrDefault())) {
 				throw new VectoException(
@@ -266,7 +280,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			aux.PowerDemandMech = DeclarationData.Fan.LookupPowerDemand(hdvClass, mission, auxData.Technology.FirstOrDefault());
 			aux.ID = Constants.Auxiliaries.IDs.Fan;
 			aux.IsFullyElectric = DeclarationData.Fan.IsFullyElectric(hdvClass, auxData.Technology.FirstOrDefault());
-
+		
+			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency; 
 			auxDataList.Add(aux);
 		}
 

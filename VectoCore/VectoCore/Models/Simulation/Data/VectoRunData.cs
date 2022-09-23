@@ -184,9 +184,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public IList<string> Technology;
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandMech;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandElectric;
 
 			[JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechFunc;
+
+
 
 			[Required] public AuxiliaryDemandType DemandType;
 
@@ -196,7 +199,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			public MissionType? MissionType;
 
-			public double AlternatorEfficiency { get; }
 
 
 		}

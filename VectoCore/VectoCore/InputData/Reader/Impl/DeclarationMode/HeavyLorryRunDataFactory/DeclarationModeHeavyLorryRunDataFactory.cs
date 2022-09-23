@@ -145,14 +145,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return GetNextRun();
 			}
 
-			protected Segment GetSegment(IVehicleDeclarationInputData vehicle)
+			protected Segment GetSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
 			{
 				_allowVocational = true;
 				Segment segment;
 				try
 				{
 					segment = DeclarationData.TruckSegments.Lookup(
-						vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
 						vehicle.CurbMassChassis,
 						vehicle.VocationalVehicle);
 				}
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				{
 					_allowVocational = false;
 					segment = DeclarationData.TruckSegments.Lookup(
-						vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+						vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
 						vehicle.CurbMassChassis,
 						false);
 				}
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void Initialize()
 			{
-				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle);
+				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, true);
 
 			}
 

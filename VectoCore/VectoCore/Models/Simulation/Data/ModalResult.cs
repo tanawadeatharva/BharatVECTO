@@ -322,10 +322,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_DCDC_Out,
 			ModalResultField.P_DCDC_missing,
 
-			//Debug
-			ModalResultField.DCDCStateCount_,
-			ModalResultField.SimIntervalCurrent_,
-			ModalResultField.SimIntervalPrev_
+			////Debug
+			//ModalResultField.DCDCStateCount_,
+			//ModalResultField.SimIntervalCurrent_,
+			//ModalResultField.SimIntervalPrev_
 		};
 
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();

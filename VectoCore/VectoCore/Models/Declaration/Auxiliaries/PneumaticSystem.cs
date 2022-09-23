@@ -39,10 +39,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable, IDeclarationAuxiliaryFullyElectricTable
+	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable, IDeclarationAuxiliaryArchitectureTable, IDeclarationAuxiliaryFullyElectricTable, IDeclarationAuxiliaryElectricPowerTable
 	{
 		private IDeclarationAuxiliaryArchitectureTable _declarationAuxiliaryArchitectureTableImplementation = new PneumaticSystemArchitectureTable();
 		private IDeclarationAuxiliaryFullyElectricTable _declarationAuxiliaryFullyElectricTableImplementation = new PneumaticSystemFullyElectricTable();
+		private IDeclarationAuxiliaryElectricPowerTable _declarationAuxiliaryElectricPowerTableImplementation = new PneumaticSystemElectricPowerTable();
 		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
 
 		protected override string ErrorMessage => "Auxiliary Lookup Error: No value found for Pneumatic System. Mission: '{0}', Technology: '{1}'";
@@ -52,11 +53,17 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 			foreach (DataRow row in table.Rows) {
 				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(table.Columns.IndexOf("fullyelectric") + 1)) {
+					if (col.Caption == "longhaul_el")
+					{
+						break;
+					}
 					if (col.Caption != "technology") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = new AuxDemandEntry() {
 							PowerDemand = row.ParseDouble(col.Caption).SI<Watt>()
 						};
 					}
+
+					
 				}
 			}
 		}
@@ -102,6 +109,57 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 			#region Overrides of LookupData
 
 			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
+
+			#endregion
+		}
+
+		#endregion
+
+
+
+
+		#region Implementation of IDeclarationAuxiliaryElectricPowerTable
+
+		public Watt GetElectricPowerDemand(MissionType mission, string technology)
+		{
+			return _declarationAuxiliaryElectricPowerTableImplementation.GetElectricPowerDemand(mission, technology);
+		}
+
+		private class PneumaticSystemElectricPowerTable : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryElectricPowerTable
+		{
+			#region Overrides of LookupData
+
+			protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv";
+			protected override string ErrorMessage => "Auxiliary Lookup Error: No fully electric value found for Pneumatic System. Mission: '{0}', Technology: '{1}'";
+			protected override void ParseData(DataTable table)
+			{
+				foreach (DataRow row in table.Rows)
+				{
+					
+					var electric = row.ParseBoolean("fullyelectric");
+					if (!electric)
+					{
+						continue;
+					}
+					var technology = row["technology"].ToString();
+					foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(table.Columns.IndexOf("longhaul_el")))
+					{
+						Data[Tuple.Create(col.Caption.Replace("_el", "").ParseEnum<MissionType>(), technology)] = new AuxDemandEntry()
+						{
+							PowerDemand = row.ParseDouble(col.Caption).SI<Watt>()
+						};
+					}
+				}
+			}
+
+			#endregion
+
+			#region Implementation of IDeclarationAuxiliaryElectricPowerTable
+
+			public Watt GetElectricPowerDemand(MissionType mission, string technology)
+			{
+				return Lookup(mission, technology).PowerDemand;
+			}
 
 			#endregion
 		}

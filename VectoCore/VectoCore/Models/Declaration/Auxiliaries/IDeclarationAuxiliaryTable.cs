@@ -30,6 +30,8 @@
 */
 
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 {
@@ -49,5 +51,10 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 	{
 		bool IsFullyElectric(string technology);
 		string[] FullyElectricTechnologies();
+	}
+
+	public interface IDeclarationAuxiliaryElectricPowerTable
+	{
+		Watt GetElectricPowerDemand(MissionType mission, string technology);
 	}
 }

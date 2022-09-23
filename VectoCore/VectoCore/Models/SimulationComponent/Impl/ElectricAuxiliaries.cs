@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
 			var left = VehicleContainer.DrivingCycleInfo.CycleData.LeftSample;
+			
 			var sum = 0.SI<Watt>();
 			foreach (var auxData in _auxData) {
 				if (auxData.DemandType == AuxiliaryDemandType.Constant) {

@@ -47,8 +47,15 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 		private readonly SteeringPumpBaseLine _baseLookup = new SteeringPumpBaseLine();
 		private readonly SteeringPumpAxles _axleLookup = new SteeringPumpAxles();
 		private readonly SteeringPumpTechnologies _techLookup = new SteeringPumpTechnologies();
-
-		public (Watt mech, Watt electric) Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
+		/// <summary>
+		/// Returns the power demand of the steering pumps split into mechanical pumps and electric pumps
+		/// </summary>
+		/// <param name="mission"></param>
+		/// <param name="hdvClass"></param>
+		/// <param name="technologies"></param>
+		/// <returns>Note: The power demand is mechanical also for the electric pumps</returns>
+		/// <exception cref="VectoException"></exception>
+		public (Watt mechanicalPumps, Watt electricPumps) Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
 			var baseLine = _baseLookup.Lookup(mission, hdvClass);
 			var powerMech = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
