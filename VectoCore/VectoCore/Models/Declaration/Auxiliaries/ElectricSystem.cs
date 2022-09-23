@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 				technology = "Standard technology";
 			}
 			var value = base.Lookup(missionType, technology);
-			return new AuxDemandEntry() { PowerDemand = value.PowerDemand / _alternator.Lookup(missionType) };
+			return new AuxDemandEntry() { PowerDemand = value.PowerDemand };
 		}
 
 		internal sealed class Alternator : LookupData<MissionType, string, double>

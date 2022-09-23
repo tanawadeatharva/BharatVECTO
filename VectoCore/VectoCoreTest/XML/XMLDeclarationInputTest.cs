@@ -1110,7 +1110,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Electric driven pump", steeringPump.Technology[1]);
 
 			Assert.AreEqual(
-				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).electric.Value());
+				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).electricPumps.Value());
 		}
 	}
 }

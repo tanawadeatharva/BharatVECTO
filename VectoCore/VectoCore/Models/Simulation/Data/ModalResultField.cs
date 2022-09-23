@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_aux_el [kW]", outputFactor: 1e-3)] P_aux_el,
+		[ModalResultField(typeof(SI), caption: "P_es_consumers [kW]", outputFactor: 1e-3)] P_ES_consumers,
 		
 		/// <summary>
 		/// [g/h] Fuel consumption from FC map..

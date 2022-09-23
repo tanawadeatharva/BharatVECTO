@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
+			
 
 			foreach (var auxType in AuxiliaryTypes)
 			{
@@ -150,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						AddSteeringPumps(mission, hdvClass, numSteeredAxles, jobType, auxData, alternatorEfficiency, aux, retVal);
 						break;
 					case AuxiliaryType.HVAC:
-						AddHVAC(mission, hdvClass, aux, auxData, alternatorEfficiency ,retVal);
+						AddHVAC(mission, hdvClass, aux, auxData, 1/DeclarationData.HVACElectricEfficiencyFactor, retVal);
 						break;
 					case AuxiliaryType.PneumaticSystem:
 						AddPneumaticSystem(mission, jobType, auxData, alternatorEfficiency, aux,retVal);
@@ -173,6 +174,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
 			auxDataList.Add(aux);
 		}
 
@@ -201,13 +203,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		private static void AddHVAC(MissionType mission, VehicleClass hdvClass, VectoRunData.AuxData aux,
-			IAuxiliaryDeclarationInputData auxData, double alternatorEfficiency, List<VectoRunData.AuxData> auxDataList)
+			IAuxiliaryDeclarationInputData auxData, double efficiency, List<VectoRunData.AuxData> auxDataList)
 		{
 			aux.PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(
 				mission,
 				auxData.Technology.FirstOrDefault(), hdvClass).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
-			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency; //TODO: calculate electrical power demand
+			aux.PowerDemandElectric = aux.PowerDemandMech * efficiency;
 			auxDataList.Add(aux);
 			return;
 		}

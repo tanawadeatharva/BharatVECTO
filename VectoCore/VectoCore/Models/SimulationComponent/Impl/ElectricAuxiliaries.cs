@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private IEnumerable<VectoRunData.AuxData> _auxData;
 
+		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
+
 		#region Implementation of IElectricAuxPort
 
 
@@ -36,9 +38,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt Initialize()
 		{
 			
-			_auxData = VehicleContainer.RunData.Aux.Where(aux => aux.MissionType == VehicleContainer.RunData.Mission.MissionType && aux.IsFullyElectric);
+			_auxData = VehicleContainer.RunData.Aux.Where(aux => aux.MissionType == VehicleContainer.RunData.Mission.MissionType);
 			foreach (var auxData in _auxData) {
-				//auxData.
+				var name = $"P_{auxData.ID}_el";
+				_auxColumnName.Add(auxData.ID, name); //use column name as ID
+				VehicleContainer.AddAuxiliary(name, name);
 			}
 
 			return 0.SI<Watt>();
@@ -51,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var sum = 0.SI<Watt>();
 			foreach (var auxData in _auxData) {
 				if (auxData.DemandType == AuxiliaryDemandType.Constant) {
-					sum += auxData.PowerDemandMech;
+					sum += auxData.PowerDemandElectric;
 				} else {
 					sum += auxData.PowerDemandMechFunc(left);
 					throw new NotImplementedException("only constant electric auxiliaries implemented");
@@ -59,33 +63,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return sum;
+
+			//VehicleContainer.EngineInfo.EngineOn
+			VehicleContainer.ElectricMotorInfo(PowertrainPosition.BatteryElectricE3)
 		}
 
 		#endregion
 
-		#region Overrides of VectoSimulationComponent
-
-		//protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
-		//{
-		//	return;
-		//}
-
-		//protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
-		//{
-		//	return;
-		//}
-
-		#endregion
+		
 
 		#region Overrides of VectoSimulationComponent
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-            //foreach (var aux in _auxData)
-            //{
-            //    container[aux.ID] = aux.PowerDemand;
-            //}
-		}
+            foreach (var aux in _auxData)
+            {
+				if (aux.DemandType == AuxiliaryDemandType.Constant) {
+					container[_auxColumnName[aux.ID]] = aux.PowerDemandElectric;
+				}
+			}
+        }
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{

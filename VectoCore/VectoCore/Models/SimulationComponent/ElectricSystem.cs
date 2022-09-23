@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
-			container[ModalResultField.P_aux_el] = CurrentState.AuxPower;
+			container[ModalResultField.P_ES_consumers] = CurrentState.AuxPower;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

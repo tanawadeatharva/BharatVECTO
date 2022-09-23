@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] ElectricSystemSignals = {
-			ModalResultField.P_aux_el,
+			ModalResultField.P_ES_consumers,
 		};
 
 		// ------------------------------------------------------------------------------------

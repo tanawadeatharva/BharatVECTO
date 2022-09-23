@@ -662,7 +662,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_clutch_out,
 					// Aux
 					ModalResultField.P_aux_mech,
-					ModalResultField.P_aux_el,
+					ModalResultField.P_ES_consumers,
 					// Gbx
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_loss,
@@ -831,7 +831,7 @@ namespace TUGraz.VectoCore.OutputData
 			dataColumns.AddRange(
 				new[] {
 					ModalResultField.P_aux_mech,
-					ModalResultField.P_aux_el
+					ModalResultField.P_ES_consumers
 				}.Select(x => x.GetName()));
 
 			if (!writeEngineOnly) {
@@ -1045,6 +1045,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (!string.IsNullOrWhiteSpace(id) && !Auxiliaries.ContainsKey(id)) {
 				var col = Data.Columns.Add(columnName ?? string.Format(ModalResultField.P_aux_.GetCaption(), id), typeof(SI));
+
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					ModalResultField.P_aux_.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
