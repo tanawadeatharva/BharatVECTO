@@ -60,8 +60,8 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 			var baseLine = _baseLookup.Lookup(mission, hdvClass);
 			var powerMech = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
 			var powerEl = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
-			var factorsMech = new SteeringPumpValues<double>(0, 0, 0);
-			var factorsEl = new SteeringPumpValues<double>(0, 0, 0);
+			var factors = new SteeringPumpValues<double>(0, 0, 0);
+			//var factorsEl = new SteeringPumpValues<double>(0, 0, 0);
 			var axleCount = 0;
 			var numberMech = 0;
 			var numberEl = 0;
@@ -80,40 +80,34 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 				var axles = _axleLookup.Lookup(mission, axleCount);
 				var f = _techLookup.Lookup(technology, mission);
 
-				
+				factors.UnloadedFriction += f.UnloadedFriction;
+				factors.Banking += f.Banking;
+				factors.Steering += f.Steering;
 				if (_techLookup.IsFullyElectric(technology)) {
 					numberEl++;
 
 					powerEl.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
 					powerEl.Banking += baseLine.Banking * axles.Banking;
 					powerEl.Steering += baseLine.Steering * axles.Steering;
-
-					factorsEl.UnloadedFriction += f.UnloadedFriction;
-					factorsEl.Banking += f.Banking;
-					factorsEl.Steering += f.Steering;
 				} else {
 					numberMech++;
 
 					powerMech.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
 					powerMech.Banking += baseLine.Banking * axles.Banking;
 					powerMech.Steering += baseLine.Steering * axles.Steering;
-
-					factorsMech.UnloadedFriction += f.UnloadedFriction;
-					factorsMech.Banking += f.Banking;
-					factorsMech.Steering += f.Steering;
 				}
 			}
 
 			if (numberMech > 0) {
-				powerMech.UnloadedFriction *= factorsMech.UnloadedFriction / numberMech;
-				powerMech.Banking *= factorsMech.Banking / numberMech;
-				powerMech.Steering *= factorsMech.Steering / numberMech;
+				powerMech.UnloadedFriction *= factors.UnloadedFriction / axleCount;
+				powerMech.Banking *= factors.Banking / axleCount;
+				powerMech.Steering *= factors.Steering / axleCount;
 			}
 
 			if (numberEl > 0) {
-				powerEl.UnloadedFriction *= factorsEl.UnloadedFriction / numberEl;
-				powerEl.Banking *= factorsEl.Banking / numberEl;
-				powerEl.Steering *= factorsEl.Steering / numberEl;
+				powerEl.UnloadedFriction *= factors.UnloadedFriction / axleCount;
+				powerEl.Banking *= factors.Banking / axleCount;
+				powerEl.Steering *= factors.Steering / axleCount;
 			}
 
 			return (powerMech.UnloadedFriction + powerMech.Banking + powerMech.Steering, 
