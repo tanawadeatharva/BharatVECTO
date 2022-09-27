@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[Required] public AuxiliaryDemandType DemandType;
 
-			[Required] public bool ConnectToDcDc;
+			[Required] public bool ConnectToREESS;
 
 			[Required] public bool IsFullyElectric;
 

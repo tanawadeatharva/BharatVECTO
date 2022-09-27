@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour(), ModalResultField.P_ice_inertia, ModalResultField.P_gbx_inertia)},
 			
 			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_mech)},
-			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_ES_consumers).ConvertToKiloWattHour(), ModalResultField.P_ES_consumers)},
+			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_Aux_el_HV).ConvertToKiloWattHour(), ModalResultField.P_Aux_el_HV)},
 			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour(), ModalResultField.P_clutch_loss)},
 			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour(), ModalResultField.P_TC_loss)},
 			{ E_SHIFT_LOSS, SumFunc((r, m) => m.WorkGearshift().ConvertToKiloWattHour(), ModalResultField.P_gbx_shift_loss)},

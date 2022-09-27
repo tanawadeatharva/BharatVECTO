@@ -662,7 +662,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_clutch_out,
 					// Aux
 					ModalResultField.P_aux_mech,
-					ModalResultField.P_ES_consumers,
+					ModalResultField.P_Aux_el_HV,
 					// Gbx
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_loss,
@@ -831,7 +831,7 @@ namespace TUGraz.VectoCore.OutputData
 			dataColumns.AddRange(
 				new[] {
 					ModalResultField.P_aux_mech,
-					ModalResultField.P_ES_consumers
+					ModalResultField.P_Aux_el_HV
 				}.Select(x => x.GetName()));
 
 			if (!writeEngineOnly) {

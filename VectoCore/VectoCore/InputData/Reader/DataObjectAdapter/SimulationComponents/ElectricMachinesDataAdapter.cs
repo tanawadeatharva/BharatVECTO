@@ -88,7 +88,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					voltageLevels.Add(vLevelData);
 				} catch (Exception ex) {
 					throw new VectoException(
-						$"Could not create Voltage Level data for {entry.VoltageLevel} at position {powertrainPosition}",
+						$"Could not create Voltage Level data for {entry.VoltageLevel} at position {powertrainPosition}!\n" +
+						$"{ex.Message}",
 						ex);
 				}
 			}

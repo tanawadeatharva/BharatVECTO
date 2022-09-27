@@ -102,6 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
 		public const double AlternatorEfficiency = 0.7;
+		public const double DCDCEfficiency = 1.0;
 
 		public const double HVACElectricEfficiencyFactor = 0.8;
 

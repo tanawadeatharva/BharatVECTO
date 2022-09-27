@@ -692,9 +692,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var ctl = new BatteryElectricMotorController(container, es);
 
-			var aux = new HighVoltageElectricAuxiliary(container);
-			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
-			es.Connect(aux);
+			//var aux = new HighVoltageElectricAuxiliary(container);
+			//aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			//es.Connect(aux);
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
@@ -765,9 +765,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				es.Connect(dcdc);
 				em.BusAux = busAux;
 			} else {
-                var dcdc = new DCDCConverter(container, 1);
+				var dcdc = new DCDCConverter(container, DeclarationData.DCDCEfficiency);
+
                 es.Connect(dcdc);
-				dcdc.Connect(new ElectricAuxiliaries(container));
+				var elAux = new ElectricAuxiliaries(container);
+				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS));
+
+				dcdc.Connect(elAux);
 				dcdc.Initialize();
             }
 
@@ -1657,68 +1661,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var shiftStrategyName = GetShiftStrategyName(gearboxType, jobType, isTestPowerTrain);
 			runData.ShiftStrategy = shiftStrategyName;
 			return ShiftStrategy.Create(container, runData.ShiftStrategy);
-
-			switch (gearboxType) {
-				case GearboxType.AMT:
-					switch (jobType) {
-						case VectoSimulationJobType.ConventionalVehicle:
-						case VectoSimulationJobType.ParallelHybridVehicle:
-							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-							return new AMTShiftStrategyOptimized(container);
-						case VectoSimulationJobType.BatteryElectricVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
-							runData.ShiftStrategy = PEVAMTShiftStrategy.Name;
-							return new PEVAMTShiftStrategy(container);
-						default:
-							throw new VectoException(
-								"no default gearshift strategy available for gearbox type {0} and job type {1}",
-								gearboxType, jobType);
-					}
-				case GearboxType.MT:
-					runData.ShiftStrategy = MTShiftStrategy.Name;
-					return new MTShiftStrategy(container);
-
-				case GearboxType.ATPowerSplit:
-				case GearboxType.ATSerial:
-					switch (jobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
-						case VectoSimulationJobType.ConventionalVehicle:
-							runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
-							return new ATShiftStrategyOptimized(container);
-						case VectoSimulationJobType.SerialHybridVehicle:
-						case VectoSimulationJobType.BatteryElectricVehicle:
-							runData.ShiftStrategy = APTNShiftStrategy.Name;
-							return new APTNShiftStrategy(container);
-						default:
-							throw new VectoException(
-								"no default gearshift strategy available for gearbox type {0} and job type {1}",
-								gearboxType, jobType);
-					}
-				case GearboxType.APTN:
-					switch (jobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
-						case VectoSimulationJobType.SerialHybridVehicle:
-						case VectoSimulationJobType.BatteryElectricVehicle:
-						case VectoSimulationJobType.IEPC_E:
-						case VectoSimulationJobType.IEPC_S:
-							runData.ShiftStrategy = APTNShiftStrategy.Name;
-							return new APTNShiftStrategy(container);
-						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
-							return null;
-						default: 
-							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
-					}
-				case GearboxType.IHPC:
-					switch (jobType) {
-						case VectoSimulationJobType.IHPC:
-							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
-							return new AMTShiftStrategyOptimized(container);
-						default:
-							throw new ArgumentException("IHPC Gearbox is only applicable on hybrid vehicle of type IHPC.");
-					}
-				default:
-					throw new ArgumentOutOfRangeException("GearboxType", gearboxType, "VECTO can not automatically derive shift strategy for GearboxType.");
-			}
 		}
 
 		

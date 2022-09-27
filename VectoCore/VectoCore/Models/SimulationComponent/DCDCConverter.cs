@@ -40,23 +40,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			
 			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
 			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
-			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency;
+			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency; //WHY ?
 
-			
-			
+
+			var electricConsumersPower =
+				_electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
 
 			if (!dryRun) {
-				CurrentState.ConsumedEnergy += _electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0) * dt;
+				CurrentState.ElectricAuxPower = electricConsumersPower;
 			}
 
+
 			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
-				return PreviousState.ConsumedEnergy / dt * efficiency;
-			
+				return (PreviousState.ConsumedEnergy / dt * efficiency) + electricConsumersPower;
 			}
 
 			// write in mod-file for post-processing correction
 			if (!dryRun) {
-				CurrentState.MissingEnergy = PreviousState.ConsumedEnergy;
+				CurrentState.MissingEnergy = PreviousState.ConsumedEnergy + electricConsumersPower * dt;
 			}
 
 			return 0.SI<Watt>();
@@ -109,8 +110,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			{
 				MissingEnergy = 0.SI<WattSecond>();
 				ConsumedEnergy = 0.SI<WattSecond>();
+
+				ElectricAuxPower = 0.SI<Watt>();
 				simInterval = 0.SI<Second>();
 			}
+
+			public Watt ElectricAuxPower { get; set; }
 
 			public WattSecond ConsumedEnergy
 			{

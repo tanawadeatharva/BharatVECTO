@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Security;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -130,6 +131,8 @@ namespace TUGraz.IVT.VectoXML
 			{ DrivingCycleDataReader.Fields.PTOTorque, XMLNames.Vehicle_PTOCycle_Torque_Attr },
 		};
 
+		#region Battery
+
 		public static readonly Dictionary<string, string> InternalResistanceMap = new Dictionary<string, string> {
 			{ BatteryInternalResistanceReader.Fields.StateOfCharge, XMLNames.REESS_InternalResistanceCurve_SoC },
 			{ BatteryInternalResistanceReader.Fields.InternalResistance_2, XMLNames.REESS_InternalResistanceCurve_R2 }, {
@@ -151,6 +154,13 @@ namespace TUGraz.IVT.VectoXML
 			{ BatteryMaxCurrentReader.Fields.StateOfCharge, XMLNames.REESS_CurrentLimits_SoC },
 			{ BatteryMaxCurrentReader.Fields.MaxChargeCurrent, XMLNames.REESS_CurrentLimits_MaxChargingCurrent },
 			{ BatteryMaxCurrentReader.Fields.MaxDischargeCurrent, XMLNames.REESS_CurrentLimits_MaxDischargingCurrent }
+		};
+
+		#endregion
+		public static readonly Dictionary<string, string> EMPowerMap = new Dictionary<string, string> {
+			{ ElectricMotorMapReader.Fields.MotorSpeed, XMLNames.PowerMap_OutShaftSpeed },
+			{ElectricMotorMapReader.Fields.Torque, XMLNames.PowerMap_Torque },
+			{ ElectricMotorMapReader.Fields.PowerElectrical, XMLNames.PowerMap_ElectricPower }
 		};
 
 		//ElectricMotorMapReader

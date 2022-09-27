@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class ElectricAuxiliaries : VectoSimulationComponent, IElectricAuxPort
 	{
-		private IEnumerable<VectoRunData.AuxData> _auxData;
+		private IList<VectoRunData.AuxData> _auxData = new List<VectoRunData.AuxData>(4);
 
 		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
 		private IDictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
@@ -34,12 +34,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		}
 
+		
+
+
 		private IVehicleContainer VehicleContainer { get; set; }
 
 		public Watt Initialize()
 		{
 			
-			_auxData = VehicleContainer.RunData.Aux.Where(aux => aux.MissionType == VehicleContainer.RunData.Mission.MissionType);
 			foreach (var auxData in _auxData) {
 				var name = $"P_{auxData.ID}_el";
 				_auxColumnName.Add(auxData.ID, name); //use column name as ID
@@ -47,6 +49,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return 0.SI<Watt>();
+		}
+
+		public void AddAuxiliary(VectoRunData.AuxData aux)
+		{
+			_auxData.Add(aux);
+		}
+
+		public void AddAuxiliaries(IEnumerable<VectoRunData.AuxData> auxData)
+		{
+			foreach (var aux in auxData) {
+				AddAuxiliary(aux);
+			}
 		}
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
