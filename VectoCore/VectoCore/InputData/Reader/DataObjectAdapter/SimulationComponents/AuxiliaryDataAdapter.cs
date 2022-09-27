@@ -233,10 +233,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					throw new VectoException("Should not be created for conventional vehicles");
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
-					aux.PowerDemandDataBusFunc = powerDemandFunc;
+					aux.PowerDemandElectricDataBusFunc = powerDemandFunc;
 					break;
 				case VectoSimulationJobType.ParallelHybridVehicle:
-					aux.PowerDemandDataBusFunc = parallelHybridPowerDemand;
+					aux.PowerDemandElectricDataBusFunc = parallelHybridPowerDemand;
 					break;
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IEPC_E:
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				{
 					var spElectric = new VectoRunData.AuxData
 					{
-						DemandType = AuxiliaryDemandType.Constant,
+						DemandType = AuxiliaryDemandType.Dynamic,
 						Technology = auxData.Technology.Where(tech => DeclarationData.SteeringPump.IsFullyElectric(tech))
 							.ToList(),
 						IsFullyElectric = true,
@@ -356,6 +356,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						ID = Constants.Auxiliaries.IDs.SteeringPump_el,
 						PowerDemandElectric = powerDemand.electricPumps * alternatorEfficiency,
 						PowerDemandMech = powerDemand.electricPumps,
+
+						PowerDemandElectricDataBusFunc = (db) => {
+							if (db.VehicleInfo.VehicleStopped) {
+								return 0.SI<Watt>();
+							} else {
+								return powerDemand.electricPumps;
+							}
+						},
 						MissionType = mission,
 					};
 

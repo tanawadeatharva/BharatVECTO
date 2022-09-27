@@ -46,18 +46,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			var electricConsumersPower =
 				_electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
 
+			var powerDemand = PreviousState.ConsumedEnergy / dt * efficiency + electricConsumersPower / Efficiency;
+
+			
+
 			if (!dryRun) {
 				CurrentState.ElectricAuxPower = electricConsumersPower;
 			}
 
-
-			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
-				return (PreviousState.ConsumedEnergy / dt * efficiency) + electricConsumersPower;
+			if (powerDemand.IsBetween(chargeEnergy, dischargeEnergy))
+			{
+				return powerDemand;
 			}
+
+			//if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
+			//	return (PreviousState.ConsumedEnergy / dt * efficiency) + electricConsumersPower / Efficiency;
+			//}
 
 			// write in mod-file for post-processing correction
 			if (!dryRun) {
-				CurrentState.MissingEnergy = PreviousState.ConsumedEnergy + electricConsumersPower * dt;
+				CurrentState.MissingEnergy = powerDemand * dt;
 			}
 
 			return 0.SI<Watt>();
@@ -72,11 +80,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (CurrentState.MissingEnergy.IsEqual(0)) {
+				var consumedEnergy =
+					(PreviousState.ConsumedEnergy / simulationInterval) + CurrentState.ElectricAuxPower;
 				container[ModalResultField.P_DCDC_In] =
-					PreviousState.ConsumedEnergy / simulationInterval / Efficiency;
+					consumedEnergy / Efficiency;
 					
 				container[ModalResultField.P_DCDC_Out] =
-					PreviousState.ConsumedEnergy / simulationInterval;
+					consumedEnergy;
 				
 
 			} else {

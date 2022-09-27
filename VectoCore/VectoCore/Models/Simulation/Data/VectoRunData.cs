@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
 
-			[JsonIgnore] public Func<IDataBus, Watt> PowerDemandDataBusFunc;
+			[JsonIgnore] public Func<IDataBus, Watt> PowerDemandElectricDataBusFunc;
 
 
 

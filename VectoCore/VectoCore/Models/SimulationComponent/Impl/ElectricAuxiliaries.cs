@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (aux.DemandType == AuxiliaryDemandType.Constant) {
 					powerDemand = aux.PowerDemandElectric;
 				} else if(aux.DemandType == AuxiliaryDemandType.Dynamic) {
-					powerDemand = aux.PowerDemandDataBusFunc(DataBus);
+					powerDemand = aux.PowerDemandElectricDataBusFunc(DataBus);
 				}
 
 
