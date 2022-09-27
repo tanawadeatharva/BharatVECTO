@@ -73,11 +73,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var runData = dataBus.RunData;
 			EarlyShiftUp = true;
 			SkipGears = true;
+
+			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, null);
 			if (runData.EngineData == null) {
 				return;
 			}
 
-			_shiftPolygonCalculator = ShiftPolygonCalculator.Create(Name, null);
 			var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
 									(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
 									runData.VehicleData.DynamicTyreRadius;

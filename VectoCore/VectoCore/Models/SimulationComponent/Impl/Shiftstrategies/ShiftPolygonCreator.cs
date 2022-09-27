@@ -40,8 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				}
 				return new PEVAMTShiftStrategyPolygonCreator(shiftStrategyParameters);
 			}
-
-
+			if (name == ATShiftStrategy.Name) {
+				return new ATShiftStrategyPolygonCalculator();
+			}
 
 
 			throw new ArgumentException($"Could not create ShiftPolygonCalculator for {name}");
