@@ -18,12 +18,6 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		#region Constant
 
 		public const double GearEfficiency = 0.95;
-		
-		public new static string GenericEfficiencyMap_ASM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_ASM_normalized.vmap";
-
-		public new static string GenericEfficiencyMap_PSM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_PSM_normalized.vmap";
 
 		#endregion
 
@@ -32,6 +26,13 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		private double axleRatio;
 		private KeyValuePair<int, double> gearRatioAtMeasurement;
 
+		public GenericBusIEPCData()
+		{
+			GenericEfficiencyMap_ASM = 
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_ASM_normalized.vmap";
+			GenericEfficiencyMap_PSM = 
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_IEPC_PSM_normalized.vmap";
+		}
 
 		public IEPCElectricMotorData CreateIEPCElectricMotorData(IIEPCDeclarationInputData iepcData, IAxleGearInputData axleGearData)
 		{
@@ -105,14 +106,14 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		private Dictionary<uint, EfficiencyMap> GetEfficiencyMaps(IElectricMotorVoltageLevel voltageLevel, int count, ElectricMachineType electricMachineType)
 		{
 			var result = new Dictionary<uint, EfficiencyMap>();
-			
+
 			foreach (var gearEntry in gearRatios) {
 
 				var gearRatio = gearEntry.Value;
-
+				
 				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(voltageLevel.FullLoadCurve,
-					axleRatio, gearRatio, GearEfficiency, axleEfficiency);
-
+					axleRatio, gearRatioAtMeasurement.Value, GearEfficiency, axleEfficiency);
+				
 				var deNormalizedMap = DeNormalizeData(GetNormalizedEfficiencyMap(electricMachineType), ratedPoint, gearRatio);
 				result.Add((uint) gearEntry.Key, IEPCMapReader.Create(deNormalizedMap, count, gearRatio));
 			}
@@ -152,12 +153,10 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 		private DataTable DeNormalizeData(TableData normalizedMap, RatedPoint ratedPoint, double gearRatio)
 		{
-
 			var result = new DataTable();
 			result.Columns.Add(ElectricMotorMapReader.Fields.MotorSpeed);
 			result.Columns.Add(ElectricMotorMapReader.Fields.Torque);
 			result.Columns.Add(ElectricMotorMapReader.Fields.PowerElectrical);
-
 
 			foreach (DataRow row in normalizedMap.Rows) {
 				var torqueNormValue = row.ParseDouble(TorqueNorm);
@@ -165,14 +164,12 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				var torque = torqueNormValue * ratedPoint.TRated * gearRatio * axleRatio * 
 							( torqueNormValue > 0 ? GearEfficiency * axleEfficiency : 1 / GearEfficiency * axleEfficiency);
 				var powerElectrical = row.ParseDouble(PowerElectricalNorm) * ratedPoint.PRated;
-
-
+				
 				var newRow = result.NewRow();
 				newRow[ElectricMotorMapReader.Fields.MotorSpeed] = Math.Round(motorSpeed.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[ElectricMotorMapReader.Fields.Torque] = Math.Round(torque.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				newRow[ElectricMotorMapReader.Fields.PowerElectrical] = Math.Round(powerElectrical.Value(), 2, MidpointRounding.AwayFromZero).ToXMLFormat(2);
 				result.Rows.Add(newRow);
-
 			}
 
 			return result;

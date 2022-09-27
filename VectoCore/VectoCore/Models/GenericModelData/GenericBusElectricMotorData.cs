@@ -13,19 +13,18 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusElectricMotorData : GenericBusEMBase
 	{
-		#region Constants
-		
-		public new static string GenericEfficiencyMap_ASM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_ASM_normalized.vmap";
-
-		public new static string GenericEfficiencyMap_PSM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_PSM_normalized.vmap";
-
-		#endregion
-
-		public ElectricMotorData CreateGenericElectricMotorData(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry, 
-			ElectricMachineType electricMachineType)
+		public GenericBusElectricMotorData()
 		{
+			GenericEfficiencyMap_ASM =
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_ASM_normalized.vmap";
+			GenericEfficiencyMap_PSM =
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_PSM_normalized.vmap";
+		}
+
+
+		public ElectricMotorData CreateGenericElectricMotorData(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry)
+		{
+			var electricMachineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
 			
 			var electricMotorData = new ElectricMotorData {
 				RatioPerGear = electricMachineEntry.RatioPerGear,
@@ -55,7 +54,7 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 				VoltageLevels = GetElectricMotorVoltageLevelData(voltageLevels, count, normalizedMap)
 			};
 		}
-
+		
 
 		private List<ElectricMotorVoltageLevelData> GetElectricMotorVoltageLevelData(IList<IElectricMotorVoltageLevel> voltageLevels, int count, TableData normalizedMap)
 		{

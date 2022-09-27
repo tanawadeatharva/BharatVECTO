@@ -14,24 +14,22 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 {
 	public class GenericBusIHPCData : GenericBusEMBase
 	{
-		#region Constants
+		public GenericBusIHPCData()
+		{
+			GenericEfficiencyMap_ASM =
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_ASM_normalized.vmap";
+
+			GenericEfficiencyMap_PSM =
+				$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_PSM_normalized.vmap";
+		}
 		
-		public new static string GenericEfficiencyMap_ASM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_ASM_normalized.vmap";
-
-		public new static string GenericEfficiencyMap_PSM =
-			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EfficiencyMap_PSM_normalized.vmap";
-
-		#endregion
-
 
 		public ElectricMotorData CreateGenericBusIHPCData(
 			ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineEntry,
 			ElectricMachineType electricMachineType, IGearboxDeclarationInputData gearboxData)
 		{
-
 			var electricMotorData = new ElectricMotorData {
-				EfficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType,gearboxData),
+				EfficiencyData = GetVoltageLevels(electricMachineEntry, electricMachineType, gearboxData),
 				Inertia = electricMachineEntry.ElectricMachine.Inertia * electricMachineEntry.Count,
 				RatioADC = electricMachineEntry.RatioADC
 			};

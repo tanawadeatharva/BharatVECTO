@@ -44,8 +44,8 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		private BatteryData GetBatteryData(IBatteryPackDeclarationInputData battery)
 		{
 			return new BatteryData {
-				MinSOC = battery.MinSOC.Value,
-				MaxSOC = battery.MaxSOC.Value,
+				MinSOC = battery.MinSOC ?? double.NaN,
+				MaxSOC = battery.MaxSOC ?? double.NaN,
 				MaxCurrent = BatteryMaxCurrentReader.Create(battery.MaxCurrentMap),
 				Capacity = battery.Capacity,
 				InternalResistance = GetGenericInternalResistanceMap(battery),

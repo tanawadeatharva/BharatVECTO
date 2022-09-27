@@ -12,12 +12,13 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 		public const string MotorSpeedNorm = "n_norm";
 		public const string TorqueNorm = "T_norm";
 		public const string PowerElectricalNorm = "Pel_norm";
+		
+		
+		protected string GenericEfficiencyMap_ASM  {get; set;}
+		protected string GenericEfficiencyMap_PSM  {get; set;}
 
-		public static string GenericEfficiencyMap_ASM = "";
-		public static string GenericEfficiencyMap_PSM = "";
-		
 		#endregion
-		
+
 		protected TableData GetNormalizedEfficiencyMap(ElectricMachineType electricMachineType)
 		{
 			switch (electricMachineType)

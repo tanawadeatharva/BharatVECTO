@@ -1,6 +1,10 @@
 ﻿using System.Data;
+using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Utils;
 
@@ -15,11 +19,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		private const string MinTorqueColumn = "minTorque";
 		private TableData fullLoadCurve;
 
-		
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+
 		[OneTimeSetUp]
 		public void Init()
 		{
 			SetFullLoadCurveData();
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		private void SetFullLoadCurveData()
@@ -86,11 +96,127 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase()]
 		public void TestFullLoadCurveRatedPointSearch()
 		{
-			var result = GenericRatedPointHelper.GetRatedPointOfFullLoadCurve(fullLoadCurve);
-			Assert.IsNotNull(result); 
-			Assert.AreEqual(755.11 , result.NRated.Value(), 1e-2);
-			Assert.AreEqual(4027.8000, result.TRated.Value(), 1e-4);
-			Assert.AreEqual(318.4980 , result.PRated.Value(), 1e-4);
+			var emResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(fullLoadCurve);
+			Assert.IsNotNull(emResult); 
+			Assert.AreEqual(755.11 , emResult.NRated.Value(), 1e-2);
+			Assert.AreEqual(4027.8000, emResult.TRated.Value(), 1e-4);
+			Assert.AreEqual(318.4980 , emResult.PRated.Value(), 1e-4);
+
+			var iepcResult = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtIEPC(fullLoadCurve, 1, 1, 0.95, 1);
+			Assert.IsNotNull(iepcResult);
+			Assert.AreEqual(755.11, iepcResult.NRated.Value(), 1e-2);
+			Assert.AreEqual(4239.7894, iepcResult.TRated.Value(), 1e-4);
+			Assert.AreEqual(335.26, iepcResult.PRated.Value(), 1e-2);
+		}
+
+
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		public void TestGenericBusElectricMotorData(string filePath)
+		{
+			var multistepBusInputData = xmlInputReader.Create(filePath) as IMultistepBusInputDataProvider;
+			var em = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines;
+
+			var genericElectricMotor = new GenericBusElectricMotorData();
+			var electricMotorData = genericElectricMotor.CreateGenericElectricMotorData(em.Entries[0]);
+
+			Assert.AreEqual(2, electricMotorData.EfficiencyData.VoltageLevels.Count);
+		}
+
+
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml")]
+		public void TestGenericIEPCElectricMotorData(string iepcFilePath)
+		{
+			var multistepBusInputData = xmlInputReader.Create(iepcFilePath) as IMultistepBusInputDataProvider;
+			var iepcData = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC;
+			var axleGear = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.AxleGearInputData;
+
+			var genericIEPCData = new GenericBusIEPCData();
+			var iepcMotorData = genericIEPCData.CreateIEPCElectricMotorData(iepcData, axleGear);
+
+			Assert.AreEqual(1, iepcMotorData.EfficiencyData.VoltageLevels.Count);
+		}
+
+
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IHPC_HEV_completedBus_2.VIF_Report_1.xml")]
+		public void TestGenericIHPCElectricMotorData(string ihpcFilePath)
+		{
+			var multistepBusInputData = xmlInputReader.Create(ihpcFilePath) as IMultistepBusInputDataProvider;
+			var electricMachineEntry = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines.Entries.First() ;
+			var transmission = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.GearboxInputData;
+			var machineType = electricMachineEntry.ElectricMachine.ElectricMachineType;
+
+			var genericBusIHPCData = new GenericBusIHPCData(); 
+			var ihpcData = genericBusIHPCData.CreateGenericBusIHPCData(electricMachineEntry, machineType, transmission);
+
+			Assert.AreEqual(2, ihpcData.EfficiencyData.VoltageLevels.Count);
+		}
+
+		[TestCase(@"TestData\XML\XMLVIFBusReport\IEPC_completedBus_2.VIF_Report_2.xml", 0.1)]
+		public void TestGenericBatteryData(string vifFilePath, double initialSoC)
+		{
+			var multistepBusInputData = xmlInputReader.Create(vifFilePath) as IMultistepBusInputDataProvider;
+			var electricStorage = multistepBusInputData.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricStorage;
+			
+			var genericBusBatteryData = new GenericBusBatteryData();
+			var batterySystemData = genericBusBatteryData.CreateBatteryData(electricStorage, initialSoC);
+
+			Assert.AreEqual(initialSoC, batterySystemData.InitialSoC);
+			Assert.AreEqual(2, batterySystemData.Batteries.Count);
+
+			var battery0 = batterySystemData.Batteries[0];
+			Assert.AreEqual(80, battery0.Item2.MaxSOC);
+			Assert.AreEqual(20, battery0.Item2.MinSOC);
+			Assert.AreEqual(72, battery0.Item2.Capacity.AsAmpHour);
+			Assert.AreEqual(2, battery0.Item2.InternalResistance.Entries.Length);
+			
+			Assert.AreEqual(0, battery0.Item2.InternalResistance.Entries[0].SoC);
+			Assert.AreEqual(3, battery0.Item2.InternalResistance.Entries[0].Resistance.Count);
+
+			var resistance = battery0.Item2.InternalResistance.Entries[0].Resistance[0].Item2.Value();
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[0].Resistance[0].Item2.Value());
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[0].Resistance[1].Item2.Value());
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[0].Resistance[2].Item2.Value());
+			Assert.AreEqual(1, battery0.Item2.InternalResistance.Entries[1].SoC);
+			Assert.AreEqual(3, battery0.Item2.InternalResistance.Entries[1].Resistance.Count);
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[0].Item2.Value());
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[1].Item2.Value());
+			Assert.AreEqual(resistance, battery0.Item2.InternalResistance.Entries[1].Resistance[2].Item2.Value());
+
+			var battery1 = batterySystemData.Batteries[0];
+			Assert.AreEqual(80, battery1.Item2.MaxSOC);
+			Assert.AreEqual(20, battery1.Item2.MinSOC);
+			Assert.AreEqual(72, battery1.Item2.Capacity.AsAmpHour);
+			Assert.AreEqual(2, battery1.Item2.InternalResistance.Entries.Length);
+			
+			Assert.AreEqual(0, battery1.Item2.InternalResistance.Entries[0].SoC);
+			Assert.AreEqual(3, battery1.Item2.InternalResistance.Entries[0].Resistance.Count);
+
+			resistance = battery1.Item2.InternalResistance.Entries[0].Resistance[0].Item2.Value();
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[0].Resistance[0].Item2.Value());
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[0].Resistance[1].Item2.Value());
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[0].Resistance[2].Item2.Value());
+			Assert.AreEqual(1, battery1.Item2.InternalResistance.Entries[1].SoC);
+			Assert.AreEqual(3, battery1.Item2.InternalResistance.Entries[1].Resistance.Count);
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[1].Resistance[0].Item2.Value());
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[1].Resistance[1].Item2.Value());
+			Assert.AreEqual(resistance, battery1.Item2.InternalResistance.Entries[1].Resistance[2].Item2.Value());
+		}
+
+		
+		[TestCase(@"TestData\Hybrids\Hyb_P2_Group2SuperCapOvl\SuperCap.vreess", 0.1)]
+		public void TestGenericSuperCapData(string superCapFilePath, double initialSoC)
+		{
+			var superCap = JSONInputDataFactory.ReadREESSData(superCapFilePath, false) as ISuperCapDeclarationInputData; 
+			var genericBusSuperCapData = new GenericBusSuperCapData();
+			var superCapData = genericBusSuperCapData.CreateGenericSuperCapData(superCap, initialSoC);
+
+			Assert.AreEqual(37.0, superCapData.Capacity.Value());
+			Assert.AreEqual(0, superCapData.MinVoltage.Value());
+			Assert.AreEqual(330.0, superCapData.MaxVoltage.Value());
+			Assert.AreEqual(100, superCapData.MaxCurrentCharge.Value());
+			Assert.AreEqual(100, superCapData.MaxCurrentDischarge.Value());
+			Assert.AreEqual(initialSoC , superCapData.InitialSoC);
+			Assert.AreEqual(270.2703, superCapData.InternalResistance.Value(), 1e-4);
 		}
 	}
 }
