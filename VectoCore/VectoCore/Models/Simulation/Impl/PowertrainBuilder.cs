@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
@@ -769,8 +770,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
                 es.Connect(dcdc);
 				var elAux = new ElectricAuxiliaries(container);
-				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS));
-
+				
+				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.SteeringPump));
+				elAux.AddAuxiliary(new SteeringPumpSystem(data.Aux.Where(aux => aux.ID == Constants.Auxiliaries.IDs.SteeringPump).ToArray()));
 				dcdc.Connect(elAux);
 				dcdc.Initialize();
             }
@@ -1490,6 +1492,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun),
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
+
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);

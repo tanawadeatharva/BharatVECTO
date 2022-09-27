@@ -179,6 +179,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public class AuxData
 		{
+			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
 			// ReSharper disable once InconsistentNaming
 			public string ID;
 
@@ -190,7 +191,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[JsonIgnore]
 			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
 
-			[JsonIgnore] public Func<IDataBus, Watt> PowerDemandElectricDataBusFunc;
+			[JsonIgnore] public PowerDemandFunc PowerDemandDataBusFunc;
 
 
 

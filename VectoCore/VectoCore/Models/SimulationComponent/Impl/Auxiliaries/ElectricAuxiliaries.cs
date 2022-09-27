@@ -9,6 +9,8 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -19,8 +21,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class ElectricAuxiliaries : VectoSimulationComponent, IElectricAuxPort
 	{
-		private IList<VectoRunData.AuxData> _auxData = new List<VectoRunData.AuxData>(4);
-
+		private IDictionary<string, Func<IDataBus, Watt>> _auxData = new Dictionary<string, Func<IDataBus, Watt>>();
 		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
 		private IDictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
@@ -42,18 +43,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt Initialize()
 		{
 			
-			foreach (var auxData in _auxData) {
-				var name = $"P_{auxData.ID}_el";
-				_auxColumnName.Add(auxData.ID, name); //use column name as ID
+			foreach (var auxId in _auxData.Keys) {
+				var name = $"P_{auxId}_el";
+				_auxColumnName.Add(auxId, name); //use column name as ID
 				VehicleContainer.AddAuxiliary(name, name);
 			}
+
 
 			return 0.SI<Watt>();
 		}
 
 		public void AddAuxiliary(VectoRunData.AuxData aux)
 		{
-			_auxData.Add(aux);
+			if (aux.DemandType == AuxiliaryDemandType.Constant) {
+				_auxData.Add(aux.ID, (dataBus) => aux.PowerDemandElectric);
+			}else if (aux.DemandType == AuxiliaryDemandType.Dynamic) {
+				_auxData.Add(aux.ID, (dataBus) => aux.PowerDemandDataBusFunc(dataBus, false));
+			}
+		}
+
+		public void AddAuxiliary(IAuxDemand aux)
+		{
+			_auxData.Add(aux.AuxID, aux.PowerDemand);
 		}
 
 		public void AddAuxiliaries(IEnumerable<VectoRunData.AuxData> auxData)
@@ -69,16 +80,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			var sum = 0.SI<Watt>();
 			foreach (var aux in _auxData) {
-				var powerDemand = 0.SI<Watt>(); 
-				if (aux.DemandType == AuxiliaryDemandType.Constant) {
-					powerDemand = aux.PowerDemandElectric;
-				} else if(aux.DemandType == AuxiliaryDemandType.Dynamic) {
-					powerDemand = aux.PowerDemandElectricDataBusFunc(DataBus);
-				}
+				var powerDemand = 0.SI<Watt>();
+				powerDemand += aux.Value(DataBus);
 
 
 				if (!dryRun) {
-					_powerDemands[aux.ID] = powerDemand;
+					_powerDemands[aux.Key] = powerDemand;
 				}
 
 				sum += powerDemand;
@@ -98,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             foreach (var aux in _auxData)
             {
 				
-				container[_auxColumnName[aux.ID]] = _powerDemands[aux.ID];
+				container[_auxColumnName[aux.Key]] = _powerDemands[aux.Key];
 				
 			}
 		}

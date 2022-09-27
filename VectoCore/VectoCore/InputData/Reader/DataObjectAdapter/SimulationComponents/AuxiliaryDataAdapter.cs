@@ -180,9 +180,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				AddConditioning(mission, jobType, retVal, hdvClass);
 			}
 
-
-			
-
 			return retVal;
 		}
 
@@ -195,13 +192,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				IsFullyElectric = true,
 				MissionType = mission,
 				DemandType = AuxiliaryDemandType.Dynamic,
-				ID = "Cond",
+				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
 			};
 
 
-			Func<IDataBus, Watt> parallelHybridPowerDemand = (dataBus) => {
+			VectoRunData.AuxData.PowerDemandFunc parallelHybridPowerDemand = (dataBus, mechPower) => {
 				double xFactor = 0;
+				if (mechPower == true)
+				{
+					throw new NotImplementedException(
+						"Conditioning only applies to xEVs and should be connected to the DCDC system");
+				}
 				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
 				if (!elInfo.EmOff) {
 					var iceInfo = dataBus.EngineInfo;
@@ -214,8 +216,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				return DeclarationData.Conditioning.LookupPowerDemand(hdv, mission) * xFactor;
 			};
 
-			Func<IDataBus, Watt> powerDemandFunc = (dataBus) => {
+			VectoRunData.AuxData.PowerDemandFunc powerDemandFunc = (dataBus, mechPower) => {
 				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
+				if (mechPower == true) {
+					throw new NotImplementedException(
+						"Conditioning only applies to xEVs and should be connected to the DCDC system");
+				}
 				if (elInfo.EmOff)
 				{
 					return 0.SI<Watt>();
@@ -233,10 +239,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					throw new VectoException("Should not be created for conventional vehicles");
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
-					aux.PowerDemandElectricDataBusFunc = powerDemandFunc;
+					aux.PowerDemandDataBusFunc = powerDemandFunc;
 					break;
 				case VectoSimulationJobType.ParallelHybridVehicle:
-					aux.PowerDemandElectricDataBusFunc = parallelHybridPowerDemand;
+					aux.PowerDemandDataBusFunc = parallelHybridPowerDemand;
 					break;
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IEPC_E:
@@ -335,41 +341,44 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				IsFullyElectric = false,
 				ID = Constants.Auxiliaries.IDs.SteeringPump,
 				PowerDemandMech = powerDemand.mechanicalPumps,
+
 				MissionType = mission,
 			};
 
 
-			if (jobType == VectoSimulationJobType.ConventionalVehicle) {
-				//Add to mechanical steering pump aux
-				spMech.PowerDemandMech += powerDemand.electricPumps;
-			} else {
-				//Create separate auxiliary component for connection to REESS via DC/DC converter
-				if (powerDemand.electricPumps.IsGreater(0))
+			
+		
+			if (powerDemand.electricPumps.IsGreater(0))
+			{
+				var spElectric = new VectoRunData.AuxData
 				{
-					var spElectric = new VectoRunData.AuxData
-					{
-						DemandType = AuxiliaryDemandType.Dynamic,
-						Technology = auxData.Technology.Where(tech => DeclarationData.SteeringPump.IsFullyElectric(tech))
-							.ToList(),
-						IsFullyElectric = true,
-						ConnectToREESS = true,
-						ID = Constants.Auxiliaries.IDs.SteeringPump_el,
-						PowerDemandElectric = powerDemand.electricPumps * alternatorEfficiency,
-						PowerDemandMech = powerDemand.electricPumps,
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = auxData.Technology.Where(tech => DeclarationData.SteeringPump.IsFullyElectric(tech))
+						.ToList(),
+					IsFullyElectric = true,
+					ConnectToREESS = true,
+					ID = Constants.Auxiliaries.IDs.SteeringPump_el,
+					PowerDemandElectric = powerDemand.electricPumps * alternatorEfficiency,
+					PowerDemandMech = powerDemand.electricPumps,
 
-						PowerDemandElectricDataBusFunc = (db) => {
-							if (db.VehicleInfo.VehicleStopped) {
-								return 0.SI<Watt>();
-							} else {
-								return powerDemand.electricPumps;
-							}
-						},
-						MissionType = mission,
-					};
+					//PowerDemandElectricDataBusFunc = (db, mech) => {
+					//	if (db.VehicleInfo.VehicleStopped) {
+					//		return 0.SI<Watt>();
+					//	} else {
+					//		return powerDemand.electricPumps;
+					//	}
+					//},
+					MissionType = mission,
+				};
 
-					auxDataList.Add(spElectric);
+				auxDataList.Add(spElectric);
+
+				if (jobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
+						VectoSimulationJobType.EngineOnlySimulation)) {
+					spElectric.ConnectToREESS = false;
 				}
 			}
+			
 
 			if (spMech.PowerDemandMech.IsGreater(0))
 			{

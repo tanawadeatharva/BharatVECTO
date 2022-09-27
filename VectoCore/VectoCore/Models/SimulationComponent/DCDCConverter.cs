@@ -87,7 +87,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 					
 				container[ModalResultField.P_DCDC_Out] =
 					consumedEnergy;
-				
+				container[ModalResultField.P_DCDC_missing] = 0.SI<Watt>();
+
 
 			} else {
 				container[ModalResultField.P_DCDC_In] = 0.SI<Watt>();

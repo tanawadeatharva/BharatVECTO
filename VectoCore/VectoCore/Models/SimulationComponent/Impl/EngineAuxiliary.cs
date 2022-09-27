@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
+
 		/// <summary>
 		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
 		/// </summary>
@@ -144,9 +145,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
-				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
+				Constants.Auxiliaries.IDs.SteeringPump, 
+				Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.PTOConsumer, 
+				Constants.Auxiliaries.IDs.PTOTransmission,
+				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, 
+				Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
 			};
 			var auxiliarieIgnoredDuringDrive = new[] {
 				Constants.Auxiliaries.IDs.Fan,
