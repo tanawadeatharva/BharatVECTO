@@ -573,13 +573,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                 "Variable displacement elec. controlled"),
 
             //Electric and Mechanic
-			TestCase(MissionType.UrbanDelivery, VehicleClass.Class5, 852.048, 768.72,
+			TestCase(MissionType.UrbanDelivery, 
+				VehicleClass.Class5, 
+				852.048, 
+				768.72,
                 "Fixed displacement",
 				"Dual displacement",
                 "Electric driven pump",
                 "Full electric steering gear"),
-			TestCase(MissionType.UrbanDelivery, VehicleClass.Class5, 0, 262.386
-				,
+			TestCase(MissionType.UrbanDelivery, 
+				VehicleClass.Class5, 
+				0, 
+				262.386,
                 "Full electric steering gear",
 				"Full electric steering gear",
 				"Full electric steering gear",
