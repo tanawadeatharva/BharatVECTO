@@ -38,6 +38,9 @@
     <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_E3_realistic.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

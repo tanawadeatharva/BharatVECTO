@@ -32,6 +32,8 @@ public class HeavyLorrySimulation
 	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml", false),
+	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml"),
+	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
 	public void HeavyLorrySimulationTest(string jobFile, bool multiThreaded = true)
 	{
