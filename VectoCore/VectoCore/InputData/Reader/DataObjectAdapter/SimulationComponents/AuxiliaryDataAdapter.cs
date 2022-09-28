@@ -196,61 +196,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				ConnectToREESS = true,
 			};
 
-
-			VectoRunData.AuxData.PowerDemandFunc parallelHybridPowerDemand = (dataBus, mechPower) => {
-				double xFactor = 0;
-				if (mechPower == true)
-				{
-					throw new NotImplementedException(
-						"Conditioning only applies to xEVs and should be connected to the DCDC system");
-				}
-				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
-				if (!elInfo.EmOff) {
-					var iceInfo = dataBus.EngineInfo;
-					var emPower = elInfo.ElectricMotorSpeed * elInfo.ElectricMotorTorque;
-					var icePower = iceInfo.EngineSpeed * iceInfo.EngineTorque;
-
-					xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
-				} 
-				
-				return DeclarationData.Conditioning.LookupPowerDemand(hdv, mission) * xFactor;
-			};
-
-			VectoRunData.AuxData.PowerDemandFunc powerDemandFunc = (dataBus, mechPower) => {
-				var elInfo = dataBus.ElectricMotorInfo(dataBus.PowertrainInfo.ElectricMotorPositions.Single());
-				if (mechPower == true) {
-					throw new NotImplementedException(
-						"Conditioning only applies to xEVs and should be connected to the DCDC system");
-				}
-				if (elInfo.EmOff)
-				{
-					return 0.SI<Watt>();
-				}
-				else
-				{
-					return DeclarationData.Conditioning.LookupPowerDemand(hdv, mission);
-				}
-			};
-			
-
-
-			switch (jobType) {
-				case VectoSimulationJobType.ConventionalVehicle:
-					throw new VectoException("Should not be created for conventional vehicles");
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.SerialHybridVehicle:
-					aux.PowerDemandDataBusFunc = powerDemandFunc;
-					break;
-				case VectoSimulationJobType.ParallelHybridVehicle:
-					aux.PowerDemandDataBusFunc = parallelHybridPowerDemand;
-					break;
-				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.IEPC_S:
-				case VectoSimulationJobType.IHPC:
-				default:
-					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
-			}
 			auxDataList.Add(aux);
 		}
 

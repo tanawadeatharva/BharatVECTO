@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -76,12 +77,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			
-			
+
+			var auxiliarieIgnoredDuringVehicleStop = new[] {
+				Constants.Auxiliaries.IDs.Fan,
+			};
 			var sum = 0.SI<Watt>();
+			
 			foreach (var aux in _auxData) {
+
 				var powerDemand = 0.SI<Watt>();
-				powerDemand += aux.Value(DataBus);
+				if (DataBus.VehicleInfo.VehicleStopped) {
+					powerDemand += auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key)
+						? aux.Value(DataBus)
+						: 0.SI<Watt>();
+				} else {
+					powerDemand += aux.Value(DataBus);
+				}
+				
 
 
 				if (!dryRun) {
