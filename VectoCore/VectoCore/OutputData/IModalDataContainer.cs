@@ -379,6 +379,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_mech);
 		}
 
+		public static WattSecond WorkElectricAuxiliaries(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_el);
+		}
+
 		public static WattSecond WorkRoadGradientResistance(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_slope);

@@ -138,6 +138,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
 		public const string E_AUX = "E_aux_sum [kWh]";
+		public const string E_AUX_EL = "E_aux_sum_el [kWh]";
 
 		public const string E_AUX_EL_HV = "E_aux_el(HV) [kWh]";
 
@@ -465,6 +466,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_POWERTRAIN_INERTIA, SumFunc((r, m) => m.PowerAccelerations().ConvertToKiloWattHour(), ModalResultField.P_ice_inertia, ModalResultField.P_gbx_inertia)},
 			
 			{ E_AUX, SumFunc((r, m) => m.WorkAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_mech)},
+			{ E_AUX_EL, SumFunc((r, m) => m.WorkElectricAuxiliaries()?.ConvertToKiloWattHour(), ModalResultField.P_aux_el)},
 			{ E_AUX_EL_HV, SumFunc((r, m) => m.TimeIntegral<WattSecond>(ModalResultField.P_Aux_el_HV).ConvertToKiloWattHour(), ModalResultField.P_Aux_el_HV)},
 			{ E_CLUTCH_LOSS, SumFunc((r, m) => m.WorkClutch().ConvertToKiloWattHour(), ModalResultField.P_clutch_loss)},
 			{ E_TC_LOSS, SumFunc((r, m) => m.WorkTorqueConverter().ConvertToKiloWattHour(), ModalResultField.P_TC_loss)},

@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             foreach (var aux in _auxData)
             {
 				var pd = _powerDemands[aux.Key];
+				sum += pd;
 				container[_auxColumnName[aux.Key]] = pd;
 
 			}
