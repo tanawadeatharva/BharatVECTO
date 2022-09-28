@@ -37,18 +37,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public Watt PowerDemand(Second absTime, Second dt, bool dryRun)
 		{
-			
-			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
-			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
-			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency; //WHY ?
-
-
 			var electricConsumersPower =
 				_electricConsumers.Sum(aux => aux.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
+			var energyDemand = PreviousState.ConsumedEnergy + electricConsumersPower * dt;
+		
 
-			var powerDemand = PreviousState.ConsumedEnergy / dt * efficiency + electricConsumersPower / Efficiency;
+			var efficiency = energyDemand > 0 ? 1 / Efficiency : Efficiency;
 
-			
+			var powerDemand = energyDemand / dt * efficiency;
+
+
+
+			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
+			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
+
 
 			if (!dryRun) {
 				CurrentState.ElectricAuxPower = electricConsumersPower;
@@ -59,13 +61,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				return powerDemand;
 			}
 
-			//if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
-			//	return (PreviousState.ConsumedEnergy / dt * efficiency) + electricConsumersPower / Efficiency;
-			//}
-
-			// write in mod-file for post-processing correction
 			if (!dryRun) {
-				CurrentState.MissingEnergy = powerDemand * dt;
+				CurrentState.MissingEnergy = energyDemand;
 			}
 
 			return 0.SI<Watt>();
