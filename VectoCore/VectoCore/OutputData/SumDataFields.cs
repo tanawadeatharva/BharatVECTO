@@ -582,7 +582,12 @@ namespace TUGraz.VectoCore.OutputData
 				}, ModalResultField.P_axle_in, ModalResultField.P_brake_in)
 			},
 
-			{ NUM_GEARSHIFTS, SumFunc((r, m) => ((uint?)r.GearboxData?.Gears.Count ?? 0u) == 1 ? 0.SI<Scalar>() : (ConvertedSI)m.GearshiftCount())},
+			{ NUM_GEARSHIFTS, SumFunc((r, m) => {
+				var gears = ((uint?)r.GearboxData?.Gears.Count ?? 0u);
+				return (gears == 1 || gears == 0)
+					? 0.SI<Scalar>()
+					: (ConvertedSI)m.GearshiftCount();
+			})},
 			
 			{ COASTING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.CoastingTimeShare(), ModalResultField.drivingBehavior) },
 			{ BRAKING_TIME_SHARE, SumFunc((r, m) => (ConvertedSI)m.BrakingTimeShare(), ModalResultField.drivingBehavior) },
