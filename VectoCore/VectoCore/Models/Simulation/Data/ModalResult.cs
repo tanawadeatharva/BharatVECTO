@@ -309,6 +309,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_Aux_el_HV,
 		};
 
+		public static readonly ModalResultField[] ElectricAuxiliarySignals = {
+			ModalResultField.P_aux_el,
+		};
+
 		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] HybridControllerSignals = {
 			ModalResultField.HybridStrategyScore,
@@ -413,15 +417,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
 					break;
-				case ElectricAuxiliaries elAux:
-					CreateElectricAuxColumns(elAux);
+				case ElectricAuxiliaries _:
+					CreateElectricAuxColumns();
 					break;
 			}
 		}
 
-		private void CreateElectricAuxColumns(ElectricAuxiliaries elAux)
+		private void CreateElectricAuxColumns()
 		{
-			
+			CreateColumns(ElectricAuxiliarySignals);
 		}
 
 		private void CreateBatteryColumns(VectoRunData vectoRunData)

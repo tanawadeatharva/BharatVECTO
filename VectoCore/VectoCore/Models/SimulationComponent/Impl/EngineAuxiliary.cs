@@ -149,12 +149,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Constants.Auxiliaries.IDs.Fan,
 				Constants.Auxiliaries.IDs.PTOConsumer, 
 				Constants.Auxiliaries.IDs.PTOTransmission,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, 
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, 
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP
 			};
 			var auxiliarieIgnoredDuringDrive = new[] {
 				Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();

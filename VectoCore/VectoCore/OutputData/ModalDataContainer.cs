@@ -663,6 +663,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_clutch_out,
 					// Aux
 					ModalResultField.P_aux_mech,
+					ModalResultField.P_aux_el,
 					ModalResultField.P_Aux_el_HV,
 					// Gbx
 					ModalResultField.P_gbx_in,
@@ -829,6 +830,10 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.P_clutch_out,
 					}.Select(x => x.GetName()));
 			}
+
+			if (HasElectricAuxiliaries) {
+				dataColumns.Add(ModalResultField.P_aux_el.GetName());
+			}
 			dataColumns.AddRange(
 				new[] {
 					ModalResultField.P_aux_mech,
@@ -902,6 +907,11 @@ namespace TUGraz.VectoCore.OutputData
 				}.Select(x => x.GetName()));
 			}
 			return dataColumns;
+		}
+
+		public bool HasElectricAuxiliaries
+		{
+			get => _runData.Aux.Any(aux => aux.ConnectToREESS);
 		}
 
 		public IEnumerable<T> GetValues<T>(DataColumn col) => GetValues(x => x.Field<T>(col));

@@ -114,12 +114,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
+			var sum = 0.SI<Watt>();
             foreach (var aux in _auxData)
             {
-				
-				container[_auxColumnName[aux.Key]] = _powerDemands[aux.Key];
-				
+				var pd = _powerDemands[aux.Key];
+				container[_auxColumnName[aux.Key]] = pd;
+
 			}
+
+			container[ModalResultField.P_aux_el] = sum;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

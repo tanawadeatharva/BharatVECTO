@@ -194,6 +194,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				DemandType = AuxiliaryDemandType.Dynamic,
 				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
 			};
 
 			auxDataList.Add(aux);
@@ -305,22 +306,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					ID = Constants.Auxiliaries.IDs.SteeringPump_el,
 					PowerDemandElectric = powerDemand.electricPumps * alternatorEfficiency,
 					PowerDemandMech = powerDemand.electricPumps,
-
-					//PowerDemandElectricDataBusFunc = (db, mech) => {
-					//	if (db.VehicleInfo.VehicleStopped) {
-					//		return 0.SI<Watt>();
-					//	} else {
-					//		return powerDemand.electricPumps;
-					//	}
-					//},
 					MissionType = mission,
 				};
 
-				auxDataList.Add(spElectric);
+				
+	
 
 				if (jobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
 						VectoSimulationJobType.EngineOnlySimulation)) {
+					//For a conventional vehicle the electric steering pump power demand is added to the power demand of the mechanical steering pumpss
 					spElectric.ConnectToREESS = false;
+					spMech.PowerDemandMech += spElectric.PowerDemandMech;
+				} else {
+					//For a vehicle with REESS the electric part of the steering pump power demand is treated as separate component
+					auxDataList.Add(spElectric);
 				}
 			}
 			

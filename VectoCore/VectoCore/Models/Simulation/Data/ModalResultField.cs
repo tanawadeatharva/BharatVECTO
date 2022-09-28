@@ -110,9 +110,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "P_ice_inertia", caption: "P_ice_inertia [kW]", outputFactor: 1e-3)] P_ice_inertia,
 
 		/// <summary>
-		///     [kW]	Total auxiliary power demand .
+		///     [kW]	Total mechanic auxiliary power demand .
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_aux_mech [kW]", outputFactor: 1e-3)] P_aux_mech,
+
+		/// <summary>
+		///     [kW]	Total electric auxiliary power demand .
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "P_aux_el [kW]", outputFactor: 1e-3)] P_aux_el,
 
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
