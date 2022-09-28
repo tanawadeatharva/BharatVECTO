@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -72,6 +73,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			Exempted = false;
 			JobType = VectoSimulationJobType.ConventionalVehicle;
+			DCDCData = new DCDCData() {
+				DCDCEfficiency = DeclarationData.DCDCEfficiency,
+			};
 		}
 
 		public VectoSimulationJobType JobType { get; internal set; }
@@ -144,6 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public SuperCapData SuperCapData { get; internal set; }
 
+		public DCDCData DCDCData { get; internal set; }
 
 		public SimulationType SimulationType { get; internal set; }
 

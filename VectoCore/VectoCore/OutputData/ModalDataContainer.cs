@@ -651,6 +651,7 @@ namespace TUGraz.VectoCore.OutputData
 						string.Format(emCol.GetAttribute().Caption, em.GetName())));
 				}
 			}
+			
 			dataColumns.AddRange(
 				new[] {
 					// TC

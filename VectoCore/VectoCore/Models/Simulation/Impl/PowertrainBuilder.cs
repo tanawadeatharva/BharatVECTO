@@ -506,7 +506,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 						var dcdc = new DCDCConverter(container,
-							data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+							data.DCDCData.DCDCEfficiency);
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
@@ -640,7 +640,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					busAux.ElectricStorage = electricStorage;
 					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 						var dcdc = new DCDCConverter(container,
-							data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+							data.DCDCData.DCDCEfficiency);
 						busAux.DCDCConverter = dcdc;
 						es.Connect(dcdc);
 					}
@@ -761,18 +761,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
 			} else {
-				var dcdc = new DCDCConverter(container, DeclarationData.DCDCEfficiency);
+				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
                 es.Connect(dcdc);
 				var elAux = new ElectricAuxiliaries(container);
 				
-				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.SteeringPump));
-				elAux.AddAuxiliary(new SteeringPumpSystem(data.Aux.Where(aux => aux.ID == Constants.Auxiliaries.IDs.SteeringPump).ToArray()));
+				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
+				elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)));
 				dcdc.Connect(elAux);
 				dcdc.Initialize();
             }
@@ -939,7 +939,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
@@ -1032,7 +1032,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
 				var electricStorage = new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
-				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 				busAux.DCDCConverter = dcdc;
 				es.Connect(dcdc);
 				em.BusAux = busAux;
@@ -1338,7 +1338,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					: (ISimpleBattery)new NoBattery(container);
 				busAux.ElectricStorage = electricStorage;
 				if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
-					var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+					var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 					busAux.DCDCConverter = dcdc;
 					es.Connect(dcdc);
 				}
