@@ -215,25 +215,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData, AngledriveData angledriveData)
 			{
-				throw new NotImplementedException();
-				//var tmpRunData = new VectoRunData()
-				//{
-				//	GearboxData = new GearboxData()
-				//	{
-				//		Type = vehicle.Components.GearboxInputData.Type,
-				//	}
-				//};
-				//var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
-				//	_segment.Missions.First().Loadings.First(), _allowVocational);
-				//var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-				//var tmpEngine = DataAdapter.CreateEngineData(
-				//	vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
-				//_gearboxData = DataAdapter.CreateGearboxData(
-				//	vehicle, new VectoRunData() { EngineData = tmpEngine, AxleGearData = _axlegearData, VehicleData = tempVehicle },
-				//	tmpStrategy);
-				//_gearshiftData = DataAdapter.CreateGearshiftData(
-				//	_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0),
-				//	tmpEngine.IdleSpeed, _gearboxData.Type, _gearboxData.Gears.Count);
+				
 			}
 
 
@@ -397,6 +379,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
 
+				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+
+				 var municipalPtoTransmissionData = PTODataAdapterLorry.DefaultPTOData();
+
+				result.PTO = mission.MissionType == MissionType.MunicipalUtility
+					? municipalPtoTransmissionData
+					: ptoTransmissionData;
 
 
 

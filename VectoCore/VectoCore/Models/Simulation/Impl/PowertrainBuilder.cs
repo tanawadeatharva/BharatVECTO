@@ -1494,8 +1494,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			if (data.PTO != null) {
+				//aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+				//				DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+					data.PTO.TransmissionPowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 					(n, absTime, dt, dryRun) =>

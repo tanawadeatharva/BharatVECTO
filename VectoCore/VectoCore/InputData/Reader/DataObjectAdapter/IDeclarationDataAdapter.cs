@@ -30,6 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         //AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
+		PTOData CreatePTOCycleData();
 	}
 
 	public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter

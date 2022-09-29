@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
 			private readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
-			private readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterLorry();
+
 			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
 			public DriverData CreateDriverData(Segment segment)
 			{
@@ -151,10 +151,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
-			public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
-			{
-				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
-			}
+			public abstract PTOData CreatePTOCycleData();
+			public abstract PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
+
 
 			public abstract IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
@@ -180,6 +179,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
 			private IGearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 			private IAuxiliaryDataAdapter _auxAdapter = new HeavyLorryAuxiliaryDataAdapter();
+			private readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterLorry();
 			public override CombustionEngineData CreateEngineData(
 				IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
 			{
@@ -190,6 +190,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				IShiftPolygonCalculator shiftPolygonCalc)
 			{
 				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
+			}
+
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			{
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
+			}
+
+			public override PTOData CreatePTOCycleData()
+			{
+				return _ptoDataAdapter.CreateDefaultPTOData();
 			}
 
 
@@ -267,6 +277,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			#endregion
+
+			#region Overrides of LorryBase
+
+			public override PTOData CreatePTOCycleData()
+			{
+				throw new NotImplementedException();
+			}
+
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 
 		public abstract class ParallelHybrid : Hybrid
@@ -299,17 +323,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			#endregion
+
+			#region Overrides of LorryBase
+
+			public override PTOData CreatePTOCycleData()
+			{
+				throw new NotImplementedException();
+			}
+
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
 		}
 
 		public abstract class BatteryElectric : LorryBase
 		{
 			#region Overrides of LorryBase
 
+
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
 			private readonly GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
 			private readonly ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
 			private readonly ElectricMachinesDataAdapter _electricMachineAdapter = new ElectricMachinesDataAdapter();
+			private readonly ElectricPTODataAdapter _ptoDataAdapter = new ElectricPTODataAdapter();
 
 			private readonly HeavyLorryPEVAuxiliaryDataAdapter
 				_auxDataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
@@ -348,6 +388,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
 			{
 				return _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+			}
+
+			public override PTOData CreatePTOCycleData()
+			{
+				return _ptoDataAdapter.CreateDefaultPTOData();
+			}
+
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			{
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
 			}
 
 			#endregion

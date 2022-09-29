@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <param name="cycleData">The cycle data.</param>
 		/// <returns></returns>
 		/// <exception cref="VectoException">CycleFile Format is unknown.</exception>
-		public static CycleType DetectCycleType(DataTable cycleData)
+		private static CycleType DetectCycleType(DataTable cycleData)
 		{
 			var cols = cycleData.Columns;
 
@@ -61,6 +61,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 			if (PTOCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.PTO;
+			}
+
+			if (EPTOCycleDataParser.ValidateHeader(cols, false)) {
+				return CycleType.EPTO;
 			}
 
 			if (PTODuringDriveCycleParser.ValidateHeader(cols, false)) {
@@ -335,7 +339,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static class Fields
 		{
 			public const string PTOPowerDemand = "P_PTO";
+			public const string PTOElectricalPowerDemand = "P_PTO_el";
 			public const string PTOTorque = "PTO Torque";
+
 			public const string EngineSpeedFull = "Engine speed";
 			public const string PWheel = "Pwheel";
 			public const string Distance = "s";
@@ -728,6 +734,48 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
+
+		/// <summary>
+		/// Parser for PTO Cycles.
+		/// </summary>
+		// <t> [s], <PTO Power Demand> [kW]
+		private class EPTOCycleDataParser : AbstractCycleDataParser
+		{
+			#region Overrides of AbstractCycleDataParser
+
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
+			{
+				ValidateHeader(table.Columns);
+
+				var entries = table.Rows.Cast<DataRow>().Select(
+					row => new DrivingCycleData.DrivingCycleEntry {
+						Time = row.ParseDouble(Fields.Time).SI<Second>(),
+						
+					}).ToArray();
+
+				return entries;
+			}
+
+			#endregion
+
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
+			{
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.PTOElectricalPowerDemand
+				};
+				var allowedCols = new[] {
+					Fields.Time,
+					Fields.PTOElectricalPowerDemand
+				};
+
+				const bool allowAux = false;
+
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Parser for PTO Cycles.

@@ -93,6 +93,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;
 
@@ -1157,6 +1158,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const string DefaultPTOActivationCycle =
 				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
+
+			public const string DefaultE_PTOActivationCycle = DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoel";
 		}
 
 		public static class VTPMode

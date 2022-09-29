@@ -134,10 +134,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var sum = 0.SI<Watt>();
             foreach (var aux in _auxData)
             {
-				var pd = _powerDemands[aux.Key];
-				sum += pd;
-				container[_auxColumnName[aux.Key]] = pd;
-
+				if (_powerDemands.ContainsKey(aux.Key)) {
+					var pd = _powerDemands[aux.Key];
+					sum += pd;
+					container[_auxColumnName[aux.Key]] = pd;
+				}
 			}
 
 			container[ModalResultField.P_aux_el] = sum;

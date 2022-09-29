@@ -60,6 +60,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			[Required, SIRange(0, double.MaxValue)] public PerSecond EngineSpeed;
 			[Required, SIRange(0, 1000)] public NewtonMeter PTOTorque;
+
+			[Required, SIRange(0, double.MaxValue)] public Watt P_PTO_consumer;
+			[Required, SIRange(0, double.MaxValue)] public Watt P_PTO_transmission;
+			[Required, SIRange(0, double.MaxValue)] public Watt P_PTO_el;
+
 		}
 	}
 }
