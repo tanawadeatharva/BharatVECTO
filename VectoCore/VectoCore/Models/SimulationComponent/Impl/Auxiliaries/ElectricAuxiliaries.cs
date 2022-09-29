@@ -79,11 +79,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
-				Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.SteeringPump,
+			};
+			var auxiliariesIgnoredWhenICEIsOff = new[] {
+				Constants.Auxiliaries.IDs.Fan
 			};
 			var sum = 0.SI<Watt>();
-			
-			foreach (var aux in _auxData) {
+
+			var consideredAuxiliaries = _auxData.AsEnumerable();
+			if (DataBus.VehicleInfo.VehicleStopped) {
+				consideredAuxiliaries = consideredAuxiliaries?.Where(aux => !auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key));
+			}
+
+			if (DataBus.PowertrainInfo.HasCombustionEngine && !DataBus.EngineInfo.EngineOn) {
+				consideredAuxiliaries = consideredAuxiliaries?.Where(aux => !auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key));
+			}
+
+			if (consideredAuxiliaries == null) {
+				return sum;
+			}
+
+			foreach (var aux in consideredAuxiliaries) {
+
 
 				var powerDemand = 0.SI<Watt>();
 				if (DataBus.VehicleInfo.VehicleStopped) {
