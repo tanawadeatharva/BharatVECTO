@@ -27,7 +27,8 @@ Public Module FileBrowserModule
     public ManRXMLFileBrowser As FileBrowser
 	Public DrivingCycleFileBrowser As FileBrowser
 	Public PTODrivingCycleStandstillFileBrowser As FileBrowser
-    Public PTODrivingCycleDrivingFileBrowser As FileBrowser
+	Public PTODrivingCycleDrivingFileBrowser As FileBrowser
+	Public PTODrivingCycleElectricStandstillFileBrowser As FileBrowser
 	Public FuelConsumptionMapFileBrowser As FileBrowser
     Public FullLoadCurveFileBrowser As FileBrowser
 

@@ -130,6 +130,7 @@ Public Class MainForm
         TransmissionLossMapFileBrowser = New FileBrowser("vtlm")
         PtoLossMapFileBrowser = New FileBrowser("vptol")
         PTODrivingCycleStandstillFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleElectricStandstillFileBrowser = New FileBrowser("vptoel")
         PTODrivingCycleDrivingFileBrowser = New FileBrowser("vptor")
         TorqueConverterFileBrowser = New FileBrowser("vtcc")
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")

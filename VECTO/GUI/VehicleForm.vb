@@ -133,6 +133,7 @@ Public Class VehicleForm
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
 
+
 		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
 		'cbLegislativeClass.DataSource = EnumHelper.GetValues(Of LegislativeClass).Cast(Of LegislativeClass?).Select( _
 		'	Function(x) New With {.Key = x, .Value = x.GetLabel()}).ToList()
@@ -1504,6 +1505,12 @@ Public Class VehicleForm
 		End If
 	End Sub
 
+	Private Sub btnPTOelCycle_Click(sender As Object, e As EventArgs) Handles btnPTOelCycle.Click
+		If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTOElectricCycle.Text, GetPath(_vehFile))) Then
+			tbPTOElectricCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
+
 	Private Sub cbEmPos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbEmPos.SelectedIndexChanged
 		gbRatiosPerGear.Enabled = PowertrainPosition.HybridP2_5.Equals(cbEmPos.SelectedValue)
 		Dim selectedValue = CbRtType.SelectedValue
@@ -1730,18 +1737,18 @@ Public Class VehicleForm
 		Dim f = FileRepl(tbIHPCFilePath.Text, GetPath(_vehFile))
 
 		IHPCForm.JobDir = GetPath(_vehFile)
-	    IHPCForm.AutoSendTo = Sub(file, vehicleForm)
-	        If UCase(FileRepl(vehicleForm.tbIHPCFilePath.Text, JobDir)) <> UCase(file) Then _
-	            vehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
-	        VectoJobForm.UpdatePic()
-	    End Sub
+		IHPCForm.AutoSendTo = Sub(file, vehicleForm)
+								  If UCase(FileRepl(vehicleForm.tbIHPCFilePath.Text, JobDir)) <> UCase(file) Then _
+				vehicleForm.tbIHPCFilePath.Text = GetFilenameWithoutDirectory(file, JobDir)
+								  VectoJobForm.UpdatePic()
+							  End Sub
 
-	    If Not Trim(f) = "" Then
-	        If Not File.Exists(f) Then
-	            MsgBox("File not found!")
-	            Exit Sub
-	        End If
-	    End If
+		If Not Trim(f) = "" Then
+			If Not File.Exists(f) Then
+				MsgBox("File not found!")
+				Exit Sub
+			End If
+		End If
 
 		If Not IHPCForm.Visible Then
 			IHPCForm.ClearIHPC()
@@ -1759,4 +1766,6 @@ Public Class VehicleForm
 			End Try
 		End If
 	End Sub
+
+
 End Class
