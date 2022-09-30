@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -13,6 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.OutputData;
+// ReSharper disable UseStringInterpolation
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -26,6 +28,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
 		private IDictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
+
+		private HashSet<string> _ignoredIds = new HashSet<string>() {
+			Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN,
+			Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP,
+			Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_BASE,
+		};
 		#region Implementation of IElectricAuxPort
 
 
@@ -49,13 +57,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_auxColumnName.Add(auxId, name); //use column name as ID
 				VehicleContainer.AddAuxiliary(name, name);
 			}
-
+			
 
 			return 0.SI<Watt>();
 		}
 
 		public void AddAuxiliary(VectoRunData.AuxData aux)
 		{
+			if (_ignoredIds.Contains(aux.ID)) {
+				Log.Debug(string.Format("{0} ignored in {1}", aux.ID, nameof(ElectricAuxiliaries)));
+				return;
+			}
+		
+
 			if (aux.DemandType == AuxiliaryDemandType.Constant) {
 				_auxData.Add(aux.ID, (dataBus) => aux.PowerDemandElectric);
 			}else if (aux.DemandType == AuxiliaryDemandType.Dynamic) {
@@ -65,6 +79,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void AddAuxiliary(IAuxDemand aux)
 		{
+			if (_ignoredIds.Contains(aux.AuxID))
+			{
+				Log.Debug(string.Format("{0} ignored in {1}", aux.AuxID, nameof(ElectricAuxiliaries)));
+				return;
+			}
 			_auxData.Add(aux.AuxID, aux.PowerDemand);
 		}
 

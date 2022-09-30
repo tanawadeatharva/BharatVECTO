@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         //AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 		VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission first, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> keyValuePair, bool allowVocational);
 		RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet);
-		PTOData CreatePTOCycleData();
+
 	}
 
 	public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IShiftPolygonCalculator shiftPolygonCalc);
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
+		PTOData CreatePTOCycleData();
 
 
 
@@ -89,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IShiftPolygonCalculator shiftPolygonCalc);
 
 		//RetarderData CreateRetarderData(IRetarderInputData retarderData);
-		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
+		//PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
 
 		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
 

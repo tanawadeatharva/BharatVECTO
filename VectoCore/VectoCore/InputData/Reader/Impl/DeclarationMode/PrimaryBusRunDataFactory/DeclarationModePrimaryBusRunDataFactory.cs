@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
-				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+				//_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 
 			}

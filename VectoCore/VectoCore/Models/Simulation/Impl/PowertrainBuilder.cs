@@ -772,7 +772,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var elAux = new ElectricAuxiliaries(container);
 				
 				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-				elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)));
+				if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
+					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)));
+				}
+				
 				dcdc.Connect(elAux);
 				dcdc.Initialize();
             }

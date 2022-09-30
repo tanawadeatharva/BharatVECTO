@@ -472,6 +472,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
 			}
 
+			public override PTOData CreatePTOCycleData()
+			{
+				throw new NotImplementedException();
+			}
+
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			{
+				throw new NotImplementedException();
+			}
+
 			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
 			{
 				throw new NotImplementedException();

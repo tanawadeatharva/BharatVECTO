@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <param name="cycleData">The cycle data.</param>
 		/// <returns></returns>
 		/// <exception cref="VectoException">CycleFile Format is unknown.</exception>
-		private static CycleType DetectCycleType(DataTable cycleData)
+		public static CycleType DetectCycleType(DataTable cycleData)
 		{
 			var cols = cycleData.Columns;
 
