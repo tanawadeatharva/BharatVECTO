@@ -228,7 +228,7 @@ Partial Class VehicleForm
         Me.gbPTO = New System.Windows.Forms.GroupBox()
         Me.pnPTO = New System.Windows.Forms.FlowLayoutPanel()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.cbPTOStandstillCycleType = New System.Windows.Forms.ComboBox()
         Me.gbPTOICEGroupBox = New System.Windows.Forms.GroupBox()
         Me.pnPtoMode3 = New System.Windows.Forms.GroupBox()
         Me.btPTOCycleDrive = New System.Windows.Forms.Button()
@@ -2373,7 +2373,7 @@ Partial Class VehicleForm
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.ComboBox1)
+        Me.GroupBox2.Controls.Add(Me.cbPTOStandstillCycleType)
         Me.GroupBox2.Location = New System.Drawing.Point(4, 3)
         Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.GroupBox2.Name = "GroupBox2"
@@ -2383,15 +2383,16 @@ Partial Class VehicleForm
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Stand still PTO cycle type"
         '
-        'ComboBox1
+        'cbPTOStandstillCycleType
         '
-        Me.ComboBox1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(4, 20)
-        Me.ComboBox1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(548, 23)
-        Me.ComboBox1.TabIndex = 3
+        Me.cbPTOStandstillCycleType.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cbPTOStandstillCycleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbPTOStandstillCycleType.FormattingEnabled = True
+        Me.cbPTOStandstillCycleType.Location = New System.Drawing.Point(4, 20)
+        Me.cbPTOStandstillCycleType.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.cbPTOStandstillCycleType.Name = "cbPTOStandstillCycleType"
+        Me.cbPTOStandstillCycleType.Size = New System.Drawing.Size(548, 23)
+        Me.cbPTOStandstillCycleType.TabIndex = 3
         '
         'gbPTOICEGroupBox
         '
@@ -2991,5 +2992,6 @@ Partial Class VehicleForm
     Friend WithEvents GroupBox5 As GroupBox
     Friend WithEvents tbPTOElectricCycle As TextBox
     Friend WithEvents gbPTOICEGroupBox As GroupBox
+    Friend WithEvents cbPTOStandstillCycleType As ComboBox
     '>>>>>>> VECTO_CERT/master
 End Class

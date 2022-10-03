@@ -53,6 +53,11 @@ Public Class VehicleForm
 		StringId = 2
 	End Enum
 
+	Private Enum PTOStandStillType
+		Mechanical = 0
+		Electrical = 1
+	End Enum
+
 
 	Private _axlDlog As VehicleAxleDialog
 	Private _hdVclass As VehicleClass
@@ -132,6 +137,9 @@ Public Class VehicleForm
 
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
+		cbPTOStandstillCycleType.DataSource =
+			EnumHelper.GetValues(Of PTOStandStillType)
+		cbPTOStandstillCycleType.SelectedIndex = -1
 
 
 		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
@@ -458,6 +466,8 @@ Public Class VehicleForm
 		tbVehicleHeight.Text = If(vehicle.Height Is Nothing, "", vehicle.Height.ToGUIFormat())
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
+
+
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
@@ -1347,6 +1357,7 @@ Public Class VehicleForm
 			pnPTO.Enabled = False
 			gbPTODrive.Enabled = False
 			tbPTOLossMap.Text = ""
+			cbPTOStandstillCycleType.SelectedIndex = -1
 		Else
 			pnPTO.Enabled = True
 			gbPTODrive.Enabled = True
@@ -1767,5 +1778,19 @@ Public Class VehicleForm
 		End If
 	End Sub
 
+	Private Sub cbPTOStandstillCycleType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOStandstillCycleType.SelectedIndexChanged
+		Dim cb = TryCast(sender, ComboBox)
+		If ((cb Is Nothing) Or (cb.SelectedIndex = -1)) Then
+			Return
+		End If
 
+		Dim val = CType(cb.SelectedValue, PTOStandStillType)
+		If (val = PTOStandStillType.Electrical) Then
+			gbPTOICEGroupBox.Enabled = False
+			gbEPTO.Enabled = True
+		Else
+			gbPTOICEGroupBox.Enabled = True
+			gbEPTO.Enabled = False
+		End If
+	End Sub
 End Class
