@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CycleIterator = new DrivingCycleEnumerator(Data);
 
 			AbsTime = -1.SI<Second>();
+			
 		}
 
 		public virtual IResponse Initialize()
@@ -178,6 +179,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			CycleIterator.MoveNext();
+			
 			AdvanceState();
 		}
 

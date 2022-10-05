@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void AddCycle(string auxId)
 		{
 			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
+
 		}
 
 		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc, string columnName = null)

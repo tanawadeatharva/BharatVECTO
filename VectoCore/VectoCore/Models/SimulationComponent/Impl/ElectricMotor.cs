@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Controller;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -26,10 +27,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Joule ThermalBuffer = 0.SI<Joule>();
 		
+
 		public bool DeRatingActive { get; protected internal set; }
 		public bool EmOff => PreviousState.EMTorque == null ? true : false;
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
+
+        #region Implementation of IElectricMotor
+		private IIdleController _idleController;
+        public IIdleController IdleController => _idleController ?? (_idleController = new BatteryElectricIdleController());
+
+		#endregion
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
@@ -598,6 +606,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 	}
+
+	
 
 	public class ElectricMotorState // : SimpleComponentState
 	{

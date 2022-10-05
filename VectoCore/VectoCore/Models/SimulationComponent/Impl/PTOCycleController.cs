@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				PreviousState.InAngularVelocity = DataBus.EngineInfo.EngineSpeed;
 			}
 			return base.Request(absTime - IdleStart, dt);
+			
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -100,10 +101,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			base.DoWriteModalResults(time, simulationInterval, container);
-			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
-																(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
-			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+
+			//base.DoWriteModalResults(time, simulationInterval, container);
+			//container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
+			//													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
+			//container[ModalResultField.P_ice_out] = 0.SI<Watt>();
 		}
 	}
 }

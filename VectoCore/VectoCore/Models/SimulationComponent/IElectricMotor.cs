@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public interface IElectricMotor : IPowerTrainComponent, IElectricMotorInfo
 	{
 		void Connect(IElectricSystem powersupply);
-		
+		IIdleController IdleController { get; }
 		BusAuxiliariesAdapter BusAux { set; }
 	}
 }

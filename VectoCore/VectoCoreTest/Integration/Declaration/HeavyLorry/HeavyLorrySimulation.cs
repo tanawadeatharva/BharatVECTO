@@ -51,17 +51,31 @@ public class HeavyLorrySimulation
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
 		var jobContainer = new JobContainer(new MockSumWriter()) { };
 		jobContainer.AddRuns(runsFactory);
-		PrintRuns(jobContainer);
+		PrintRuns(jobContainer, null);
 		jobContainer.Execute(multiThreaded);
 		jobContainer.WaitFinished();
-		PrintRuns(jobContainer);
+		PrintRuns(jobContainer, fileWriter);
+		PrintFiles(fileWriter);
 
 	}
 
-	private void PrintRuns(JobContainer jobContainer)
+	private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
 	{
 		foreach (var keyValuePair in jobContainer.GetProgress()) {
 			TestContext.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value.CycleName} {keyValuePair.Value.RunName} {keyValuePair.Value.Error?.Message}" );
+			//if (fileWriter != null && keyValuePair.Value.Success) {
+			//	TestContext.AddTestAttachment(fileWriter.GetModDataFileName(keyValuePair.Value.RunName, keyValuePair.Value.CycleName, keyValuePair.Value.RunSuffix), keyValuePair.Value.RunName);
+   //         }
+	
 		}
+	}
+
+	private void PrintFiles(FileOutputWriter fileWriter)
+	{
+		foreach (var keyValuePair in fileWriter.GetWrittenFiles()) {
+			TestContext.WriteLine($"{keyValuePair.Key} written to {keyValuePair.Value}");
+			TestContext.AddTestAttachment(keyValuePair.Value, keyValuePair.Key.ToString());
+		}
+		
 	}
 }
