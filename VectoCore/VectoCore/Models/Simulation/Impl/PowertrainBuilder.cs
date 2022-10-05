@@ -699,6 +699,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+
 			var powertrain = cycle
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
@@ -752,6 +753,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			new DummyEngineInfo(container);
 
+		
 			if (data.BusAuxiliaries != null) {
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
@@ -777,8 +779,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				
 				dcdc.Connect(elAux);
+			
+
+				if (data.PTO != null)
+				{
+					cycle.IdleController = GetIdleController(data.PTO, em, container) as IdleControllerSwitcher;
+					if (cycle.IdleController == null)
+					{
+						throw new VectoException("Could not assign IdleController to cycle");
+					}
+					elAux.AddAuxiliary(new EPTO());
+				}
+
+
 				dcdc.Initialize();
             }
+
+		
 
 			return container;
 		}
@@ -1438,6 +1455,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			pto?.PTOCycle is null
 				? engine.IdleController
 				: new IdleControllerSwitcher(engine.IdleController, new PTOCycleController(container, pto.PTOCycle));
+
+		private static IIdleController GetIdleController(PTOData pto, IElectricMotor electricMotor,
+			IVehicleContainer container) =>
+			pto?.PTOCycle is null
+				? electricMotor.IdleController
+				: new IdleControllerSwitcher(electricMotor.IdleController, new PTOCycleController(container, pto.PTOCycle));
 
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
