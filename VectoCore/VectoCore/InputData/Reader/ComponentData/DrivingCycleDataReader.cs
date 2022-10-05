@@ -98,6 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				case CycleType.MeasuredSpeedGear: return new MeasuredSpeedGearDataParser();
 				case CycleType.MeasuredSpeed: return new MeasuredSpeedDataParser();
 				case CycleType.PTO: return new PTOCycleDataParser();
+				case CycleType.EPTO: return new EPTOCycleDataParser();
 				case CycleType.VTP: return new VTPCycleDataParser();
 				case CycleType.PTODuringDrive: return new PTODuringDriveCycleParser();
 				default: throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
@@ -750,7 +751,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var entries = table.Rows.Cast<DataRow>().Select(
 					row => new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
-						
+						PTOElectricalPowerDemand = row.ParseDouble(Fields.PTOElectricalPowerDemand).SI<Watt>(),
 					}).ToArray();
 
 				return entries;
