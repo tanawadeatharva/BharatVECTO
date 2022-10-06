@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected IXMLMultistepIntermediateReport _multistageBusReport;
 
 		public XMLDeclarationReportMultistageBusVehicle(IReportWriter writer)
-			: base(writer)
+			: base(writer, null,null)
 		{
 			throw new NotImplementedException();
 			//throw new VectoException("Used here");

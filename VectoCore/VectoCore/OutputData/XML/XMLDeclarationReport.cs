@@ -61,18 +61,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected readonly IManufacturerReportFactory _mrfFactory;
 		protected readonly ICustomerInformationFileFactory _cifFactory;
-
-
+		
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		[Obsolete]
-		public XMLDeclarationReport(IReportWriter writer) : base(writer)
-		{
-
-		}
-
-		
 		public XMLDeclarationReport(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
 		{
 			_mrfFactory = mrfFactory;
