@@ -2505,7 +2505,7 @@ Changelog:
 	<xs:simpleType name="AuxPSTechnology_PEV_LorryType">
 		<xs:restriction base="v2.4:AuxPSTechnologyLorryType">
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + ESS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven "/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
@@ -2548,7 +2548,7 @@ Changelog:
 			<xs:enumeration value="Large Supply + mech. clutch + AMS"/>
 			<xs:enumeration value="Vacuum pump"/>
 			<xs:enumeration value="Small + elec. driven"/>
-			<xs:enumeration value="Small + ESS + elec. driven "/>
+			<xs:enumeration value="Small + AMS + elec. driven "/>
 			<xs:enumeration value="Medium Supply 1-stage + elec. driven"/>
 			<xs:enumeration value="Medium Supply 1-stage + AMS + elec. driven "/>
 			<xs:enumeration value="Medium Supply 2-stage + elec. driven"/>
