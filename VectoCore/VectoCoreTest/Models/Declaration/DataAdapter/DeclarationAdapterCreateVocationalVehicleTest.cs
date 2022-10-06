@@ -11,6 +11,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
@@ -57,10 +59,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var dataProvider = xmlInputReader.CreateDeclaration(modified);
 
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 			var sumData = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumData);
-
 			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null, xmlReport);
 			runsFactory.WriteModalResults = false;
 			runsFactory.Validate = false;

@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         {
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
             var writer = new FileOutputWriter(jobfile);
-            var xmlReport = new XMLDeclarationReport(writer);
+            var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
             var sumData = new SummaryDataContainer(writer);
             var jobContainer = new JobContainer(sumData);
 
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 					var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-					var xmlReport = new XMLDeclarationReport(writer);
+					var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
 
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(InputDataHelper.GetRandomFilename(jobfile));
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.4/vecto_vehicle-primary_heavyBus-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(writer, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
