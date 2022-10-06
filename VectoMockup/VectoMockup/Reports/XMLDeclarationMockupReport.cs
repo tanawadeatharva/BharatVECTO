@@ -15,7 +15,7 @@ namespace TUGraz.VectoMockup.Reports
 	/// <summary>
 	/// Create MRF and CIF for lorries
 	/// </summary>
-	internal class XMLDeclarationMockupReport : XMLDeclarationReport09
+	internal class XMLDeclarationMockupReport : XMLDeclarationReport
     {
 		private readonly bool _exempted;
 

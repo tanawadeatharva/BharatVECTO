@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					PrimaryVehicleRecordFile = PrimaryVehicleReportInputData
 				};
 		}
-
+		
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			_weightingFactors = EqualWeighting;
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 1 },
 					{ Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 1 },
 				});
-
+		
 		protected internal override void DoWriteReport()
 		{
 			foreach (var specificResult in Results.Where(x => VehicleClassHelper.IsCompletedBus(x.VehicleClass)).OrderBy(x => x.VehicleClass)

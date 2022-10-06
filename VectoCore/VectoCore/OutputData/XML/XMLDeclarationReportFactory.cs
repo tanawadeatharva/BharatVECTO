@@ -87,19 +87,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicleCategory = declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory;
 			if (vehicleCategory.IsLorry())
 			{
-				return new XMLDeclarationReport09(outputDataWriter, _mrfFactory, _cifFactory);
+				return new XMLDeclarationReport(outputDataWriter, _mrfFactory, _cifFactory);
 			}
 
 			if (vehicleCategory.IsBus())
 				switch (declarationInputDataProvider.JobInputData.Vehicle.VehicleCategory)
 				{
 					case VehicleCategory.HeavyBusCompletedVehicle:
-						return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
+						return new XMLDeclarationReportCompletedVehicle_09(outputDataWriter)
 											{
 												PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
 											};
 					case VehicleCategory.HeavyBusPrimaryVehicle:
-						return new XMLDeclarationReportPrimaryVehicle(outputDataWriter);
+						return new XMLDeclarationReportPrimaryVehicle_09(outputDataWriter);
 
 					default:
 						break;

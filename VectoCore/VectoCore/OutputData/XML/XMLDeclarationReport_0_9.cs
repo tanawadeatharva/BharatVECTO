@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
@@ -14,24 +21,37 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create MRF and VIF for primary bus
 	/// </summary>
-	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
+	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReport
 	{
-				private readonly IManufacturerReportFactory _mrfFactory;
+		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly IVIFReportFactory _vifFactory;
 
+		protected IXMLVehicleInformationFile VehicleInformationFile;
+
+
+		public override XDocument CustomerReport => null;
+
+		public override XDocument PrimaryVehicleReport => VehicleInformationFile?.Report;
+
+		#region constructors
+		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer) : base(writer)
+		{
+		}
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
 			IVIFReportFactory vifFactory) : base(writer)
 		{
 			_mrfFactory = mrfFactory;
+			
 			//_cifFactory = cifFactory;
 			_vifFactory = vifFactory;
 		}
 
+		#endregion
 
 
-
+		#region Overrides of XMLDeclarationReport
 		protected override void InstantiateReports(VectoRunData modelData)
 		{
 			var vehicleData = modelData.VehicleData.InputData;
@@ -53,17 +73,58 @@ namespace TUGraz.VectoCore.OutputData.XML
                 iepc,
                 ihpc);
 
+			/*	code from XMLDeclarationReportPrimaryVehicle
+			  if (modelData.Exempted) {
+				ManufacturerRpt = new XMLManufacturerReportExeptedPrimaryBus();
+				CustomerRpt = new XMLCustomerReportExemptedPrimaryBus();
+				VehicleInformationFile = new XMLExemptedPrimaryBusVehicleReport();
+
+			} else {
+				ManufacturerRpt = new XMLManufacturerReportPrimaryBus();
+				CustomerRpt = new XMLCustomerReport();
+				VehicleInformationFile = new XMLPrimaryBusVehicleReport();
+			}
+
+
+			 */
+
 
 		}
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			base.InitializeReport(modelData, fuelModes);
+			VehicleInformationFile.Initialize(modelData, fuelModes);
+		}
+		protected override void WriteResult(ResultEntry result)
+		{
+			base.WriteResult(result);
+			VehicleInformationFile.WriteResult(result);
+		}
 
+		protected override void GenerateReports()
+		{
+			ManufacturerRpt.GenerateReport();
+			var fullReportHash = GetSignature(ManufacturerRpt.Report);
+			CustomerRpt.GenerateReport(fullReportHash);
+			VehicleInformationFile.GenerateReport(fullReportHash);
+		}
+
+
+
+		protected override void OutputReports()
+		{
+			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
+			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, VehicleInformationFile.Report);
+		}
+		#endregion
 	}
 
-    // --------------------------------------------------
+	// --------------------------------------------------
 
-    /// <summary>
-    /// Create VIF of an interim (or the complete(d) step
-    /// </summary>
-    public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport
+	/// <summary>
+	/// Create VIF of an interim (or the complete(d) step
+	/// </summary>
+	public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport
 	{
 		protected readonly IVIFReportFactory _vifFactory;
 
@@ -134,11 +195,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create MRF and CIF of the complete(d) step
 	/// </summary>
-	public class XMLDeclarationReportCompletedVehicle_09 : XMLDeclarationReportCompletedVehicle
+	public class XMLDeclarationReportCompletedVehicle_09 : XMLDeclarationReport
 	{
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		protected readonly IManufacturerReportFactory _mrfFactory;
 
+        #region Constructors
+        public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer) : base(writer) { }
 		public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer, IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
 			IVIFReportFactory vifFactory) : base(writer)
@@ -146,6 +209,10 @@ namespace TUGraz.VectoCore.OutputData.XML
             _cifFactory = cifFactory;
 			_mrfFactory = mrfFactory;
 		}
+
+        #endregion
+
+        public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleReportInputData { get; set; }
 
 		#region Overrides of XMLDeclarationReportCompletedVehicle
 
@@ -173,8 +240,76 @@ namespace TUGraz.VectoCore.OutputData.XML
 				ihpc);
 
 		}
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			_weightingFactors = EqualWeighting;
 
+			InstantiateReports(modelData);
+
+			ManufacturerRpt.Initialize(modelData, fuelModes);
+			CustomerRpt.Initialize(modelData, fuelModes);
+		}
 		#endregion
+
+
+
+		private static IDictionary<Tuple<MissionType, LoadingType>, double> EqualWeighting =>
+			new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(
+				new Dictionary<Tuple<MissionType, LoadingType>, double>() {
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 1 },
+					{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 1 },
+					{ Tuple.Create(MissionType.Coach, LoadingType.ReferenceLoad), 1 },
+				});
+
+		protected internal override void DoWriteReport()
+		{
+			foreach (var specificResult in Results.Where(x => VehicleClassHelper.IsCompletedBus(x.VehicleClass)).OrderBy(x => x.VehicleClass)
+												.ThenBy(x => x.FuelMode).ThenBy(x => x.Mission))
+			{
+
+				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() && x.FuelMode == specificResult.FuelMode &&
+						x.Mission == specificResult.Mission && x.LoadingType == specificResult.LoadingType);
+				var primaryResult = genericResult.PrimaryResult ?? specificResult.PrimaryResult;
+				if (primaryResult == null)
+				{
+					throw new VectoException(
+						"no primary result entry set for simulation run vehicle class: {0}, mission: {1}, payload: {2}",
+						genericResult.VehicleClass, genericResult.Mission, genericResult.Payload);
+				}
+
+				(ManufacturerRpt as XMLManufacturerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
+				(CustomerRpt as XMLCustomerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
+			}
+
+			GenerateReports();
+
+			if (Writer != null)
+			{
+				OutputReports();
+			}
+		}
+
 	}
 	// --------------------------------------------------
 

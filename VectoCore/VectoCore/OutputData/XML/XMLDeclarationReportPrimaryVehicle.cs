@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
-	
+
 
 		protected override void OutputReports()
 		{
@@ -71,5 +71,6 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		}
 
 		#endregion
+		
 	}
 }

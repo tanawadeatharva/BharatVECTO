@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				new TempFileOutputWriter(originalReportWriter, ReportType.DeclarationReportManufacturerXML)
 				;
 			_currentStageDeclarationReport =
-				new XMLDeclarationReportPrimaryVehicle(_currentStageOutputDataWriter);
+				new XMLDeclarationReportPrimaryVehicle_09(_currentStageOutputDataWriter);
 			_currentStageInputData = originalStageInputData.PrimaryVehicle;
 
 		}

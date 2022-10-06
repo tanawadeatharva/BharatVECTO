@@ -106,7 +106,7 @@ namespace TUGraz.VectoMockup.Reports
                 {
                     case VehicleCategory.HeavyBusCompletedVehicle:
                         throw new NotImplementedException();
-                        return new XMLDeclarationReportCompletedVehicle(outputDataWriter)
+                        return new XMLDeclarationReportCompletedVehicle_09(outputDataWriter)
                         {
                             PrimaryVehicleReportInputData = declarationInputDataProvider.PrimaryVehicleData,
                         };
