@@ -66,8 +66,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-        [Obsolete]
-		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
+		[Obsolete]
+		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		{
+
+		}
 
 		
 		public XMLDeclarationReport(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)

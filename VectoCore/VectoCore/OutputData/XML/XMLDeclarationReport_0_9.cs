@@ -23,7 +23,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// </summary>
 	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReport
 	{
-		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly IVIFReportFactory _vifFactory;
 
 		protected IXMLVehicleInformationFile VehicleInformationFile;
@@ -39,12 +38,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
-			ICustomerInformationFileFactory cifFactory,
-			IVIFReportFactory vifFactory) : base(writer)
+			IVIFReportFactory vifFactory) : base(writer, mrfFactory, null)
 		{
-			_mrfFactory = mrfFactory;
-			
-			//_cifFactory = cifFactory;
+
 			_vifFactory = vifFactory;
 		}
 
@@ -73,20 +69,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                 iepc,
                 ihpc);
 
-			/*	code from XMLDeclarationReportPrimaryVehicle
-			  if (modelData.Exempted) {
-				ManufacturerRpt = new XMLManufacturerReportExeptedPrimaryBus();
-				CustomerRpt = new XMLCustomerReportExemptedPrimaryBus();
-				VehicleInformationFile = new XMLExemptedPrimaryBusVehicleReport();
-
-			} else {
-				ManufacturerRpt = new XMLManufacturerReportPrimaryBus();
-				CustomerRpt = new XMLCustomerReport();
-				VehicleInformationFile = new XMLPrimaryBusVehicleReport();
-			}
-
-
-			 */
+			
 
 
 		}
@@ -197,17 +180,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// </summary>
 	public class XMLDeclarationReportCompletedVehicle_09 : XMLDeclarationReport
 	{
-		protected readonly ICustomerInformationFileFactory _cifFactory;
-		protected readonly IManufacturerReportFactory _mrfFactory;
+	
 
         #region Constructors
-        public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer) : base(writer) { }
+        //public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer) : base(writer) { }
 		public XMLDeclarationReportCompletedVehicle_09(IReportWriter writer, IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
-			IVIFReportFactory vifFactory) : base(writer)
+			IVIFReportFactory vifFactory) : base(writer, mrfFactory, cifFactory)
 		{
-            _cifFactory = cifFactory;
-			_mrfFactory = mrfFactory;
 		}
 
         #endregion
