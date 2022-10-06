@@ -53,6 +53,8 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -228,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(writer);//;, _kernel.Get<IManufacturerReportFactory>(), _kernel.Get<ICustomerInformationFileFactory>());
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
