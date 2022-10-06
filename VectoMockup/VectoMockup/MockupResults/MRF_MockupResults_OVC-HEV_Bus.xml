@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.xsd">
 	<Results>
 		<Status>success</Status>
-		<!-- OCV HEV (and OCV FCV in future) Bus -->
+		<!-- OVC HEV (and OVC FCV in future) Bus -->
 		<Result status="success" xsi:type="ResultSuccessOVCHEVType">
 			<Mission>Long Haul</Mission>
 			<Distance unit="km">100.185</Distance>
@@ -105,7 +105,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\
 				<UtilityFactor>0.345</UtilityFactor>
 			</Total>
 		</Result>
-		<!-- END OCV HEV (and OCV FCV in future) Bus -->
+		<!-- END OVC HEV (and OVC FCV in future) Bus -->
 	</Results>
 </VectoMockResults>
-
