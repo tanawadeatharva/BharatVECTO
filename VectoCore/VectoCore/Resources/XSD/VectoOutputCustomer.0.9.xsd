@@ -1467,7 +1467,7 @@
 			<xs:choice>
 				<xs:sequence>
 					<xs:element name="Result" type="AbstractResultType" maxOccurs="unbounded"/>
-					<xs:element name="Summary" type="AbstractResultSummaryType"/>
+					<xs:element name="Summary" type="AbstractResultSummaryType" minOccurs="0"/>
 				</xs:sequence>
 				<xs:element name="ExemptedVehicle">
 					<xs:complexType/>
