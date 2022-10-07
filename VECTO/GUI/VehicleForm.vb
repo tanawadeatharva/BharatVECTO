@@ -97,7 +97,9 @@ Public Class VehicleForm
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
+		gbEPTO.Enabled = Not Cfg.DeclMode
 		gbPTODrive.Enabled = Not Cfg.DeclMode
+		cbPTOStandstillCycleType.Enabled = Not Cfg.DeclMode
 		tpRoadSweeper.Visible = Not Cfg.DeclMode
 
 		CbCdMode.DataSource = EnumHelper.GetKeyValuePairs(Of CrossWindCorrectionMode)(Function(t) t.GetLabel())
@@ -139,8 +141,15 @@ Public Class VehicleForm
 			Function(technology) New With {.Key = technology, .Value = technology}).ToList()
 		cbPTOStandstillCycleType.DataSource =
 			EnumHelper.GetValues(Of PTOStandStillType)
-		cbPTOStandstillCycleType.SelectedIndex = -1
+		
+		If(Cfg.DeclMode) Then
+			cbPTOStandstillCycleType.SelectedIndex = -1
+		Else
+			'VehicleType
+		End If
 
+	
+		
 
 		cbLegislativeClass.DataSource = EnumHelper.GetKeyValuePairs(Of LegislativeClass)(Function(t) t.GetLabel())
 		'cbLegislativeClass.DataSource = EnumHelper.GetValues(Of LegislativeClass).Cast(Of LegislativeClass?).Select( _
@@ -1357,7 +1366,7 @@ Public Class VehicleForm
 			pnPTO.Enabled = False
 			gbPTODrive.Enabled = False
 			tbPTOLossMap.Text = ""
-			cbPTOStandstillCycleType.SelectedIndex = -1
+			'cbPTOStandstillCycleType.SelectedIndex = -1
 		Else
 			pnPTO.Enabled = True
 			gbPTODrive.Enabled = True
@@ -1517,8 +1526,8 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btnPTOelCycle_Click(sender As Object, e As EventArgs) Handles btnPTOelCycle.Click
-		If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTOElectricCycle.Text, GetPath(_vehFile))) Then
-			tbPTOElectricCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
+		If PTODrivingCycleElectricStandstillFileBrowser.OpenDialog(FileRepl(tbPTOElectricCycle.Text, GetPath(_vehFile))) Then
+			tbPTOElectricCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleElectricStandstillFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
@@ -1780,17 +1789,26 @@ Public Class VehicleForm
 
 	Private Sub cbPTOStandstillCycleType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOStandstillCycleType.SelectedIndexChanged
 		Dim cb = TryCast(sender, ComboBox)
+	
+		If (Cfg.DeclMode) Then
+			Exit Sub
+		End If
 		If ((cb Is Nothing) Or (cb.SelectedIndex = -1)) Then
+			gbPTOICEGroupBox.Enabled = false
+			gbEPTO.Enabled = false
 			Return
 		End If
 
 		Dim val = CType(cb.SelectedValue, PTOStandStillType)
-		If (val = PTOStandStillType.Electrical) Then
-			gbPTOICEGroupBox.Enabled = False
-			gbEPTO.Enabled = True
-		Else
-			gbPTOICEGroupBox.Enabled = True
-			gbEPTO.Enabled = False
-		End If
+
+		gbPTOICEGroupBox.Enabled = (val = PTOStandStillType.Mechanical)
+		gbEPTO.Enabled = (val = PTOStandStillType.Electrical)
+		'If (val = PTOStandStillType.Electrical) Then
+		'	gbPTOICEGroupBox.Enabled = False
+		'	gbEPTO.Enabled = True
+		'Else I
+		'	gbPTOICEGroupBox.Enabled = True
+		'	gbEPTO.Enabled = False
+		'End If
 	End Sub
 End Class
