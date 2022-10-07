@@ -150,3 +150,15 @@ P_loss_total = P_clutch_loss + P_gbx_loss + P_ret_loss + P_gbx_inertia + P_angle
 								P_wheel_inertia + P_air + P_roll + P_grad + P_veh_inertia (+ P_PTOconsumer + P_PTO_transm)
 
 P_trac = P_veh_inertia + P_roll + P_air + P_slope
+
+
+**Driving Action:**
+
+| DrivingAction    | Value   |
+| ---------------- | ------- |
+| Halt             | 0       |
+| Roll 	           | 2       |
+| Coast	           | 4       |
+| Accelerate       | 6       |
+| Brake            | -5      |
+
