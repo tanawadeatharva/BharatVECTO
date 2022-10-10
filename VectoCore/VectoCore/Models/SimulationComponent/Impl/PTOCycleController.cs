@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
 		{
-			if (_ptoActive) {		
+			if (_ptoActive) {
 				CycleIterator.MoveNext();
 			}
 		}
@@ -186,6 +186,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void ActivateIdle()
 		{
 			_ptoActive = false;
+			Reset();
 		}
 
 		#endregion
