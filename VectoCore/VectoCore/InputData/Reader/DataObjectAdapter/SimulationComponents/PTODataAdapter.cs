@@ -37,7 +37,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				return new PTOData
 				{
 					TransmissionPowerDemand = powerDemand,
-					//TransmissionPowerDemandElectrical = 
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				};
@@ -53,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			return new PTOData()
 			{
-				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology, //Consider vehicles with transmission ? 
+				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
 				LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				PTOCycle =
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultE_PTOActivationCycle),

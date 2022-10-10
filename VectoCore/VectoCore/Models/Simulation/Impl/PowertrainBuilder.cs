@@ -782,9 +782,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 
 				if (data.PTO?.PTOCycle != null) {
-					cycle.IdleController = GetPEVIdleController(data.PTO, container);
-					
-					elAux.AddAuxiliary(new EPTO());
+					var pevPTOController =  GetPEVIdleController(data.PTO, container);
+					cycle.IdleController = pevPTOController;
+					elAux.AddAuxiliary(new EPTO(pevPTOController));
 				}
 
 

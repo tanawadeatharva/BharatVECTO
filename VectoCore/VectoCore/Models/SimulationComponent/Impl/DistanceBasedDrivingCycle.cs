@@ -481,17 +481,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public CycleData CycleData {
 			get
 			{
-				var cycleData = new CycleData
+				return new CycleData
 				{
 					AbsTime = CurrentState.AbsTime,
 					AbsDistance = CurrentState.Distance,
 					LeftSample = Left,
 					RightSample = CycleIntervalIterator.RightSample,
 				};
-				IdleController?.UpdateCycleEntry(cycleData);
-				
-
-				return cycleData;
 			}
 		}
 			

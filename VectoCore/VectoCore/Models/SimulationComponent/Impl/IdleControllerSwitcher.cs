@@ -111,6 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+
 		public Second Duration
 		{
 			get {
@@ -121,9 +122,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public void UpdateCycleEntry(CycleData cycleData)
+		public CycleData CycleData
 		{
-			//Do nothing
+			get => throw new NotImplementedException();
 		}
 	}
 }

@@ -48,8 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container);
 		Second GetNextCycleTime();
 		Second Duration { get; }
-
-		void UpdateCycleEntry(CycleData entry);
+		CycleData CycleData { get; }
 	}
 
 	public class PTOCycleController : PowertrainDrivingCycle, IIdleController
@@ -142,6 +141,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AbsTime = -1.SI<Second>();
 		}
 
+		public CycleData CycleData
+		{
+			get => new CycleData() {
+				LeftSample = _ptoActive ? CycleIterator.LeftSample : new DrivingCycleData.DrivingCycleEntry(),
+			};
+		} 
+
 
 		public void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
 		{
@@ -165,16 +171,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CycleIterator.Reset();
 		}
-
-		public void UpdateCycleEntry(CycleData cycleData)
-		{
-			if (_ptoActive)
-			{
-				cycleData.LeftSample.PTOElectricalPowerDemand = CycleIterator.LeftSample.PTOElectricalPowerDemand;
-			}
-		}
-
-
 
 		#region Implementation of IIdleControllerSwitcher
 
