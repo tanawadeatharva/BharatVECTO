@@ -751,7 +751,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var entries = table.Rows.Cast<DataRow>().Select(
 					row => new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
-						PTOElectricalPowerDemand = row.ParseDouble(Fields.PTOElectricalPowerDemand).SI<Watt>(),
+						PTOElectricalPowerDemand = (row.ParseDouble(Fields.PTOElectricalPowerDemand) * 1000).SI<Watt>(),
 					}).ToArray();
 
 				return entries;

@@ -781,13 +781,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				dcdc.Connect(elAux);
 			
 
-				if (data.PTO != null)
-				{
-					cycle.IdleController = GetIdleController(data.PTO, em, container) as IdleControllerSwitcher;
-					if (cycle.IdleController == null)
-					{
-						throw new VectoException("Could not assign IdleController to cycle");
-					}
+				if (data.PTO?.PTOCycle != null) {
+					cycle.IdleController = GetPEVIdleController(data.PTO, container);
+					
 					elAux.AddAuxiliary(new EPTO());
 				}
 
@@ -1456,11 +1452,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? engine.IdleController
 				: new IdleControllerSwitcher(engine.IdleController, new PTOCycleController(container, pto.PTOCycle));
 
-		private static IIdleController GetIdleController(PTOData pto, IElectricMotor electricMotor,
-			IVehicleContainer container) =>
-			pto?.PTOCycle is null
-				? electricMotor.IdleController
-				: new IdleControllerSwitcher(electricMotor.IdleController, new PTOCycleController(container, pto.PTOCycle));
+		private static IIdleControllerSwitcher GetPEVIdleController(PTOData pto,
+			IVehicleContainer container) => pto?.PTOCycle is null ? null : new EPTOCycleController(container, pto?.PTOCycle);
+			
 
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
@@ -1621,11 +1615,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ParallelHybridVehicle:
 
 							return AMTShiftStrategyOptimized.Name;
-						//return new AMTShiftStrategyOptimized(container);
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
 							return PEVAMTShiftStrategy.Name;
-						//return new PEVAMTShiftStrategy(container);
 						default:
 							throw new VectoException(
 								"no default gearshift strategy available for gearbox type {0} and job type {1}",
@@ -1633,7 +1625,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 				case GearboxType.MT:
 					return MTShiftStrategy.Name;
-				//return new MTShiftStrategy(container);
 
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
@@ -1641,11 +1632,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ParallelHybridVehicle:
 						case VectoSimulationJobType.ConventionalVehicle:
 							return ATShiftStrategyOptimized.Name;
-						//return new ATShiftStrategyOptimized(container);
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
 							return APTNShiftStrategy.Name;
-						//return new APTNShiftStrategy(container);
 						default:
 							throw new VectoException(
 								"no default gearshift strategy available for gearbox type {0} and job type {1}",
@@ -1659,7 +1648,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
 							return APTNShiftStrategy.Name;
-						//return new APTNShiftStrategy(container);
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;
 						default:
@@ -1670,7 +1658,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					switch (jobType) {
 						case VectoSimulationJobType.IHPC:
 							return AMTShiftStrategyOptimized.Name;
-						//return new AMTShiftStrategyOptimized(container);
 						default:
 							throw new ArgumentException(
 								"IHPC Gearbox is only applicable on hybrid vehicle of type IHPC.");

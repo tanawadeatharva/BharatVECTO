@@ -135,6 +135,7 @@
   <ItemGroup>
     <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
     <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
+    <Folder Include="Models\SimulationComponent\Impl\Controller\" />
   </ItemGroup>
 
 </Project>

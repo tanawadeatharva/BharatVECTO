@@ -9,7 +9,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Controller;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -33,11 +32,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public BusAuxiliariesAdapter BusAux { protected get; set; }
 
-        #region Implementation of IElectricMotor
-		private IIdleController _idleController;
-        public IIdleController IdleController => _idleController ?? (_idleController = new BatteryElectricIdleController());
-
-		#endregion
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, PowertrainPosition position) : base(container)
 		{
@@ -125,6 +119,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				PreviousState.DrivetrainInTorque = 0.SI<NewtonMeter>();
 				//PreviousState.InAngularVelocity = emOutAngularVelocity;
 			}
+			//IdleController.RequestPort = NextComponent ?? ElectricPower;
+
 			return NextComponent.Initialize(outTorque, outAngularVelocity);
 			//return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
 		}
@@ -142,6 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
+
 			if (TransmissionRatioPerGear == null) {
 				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, 1.0);
 			}

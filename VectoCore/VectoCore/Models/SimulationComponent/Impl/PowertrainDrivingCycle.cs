@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity, false);
 				CurrentState.InAngularVelocity = angularVelocity;
 				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
+				
 				debug.Add("PDC.DHR-0", response);
 				switch (response) {
 					case ResponseGearShift _:

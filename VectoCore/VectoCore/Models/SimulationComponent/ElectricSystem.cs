@@ -28,6 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
+
 			var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
 			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
 			var totalPowerDemand = powerDemand + chargePower - auxDemand;

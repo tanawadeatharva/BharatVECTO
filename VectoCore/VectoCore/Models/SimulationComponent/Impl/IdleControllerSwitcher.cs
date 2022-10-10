@@ -33,11 +33,22 @@ using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class IdleControllerSwitcher : IIdleController
+
+
+
+	public interface IIdleControllerSwitcher : IPTOCycleController
+	{
+		void ActivatePTO();
+		void ActivateIdle();
+	}
+
+	
+	public class IdleControllerSwitcher : IIdleController, IIdleControllerSwitcher
 	{
 		private readonly IIdleController _idleController;
 		private readonly PTOCycleController _ptoController;
@@ -108,6 +119,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				return 0.SI<Second>();
 			}
+		}
+
+		public void UpdateCycleEntry(CycleData cycleData)
+		{
+			//Do nothing
 		}
 	}
 }

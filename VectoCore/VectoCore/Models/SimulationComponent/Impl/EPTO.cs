@@ -9,9 +9,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class EPTO : IAuxDemand
 	{
 		#region Implementation of IAuxDemand
-
 		public Watt PowerDemand(IDataBus dataBus)
 		{
+			
 			if (dataBus.DrivingCycleInfo.PTOActive) {
 				return dataBus.DrivingCycleInfo.CycleData.LeftSample.PTOElectricalPowerDemand ?? 0.SI<Watt>();
 			}

@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly IDrivingCycleData Data;
 		internal DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
-		internal IdleControllerSwitcher IdleController;
+		internal IIdleControllerSwitcher IdleController;
 		private Meter CycleEndDistance;
 
 		
@@ -288,6 +288,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
+			
 
 			return NextComponent.Request(absTime, dt, Left.VehicleTargetSpeed, CurrentState.Gradient);
 		}
@@ -477,13 +478,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data.Finish();
 		}
 
-		public CycleData CycleData =>
-			new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = Left,
-				RightSample = CycleIntervalIterator.RightSample
-			};
+		public CycleData CycleData {
+			get
+			{
+				var cycleData = new CycleData
+				{
+					AbsTime = CurrentState.AbsTime,
+					AbsDistance = CurrentState.Distance,
+					LeftSample = Left,
+					RightSample = CycleIntervalIterator.RightSample,
+				};
+				IdleController?.UpdateCycleEntry(cycleData);
+				
+
+				return cycleData;
+			}
+		}
+			
+			
 
 		public bool PTOActive { get; private set; }
 

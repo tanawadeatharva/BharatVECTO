@@ -122,14 +122,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 				var powerDemand = 0.SI<Watt>();
-				if (DataBus.VehicleInfo.VehicleStopped) {
-					powerDemand += auxiliarieIgnoredDuringVehicleStop.Contains(aux.Key)
-						? aux.Value(DataBus)
-						: 0.SI<Watt>();
-				} else {
-					powerDemand += aux.Value(DataBus);
-				}
-				
+
+				powerDemand += aux.Value(DataBus);
+
 
 
 				if (!dryRun) {
