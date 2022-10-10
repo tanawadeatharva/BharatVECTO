@@ -54,6 +54,8 @@ public class HeavyLorrySimulation
 		PrintRuns(jobContainer, null);
 		jobContainer.Execute(multiThreaded);
 		jobContainer.WaitFinished();
+		Assert.IsTrue(jobContainer.AllCompleted);
+		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
 
