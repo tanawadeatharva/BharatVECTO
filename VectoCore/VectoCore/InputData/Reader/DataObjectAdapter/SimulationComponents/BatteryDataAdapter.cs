@@ -20,15 +20,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				return null;
 			}
 
-			var bat = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
+			var batteries = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
 
-			if (bat.Length == 0)
+			if (batteries.Length == 0)
 			{
 				return null;
 			}
 
 			var retVal = new BatterySystemData();
-			foreach (var entry in bat)
+			foreach (var entry in batteries)
 			{
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
 				if (b == null)
@@ -47,8 +47,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					}
 				
 					var batteryData = new BatteryData() {
-						MinSOC = minSoc,
-						MaxSOC = maxSoc,
+						MinSOC = maxSoc  * ((1d/2) * DeclarationData.Battery.GenericDeterioration)
+								+ minSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration),
+						MaxSOC = (maxSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration)
+								+ minSoc * ((1d/2) * DeclarationData.Battery.GenericDeterioration)),
 						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 						Capacity = b.Capacity,
 						InternalResistance =

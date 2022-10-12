@@ -1228,8 +1228,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <summary>
 			/// Percentage of the maximum voltage of the battery
 			/// </summary>
-			private const double SOCMinHP = 0.2;
-			private const double SOCMaxHP = 0.8;
+			private const double SOCMinHP = 0.05;
+			private const double SOCMaxHP = 0.95;
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
@@ -1247,6 +1247,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						throw new ArgumentOutOfRangeException(nameof(type), type, null);
 				}
 			}
+
+			public static double GenericDeterioration => 0.05;
 
 
 			public static double GetMaxSoc(BatteryType type)
