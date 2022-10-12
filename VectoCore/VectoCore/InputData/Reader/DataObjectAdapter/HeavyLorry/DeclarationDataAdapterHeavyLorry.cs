@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
-			public virtual BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
+			public virtual BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
 			{
 				throw new NotImplementedException();
 			}
@@ -247,9 +247,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 					gears);
 			}
 
-			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData)
+			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData, VectoSimulationJobType jobType, bool ovc)
 			{
-				return _eletricStorageAdapter.CreateBatteryData(batteryInputData);
+				return _eletricStorageAdapter.CreateBatteryData(batteryInputData, jobType, ovc);
 			}
 
 			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData)
@@ -380,9 +380,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _electricMachineAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
 			}
 
-			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)
+			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
 			{
-				return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage);
+				return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage, jobType: jobType, ovc: ovc);
 			}
 
 			public override SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage)

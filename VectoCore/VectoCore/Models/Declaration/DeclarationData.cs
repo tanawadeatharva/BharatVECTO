@@ -1225,6 +1225,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Battery
 		{
+			public static GenericSOC GenericSOC = new GenericSOC();
+
 			/// <summary>
 			/// Percentage of the maximum voltage of the battery
 			/// </summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -6,6 +7,7 @@ using Castle.Core.Resource;
 using Moq;
 using NLog.LayoutRenderers;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
@@ -27,73 +29,53 @@ public class BatteryDataAdapterTest
 
 	}
 
-	[TestCase(null, null, 0.0725, 0.9275, 0.8550)]
-	public void PEVBatteryDataAdapterTest(
+	//PEV
+	[TestCase(null, null, 0.0725, 0.9275, 0.8550, VectoSimulationJobType.BatteryElectricVehicle, true)]
+	[TestCase(null, null, 0.0725, 0.9275, 0.8550, VectoSimulationJobType.BatteryElectricVehicle, false)]
+
+	//HEV Ovc
+	[TestCase(0.23, 0.77, 0.2435, 0.7565, 0.5130, VectoSimulationJobType.SerialHybridVehicle, true)]
+	[TestCase(null, null, 0.1675, 0.8325, 0.6650, VectoSimulationJobType.SerialHybridVehicle, true)]
+	[TestCase(0.05, 0.97, 0.1675, 0.8325, 0.6650, VectoSimulationJobType.SerialHybridVehicle, true)]
+
+	//HEV Non Ovc
+	[TestCase(0.40, 0.60, 0.4050, 0.5950, 0.1900, VectoSimulationJobType.SerialHybridVehicle, false)]
+	[TestCase(null, null, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
+	[TestCase(0.15, 0.85, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
+
+
+	public void GenericSOCTest(
 		double inputMinSoc,
 		double inputMaxSoc,
 		double expectedMinSoc,
 		double expectedMaxSoc,
-		double usableSocRange)
-	{
-		var elStorage = CreateElectricStorage(null, null);
-		var inputData = CreateElectricStorageSystem(elStorage.Object);
-
-
-		var batteryData = _electricStorageAdapter.CreateBatteryData(inputData.Object);
-		Assert.AreEqual(1, batteryData.Batteries.Count);
-		
-		var battery = batteryData.Batteries.FirstOrDefault().Item2;
-		
-		Assert.IsTrue(battery.MinSOC.IsEqual(expectedMinSoc));
-		Assert.IsTrue(battery.MaxSOC.IsEqual(expectedMaxSoc ));
-
-		Assert.IsTrue(usableSocRange.IsEqual(battery.GetUsableSocRange()), $"Invalid {nameof(usableSocRange)} expected {usableSocRange} got {battery.GetUsableSocRange()}");
-
-	}
-
-	private static Mock<IElectricStorageDeclarationInputData> CreateElectricStorage(double? minSoc, double? maxSoc)
-	{
-		var elStorage = new Mock<IElectricStorageDeclarationInputData>();
-		var ressPack = new Mock<IBatteryPackDeclarationInputData>();
-
-		ressPack.Setup(m => m.Capacity).Returns((1000).SI<AmpereSecond>());
-
-		ressPack.Setup(m => m.MinSOC).Returns(() => minSoc);
-		ressPack.Setup(m => m.MaxSOC).Returns(() => maxSoc);
-		ressPack.Setup(m => m.MaxCurrentMap).Returns(
-			GetMockTableData(new[] {
-				new[]{"0.0", "0.0", "0.0"}, 
-				new[]{"0.0", "0.0", "0.0"},
-				new[]{"0.0", "0.0", "0.0"}
-			}));
-
-		ressPack.Setup(m => m.InternalResistanceCurve).Returns(
-			GetMockTableData(new[] {
-				new[]{"0.0", "0.0"},
-				new[]{"0.0", "0.0"},
-				new[]{"0.0", "0.0"}
-			}));
-		ressPack.Setup(m => m.VoltageCurve).Returns(
-			GetMockTableData(new[] {
-				new[]{"0.0", "0.0"},
-				new[]{"0.0", "0.0"},
-				new[]{"0.0", "0.0"}
-			}));
-
-		elStorage.Setup(m => m.REESSPack).Returns(() => ressPack.Object);
-		return elStorage;
-	}
-
-	[TestCase]
-	public void OVCHevBatteryDataAdapterTest()
+		double usableSocRange, VectoSimulationJobType vectoSimulationJobType, bool ovc)
 	{
 
-	}
+			var elStorage = CreateElectricStorage(inputMinSoc, inputMaxSoc);
+			var inputData = CreateElectricStorageSystem(elStorage.Object);
 
-	[TestCase]
-	public void NonOVCHevBatteryDataAdapterTest()
-	{
 
+			BatterySystemData batteryData;
+			if (vectoSimulationJobType == VectoSimulationJobType.BatteryElectricVehicle && !ovc) {
+
+				Assert.Throws<VectoException>(() => _electricStorageAdapter.CreateBatteryData(inputData.Object, vectoSimulationJobType, ovc));
+				Assert.Pass();
+			}
+
+			batteryData = _electricStorageAdapter.CreateBatteryData(inputData.Object, vectoSimulationJobType, ovc);
+
+
+
+			Assert.AreEqual(1, batteryData.Batteries.Count);
+
+			var battery = batteryData.Batteries.FirstOrDefault().Item2;
+
+			Assert.IsTrue(battery.MinSOC.IsEqual(expectedMinSoc), $"Expected: {expectedMinSoc}, Actual{battery.MinSOC}");
+			Assert.IsTrue(battery.MaxSOC.IsEqual(expectedMaxSoc), $"Expected: {expectedMaxSoc}, Actual{battery.MaxSOC}");
+
+			Assert.IsTrue(usableSocRange.IsEqual(battery.GetUsableSocRange()),
+				$"Invalid {nameof(usableSocRange)} expected {usableSocRange} got {battery.GetUsableSocRange()}");
 	}
 
 	Mock<IElectricStorageSystemDeclarationInputData> CreateElectricStorageSystem(params IElectricStorageDeclarationInputData[] elStorageInputData)
@@ -121,6 +103,39 @@ public class BatteryDataAdapterTest
 
 	}
 
+
+	private static Mock<IElectricStorageDeclarationInputData> CreateElectricStorage(double? minSoc, double? maxSoc)
+	{
+		var elStorage = new Mock<IElectricStorageDeclarationInputData>();
+		var ressPack = new Mock<IBatteryPackDeclarationInputData>();
+
+		ressPack.Setup(m => m.Capacity).Returns((1000).SI<AmpereSecond>());
+
+		ressPack.Setup(m => m.MinSOC).Returns(() => minSoc);
+		ressPack.Setup(m => m.MaxSOC).Returns(() => maxSoc);
+		ressPack.Setup(m => m.MaxCurrentMap).Returns(
+			GetMockTableData(new[] {
+				new[]{"0.0", "0.0", "0.0"},
+				new[]{"0.0", "0.0", "0.0"},
+				new[]{"0.0", "0.0", "0.0"}
+			}));
+
+		ressPack.Setup(m => m.InternalResistanceCurve).Returns(
+			GetMockTableData(new[] {
+				new[]{"0.0", "0.0"},
+				new[]{"0.0", "0.0"},
+				new[]{"0.0", "0.0"}
+			}));
+		ressPack.Setup(m => m.VoltageCurve).Returns(
+			GetMockTableData(new[] {
+				new[]{"0.0", "0.0"},
+				new[]{"0.0", "0.0"},
+				new[]{"0.0", "0.0"}
+			}));
+
+		elStorage.Setup(m => m.REESSPack).Returns(() => ressPack.Object);
+		return elStorage;
+	}
 
 }
 

@@ -13,7 +13,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 	public class ElectricStorageAdapter
 	{
-		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData)
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
+			VectoSimulationJobType jobType, bool ovc)
 		{
 			if (batteryInputData == null)
 			{
@@ -28,6 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 
 			var retVal = new BatterySystemData();
+			var genericSOC = DeclarationData.Battery.GenericSOC.Lookup(jobType, ovc);
 			foreach (var entry in batteries)
 			{
 				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
@@ -37,12 +39,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				}
 
 				//for (var i = 0; i < entry.Count; i++) {
-					var minSoc = DeclarationData.Battery.GetMinSoc(b.BatteryType);
+					var minSoc = genericSOC.SOCMin;
 					if (b.MinSOC != null && b.MinSOC > minSoc) {
 						minSoc = b.MinSOC.Value;
 					}
-					var maxSoc = DeclarationData.Battery.GetMaxSoc(b.BatteryType);
-					if (b.MaxSOC != null && b.MaxSOC < maxSoc) {
+
+					var maxSoc = genericSOC.SOCMax;
+					if (b.MaxSOC != null && b.MaxSOC < maxSoc && b.MaxSOC > b.MinSOC) {
 						maxSoc = b.MaxSOC.Value;
 					}
 				

@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var runData = CreateCommonRunData(vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 				runData.VehicleData = DataAdapter.CreateVehicleData(vehicle, _segment, mission, loading, _allowVocational);
 				runData.EngineData = DataAdapter.CreateEngineData(vehicle, engineMode, mission);
-				runData.BatteryData = DataAdapter.CreateBatteryData(vehicle.Components.ElectricStorage);
+				runData.BatteryData = DataAdapter.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.VehicleType, vehicle.OvcHev);
 				runData.SuperCapData = DataAdapter.CreateSuperCapData(vehicle.Components.ElectricStorage);
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, runData.BatteryData.CalculateAverageVoltage());
 				runData.GearboxData = _gearboxData;

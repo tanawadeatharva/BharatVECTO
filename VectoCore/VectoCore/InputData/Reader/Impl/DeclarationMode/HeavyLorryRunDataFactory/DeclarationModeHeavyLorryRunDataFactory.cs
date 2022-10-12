@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				result.AirdragData =
 					DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment);
 				result.DriverData = DataAdapter.CreateDriverData(_segment);
-				result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage);
+				result.BatteryData = DataAdapter.CreateBatteryData(componentsElectricStorage: vehicle.Components.ElectricStorage, vehicle.VehicleType, true);
 				result.SuperCapData = DataAdapter.CreateSuperCapData(componentsElectricStorage: vehicle.Components.ElectricStorage);
 				result.ElectricMachinesData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateAverageVoltage(), null);
 				result.AngledriveData = DataAdapter.CreateAngledriveData(vehicle.Components.AngledriveInputData);
