@@ -1,14 +1,8 @@
-﻿using System;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory

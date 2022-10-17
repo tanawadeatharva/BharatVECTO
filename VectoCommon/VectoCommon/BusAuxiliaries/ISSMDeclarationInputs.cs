@@ -27,6 +27,17 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		IAuxHeater AuxHeater { get; }
 
 		string HVACTechnology { get; }
+
+		//HeatPumpType HeatPumpTypeHeatingDriverCompartment { get; }
+		
+		HeatPumpType HeatPumpTypeDriverCompartment { get; }
+		
+		//HeatPumpType HeatPumpTypeHeatingPassengerCompartment { get; }
+		
+		HeatPumpType HeatPumpTypePassengerCompartment { get; }
+
+		BusHVACSystemConfiguration HVACSystemConfiguration { get; }
+
 		string Source { get; }
 	}
 
@@ -91,7 +102,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		Watt HVACMaxCoolingPower { get; }
 
-		double COP { get; }
+		Watt HVACMaxCoolingPowerDriver { get; }
+
+		Watt HVACMaxCoolingPowerPassenger { get; }
+
+		//double COP { get; }
 	}
 
 	public interface IVentilation
@@ -225,7 +240,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		private const string NON_R_744_4_STAGE = "non R-744 4-stage";
 		private const string NON_R_744_CONTINUOUS = "non R-744 continuous";
 		
-		public static HeatPumpType Parse(string parse)
+		public static HeatPumpType? TryParse(string parse)
 		{
 			switch (parse)
 			{
@@ -240,9 +255,20 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 				case "2-stage": return HeatPumpType.non_R_744_2_stage;
 				case "3-stage": return HeatPumpType.non_R_744_3_stage;
 				case "4-stage": return HeatPumpType.non_R_744_4_stage;
-				default: throw new InvalidEnumArgumentException("HeatPumpType");
+				default: return null; //throw new InvalidEnumArgumentException("HeatPumpType");
 			}
 		}
+
+		public static HeatPumpType Parse(string parse)
+		{
+			var retVal = TryParse(parse);
+			if (retVal == null) {
+				throw new InvalidEnumArgumentException("HeatPumpType");
+			}
+
+			return retVal.Value;
+		}
+
 
 		public static string GetLabel(this HeatPumpType? type)
 		{
@@ -281,30 +307,59 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			return !type.IsElectrical();
 		}
 
-		public static double COP(this HeatPumpType type, FloorType floortype)
-		{
-			var cop = 3.5;
+		//public static double COP(this HeatPumpType type, FloorType floortype)
+		//{
+		//	var cop = 3.5;
 
-			switch (type) {
-				case HeatPumpType.none:
-				//case HeatPumpType.Unknown:
-					return 0;
-				case HeatPumpType.non_R_744_2_stage:
-					return cop;
-				case HeatPumpType.non_R_744_3_stage:
-				case HeatPumpType.non_R_744_4_stage:
-					return cop * 1.02;
-				case HeatPumpType.non_R_744_continuous:
-				case HeatPumpType.R_744:
-					return floortype == FloorType.LowFloor
-						? cop * 1.04
-						: cop * 1.06;
-				default:
-					throw new ArgumentOutOfRangeException();
+		//	switch (type) {
+		//		case HeatPumpType.none:
+		//		//case HeatPumpType.Unknown:
+		//			return 0;
+		//		case HeatPumpType.non_R_744_2_stage:
+		//			return cop;
+		//		case HeatPumpType.non_R_744_3_stage:
+		//		case HeatPumpType.non_R_744_4_stage:
+		//			return cop * 1.02;
+		//		case HeatPumpType.non_R_744_continuous:
+		//		case HeatPumpType.R_744:
+		//			return floortype == FloorType.LowFloor
+		//				? cop * 1.04
+		//				: cop * 1.06;
+		//		default:
+		//			throw new ArgumentOutOfRangeException();
+		//	}
+		//}
+	}
+
+
+    [Flags]
+	public enum HeaterType
+	{
+		None = 0,
+		WaterElectricHeater = 1<<1,
+		AirElectricHeater = 1<<2,
+		OtherElectricHeating = 1<<3,
+		FuelHeater = 1<<4,
+	}
+
+	public static class HeaterTypeHelper
+	{
+		private const string WATER_ELECTRIC_HEATER = "water electric heater";
+		private const string AIR_ELECTRIC_HEATER = "air electric heater";
+		private const string OTHER_ELECTRIC_HEATING = "other electric heating";
+		private const string FUEL_HEATER = "fuel heater";
+
+		public static HeaterType? TryParse(string parse)
+		{
+			switch (parse) {
+				case WATER_ELECTRIC_HEATER: return HeaterType.WaterElectricHeater;
+				case AIR_ELECTRIC_HEATER: return HeaterType.AirElectricHeater;
+				case OTHER_ELECTRIC_HEATING: return HeaterType.OtherElectricHeating;
+				case FUEL_HEATER: return HeaterType.FuelHeater;
+				default: return null;
 			}
 		}
 	}
-
 
 	public interface ISSMEngineeringInputs : ISSMInputs
 	{

@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public IHVACConstants HVACConstants { get; set; }
 
 		// Repeat Warning Flags
-		private bool CompressorCapacityInsufficientWarned;
+		//private bool CompressorCapacityInsufficientWarned;
 
 		// Base Values
 		public Watt ElectricalWBase => Calculate.ElectricalWBase; // .SI(Of Watt)()
@@ -89,10 +89,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var mechAdjusted = Calculate.MechanicalWBaseAdjusted;
 
-				if (CompressorCapacityInsufficientWarned == false && (mechAdjusted) / (1000 * SSMInputs.ACSystem.COP) > SSMInputs.ACSystem.HVACMaxCoolingPower) {
-					LoggingObject.Logger<SSMTOOL>().Warn("HVAC SSM :AC-Compressor Capacity unable to service cooling, run continues as if capacity was sufficient.");
-					CompressorCapacityInsufficientWarned = true;
-				}
+				//if (CompressorCapacityInsufficientWarned == false && (mechAdjusted) / (1000 * SSMInputs.ACSystem.COP) > SSMInputs.ACSystem.HVACMaxCoolingPower) {
+				//	LoggingObject.Logger<SSMTOOL>().Warn("HVAC SSM :AC-Compressor Capacity unable to service cooling, run continues as if capacity was sufficient.");
+				//	CompressorCapacityInsufficientWarned = true;
+				//}
 
 
 				return mechAdjusted; // .SI(Of Watt)()

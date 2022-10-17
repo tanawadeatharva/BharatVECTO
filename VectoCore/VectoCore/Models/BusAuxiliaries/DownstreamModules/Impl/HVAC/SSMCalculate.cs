@@ -3,6 +3,7 @@ using System.Text;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -455,33 +456,71 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim I94 = BaseCoolingW_ElectricalVentilation
 			// Dim I95 = BaseVentilationW_ElectricalVentilation
 
-			
+			var cop = GetCoP(genInputs, env);
+			var electricCoolingPower = double.IsNaN(cop)
+				? 0.SI<Watt>()
+				: VectoMath.Min(BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar),
+					genInputs.ACSystem.HVACMaxCoolingPower) /
+				cop;
 
 			var electricalWBaseCurrentResult =
-				VectoMath.Min(
-					BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar), genInputs.ACSystem.HVACMaxCoolingPower) /
-				genInputs.ACSystem.COP + BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar) +
+				electricCoolingPower + BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar) +
 				BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar) +
 				BaseVentilationW_ElectricalVentilation(env.Temperature, env.Solar);
 
 			return electricalWBaseCurrentResult * env.Weighting;
 		}
 
+		private double GetCoP(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		{
+			var hvacConfig = genInputs.HVACSystemConfiguration;
+			if (hvacConfig.RequiresDriverAC() && hvacConfig.RequiresPassengerAC()) {
+				var coolingTechDriver = genInputs.HeatPumpTypeDriverCompartment;
+				var coolingTechPassenger = genInputs.HeatPumpTypePassengerCompartment;
+
+				var copDriver = env.HeatPumpCoP.ContainsKey(coolingTechDriver) ? env.HeatPumpCoP[coolingTechDriver] : double.NaN;
+				var copPassenger = env.HeatPumpCoP.ContainsKey(coolingTechPassenger) ? env.HeatPumpCoP[coolingTechPassenger] : double.NaN;
+
+				if (double.IsNaN(copDriver) || double.IsNaN(copPassenger)) {
+					return double.NaN;
+				}
+
+				return (genInputs.ACSystem.HVACMaxCoolingPowerDriver * copDriver + genInputs.ACSystem.HVACMaxCoolingPowerPassenger * copPassenger) /
+						(genInputs.ACSystem.HVACMaxCoolingPowerDriver + genInputs.ACSystem.HVACMaxCoolingPowerPassenger);
+			}
+
+			if (hvacConfig.RequiresPassengerAC()) {
+				var coolingTechPassenger = genInputs.HeatPumpTypePassengerCompartment;
+				var copPassenger = env.HeatPumpCoP.ContainsKey(coolingTechPassenger) ? env.HeatPumpCoP[coolingTechPassenger] : double.NaN;
+				return copPassenger;
+			}
+
+			if (hvacConfig.RequiresDriverAC()) {
+				var coolingTechDriver = genInputs.HeatPumpTypeDriverCompartment;
+				var copDriver = env.HeatPumpCoP.ContainsKey(coolingTechDriver) ? env.HeatPumpCoP[coolingTechDriver] : double.NaN;
+				return copDriver;
+			}
+
+			return double.NaN;
+		}
+
 		private Watt CalculateMechanicalWBase(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(F94,C54*1000)/C59
-
-
 
 			// Dim F94 = BaseCoolingW_Mechanical
 			// Dim C54 = genInputs.AC_CompressorCapacitykW
 			// Dim C59 = genInputs.AC_COP 
 
-			var MechanicalWBaseCurrentResult = VectoMath.Min(
-													BaseCoolingW_Mechanical(env.Temperature, env.Solar), genInputs.ACSystem.HVACMaxCoolingPower) /
-												genInputs.ACSystem.COP;
+			var cop = GetCoP(genInputs, env);
 
-			return MechanicalWBaseCurrentResult * env.Weighting;
+			var mechanicalWBaseCurrentResult = double.IsNaN(cop)
+				? 0.SI<Watt>()
+				: VectoMath.Min(
+					BaseCoolingW_Mechanical(env.Temperature, env.Solar), genInputs.ACSystem.HVACMaxCoolingPower) /
+				cop;
+
+			return mechanicalWBaseCurrentResult * env.Weighting;
 		}
 
 		//private KilogramPerSecond CalculateFuelLPerHBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
@@ -511,7 +550,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var H94 = BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar);
 			var H100 = TechListAdjustedCoolingW_ElectricalCoolingHeating;
 			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
-			var C59 = genInputs.ACSystem.COP;
+			var C59 = GetCoP(genInputs, env);
+			if (double.IsNaN(C59) && H94.IsEqual(0)) {
+				return 0.SI<Watt>();
+			}
 
 			var I93 = BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar);
 			var I94 = BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar);
@@ -533,8 +575,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var F94 = BaseCoolingW_Mechanical(env.Temperature, env.Solar);
 			var F100 = TechListAdjustedCoolingW_Mechanical;
 			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
-			var C59 = genInputs.ACSystem.COP;
-
+			var C59 = GetCoP(genInputs, env);
+			if (double.IsNaN(C59) && F94.IsEqual(0)) {
+				return 0.SI<Watt>();
+			}
 			var MechanicalWBaseAdjusted = (VectoMath.Min((F94 * (1 - F100)), C54) / C59);
 
 			return MechanicalWBaseAdjusted * env.Weighting;

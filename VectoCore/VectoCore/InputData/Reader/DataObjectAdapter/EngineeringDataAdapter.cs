@@ -625,7 +625,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = busAux.HVACData.MechanicalPowerDemand,
 					ElectricPower = busAux.HVACData.ElectricalPowerDemand,
 					AuxHeaterPower = busAux.HVACData.AuxHeaterPower,
@@ -695,7 +695,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ParkBrakeAndDoors = 0,
 					CycleTime = 1.SI<Second>()
 				},
-				SSMInputs = new SSMEngineeringInputs() {
+				SSMInputsCooling = new SSMEngineeringInputs() {
 					MechanicalPower = 0.SI<Watt>(),
 					ElectricPower = 0.SI<Watt>(),
 					AuxHeaterPower = 0.SI<Watt>(),

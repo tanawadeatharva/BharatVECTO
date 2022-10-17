@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -49,11 +50,11 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
-
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public static class DeclarationData
+    public static class DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -383,19 +384,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double CalculateCOP(Watt coolingPwrDriver, HeatPumpType comprTypeDriver, Watt coolingPwrPass, HeatPumpType comprTypePass, FloorType floorType)
-			{
-				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == HeatPumpType.none) {
-					comprTypeDriver = comprTypePass;
-				}
-				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
-					return 1.0;
-				}
-				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
-						(coolingPwrDriver + coolingPwrPass);
-			}
+            public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
+            {
+                if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
+                    copDriver = copPass;
+                }
+                if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+                    return 1.0;
+                }
+                return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
+                        (coolingPwrDriver + coolingPwrPass);
+            }
 
-			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
+            public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
 				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
@@ -407,6 +408,73 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return 0.SI<Meter>();
 			}
+
+			public static BusHVACSystemConfiguration GetHVACConfig(BusHVACSystemConfiguration hvacConfigurationInput, HeatPumpType heatPumpDriver, HeatPumpType heatPumpPassenger)
+			{
+				var hasDriverHP = heatPumpDriver != HeatPumpType.none;
+				var hasPassengerHP = heatPumpPassenger != HeatPumpType.none;
+
+				switch (hvacConfigurationInput) {
+					case BusHVACSystemConfiguration.Unknown:
+					case BusHVACSystemConfiguration.Configuration0:
+						throw new VectoException($"Invalid HVAC Configuration {hvacConfigurationInput}");
+					case BusHVACSystemConfiguration.Configuration1 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration1;
+
+					case BusHVACSystemConfiguration.Configuration2 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration1;
+					case BusHVACSystemConfiguration.Configuration2 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration2;
+
+					case BusHVACSystemConfiguration.Configuration3 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration4 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+
+					case BusHVACSystemConfiguration.Configuration4 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+
+					case BusHVACSystemConfiguration.Configuration5 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration5 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+
+					case BusHVACSystemConfiguration.Configuration6 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration6 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration6;
+
+					case BusHVACSystemConfiguration.Configuration7 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration7 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+					case BusHVACSystemConfiguration.Configuration7 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+					case BusHVACSystemConfiguration.Configuration7 when hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration7;
+
+					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+
+					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration7;
+
+					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration6;
+				}
+				throw new VectoException($"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
+			}
+
 		}
 
 		public static class Driver

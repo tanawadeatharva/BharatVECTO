@@ -112,14 +112,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// C54 -  ( KW )
-		public Watt HVACMaxCoolingPower { get; set; }
+		public Watt HVACMaxCoolingPower => (HVACMaxCoolingPowerDriver ?? 0.SI<Watt>()) + (HVACMaxCoolingPowerPassenger ?? 0.SI<Watt>());
 
-		// C59
-		public double COP { get; set; }
+		public Watt HVACMaxCoolingPowerDriver { get; set; }
+
+		public Watt HVACMaxCoolingPowerPassenger { get; set; }
+
+        // C59
+        //public double COP { get; set; }
 
 
-		// C62 - Boolean Yes/No
-		public bool VentilationOnDuringHeating { get; set; }
+        // C62 - Boolean Yes/No
+        public bool VentilationOnDuringHeating { get; set; }
 
 		// C63 - Boolean Yes/No
 		public bool VentilationWhenBothHeatingAndACInactive { get; set; }
@@ -156,7 +160,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public IAuxHeater AuxHeater => this;
 
 		public ISSMTechnologyBenefits Technologies { get; set; }
-		public string HVACTechnology { get; set; }
+		public string HVACTechnology => $"{HVACSystemConfiguration.GetName()} " +
+										$"({string.Join(", ", HeatPumpTypePassengerCompartment.GetName(), HeatPumpTypeDriverCompartment.GetName())})";
+
+		//public HeatPumpType HeatPumpTypeHeatingDriverCompartment { get; set; }
+		public HeatPumpType HeatPumpTypeDriverCompartment { get; set; }
+		//public HeatPumpType HeatPumpTypeHeatingPassengerCompartment { get; set; }
+		public HeatPumpType HeatPumpTypePassengerCompartment { get; set; }
+		public BusHVACSystemConfiguration HVACSystemConfiguration { get; set; }
 
 		#endregion
 	}

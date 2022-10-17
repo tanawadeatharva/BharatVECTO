@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
@@ -12,5 +13,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 
 		//double GetNormalisedWeighting(IList<IEnvironmentalConditionsMapEntry> map);
+
+		IReadOnlyDictionary<HeaterType, double> HeaterEfficiency { get; }
+
+		IReadOnlyDictionary<HeatPumpType, double> HeatPumpCoP { get; }
 	}
 }

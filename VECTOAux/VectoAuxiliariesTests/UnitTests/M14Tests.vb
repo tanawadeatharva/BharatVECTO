@@ -52,7 +52,7 @@ Namespace UnitTests
         Public Property SSMInputs As ISSMDeclarationInputs Implements ISSMTOOL.SSMInputs
 
             Get
-                Return CType(Utils.GetAuxTestConfig().SSMInputs, ISSMDeclarationInputs)
+                Return CType(Utils.GetAuxTestConfig().SSMInputsCooling, ISSMDeclarationInputs)
             End Get
             Set(value As ISSMDeclarationInputs)
             End Set

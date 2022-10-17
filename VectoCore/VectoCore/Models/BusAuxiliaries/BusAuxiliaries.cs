@@ -47,9 +47,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			ssmTool = auxConfig.SSMInputs is ISSMEngineeringInputs ?
-				new SimpleSSMTool(auxConfig.SSMInputs)
-				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
+			ssmTool = auxConfig.SSMInputsCooling is ISSMEngineeringInputs ?
+				new SimpleSSMTool(auxConfig.SSMInputsCooling)
+				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputsCooling);
 
 
 			var electricUserInputConfigNoAlternator = new ElectricsUserInputsConfig() {
@@ -166,12 +166,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				throw new VectoException("Auxiliary configuration missing!");
 			}
 
-			if (auxConfig.SSMInputs is ISSMEngineeringInputs ssmEngineeringInputs) {
+			if (auxConfig.SSMInputsCooling is ISSMEngineeringInputs ssmEngineeringInputs) {
 				var M14eng = new M14bImpl(ssmEngineeringInputs);
 				return M14eng.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 			}
 
-			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputs));
+			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputsCooling));
 			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 		}
 
@@ -185,9 +185,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			var ssmTool = auxConfig.SSMInputs is ISSMEngineeringInputs ?
-				new SimpleSSMTool(auxConfig.SSMInputs)
-				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputs);
+			var ssmTool = auxConfig.SSMInputsCooling is ISSMEngineeringInputs ?
+				new SimpleSSMTool(auxConfig.SSMInputsCooling)
+				: (ISSMPowerDemand)new SSMTOOL(auxConfig.SSMInputsCooling);
 
 
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
