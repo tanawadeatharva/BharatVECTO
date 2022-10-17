@@ -247,6 +247,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
+			private static HeatingDistributionCasesMap heatingDistributionCasesMap;
+			private static HeatingDistributionMap heatingDistributionMap;
 
 			public static List<SSMTechnology> SSMTechnologyList =>
 				ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
@@ -255,6 +257,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions =>
 				envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
+
+			public static HeatingDistributionCasesMap HeatingDistributionCases =>
+				heatingDistributionCasesMap ?? (heatingDistributionCasesMap = HeatingDistributionCasesMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistributionCases.csv")));
+			public static HeatingDistributionMap HeatingDistribution =>
+				heatingDistributionMap ?? (heatingDistributionMap = HeatingDistributionMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistribution.csv")));
 
 			public static ElectricalConsumerList DefaultElectricConsumerList =>
 				elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
