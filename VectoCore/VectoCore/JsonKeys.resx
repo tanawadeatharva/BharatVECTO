@@ -201,7 +201,10 @@
   <data name="Vehicle_PTO_Cycle" xml:space="preserve">
     <value>Cycle</value>
   </data>
-  <data name="Vehicle_PTO_Type" xml:space="preserve">
+  <data name="Vehicle_EPTO_Cycle" xml:space="preserve">
+    <value>CycleEPTO</value>
+  </data>
+<data name="Vehicle_PTO_Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="Vehicle_Angledrive" xml:space="preserve">

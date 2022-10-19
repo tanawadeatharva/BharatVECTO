@@ -479,7 +479,13 @@ Public Class VehicleForm
 
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
-		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
+		
+		If(vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S))
+			cbPTOStandstillCycleType.SelectedIndex = 1
+		End If
+
+	    tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
+		tbPTOElectricCycle.Text = If(Cfg.DeclMode OrElse pto.EPTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.EPTOCycleDuringStop.Source, basePath))
 		tbPTODrive.Text = If(Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
@@ -723,7 +729,7 @@ Public Class VehicleForm
 
 			    'PTO
 			    gbPTODrive.Enabled = False
-			    pnPtoMode1.Enabled = false
+			    'pnPtoMode1.Enabled = false
 			    pnPtoMode3.Enabled = False
 				lblNotePtoPEV_HEVS.Visible = true
 			Case VectoSimulationJobType.IEPC_E
@@ -893,7 +899,8 @@ Public Class VehicleForm
 
 			veh.PtoType = CType(cbPTOType.SelectedValue, String)
 			veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+
+			
 			veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
 
 			For Each item As ListViewItem In lvTorqueLimits.Items
@@ -905,6 +912,13 @@ Public Class VehicleForm
 
 			veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, Nothing), TankSystem?)
 		End If
+
+		If(cbPTOStandstillCycleType.SelectedValue.ToString() = PTOStandStillType.Mechanical.ToString())
+			veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+		Else
+			veh.EPtoCycleStandstill.Init(GetPath(file), tbPTOElectricCycle.Text)
+		End If
+
 
 		if (VehicleType = VectoSimulationJobType.BatteryElectricVehicle) Then
 		    veh.PtoType = CType(cbPTOType.SelectedValue, String)
@@ -1803,12 +1817,5 @@ Public Class VehicleForm
 
 		gbPTOICEGroupBox.Enabled = (val = PTOStandStillType.Mechanical)
 		gbEPTO.Enabled = (val = PTOStandStillType.Electrical)
-		'If (val = PTOStandStillType.Electrical) Then
-		'	gbPTOICEGroupBox.Enabled = False
-		'	gbEPTO.Enabled = True
-		'Else I
-		'	gbPTOICEGroupBox.Enabled = True
-		'	gbEPTO.Enabled = False
-		'End If
 	End Sub
 End Class
