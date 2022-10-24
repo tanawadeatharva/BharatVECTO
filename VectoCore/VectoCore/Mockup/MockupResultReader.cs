@@ -32,7 +32,7 @@ namespace TUGraz.VectoMockup
 		private static class MockupResultHelper
 		{
 			private static string _convArch = "Conv";
-			private const string mockupResourcePrefix = "TUGraz.VectoMockup.MockupResults";
+			private const string mockupResourcePrefix = "TUGraz.VectoCore.Mockup.MockupResults";
 			
 			
 			private static HashSet<string> conventional = new HashSet<string>() {
