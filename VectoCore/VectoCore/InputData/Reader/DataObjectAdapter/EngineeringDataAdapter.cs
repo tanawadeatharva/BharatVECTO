@@ -546,6 +546,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 				if (pto.PTOCycleDuringStop != null) {
 					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycleDuringStop, "PTO", false);
+
 				}
 				return ptoData;
 			}
@@ -1297,17 +1298,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto)
 		{
+			PTOData ptoData = null;
 			if (pto.PTOTransmissionType != "None") {
-				var ptoData = new PTOData() {
+				ptoData = new PTOData()
+				{
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = pto.PTOLossMap == null
 						? PTOIdleLossMapReader.GetZeroLossMap()
-						: PTOIdleLossMapReader.Create(pto.PTOLossMap)
+						: PTOIdleLossMapReader.Create(pto.PTOLossMap),
 				};
-				return ptoData;
 			}
 
-			return null;
+			if (pto.EPTOCycleDuringStop != null) {
+				ptoData = ptoData ?? new PTOData();
+				ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.EPTOCycleDuringStop, "PTO", false);
+			}
+
+			return ptoData;
 		}
 
 		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)

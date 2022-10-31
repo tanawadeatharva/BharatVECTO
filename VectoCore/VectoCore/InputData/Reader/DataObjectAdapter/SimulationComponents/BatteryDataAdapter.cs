@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	public class ElectricStorageAdapter
 	{
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
-			VectoSimulationJobType jobType, bool ovc)
+			VectoSimulationJobType jobType,
+			bool ovc)
 		{
 			if (batteryInputData == null)
 			{
@@ -92,6 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				return null;
 			}
+			
 
 			return new SuperCapData()
 			{

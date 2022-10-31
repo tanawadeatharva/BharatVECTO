@@ -90,6 +90,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
+			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action,
+				Action<SuperCapData> setSuperCapData);
+
+
 			public virtual BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
 			{
 				throw new NotImplementedException();
@@ -223,6 +228,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _auxAdapter.CreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength,
 					numSteeredAxles, jobType);
 			}
+
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action,
+				Action<SuperCapData> setSuperCapData)
+			{
+				throw new NotImplementedException();
+			}
 		}
 
 		public abstract class Hybrid : LorryBase
@@ -268,6 +280,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override GearboxType[] SupportedGearboxTypes { get; }
 
+			private SerialHybridStrategyParameterDataAdapter _hybridStrategyParameterData =
+				new SerialHybridStrategyParameterDataAdapter();
+
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
@@ -282,13 +297,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public override PTOData CreatePTOCycleData()
 			{
-				throw new NotImplementedException();
+				//throw new NotImplementedException();
+				return null;
 			}
 
 			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
 			{
+				//throw new NotImplementedException();
+				return null;
+			}
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
+			{
 				throw new NotImplementedException();
 			}
+
+
+
 
 			#endregion
 		}
@@ -313,6 +338,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
 				VectoSimulationJobType jobType)
+			{
+				throw new NotImplementedException();
+			}
+
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
 			{
 				throw new NotImplementedException();
 			}
@@ -380,6 +411,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _electricMachineAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
 			}
 
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
+			{
+				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
+				var superCapData = _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+
+				
+				if (batteryData == null) {
+					throw new VectoException("Could not create BatterySystem for PEV");
+				}
+				setBatteryData(batteryData);
+				
+				
+				if (superCapData != null) {
+					throw new VectoException("Supercaps are not allowed for PEVs");
+				}
+				
+
+			}
+
 			public override BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage, VectoSimulationJobType jobType, bool ovc)
 			{
 				return _electricStorageAdapter.CreateBatteryData(batteryInputData: componentsElectricStorage, jobType: jobType, ovc: ovc);
@@ -408,6 +459,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			#region Overrides of LorryBase
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
+
+
+
 			private GearboxDataAdapter _gearBoxDataAdaper = new GearboxDataAdapter(new TorqueConverterDataAdapter());
 			public override GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 				IShiftPolygonCalculator shiftPolygonCalc)
@@ -470,6 +524,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
 				return _vehicleDataAdapter.CreateExemptedVehicleData(vehicle);
+			}
+
+			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
+			{
+				throw new NotImplementedException();
 			}
 
 			public override PTOData CreatePTOCycleData()

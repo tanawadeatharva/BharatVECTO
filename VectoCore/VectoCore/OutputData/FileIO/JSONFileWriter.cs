@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.OutputData;
@@ -506,9 +507,11 @@ public class JSONFileWriter : IOutputFileWriter
 			ptoOut.Add("LossMap", pto.PTOTransmissionType != "None" && pto.PTOLossMap != null
 					? GetRelativePath(pto.PTOLossMap.Source, basePath)
 					: "");
-			ptoOut.Add("Cycle", pto.PTOTransmissionType != "None" && pto.PTOCycleDuringStop != null
+			ptoOut.Add("Cycle", pto.PTOTransmissionType != "None" &&
+								pto.PTOCycleDuringStop != null
 					? GetRelativePath(pto.PTOCycleDuringStop.Source, basePath)
 					: "");
+			ptoOut.Add(JsonKeys.Vehicle_EPTO_Cycle, pto.EPTOCycleDuringStop != null ? GetRelativePath(pto.EPTOCycleDuringStop.Source, basePath) : "");
 			ptoOut.Add("CycleDriving", pto.PTOTransmissionType != "None" && pto.PTOCycleWhileDriving != null
 					? GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath)
 					: "");
