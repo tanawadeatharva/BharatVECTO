@@ -1298,21 +1298,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto)
 		{
-			PTOData ptoData = null;
-			if (pto.PTOTransmissionType != "None") {
-				ptoData = new PTOData()
-				{
-					TransmissionType = pto.PTOTransmissionType,
-					LossMap = pto.PTOLossMap == null
-						? PTOIdleLossMapReader.GetZeroLossMap()
-						: PTOIdleLossMapReader.Create(pto.PTOLossMap),
-				};
-			}
 
-			if (pto.EPTOCycleDuringStop != null) {
-				ptoData = ptoData ?? new PTOData();
-				ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.EPTOCycleDuringStop, "PTO", false);
-			}
+
+			var ptoData = new PTOData() {
+				TransmissionType = pto.PTOTransmissionType,
+				LossMap = pto.PTOLossMap == null
+					? PTOIdleLossMapReader.GetZeroLossMap()
+					: PTOIdleLossMapReader.Create(pto.PTOLossMap),
+				PTOCycle = pto.EPTOCycleDuringStop != null
+					? DrivingCycleDataReader.ReadFromDataTable(pto.EPTOCycleDuringStop, "PTO", false)
+					: null,
+			};
 
 			return ptoData;
 		}
