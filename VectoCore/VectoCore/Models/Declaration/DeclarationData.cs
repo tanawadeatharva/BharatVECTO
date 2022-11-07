@@ -428,9 +428,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 					case BusHVACSystemConfiguration.Configuration3 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration3;
+
 					case BusHVACSystemConfiguration.Configuration4 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration3;
-
 					case BusHVACSystemConfiguration.Configuration4 when hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration4;
 
@@ -456,21 +456,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration3;
 					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && hasPassengerHP:
-						return BusHVACSystemConfiguration.Configuration5;
+						return BusHVACSystemConfiguration.Configuration8;
 
 					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration3;
 					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration4;
 					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && hasPassengerHP:
-						return BusHVACSystemConfiguration.Configuration5;
+						return BusHVACSystemConfiguration.Configuration8;
 					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && hasPassengerHP:
-						return BusHVACSystemConfiguration.Configuration7;
+						return BusHVACSystemConfiguration.Configuration9;
 
 					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && !hasPassengerHP:
 						return BusHVACSystemConfiguration.Configuration3;
 					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && hasPassengerHP:
-						return BusHVACSystemConfiguration.Configuration6;
+						return BusHVACSystemConfiguration.Configuration10;
 				}
 				throw new VectoException($"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
 			}
