@@ -124,9 +124,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
-				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
 
-				_municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData();
+				_municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
 
 
 			}
@@ -392,9 +392,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
 
-				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
 
-				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData();
+				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
 
 				result.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? municipalPtoTransmissionData

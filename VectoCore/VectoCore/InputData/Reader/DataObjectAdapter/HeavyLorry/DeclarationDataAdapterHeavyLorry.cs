@@ -54,7 +54,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 {
-	public partial class DeclarationDataAdapterHeavyLorry
+	public class DeclarationDataAdapterHeavyLorry
 	{
 		public abstract class LorryBase : AbstractSimulationDataAdapter, ILorryDeclarationDataAdapter
 		{
@@ -156,8 +156,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
 			}
 
-			public abstract PTOData CreatePTOCycleData();
-			public abstract PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
+			public abstract PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
+			public abstract PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx);
 
 
 			public abstract IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
@@ -197,14 +198,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
-			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx)
 			{
-				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData, gbx);
 			}
 
-			public override PTOData CreatePTOCycleData()
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
-				return _ptoDataAdapter.CreateDefaultPTOData();
+				return _ptoDataAdapter.CreateDefaultPTOData(pto, gbx);
 			}
 
 
@@ -295,13 +297,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			#region Overrides of LorryBase
 
-			public override PTOData CreatePTOCycleData()
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
 				//throw new NotImplementedException();
 				return null;
 			}
 
-			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx)
 			{
 				//throw new NotImplementedException();
 				return null;
@@ -357,12 +360,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			#region Overrides of LorryBase
 
-			public override PTOData CreatePTOCycleData()
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
 				throw new NotImplementedException();
 			}
 
-			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx)
 			{
 				throw new NotImplementedException();
 			}
@@ -441,14 +445,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
 			}
 
-			public override PTOData CreatePTOCycleData()
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
-				return _ptoDataAdapter.CreateDefaultPTOData();
+				return _ptoDataAdapter.CreateDefaultPTOData(pto, gbx);
 			}
 
-			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx)
 			{
-				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
+				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData, gbx);
 			}
 
 			#endregion
@@ -532,12 +537,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
-			public override PTOData CreatePTOCycleData()
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
 				throw new NotImplementedException();
 			}
 
-			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
+			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
+				IGearboxDeclarationInputData gbx)
 			{
 				throw new NotImplementedException();
 			}

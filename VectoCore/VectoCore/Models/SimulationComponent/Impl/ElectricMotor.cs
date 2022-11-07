@@ -387,7 +387,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.DrivetrainOutTorque = outTorque;
 
 				CurrentState.TransmissionTorqueLoss = avgDtSpeed.IsEqual(0) ? 0.SI<NewtonMeter>() :
-					((inTorqueDt - outTorque) * avgDtSpeed - emTorque * avgEmSpeed) / avgDtSpeed;
+					((inTorqueDt - outTorque) * avgDtSpeed - emTorque * avgEmSpeed)
+					/ avgDtSpeed;
 
 				CurrentState.ElectricPowerToBattery = retVal.ElectricSystem?.ConsumerPower;
 

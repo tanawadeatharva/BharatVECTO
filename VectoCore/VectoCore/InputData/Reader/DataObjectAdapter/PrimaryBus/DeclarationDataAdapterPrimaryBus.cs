@@ -31,7 +31,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			private readonly IDriverDataAdapter _driverDataAdapter = new PrimaryBusDriverDataAdapter();
 			protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
 			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			protected readonly IPTODataAdapter _ptoDataAdapter = new PTODataAdapterBus();
 			protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
 			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
@@ -86,11 +85,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public RetarderData CreateRetarderData(IRetarderInputData retarderData, PowertrainPosition position = PowertrainPosition.HybridPositionNotSet)
 			{
 				return _retarderDataAdapter.CreateRetarderData(retarderData, position);
-			}
-
-			public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData)
-			{
-				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData);
 			}
 
 			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,

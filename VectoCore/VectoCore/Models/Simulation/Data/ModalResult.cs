@@ -145,6 +145,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.T_gbx_in,
 			ModalResultField.T_gbx_out,
 			ModalResultField.n_gbx_out_avg,
+			ModalResultField.n_gbx_in_avg,
 
 			ModalResultField.Gear
 		};

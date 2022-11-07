@@ -165,7 +165,7 @@ Public Class Vehicle
 				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
-				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle)
+				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)

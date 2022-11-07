@@ -105,8 +105,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

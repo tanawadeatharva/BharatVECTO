@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
             PTOTransmissionData =
-				DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
+				DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
 
             GearshiftData = DataAdapter.CreateGearshiftData(
                  AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed, GearboxData.Type, GearboxData.Gears.Count);

@@ -54,7 +54,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal readonly IDrivingCycleData Data;
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
-		protected Second AbsTime { get; set; }
+		protected Second AbsTime
+		{
+			get; 
+			set;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PowertrainDrivingCycle"/> class.

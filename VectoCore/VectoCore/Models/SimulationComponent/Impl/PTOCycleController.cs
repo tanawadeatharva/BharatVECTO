@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class EPTOCycleController : IIdleControllerSwitcher
 	{
 		internal readonly IDrivingCycleData Data;
-		protected Second AbsTime { get; }
+		protected Second AbsTime { get; private set; }
 		protected DrivingCycleEnumerator CycleIterator { get; }
 		private bool _ptoActive;
 		protected IVehicleContainer DataBus { get; set; }
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 			CycleIterator = new DrivingCycleEnumerator(Data);
 			_ptoActive = false;
-			AbsTime = -1.SI<Second>();
+			AbsTime = 0.SI<Second>();
 		}
 
 		public CycleData CycleData
@@ -153,23 +153,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (_ptoActive) {
 				CycleIterator.MoveNext();
+				AbsTime += simulationInterval;
 			}
 		}
 
 		public Second GetNextCycleTime()
 		{
-			if (CycleIterator.LastEntry && AbsTime.IsEqual(Duration))
-			{
-				return null;
-			}
+            if (CycleIterator.LastEntry && AbsTime.IsEqual(Duration))
+            {
+                return null;
+            }
 
-			return CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
+            return CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
 		}
 
 
-		public void Reset()
+		private void Reset()
 		{
 			CycleIterator.Reset();
+			AbsTime = 0.SI<Second>();
 		}
 
 		#region Implementation of IIdleControllerSwitcher

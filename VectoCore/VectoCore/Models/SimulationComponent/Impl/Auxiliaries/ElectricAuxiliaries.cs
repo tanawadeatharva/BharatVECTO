@@ -14,6 +14,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
+
 // ReSharper disable UseStringInterpolation
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -148,11 +150,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var sum = 0.SI<Watt>();
             foreach (var aux in _auxData)
             {
-				if (_powerDemands.ContainsKey(aux.Key)) {
-					var pd = _powerDemands[aux.Key];
-					sum += pd;
-					container[_auxColumnName[aux.Key]] = pd;
-				}
+				var pd = _powerDemands.GetValueOrZero(aux.Key);
+				sum += pd;
+				container[_auxColumnName[aux.Key]] = pd;
 			}
 
 			container[ModalResultField.P_aux_el] = sum;

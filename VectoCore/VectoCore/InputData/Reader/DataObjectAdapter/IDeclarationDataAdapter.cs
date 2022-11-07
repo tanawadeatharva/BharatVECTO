@@ -47,8 +47,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc);
 
-		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
-		PTOData CreatePTOCycleData();
+		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
+		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
 
 
 

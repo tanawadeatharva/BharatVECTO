@@ -10,14 +10,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 {
 	public interface IPTODataAdapter
 	{
-		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto);
-		PTOData CreateDefaultPTOData();
+		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
+		PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx);
 	}
 
 	public class PTODataAdapterLorry : IPTODataAdapter
 	{
 
-        public PTOData CreateDefaultPTOData()
+        public virtual PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
 			return new PTOData()
 			{
@@ -26,11 +26,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				PTOCycle =
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
 						CycleType.PTO, "PTO", false),
-				TransmissionPowerDemand = null,
-				TransmissionPowerDemandElectrical = null
+				TransmissionPowerDemand = DeclarationData.PTOTransmission.Lookup(DeclarationData.PTO.DefaultPTOTechnology).PowerDemand,
 			};
 		}
-        public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
+        public virtual PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
 			if (pto != null && pto.PTOTransmissionType != "None"){
 				var powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
@@ -41,67 +40,48 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				};
 			}
-
 			return null;
 		}
 	}
 
+
 	public class ElectricPTODataAdapter : PTODataAdapterLorry
 	{
-		public PTOData CreateDefaultPTOData()
+		public override PTOData CreateDefaultPTOData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
+			Watt powerDemand = null;
+			string transmissionType = null;
+			if (pto != null && gbx != null && pto.PTOTransmissionType != "None") {
+				powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
+				transmissionType = pto.PTOTransmissionType;
+			}
+
+
 			return new PTOData()
 			{
-				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
+				TransmissionType = transmissionType,
 				LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				PTOCycle =
 					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultE_PTOActivationCycle),
 						CycleType.EPTO, "PTO", false),
-				TransmissionPowerDemand = null,
-				TransmissionPowerDemandElectrical = null
+				TransmissionPowerDemand = powerDemand,
 			};
 		}
 
-		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, VectoSimulationJobType jobType)
+		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
-			if (pto != null && pto.PTOTransmissionType != "None")
+
+			if ((gbx != null) && (pto != null) && (pto.PTOTransmissionType != "None"))
 			{
 				var powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
 				return new PTOData
 				{
 					TransmissionPowerDemand = powerDemand,
-					//TransmissionPowerDemandElectrical = powerDemand * DeclarationData.AlternatorEfficiency / 
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				};
 			}
-
 			return null;
 		}
-	}
-
-
-		/// <summary>
-		/// Remove this class
-		/// </summary>
-	public class PTODataAdapterBus : IPTODataAdapter
-	{
-		public static PTOData DefaultPTOData()
-		{
-			return null;
-		}
-		#region Implementation of IPTODataAdapter
-
-		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
-		{
-			return null;
-		}
-
-		public PTOData CreateDefaultPTOData()
-		{
-			return DefaultPTOData();
-		}
-
-		#endregion
 	}
 }

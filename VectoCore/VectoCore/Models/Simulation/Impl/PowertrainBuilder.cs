@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ConventionalVehicle: return BuildFullPowertrainConventional(data, modData, sumWriter);
 						case VectoSimulationJobType.ParallelHybridVehicle: return BuildFullPowertrainParallelHybrid(data, modData, sumWriter);
 						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data, modData, sumWriter);
-						case VectoSimulationJobType.BatteryElectricVehicle: return BuildFulPowertrainBatteryElectric(data, modData, sumWriter);
+						case VectoSimulationJobType.BatteryElectricVehicle: return BuildFullPowertrainBatteryElectric(data, modData, sumWriter);
 						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data, modData, sumWriter);
 						case VectoSimulationJobType.IEPC_E: return BuildFullPowertrainIEPCE(data, modData, sumWriter);
 						case VectoSimulationJobType.IEPC_S: return BuildFullPowertrainIEPCSerial(data, modData, sumWriter);
@@ -676,7 +676,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └Engine E2
 		/// </code>
 		/// </summary>
-		private static IVehicleContainer BuildFulPowertrainBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		private static IVehicleContainer BuildFullPowertrainBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -830,10 +830,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
-				pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
-				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+				//pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+				//		(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
+				//container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				//								Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return pto;
