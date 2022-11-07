@@ -29,6 +29,7 @@ Public Class Configuration
 	Public Co2PerFc As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
+	Public Multithreaded As Boolean
 
 	Public ValidateRunData As Boolean
 
@@ -61,10 +62,14 @@ Public Class Configuration
 		DeclMode = True
 		ValidateRunData = True
         OutputFolder = ""
+		Multithreaded = True
 	End Sub
 
 	Public Sub Load()
 		SetDefault()
+	    If Environment.GetCommandLineArgs().Contains("-st") Then 
+			Multithreaded = False
+	    End If
 
 		If Not File.Exists(FilePath) Then
 			Exit Sub

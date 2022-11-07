@@ -1095,7 +1095,7 @@ lbFound:
                                  $"Starting Simulation ({JobFileList.Count} Jobs, {jobContainer.GetProgress().Count _
                                  } Runs)"})
 
-        jobContainer.Execute(True)
+        jobContainer.Execute(Cfg.Multithreaded)
 
         Dim start As DateTime = DateTime.Now()
 

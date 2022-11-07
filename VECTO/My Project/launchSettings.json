@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "VECTO": {
+      "commandName": "Project"
+    },
+    "VECTO_singlethreaded": {
+      "commandName": "Project",
+      "commandLineArgs": "-st"
+    }
+  }
+}
