@@ -126,7 +126,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			var engineOnlyBuilders =  new Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>()
 			{
-				{ VectoSimulationJobType.ConventionalVehicle, BuildEngineOnly }
+				{ VectoSimulationJobType.ConventionalVehicle, BuildEngineOnly },
+				{ VectoSimulationJobType.EngineOnlySimulation, BuildEngineOnly }
 			};
 			
 			_builders = new Dictionary<CycleType, Dictionary<VectoSimulationJobType, Func<VectoRunData, IModalDataContainer, ISumData, IVehicleContainer>>>()
