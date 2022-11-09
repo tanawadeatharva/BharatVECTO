@@ -669,10 +669,13 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_loss,
 					ModalResultField.P_gbx_inertia,
-					ModalResultField.n_gbx_out_avg,
+
 					ModalResultField.n_gbx_in_avg,
-					ModalResultField.T_gbx_out,
+					ModalResultField.n_gbx_out_avg,
+
 					ModalResultField.T_gbx_in,
+					ModalResultField.T_gbx_out,
+
 					// retarder
 					ModalResultField.P_retarder_in,
 					ModalResultField.P_ret_loss,
