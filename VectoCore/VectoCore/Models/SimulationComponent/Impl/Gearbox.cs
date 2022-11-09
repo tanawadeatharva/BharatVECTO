@@ -378,6 +378,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
 
+			InvokeGearShiftTriggered();
+
 			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 			response.Gearbox.Gear = new GearshiftPosition(0);
 			response.Gearbox.InputSpeed = inAngularVelocity;
