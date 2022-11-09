@@ -26,7 +26,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 
 	public class Conditioning : IAuxDemand
 	{
-		private readonly Watt electricPowerDemand;
+		private readonly Watt _electricPowerDemand;
+		private readonly IEPTO _epto;
+
+
+		private bool EPTOOn(IDataBus dataBus)
+		{
+			return _epto?.EPTOOn(dataBus) ?? false;
+		}
 
 		#region Implementation of IAuxDemand
 
@@ -34,7 +41,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 
 		#endregion
 
-		public Conditioning(VectoRunData.AuxData condAuxData)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="condAuxData"></param>
+		/// <param name="eptoCycleController">needed in case an epto is present in the vehicle</param>
+		/// <exception cref="VectoException"></exception>
+
+		public Conditioning(VectoRunData.AuxData condAuxData, IEPTO epto = null)
 		{
 			if (condAuxData.ID != Constants.Auxiliaries.IDs.Cond) {
 				throw new VectoException($"Invalid {nameof(condAuxData)}: ID must be {Constants.Auxiliaries.IDs.Cond}");
@@ -43,12 +57,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 			if (condAuxData.PowerDemandElectric == null) {
 				throw new VectoException($"No electric powerdemand set for {condAuxData.ID}");
 			}
-			electricPowerDemand = condAuxData.PowerDemandElectric;
+			_electricPowerDemand = condAuxData.PowerDemandElectric;
+			_epto = epto;
 			AuxID = condAuxData.ID;
 		}
-
-
-
 
 		public Watt PowerDemand(IDataBus dataBus)
         {
@@ -56,10 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return GetPEV_SHEV_PowerDemand(dataBus);
-
 				case VectoSimulationJobType.ParallelHybridVehicle:
 					return GetP_HEV_PowerDemand(dataBus);
-
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
@@ -73,12 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 		public Watt GetPEV_SHEV_PowerDemand(IDataBus dataBus)
 		{
 			var elInfo = GetElectricMotorInfo(dataBus);
-			if (elInfo.EmOff)
-			{
+			if (!elInfo.EmOff || EPTOOn(dataBus)) {
+				return _electricPowerDemand;
+			} else {
 				return 0.SI<Watt>();
-			}
-			else {
-				return electricPowerDemand;
 			}
 		}
 
@@ -96,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				xFactor = emPower.Abs() / (emPower.Abs() + icePower.Abs());
 			}
 
-			return electricPowerDemand * xFactor;
+			return _electricPowerDemand * xFactor;
 		}
 
 		private IElectricMotorInfo GetElectricMotorInfo(IDataBus dataBus)

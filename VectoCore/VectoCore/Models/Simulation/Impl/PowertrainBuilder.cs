@@ -772,20 +772,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
                 es.Connect(dcdc);
 				var elAux = new ElectricAuxiliaries(container);
-				
+
+				IEPTO epto = null;
+				if (data.PTO?.PTOCycle != null)
+				{
+					var pevPTOController = GetPEVIdleController(data.PTO, container);
+					cycle.IdleController = pevPTOController;
+					var eptoAux = new EPTO(pevPTOController);
+					elAux.AddAuxiliary(eptoAux);
+					epto = eptoAux;
+				}
+
 				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
 				if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
-					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)));
+					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
 				}
 				
 				dcdc.Connect(elAux);
 			
 
-				if (data.PTO?.PTOCycle != null) {
-					var pevPTOController =  GetPEVIdleController(data.PTO, container);
-					cycle.IdleController = pevPTOController;
-					elAux.AddAuxiliary(new EPTO(pevPTOController));
-				}
+
 
 
 				dcdc.Initialize();

@@ -6,7 +6,12 @@ using Constants = TUGraz.VectoCore.Configuration.Constants;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EPTO : IAuxDemand
+	public interface IEPTO
+	{
+		bool EPTOOn(IDataBus dataBus);
+	}
+
+	public class EPTO : IAuxDemand, IEPTO
 	{
 		private readonly IPTOCycleController _ptoCycleController;
 
@@ -18,12 +23,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of IAuxDemand
 		public Watt PowerDemand(IDataBus dataBus)
 		{
-			
 			if (dataBus.DrivingCycleInfo.PTOActive) {
 				return _ptoCycleController.CycleData.LeftSample.PTOElectricalPowerDemand ?? 0.SI<Watt>();
 			}
 
 			return 0.SI<Watt>();
+		}
+
+		public bool EPTOOn(IDataBus dataBus)
+		{
+			return !PowerDemand(dataBus).IsEqual(0);
 		}
 
 
