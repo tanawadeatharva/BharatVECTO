@@ -125,7 +125,7 @@ Public Class Utils
                 .Technologies = techBenefits,
                 .BusFloorType = FloorType.HighFloor,
                 .BusSurfaceArea = 0.SI(Of SquareMeter),
-                .BusVolume = 0.SI(Of CubicMeter),
+                .BusVolumeVentilation = 0.SI(Of CubicMeter),
                 .BusWindowSurface = 0.SI(of SquareMeter),
                 .UValue = 3.SI(Of WattPerKelvinSquareMeter),
                 .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),

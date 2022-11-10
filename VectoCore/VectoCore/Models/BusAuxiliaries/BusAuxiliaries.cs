@@ -166,12 +166,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				throw new VectoException("Auxiliary configuration missing!");
 			}
 
-			if (auxConfig.SSMInputsCooling is ISSMEngineeringInputs ssmEngineeringInputs) {
+			if (auxConfig.SSMInputsHeating is ISSMEngineeringInputs ssmEngineeringInputs) {
 				var M14eng = new M14bImpl(ssmEngineeringInputs);
 				return M14eng.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 			}
 
-			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputsCooling));
+			var M14 = new M14aImpl(new SSMTOOL(auxConfig.SSMInputsHeating));
 			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 		}
 

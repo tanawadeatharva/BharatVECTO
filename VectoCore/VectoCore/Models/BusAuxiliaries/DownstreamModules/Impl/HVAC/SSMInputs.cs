@@ -13,6 +13,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		IAuxHeater, ISSMBusParameters
 	{
 		private readonly IFuelProperties HeatingFuel;
+		private HeatingDistributionCase? _heatingDistributionCase;
 
 		public SSMInputs(string source, IFuelProperties heatingFuel = null)
 		{
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public SquareMeter BusWindowSurface { get; internal set; }
 
 		// D11/C11 - ( M/3 )
-		public CubicMeter BusVolume { get; internal set; }
+		public CubicMeter BusVolumeVentilation { get; internal set; }
 
 		// C17
 		public double GFactor { get; set; }
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public Watt VentPower(bool heating)
 		{
 			// =C31*C35
-			return BusVolume * (heating ? VentilationRateHeating : VentilationRate) * SpecificVentilationPower;
+			return BusVolumeVentilation * (heating ? VentilationRateHeating : VentilationRate) * SpecificVentilationPower;
 		}
 
 		// C35 - ( Wh/M3 )
@@ -108,7 +109,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
-		public HeatPumpType HVACCompressorType { get; set; }
+		//public HeatPumpType HVACCompressorType { get; set; }
 
 
 		// C54 -  ( KW )
@@ -163,11 +164,47 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public string HVACTechnology => $"{HVACSystemConfiguration.GetName()} " +
 										$"({string.Join(", ", HeatPumpTypePassengerCompartment.GetName(), HeatPumpTypeDriverCompartment.GetName())})";
 
+		public HeatingDistributionCase HeatingDistributionCase
+		{
+			get
+			{
+				if (!_heatingDistributionCase.HasValue) {
+					_heatingDistributionCase = GetHeatingDistributionCase();
+				}
+
+				return _heatingDistributionCase.Value;
+			}
+		}
+		protected virtual HeatingDistributionCase GetHeatingDistributionCase()
+		{
+			return HeatingDistributions.GetHeatingDistributionCase(HeatPumpTypePassengerCompartment, ElectricHeater,
+				AuxHeater.FuelFiredHeaterPower.IsGreater(0));
+		}
+
+		public HeatingDistributionCasesMap HeatingDistributions { get; set; }
+
 		//public HeatPumpType HeatPumpTypeHeatingDriverCompartment { get; set; }
 		public HeatPumpType HeatPumpTypeDriverCompartment { get; set; }
 		//public HeatPumpType HeatPumpTypeHeatingPassengerCompartment { get; set; }
 		public HeatPumpType HeatPumpTypePassengerCompartment { get; set; }
 		public BusHVACSystemConfiguration HVACSystemConfiguration { get; set; }
+		public HeaterType ElectricHeater { get; set; }
+		public Watt MaxHeatingPower => (MaxHeatingPowerDriver ?? 0.SI<Watt>()) + (MaxHeatingPowerPassenger ?? 0.SI<Watt>());
+
+		public Watt MaxHeatingPowerDriver { get; set; }
+		public Watt MaxHeatingPowerPassenger { get; set; }
+
+		public Meter DriverCompartmentLength { get; set; }
+
+		public Meter PassengerCompartmentLength { get; set; }
+
+		public double DriverHVACContribution => (DriverCompartmentLength + PassengerCompartmentLength).IsEqual(0)
+			? 0
+			: (DriverCompartmentLength / (DriverCompartmentLength + PassengerCompartmentLength)).Value();
+
+		public double PassengerHVACContribution => (DriverCompartmentLength + PassengerCompartmentLength).IsEqual(0)
+			? 0
+			: (PassengerCompartmentLength / (DriverCompartmentLength + PassengerCompartmentLength)).Value();
 
 		#endregion
 	}

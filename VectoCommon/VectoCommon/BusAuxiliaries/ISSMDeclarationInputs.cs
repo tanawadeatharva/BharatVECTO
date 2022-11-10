@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
@@ -28,6 +29,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		string HVACTechnology { get; }
 
+		HeatingDistributionCase HeatingDistributionCase { get; }
+
 		//HeatPumpType HeatPumpTypeHeatingDriverCompartment { get; }
 		
 		HeatPumpType HeatPumpTypeDriverCompartment { get; }
@@ -39,6 +42,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		BusHVACSystemConfiguration HVACSystemConfiguration { get; }
 
 		string Source { get; }
+		
 	}
 
 	public interface ISSMBusParameters
@@ -47,7 +51,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		FloorType BusFloorType { get; }
 		SquareMeter BusWindowSurface { get; }
 		SquareMeter BusSurfaceArea { get; }
-		CubicMeter BusVolume { get; }
+		CubicMeter BusVolumeVentilation { get; }
 	}
 
 	public interface ISSMBoundaryConditions
@@ -98,13 +102,25 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IACSystem
 	{
 		// AC-system				            
-		HeatPumpType HVACCompressorType { get; }
+		//HeatPumpType HVACCompressorType { get; }
 
 		Watt HVACMaxCoolingPower { get; }
 
 		Watt HVACMaxCoolingPowerDriver { get; }
 
 		Watt HVACMaxCoolingPowerPassenger { get; }
+
+		HeaterType ElectricHeater { get; }
+
+		Watt MaxHeatingPower { get; }
+
+		Watt MaxHeatingPowerDriver { get; }
+
+		Watt MaxHeatingPowerPassenger { get; }
+
+		double DriverHVACContribution { get; }
+
+		double PassengerHVACContribution { get; }
 
 		//double COP { get; }
 	}

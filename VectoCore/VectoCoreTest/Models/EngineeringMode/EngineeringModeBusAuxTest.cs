@@ -1048,7 +1048,7 @@ namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 				},
 				VehicleData = vehicleData,
 			};
-
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
 			return retVal;
 		}
 

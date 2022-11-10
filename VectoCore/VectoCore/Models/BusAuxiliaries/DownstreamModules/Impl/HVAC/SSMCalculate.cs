@@ -169,9 +169,68 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
+		public Watt AverageHeatingPowerHeatPumpElectric
+		{
+			get
+			{
+				var averagePower = 0.0.SI<Watt>();
+				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
+				var tl = ssmTOOL.TechList;
+
+				if (!gen.BatchMode) {
+					averagePower =
+						CalculateAverageHeatpumpHeatingPowerElectric(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
+				} else {
+					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
+						averagePower += CalculateAverageHeatpumpHeatingPowerElectric(
+							ssmTOOL.SSMInputs, tl, envCondition);
+				}
+
+				return averagePower;
+			}
+		}
+
+		public Watt AverageHeatingPowerHeatPumpMech {
+			get {
+				var averagePower = 0.0.SI<Watt>();
+				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
+				var tl = ssmTOOL.TechList;
+
+				if (!gen.BatchMode) {
+					averagePower =
+						CalculateAverageHeatpumpHeatingPowerMech(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
+				} else {
+					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
+						averagePower += CalculateAverageHeatpumpHeatingPowerMech(
+							ssmTOOL.SSMInputs, tl, envCondition);
+				}
+
+				return averagePower;
+			}
+		}
+
+		public Watt AverageHeatingPowerElectricHeater {
+			get {
+				var averagePower = 0.0.SI<Watt>();
+				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
+				var tl = ssmTOOL.TechList;
+
+				if (!gen.BatchMode) {
+					averagePower =
+						CalculateAverageHeatingPowerElectricHeater(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
+				} else {
+					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
+						averagePower += CalculateAverageHeatingPowerElectricHeater(
+							ssmTOOL.SSMInputs, tl, envCondition);
+				}
+
+				return averagePower;
+			}
+		}
+
 
 		// Base Values
-		
+
 		public Watt BaseHeatingW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
 			
@@ -225,6 +284,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var gen = ssmTOOL.SSMInputs;
 
+			if (environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff) {
+				return 0.SI<Watt>();
+			}
+
 			// Dim C46 = gen.EC_EnviromentalTemperature
 			// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
 			// Dim C53 = gen.AC_CompressorTypeDerived
@@ -234,13 +297,24 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
 			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 
-			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
-				? 0.SI<Watt>()
-				: gen.ACSystem.HVACCompressorType.IsElectrical()
-					? 0.SI<Watt>()
-					: run1TotalW > 0 && run2TotalW > 0
-						? VectoMath.Min(run1TotalW, run2TotalW)
-						: 0.SI<Watt>();
+			if (run1TotalW.IsSmallerOrEqual(0) || run2TotalW.IsSmallerOrEqual(0)) {
+				return 0.SI<Watt>();
+			}
+
+			var coolingPwr = VectoMath.Min(run1TotalW, run2TotalW);
+			var driverContribution = coolingPwr * gen.ACSystem.DriverHVACContribution;
+			var passengerContribution = coolingPwr * gen.ACSystem.PassengerHVACContribution;
+			var retVal = (gen.HeatPumpTypeDriverCompartment.IsMechanical() ? driverContribution : 0.SI<Watt>()) +
+						(gen.HeatPumpTypePassengerCompartment.IsMechanical() ? passengerContribution : 0.SI<Watt>());
+			return retVal;
+
+			//return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
+			//	? 0.SI<Watt>()
+			//	: gen.ACSystem.HVACCompressorType.IsElectrical()
+			//		? 0.SI<Watt>()
+			//		: run1TotalW > 0 && run2TotalW > 0
+			//			? VectoMath.Min(run1TotalW, run2TotalW)
+			//			: 0.SI<Watt>();
 		}
 
 		protected Watt BaseCoolingW_ElectricalCoolingHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
@@ -249,6 +323,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var gen = ssmTOOL.SSMInputs;
 
+			if (environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff) {
+				return 0.SI<Watt>();
+			}
+
 			// Dim C46 = gen.EC_EnviromentalTemperature
 			// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
 			// Dim C53 = gen.AC_CompressorTypeDerived
@@ -257,13 +335,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
 			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
-			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
-				? 0.SI<Watt>()
-				: gen.ACSystem.HVACCompressorType.IsElectrical()
-					? run1TotalW > 0 && run2TotalW > 0
-						? VectoMath.Min(run1TotalW, run2TotalW)
-						: 0.SI<Watt>()
-					: 0.SI<Watt>();
+
+			if (run1TotalW.IsSmallerOrEqual(0) || run2TotalW.IsSmallerOrEqual(0)) {
+				return 0.SI<Watt>();
+			}
+
+			var coolingPwr = VectoMath.Min(run1TotalW, run2TotalW);
+			var driverContribution = coolingPwr * gen.ACSystem.DriverHVACContribution;
+			var passengerContribution = coolingPwr * gen.ACSystem.PassengerHVACContribution;
+			var retVal = (gen.HeatPumpTypeDriverCompartment.IsElectrical() ? driverContribution : 0.SI<Watt>()) +
+						(gen.HeatPumpTypePassengerCompartment.IsElectrical() ? passengerContribution : 0.SI<Watt>());
+			return retVal;
+
+			//return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
+			//	? 0.SI<Watt>()
+			//	: gen.ACSystem.HVACCompressorType.IsElectrical()
+			//		? run1TotalW > 0 && run2TotalW > 0
+			//			? VectoMath.Min(run1TotalW, run2TotalW)
+			//			: 0.SI<Watt>()
+			//		: 0.SI<Watt>();
 		}
 
 		protected Watt BaseCoolingW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
@@ -375,9 +465,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				//			Math.Max(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
 				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
 
-				if (gen.ACSystem.HVACCompressorType.IsElectrical()) {
-					return 0;
-				}
+				//if (gen.ACSystem.HVACCompressorType.IsElectrical()) {
+				//	return 0;
+				//}
 
 				return tl.CValueVariation.LimitTo(
 					-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList,
@@ -397,9 +487,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
 
-				if (gen.ACSystem.HVACCompressorType.IsMechanical()) {
-					return 0;
-				}
+				//if (gen.ACSystem.HVACCompressorType.IsMechanical()) {
+				//	return 0;
+				//}
 
 				return tl.CValueVariation.LimitTo(
 					-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList,
@@ -456,12 +546,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim I94 = BaseCoolingW_ElectricalVentilation
 			// Dim I95 = BaseVentilationW_ElectricalVentilation
 
-			var cop = GetCoP(genInputs, env);
+			var cop = GetCoPCooling(genInputs, env);
 			var electricCoolingPower = double.IsNaN(cop)
 				? 0.SI<Watt>()
 				: VectoMath.Min(BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar),
-					genInputs.ACSystem.HVACMaxCoolingPower) /
-				cop;
+					genInputs.ACSystem.HVACMaxCoolingPower) / cop;
 
 			var electricalWBaseCurrentResult =
 				electricCoolingPower + BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar) +
@@ -471,7 +560,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return electricalWBaseCurrentResult * env.Weighting;
 		}
 
-		private double GetCoP(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		private double GetCoPCooling(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
 			var hvacConfig = genInputs.HVACSystemConfiguration;
 			if (hvacConfig.RequiresDriverAC() && hvacConfig.RequiresPassengerAC()) {
@@ -504,6 +593,39 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return double.NaN;
 		}
 
+		private double GetCoPHeating(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		{
+			var hvacConfig = genInputs.HVACSystemConfiguration;
+			if (hvacConfig.RequiresDriverAC() && hvacConfig.RequiresPassengerAC()) {
+				var heatingTechDriver = genInputs.HeatPumpTypeDriverCompartment;
+				var heatingTechPassenger = genInputs.HeatPumpTypePassengerCompartment;
+
+				var copDriver = env.HeatPumpCoP.ContainsKey(heatingTechDriver) ? env.HeatPumpCoP[heatingTechDriver] : double.NaN;
+				var copPassenger = env.HeatPumpCoP.ContainsKey(heatingTechPassenger) ? env.HeatPumpCoP[heatingTechPassenger] : double.NaN;
+
+				if (double.IsNaN(copDriver) || double.IsNaN(copPassenger)) {
+					return double.NaN;
+				}
+
+				return (genInputs.ACSystem.MaxHeatingPowerDriver * copDriver + genInputs.ACSystem.MaxHeatingPowerPassenger * copPassenger) /
+						(genInputs.ACSystem.MaxHeatingPowerDriver + genInputs.ACSystem.MaxHeatingPowerPassenger);
+			}
+
+			if (hvacConfig.RequiresPassengerAC()) {
+				var heatingTechPassenger = genInputs.HeatPumpTypePassengerCompartment;
+				var copPassenger = env.HeatPumpCoP.ContainsKey(heatingTechPassenger) ? env.HeatPumpCoP[heatingTechPassenger] : double.NaN;
+				return copPassenger;
+			}
+
+			if (hvacConfig.RequiresDriverAC()) {
+				var heatingTechDriver = genInputs.HeatPumpTypeDriverCompartment;
+				var copDriver = env.HeatPumpCoP.ContainsKey(heatingTechDriver) ? env.HeatPumpCoP[heatingTechDriver] : double.NaN;
+				return copDriver;
+			}
+
+			return double.NaN;
+		}
+
 		private Watt CalculateMechanicalWBase(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(F94,C54*1000)/C59
@@ -512,7 +634,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim C54 = genInputs.AC_CompressorCapacitykW
 			// Dim C59 = genInputs.AC_COP 
 
-			var cop = GetCoP(genInputs, env);
+			var cop = GetCoPCooling(genInputs, env);
 
 			var mechanicalWBaseCurrentResult = double.IsNaN(cop)
 				? 0.SI<Watt>()
@@ -550,7 +672,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var H94 = BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar);
 			var H100 = TechListAdjustedCoolingW_ElectricalCoolingHeating;
 			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
-			var C59 = GetCoP(genInputs, env);
+			var C59 = GetCoPCooling(genInputs, env);
 			if (double.IsNaN(C59) && H94.IsEqual(0)) {
 				return 0.SI<Watt>();
 			}
@@ -575,7 +697,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var F94 = BaseCoolingW_Mechanical(env.Temperature, env.Solar);
 			var F100 = TechListAdjustedCoolingW_Mechanical;
 			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
-			var C59 = GetCoP(genInputs, env);
+			var C59 = GetCoPCooling(genInputs, env);
 			if (double.IsNaN(C59) && F94.IsEqual(0)) {
 				return 0.SI<Watt>();
 			}
@@ -585,6 +707,96 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		private Watt CalculateAverageAuxHeaterPower(
+			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		{
+			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
+			var heatingDistributionCase = genInputs.HeatingDistributionCase;
+			var heatingDistribution =
+				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
+			
+			var auxHeaterPower = heatingPower * (heatingDistribution?.GetFuelHeaterContribution() ?? 0);
+			var auxHeaterPowerLtd = VectoMath.Min(auxHeaterPower, genInputs.AuxHeater.FuelFiredHeaterPower) /
+										genInputs.BoundaryConditions.AuxHeaterEfficiency;
+			
+			return auxHeaterPowerLtd * env.Weighting;
+		}
+
+		private Watt CalculateAverageHeatpumpHeatingPowerMech(ISSMDeclarationInputs genInputs,
+			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		{
+			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
+			var heatingDistributionCase = genInputs.HeatingDistributionCase;
+			var heatingDistribution =
+				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
+
+			var heaterPower = heatingPower * (heatingDistribution?.GetHeatpumpContribution(genInputs.HeatPumpTypeDriverCompartment) ?? 0);
+			var cop = GetCoPHeating(genInputs, env);
+			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(cop) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / cop;
+
+			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
+			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
+			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsMechanical() ? driverContribution : 0.SI<Watt>()) +
+						(genInputs.HeatPumpTypePassengerCompartment.IsMechanical() ? passengerContribution : 0.SI<Watt>());
+
+			return retVal * env.Weighting;
+		}
+
+		private Watt CalculateAverageHeatpumpHeatingPowerElectric(ISSMDeclarationInputs genInputs,
+			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		{
+			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
+			var heatingDistributionCase = genInputs.HeatingDistributionCase;
+			var heatingDistribution =
+				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
+
+			var heaterPower = heatingPower * (heatingDistribution?.GetHeatpumpContribution(genInputs.HeatPumpTypeDriverCompartment) ?? 0);
+			var cop = GetCoPHeating(genInputs, env);
+			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(cop) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / cop;
+
+			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
+			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
+			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsElectrical() ? driverContribution : 0.SI<Watt>()) +
+						(genInputs.HeatPumpTypePassengerCompartment.IsElectrical() ? passengerContribution : 0.SI<Watt>());
+
+			return retVal * env.Weighting;
+		}
+
+		private Watt CalculateAverageHeatingPowerElectricHeater(ISSMDeclarationInputs genInputs,
+			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		{
+			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
+			var heatingDistributionCase = genInputs.HeatingDistributionCase;
+			var heatingDistribution =
+				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
+
+			var heaterPower = heatingPower * (heatingDistribution?.GetElectricHeaterContribution(genInputs.ACSystem.ElectricHeater) ?? 0);
+			var efficiency = GetElectricHeaterEfficiency(genInputs, env);
+			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(efficiency) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / efficiency;
+
+			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
+			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
+			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsElectrical() ? driverContribution : 0.SI<Watt>()) +
+						(genInputs.HeatPumpTypePassengerCompartment.IsElectrical() ? passengerContribution : 0.SI<Watt>());
+
+			return retVal * env.Weighting;
+		}
+
+		private double GetElectricHeaterEfficiency(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		{
+			var cnt = 0;
+			var sum = 0.0;
+			foreach (var heaterType in EnumHelper.GetValues<HeaterType>()) {
+				if ((genInputs.ACSystem.ElectricHeater & heaterType) == 0) {
+					continue;
+				}
+
+				cnt++;
+				sum += env.HeaterEfficiency[heaterType];
+			}
+			return sum / cnt;
+		}
+
+		private Watt CalculateAverageHeatingPower(
 			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
@@ -609,12 +821,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 							? Run1.TechListAmendedFuelHeater(env.Temperature, env.Solar)
 							: Run2.TechListAmendedFuelHeater(env.Temperature, env.Solar)).Value().SI<Watt>();
 			}
+			return result;
 
-			var auxHeaterPower = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterPower) /
-										genInputs.BoundaryConditions.AuxHeaterEfficiency;
-										// / (genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity*/);
-
-			return auxHeaterPower * env.Weighting;
 		}
 	}
 }

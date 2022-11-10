@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="InputData\DeclarationDataAdapterTest\" />
+    <Folder Include="Models\Declaration\BusAux\" />
   </ItemGroup>
 	<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">

@@ -569,7 +569,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private IAuxiliaryConfig GetBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -637,11 +637,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		private IAuxiliaryConfig GetBatteryElectricBusAuxiliariesData(VehicleData vehicleData, IBusAuxiliariesEngineeringData busAux)
 		{
-			return new AuxiliaryConfig() {
+			var retVal = new AuxiliaryConfig() {
 				//InputData = auxInputData.BusAuxiliariesData,
 				ElectricalUserInputsConfig = new ElectricsUserInputsConfig() {
 					PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
@@ -707,6 +709,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				},
 				VehicleData = vehicleData,
 			};
+			retVal.SSMInputsHeating = retVal.SSMInputsCooling;
+			return retVal;
 		}
 
 		

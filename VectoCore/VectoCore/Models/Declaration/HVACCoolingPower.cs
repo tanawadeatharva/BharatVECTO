@@ -17,13 +17,31 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			return DriverCoolingPower.Lookup(configuration, mission).SI<Watt>();
 		}
 
-		public Watt PassengerMaxCoolingPower(BusHVACSystemConfiguration configuration, MissionType mission, CubicMeter volume)
+		public Watt PassengerMaxCoolingPower(BusHVACSystemConfiguration configuration, MissionType mission,
+			CubicMeter volume)
 		{
 			return PassengerCoolingPower.Lookup(configuration, mission).SI<WattPerCubicMeter>() * volume;
 		}
+	}
 
+	public class HVACHeatingPower
+	{
+		private static HVACLookup DriverCoolingPower = new HVACLookup(".Buses.HVACHeatingPowerDriver.csv");
+		private static HVACLookup PassengerCoolingPower = new HVACLookup(".Buses.HVACHeatingPowerPassenger.csv");
 
-		private class HVACLookup : LookupData<BusHVACSystemConfiguration, MissionType, double>{
+		public Watt DriverMaxHeatingPower(BusHVACSystemConfiguration configuration, MissionType mission)
+		{
+			return DriverCoolingPower.Lookup(configuration, mission).SI<Watt>();
+		}
+
+		public Watt PassengerMaxHeatingPower(BusHVACSystemConfiguration configuration, MissionType mission,
+			CubicMeter volume)
+		{
+			return PassengerCoolingPower.Lookup(configuration, mission).SI<WattPerCubicMeter>() * volume;
+		}
+	}
+
+	public class HVACLookup : LookupData<BusHVACSystemConfiguration, MissionType, double>{
 			public HVACLookup(string resource)
 			{
 				ResourceId = DeclarationData.DeclarationDataResourcePrefix + resource;
@@ -50,5 +68,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 
 			#endregion
 		}
-	}
+	
+
+
 }

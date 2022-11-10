@@ -27,6 +27,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		ISSMInputs SSMInputsCooling { get; }
 
+		ISSMInputs SSMInputsHeating { get; }
+
 		IActuations Actuations { get; }
 
 		bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other);

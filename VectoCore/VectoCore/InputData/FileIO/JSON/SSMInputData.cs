@@ -62,17 +62,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.BusFloorType = genInput.GetEx<string>("BP_FloorType").ParseEnum<FloorType>();
 			retVal.BusSurfaceArea = genInput.GetEx<double>("BP_BusSurfaceArea").SI<SquareMeter>();
 			retVal.BusWindowSurface = genInput.GetEx<double>("BP_BusWindowSurfaceArea").SI<SquareMeter>();
-			retVal.BusVolume = genInput.GetEx<double>("BP_BusVolume").SI<CubicMeter>();
+			retVal.BusVolumeVentilation = genInput.GetEx<double>("BP_BusVolume").SI<CubicMeter>();
 			retVal.NumberOfPassengers = genInput.GetEx<double>("BP_PassengerCount");
 
 			//retVal.EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
 			//retVal.Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
-			retVal.DefaultConditions = new EnvironmentalConditionMapEntry(
+			retVal.DefaultConditions = new EnvironmentalConditionMapEntry(0,
 				genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin(),
 				genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>(), 1.0, heatPumpCoP, heaterEff);
 			//retVal.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
 			//retVal.BatchMode = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-			retVal.HVACCompressorType = HeatPumpTypeHelper.Parse(genInput.GetEx<string>("AC_CompressorType"));
+			//retVal.HVACCompressorType = HeatPumpTypeHelper.Parse(genInput.GetEx<string>("AC_CompressorType"));
 			retVal.HVACMaxCoolingPowerPassenger = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 			retVal.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
 			retVal.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");

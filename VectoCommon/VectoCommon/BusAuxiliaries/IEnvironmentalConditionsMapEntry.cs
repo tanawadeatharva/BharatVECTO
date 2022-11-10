@@ -5,6 +5,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IEnvironmentalConditionsMapEntry
 	{
+		int ID { get; }
+
 		Kelvin Temperature { get; }
 		WattPerSquareMeter Solar { get; }
 

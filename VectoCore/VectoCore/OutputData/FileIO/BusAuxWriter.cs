@@ -200,12 +200,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			retVal["BP_FloorType"] = ssmInputs.BusParameters.BusFloorType.ToString();
 			retVal["BP_BusSurfaceArea"] = ssmInputs.BusParameters.BusSurfaceArea.Value();
 			retVal["BP_BusWindowSurfaceArea"] = ssmInputs.BusParameters.BusWindowSurface.Value();
-			retVal["BP_BusVolume"] = ssmInputs.BusParameters.BusVolume.Value();
+			retVal["BP_BusVolume"] = ssmInputs.BusParameters.BusVolumeVentilation.Value();
 			retVal["BP_PassengerCount"] = ssmInputs.BusParameters.NumberOfPassengers;
 
 			retVal["EC_EnviromentalTemperature"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Temperature.AsDegCelsius;
 			retVal["EC_Solar"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Solar.Value();
-			retVal["AC_CompressorType"] = ssmInputs.ACSystem.HVACCompressorType.ToString();
+			//retVal["AC_CompressorType"] = ssmInputs.ACSystem.HVACCompressorType.ToString();
 			retVal["AC_CompressorCapacitykW"] = ssmInputs.ACSystem.HVACMaxCoolingPower.ConvertToKiloWatt().Value;
 			//retVal["AC_COP"] = ssmInputs.ACSystem.COP;
 			retVal["VEN_VentilationOnDuringHeating"] = ssmInputs.Ventilation.VentilationOnDuringHeating;

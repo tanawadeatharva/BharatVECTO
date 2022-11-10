@@ -248,6 +248,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
+			private static HVACHeatingPower hvacMaxHeatingPower;
 			private static HeatingDistributionCasesMap heatingDistributionCasesMap;
 			private static HeatingDistributionMap heatingDistributionMap;
 
@@ -276,6 +277,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 
 			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
+
+			public static HVACHeatingPower HVACMaxHeatingPower => hvacMaxHeatingPower ?? (hvacMaxHeatingPower = new HVACHeatingPower());
 
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{

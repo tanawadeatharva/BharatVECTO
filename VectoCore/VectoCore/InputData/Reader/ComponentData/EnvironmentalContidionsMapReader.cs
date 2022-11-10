@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				}
 				entries.Add(
 					new EnvironmentalConditionMapEntry(
+						row.Field<string>(Fields.ID).ToInt(),
 						row.ParseDouble(Fields.EnvTemp).DegCelsiusToKelvin(),
 						row.ParseDouble(Fields.Solar).SI<WattPerSquareMeter>(),
 						row.ParseDouble(Fields.WeightingFactor),
