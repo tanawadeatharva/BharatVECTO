@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -21,31 +23,122 @@ public class SSMTestHeatingCooling
 {
 
 	[
-		TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 1, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 6, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 8, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 11, 0, 0.0),
+	// only mechanical heatpumps
+	TestCase(BusHVACSystemConfiguration.Configuration1  , 1  , HeatPumpType.none                 , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration1  , 6  , HeatPumpType.none                 , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration1  , 8  , HeatPumpType.none                 , HeatPumpType.none                 , 287.8848  , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration1  , 11 , HeatPumpType.none                 , HeatPumpType.none                 , 287.8848  , 0.0)       ,
 
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 1, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 6, 299.88, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 8, 287.8848, 1.0156),
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 11, 287.8848, 1351.1654),
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 287.8848  , 1.0156)    ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 287.8848  , 1351.1654) ,
 
-		TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 1, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 6, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 8, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 11, 0, 0.0),
+	TestCase(BusHVACSystemConfiguration.Configuration3  , 1  , HeatPumpType.none                 , HeatPumpType.none                 , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration3  , 6  , HeatPumpType.none                 , HeatPumpType.none                 , 856.800   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration3  , 8  , HeatPumpType.none                 , HeatPumpType.none                 , 822.5280  , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration3  , 11 , HeatPumpType.none                 , HeatPumpType.none                 , 822.5280  , 0.0)       ,
 
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 1, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 6, 856.80, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 8, 822.5280, 633.1093),
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 11, 822.5280, 2000.0),
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 822.5280  , 633.1093)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.none                 , 822.5280  , 2000.0)    ,
 
-		TestCase(BusHVACSystemConfiguration.Configuration6, HeatPumpType.none, HeatPumpType.non_R_744_2_stage, 6, 856.80, 0.0)
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 612.7957)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 2965.1077) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 612.7957)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 2965.1077) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 822.528   , 616.1931)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 822.528   , 2984.8347) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 612.7957)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 2965.1077) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 822.528   , 616.1931)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_3_stage    , 822.528   , 2984.8347) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 612.7957)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_3_stage    , 822.528   , 2965.1077) ,
+
+	// only electrical heatpumps
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 299.88    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 288.8324  , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration2  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 1520.7    , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration4  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.none                 , 2647.3455 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration5  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration6  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration8  , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 1  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 6  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 8  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1413.2125 , 0)         ,
+	TestCase(BusHVACSystemConfiguration.Configuration10 , 11 , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 3636.1338 , 0)         ,
+
+	// mixed electrical and mechanical heatpumps
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 883.4159  , 547.9913)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 1116.3204 , 2644.1315) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 1360.3368 , 59.7565)   ,
+	TestCase(BusHVACSystemConfiguration.Configuration7  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 3393.4694 , 285.6602)  ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 1  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 6  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 8  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 883.4159  , 547.9913)  ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 11 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 1116.3204 , 2644.1315) ,
+
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 1  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 6  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 8  , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 1360.3368 , 59.7565)   ,
+	TestCase(BusHVACSystemConfiguration.Configuration9  , 11 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 3393.4694 , 285.6602)  ,
 
     ]
-	public void SSMTest_Cooling_SingleEnvironment(BusHVACSystemConfiguration cfg, HeatPumpType driverHeatpump,
-		HeatPumpType passengerHeatpump, int envId, double expectedElPwrW, double expectedMechPwrW)
+	public void SSMTest_Cooling_SingleEnvironment(BusHVACSystemConfiguration cfg, int envId, HeatPumpType driverHeatpump,
+		HeatPumpType passengerHeatpump,  double expectedElPwrW, double expectedMechPwrW)
 	{
 		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatpump, passengerHeatpump);
 
@@ -61,28 +154,51 @@ public class SSMTestHeatingCooling
 		ssmInputs.EnvironmentalConditionsMap = new EnvironmentalConditionsMap(new[] { newEnv });
 		// ---
 
+		Assert.AreEqual(cfg, ssmInputs.HVACSystemConfiguration);
+
 		var ssm = new SSMTOOL(auxData.SSMInputsCooling);
+
+		Console.WriteLine($"{ssm.ElectricalWAdjusted.Value().ToGUIFormat(4)}, {ssm.MechanicalWBaseAdjusted.Value().ToGUIFormat(4)}");
 		
-		Assert.AreEqual(expectedElPwrW, ssm.ElectricalWAdjusted.Value(), 1e-3);
-		Assert.AreEqual(expectedMechPwrW, ssm.MechanicalWBaseAdjusted.Value(), 1e-3);
+		Assert.AreEqual(expectedElPwrW, ssm.ElectricalWAdjusted.Value(), 1e-3, "expected Electric Power");
+		Assert.AreEqual(expectedMechPwrW, ssm.MechanicalWBaseAdjusted.Value(), 1e-3, "expected Mechanical Power");
 
 	}
 
 
 	[
+		// only mechanical heatpumps
 		// electric: only ventilation, mechanic: heatpump
-		TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 293.8056, 0.0),  // correct? I'd expect P_el = 293 as well! (ventilation low)
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 293.8056, 109.29748),
-		TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 662.12989, 0.0), // correct? I'd expect p_el = 622 as well! (ventilation high)
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_2_stage, HeatPumpType.none, 662.12989, 398.5246),
+		TestCase(BusHVACSystemConfiguration.Configuration1  , HeatPumpType.none              , HeatPumpType.none              , 295.3949 , 0.0)       ,
+		TestCase(BusHVACSystemConfiguration.Configuration2  , HeatPumpType.non_R_744_2_stage , HeatPumpType.none              , 295.3949 , 109.29748) ,
+		TestCase(BusHVACSystemConfiguration.Configuration3  , HeatPumpType.none              , HeatPumpType.none              , 664.4004 , 0.0)       ,
+		TestCase(BusHVACSystemConfiguration.Configuration4  , HeatPumpType.non_R_744_2_stage , HeatPumpType.none              , 664.4004 , 398.5246)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration5  , HeatPumpType.none              , HeatPumpType.non_R_744_3_stage , 664.4004 , 429.8231)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration6  , HeatPumpType.none              , HeatPumpType.non_R_744_3_stage , 664.4004 , 429.8231)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration7  , HeatPumpType.non_R_744_2_stage , HeatPumpType.non_R_744_3_stage , 664.4004 , 432.3237)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration8  , HeatPumpType.none              , HeatPumpType.non_R_744_3_stage , 664.4004 , 429.8231)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration9  , HeatPumpType.non_R_744_2_stage , HeatPumpType.non_R_744_3_stage , 664.4004 , 432.3237)  ,
+		TestCase(BusHVACSystemConfiguration.Configuration10 , HeatPumpType.none              , HeatPumpType.non_R_744_3_stage , 664.4004 , 429.8231)  ,
 
-		TestCase(BusHVACSystemConfiguration.Configuration6, HeatPumpType.none, HeatPumpType.non_R_744_2_stage, 662.1298, 444.7991),
-
+		// only electrical heatpumps
 		// electric: ventilation + heatpump
 		//TestCase(BusHVACSystemConfiguration.Configuration1, HeatPumpType.none, HeatPumpType.none, 0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_continuous, HeatPumpType.none, 394.405, 0.0),
+		TestCase(BusHVACSystemConfiguration.Configuration2, HeatPumpType.non_R_744_continuous, HeatPumpType.none, 395.9945, 0.0),
 		//TestCase(BusHVACSystemConfiguration.Configuration3, HeatPumpType.none, HeatPumpType.none, 0.0, 0.0),
-		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_continuous, HeatPumpType.none, 1031.611, 0.0),
+		TestCase(BusHVACSystemConfiguration.Configuration4, HeatPumpType.non_R_744_continuous, HeatPumpType.none, 1033.8823, 0.0),
+
+		TestCase(BusHVACSystemConfiguration.Configuration5  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+		TestCase(BusHVACSystemConfiguration.Configuration6  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+		TestCase(BusHVACSystemConfiguration.Configuration7  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+		TestCase(BusHVACSystemConfiguration.Configuration8  , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+		TestCase(BusHVACSystemConfiguration.Configuration9  , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+		TestCase(BusHVACSystemConfiguration.Configuration10 , HeatPumpType.none                 , HeatPumpType.non_R_744_continuous , 1076.1036 , 0) ,
+
+		// mixed electrical and mechanical heatpumps
+		TestCase(BusHVACSystemConfiguration.Configuration7 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 707.0598  , 383.9348) ,
+		TestCase(BusHVACSystemConfiguration.Configuration7 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 1039.7276 , 41.703)   ,
+		TestCase(BusHVACSystemConfiguration.Configuration9 , HeatPumpType.non_R_744_continuous , HeatPumpType.non_R_744_3_stage    , 707.0598  , 383.9348) ,
+		TestCase(BusHVACSystemConfiguration.Configuration9 , HeatPumpType.non_R_744_2_stage    , HeatPumpType.non_R_744_continuous , 1039.7276 , 41.703)   ,
 
 	]
 	public void SSMTest_Cooling_AvgAllEnvironments(BusHVACSystemConfiguration cfg, HeatPumpType driverHeatpump,
@@ -90,10 +206,16 @@ public class SSMTestHeatingCooling
 	{
 		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatpump, passengerHeatpump);
 
+		var ssmInputs = auxData.SSMInputsCooling as SSMInputs;
+		Assert.NotNull(ssmInputs);
+		Assert.AreEqual(cfg, ssmInputs.HVACSystemConfiguration);
+
 		var ssm = new SSMTOOL(auxData.SSMInputsCooling);
 
-		Assert.AreEqual(expectedElPwrW, ssm.ElectricalWAdjusted.Value(), 1e-3);
-		Assert.AreEqual(expectedMechPwrW, ssm.MechanicalWBaseAdjusted.Value(), 1e-3);
+		Console.WriteLine($"{ssm.ElectricalWAdjusted.Value().ToGUIFormat(4)}, {ssm.MechanicalWBaseAdjusted.Value().ToGUIFormat(4)}");
+
+		Assert.AreEqual(expectedElPwrW, ssm.ElectricalWAdjusted.Value(), 1e-3, "expected electrical power");
+		Assert.AreEqual(expectedMechPwrW, ssm.MechanicalWBaseAdjusted.Value(), 1e-3, "expected mechanical power");
 
 	}
 
