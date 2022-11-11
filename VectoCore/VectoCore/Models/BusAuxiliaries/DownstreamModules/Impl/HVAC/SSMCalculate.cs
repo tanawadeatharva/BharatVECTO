@@ -673,9 +673,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var H100 = TechListAdjustedCoolingW_ElectricalCoolingHeating;
 			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
 			var C59 = GetCoPCooling(genInputs, env);
-			if (double.IsNaN(C59) && H94.IsEqual(0)) {
-				return 0.SI<Watt>();
-			}
 
 			var I93 = BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar);
 			var I94 = BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar);
@@ -684,7 +681,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var I100 = TechListAdjustedCoolingW_ElectricalVentilation;
 			var I101 = TechListAdjustedVentilationW_ElectricalVentilation;
 
-			var ElectricalWAdjusted = (VectoMath.Min((H94 * (1 - H100)), C54) / C59) + (I93 * (1 - I99)) + (I94 * (1 - I100)) +
+			var coolingAdjusted = double.IsNaN(C59) ? 0.SI<Watt>() : (VectoMath.Min((H94 * (1 - H100)), C54) / C59);
+
+			var ElectricalWAdjusted = coolingAdjusted + (I93 * (1 - I99)) + (I94 * (1 - I100)) +
 									(I95 * (1 - I101));
 
 			return ElectricalWAdjusted * env.Weighting;
