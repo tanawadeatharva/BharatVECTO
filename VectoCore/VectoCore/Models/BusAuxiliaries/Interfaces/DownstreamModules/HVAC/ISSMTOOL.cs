@@ -9,8 +9,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		Watt ElectricalWAdjusted { get; } // Watt
 		Watt MechanicalWBaseAdjusted { get; } // Watt
 
-		Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat);
+		HeaterPower AverageHeaterPower(Watt averageUseableEngineWasteHeat);
 
+	}
+
+	public struct  HeaterPower
+	{
+		public Watt RequiredHeatingPower;
+		public Watt AuxHeaterPower;
+		public Watt ElectricHeaterPowerEl;
+		public Watt HeatPumpPowerEl;
+		public Watt HeatPumpPowerMech;
 	}
 
 	public interface ISSMTOOL : ISSMPowerDemand

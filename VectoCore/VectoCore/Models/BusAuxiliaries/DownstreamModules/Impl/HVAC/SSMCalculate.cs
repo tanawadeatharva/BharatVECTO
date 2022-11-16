@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Text;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
@@ -144,90 +146,126 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public Watt AverageAuxHeaterPower
+		public HeaterPower CalculateAverageHeatingDemand()
 		{
-			get {
-				var averageAuxHeaterPower = 0.0.SI<Watt>();
+			var heatingDemands = new List<HeaterPower>();
+			var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
+			var tl = ssmTOOL.TechList;
+			if (!gen.BatchMode)
+				return CalculateHeatingPower(
+					ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
+			else {
+				foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
+					heatingDemands.Add(CalculateHeatingPower(
+						ssmTOOL.SSMInputs, tl, envCondition));
+			}
+
+			return new HeaterPower() {
+				RequiredHeatingPower = heatingDemands.Sum(x => x.RequiredHeatingPower),
+				HeatPumpPowerMech = heatingDemands.Sum(x => x.HeatPumpPowerMech),
+				HeatPumpPowerEl = heatingDemands.Sum(x => x.HeatPumpPowerEl),
+				ElectricHeaterPowerEl = heatingDemands.Sum(x => x.ElectricHeaterPowerEl),
+				AuxHeaterPower = heatingDemands.Sum(x => x.AuxHeaterPower),
+			};
+		}
+
+		protected HeaterPower CalculateHeatingPower(ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
+		{
+			var heatingDemand = CalculateAverageHeatingPower(genInputs, tecList, env);
+			var heatingDemandDriver = heatingDemand * genInputs.ACSystem.DriverHVACContribution;
+			var heatingDemandPassenger = heatingDemand * genInputs.ACSystem.PassengerHVACContribution;
+
+			var heatingPowerDriver = CalculateHeatingDistribution(genInputs.HeatingDistributionCaseDriver,
+				genInputs.HeatPumpTypeDriverCompartment, genInputs.ACSystem.ElectricHeater, env, heatingDemandDriver, genInputs.ACSystem.MaxHeatingPower * genInputs.ACSystem.DriverHVACContribution);
+			var heatingPowerPassenger = CalculateHeatingDistribution(genInputs.HeatingDistributionCasePassenger,
+				genInputs.HeatPumpTypePassengerCompartment, genInputs.ACSystem.ElectricHeater, env, heatingDemandPassenger, genInputs.ACSystem.MaxHeatingPower * genInputs.ACSystem.PassengerHVACContribution);
+			var techBenefitsFuelFiredHeater = 1 - TechListAdjustedHeatingW_FuelFiredHeating;
+
+			var copDriver = env.HeatPumpCoP.ContainsKey(genInputs.HeatPumpTypeDriverCompartment) ? env.HeatPumpCoP[genInputs.HeatPumpTypeDriverCompartment] : double.NaN;
+			var copPassenger = env.HeatPumpCoP.ContainsKey(genInputs.HeatPumpTypePassengerCompartment) ? env.HeatPumpCoP[genInputs.HeatPumpTypePassengerCompartment] : double.NaN;
+			var elHeaterEff = GetElectricHeaterEfficiency(genInputs.ACSystem.ElectricHeater, env);
+			var fuelHeaterEff = env.HeaterEfficiency.ContainsKey(HeaterType.FuelHeater)
+				? env.HeaterEfficiency[HeaterType.FuelHeater]
+				: double.NaN;
+
+			var retVal = new HeaterPower() {
+				RequiredHeatingPower = heatingDemand * env.Weighting,
+				HeatPumpPowerMech =
+					((double.IsNaN(copDriver) ? 0.SI<Watt>() : heatingPowerDriver.HeatPumpPowerMech / copDriver) +
+					(double.IsNaN(copPassenger)
+						? 0.SI<Watt>()
+						: heatingPowerPassenger.HeatPumpPowerMech / copPassenger)) * env.Weighting,
+				HeatPumpPowerEl =
+					((double.IsNaN(copDriver) ? 0.SI<Watt>() : heatingPowerDriver.HeatPumpPowerEl / copDriver) +
+					(double.IsNaN(copPassenger)
+						? 0.SI<Watt>()
+						: heatingPowerPassenger.HeatPumpPowerEl / copPassenger)) * env.Weighting,
+				ElectricHeaterPowerEl =
+					double.IsNaN(elHeaterEff)
+						? 0.SI<Watt>()
+						: (heatingPowerDriver.ElectricHeaterPowerEl + heatingPowerPassenger.ElectricHeaterPowerEl) /
+						elHeaterEff * env.Weighting,
+				AuxHeaterPower = double.IsNaN(fuelHeaterEff) ? 0.SI<Watt>() : VectoMath.Min(genInputs.AuxHeater.FuelFiredHeaterPower,
+									heatingPowerDriver.AuxHeaterPower + heatingPowerPassenger.AuxHeaterPower) / fuelHeaterEff *
+								techBenefitsFuelFiredHeater * env.Weighting,
+			};
+			return retVal;
+		}
+
+		protected HeaterPower CalculateHeatingDistribution(HeatingDistributionCase hdCase, HeatPumpType heatPump,
+			HeaterType heater, IEnvironmentalConditionsMapEntry env, Watt heatingDemand, Watt maxHeatingPower)
+		{
+			var heatingDistribution = DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(hdCase, env.ID);
+
+			var auxHeaterPower = heatingDemand * heatingDistribution.GetFuelHeaterContribution();
+			var heatPumpPower = heatingDemand * heatingDistribution.GetHeatpumpContribution(heatPump);
+			var electricHeaterPower = heatingDemand * heatingDistribution.GetElectricHeaterContribution(heater);
+
+			var sumHeatingPower = VectoMath.Min(maxHeatingPower, heatPumpPower + electricHeaterPower);
+			var heatPumpPowerLtd = ((1-heatingDistribution.GetFuelHeaterContribution()).IsEqual(0)
+										? sumHeatingPower
+										: sumHeatingPower / (1 - heatingDistribution.GetFuelHeaterContribution()))
+									* heatingDistribution.GetHeatpumpContribution(heatPump);
+			var electricHeaterPowerLtd = ((1-heatingDistribution.GetFuelHeaterContribution()).IsEqual(0)
+											? sumHeatingPower
+											: sumHeatingPower / (1 - heatingDistribution.GetFuelHeaterContribution())) *
+										heatingDistribution.GetElectricHeaterContribution(heater);
+
+			return new HeaterPower() {
+				RequiredHeatingPower = heatingDemand,
+				HeatPumpPowerMech =  heatPump.IsMechanical() ? heatPumpPowerLtd : 0.SI<Watt>(),
+				HeatPumpPowerEl = heatPump.IsElectrical() ? heatPumpPowerLtd : 0.SI<Watt>(),
+				ElectricHeaterPowerEl = electricHeaterPowerLtd,
+				AuxHeaterPower = auxHeaterPower,
+			};
+
+		}
+
+		public Watt AverageHeatingPowerDemand
+		{
+			get
+			{
+				var averageHeatingPower = 0.0.SI<Watt>();
 				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				var tl = ssmTOOL.TechList;
-				
+
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the FuelLPerHBaseAdjusted for each input in the AENV file and then calculate the weighted average
 				if (!gen.BatchMode)
-					averageAuxHeaterPower = CalculateAverageAuxHeaterPower(
+					averageHeatingPower = CalculateAverageHeatingPower(
 						ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
 				else {
 					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						averageAuxHeaterPower += CalculateAverageAuxHeaterPower(
+						averageHeatingPower += CalculateAverageHeatingPower(
 							ssmTOOL.SSMInputs, tl, envCondition);
 
-					
+
 				}
 
-				return averageAuxHeaterPower;
+				return averageHeatingPower;
 			}
 		}
-
-		public Watt AverageHeatingPowerHeatPumpElectric
-		{
-			get
-			{
-				var averagePower = 0.0.SI<Watt>();
-				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var tl = ssmTOOL.TechList;
-
-				if (!gen.BatchMode) {
-					averagePower =
-						CalculateAverageHeatpumpHeatingPowerElectric(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
-				} else {
-					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						averagePower += CalculateAverageHeatpumpHeatingPowerElectric(
-							ssmTOOL.SSMInputs, tl, envCondition);
-				}
-
-				return averagePower;
-			}
-		}
-
-		public Watt AverageHeatingPowerHeatPumpMech {
-			get {
-				var averagePower = 0.0.SI<Watt>();
-				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var tl = ssmTOOL.TechList;
-
-				if (!gen.BatchMode) {
-					averagePower =
-						CalculateAverageHeatpumpHeatingPowerMech(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
-				} else {
-					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						averagePower += CalculateAverageHeatpumpHeatingPowerMech(
-							ssmTOOL.SSMInputs, tl, envCondition);
-				}
-
-				return averagePower;
-			}
-		}
-
-		public Watt AverageHeatingPowerElectricHeater {
-			get {
-				var averagePower = 0.0.SI<Watt>();
-				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var tl = ssmTOOL.TechList;
-
-				if (!gen.BatchMode) {
-					averagePower =
-						CalculateAverageHeatingPowerElectricHeater(ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
-				} else {
-					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						averagePower += CalculateAverageHeatingPowerElectricHeater(
-							ssmTOOL.SSMInputs, tl, envCondition);
-				}
-
-				return averagePower;
-			}
-		}
-
 
 		// Base Values
 
@@ -256,27 +294,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				return res;
 			
 		}
-
-		//public Watt BaseHeatingW_FuelFiredHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
-		//{
-			
-		//		// =IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:O90,3),0)
-
-		//		// Dim M89 = Me.Run1.TotalW
-		//		// Dim M90 = Me.Run2.TotalW
-		//		// VLOOKUP(MAX(M89:M90),M89:O90  => VLOOKUP ( lookupValue, tableArray, colIndex, rangeLookup )
-
-		//		// If both Run TotalW values are >=0 then return FuelW from Run with largest TotalW value, else return 0
-		//		var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
-		//		var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
-
-		//		if ((run1TotalW < 0 && run2TotalW < 0)) {
-		//			return run1TotalW > run2TotalW ? Run1.PowerFuelHeater(environmentalTemperature, solar) : Run2.PowerFuelHeater(environmentalTemperature, solar);
-		//		}
-
-		//		return 0.SI<Watt>();
-			
-		//}
 
 		protected Watt BaseCoolingW_Mechanical(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
@@ -705,97 +722,26 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return MechanicalWBaseAdjusted * env.Weighting;
 		}
 
-		private Watt CalculateAverageAuxHeaterPower(
-			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
-		{
-			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
-			var heatingDistributionCase = genInputs.HeatingDistributionCase;
-			var heatingDistribution =
-				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
-			
-			var auxHeaterPower = heatingPower * (heatingDistribution?.GetFuelHeaterContribution() ?? 0);
-			var auxHeaterPowerLtd = VectoMath.Min(auxHeaterPower, genInputs.AuxHeater.FuelFiredHeaterPower) /
-										genInputs.BoundaryConditions.AuxHeaterEfficiency;
-			
-			return auxHeaterPowerLtd * env.Weighting;
-		}
+		private double GetElectricHeaterEfficiency(HeaterType electricHeater, IEnvironmentalConditionsMapEntry env)
+        {
+            var cnt = 0;
+            var sum = 0.0;
+            foreach (var heaterType in EnumHelper.GetValues<HeaterType>()) {
+                if ((electricHeater & heaterType) == 0) {
+                    continue;
+                }
 
-		private Watt CalculateAverageHeatpumpHeatingPowerMech(ISSMDeclarationInputs genInputs,
-			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
-		{
-			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
-			var heatingDistributionCase = genInputs.HeatingDistributionCase;
-			var heatingDistribution =
-				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
-
-			var heaterPower = heatingPower * (heatingDistribution?.GetHeatpumpContribution(genInputs.HeatPumpTypeDriverCompartment) ?? 0);
-			var cop = GetCoPHeating(genInputs, env);
-			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(cop) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / cop;
-
-			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
-			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
-			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsMechanical() ? driverContribution : 0.SI<Watt>()) +
-						(genInputs.HeatPumpTypePassengerCompartment.IsMechanical() ? passengerContribution : 0.SI<Watt>());
-
-			return retVal * env.Weighting;
-		}
-
-		private Watt CalculateAverageHeatpumpHeatingPowerElectric(ISSMDeclarationInputs genInputs,
-			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
-		{
-			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
-			var heatingDistributionCase = genInputs.HeatingDistributionCase;
-			var heatingDistribution =
-				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
-
-			var heaterPower = heatingPower * (heatingDistribution?.GetHeatpumpContribution(genInputs.HeatPumpTypeDriverCompartment) ?? 0);
-			var cop = GetCoPHeating(genInputs, env);
-			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(cop) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / cop;
-
-			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
-			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
-			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsElectrical() ? driverContribution : 0.SI<Watt>()) +
-						(genInputs.HeatPumpTypePassengerCompartment.IsElectrical() ? passengerContribution : 0.SI<Watt>());
-
-			return retVal * env.Weighting;
-		}
-
-		private Watt CalculateAverageHeatingPowerElectricHeater(ISSMDeclarationInputs genInputs,
-			ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
-		{
-			var heatingPower = CalculateAverageHeatingPower(genInputs, tecList, env);
-			var heatingDistributionCase = genInputs.HeatingDistributionCase;
-			var heatingDistribution =
-				DeclarationData.BusAuxiliaries.HeatingDistribution.Lookup(heatingDistributionCase, env.ID);
-
-			var heaterPower = heatingPower * (heatingDistribution?.GetElectricHeaterContribution(genInputs.ACSystem.ElectricHeater) ?? 0);
-			var efficiency = GetElectricHeaterEfficiency(genInputs, env);
-			var heaterPowerLtd = heaterPower.IsEqual(0) || double.IsNaN(efficiency) ? 0.SI<Watt>() : VectoMath.Min(heaterPower, genInputs.ACSystem.MaxHeatingPower) / efficiency;
-
-			var driverContribution = heaterPowerLtd * genInputs.ACSystem.DriverHVACContribution;
-			var passengerContribution = heaterPowerLtd * genInputs.ACSystem.PassengerHVACContribution;
-			var retVal = (genInputs.HeatPumpTypeDriverCompartment.IsElectrical() ? driverContribution : 0.SI<Watt>()) +
-						(genInputs.HeatPumpTypePassengerCompartment.IsElectrical() ? passengerContribution : 0.SI<Watt>());
-
-			return retVal * env.Weighting;
-		}
-
-		private double GetElectricHeaterEfficiency(ISSMDeclarationInputs genInputs, IEnvironmentalConditionsMapEntry env)
-		{
-			var cnt = 0;
-			var sum = 0.0;
-			foreach (var heaterType in EnumHelper.GetValues<HeaterType>()) {
-				if ((genInputs.ACSystem.ElectricHeater & heaterType) == 0) {
+				if (!env.HeaterEfficiency.ContainsKey(heaterType)) {
 					continue;
 				}
 
-				cnt++;
-				sum += env.HeaterEfficiency[heaterType];
-			}
-			return sum / cnt;
-		}
+                cnt++;
+                sum += env.HeaterEfficiency[heaterType];
+            }
+            return sum / cnt;
+        }
 
-		private Watt CalculateAverageHeatingPower(
+        private Watt CalculateAverageHeatingPower(
 			ISSMDeclarationInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
@@ -813,12 +759,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var result = 0.SI<Watt>();
 
+			
 			if (run1TotalW < 0 && run2TotalW < 0) {
 				result = VectoMath
 					.Abs(
 						run1TotalW > run2TotalW
-							? Run1.TechListAmendedFuelHeater(env.Temperature, env.Solar)
-							: Run2.TechListAmendedFuelHeater(env.Temperature, env.Solar)).Value().SI<Watt>();
+							? run1TotalW //.TechListAmendedFuelHeater(env.Temperature, env.Solar)
+							: run2TotalW //.TechListAmendedFuelHeater(env.Temperature, env.Solar)
+                    ) - ssmTOOL.EngineWasteHeat;
 			}
 			return result;
 

@@ -25,5 +25,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			return parse.Replace("HD", "HeatingDistribution").ParseEnum<HeatingDistributionCase>();
 		}
+
+		public static int GetID(this HeatingDistributionCase hd)
+		{
+			return hd.ToString().Replace("HeatingDistribution", "").ToInt();
+		}
 	}
 }

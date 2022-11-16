@@ -12,10 +12,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		Watt ElectricalWAdjusted { get; }
 		Watt MechanicalWBaseAdjusted { get; }
 
-		Watt AverageAuxHeaterPower { get; }
+        //Watt AverageHeatingPowerDemand { get; }
 
+        //Watt AverageAuxHeaterPower { get; }
 
-		double TechListAdjustedHeatingW_FuelFiredHeating { get; }
+        //Watt AverageHeatingPowerHeatPumpElectric { get; }
+
+        //Watt AverageHeatingPowerHeatPumpMech { get; }
+
+        //Watt AverageHeatingPowerElectricHeater { get; }
+
+        //double TechListAdjustedHeatingW_FuelFiredHeating { get; }
+
+        HeaterPower CalculateAverageHeatingDemand();
 
 	}
 }

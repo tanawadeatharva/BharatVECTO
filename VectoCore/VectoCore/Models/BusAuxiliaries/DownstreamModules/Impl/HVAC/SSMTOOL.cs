@@ -30,8 +30,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public Watt ElectricalWAdjusted => _ssmInput.ElectricPower;
 
 		public Watt MechanicalWBaseAdjusted => _ssmInput.MechanicalPower;
-
-		public Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat)
+		public HeaterPower AverageHeaterPower(Watt averageUseableEngineWasteHeat)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -111,13 +110,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		
 		
 		// Dynamicly Get Fuel having re-adjusted Engine Heat Waste, this was originally supposed to be Solid State. Late adjustment request 24/3/2015
-		public Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat)
+		public HeaterPower AverageHeaterPower(Watt averageUseableEngineWasteHeat)
 		{
 			// Set Engine Waste Heat
 			//SSMInputs.AuxHeater.EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
 			EngineWasteHeat = averageUseableEngineWasteHeat;
 
-			var fba = Calculate.AverageAuxHeaterPower;
+			//var retVal = new HeaterPower() {
+			//	RequiredHeatingPower = Calculate.AverageHeatingPowerDemand,
+			//	AuxHeaterPower = Calculate.AverageAuxHeaterPower,
+			//	ElectricHeaterPowerEl = Calculate.AverageHeatingPowerElectricHeater,
+			//	HeatPumpPowerMech = Calculate.AverageHeatingPowerHeatPumpMech,
+			//	HeatPumpPowerEl = Calculate.AverageHeatingPowerHeatPumpElectric,
+			//};
+
+			var retVal = Calculate.CalculateAverageHeatingDemand();
+
+			//var fba = Calculate.AverageAuxHeaterPower;
 
 			// Dim FuelFiredWarning As Boolean = fba * SSMInputs.BC_AuxHeaterEfficiency * HVACConstants.FuelDensity * SSMInputs.BC_GCVDieselOrHeatingOil * 1000 > (AverageUseableEngineWasteHeatKW + SSMInputs.AH_FuelFiredHeaterkW)
 			// If Not FuelFiredHeaterInsufficientWarned AndAlso FuelFiredWarning Then
@@ -125,7 +134,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// OnMessage(Me, " HVAC SSM : Fuel fired heater insufficient for heating requirements, run continues assuming it was sufficient.", AdvancedAuxiliaryMessageType.Warning)
 			// End If
 
-			return fba;
+			return retVal;
 		}
 
 	}

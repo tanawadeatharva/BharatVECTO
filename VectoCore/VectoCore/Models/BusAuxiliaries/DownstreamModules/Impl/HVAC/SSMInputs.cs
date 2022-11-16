@@ -13,7 +13,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		IAuxHeater, ISSMBusParameters
 	{
 		private readonly IFuelProperties HeatingFuel;
-		private HeatingDistributionCase? _heatingDistributionCase;
+		private HeatingDistributionCase? _heatingDistributionDriverCase;
+		private HeatingDistributionCase? _heatingDistributionPassengerCase;
 
 		public SSMInputs(string source, IFuelProperties heatingFuel = null)
 		{
@@ -164,20 +165,31 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public string HVACTechnology => $"{HVACSystemConfiguration.GetName()} " +
 										$"({string.Join(", ", HeatPumpTypePassengerCompartment.GetName(), HeatPumpTypeDriverCompartment.GetName())})";
 
-		public HeatingDistributionCase HeatingDistributionCase
+		public HeatingDistributionCase HeatingDistributionCaseDriver
 		{
 			get
 			{
-				if (!_heatingDistributionCase.HasValue) {
-					_heatingDistributionCase = GetHeatingDistributionCase();
+				if (!_heatingDistributionDriverCase.HasValue) {
+					_heatingDistributionDriverCase = GetHeatingDistributionCase(HeatPumpTypeDriverCompartment);
 				}
 
-				return _heatingDistributionCase.Value;
+				return _heatingDistributionDriverCase.Value;
 			}
 		}
-		protected virtual HeatingDistributionCase GetHeatingDistributionCase()
+
+		public HeatingDistributionCase HeatingDistributionCasePassenger {
+			get {
+				if (!_heatingDistributionPassengerCase.HasValue) {
+					_heatingDistributionPassengerCase = GetHeatingDistributionCase(HeatPumpTypePassengerCompartment);
+				}
+
+				return _heatingDistributionPassengerCase.Value;
+			}
+		}
+
+		protected virtual HeatingDistributionCase GetHeatingDistributionCase(HeatPumpType heatPump)
 		{
-			return HeatingDistributions.GetHeatingDistributionCase(HeatPumpTypePassengerCompartment, ElectricHeater,
+			return HeatingDistributions.GetHeatingDistributionCase(heatPump, ElectricHeater,
 				AuxHeater.FuelFiredHeaterPower.IsGreater(0));
 		}
 

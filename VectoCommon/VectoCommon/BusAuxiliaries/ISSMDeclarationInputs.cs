@@ -29,10 +29,12 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		string HVACTechnology { get; }
 
-		HeatingDistributionCase HeatingDistributionCase { get; }
+		HeatingDistributionCase HeatingDistributionCaseDriver { get; }
+
+		HeatingDistributionCase HeatingDistributionCasePassenger { get; }
 
 		//HeatPumpType HeatPumpTypeHeatingDriverCompartment { get; }
-		
+
 		HeatPumpType HeatPumpTypeDriverCompartment { get; }
 		
 		//HeatPumpType HeatPumpTypeHeatingPassengerCompartment { get; }
