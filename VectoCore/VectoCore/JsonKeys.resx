@@ -375,16 +375,115 @@
   <data name="Vehicle_PTO_CycleDriving" xml:space="preserve">
     <value>CycleDriving</value>
   </data>
-	<data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
-		<value>MaxDrivetrainPower</value>
-	</data>
+  <data name="HEV_Vehicle_MaxDrivetrainPower" xml:space="preserve">
+    <value>MaxDrivetrainPower</value>
+  </data>
   <data name="PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
-  <data name="InterimStage" xml:space="preserve">
-    <value>InterimStage</value>
+  <data name="InterimStep" xml:space="preserve">
+    <value>InterimStep</value>
   </data>
   <data name="Completed" xml:space="preserve">
     <value>Completed</value>
   </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>AppVersion</value>
+  </data>
+  <data name="Component_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Gearbox_Gear_MaxOutShaftSpeed" xml:space="preserve">
+    <value>MaxOutShaftSpeed</value>
+  </data>
+  <data name="Gearbox_Gear_MaxOutShaftTorque" xml:space="preserve">
+    <value>MaxOutShaftTorque</value>
+  </data>
+  <data name="IEPC_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="IEPC_ContinuousTorqueSpeed" xml:space="preserve">
+    <value>ContinuousTorqueSpeed</value>
+  </data>
+  <data name="IEPC_DesignTypeWheelMotor" xml:space="preserve">
+    <value>DesignTypeWheelMotor</value>
+  </data>
+  <data name="IEPC_DifferentialIncluded" xml:space="preserve">
+    <value>DifferentialIncluded</value>
+  </data>
+  <data name="IEPC_DragCurves" xml:space="preserve">
+    <value>DragCurves</value>
+  </data>
+  <data name="IEPC_FullLoadCurve" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+  <data name="IEPC_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+  <data name="IEPC_NrOfDesignTypeWheelMotorMeasured" xml:space="preserve">
+    <value>NrOfDesignTypeWheelMotorMeasured</value>
+  </data>
+  <data name="IEPC_OverloadTime" xml:space="preserve">
+    <value>OverloadTime</value>
+  </data>
+  <data name="IEPC_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="IEPC_OverloadTorqueSpeed" xml:space="preserve">
+    <value>OverloadTorqueSpeed</value>
+  </data>
+  <data name="IEPC_PowerMaps" xml:space="preserve">
+    <value>PowerMaps</value>
+  </data>
+  <data name="IEPC_ThermalOverloadRecoveryFactor" xml:space="preserve">
+    <value>ThermalOverloadRecoveryFactor</value>
+  </data>
+  <data name="IEPC_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="IEPC_VoltageLevels" xml:space="preserve">
+    <value>VoltageLevels</value>
+  </data>
+  <data name="EM_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="EM_ContinuousTorqueSpeed" xml:space="preserve">
+    <value>ContinuousTorqueSpeed</value>
+  </data>
+  <data name="EM_DragCurve" xml:space="preserve">
+    <value>DragCurve</value>
+  </data>
+  <data name="EM_EfficiencyMap" xml:space="preserve">
+    <value>EfficiencyMap</value>
+  </data>
+  <data name="EM_FullLoadCurve" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+  <data name="EM_OverloadTime" xml:space="preserve">
+    <value>OverloadTime</value>
+  </data>
+  <data name="EM_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="EM_OverloadTorqueSpeed" xml:space="preserve">
+    <value>OverloadTorqueSpeed</value>
+  </data>
+  <data name="EM_ThermalOverloadRecoveryFactor" xml:space="preserve">
+    <value>ThermalOverloadRecoveryFactor</value>
+  </data>
+  <data name="EM_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="EM_VoltageLevels" xml:space="preserve">
+    <value>VoltageLevels</value>
+  </data>
+  <data name="JsonHeader_CreatedBy" xml:space="preserve">
+    <value>CreatedBy</value>
+  </data>
+  <data name="JsonHeader_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+<data name="BUS_RunSimulation" xml:space="preserve">
+	<value>RunSimulation</value>
+</data>
 </root>

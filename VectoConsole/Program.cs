@@ -49,7 +49,9 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -105,6 +107,7 @@ Examples:
 
 		private static int Main(string[] args)
 		{
+
 			_kernel = new StandardKernel(new VectoNinjectModule());
 			try {
 				// on -h display help and terminate.
@@ -142,6 +145,12 @@ Examples:
 				}
 
 				var config = LogManager.Configuration;
+				if (config is null) {
+					// in .net6.0 the app is exported as dll, therefore the default config lookup of nlog doesn't work.
+					LogManager.LoadConfiguration($"{Assembly.GetExecutingAssembly().GetName().Name}.dll.config");
+					config = LogManager.Configuration;
+				}
+
 				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("LogFile")));
 
 				if (logLevel > LogLevel.Warn) {
@@ -227,12 +236,12 @@ Examples:
 					}
 
 					fileWriter = new FileOutputWriter(file);
-					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
-						ModalResults1Hz = args.Contains("-1Hz"),
-						WriteModalResults = args.Contains("-mod"),
-						ActualModalData = args.Contains("-act"),
-						Validate = !args.Contains("-nv"),
-					};
+					var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(mode, dataProvider, fileWriter, null, null);
+					//var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, dataProvider, fileWriter);
+					runsFactory.ModalResults1Hz = args.Contains("-1Hz");
+					runsFactory.WriteModalResults = args.Contains("-mod");
+					runsFactory.ActualModalData = args.Contains("-act");
+					runsFactory.Validate = !args.Contains("-nv");
 
 					_jobContainer.AddRuns(runsFactory);
 				}
@@ -359,7 +368,7 @@ Examples:
 			WriteLine($@"VectoCore: {VectoSimulationCore.VersionNumber}");
 		}
 
-		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
+		private static void PrintProgress(IDictionary<int, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true, bool force = false)
 		{
 			try {

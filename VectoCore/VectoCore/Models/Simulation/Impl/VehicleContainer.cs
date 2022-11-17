@@ -79,9 +79,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IRESSInfo BatteryInfo { get; protected set; }
 		public ITorqueConverterInfo TorqueConverterInfo { get; protected set; }
 
-		public virtual ITorqueConverterControl TorqueConverterCtl { get; private set; }
+		public virtual ITorqueConverterControl TorqueConverterCtl { get; protected set; }
 
-		public IDCDCConverter DCDCConverter { get; private set; }
+		public IDCDCConverter DCDCConverter { get; protected set; }
+
+		public WHRCharger WHRCharger { get; protected set; }
+
+		public IElectricSystemInfo ElectricSystemInfo { get; protected set; }
 
 		public virtual bool IsTestPowertrain => false;
 
@@ -89,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IModalDataContainer ModData;
 
-		internal WriteSumData WriteSumData;
+		protected ISumData WriteSumData;
 
 		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
 
@@ -98,10 +102,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
-			WriteSumData writeSumData = null)
+			ISumData writeSumData = null)
 		{
 			ModData = modData;
-			WriteSumData = writeSumData ?? delegate { };
+			WriteSumData = writeSumData;
 			ExecutionMode = executionMode;
 		}
 
@@ -118,7 +122,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual Second AbsTime { get; set; }
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
-			return ElectricMotors.GetValueOrDefault(pos);
+			return ElectricMotors.GetVECTOValueOrDefault(pos);
 		}
 
 
@@ -150,6 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IRESSInfo c14) { BatteryInfo = c14; }
 			if (component is BusAuxiliariesAdapter c15) { BusAux = c15; }
 			if (component is IDCDCConverter c16) { DCDCConverter = c16; }
+			if (component is IElectricSystemInfo c24) { ElectricSystemInfo = c24; }
 			
 			if (component is IEngineInfo c17){
 				EngineInfo = c17;
@@ -184,13 +189,69 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ElectricMotors[c23.Position] = c23;
 				HasElectricMotor = true;
 			}
+
+			if (component is WHRCharger c25) {
+				WHRCharger = c25;
+			}
 			
 			_components.Add(Tuple.Create(commitPriority, component));
 			//todo mk20210617 use sorted list with inverse commitPriority (-commitPriority)
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
+
+			ModalData?.RegisterComponent(component);
+
+			WriteSumData?.RegisterComponent(component, RunData);
 		}
 
+		public void AddAuxiliary(string id, string columnName = null)
+		{
+			ModalData?.AddAuxiliary(id, columnName);
+			WriteSumData?.AddAuxiliary(id);
+		}
 
+		private List<(IUpdateable, object)> ComponentUpdateList = new List<(IUpdateable, object)>();
+
+		protected void UpdateComponentsInternal(IDataBus realContainer)
+		{
+			if (ComponentUpdateList.Any()) {
+				foreach (var (target, source) in ComponentUpdateList) {
+					target.UpdateFrom(source);
+				}
+			} else {
+				foreach (var (_, c) in _components) {
+#if DEBUG
+					var found = false;
+#endif
+					if (c is IUpdateable target) {
+						foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+							if (target.UpdateFrom(source)) {
+								ComponentUpdateList.Add((target, source));
+#if DEBUG
+								found = true;
+#endif
+							}
+						}
+					}
+
+#if DEBUG
+					if (!found) {
+						Console.WriteLine("Test Component is not updateable: " + c.GetType());
+					}
+#endif
+				}
+				
+#if DEBUG
+				var sourceList = ComponentUpdateList.Select(st => st.Item2).ToArray();
+				foreach (var (_, source) in (realContainer as VehicleContainer)._components) {
+					if (!sourceList.Contains(source)){
+						Console.WriteLine("Real Component is not used for update: " + source.GetType());
+					}
+				}
+#endif
+
+				ComponentUpdateList = ComponentUpdateList.Distinct().ToList();
+			}
+		}
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -215,13 +276,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData?.Finish(RunStatus, e);
 
-			WriteSumData(ModData);
+			WriteSumData?.Write(ModData, RunData);
 
 			ModData?.FinishSimulation();
 			DrivingCycleInfo?.FinishSimulation();
 		}
 
 		public virtual IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns => new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors);
+		public ISumData SumData => WriteSumData;
 
 		public virtual void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
@@ -235,7 +297,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual VectoRun.Status RunStatus { get; set; }
 
-		#endregion
+#endregion
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
@@ -245,6 +307,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public virtual bool HasElectricMotor { get; private set; }
 
 		public PowertrainPosition[] ElectricMotorPositions => ElectricMotors.Keys.ToArray();
+
+		public VectoSimulationJobType VehicleArchitecutre => RunData.JobType;
 
 		public virtual bool HasCombustionEngine { get; private set; }
 
@@ -266,7 +330,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IGearboxInfo _gearboxInfo;
 
 		public ExemptedRunContainer(
-			ExecutionMode executionMode, IModalDataContainer modData = null, WriteSumData writeSumData = null) : base(
+			ExecutionMode executionMode, IModalDataContainer modData = null, ISumData writeSumData = null) : base(
 			executionMode, modData, writeSumData)
 		{
 			_mileageCounter = new ZeroMileageCounter(this);
@@ -274,22 +338,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_gearboxInfo = new EngineOnlyGearboxInfo(this);
 		}
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IMileageCounter MileageCounter => _mileageCounter;
 
-		#endregion
+#endregion
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IVehicleInfo VehicleInfo => _vehicleInfo;
 
-		#endregion
+#endregion
 
-		#region Overrides of VehicleContainer
+#region Overrides of VehicleContainer
 
 		public override IGearboxInfo GearboxInfo => _gearboxInfo;
 
-		#endregion
+#endregion
 	}
 }

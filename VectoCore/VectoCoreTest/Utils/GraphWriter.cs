@@ -35,13 +35,13 @@ using System.Data;
 using System.IO;
 using System.Drawing;
 using System.Linq;
+#if !NET5_0_OR_GREATER
 using System.Windows.Forms.DataVisualization.Charting;
+#endif
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
-
-// ReSharper disable UnusedVariable
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -51,9 +51,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private Size _diagramSize = new Size(2000, 440);
 
+#if !NET5_0_OR_GREATER
 		private readonly Font AxisLabelFont = new Font("Consolas", 10);
 		private readonly Font AxisTitleFont = new Font("Verdana", 12);
 		private readonly Font LegendFont = new Font("Verdana", 14);
+#endif
 
 		public string Series2Label { get; set; }
 
@@ -79,6 +81,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void Write(string fileNameV3, string fileNameV22 = null)
 		{
+#if !NET5_0_OR_GREATER
 			if (!_enabled) {
 				return;
 			}
@@ -214,6 +217,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				chart.Invalidate();
 				chart.SaveImage(Path.Combine(Path.GetDirectoryName(fileNameV3) ?? "", fileName), ChartImageFormat.Png);
 			}
+#endif
 		}
 
 		private string TranslateFieldname(ModalResultField modalResultField)
@@ -236,6 +240,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool WriteDistanceSlice(string fileNameV3, string fileNameV22, double start, double end)
 		{
+#if !NET5_0_OR_GREATER
 			if (!_enabled) {
 				return true;
 			}
@@ -245,10 +250,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			//    RowFilter = string.Format(@"dist > {0} AND dist < {1}", start, end)
 			//};
 			//var modDataV3 = modDataV3View.ToTable();
-			var modDataV3Tmp = modDataV3Iput.AsEnumerable().Where(row => {
+			var modDataV3Tmp = modDataV3Iput.Rows.Cast<DataRow>().Where(row => {
 				var s = row.ParseDouble("dist");
 				return s >= start && s <= end;
-			});
+			}).ToList();
 
 			if (!File.Exists(fileNameV22)) {
 				//LogManager.GetCurrentClassLogger().Error("Modfile V2.2 not found: " + fileNameV22);
@@ -261,20 +266,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 				//var modDataV22View = new DataView(modDataV22Input) {
 				//    RowFilter = string.Format(@"dist > {0} AND dist < {1}", start, end)
 				//};
-				var modDataV22Tmp = modDataV22Input.AsEnumerable().Where(row => {
+				var modDataV22Tmp = modDataV22Input.Rows.Cast<DataRow>().Where(row => {
 					var s = row.ParseDouble("dist");
 					return s >= start && s <= end;
-				});
+				}).ToList();
 				if (!(modDataV3Tmp.Any() || modDataV22Tmp.Any())) {
 					return false;
 				}
-				modDataV22 = modDataV22Tmp.CopyToDataTable();
+
+				var d = new DataTable();
+				modDataV22Tmp.ForEach(r => d.Rows.Add(r));
+				modDataV22 = d;
 			} else {
 				if (!modDataV3Tmp.Any()) {
 					return false;
 				}
 			}
-			var modDataV3 = modDataV3Tmp.CopyToDataTable();
+
+			var modDataV3 = new DataTable();
+			modDataV3Tmp.ForEach(r => modDataV3.Rows.Add(r));
 
 			//var xfields = new[] { ModalResultField.dist };
 			var xfield = ModalResultField.dist;
@@ -351,9 +361,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 				chart.Invalidate();
 				chart.SaveImage(fileName, ChartImageFormat.Png);
 			}
+#endif
 			return true;
 		}
 
+#if !NET5_0_OR_GREATER
 		private static void AddTitle(Chart chart, string titleText, string dockToChartArea)
 		{
 			var title = new Title {
@@ -369,14 +381,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var field = string.Format(fieldA, "");
 			return modDataV3.Rows.Cast<DataRow>()
-				.Select(v => v.Field<string>(field).Length == 0
+				.Select(v => ((string)v[field]).Length == 0
 					? double.NaN
-					: v.Field<string>(field).ToDouble())
+					: ((string)v[field]).ToDouble())
 				.ToArray();
 		}
 
-		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping) =>
-			modDataV3.Rows.Cast<DataRow>().Select(x => mapping.GetValueOrDefault(x.Field<string>(field), double.NaN)).ToArray();
+		//private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping) =>
+		//	modDataV3.Rows.Cast<DataRow>().Select(x => mapping.GetValueOrDefault(((string)x[field]), double.NaN)).ToArray();
+		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping)
+		{
+			return (from x in modDataV3.Rows.Cast<DataRow>()
+				let val = x.Field<string>(field)
+				select mapping.ContainsKey(val) ? mapping[val] : double.NaN).ToArray();
+		}
 
 		private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
 		{
@@ -460,5 +478,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chart.Series[series1.Name].Points.DataBindXY(x, y);
 			return series1;
 		}
+#endif
 	}
 }

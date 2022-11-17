@@ -45,10 +45,18 @@ namespace TUGraz.VectoCommon.Hashing
 		Airdrag,
 		Tyre,
 		Vehicle,
-		VectoOutput,
+		VectoManufacturerReport,
 		VectoCustomerInformation,
 		VectoPrimaryVehicleInformation,
-		VectoManufacturingStage
+		VectoInterimVehicleInformation,
+		VectoManufacturingStep, 
+		BatterySystem,
+		CapacitorSystem,
+		ElectricMachineSystem,
+		IEPC,
+		ADC,
+		CertifiedAeroReduction,
+		ElectricEnergyStorage
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -74,14 +82,28 @@ namespace TUGraz.VectoCommon.Hashing
 					return XMLNames.AxleWheels_Axles_Axle_Tyre;
 				case VectoComponents.Vehicle:
 					return XMLNames.Component_Vehicle;
-				case VectoComponents.VectoOutput:
+				case VectoComponents.VectoManufacturerReport:
 					return "VectoOutput";
 				case VectoComponents.VectoCustomerInformation:
 					return "VectoCustomerInformation";
 				case VectoComponents.VectoPrimaryVehicleInformation:
 					return "PrimaryVehicle";
-				case VectoComponents.VectoManufacturingStage:
-					return "ManufacturingStage";
+				case VectoComponents.VectoManufacturingStep:
+					return XMLNames.ManufacturingStep;
+				case VectoComponents.BatterySystem:
+					return XMLNames.Component_BatterySystem;
+				case VectoComponents.CapacitorSystem:
+					return XMLNames.Component_CapacitorSystem;
+				case VectoComponents.ElectricMachineSystem:
+					return XMLNames.Component_ElectricMachineSystem;
+				case VectoComponents.IEPC:
+					return XMLNames.Component_IEPC;
+				case VectoComponents.ADC:
+					return XMLNames.Component_ADC;
+				case VectoComponents.CertifiedAeroReduction:
+					return XMLNames.Component_CertifiedAeroReduction;
+				case VectoComponents.ElectricEnergyStorage:
+					return XMLNames.REESS;
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -106,16 +128,32 @@ namespace TUGraz.VectoCommon.Hashing
 					return "AD-";
 				case VectoComponents.Tyre:
 					return "TYRE-";
-				case VectoComponents.VectoOutput:
-					return "RESULT-";
+				case VectoComponents.VectoManufacturerReport:
+					return "MRF-";
 				case VectoComponents.VectoCustomerInformation:
-					return "COC-";
+					return "CIF-";
 				case VectoComponents.VectoPrimaryVehicleInformation:
-					return "PIF-";
+					return "VIF_P-";
+				case VectoComponents.VectoInterimVehicleInformation:
+					return "VIF_I-";
 				case VectoComponents.Vehicle:
 					return "VEH-";
-				case VectoComponents.VectoManufacturingStage:
+				case VectoComponents.VectoManufacturingStep:
 					return "MST-";
+				case VectoComponents.BatterySystem:
+					return "BAT-";
+				case VectoComponents.CapacitorSystem:
+					return "CAP-";
+				case VectoComponents.ElectricMachineSystem:
+					return "EM-";
+				case VectoComponents.IEPC:
+					return "IEPC-";
+				case VectoComponents.ADC:
+					return "ADC-";
+				case VectoComponents.CertifiedAeroReduction:
+					return "AERO-";
+				case VectoComponents.ElectricEnergyStorage:
+					return "REESS-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -125,9 +163,9 @@ namespace TUGraz.VectoCommon.Hashing
 		{
 			switch (component) {
 				case VectoComponents.VectoCustomerInformation:
-				case VectoComponents.VectoOutput:
+				case VectoComponents.VectoManufacturerReport:
 				case VectoComponents.VectoPrimaryVehicleInformation:
-				case VectoComponents.VectoManufacturingStage:
+				case VectoComponents.VectoManufacturingStep:
 					return true;
 				default:
 					return false;

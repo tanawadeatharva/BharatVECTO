@@ -83,14 +83,10 @@ Public Class VectoJobForm
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		gbEcoRoll.Enabled = not Cfg.DeclMode
-		gbEngineStopStart.Enabled = not cfg.DeclMode
-		gbPCC.Enabled = Not Cfg.DeclMode
+        gbEngineStopStart.Visible = Not Cfg.DeclMode
+        gbPCC.Enabled = Not Cfg.DeclMode
 
 		_changed = False
-
-		cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-		cbGearshiftStrategy.DisplayMember = "Label"
-        cbGearshiftStrategy.ValueMember = "Value"
 
         'Attempt to select that found in Config
 
@@ -105,6 +101,10 @@ Public Class VectoJobForm
                 lblTitle.Text = prefix + "Parallel Hybrid Vehicle"
                 gbElectricAux.Enabled = True
                 GrAuxMech.Enabled = True
+            case VectoSimulationJobType.SerialHybridVehicle
+                lblTitle.Text = prefix + "Serial Hybrid Vehicle"
+                gbElectricAux.Enabled = true
+                GrAuxMech.Enabled = true
             Case VectoSimulationJobType.BatteryElectricVehicle
                 lblTitle.Text = prefix + "Battery Electric Vehicle"
                 gbElectricAux.Enabled = True
@@ -115,6 +115,18 @@ Public Class VectoJobForm
                 GrAuxMech.Enabled = True
             Case VectoSimulationJobType.EngineOnlySimulation
                 lblTitle.Text = prefix + "Engine Only"
+            Case VectoSimulationJobType.IEPC_E
+                lblTitle.Text = prefix + "IEPC-E Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            case VectoSimulationJobType.IEPC_S
+                lblTitle.Text = prefix + "IEPC-S Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False
+            Case VectoSimulationJobType.IHPC
+                lblTitle.Text = prefix + "IHPC Vehicle"
+                gbElectricAux.Enabled = True
+                GrAuxMech.Enabled = False      
         End Select
     End Sub
 
@@ -318,19 +330,22 @@ Public Class VectoJobForm
             GearboxForm.BringToFront()
         End If
         Dim vehicleType As VehicleCategory
+        Dim jobType as VectoSimulationJobType
         Try
             If Not Trim(f) = "" Then
-                Dim vehInput As IVehicleDeclarationInputData =
+                Dim vehInput As IVehicleEngineeringInputData =
                         CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))),
                             IEngineeringInputDataProvider).JobInputData.Vehicle
                 vehicleType = vehInput.VehicleCategory
+                jobType = vehInput.VehicleType
             End If
 
         Catch ex As Exception
             vehicleType = VehicleCategory.RigidTruck
+            jobType = VectoSimulationJobType.ConventionalVehicle
         End Try
         Try
-            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
+            If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType, jobType)
         Catch ex As Exception
             MsgBox("Failed to open Gearbox File: " + ex.Message)
         End Try
@@ -464,20 +479,24 @@ Public Class VectoJobForm
         UpdateEnabledControls()
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
-            TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
-        End If
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle OrElse not IsNothing(inputData.JobInputData.Vehicle.Components.GearboxInputData)) Then
-            TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
-        End If
-        If (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
-            TbShiftStrategyParams.Text = ""
-        Else
-            TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
-        End If
-        If (JobType = VectoSimulationJobType.ParallelHybridVehicle) Then
-            tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
-        End If
+		If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
+			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
+		Else
+			TbENG.Text = ""
+		End If
+		If (inputData.JobInputData.Vehicle.Components.GearboxInputData IsNot Nothing) Then
+			TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
+		Else
+			TbGBX.Text = ""
+		End If
+		If (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
+			TbShiftStrategyParams.Text = ""
+		Else
+			TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
+		End If
+		If (JobType = VectoSimulationJobType.ParallelHybridVehicle OrElse JobType = VectoSimulationJobType.SerialHybridVehicle OrElse JobType = VectoSimulationJobType.IEPC_S OrElse JobType = VectoSimulationJobType.IHPC) Then
+			tbHybridStrategyParams.Text = GetRelativePath(inputData.JobInputData.HybridStrategyParameters.Source, _basePath)
+		End If
 
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -522,7 +541,11 @@ Public Class VectoJobForm
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
                 Dim lv0 As ListViewItem = New ListViewItem
-                lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                if (sb.CycleData.SourceType = DataSourceType.Embedded) Then
+                    lv0.Text = sb.Name
+                else 
+                    lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                End If
                 LvCycles.Items.Add(lv0)
             Next
         Catch ex As Exception
@@ -569,17 +592,6 @@ Public Class VectoJobForm
         tbPCCPreviewUseCase2.Text = If(driver.PCCData?.PreviewDistanceUseCase2?.ToGUIFormat(), DeclarationData.Driver.PCC.PreviewDistanceUseCase2.ToGUIFormat())
 
         '-------------------------------------------------------------
-
-        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle OrElse Not IsNothing(inputData.JobInputData.Vehicle.Components.GearboxInputData)) Then
-            cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type) _
-            .Concat({Tuple.Create("", "Not specified - use default")}) _
-            .Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
-            cbGearshiftStrategy.DisplayMember = "Label"
-            cbGearshiftStrategy.ValueMember = "Value"
-        End If
-        If (Not inputData.JobInputData.ShiftStrategy Is Nothing) Then
-            cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
-        End If
 
         if (Not inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.BusAuxiliariesData Is nothing) Then
             cbEnableBusAux.Checked = True
@@ -641,7 +653,6 @@ Public Class VectoJobForm
 
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
-        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
         vectoJob.PathHybridStrategyParams = tbHybridStrategyParams.Text
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
@@ -1025,13 +1036,13 @@ Public Class VectoJobForm
         pnEngine.Enabled = True
         pnShiftParams.Enabled = True
         pnHybridStrategy.Enabled = False
-        lblESSUtilityFactorDriving.Enabled  = false
-        tbESSUtilityFactorDriving.Enabled = false
+        gbEngineStopStart.Visible = True
+        lblESSUtilityFactorDriving.Visible = True
+        tbESSUtilityFactorDriving.Visible = True
+        lblESSUtilityFactorDrivingUnit.Visible = True
         Select Case JobType
             Case VectoSimulationJobType.ConventionalVehicle
                 gbElectricAux.Enabled = False
-                lblESSUtilityFactorDriving.Enabled  = true
-                tbESSUtilityFactorDriving.Enabled = true
             Case VectoSimulationJobType.EngineOnlySimulation
                 pnVehicle.Enabled = False
                 pnGearbox.Enabled = False
@@ -1039,14 +1050,41 @@ Public Class VectoJobForm
                 TabPgADAS.Enabled = False
                 tpAuxiliaries.Enabled = False
                 pnShiftParams.Enabled = False
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.ParallelHybridVehicle
-                ' empty line - do not fall-through
-                pnHybridStrategy.Enabled = True
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                lblESSUtilityFactorDriving.Visible = False
+                tbESSUtilityFactorDriving.Visible = False
+                lblESSUtilityFactorDrivingUnit.Visible = False
+            Case VectoSimulationJobType.SerialHybridVehicle
+                pnHybridStrategy.Enabled = Not Cfg.DeclMode
+                gbEngineStopStart.Visible = False
             Case VectoSimulationJobType.BatteryElectricVehicle
                 pnEngine.Enabled = False
                 pnGearbox.Enabled = True
                 GrAuxMech.Enabled = False
-                pnShiftParams.Enabled = true
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IHPC
+                pnEngine.Enabled = True
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = True
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
+            Case VectoSimulationJobType.IEPC_E
+                pnEngine.Enabled = False
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+            Case VectoSimulationJobType.IEPC_S
+                pnEngine.Enabled = True
+                pnGearbox.Enabled = True
+                GrAuxMech.Enabled = False
+                pnShiftParams.Enabled = True
+                gbEngineStopStart.Visible = False
+                pnHybridStrategy.Enabled = true
         End Select
     End Sub
 
@@ -1152,7 +1190,11 @@ Public Class VectoJobForm
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse  JobType = VectoSimulationJobType.IEPC_S) Then
+            TbGbxTxt.Text = $"IEPC {gearbox.Model}"
+        else
+            TbGbxTxt.Text = $"{gearbox.Gears.Count}-Speed {gearbox.Type.ShortName()} {gearbox.Model}"
+        End If
 
 	    If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count
@@ -1348,10 +1390,10 @@ Public Class VectoJobForm
 		End If
 
 		PicVehicle.Image = ConvPicPath(HDVclass, False) _
-		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+        'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = $"HDV Group {HDVclass}"
-	    TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
+        TbHVCclass.Text = $"{HDVclass}"
+        TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
 	End Sub
@@ -1391,14 +1433,187 @@ Public Class VectoJobForm
 #End Region
 
 
-	Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
-		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
-			Then _
-			tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
-																	GetPath(VectoFile))
-	End Sub
+#Region "TextBox Validation OnLeave"
 
-	Private Sub btnDfVelocityDrop_Click_1(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
+    Private Function TextboxValidation(text As String) As Boolean
+        If text = "" Then
+            Return True
+        End If
+        If Not IsNumeric(text) Then
+            Return False
+        End If
+
+        If Not 0 < Convert.ToDouble(text) Then
+            Return False
+        End If
+
+        Return True
+    End Function
+
+
+    Private Sub tbEngineStopStartActivationDelay_Leave(sender As Object, e As System.EventArgs) Handles tbEngineStopStartActivationDelay.Leave
+        If Not TextboxValidation(tbEngineStopStartActivationDelay.Text) Then
+            MsgBox("Invalid input value for 'Engine-off'!", vbExclamation, "Warning")
+            tbEngineStopStartActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbMaxEngineOffTimespan_Leave(sender As Object, e As System.EventArgs) Handles tbMaxEngineOffTimespan.Leave
+        If Not TextboxValidation(tbMaxEngineOffTimespan.Text) Then
+            MsgBox("Invalid input value for 'Max. engine-off time:'!", vbExclamation, "Warning")
+            tbMaxEngineOffTimespan.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollMinSpeed.Leave
+        If Not TextboxValidation(tbEcoRollMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Minimum Speed'!", vbExclamation, "Warning")
+            tbEcoRollMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollActivationDelay_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollActivationDelay.Leave
+        If Not TextboxValidation(tbEcoRollActivationDelay.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Activation Delay'!", vbExclamation, "Warning")
+            tbEcoRollActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollMaxAcc_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollMaxAcc.Leave
+        If Not TextboxValidation(tbEcoRollMaxAcc.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Upper Accelaration Limit'!", vbExclamation, "Warning")
+            tbEcoRollActivationDelay.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbEcoRollUnderspeed_Leave(sender As Object, e As System.EventArgs) Handles tbEcoRollUnderspeed.Leave
+        If Not TextboxValidation(tbEcoRollUnderspeed.Text) Then
+            MsgBox("Invalid input value for 'Eco Roll - Underspeed threshold'!", vbExclamation, "Warning")
+            tbEcoRollUnderspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCUnderspeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCUnderspeed.Leave
+        If Not TextboxValidation(tbPCCUnderspeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control -  Allowed Underspeed'!", vbExclamation, "Warning")
+            tbPCCUnderspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCOverspeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCOverspeed.Leave
+        If Not TextboxValidation(tbPCCOverspeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Allowed Overspeed'!", vbExclamation, "Warning")
+            tbPCCOverspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCEnableSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCEnableSpeed.Leave
+        If Not TextboxValidation(tbPCCEnableSpeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - PCC enabling velocity'!", vbExclamation, "Warning")
+            tbPCCEnableSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbPCCMinSpeed.Leave
+        If Not TextboxValidation(tbPCCMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Minimum Speed'!", vbExclamation, "Warning")
+            tbPCCMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPCCPreviewUseCase1_Leave(sender As Object, e As System.EventArgs) Handles tbPCCPreviewUseCase1.Leave
+        If Not TextboxValidation(tbPCCPreviewUseCase1.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Preview Distance use case 1'!", vbExclamation, "Warning")
+            tbPCCPreviewUseCase1.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbtbPCCPreviewUseCase2_Leave(sender As Object, e As System.EventArgs) Handles tbPCCPreviewUseCase2.Leave
+        If Not TextboxValidation(tbPCCPreviewUseCase2.Text) Then
+            MsgBox("Invalid input value for 'Predictive Cruise Control - Preview Distance use case 2'!", vbExclamation, "Warning")
+            tbPCCPreviewUseCase2.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbAuxPAuxICEOn_Leave(sender As Object, e As System.EventArgs) Handles TbAuxPAuxICEOn.Leave
+        If Not TextboxValidation(TbAuxPAuxICEOn.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (ICE On)'!", vbExclamation, "Warning")
+            TbAuxPAuxICEOn.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPAuxDrivingICEOff_Leave(sender As Object, e As System.EventArgs) Handles tbPAuxDrivingICEOff.Leave
+        If Not TextboxValidation(tbPAuxDrivingICEOff.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (Driving, ICE Off)'!", vbExclamation, "Warning")
+            tbPAuxDrivingICEOff.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbPAuxStandstillICEOff_Leave(sender As Object, e As System.EventArgs) Handles tbPAuxStandstillICEOff.Leave
+        If Not TextboxValidation(tbPAuxStandstillICEOff.Text) Then
+            MsgBox("Invalid input value for 'Auxiliaries - Aux Load (Standstill, ICE Off)'!", vbExclamation, "Warning")
+            tbPAuxStandstillICEOff.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbOverspeed_Leave(sender As Object, e As System.EventArgs) Handles TbOverspeed.Leave
+        If Not TextboxValidation(TbOverspeed.Text) Then
+            MsgBox("Invalid input value for 'Driver Model - 'Maximum Overspeed'!", vbExclamation, "Warning")
+            TbOverspeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub TbVmin_Leave(sender As Object, e As System.EventArgs) Handles TbVmin.Leave
+        If Not TextboxValidation(TbVmin.Text) Then
+            MsgBox("Invalid input value for 'Driver Model - 'Minimum Speed'!", vbExclamation, "Warning")
+            TbVmin.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbLacMinSpeed_Leave(sender As Object, e As System.EventArgs) Handles tbLacMinSpeed.Leave
+        If Not TextboxValidation(tbLacMinSpeed.Text) Then
+            MsgBox("Invalid input value for 'Look-Ahead Coasting - 'Min. Velocity'!", vbExclamation, "Warning")
+            tbLacMinSpeed.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbLacPreviewFactor_Leave(sender As Object, e As System.EventArgs) Handles tbLacPreviewFactor.Leave
+        If Not TextboxValidation(tbLacPreviewFactor.Text) Then
+            MsgBox("Invalid input value for 'Look-Ahead Coasting - 'Preview distance factor'!", vbExclamation, "Warning")
+            tbLacPreviewFactor.Focus()
+            Return
+        End If
+    End Sub
+
+
+#End Region
+
+    Private Sub btnDfTargetSpeed_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
+        If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VectoFile))) _
+            Then _
+            tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
+                                                                    GetPath(VectoFile))
+    End Sub
+
+    Private Sub btnDfVelocityDrop_Click_1(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
 		If DriverDecisionFactorVelocityDropFileBrowser.OpenDialog(FileRepl(tbLacDfVelocityDropFile.Text, GetPath(VectoFile))) _
 			Then _
 			tbLacDfVelocityDropFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorVelocityDropFileBrowser.Files(0),
@@ -1439,6 +1654,7 @@ Public Class VectoJobForm
 
         'Thus Veh-file is returned
         HybridStrategyParamsForm.JobDir = GetPath(VectoFile)
+        HybridStrategyParamsForm.JobType = JobType
         HybridStrategyParamsForm.AutoSendTo = True
 
         If Not Trim(f) = "" Then
@@ -1525,6 +1741,9 @@ Public Class VectoJobForm
         End If
     End Sub
 
+    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
+
+    End Sub
 End Class
 
 

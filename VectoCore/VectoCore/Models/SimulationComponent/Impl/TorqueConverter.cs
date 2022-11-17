@@ -49,7 +49,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class TorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>,
-		ITnInPort, ITnOutPort, ITorqueConverter
+		ITnInPort, ITnOutPort, ITorqueConverter, IUpdateable
 	{
 		protected readonly IGearboxInfo Gearbox;
 		protected readonly IShiftStrategy ShiftStrategy;
@@ -82,8 +82,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (operatingPointList.Count > 0) {
 				operatingPoint = SelectOperatingPoint(operatingPointList);
 			} else {
-				Log.Warn(
-					"TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+				if (outTorque.IsEqual(0) && outAngularVelocity.IsEqual(0)) {
+					Log.Info("TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+				}
+				else {
+					Log.Warn("TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+				}
 				var inAngularVelocity = outAngularVelocity.LimitTo(DataBus.EngineInfo.EngineIdleSpeed, DataBus.EngineInfo.EngineN95hSpeed);
 				operatingPoint = new TorqueConverterOperatingPoint {
 					OutAngularVelocity = outAngularVelocity,
@@ -502,6 +506,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public TorqueConverterOperatingPoint OperatingPoint;
 			public bool IgnitionOn;
+
+			public new TorqueConverterComponentState Clone() => (TorqueConverterComponentState)base.Clone();
 		}
 
 		#region Implementation of ITorqueConverterControl
@@ -515,6 +521,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public TorqueConverterOperatingPoint SetOperatingPoint { get; set; }
 
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is TorqueConverter tc) {
+				PreviousState = tc.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
 
 		#endregion
 	}

@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		MeterPerSquareSecond DriverAcceleration { get; }
 
 		PCCStates PCCState { get; }
-		
-	}
 
+		MeterPerSecond NextBrakeTriggerSpeed { get; }
+	}
 }

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>hashingcmd</AssemblyName>
+    <RootNamespace>TUGraz.VECTO</RootNamespace>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <DefineConstants />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+  </ItemGroup>
+
+</Project>

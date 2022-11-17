@@ -29,16 +29,14 @@
 '   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 '
 
-Imports System.Collections.Generic
+Imports System.Collections.Concurrent
 Imports System.ComponentModel
 Imports System.IO
-Imports System.Linq
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
 Imports System.Threading
 Imports System.Xml
-Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
@@ -49,7 +47,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.Models.Simulation
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -59,7 +57,7 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 ''' <remarks></remarks>
 
-    Public Class MainForm
+Public Class MainForm
     Private _jobListView As FileListView
     Private _cycleListView As FileListView
 
@@ -77,7 +75,7 @@ Imports TUGraz.VectoCore.Utils
 
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-    Private Declare Function SetThreadExecutionState Lib "kernel32"(esFlags As Long) As Long
+    Private Declare Function SetThreadExecutionState Lib "kernel32" (esFlags As Long) As Long
 
     Private Shared Sub AllowSleepOff()
 #If Not PLATFORM = "x86" Then
@@ -118,7 +116,7 @@ Imports TUGraz.VectoCore.Utils
         JobfileFileBrowser = New FileBrowser("vecto")
         VehicleFileBrowser = New FileBrowser("vveh")
         VehicleXMLFileBrowser = New FileBrowser("vveh_xml")
-        ManRXMLFileBrowser = new FileBrowser("xml")
+        ManRXMLFileBrowser = New FileBrowser("xml")
         FuelConsumptionMapFileBrowser = New FileBrowser("vmap")
         DrivingCycleFileBrowser = New FileBrowser("vdri")
         FullLoadCurveFileBrowser = New FileBrowser("vfld")
@@ -137,8 +135,12 @@ Imports TUGraz.VectoCore.Utils
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
         CrossWindCorrectionFileBrowser = New FileBrowser("vcdx")
         ElectricMotorFileBrowser = New FileBrowser("vem")
+        IEPCFileBrowser = New FileBrowser("viepc")
+        IEPCFLCFileBrowser = New FileBrowser("viepcp")
+        IEPCDragFileBrowser = new FileBrowser("viepcd")
+        IEPCPowerMapFileBrowser = New FileBrowser("viepco")
         REESSFileBrowser = New FileBrowser("vreess")
-        EmADCLossMapFileBrowser = new FileBrowser("vtlm")
+        EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")
         DriverDecisionFactorVelocityDropFileBrowser.Extensions = New String() {"csv"}
@@ -148,14 +150,18 @@ Imports TUGraz.VectoCore.Utils
         ElectricMachineMaxTorqueFileBrowser = New FileBrowser("vemp")
         ElectricMachineEfficiencyMapFileBrowser = New FileBrowser("vemo")
         HCUFileBrowser = New FileBrowser("vhctl")
-        BusAuxFileBrowser = new FileBrowser(".vaux")
-        BusAuxCompressorMapFileBrowser = new FileBrowser(".acmp")
-        BatteryMaxCurrentCurveFileBrowser = new FileBrowser("vimax")
+        BusAuxFileBrowser = New FileBrowser(".vaux")
+        BusAuxCompressorMapFileBrowser = New FileBrowser(".acmp")
+        BatteryMaxCurrentCurveFileBrowser = New FileBrowser("vimax")
         BatteryInternalResistanceCurveFileBrowser = New FileBrowser("vbatr")
         BatterySoCCurveFileBrowser = New FileBrowser("vbatv")
-        PropulsionTorqueLimitFileBrowser = new FileBrowser("vtqp")
+        PropulsionTorqueLimitFileBrowser = New FileBrowser("vtqp")
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
+        IHPCFileBrowser = new FileBrowser("vem")
+        IHPCPowerMapFileBrowser = new FileBrowser("vemo")
+        IHPCFullLoadCurveFileBrowser = new FileBrowser("vemp")
+        IHPCDragCurveFileBrowser = new FileBrowser("vemd")
 
         '-------------------------------------------------------
         TextFileBrowser.Extensions = New String() {"txt"}
@@ -176,27 +182,37 @@ Imports TUGraz.VectoCore.Utils
         TransmissionLossMapFileBrowser.Extensions = New String() {"vtlm"}
         PtoLossMapFileBrowser.Extensions = New String() {"vptol"}
         PTODrivingCycleStandstillFileBrowser.Extensions = New String() {"vptoc"}
-        PTODrivingCycleDrivingFileBrowser.Extensions = New String() { "vptor" }
+        PTODrivingCycleDrivingFileBrowser.Extensions = New String() {"vptor"}
         TorqueConverterFileBrowser.Extensions = New String() {"vtcc"}
         TorqueConverterShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
         CrossWindCorrectionFileBrowser.Extensions = New String() {"vcdv", "vcdb"}
         ElectricMotorFileBrowser.Extensions = New String() {"vem"}
-        REESSFileBrowser.Extensions = New String() {"vreess"}
-        EmADCLossMapFileBrowser.Extensions = new String(){"vtlm"}
+        REESSFileBrowser.Extensions = New String() {"vreess", "vbat"}
+        EmADCLossMapFileBrowser.Extensions = New String() {"vtlm"}
 
         ElectricMachineDragTorqueFileBrowser.Extensions = New String() {"vemd"}
         ElectricMachineMaxTorqueFileBrowser.Extensions = New String() {"vemp"}
         ElectricMachineEfficiencyMapFileBrowser.Extensions = New String() {"vemo"}
 
-        BatteryMaxCurrentCurveFileBrowser.Extensions = new String() {"vimax"}
+        BatteryMaxCurrentCurveFileBrowser.Extensions = New String() {"vimax"}
         BatteryInternalResistanceCurveFileBrowser.Extensions = New String() {"vbatr"}
         BatterySoCCurveFileBrowser.Extensions = New String() {"vbatv"}
         HCUFileBrowser.Extensions = New String() {"vhctl"}
-        BusAuxFileBrowser.Extensions = New String(){"vaux"}
-        BusAuxCompressorMapFileBrowser.Extensions = new String(){"acmp"}
-        PropulsionTorqueLimitFileBrowser.Extensions = new String(){"vtqp"}
+        BusAuxFileBrowser.Extensions = New String() {"vaux"}
+        BusAuxCompressorMapFileBrowser.Extensions = New String() {"acmp"}
+        PropulsionTorqueLimitFileBrowser.Extensions = New String() {"vtqp"}
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
+
+        IHPCFileBrowser.Extensions = New String(){"vem"}
+        IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
+        IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
+        IHPCDragCurveFileBrowser.Extensions = New String(){"vemd"}
+        
+        IEPCFileBrowser.Extensions = New String () {"viepc"}
+        IEPCFLCFileBrowser.Extensions = New String() {"viepcp"}
+        IEPCDragFileBrowser.Extensions = New String() {"viepcd"}
+        IEPCPowerMapFileBrowser.Extensions = New String() {"viepco"}
     End Sub
 
     Private Sub FB_Close()
@@ -255,6 +271,10 @@ Imports TUGraz.VectoCore.Utils
         _genCheckAllLock = False
         _genChecked = 0
 
+        Dim logMessageTimer As New Windows.Forms.Timer(components)
+        logMessageTimer.Interval = 100
+        AddHandler logMessageTimer.Tick, AddressOf TimerLogMessages_Tick
+        logMessageTimer.Start()
 
         'Load Tabs properly (otherwise problem with ListViews)
         For x = 0 To TabControl1.TabCount - 1
@@ -269,17 +289,17 @@ Imports TUGraz.VectoCore.Utils
 
 
         'FileLists
-        _jobListView = New FileListView(path.Combine(MyConfPath, CONFIG_JOBLIST_FILE))
+        _jobListView = New FileListView(Path.Combine(MyConfPath, CONFIG_JOBLIST_FILE))
         _jobListView.LVbox = LvGEN
-        _cycleListView = New FileListView(path.Combine(MyConfPath, CONFIG_CYCLELIST_FILE))
+        _cycleListView = New FileListView(Path.Combine(MyConfPath, CONFIG_CYCLELIST_FILE))
 
         _jobListView.LoadList()
 
         LoadOptions()
 
         'Resize columns ... after Loading the @file-lists
-        LvGEN.Columns(1).Width = - 2
-        LvMsg.Columns(2).Width = - 2
+        LvGEN.Columns(1).Width = -2
+        LvMsg.Columns(2).Width = -2
 
         'Initialize BackgroundWorker
 
@@ -319,6 +339,10 @@ Imports TUGraz.VectoCore.Utils
         Else
             Text = "VECTO" & VectoSimulationCore.BranchSuffix & " " & COREvers
         End If
+
+#If MOCKUP Then
+        Text += " [MOCKUP]"
+#End If
 
         If Cfg.DeclMode Then
             _lastModeName = "Declaration"
@@ -386,7 +410,7 @@ Imports TUGraz.VectoCore.Utils
                         GearboxForm.BringToFront()
                     End If
                     Try
-                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
+                        GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle)
                     Catch ex As Exception
                         MsgBox("Failed to open Gearbox File: " + ex.Message)
                     End Try
@@ -541,7 +565,7 @@ Imports TUGraz.VectoCore.Utils
 
         lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-        For i = UBound(selIx) To 0 Step - 1
+        For i = UBound(selIx) To 0 Step -1
             LvGEN.Items.RemoveAt(selIx(i))
         Next
 
@@ -610,14 +634,14 @@ Imports TUGraz.VectoCore.Utils
         Dim p As Integer
         Dim f As Integer
         Dim fList As String()
-        Dim fListDim As Integer = - 1
+        Dim fListDim As Integer = -1
         Dim listViewItem As ListViewItem
 
         'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
         If VectoWorkerV3.IsBusy Then Exit Sub
 
         pDim = UBound(path)
-        ReDim fList(0)	   'um Nullverweisausnahme-Warnung zu verhindern
+        ReDim fList(0)     'um Nullverweisausnahme-Warnung zu verhindern
 
         '******************************************* Begin Update '*******************************************
         LvGEN.BeginUpdate()
@@ -659,13 +683,13 @@ Imports TUGraz.VectoCore.Utils
             End If
 
             'Otherwise: Add File (without WorkDir)
-            listViewItem = New ListViewItem(path(p))	'fFileWD(Path(p)))
+            listViewItem = New ListViewItem(path(p))    'fFileWD(Path(p)))
             listViewItem.SubItems.Add(" ")
             listViewItem.Checked = True
             listViewItem.Selected = True
             LvGEN.Items.Add(listViewItem)
             listViewItem.EnsureVisible()
-            lbFound:
+lbFound:
         Next
 
         LvGEN.EndUpdate()
@@ -762,7 +786,7 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenLogToolStripMenuItem.Click
-        Process.Start(Path.Combine(MyAppPath, "log.txt"))
+        Process.Start(new ProcessStartInfo(Path.Combine(MyAppPath, "log.txt")) with {.UseShellExecute = true})
     End Sub
 
     Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -772,20 +796,20 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UserManualToolStripMenuItem.Click
-        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
-            Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html")}""")
-        Else
-            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-        End If
+        OpenFileExternal("User Manual\help.html")
     End Sub
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
-            Process.Start(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf"))
+        OpenFileExternal("User Manual\Release Notes.pdf")
+    End Sub
+
+    Private Sub OpenFileExternal(filename As String)
+        Dim filepath = Path.Combine(MyAppPath, filename)
+        If File.Exists(filepath) Then
+            Process.Start(new ProcessStartInfo(filepath) With {.UseShellExecute = true})
         Else
-            MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
+            MsgBox("File not found!", MsgBoxStyle.Critical)
         End If
     End Sub
 
@@ -937,8 +961,8 @@ Imports TUGraz.VectoCore.Utils
             Status("Launching VECTO ...")
             JobFileList.Clear()
             JobFileList.AddRange(
-                From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast (Of ListViewItem)()
-                                    Select fFileRepl = FileRepl(listViewItem.SubItems(0).Text))
+                From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast(Of ListViewItem)()
+                Select fFileRepl = FileRepl(listViewItem.SubItems(0).Text))
 
             SetOptions()
             Cfg.Save()
@@ -978,7 +1002,7 @@ Imports TUGraz.VectoCore.Utils
             mode = ExecutionMode.Declaration
         Else
             mode = ExecutionMode.Engineering
-            Physics.AirDensity = Cfg.AirDensity.SI (Of KilogramPerCubicMeter)()
+            Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)()
         End If
 
         'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
@@ -999,16 +1023,16 @@ Imports TUGraz.VectoCore.Utils
                     Case VectoCore.Configuration.Constants.FileExtensions.VectoJobFile
                         input = JSONInputDataFactory.ReadJsonJob(jobFile)
                     Case ".xml"
-                        Dim xDocument As XDocument = xDocument.Load(jobFile)
+                        Dim xDocument As XDocument = XDocument.Load(jobFile)
                         Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
-                        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
-                        Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
+                        Dim kernel As IKernel = New StandardKernel(New VectoNinjectModule)
+                        Dim xmlInputReader As IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                         Select Case rootNode
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
                                 Using reader As XmlReader = XmlReader.Create(jobFile)
-                                input = xmlInputReader.CreateDeclaration(reader)
+                                    input = xmlInputReader.CreateDeclaration(reader)
                                 End Using
                         End Select
                 End Select
@@ -1024,7 +1048,7 @@ Imports TUGraz.VectoCore.Utils
                 Dim outFile As String = GetOutputDirectory(jobFile)
                 Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
 
-                Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, input, fileWriter)
+                Dim runsFactory As ISimulatorFactory = SimulatorFactory.CreateSimulatorFactory(mode, input, fileWriter)
                 runsFactory.WriteModalResults = Cfg.ModOut
                 runsFactory.ModalResults1Hz = Cfg.Mod1Hz
                 runsFactory.Validate = cbValidateRunData.Checked
@@ -1037,11 +1061,11 @@ Imports TUGraz.VectoCore.Utils
 
                 ' TODO MQ-20200525: Remove the following loop in production (or after evaluation of LAC!!
                 If not string.IsNullOrWhiteSpace(tbMinSpeedLAC.Text) then
-                    for Each run as JobContainer.RunEntry In jobContainer.Runs
-                        dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
-                        tmpDriver.LookAheadCoasting.Enabled = True
-                        tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
-                    Next
+                    'for Each run as JobContainer.RunEntry In jobContainer.Runs
+                    '    dim tmpDriver as DriverData = CType(run.Run, VectoRun).GetContainer().RunData.DriverData
+                    '    tmpDriver.LookAheadCoasting.Enabled = True
+                    '    tmpDriver.LookAheadCoasting.MinSpeed = tbMinSpeedLAC.Text.ToDouble().KMPHtoMeterPerSecond()
+                    'Next
                 end if
 
                     
@@ -1051,7 +1075,7 @@ Imports TUGraz.VectoCore.Utils
                                          .Message = "Finished Reading Data for job: " + jobFile})
 
             Catch ex As Exception
-                MsgBox($"ERROR running job {jobFile}: {ex.Message}", MsgBoxStyle.Critical)
+                MsgBox($"ERROR running job {jobFile}: {ex.Message} {vbCrLf} {ex.InnerException?.Message}", MsgBoxStyle.Critical)
                 sender.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError", .Message = ex.Message})
                 Return
             End Try
@@ -1081,28 +1105,27 @@ Imports TUGraz.VectoCore.Utils
                 Return
             End If
 
-            Dim progress As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress()
+            Dim progress As IDictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress()
             Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
             Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-            sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
+           
+                sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
                                   New VectoProgress With {.Target = "Status",
                                      .Message = $"Duration: {duration:0}s, Current Progress: {(sumProgress/progress.Count):P} ({ _
                                      String.Join(", ", progress.Select(Function(pair) $"{pair.Value.Progress,4:P}"))})"})
 
-            Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
-                    progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
-                    ToDictionary(
-                        Function(pair) pair.Key, Function(pair) pair.Value)
+            Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) = New Dictionary(Of Integer,JobContainer.ProgressEntry)(
+                progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value))
+                    
             PrintRuns(justFinished, fileWriters)
             finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
             Thread.Sleep(100)
         End While
 
-        Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) =
-                jobContainer.GetProgress().Where(
-                    Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
-                ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+        Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = New Dictionary(Of Integer,JobContainer.ProgressEntry)(jobContainer.GetProgress().Where(
+            Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value))
+                
         PrintRuns(remainingRuns, fileWriters)
 
         finishedRuns.Clear()
@@ -1182,9 +1205,10 @@ Imports TUGraz.VectoCore.Utils
     Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
                                  fileWriters As Dictionary(Of Integer, FileOutputWriter))
         For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
-            Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+            Dim modFilename As String = if(fileWriters.ContainsKey(p.Key) , fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
                                                                               p.Value.RunSuffix +
-                                                                              If(Cfg.Mod1Hz, "_1Hz", ""))
+                                                                              If(Cfg.Mod1Hz, "_1Hz", "")) , "")
+
 
             Dim runName As String = $"{p.Value.RunName} {p.Value.CycleName} {p.Value.RunSuffix}"
 
@@ -1511,9 +1535,7 @@ Imports TUGraz.VectoCore.Utils
         lv0.SubItems.Add(Now.ToString("HH:mm:ss.ff"))
         lv0.SubItems.Add(source)
 
-        If LvMsg.Items.Count > 9999 Then LvMsg.Items.RemoveAt(0)
-
-        LogFile.WriteToLog(id, msg & vbTab & source)
+        Task.Run(Sub() LogFile.WriteToLog(id, msg & vbTab & source))
 
         Select Case id
 
@@ -1542,10 +1564,26 @@ Imports TUGraz.VectoCore.Utils
             lv0.Tag = link
         End If
 
+        _logItemQueue.Enqueue(lv0)
+    End Sub
 
-        LvMsg.Items.Add(lv0)
+    Private ReadOnly _logItemQueue As New ConcurrentQueue(Of ListViewItem)
 
-        lv0.EnsureVisible()
+    Private Sub TimerLogMessages_Tick(sender As Object, e As EventArgs)
+        If Not _logItemQueue.IsEmpty Then
+
+            LvMsg.BeginUpdate()
+            Dim item As ListViewItem = Nothing
+            While _logItemQueue.TryDequeue(item)
+                LvMsg.Items.Add(item)
+                If LvMsg.Items.Count > 9999 Then
+                    LvMsg.Items.RemoveAt(0)
+                End If
+            End While
+
+            LvMsg.Items(LvMsg.Items.Count - 1).EnsureVisible()
+            LvMsg.EndUpdate()
+        End If
     End Sub
 
 
@@ -1562,9 +1600,9 @@ Imports TUGraz.VectoCore.Utils
                     txt = txt.Replace("\", "/")
                     txt = "file:///" & txt
                     Try
-                        Process.Start(txt)
+                        Process.Start(new ProcessStartInfo(txt) With {.UseShellExecute = True})
                     Catch ex As Exception
-                        MsgBox("Cannot open link! (-_-;)")
+                        MsgBox("Cannot open link!")
                     End Try
                 ElseIf _
                     Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
@@ -1576,7 +1614,7 @@ Imports TUGraz.VectoCore.Utils
                     Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<RUN>" Then
                     txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<RUN>", "")
                     Try
-                        Process.Start(txt)
+                        Process.Start(new ProcessStartInfo(txt) With {.UseShellExecute = true})
                     Catch ex As Exception
                         GUIMsg(MessageType.Err, "Could not run '" & txt & "'!")
                     End Try
@@ -1673,6 +1711,10 @@ Imports TUGraz.VectoCore.Utils
         JobEditorBatteryElectricVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
         JobEditorParallelHybridVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
         JobEditorEngineOnlyModeToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorSerialHybridVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorIEPC_E_VehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorIEPC_S_VehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
+        JobEditorIHPCVehicleToolStripMenuItem.Enabled = Not Cfg.DeclMode
     End Sub
 
 
@@ -2174,14 +2216,19 @@ Imports TUGraz.VectoCore.Utils
     Private Sub JobEditorEngineOnlyModeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorEngineOnlyModeToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.EngineOnlySimulation)
     End Sub
+
+    Private Sub JobEditorSerialHybridVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorSerialHybridVehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.SerialHybridVehicle)
+    End Sub
+    Private Sub JobEditorIEPC_E_VehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_E_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
+    End Sub
+
+    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click 
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles JobEditorIEPC_S_VehicleToolStripMenuItem.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_S)
+    End Sub
 End Class
-
-'Public Enum VectoJobType
-'    NotSet
-'    ConventionalVehicle
-'    ParallelHybrid
-'    BatteryElectric
-'    EngineOnly
-'End Enum
-
-

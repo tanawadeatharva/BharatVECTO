@@ -47,8 +47,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
-		IVehicle, IMileageCounter, IFvInPort,
-		IDriverDemandOutPort
+		IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort, IUpdateable
 	{
 		internal readonly VehicleData ModelData;
 
@@ -87,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual void SetMaxVehicleSpeed()
 		{
-			if (DataBus.PowertrainInfo.HasCombustionEngine) {
+			if (DataBus.PowertrainInfo.VehicleArchitecutre != VectoSimulationJobType.SerialHybridVehicle && DataBus.PowertrainInfo.HasCombustionEngine) {
 				if (DataBus.GearboxInfo == null || DataBus.AxlegearInfo == null) {
 					throw new VectoException("Powertrain with combustion engine requires gearbox and axlegear!");
 					//return;
@@ -101,7 +100,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			
 			if (DataBus.PowertrainInfo.HasElectricMotor) {
-				var positions = DataBus.PowertrainInfo.ElectricMotorPositions;
+				var positions = DataBus.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.GEN).ToArray();
+				;
 				if (positions.Length > 1) {
 					throw new VectoException("Multiple electrical machines are currently not supported");
 				}
@@ -115,9 +115,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						ratio = DataBus.AxlegearInfo.Ratio;
 					}
 
-					if (pos == PowertrainPosition.BatteryElectricE2) {
+					if (pos == PowertrainPosition.BatteryElectricE2 || pos == PowertrainPosition.IEPC) {
 						ratio = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio *
-								DataBus.AxlegearInfo.Ratio *
+								(DataBus.AxlegearInfo?.Ratio ?? 1.0) *
 								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
@@ -279,6 +279,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				$"slope_res: {SlopeResistance}, " +
 				$"air_drag: {AirDragResistance}, " +
 				$"traction force: {VehicleTractionForce}";
+
+			public VehicleState Clone() => (VehicleState)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is Vehicle v) {
+				PreviousState = v.PreviousState.Clone();
+				MaxVehicleSpeed = v.MaxVehicleSpeed;
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

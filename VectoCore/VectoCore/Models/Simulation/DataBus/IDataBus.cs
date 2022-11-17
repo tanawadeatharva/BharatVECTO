@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
@@ -74,6 +75,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IRESSInfo BatteryInfo { get; }
 
+		IElectricSystemInfo ElectricSystemInfo { get; }
+
 		ITorqueConverterInfo TorqueConverterInfo { get; }
 
 		ITorqueConverterControl TorqueConverterCtl { get; }
@@ -88,6 +91,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		IDCDCConverter DCDCConverter { get; }
 
+		WHRCharger WHRCharger { get; }
 		bool IsTestPowertrain { get; }
 	}
 
@@ -98,5 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool HasElectricMotor { get; }
 
 		PowertrainPosition[] ElectricMotorPositions { get; }
+
+		VectoSimulationJobType VehicleArchitecutre { get; }
 	}
 }

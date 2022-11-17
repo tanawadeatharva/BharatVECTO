@@ -13,29 +13,26 @@ Imports TUGraz.VectoCore.Utils
 ''' <summary>
 ''' About Dialog. Shows Licence and contact/support information
 ''' </summary>
-''' <remarks></remarks>
 Public Class AboutBox
-	'Initialize
-	Private Sub F10_AboutBox_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
-		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
+	Private Sub F10_AboutBox_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+#If NET47_OR_GREATER Or NET5_0_OR_GREATER Then
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers & " / " & Runtime.InteropServices.RuntimeInformation.FrameworkDescription
+#Else
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers & " / .NET Framework " & If(Environment.Version.Revision < 42000, "4.5", "4.6")
+#End If
 	End Sub
 
-	'e-mail links----------------------------------------------------------------
 	Private Sub LinkLabel1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) _
 		Handles LinkLabel1.LinkClicked
-		Process.Start("mailto:jrc-vecto@ec.europa.eu")
+		Process.Start(New ProcessStartInfo("mailto:jrc-vecto@ec.europa.eu") With {.UseShellExecute = True})
 	End Sub
 
-	'----------------------------------------------------------------------------
-
-	'Picture Links------------------------------------------------------------------
 	Private Sub PictureBoxJRC_Click(sender As Object, e As EventArgs) Handles PictureBoxJRC.Click
-		Process.Start("http://ec.europa.eu/dgs/jrc/index.cfm")
+		Process.Start(New ProcessStartInfo("http://ec.europa.eu/dgs/jrc/index.cfm") With {.UseShellExecute = True})
 	End Sub
-
-
+	
 	Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) _
 		Handles LinkLabel2.LinkClicked
-		Process.Start("https://joinup.ec.europa.eu/community/eupl/og_page/eupl")
+		Process.Start(New ProcessStartInfo("https://joinup.ec.europa.eu/community/eupl/og_page/eupl") With {.UseShellExecute = True})
 	End Sub
 End Class

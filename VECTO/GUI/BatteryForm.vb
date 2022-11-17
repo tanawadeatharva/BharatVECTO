@@ -189,8 +189,8 @@ Public Class BatteryForm
             Dim battery As IBatteryPackEngineeringInputData = ctype(reess, IBatteryPackEngineeringInputData)
             tbCapacity.Text = battery.Capacity.AsAmpHour.ToGUIFormat()
 
-            tbSoCMin.Text = (battery.MinSOC * 100).ToGUIFormat()
-            tbSoCMax.Text = (battery.MaxSOC * 100).ToGUIFormat()
+            tbSoCMin.Text = (battery.MinSOC.Value * 100).ToGUIFormat()
+            tbSoCMax.Text = (battery.MaxSOC.Value * 100).ToGUIFormat()
 
             tbMaxCurrentMap.Text = GetRelativePath(battery.MaxCurrentMap.Source, basePath)
             tbSoCCurve.Text = GetRelativePath(battery.VoltageCurve.Source, basePath)
@@ -300,12 +300,12 @@ Public Class BatteryForm
         superCap.MinV = _tbSuperCapMinV.Text.ToDouble(0)
         superCap.MaxV = tbSuperCapMaxV.Text.ToDouble(0)
 
-        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble()
-        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble()
+        superCap.MaxChgCurrent = tbSuperCapMaxCurrentCharge.Text.ToDouble(0)
+        superCap.MaxDischgCurrent = tbSuperCapMaxCurrentDischarge.Text.ToDouble(0)
         Return superCap
     End Function
 
-    Private Function FillBattery(file As string) As Battery
+    Private Function FillBattery(file As String) As Battery
         Dim battery As Battery = New Battery
         battery.FilePath = file
 
@@ -323,7 +323,47 @@ Public Class BatteryForm
         battery.PathMaxCurrentCurve = tbMaxCurrentMap.Text
         Return battery
     End Function
+    Private Sub tbCapacity_Leave(sender As Object, e As System.EventArgs) Handles tbCapacity.Leave
 
+        If Not IsNumeric(tbCapacity.Text) Then
+            MsgBox("Invalid capacity value")
+            tbCapacity.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbCapacity.Text) Then
+            MsgBox("Input has to be positive")
+            tbCapacity.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMin_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMin.Leave
+
+        If Not IsNumeric(tbSoCMin.Text) Then
+            MsgBox("Invalid SoC Min value")
+            tbSoCMin.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMin.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMin.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub tbSoCMax_Leave(sender As Object, e As System.EventArgs) Handles tbSoCMax.Leave
+
+        If Not IsNumeric(tbSoCMax.Text) Then
+            MsgBox("Invalid SoC Max value")
+            tbSoCMax.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbSoCMax.Text) Then
+            MsgBox("Input has to be positive")
+            tbSoCMax.Focus()
+            Return
+        End If
+    End Sub
 
 #Region "Track changes"
 
@@ -433,7 +473,7 @@ Public Class BatteryForm
         Try
             Dim riFile As String =
                     If(Not String.IsNullOrWhiteSpace(_batteryFile), Path.Combine(Path.GetDirectoryName(_batteryFile), tbRiCurve.Text), tbRiCurve.Text)
-            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile))
+            If File.Exists(riFile) Then riCurve = BatteryInternalResistanceReader.Create(VectoCSVFile.Read(riFile), false)
         Catch ex As Exception
         End Try
 

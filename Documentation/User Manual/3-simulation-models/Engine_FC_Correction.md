@@ -1,26 +1,26 @@
-##Engine Fuel Consumption Correction
+## Engine Fuel Consumption Correction
 
-The final fuel consumption is corrected in a post-processing to reflect systems not directly modeled in VECTO (e.g. electric waste heat recovery sysmtes) or to account for systems not active all the time for different reasons (e.g., engine stop-start).
+The final fuel consumption is corrected in a post-processing to reflect systems not directly modeled in VECTO (e.g. electric waste heat recovery systems) or to account for systems not active all the time for different reasons (e.g., engine stop-start).
 
-###Engine Stop/Start Correction
+### Engine Stop/Start Correction
 
 As the energy demand of auxiliaries is modeled as an average power demand over the whole simulated cycle, the demand of certain auxiliaries during engine-off periods needs to be compensated during engine-on periods. This is done using the [Engine-Line approach](#engine-line-approach).
 
-During the simulation the combustion engine is allways off. In this phases the "missing" auxiliary demand is balanced in separate colums for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
+When either the driver model (eco-roll, engine stop/start) or the hybrid controller decides to turn off the combustion engine, it is fully off, i.e. the fuel consumption is 0 and no auxiliary power is provided. In this phases the "missing" auxiliary demand is balanced in separate columns for the cases a) the ICE is really off, and b) the ICE would be on. This allows for an accurate correction of the fuel consumption taking into account that ESS is in reality not active in all possible cases due to e.g. auxiliary power demand, environmental conditions, etc.
 
-A general goal is that the actual auxiliary demand matches the target auxiliary demand over the cycle. So in case the ICE is off, some systems still consume electric energy but no electric energy is created during ICE-off phases. Or in case of bus auxiliaries the total air demand is pre-calculated and thus leading to an average air demand over the cycle. During ICE-off phases, however, no compressed air is generated. This 'missing' compressed air is corrected in the post-processing.
+A general goal is that the actual auxiliary demand matches the target auxiliary demand over the cycle. So in case the ICE is off, some systems still consume electric energy but no electric energy is generated during ICE-off phases. Or in case of bus auxiliaries the total air demand is pre-calculated and thus leading to an average air demand over the cycle. During ICE-off phases, however, no compressed air is generated. This 'missing' compressed air is corrected in the post-processing.
 
-A utility factor (UF) considers that the ICE is not off in all cases. Therefore the fuel consumption for compensating the missing auxiliary demand consists of two parts. The first part considers the fuel consumption required for the 'missing' auxiliary demand if the ICE is really off. Here the according auxiliary energy demand is multiplied by the utility factor and the engine line. The second part considers the fuel consumption in case the ICE would not be switched off. Here the 'missing' auxiliary energy demand is multiplied by (1 - utility factor) and the engine line and the idle fuel consumption is added for time periods the ICE would be on.
+A utility factor (UF) considers that the ICE is not off in all cases. Therefore the fuel consumption for compensating the missing auxiliary demand consists of two parts. The first part considers the fuel consumption required for the 'missing' auxiliary demand if the ICE is really off. Here the according auxiliary energy demand is multiplied by the utility factor and the engine line. The second part considers the fuel consumption in case the ICE would not be turned off. Here the 'missing' auxiliary energy demand is multiplied by (1 - utility factor) and the engine line and the idle fuel consumption is added for time periods the ICE would be on.
 
 For the post-processing two different utility factors are considered. One for ICE-off phases during vehicle standstill and one for ICE-off phases during driving.
 
-####ICE Start
+#### ICE Start
 
 $\textrm{E\_ICE\_start} = \sum{\textrm{P\_ICE\_start} \cdot dt}$
 
 $\textrm{FC\_ICE\_start} = \textrm{E\_ICE\_start} \cdot k_\textrm{engline}$
 
-####Mechanical Auxiliaries
+#### Mechanical Auxiliaries
 
 $\textrm{E\_aux\_ESS\_mech\_ICEoff\_standstill} = \sum_{\forall \textrm{v\_act}_i = 0}{\textrm{P\_aux\_ESS\_mech\_ICE\_off} \cdot dt}$
 
@@ -43,7 +43,7 @@ $$
 $$
 
 
-####Bus Auxiliaries Correction -- Electric System
+#### Bus Auxiliaries Correction -- Electric System
 
 The bus auxiliaries electric system correction is used for conventional vehicles with ESS and buses with smart electric system in the same way. 
 
@@ -51,11 +51,16 @@ $\textrm{E\_BusAux\_ES\_consumed} = \sum{\textrm{P\_BusAux\_ES\_consumed} \cdot 
 
 $\textrm{E\_BusAux\_ES\_gen} =  \sum{\textrm{P\_BusAux\_ES\_gen} \cdot dt}$
 
-$\Delta\textrm{E\_BusAux\_ES\_mech} = (\textrm{E\_BusAux\_ES\_consumed} - \textrm{E\_BusAux\_ES\_gen}) / \textrm{AlternatorEfficiency} / \textrm{AlternatorGearEfficiency}$
+$\Delta\textrm{E\_BusAux\_ES\_mech} = \begin{cases}
+0 & \textrm{if Alternator type is none} \\
+\frac{\textrm{E\_BusAux\_ES\_consumed} - \textrm{E\_BusAux\_ES\_gen}}{\textrm{AlternatorEfficiency} \cdot \textrm{AlternatorGearEfficiency}} & \textrm{otherwise}
+\end{cases}$
 
-$\textbf{\textrm{FC\_BusAux\_ES}} = \textrm{E\_BusAux\_ES} \cdot k_\textrm{engline}$
+$\textbf{\textrm{FC\_BusAux\_ES}} = \Delta\textrm{E\_BusAux\_ES\_mech} \cdot k_\textrm{engline}$
 
-####Bus Auxiliaries Correction -- Electric System Supply from REESS
+*Note:* In case the alternator is simulated without alternator, the power generated by the alternator is always 0 and the auxiliaries are supplied from the high-voltage REESS via the DC/DC converter. In this case, no correction for the electric system needs to be applied because the energy is either taken from the REESS already during the simulation or corrected via DCDC_missing (see below).
+
+#### Bus Auxiliaries Correction -- Electric System Supply from REESS
 
 $\textrm{E\_DCDC\_missing} =  \textrm{P\_DCDC\_missing} \cdot dt$
 
@@ -64,14 +69,14 @@ $\textrm{E\_DCDC\_missing\_mech} = \textrm{E\_DCDC\_missing} / \textrm{DCDC\_Con
 $\textbf{\textrm{FC\_DCDCMissing}} = \textrm{E\_DCDC\_missing\_mech} \cdot k_\textrm{engline}$
 
 
-####Bus Auxiliaries Correction -- Pneumatic System
+#### Bus Auxiliaries Correction -- Pneumatic System
 
 For the pneumatic system the goal of the post-processing correction is that the correct amount of compressed air is generated, even when the ICE is off. As the average
 air demand is calculated with an estimated cycle driving time, the first step is to correct the air demand using the actual cycle driving time.
-The missing (or excessive) amout of air is transferred into mechanical energy demand using $k_\textrm{Air}$. This value depicts the delta energy demand for a certain delta compressed air.
+The missing (or excessive) amount of air is transferred into mechanical energy demand using $k_\textrm{Air}$. This value depicts the delta energy demand for a certain delta compressed air.
 $k_\textrm{Air}$ is derived from two points. on the one hand the compressor runs in idle mode, applying only the drag load and producing no compressed air and the second point is that the compressor 
 is always on, applying the always-on mechanical power demand and generating the maximum possible amount of compressed air.
-The mechanical energy is then corrected using the engineline.
+The mechanical energy is then corrected using the [engineline](#engine-fuel-consumption-correction) (below).
 
 $\textrm{E\_busAux\_PS\_drag} = \sum_{\textrm{Nl\_busAux\_consumed}_i = \textrm{Nl\_busAux\_gen}_i}{\textrm{P\_busAux\_PS\_drag}\cdot dt}$
 
@@ -108,9 +113,9 @@ $$
 $$
 
 
-####Bus Auxiliaries Correction -- Aux Heater
+#### Bus Auxiliaries Correction -- Aux Heater
 
-The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steaty state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the main fuel:
+The power demand for an additional fuel-fired heater is calculated in the post-processing. The HVAC steady state model calculates the heating demand (weighted sum of different climatic conditions) and based on the engine's average waste heat over the cycle the power demand for the aux heater is calculated. The fuel consumption for the aux heater is only added for the primary fuel:
 
 
 $E_\textrm{ice,waste heat} = \sum_\textrm{fuels} FC_\textrm{final,sum}(fuel) * NCV_\textrm{fuel}$
@@ -121,7 +126,7 @@ $\textrm{E\_auxHeater} = \textrm{HVACSSM}_\textrm{AuxHtr}(\overline{P}_\textrm{i
 
 $\textbf{\textrm{FC\_BusAux\_AuxHeater}} = \textrm{E\_auxHeater} \cdot \textrm{NCV}_\textrm{main fuel}$
 
-####Waste Heat Recovery Systems
+#### Waste Heat Recovery Systems
 
 $\textrm{E\_WHR\_mech} = \sum{\textrm{P\_WHR\_mech} \cdot dt}$
 
@@ -129,18 +134,18 @@ $\textrm{E\_WHR\_el} = \sum{\textrm{P\_WHR\_el} \cdot dt}$
 
 $$
 \textrm{E\_WHR\_el\_mech} = \begin{cases}
-\textrm{E\_WHR\_el} / \textrm{AlternatorEfficiency} & if conventional truck \\
-\textrm{E\_WHR\_el} / \eta_{\textrm{EM}_\textrm{chg}} & if bus with ES connected to REES and smart alternator \\
-\textrm{E\_WHR\_el} / \textrm{BusAlternatorEfficiency} & otherwise
+\textrm{E\_WHR\_el} / \textrm{AlternatorEfficiency} & \textrm{if conventional truck} \\
+\textrm{E\_WHR\_el} / \eta_{\textrm{EM}_\textrm{chg}} & \textrm{if bus with ES connected to REES and smart alternator} \\
+\textrm{E\_WHR\_el} / \textrm{BusAlternatorEfficiency} & \textrm{otherwise}
 \end{cases}
 $$
 
 $\textbf{\textrm{FC\_WHR}} = - (\textrm{E\_WHR\_mech} + \textrm{E\_WHR\_el\_mech}) \cdot k_\textrm{engline}$
 
 
-####Hybrid Vehicles: REESS SoC Correction
+#### Parallel Hybrid Vehicles: REESS SoC Correction
 
-If the REESS Soc at the end of the simulation is higher than the initial SoC the correction is done according to:
+If the REESS Soc at the end of the simulation is different than the initial SoC the correction is done according to:
 
 $$
 \textbf{\textrm{FC\_SoC}} = -\frac{\Delta\textrm{E\_REESS} \cdot k_\textrm{engline}}{\eta_{\textrm{EM}_\textrm{chg}} \cdot \eta_{\textrm{REESS}_\textrm{chg}}} 
@@ -159,9 +164,27 @@ $\eta_{\textrm{REESS}_\textrm{chg}} = \frac{\textrm{E\_REESS\_INT\_CHG}}{\textrm
 $\eta_{\textrm{REESS}_\textrm{dischg}} = \frac{\textrm{E\_REESS\_INT\_DISCHG}}{\textrm{E\_REEES\_T\_DISCHG}}$
 
 
-###Corrected Total Fuel Consumption
+#### Serial Hybrid Vehicles: REESS SoC Correction
 
-The final fuel consumption after all corrections are applied is calcualted as follows:
+If the REESS Soc at the end of the simulation is different than the initial SoC the correction is done according to:
+
+$FC_\textrm{gen,charging} = \sum{FC_\textrm{mod,final}\cdot dt}$
+
+$E_\textrm{gen,el} = \sum{P_\textrm{em,el}\cdot dt}$
+
+If the GenSet was on during the cycle, the SoC correction is done according to:
+
+$\textrm{FC\_SOC} = \Delta\textrm{E\_REESS} \cdot \frac{FC_\textrm{gen,charging}}{E_\textrm{gen,el}}$
+
+If the GenSet was never on during the cycle, the SoC correction is done according to:
+
+$\textrm{FC\_SOC} = \Delta\textrm{E\_REESS} \cdot \frac{FC_\textrm{gen,optimal}}{E_\textrm{gen,el,optimal}}$
+
+where $FC_\textrm{gen,optimal}$ and $E_\textrm{gen,el,optimal}$ are the fuel consumption and generated electric power in the optimal operating point of the GenSet
+
+### Corrected Total Fuel Consumption
+
+The final fuel consumption after all corrections are applied is calculated as follows:
 
 $$
 \begin{align*} 
@@ -177,7 +200,7 @@ $$
 $$
 
 
-###Engine-Line Approach
+### Engine-Line Approach
 
 The total fuel consumption is corrected in a post-processing step according to the *engine-line* approach. Therefore, for every engine operating point where the engine is  on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
 

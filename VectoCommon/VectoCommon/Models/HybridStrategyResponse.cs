@@ -18,6 +18,7 @@ namespace TUGraz.VectoCommon.Models {
 		public GearboxResponse GearboxResponse { get; set; }
 	}
 
+	[DebuggerDisplay("HybridStrategyResponse(Gear: {NextGear})")]
 	public class HybridStrategyResponse : AbstractComponentResponse, IHybridStrategyResponse
 	{
 		public Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> MechanicalAssistPower;
@@ -31,9 +32,10 @@ namespace TUGraz.VectoCommon.Models {
 		public HybridResultEntry EvaluatedSolution { get; set; }
 		public bool GearboxEngaged { get; set; }
 		public bool ProhibitGearshift { get; set; }
+		public PerSecond GenSetSpeed { get; set; }
 	}
 
-	[DebuggerDisplay("{U}: {Score} - G{Gear}")]
+	[DebuggerDisplay("{U,nq}: {Score,nq} - G{Gear,nq} - {IgnoreReason,nq}")]
 	public class HybridResultEntry
 	{
 		public Second SimulationInterval;

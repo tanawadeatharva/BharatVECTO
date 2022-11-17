@@ -40,17 +40,17 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IHybridControlledGearbox, IUpdateable
 	{
 		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		protected internal bool RequestAfterGearshift;
 
 		internal WattSecond _powershiftLossEnergy;
 		protected internal KilogramSquareMeter EngineInertia;
@@ -84,8 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public bool ShiftToLocked =>
-			PreviousState.Gear.Gear == Gear.Gear && !PreviousState.Gear.TorqueConverterLocked.Value &&
-			Gear.TorqueConverterLocked.Value;
+			PreviousState.Gear.Gear == Gear.Gear 
+			&& !PreviousState.Gear.TorqueConverterLocked.Value 
+			&& Gear.TorqueConverterLocked.Value;
 
 		public bool Disengaged
 		{
@@ -102,14 +103,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override Second LastUpshift
 		{
 			get => -double.MaxValue.SI<Second>();
-			//throw new System.NotImplementedException();
 			protected internal set => throw new System.NotImplementedException();
 		}
 
 		public override Second LastDownshift
 		{
 			get => -double.MaxValue.SI<Second>();
-			//throw new System.NotImplementedException();
 			protected internal set => throw new System.NotImplementedException();
 		}
 
@@ -128,18 +127,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public override bool GearEngaged(Second absTime)
-		{
-			return absTime.IsGreater(DataBus.AbsTime) ||
-					!(CurrentState.Disengaged || (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
+		public override bool GearEngaged(Second absTime) {
+			if (absTime.IsGreater(DataBus.AbsTime)) {
+				//todo mk20220420 why is this condition needed?
+				return true;
+			}
+
+			var isHalted = DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted;
+			var isDisengaged = CurrentState.Disengaged;
+			var isDisengaging = DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch;
+
+			return !isHalted && !isDisengaged && !isDisengaging;
 		}
 
 		public override bool DisengageGearbox { get; set; }
-		public override void TriggerGearshift(Second absTime, Second dt)
-		{
-			//throw new System.NotImplementedException();
-			RequestAfterGearshift = true;
-		}
+
+		public override void TriggerGearshift(Second absTime, Second dt) => RequestAfterGearshift = true;
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -255,7 +258,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var loop = false;
 			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity);
 			do {
-				if (CurrentState.Disengaged || (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted) || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)) {
+				if (CurrentState.Disengaged 
+					|| (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Halted)
+					|| (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)) {
 					// only when vehicle is halted or close before halting or during eco-roll events
 					retVal = RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				} else {
@@ -576,8 +581,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public bool Disengaged = true;
 			public WattSecond PowershiftLossEnergy;
 			public NewtonMeter PowershiftLoss;
+
+			public new ATGearboxState Clone() => (ATGearboxState)MemberwiseClone();
+
 		}
 
 		public bool SwitchToNeutral { get; set; }
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other)
+		{
+			if (other is ATGearbox g) {
+				PreviousState = g.PreviousState.Clone();
+				_powershiftLossEnergy = g._powershiftLossEnergy;
+				LastShift = g.LastShift;
+				return true;
+			}
+			
+			return false;
+		}
+
+		#endregion
 	}
 }

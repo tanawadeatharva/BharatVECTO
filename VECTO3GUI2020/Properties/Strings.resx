@@ -305,7 +305,7 @@
     <value>Vehicle Code</value>
   </data>
   <data name="VehicleDeclarationType" xml:space="preserve">
-    <value>Declaration Type</value>
+    <value>Vehicle Declaration Type</value>
   </data>
   <data name="WaterElectricHeater" xml:space="preserve">
     <value>Water Electric Heater</value>
@@ -324,5 +324,8 @@
   </data>
   <data name="HeatPumpType" xml:space="preserve">
     <value>Heat Pump Type</value>
+  </data>
+  <data name="VehicleTypeApprovalNumber" xml:space="preserve">
+    <value>Vehicle Type Approval Number</value>
   </data>
 </root>

@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
 				var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-				AverageAxlegearEfficiency = eAxlOut / eAxlIn;
+				AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
 
 				WeightingFactor = weightingFactor;
 
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				WeightingGroup = DeclarationData.WeightingGroup.Lookup(
 						modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab.Value,
-						modelData.EngineData.RatedPowerDeclared);
+						modelData.EngineData?.RatedPowerDeclared ?? Watt.Create(0));
 			}
 
 			_weightingFactors = WeightingGroup == WeightingGroup.Unknown
@@ -248,19 +248,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 			InstantiateReports(modelData);
 
 			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt.Initialize(modelData, fuelModes);
+			CustomerRpt?.Initialize(modelData, fuelModes);
 		}
 
 		public WeightingGroup WeightingGroup { get; protected set; }
 
 		protected virtual void InstantiateReports(VectoRunData modelData)
 		{
-			if (modelData.Exempted) {
-				ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
-			} else {
-				ManufacturerRpt = new XMLManufacturerReportTruck();
-			}
-			CustomerRpt = new XMLCustomerReport();
+			//if (modelData.Exempted) {
+			//	ManufacturerRpt = new XMLManufacturerReportExemptedTruck();
+			//} else {
+			//	ManufacturerRpt = new XMLManufacturerReportTruck();
+			//}
+			//CustomerRpt = new XMLCustomerReport();
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting =>

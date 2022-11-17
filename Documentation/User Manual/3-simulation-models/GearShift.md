@@ -1,4 +1,4 @@
-##Gear Shift Model
+## Gear Shift Model
 
 This VECTO version contains a new shift strategy called EffShift.
 
@@ -24,7 +24,28 @@ $a_{demand} = a_{act} * a_{red}$   for $(n_{act} > n_{T98h})$
 $a_{red} = 1+ (\textrm{AccelerationFactorNP98h} - 1) / (n_{P98h} - n_{T98h}) * (n - n_{T98h})$  for $(n_{act} > n_{T98h})$
 
 
+## PEV Gear Shift Model
+
+The gear shift lines for pure electric vehicles is different than for conventional vehicles and HEV as the shape of maximum torque curve is typically very different.
+
+The figure below depicts a typical maximum torque curve (orange) and maximum power curve (blue) for an electric motor. The downshift and upshift lines are plotted with a dot-dashed green line.
+
+**Basics:**
+
+  * Downshift for operation point left of green dot-dashed downshift lines
+  * Upshift for operation point right of green dot-dashed upshift line
+  * EffShift method applied for operation point between downshift and upshift lines (refer to user manual) 
+
+**Driving:**
+
+  * Maximum downshift speed always located at n_P80low (where 80% of max power is available)
+  * For EM in de-rating n_P80low is calculated from the de-rated power curve
+
+**Braking:**
+
+  * EffShift is suppressed for operation point within red shaded area(2% below max recuperation power)
+  * New gear after downshift is selected so that operation point is closest to and above n_brake_target_norm (or only closest to n_brake_target_norm in case no operation point with higher speed exists)
 
 
-
+![](pics/PEV_Gearshift.png)
 

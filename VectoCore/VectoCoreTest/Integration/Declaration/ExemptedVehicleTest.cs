@@ -32,7 +32,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
@@ -44,9 +43,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Integration.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -63,28 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string ExemptedVehicleV2 = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2.xml";
 		const string ExemptedVehicleV2NoHEV = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted_v2_nonHEV.xml";
 
-		private const string ExemptedMin = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted.xml";
-		private const string ExemptedAxl = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl.xml";
-		private const string ExemptedAxlSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperT.xml";
-		private const string ExemptedAxlSleeperF = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_axl+sleeperF.xml";
-		private const string ExemptedSleeperT = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_sleeperT.xml";
-		private const string ExemptedSleeperF = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_sleeperF.xml";
-		private const string ExemptedPEVMaxNetPower = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_PEV.xml";
-		private const string ExemptedPEVMin = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_PEV_2.xml";
-
-		private const string ExemptedMin_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1.xml";
-
-		private const string ExemptedAxl_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl.xml";
-		private const string ExemptedAxlSleeperT_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl+SleeperT.xml";
-		private const string ExemptedAxlSleeperF_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_axl+SleeperF.xml";
-		private const string ExemptedSleeperT_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_sleeperT.xml";
-		private const string ExemptedSleeperF_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_sleeperF.xml";
-		private const string ExemptedPEVMaxNetPower_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_PEV.xml";
-		private const string ExemptedPEVMin_v2 = @"TestData\Integration\DeclarationMode\ExemptedVehicle\exempted_v2.2.1_PEV_2.xml";
-
-
-
-		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\exempted_primary_heavyBus.xml";
+		const string ExemptedPrimaryBus = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\exempted_primary_heavyBus.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -121,19 +98,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
 			var inputData = xmlInputReader.CreateDeclaration(filename);
-			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
-			var jobContainer = new JobContainer(new MockSumWriter());
 
-			var runs = factory.SimulationRuns().ToList();
-			Assert.AreEqual(numRuns, runs.Count);
-			foreach (var run in runs) {
-				jobContainer.AddRun(run);
-			}
-			//jobContainer.AddRuns(factory);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
+			var jobContainer = new JobContainer(new MockSumWriter());
+			jobContainer.AddRuns(factory);
+			Assert.That(jobContainer.Runs.Count, Is.EqualTo(numRuns));
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
@@ -186,10 +157,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -264,10 +234,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -283,102 +252,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-
-		[
-		TestCase(ExemptedMin, null, null, null, null, false),
-		TestCase(ExemptedAxl, AxleConfiguration.AxleConfig_4x2, null, 30000, 20000, false),
-		TestCase(ExemptedAxlSleeperT, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, false),
-		TestCase(ExemptedAxlSleeperF, AxleConfiguration.AxleConfig_4x2, false, 30000, 20000, false),
-		TestCase(ExemptedSleeperT, null, true, 30000, 20000, false),
-		TestCase(ExemptedSleeperF, null, false, 30000, 20000, false),
-		TestCase(ExemptedPEVMaxNetPower, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
-		TestCase(ExemptedPEVMin, null, null, null, null, true),
-
-		TestCase(ExemptedMin_v2, null, null, null, null, false),
-		TestCase(ExemptedAxl_v2, AxleConfiguration.AxleConfig_4x2, null, 30000, 20000, false),
-		TestCase(ExemptedAxlSleeperT_v2, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, false),
-		TestCase(ExemptedAxlSleeperF_v2, AxleConfiguration.AxleConfig_4x2, false, 30000, 20000, false),
-		TestCase(ExemptedSleeperT_v2, null, true, 30000, 20000, false),
-		TestCase(ExemptedSleeperF_v2, null, false, 30000, 20000, false),
-		TestCase(ExemptedPEVMaxNetPower_v2, AxleConfiguration.AxleConfig_4x2, true, 30000, 20000, true),
-		TestCase(ExemptedPEVMin_v2, null, null, null, null, true),
-		]
-		public void TestExemptedVehiclesAxleConfSleeperCabMRF(string filename, AxleConfiguration? expectedMrfAxleConf,
-			bool? expectedMrfSleeperCab, double? expectedMaxNetPower1, double? expectedMaxNetPower2, bool zeHDV)
-		{
-			var writer = new MockDeclarationWriter(filename);
-
-
-			var inputData = xmlInputReader.CreateDeclaration(filename);
-
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
-			var jobContainer = new JobContainer(new MockSumWriter());
-
-			var runs = factory.SimulationRuns().ToList();
-			Assert.AreEqual(1, runs.Count);
-			foreach (var run in runs) {
-				jobContainer.AddRun(run);
-			}
-			//jobContainer.AddRuns(factory);
-
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
-			var progress = jobContainer.GetProgress();
-			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
-
-
-			var validator = new XMLValidator(writer.GetReport(ReportType.DeclarationReportManufacturerXML).CreateReader());
-			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport));
-
-			var val2 = new XMLValidator(writer.GetReport(ReportType.DeclarationReportCustomerXML).CreateReader());
-			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport));
-
-			var mrf = writer.GetReport(ReportType.DeclarationReportManufacturerXML).Document;
-			Assert.NotNull(mrf);
-
-			var axleConfNode = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_AxleConfiguration))
-				.ToArray();
-			if (expectedMrfAxleConf == null) {
-				Assert.AreEqual(0, axleConfNode.Length);
-			} else {
-				Assert.AreEqual(1, axleConfNode.Length, "axleconfiguration missing in mrf");
-				Assert.AreEqual(expectedMrfAxleConf.Value, AxleConfigurationHelper.Parse(axleConfNode.First().Value), "axleconfiguration: incorrect value");
-			}
-
-			var sleeperCabNode = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_SleeperCab))
-				.ToArray();
-			if (expectedMrfSleeperCab == null) {
-				Assert.AreEqual(0, sleeperCabNode.Length);
-			} else {
-				Assert.AreEqual(1, sleeperCabNode.Length);
-				Assert.AreEqual(expectedMrfSleeperCab.Value, XmlConvert.ToBoolean(sleeperCabNode.First().Value));
-			}
-
-			var maxNetPower1Node = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_MaxNetPower1))
-				.ToArray();
-			if (expectedMaxNetPower1 == null) {
-				Assert.AreEqual(0, maxNetPower1Node.Length);
-			} else {
-				Assert.AreEqual(1, maxNetPower1Node.Length);
-				Assert.AreEqual(expectedMaxNetPower1.Value, maxNetPower1Node.First().Value.ToDouble());
-			}
-
-			var maxNetPower2Node = mrf.XPathSelectElements(XMLHelper.QueryLocalName(XMLNames.Vehicle_MaxNetPower2))
-				.ToArray();
-			if (expectedMaxNetPower2 == null) {
-				Assert.AreEqual(0, maxNetPower2Node.Length);
-			} else {
-				Assert.AreEqual(1, maxNetPower2Node.Length);
-				Assert.AreEqual(expectedMaxNetPower2.Value, maxNetPower2Node.First().Value.ToDouble());
-			}
-
-			var zeNode = mrf.XPathSelectElement(XMLHelper.QueryLocalName(XMLNames.Vehicle_ZeroEmissionVehicle));
-			Assert.NotNull(zeNode);
-			Assert.AreEqual(zeHDV, XmlConvert.ToBoolean(zeNode.Value));
-		}
 
 		private static void SetExemptedParameters(XPathNavigator nav, bool zeroEmission, bool hybrid, bool dualFuel)
 		{
@@ -437,10 +310,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var inputData = xmlInputReader.CreateDeclaration(filename);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				ActualModalData = true
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.ActualModalData = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			var runs = factory.SimulationRuns().ToList();
@@ -462,7 +334,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport), validator.ValidationError);
 
 			var val2 = new XMLValidator(XmlReader.Create(primaryReportFile));
-			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.MultistageOutputData), val2.ValidationError);
+			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.MultistepOutputData), val2.ValidationError);
 
 			//var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
 			//Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);

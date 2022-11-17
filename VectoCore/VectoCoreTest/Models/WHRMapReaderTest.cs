@@ -12,6 +12,8 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -338,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[TestCase()]
+		[TestCase(), Ignore("Engineering XML not maintained")]
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
@@ -346,7 +348,6 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);
-
 			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 	}

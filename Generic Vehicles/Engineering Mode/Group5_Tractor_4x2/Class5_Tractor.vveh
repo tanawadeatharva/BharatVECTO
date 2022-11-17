@@ -1,7 +1,7 @@
-﻿{
+{
   "Header": {
     "CreatedBy": "",
-    "Date": "2019-12-03T16:56:30.4122138Z",
+    "Date": "2022-01-26T08:54:53.5628568Z",
     "AppVersion": "3",
     "FileVersion": 8
   },
@@ -11,28 +11,11 @@
     "LegislativeClass": "Unknown",
     "CurbWeight": 8229.0,
     "CurbWeightExtra": 7500.0,
-    "Loading": 19300.0,
     "MassMax": 18.0,
+    "Loading": 19300.0,
     "rdyn": 492.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
-    "Retarder": {
-      "Type": "secondary",
-      "Ratio": 1.0,
-      "File": "Default.vrlm"
-    },
-    "Angledrive": {
-      "Type": "None",
-      "Ratio": 0.0,
-      "LossMap": ""
-    },
-    "PTO": {
-      "Type": "None",
-      "LossMap": "",
-      "Cycle": ""
-    },
-    "TorqueLimits": {},
-    "IdlingSpeed": 0.0,
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
@@ -84,10 +67,28 @@
       ]
     },
     "EngineStopStart": false,
-    "EcoRoll": "None",
-    "PredictiveCruiseControl": "None",
+    "EcoRoll": "WithoutEngineStop",
+    "PredictiveCruiseControl": "Option_1_2_3",
     "ATEcoRollReleaseLockupClutch": false,
     "CdA": 5.3,
-    "VehicleHeight": 0.0
+    "VehicleHeight": 0.0,
+    "IdlingSpeed": 0.0,
+    "Retarder": {
+      "Type": "secondary",
+      "Ratio": 1.0,
+      "File": "Default.vrlm"
+    },
+    "Angledrive": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "LossMap": ""
+    },
+    "PTO": {
+      "Type": "None",
+      "LossMap": "",
+      "Cycle": "",
+      "CycleDriving": ""
+    },
+    "TorqueLimits": {}
   }
 }

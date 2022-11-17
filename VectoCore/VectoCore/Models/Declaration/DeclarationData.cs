@@ -100,6 +100,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public const double AlternatorEfficiency = 0.7;
 
+		public const double WHRChargerEfficiency = 0.98;
+
 		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
 			new ConcurrentDictionary<MissionType, DrivingCycleData>();
 
@@ -135,6 +137,56 @@ namespace TUGraz.VectoCore.Models.Declaration
 						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
+		public static VehicleClass GetVehicleGroupGroup(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleCategory) {
+				case VehicleCategory.Van:
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					var truckSegment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory,
+						vehicleData.AxleConfiguration, vehicleData.GrossVehicleMassRating, vehicleData.CurbMassChassis,
+						vehicleData.VocationalVehicle);
+					return truckSegment.VehicleClass;
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					var primarySegment = DeclarationData.PrimaryBusSegments.Lookup(vehicleData.VehicleCategory,
+						vehicleData.AxleConfiguration, vehicleData.Articulated);
+					return primarySegment.VehicleClass;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					var segment = DeclarationData.CompletedBusSegments.Lookup(vehicleData.AxleConfiguration.NumAxles(),
+						vehicleData.VehicleCode,
+						vehicleData.RegisteredClass, vehicleData.NumberPassengerSeatsLowerDeck, vehicleData.Height,
+						vehicleData.LowEntry);
+					return segment.VehicleClass;
+			}
+
+			throw new VectoException("No Group found for vehicle");
+		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData)
+		{
+			switch (vehicleData.VehicleCategory) {
+				case VehicleCategory.Van:
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					var vehicleGroup = GetVehicleGroupGroup(vehicleData);
+					var propulsionPower = (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
+										(vehicleData.Components?.ElectricMachines?.Entries
+											.Where(x => x.Position != PowertrainPosition.GEN)
+											.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
+										(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) + 
+										(vehicleData.MaxNetPower1 ?? 0.SI<Watt>()); 
+					var co2Group = WeightingGroup.Lookup(vehicleGroup, vehicleData.SleeperCab ?? false, propulsionPower);
+					return co2Group;
+				default:
+					return Declaration.WeightingGroup.Unknown;
+			}
+			//throw new VectoException("No CO2 Group found for vehicle");
+		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
+		{
+			return Declaration.WeightingGroup.Unknown;
+		}
 
 
 
@@ -334,7 +386,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
-				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && !(bool)lowEntry) {
+				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
 						case 2: return 1.0.SI<Meter>();
 						case 3: return articulated ? 1.0.SI<Meter>() : 1.25.SI<Meter>();
@@ -465,7 +517,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static PerSecond MinEngineSpeedPostUpshift = 0.RPMtoRad();
 
-			public static Second ATLookAheadTime = Gearbox.PowershiftShiftTime;
+			public static Second ATLookAheadTime = 1.5.SI<Second>(); //Gearbox.PowershiftShiftTime;
 
 			public static double[] LoadStageThresholdsUp = { 19.7, 36.34, 53.01, 69.68, 86.35 };
 			public static double[] LoadStageThresoldsDown = { 13.7, 30.34, 47.01, 63.68, 80.35 };
@@ -482,7 +534,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double DownhillSlope = -5;
 			public const double UphillSlope = 5;
 
-			public static string DefaultShiftStrategy = "";
 			public const double DragMarginFactor = 0.7;
 
 
@@ -531,10 +582,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (tcuData.MinEngineSpeedPostUpshift != null) {
 					MinEngineSpeedPostUpshift = tcuData.MinEngineSpeedPostUpshift;
 				}
-				var tmp = tcuData as JSONFile;
-				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
-					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
-				}
 				//#endif
 			}
 		}
@@ -579,6 +626,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				switch (type) {
 					case GearboxType.AMT:
+					case GearboxType.APTN:
+					case GearboxType.IHPC:
 						// TODO MQ: 2020-10-14: compute for AMT with ICE and AMT with EM differently
 						return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT:
@@ -612,7 +661,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var nMax = downshiftMaxSpeed ?? fullLoadCurve.NP80low;
 					var nMin = downshiftMinSpeed ?? 0.1 * fullLoadCurve.RatedSpeed;
 
-					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, nMax));
+					downShift.AddRange(DownshiftLineDrive(fullLoadCurve, nMin, fullLoadCurve.NP80low));
 					downShift.AddRange(DownshiftLineDrag(fullLoadCurve, nMin, nMax));
 
 				}
@@ -1156,5 +1205,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const bool EngineStopStartDefault = false;
 			}
 		}
+
+
 	}
 }

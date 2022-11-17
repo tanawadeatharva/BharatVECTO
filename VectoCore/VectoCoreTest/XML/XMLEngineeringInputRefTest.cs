@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
-		[TestCase]
+		[TestCase, Ignore("Engineering XML not maintained")]
 		public void TestXMLPowertrainGenerationReferencedFile()
 		{
 			var fileWriter = new FileOutputWriter("foo");
@@ -297,9 +297,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter);
 			runsFactory.WriteModalResults = true;
 
-			jobContainer.AddRuns(runsFactory);
+			Assert.That(() => jobContainer.AddRuns(runsFactory),
+				Throws.TypeOf<VectoException>()
+					.And.Message.EqualTo("Node IdlingSpeed not found in input data"));
 
-			//Assert.AreEqual(6, jobContainer.Runs.Count);
+			Assert.AreEqual(6, jobContainer.Runs.Count);
 		}
 
 

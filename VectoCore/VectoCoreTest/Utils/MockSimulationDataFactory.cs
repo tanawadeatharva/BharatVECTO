@@ -151,6 +151,26 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return engineData;
 		}
 
+		public static CombustionEngineData CreateEngineDataFromFile(string engineFile, int numGears, NewtonMeter topTorque)
+		{
+			var dao = new EngineeringDataAdapter();
+			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
+			var vehicleInput = new MockEngineeringVehicleInputData() {
+				EngineInputData = engineInput,
+			};
+			var engineData = dao.CreateEngineData(vehicleInput, engineInput.EngineModes.First());
+			for (uint i = 1; i <= numGears; i++) {
+				if (i < numGears) {
+					engineData.FullLoadCurves[i] =
+						AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineData.FullLoadCurves[0], topTorque);
+				} else {
+					engineData.FullLoadCurves[i] = engineData.FullLoadCurves[0];
+				}
+			}
+
+			return engineData;
+		}
+
 		public static VehicleData CreateVehicleDataFromFile(string vehicleDataFile)
 		{
 			var dao = new EngineeringDataAdapter();
@@ -190,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Count = count, ElectricMachine = inputData, Position = pos, RatioADC = ratio, MechanicalTransmissionEfficiency = efficiency,
 					}
 				}
-			}, null);
+			}, null, null);
 		}
 	
 
@@ -199,6 +219,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var inputData = JSONInputDataFactory.ReadREESSData(file, false);
 			return new EngineeringDataAdapter().CreateBatteryData(new MockBatteryInputData() {REESSPack = inputData}, initialSoC);
 		}
+
+		
 	}
 
 	public class MockComponentsTest : IVehicleComponentsDeclaration
@@ -216,6 +238,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
+		public IIEPCDeclarationInputData IEPC { get; }
 	}
 
 	public class MockVehicleTestInputData : IVehicleDeclarationInputData
@@ -248,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public PerSecond EngineIdleSpeed { get; }
 		public bool VocationalVehicle { get; }
 		public bool? SleeperCab { get; }
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 		public bool ZeroEmissionVehicle { get; }
@@ -272,6 +295,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public TableData BoostingLimitations { get; }
+		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
+		public VectoSimulationJobType VehicleType { get; }
 		public IVehicleComponentsDeclaration Components { get; set; }
 		public XmlNode XMLSource { get; }
 	}

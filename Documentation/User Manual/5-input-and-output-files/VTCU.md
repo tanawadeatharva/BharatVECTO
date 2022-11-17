@@ -1,4 +1,4 @@
-##Gearshift Parameters File
+## Gearshift Parameters File (.vtcu)
 
 
 **Empty .vtcu File - default values are used**

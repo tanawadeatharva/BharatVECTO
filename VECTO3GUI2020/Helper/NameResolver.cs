@@ -1,5 +1,4 @@
 ﻿using System.Resources;
-using Castle.Core.Internal;
 
 namespace VECTO3GUI2020.Helper
 {
@@ -10,15 +9,14 @@ namespace VECTO3GUI2020.Helper
 			foreach (var resourceManager in resourceManagers)
 			{
 				var resolvedName = resourceManager?.GetString(propertyName);
-				if (!resolvedName.IsNullOrEmpty())
+				if (!string.IsNullOrEmpty(resolvedName))
 				{
 					return resolvedName;
-					break;
 				}
 			}
 
 
-			return propertyName + "*";
+			return propertyName;
 		}
 	}
 }

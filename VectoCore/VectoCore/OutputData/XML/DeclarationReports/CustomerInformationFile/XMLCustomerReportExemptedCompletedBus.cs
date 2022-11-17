@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleCompletedExemptedBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleCompletedExemptedBusType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(
 					tns + "PrimaryVehicle",
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					modelData.VehicleData.InputData.NumberPassengerSeatsUpperDeck
 				),
 				new XElement(tns + XMLNames.Bus_LowEntry, modelData.VehicleData.InputData.LowEntry),
-				new XElement(tns + XMLNames.Bus_HeighIntegratedBody,
+				new XElement(tns + XMLNames.Bus_HeightIntegratedBody,
 					modelData.VehicleData.InputData.Height.ToXMLFormat(3))
 			);
 			VehiclePart.Add(

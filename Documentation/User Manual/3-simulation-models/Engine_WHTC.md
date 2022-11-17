@@ -1,9 +1,9 @@
-##Engine: Correction Factors
+## Engine: Correction Factors
 
 <div class="declaration">
 In declaration mode the fuel consumption is corrected as follows:
 
-To prevent inconsistencies of regulated emissions and fuel consumption between the WHTC (hot part) test and the steady state fuel map as well as considering effects of transient engine behaviour a "WHTC correction factor" is used.
+To prevent inconsistencies of regulated emissions and fuel consumption between the WHTC (hot part) test and the steady state fuel map as well as considering effects of transient engine behavior a "WHTC correction factor" is used.
 
 Based on the target engine operation points of the particular engine in WHTC the fuel consumption is interpolated from the steady state fuel map (“backward calculation”) in each of the three parts of the WHTC separately. The measured specific fuel consumption per WHTC part in [g/kWh] is then divided by the interpolated specific fuel consumption to obtain the "WHTC correction factors" CF~urb~ (Urban), CF~rur~ (Rural), CF~mot~ (Motorway). For the interpolation the same method as for interpolation in VECTO is applied (Delauney triangulation).
 
@@ -20,7 +20,7 @@ with the correction factor CF~urb~, CF~rur~, CF~mot~ coming from the [Engine](#e
 | Long haul          | 11%     | 0%      | 89%     |
 | Regional delivery  | 17%     | 30%     | 53%     |
 | Urban delivery     | 69%     | 27%     | 4%      |
-| Municipial utility | 98%     | 0%      | 2%      |
+| Municipal utility | 98%     | 0%      | 2%      |
 | Construction       | 62%     | 32%     | 6%      |
 | Citybus            | 100%    | 0%      | 0%      |
 | Interurban bus     | 45%     | 36%     | 19%     |
@@ -28,7 +28,7 @@ with the correction factor CF~urb~, CF~rur~, CF~mot~ coming from the [Engine](#e
 
 In order to balance the trade-off between emissions and fuel consumption during cold and hot starting conditions an additional balancing factor $CF_{C/H}$ is determined from the overall specific fuel consumption over the cold start and hot start WHTC test. Additional correction factors considered are regarding the net calorific value of the fuel ($CF_{NCV}$) and exhaust after-treatment systems ($CF_{RegPer}$). This values are part of the output from the engine component tool.
 
-$NCV_{stdEngine}$: Net calorific value as defined as refernce value for engine testing (Pt. 5.3.3.1 of Annex V), see [Fuel properties](#fuel-properties)
+$NCV_{stdEngine}$: Net calorific value as defined as reference value for engine testing (Pt. 5.3.3.1 of Annex V), see [Fuel properties](#fuel-properties)
 
 $NCV_{stdVECTO}$: Net calorific value defined as reference value for vehicle CO2 certification, see [Fuel properties](#fuel-properties)
 
@@ -36,7 +36,7 @@ The WHTC-corrected fuel consumption is then calculated with: $FC_{final} = FC \c
 </div>
 
 <div class="engineering">
-In engineering mode a single correction is applied by Vecto. The fuel consumption interpolated from the FC map is multiplied by the engineering correction factor. 
+In engineering mode a single correction is applied by VECTO. The fuel consumption interpolated from the FC map is multiplied by the engineering correction factor. 
 
 $FC_{final} = FC \cdot CF_{Engineering}$
 </div>

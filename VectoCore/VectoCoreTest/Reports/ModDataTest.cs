@@ -51,6 +51,8 @@ using System.IO;
 using Ninject;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Utils;
 
@@ -79,9 +81,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void SumDataTest(double initialSpeedVal, double accVal)
 		{
 			var rundata = new VectoRunData() {
-				JobName = "sumDataTest"
-            }; 
+				JobName = "sumDataTest",
+				Cycle = new DrivingCycleData() {
+					CycleType = CycleType.DistanceBased
+				}
+			};
 			var modData = new ModalDataContainer(rundata, null, null);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			modData.Data.CreateColumns(ModalResults.DriverSignals);
 			var initalSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
 			var speed = initalSpeed;
 			var dist = 0.SI<Meter>();
@@ -130,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			AssertModDataIntegrity(modData, auxKeys, cycle.Entries.Last().Distance.Value(), engineData.Fuels.First().ConsumptionMap, true);
+			AssertModDataIntegrity(modData, auxKeys, cycle.Entries.Last().Distance.Value(), engineData.Fuels.First().ConsumptionMap, true, run.GetContainer().RunData);
 		}
 
 		[Category("LongRunning")]
@@ -139,6 +146,65 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			RunSimulation(jobName, ExecutionMode.Declaration);
 		}
+
+		[Category("LongRunning")]
+		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_ESS\Class2_RigidTruck_DECL.vecto")]
+		public void TestFullCycleModDataIntegrityDeclESS(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Declaration);
+		}
+
+		[Category("LongRunning")]
+		[TestCase(@"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto")]
+		public void TestFullCycleModDataIntegrityDecl_P1ESS(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Engineering);
+		}
+
+		[Category("LongRunning")]
+		[TestCase]
+		public void Test_P1_PCC_ESSOn_EssOff()
+		{
+			var jobName = @"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload.vecto";
+			var fileWriter = new FileOutputWriter(jobName);
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			runsFactory.WriteModalResults = false;
+			runsFactory.Validate = false;
+
+			jobContainer.AddRuns(runsFactory);
+
+			var run = runsFactory.SimulationRuns().First();
+			var modESSon = (run.GetContainer().ModalData as ModalDataContainer).Data;
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			jobName = @"TestData\Integration\EngineeringMode\P1_Group5_AMT\P1_Group5_s2c0_rep_Payload_ESSoff.vecto";
+			fileWriter = new FileOutputWriter(jobName);
+			inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			runsFactory.WriteModalResults = false;
+			runsFactory.Validate = false;
+
+			jobContainer.AddRuns(runsFactory);
+
+			run = runsFactory.SimulationRuns().First();
+			var modESSoff = (run.GetContainer().ModalData as ModalDataContainer).Data;
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			// ICEOn is sometimes 0, therefore the sum must be lower than the row count
+			Assert.That(modESSon.Sum(r => (bool)r[ModalResultField.ICEOn.GetName()] ? 1 : 0) < modESSon.Rows.Count);
+
+			// ICEOn must always be 1, therefore the sum should equal the row count
+			Assert.That(modESSoff.Sum(r => (bool)r[ModalResultField.ICEOn.GetName()] ? 1 : 0) == modESSoff.Rows.Count);
+		}
+
+
+
+
 
 		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
 		public void TestVSUM_VMOD_FormatDecl(string jobName)
@@ -157,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto"),]
 		public void TestFullCycleModDataIntegrityMT(string jobName)
 		{
-			RunSimulation(jobName, ExecutionMode.Engineering);	
+			RunSimulation(jobName, ExecutionMode.Engineering);
 		}
 
 		[TestCase(@"TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml", 1, 1.0),
@@ -167,9 +233,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var writer = new FileOutputWriter(filename);
 			var inputData = xmlInputReader.CreateDeclaration(filename);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			jobContainer.AddRuns(factory);
@@ -210,7 +275,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.IsTrue(min2.IsEqual(expectedTractionInterruption, 0.1), "minimum traction interruption time: {0}", min);
 			Assert.IsTrue(max2.IsEqual(expectedTractionInterruption, 0.1), "maximum traction interruption time: {0}", max2);
 
-			
+
 		}
 
 		private Dictionary<Second, Second> ExtractTractionInterruptionTimes(ModalResults modData)
@@ -219,21 +284,21 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			Second tracStart = null;
 			foreach (DataRow row in modData.Rows) {
-				var velocity = row.Field<MeterPerSecond>(ModalResultField.v_act.GetName());
+				var velocity = (MeterPerSecond)row[ModalResultField.v_act.GetName()];
 				if (velocity.IsEqual(0)) {
 					tracStart = null;
 					continue;
 				}
 
-				var gear = row.Field<uint>(ModalResultField.Gear.GetName());
-				var absTime = row.Field<Second>(ModalResultField.time.GetName());
-				var dt = row.Field<Second>(ModalResultField.simulationInterval.GetName());
+				var gear = (uint)row[ModalResultField.Gear.GetName()];
+				var absTime = (Second)row[ModalResultField.time.GetName()];
+				var dt = (Second)row[ModalResultField.simulationInterval.GetName()];
 				if (gear == 0 && tracStart == null) {
 					tracStart = absTime - dt / 2.0;
 				}
 				if (gear != 0 && tracStart != null) {
 					var tracEnd = absTime - dt / 2.0;
-					retVal[absTime] =(tracEnd - tracStart);
+					retVal[absTime] = (tracEnd - tracStart);
 					tracStart = null;
 				}
 			}
@@ -252,45 +317,56 @@ namespace TUGraz.VectoCore.Tests.Reports
 		private void AssertModDataFormat(string modFilename)
 		{
 			var lineCnt = 0;
-			var gearColumn = -1;
+			var columnCount = -1;
+			var ignoreColumns = new HashSet<int>();
 			foreach (var line in File.ReadLines(modFilename)) {
 				lineCnt++;
 				if (lineCnt == 2) {
 					var header = line.Split(',').ToList();
-					gearColumn = header.FindIndex(x => x.StartsWith("Gear"));
+					columnCount = header.Count;
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("Gear")));
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("ICE On")));
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("DriverAction")));
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("EcoRollConditionsMet")));
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("PCCSegment")));
+					ignoreColumns.Add(header.FindIndex(x => x.StartsWith("PCCState")));
 				}
 				if (lineCnt <= 2) {
 					continue;
 				}
 				var parts = line.Split(',');
-				for (var i = 0; i < 53; i++) {
-					if (i == gearColumn || i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+				for (var i = 0; i < columnCount; i++) {
+					if (ignoreColumns.Contains(i) || string.IsNullOrWhiteSpace(parts[i])) {
 						continue;
 					}
 					var numParts = parts[i].Split('.');
 					Assert.AreEqual(2, numParts.Length, $"Line {lineCnt}: column {i}: value {parts[i]}");
 					Assert.IsTrue(numParts[0].Length > 0);
 					Assert.AreEqual(4, numParts[1].Length);
-				} 
+				}
 			}
 		}
 
 		private void AssertSumDataFormat(string sumFilename)
 		{
-			var first = 2;
-			var sumContainer = new SummaryDataContainer(null);
+			//var first = 2;
+			//var sumContainer = new SummaryDataContainer(null);
 			var ranges = new[] {
-				Tuple.Create(SummaryDataContainer.Fields.SPEED, SummaryDataContainer.Fields.BRAKING_TIME_SHARE)
+				Tuple.Create(SumDataFields.SPEED, SumDataFields.BRAKING_TIME_SHARE)
 			};
+			var lineCnt = 0;
+			List<string> header = new List<string>();
 			foreach (var line in File.ReadLines(sumFilename)) {
-				if (first > 0) {
-					first--;
+				if (lineCnt == 2) {
+					header = line.Split(',').ToList();
+				}
+				if (lineCnt <= 2) {
 					continue;
 				}
 				var parts = line.Split(',');
 				foreach (var range in ranges) {
-					for (var i = sumContainer.Table.Columns.IndexOf(range.Item1);
-						i <= sumContainer.Table.Columns.IndexOf(range.Item2);
+					for (var i = header.FindIndex(x => x.StartsWith(range.Item1));
+						i <= header.FindIndex(x => x. StartsWith(range.Item2));
 						i++) {
 						if (i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
 							continue;
@@ -313,10 +389,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(mode, inputData, fileWriter) { WriteModalResults = true };
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(mode, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, double>>();
+			VectoRunData runData = null;
 			foreach (var run in jobContainer.Runs) {
 				var distanceCycle = ((VehicleContainer)run.Run.GetContainer()).DrivingCycleInfo as DistanceBasedDrivingCycle;
 				if (distanceCycle != null) {
@@ -327,6 +405,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 				if (cycle != null)
 					modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 						cycle.Data.Entries.Last().Time.Value()));
+				if (runData == null) {
+					runData = run.Run.GetContainer().RunData;
+				}
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
@@ -342,78 +423,101 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var engInput = inputData as IEngineeringInputDataProvider;
 			FuelConsumptionMap fcMap = null;
 			if (engInput != null) {
-				 fcMap = FuelConsumptionMapReader.Create(engInput.JobInputData.Vehicle
-					.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap);
+				fcMap = FuelConsumptionMapReader.Create(engInput.JobInputData.Vehicle
+				   .Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap);
 			}
 			var vtpInput = inputData as IVTPEngineeringInputDataProvider;
-			if (vtpInput != null ) {
+			if (vtpInput != null) {
 				fcMap = FuelConsumptionMapReader.Create(vtpInput.JobInputData.Vehicle
 					.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap);
 			}
 			var disatanceBased =
 				((VehicleContainer)(jobContainer.Runs.First().Run.GetContainer())).DrivingCycleInfo is DistanceBasedDrivingCycle;
+			var em = jobContainer.Runs.First().Run.GetContainer().RunData.ElectricMachinesData;
 			foreach (var modalResults in modData) {
-				AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2,fcMap, disatanceBased);
+				if (em.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+					AssertModDataIntegrityP1(modalResults.Item1, auxKeys, modalResults.Item2, fcMap, disatanceBased, runData);
+				} else {
+					AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2, fcMap, disatanceBased, runData);
+				}
 			}
 
-			AssertSumDataIntegrity(sumData, mode, disatanceBased);
+			AssertSumDataIntegrity(sumData, mode, disatanceBased, runData);
 		}
 
-		private static void AssertSumDataIntegrity(SummaryDataContainer sumData, ExecutionMode mode, bool distanceBased)
+		private static void AssertSumDataIntegrity(SummaryDataContainer sumData, ExecutionMode mode,
+			bool distanceBased, VectoRunData runData)
 		{
 			Assert.IsTrue(sumData.Table.Rows.Count > 0);
 
 			var ptoTransmissionColumn =
-				sumData.Table.Columns.Contains(string.Format(SummaryDataContainer.Fields.E_FORMAT,
+				sumData.Table.Columns.Contains(string.Format(SumDataFields.E_FORMAT,
 					Constants.Auxiliaries.IDs.PTOTransmission))
-					? string.Format(SummaryDataContainer.Fields.E_FORMAT, Constants.Auxiliaries.IDs.PTOTransmission)
+					? string.Format(SumDataFields.E_FORMAT, Constants.Auxiliaries.IDs.PTOTransmission)
 					: null;
 			var ptoConsumerColumn =
-				sumData.Table.Columns.Contains(string.Format(SummaryDataContainer.Fields.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer))
-					? string.Format(SummaryDataContainer.Fields.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer)
+				sumData.Table.Columns.Contains(string.Format(SumDataFields.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer))
+					? string.Format(SumDataFields.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer)
 					: null;
 
-			foreach (DataRow row in sumData.Table.Rows) {
-				var inputFile = row[SummaryDataContainer.Fields.INPUTFILE].ToString();
-				var cycle = row[SummaryDataContainer.Fields.CYCLE].ToString();
-				var loading = row[SummaryDataContainer.Fields.LOADING].ToString();
-				var eFcMapPos = ((ConvertedSI)row[SummaryDataContainer.Fields.E_FCMAP_POS]);
-				var eFcMapNeg = ((ConvertedSI)row[SummaryDataContainer.Fields.E_FCMAP_NEG]);
-				var ePowertrainInertia = ((ConvertedSI)row[SummaryDataContainer.Fields.E_POWERTRAIN_INERTIA]);
-				var eAux = ((ConvertedSI)row[SummaryDataContainer.Fields.E_AUX]);
-				var eClutchLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_CLUTCH_LOSS]);
-				var eTcLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_TC_LOSS]);
-				//var eShiftLoss = ((SI)row[SummaryDataContainer.E_SHIFT_LOSS]);
-				var eGbxLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_GBX_LOSS]);
-				var eRetLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_RET_LOSS]);
-				var eAngleLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_ANGLE_LOSS]);
-				var eAxlLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_AXL_LOSS]);
-				var eBrakeLoss = ((ConvertedSI)row[SummaryDataContainer.Fields.E_BRAKE]);
-				var eVehInertia = ((ConvertedSI)row[SummaryDataContainer.Fields.E_VEHICLE_INERTIA]);
-				var eWheel = !distanceBased ? ((ConvertedSI)row[SummaryDataContainer.Fields.E_WHEEL]) : null ;
-				var eAir = ((ConvertedSI)row[SummaryDataContainer.Fields.E_AIR]);
-				var eRoll = ((ConvertedSI)row[SummaryDataContainer.Fields.E_ROLL]);
-				var eGrad = ((ConvertedSI)row[SummaryDataContainer.Fields.E_GRAD]);
-				var cargoVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SummaryDataContainer.Fields.CARGO_VOLUME]);
+			var emPos = EnumHelper.GetValues<PowertrainPosition>().FirstOrDefault(p =>
+				sumData.Table.Columns.Contains(string.Format(SumDataFields.EM_AVG_SPEED_FORMAT, p.GetName())));
+			var emDriveCol = emPos != PowertrainPosition.HybridPositionNotSet
+				? string.Format(string.Format(SumDataFields.E_EM_DRIVE_FORMAT, emPos.GetName()))
+				: null;
+			var emRecupCol = emPos != PowertrainPosition.HybridPositionNotSet
+				? string.Format(SumDataFields.E_EM_GENERATE_FORMAT, emPos.GetName())
+				: null;
+			var emDragCol = emPos != PowertrainPosition.HybridPositionNotSet
+				? string.Format(SumDataFields.E_EM_OFF_Loss_Format, emPos.GetName())
+				: null;
 
-				var loadingValue = ((ConvertedSI)row[SummaryDataContainer.Fields.LOADING]) / 1000;
-				var fcPer100km = distanceBased ? ((ConvertedSI)row[string.Format(SummaryDataContainer.Fields.FCFINAL_LITERPER100KM, "")]) : null;
+			foreach (DataRow row in sumData.Table.Rows) {
+				var inputFile = row[SumDataFields.INPUTFILE].ToString();
+				var cycle = row[SumDataFields.CYCLE].ToString();
+				var loading = row[SumDataFields.LOADING].ToString();
+				var eFcMapPos = ((ConvertedSI)row[SumDataFields.E_FCMAP_POS]);
+				var eFcMapNeg = ((ConvertedSI)row[SumDataFields.E_FCMAP_NEG]);
+				var ePowertrainInertia = distanceBased ? ((ConvertedSI)row[SumDataFields.E_POWERTRAIN_INERTIA]) : new ConvertedSI(0, "");
+				var eAux = ((ConvertedSI)row[SumDataFields.E_AUX]);
+				var eClutchLoss = runData.GearboxData.Type.AutomaticTransmission() ? new ConvertedSI(0, "") : ((ConvertedSI)row[SumDataFields.E_CLUTCH_LOSS]);
+				var eTcLoss = row.Table.Columns.Contains(SumDataFields.E_TC_LOSS) ? ((ConvertedSI)row[SumDataFields.E_TC_LOSS]) : new ConvertedSI(0, "");
+				//var eShiftLoss = ((SI)row[SummaryDataContainer.E_SHIFT_LOSS]);
+				var eGbxLoss = ((ConvertedSI)row[SumDataFields.E_GBX_LOSS]);
+				var eRetLoss = runData.Retarder.Type.IsDedicatedComponent() ? ((ConvertedSI)row[SumDataFields.E_RET_LOSS]) : new ConvertedSI(0, "");
+				var eAngleLoss = row.Table.Columns.Contains(SumDataFields.E_ANGLE_LOSS) ? ((ConvertedSI)row[SumDataFields.E_ANGLE_LOSS]) : new ConvertedSI(0, "");
+				var eAxlLoss = ((ConvertedSI)row[SumDataFields.E_AXL_LOSS]);
+				var eBrakeLoss = distanceBased ? ((ConvertedSI)row[SumDataFields.E_BRAKE]) : new ConvertedSI(0, "");
+				var eVehInertia = distanceBased ? ((ConvertedSI)row[SumDataFields.E_VEHICLE_INERTIA]): new ConvertedSI(0, "");
+				var eWheel = !distanceBased ? ((ConvertedSI)row[SumDataFields.E_WHEEL]) : null;
+				var eAir = distanceBased ? ((ConvertedSI)row[SumDataFields.E_AIR]) : new ConvertedSI(0, "");
+				var eRoll = distanceBased ?((ConvertedSI)row[SumDataFields.E_ROLL]) : new ConvertedSI(0, "");
+				var eGrad = distanceBased ? ((ConvertedSI)row[SumDataFields.E_GRAD]) : new ConvertedSI(0, "");
+				var cargoVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SumDataFields.CARGO_VOLUME]);
+
+				var loadingValue = ((ConvertedSI)row[SumDataFields.LOADING]) / 1000;
+				var fcPer100km = distanceBased ? ((ConvertedSI)row[string.Format(SumDataFields.FCFINAL_LITERPER100KM, "")]) : null;
 				var fcPerVolume = mode == ExecutionMode.Engineering
 					? 0.0
-					: ((ConvertedSI)row[string.Format(SummaryDataContainer.Fields.FCFINAL_LiterPer100M3KM, "")]);
-				var fcPerLoad = loadingValue > 0 ? ((ConvertedSI)row[string.Format(SummaryDataContainer.Fields.FCFINAL_LITERPER100TKM, "")]) : 0.0;
-				var co2PerKm = distanceBased? ((ConvertedSI)row[SummaryDataContainer.Fields.CO2_KM]) : null;
-				var co2PerVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SummaryDataContainer.Fields.CO2_M3KM]);
-				var co2PerLoad = loadingValue > 0 ? ((ConvertedSI)row[SummaryDataContainer.Fields.CO2_TKM]) : 0.0;
+					: ((ConvertedSI)row[string.Format(SumDataFields.FCFINAL_LiterPer100M3KM, "")]);
+				var fcPerLoad = loadingValue > 0 ? ((ConvertedSI)row[string.Format(SumDataFields.FCFINAL_LITERPER100TKM, "")]) : 0.0;
+				var co2PerKm = distanceBased ? ((ConvertedSI)row[SumDataFields.CO2_KM]) : null;
+				var co2PerVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SumDataFields.CO2_M3KM]);
+				var co2PerLoad = loadingValue > 0 ? ((ConvertedSI)row[SumDataFields.CO2_TKM]) : 0.0;
 
 				var ePTOtransm = ptoTransmissionColumn != null ? ((ConvertedSI)row[ptoTransmissionColumn]) : 0.0;
 				var ePTOconsumer = ptoConsumerColumn != null ? ((ConvertedSI)row[ptoConsumerColumn]) : 0.0;
+
+				var eEmDrive = emDriveCol != null ? ((ConvertedSI)row[emDriveCol]) : 0.0;
+				var eEmRecup = emRecupCol != null ? ((ConvertedSI)row[emRecupCol]) : 0.0;
+				var eEmDrag = emDragCol != null ? ((ConvertedSI)row[emDragCol]) : 0.0;
+
 
 				if (distanceBased) {
 					// E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx + E_aux_sum + E_clutch_loss + E_tc_loss + E_gbx_loss + E_shift_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM
 					Assert.AreEqual(eFcMapPos,
 						eFcMapNeg + ePowertrainInertia + eAux + eClutchLoss + eTcLoss + eGbxLoss + eRetLoss + eAngleLoss +
-						eAxlLoss + eBrakeLoss + eVehInertia + eAir + eRoll + eGrad + ePTOconsumer + ePTOtransm, 1e-5,
+						eAxlLoss + eBrakeLoss + eVehInertia + eAir + eRoll + eGrad + ePTOconsumer + ePTOtransm - eEmDrive + eEmRecup + eEmDrag, 1e-5,
 						"input file: {0}  cycle: {1} loading: {2}",
 						inputFile, cycle, loading);
 				} else {
@@ -424,8 +528,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 						"input file: {0}  cycle: {1} loading: {2}",
 						inputFile, cycle, loading);
 				}
-				var pFcmapPos = ((ConvertedSI)row[SummaryDataContainer.Fields.P_FCMAP_POS]);
-				var time = ((ConvertedSI)row[SummaryDataContainer.Fields.TIME]);
+				var pFcmapPos = ((ConvertedSI)row[SumDataFields.P_FCMAP_POS]);
+				var time = ((ConvertedSI)row[SumDataFields.TIME]);
 
 				// E_fcmap_pos = P_fcmap_pos * t
 				Assert.AreEqual(eFcMapPos, pFcmapPos * (time / 3600), 1e-3, "input file: {0}  cycle: {1} loading: {2}", inputFile,
@@ -447,19 +551,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 						inputFile, cycle, loading);
 				}
 
-				var stopTimeShare = ((ConvertedSI)row[SummaryDataContainer.Fields.STOP_TIMESHARE]);
-				var accTimeShare = ((ConvertedSI)row[SummaryDataContainer.Fields.ACC_TIMESHARE]);
-				var decTimeShare = ((ConvertedSI)row[SummaryDataContainer.Fields.DEC_TIMESHARE]);
-				var cruiseTimeShare = ((ConvertedSI)row[SummaryDataContainer.Fields.CRUISE_TIMESHARE]);
+				var stopTimeShare = ((ConvertedSI)row[SumDataFields.STOP_TIMESHARE]);
+				var accTimeShare = ((ConvertedSI)row[SumDataFields.ACC_TIMESHARE]);
+				var decTimeShare = ((ConvertedSI)row[SumDataFields.DEC_TIMESHARE]);
+				var cruiseTimeShare = ((ConvertedSI)row[SumDataFields.CRUISE_TIMESHARE]);
 
 				Assert.AreEqual(100, stopTimeShare + accTimeShare + decTimeShare + cruiseTimeShare, 1e-3,
 					"input file: {0}  cycle: {1} loading: {2}", inputFile, cycle, loading);
 
 				if (distanceBased) {
-					Assert.IsTrue(((ConvertedSI)row[SummaryDataContainer.Fields.ACC_POS]) > 0);
-					Assert.IsTrue(((ConvertedSI)row[SummaryDataContainer.Fields.ACC_NEG]) < 0);
+					Assert.IsTrue(((ConvertedSI)row[SumDataFields.ACC_POS]) > 0);
+					Assert.IsTrue(((ConvertedSI)row[SumDataFields.ACC_NEG]) < 0);
 				}
-				var gearshifts = ((ConvertedSI)row[SummaryDataContainer.Fields.NUM_GEARSHIFTS]);
+				var gearshifts = ((ConvertedSI)row[SumDataFields.NUM_GEARSHIFTS]);
 				Assert.IsTrue(gearshifts > 0);
 
 				//var acc = ((SI)row[SummaryDataContainer.ACC]).Value();
@@ -467,12 +571,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		private static void AssertModDataIntegrity(ModalResults modData, Dictionary<string, DataColumn> auxKeys,
-			double totalDistance, FuelConsumptionMap consumptionMap, bool distanceBased)
+			double totalDistance, FuelConsumptionMap consumptionMap, bool distanceBased, VectoRunData runData)
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
-			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (distanceBased && totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]).Value())) {
 					continue;
@@ -490,7 +594,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[ModalResultField.FCMap.GetName()];
 				Assert.AreEqual(fuelConsumption.Value(),
-					consumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap,true).Value.Value(), 1E-3, "time: {0}  distance: {1}",
+					consumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap, true).Value.Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng
@@ -510,21 +614,21 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
 				var pLossAxle = (Watt)row[ModalResultField.P_axle_loss.GetName()];
-				var pLossAngle = row[ModalResultField.P_angle_loss.GetName()] is DBNull
+				var pLossAngle = !row.Table.Columns.Contains(ModalResultField.P_angle_loss.GetName()) || row[ModalResultField.P_angle_loss.GetName()] is DBNull
 					? 0.SI<Watt>()
 					: (Watt)row[ModalResultField.P_angle_loss.GetName()];
 				var pAxleIn = (Watt)row[ModalResultField.P_axle_in.GetName()];
-				var pLossRet = (Watt)row[ModalResultField.P_ret_loss.GetName()];
-				var pRetIn = (Watt)row[ModalResultField.P_retarder_in.GetName()];
+				var pLossRet = !row.Table.Columns.Contains(ModalResultField.P_ret_loss.GetName()) || row[ModalResultField.P_ret_loss.GetName()] is DBNull ? 0.SI<Watt>() : (Watt)row[ModalResultField.P_ret_loss.GetName()];
+				var pRetIn = !row.Table.Columns.Contains(ModalResultField.P_ret_loss.GetName()) || row[ModalResultField.P_retarder_in.GetName()] is DBNull ? pAxleIn : (Watt)row[ModalResultField.P_retarder_in.GetName()];
 				var pGbxInertia = (Watt)row[ModalResultField.P_gbx_inertia.GetName()];
-				var pShiftLoss = row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
+				var pShiftLoss = runData.GearboxData.Type.ManualTransmission() || row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
 					? 0.SI<Watt>()
 					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
 				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
 				var pAux =
 					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
 				var pBrakeLoss = distanceBased ? (Watt)row[ModalResultField.P_brake_loss.GetName()] : 0.SI<Watt>();
-				var pBrakeIn =  distanceBased ? (Watt)row[ModalResultField.P_brake_in.GetName()] : pWheelIn;
+				var pBrakeIn = distanceBased ? (Watt)row[ModalResultField.P_brake_in.GetName()] : pWheelIn;
 
 				var pWheelInertia = distanceBased ? (Watt)row[ModalResultField.P_wheel_inertia.GetName()] : 0.SI<Watt>();
 				var pPTOconsumer = ptoConsumerColumn == null || row[ptoConsumerColumn.ColumnName] is DBNull
@@ -548,7 +652,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				}
 				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time,
 						distance);
-				
+
 				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
 				Assert.AreEqual(pRetIn.Value(), (pAxleIn + pLossRet).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
@@ -560,13 +664,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pClutchOut = row[ModalResultField.P_clutch_out.GetName()];
 				if (pClutchOut != DBNull.Value) {
 					Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
-					Assert.AreEqual(pEngOut.Value(), (pClutchOut as Watt + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+					Assert.AreEqual(pEngOut.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
 						time, distance);
 				}
 
-				var pTC_Loss = (Watt)(row[ModalResultField.P_TC_loss.GetName()] != DBNull.Value
-					? row[ModalResultField.P_TC_loss.GetName()]
-					: 0.SI<Watt>());
+				var pTC_Loss = row.Table.Columns.Contains(ModalResultField.P_TC_loss.GetName()) && row[ModalResultField.P_TC_loss.GetName()] != DBNull.Value
+					? (Watt)row[ModalResultField.P_TC_loss.GetName()]
+					: 0.SI<Watt>();
 
 				var pTCOut = row[ModalResultField.P_clutch_out.GetName()];
 				if (pTCOut != DBNull.Value) {
@@ -598,6 +702,170 @@ namespace TUGraz.VectoCore.Tests.Reports
 			}
 		}
 
+
+		private static void AssertModDataIntegrityP1(ModalResults modData, Dictionary<string, DataColumn> auxKeys,
+			double totalDistance, FuelConsumptionMap consumptionMap, bool distanceBased, VectoRunData runData)
+		{
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+
+			var p1OutColumn =
+				modData.Columns[string.Format(ModalResultField.P_EM_out_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
+			Assert.NotNull(p1OutColumn);
+			var p1InColumn =
+				modData.Columns[string.Format(ModalResultField.P_EM_in_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
+			Assert.NotNull(p1InColumn);
+			var p1LossColumn =
+				modData.Columns[string.Format(ModalResultField.P_EM_loss_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
+			Assert.NotNull(p1LossColumn);
+			var p1MechColumn =
+				modData.Columns[string.Format(ModalResultField.P_EM_mech_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
+			Assert.NotNull(p1MechColumn);
+			var p1ElColumn =
+				modData.Columns[string.Format(ModalResultField.P_EM_electricMotor_el_.GetCaption(), PowertrainPosition.HybridP1.GetName())];
+			Assert.NotNull(p1ElColumn);
+
+
+			foreach (DataRow row in modData.Rows) {
+				if (distanceBased && totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]).Value())) {
+					continue;
+				}
+				var gear = (uint)row[ModalResultField.Gear.GetName()];
+				var time = (Second)row[ModalResultField.time.GetName()];
+
+				Meter distance = 0.SI<Meter>();
+				if (distanceBased) {
+					distance = (Meter)row[ModalResultField.dist.GetName()];
+				}
+				var tqEngFcmap = (NewtonMeter)row[ModalResultField.T_ice_fcmap.GetName()];
+				var nEngFcMap = (PerSecond)row[ModalResultField.n_ice_avg.GetName()];
+
+				// check fuel consumption interpolation
+				var fuelConsumption = (SI)row[ModalResultField.FCMap.GetName()];
+				Assert.AreEqual(fuelConsumption.Value(),
+					consumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap, true).Value.Value(), 1E-3, "time: {0}  distance: {1}",
+					time, distance);
+
+				// check P_eng_FCmap = T_eng_fcmap * n_eng
+				var pEngFcmap = (SI)row[ModalResultField.P_ice_fcmap.GetName()];
+				Assert.AreEqual(pEngFcmap.Value(), (tqEngFcmap * nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
+
+				var pWheelIn = (Watt)row[ModalResultField.P_wheel_in.GetName()];
+				var pAir = distanceBased ? (Watt)row[ModalResultField.P_air.GetName()] : 0.SI<Watt>();
+				var pRoll = distanceBased ? (Watt)row[ModalResultField.P_roll.GetName()] : 0.SI<Watt>();
+				var pGrad = distanceBased ? (Watt)row[ModalResultField.P_slope.GetName()] : 0.SI<Watt>();
+				var pVehInertia = distanceBased ? (Watt)row[ModalResultField.P_veh_inertia.GetName()] : 0.SI<Watt>();
+				var pTrac = distanceBased ? (Watt)row[ModalResultField.P_trac.GetName()] : pWheelIn;
+
+				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux_mech - P_brake_loss
+				var pEngOut = (Watt)row[ModalResultField.P_ice_out.GetName()];
+				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
+				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
+				var pLossAxle = (Watt)row[ModalResultField.P_axle_loss.GetName()];
+				var pLossAngle = !row.Table.Columns.Contains(ModalResultField.P_angle_loss.GetName()) || row[ModalResultField.P_angle_loss.GetName()] is DBNull
+					? 0.SI<Watt>()
+					: (Watt)row[ModalResultField.P_angle_loss.GetName()];
+				var pAxleIn = (Watt)row[ModalResultField.P_axle_in.GetName()];
+				var pLossRet = (Watt)row[ModalResultField.P_ret_loss.GetName()];
+				var pRetIn = (Watt)row[ModalResultField.P_retarder_in.GetName()];
+				var pGbxInertia = (Watt)row[ModalResultField.P_gbx_inertia.GetName()];
+				var pShiftLoss = runData.GearboxData.Type.ManualTransmission() || row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
+					? 0.SI<Watt>()
+					: (Watt)row[ModalResultField.P_gbx_shift_loss.GetName()];
+				var pEngInertia = (Watt)row[ModalResultField.P_ice_inertia.GetName()];
+				var pAux =
+					(Watt)(row[ModalResultField.P_aux_mech.GetName()] != DBNull.Value ? row[ModalResultField.P_aux_mech.GetName()] : 0.SI<Watt>());
+				var pBrakeLoss = distanceBased ? (Watt)row[ModalResultField.P_brake_loss.GetName()] : 0.SI<Watt>();
+				var pBrakeIn = distanceBased ? (Watt)row[ModalResultField.P_brake_in.GetName()] : pWheelIn;
+
+				var pWheelInertia = distanceBased ? (Watt)row[ModalResultField.P_wheel_inertia.GetName()] : 0.SI<Watt>();
+				var pPTOconsumer = ptoConsumerColumn == null || row[ptoConsumerColumn.ColumnName] is DBNull
+					? 0.SI<Watt>()
+					: (Watt)row[ptoConsumerColumn.ColumnName];
+				var pPTOtransm = ptoTransmissionColumn == null || row[ptoTransmissionColumn.ColumnName] is DBNull
+					? 0.SI<Watt>()
+					: (Watt)row[ptoTransmissionColumn.ColumnName];
+
+				if (distanceBased) {
+					// P_trac = P_veh_inertia + P_roll + P_air + P_slope
+					Assert.AreEqual(pTrac.Value(), (pAir + pRoll + pGrad + pVehInertia).Value(), 1E-3, "time: {0}  distance: {1}",
+						time,
+						distance);
+				}
+
+				if (distanceBased) {
+					// P_wheel_in = P_trac + P_wheel_inertia
+					Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,
+						distance);
+				}
+				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time,
+						distance);
+
+				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pRetIn.Value(), (pAxleIn + pLossRet).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				var pClutchLoss = (Watt)(row[ModalResultField.P_clutch_loss.GetName()] != DBNull.Value
+					? row[ModalResultField.P_clutch_loss.GetName()]
+					: 0.SI<Watt>());
+
+				var pClutchOut = row[ModalResultField.P_clutch_out.GetName()];
+				//if (pClutchOut != DBNull.Value) {
+				Assert.AreEqual(pGbxIn.Value(), (pClutchOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+				var pP1Out = row[p1OutColumn] as Watt;
+				Assert.AreEqual(pP1Out.Value(), ((pClutchOut as Watt) + pClutchLoss).Value(), 1E-3, "time: {0}  distance: {1}",
+					time, distance);
+
+				var pP1Loss = row[p1LossColumn] as Watt;
+				var pP1Mech = row[p1MechColumn] as Watt;
+				var pP1In = row[p1InColumn] as Watt;
+				var pP1El = row[p1ElColumn] as Watt;
+				Assert.AreEqual(pP1In.Value(), (pP1Out + pP1Mech).Value(), 1E-3, "time: {0}  distance: {1}",
+					time, distance);
+
+				Assert.AreEqual(pP1Loss.Value(), (pP1In - pP1Out - pP1El).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				//}
+
+				var pTC_Loss = row.Table.Columns.Contains(ModalResultField.P_TC_loss.GetName()) && row[ModalResultField.P_TC_loss.GetName()] != DBNull.Value
+					? (Watt)row[ModalResultField.P_TC_loss.GetName()]
+					: 0.SI<Watt>();
+
+				var pTCOut = row[ModalResultField.P_clutch_out.GetName()];
+				if (pTCOut != DBNull.Value) {
+					Assert.AreEqual(pGbxIn.Value(), (pTCOut as Watt).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+					//Assert.AreEqual(pEngOut.Value(), (pTCOut as Watt + pTC_Loss).Value(), 1E-3, "time: {0}  distance: {1}",
+					//	time, distance);
+				}
+
+				Assert.IsTrue(pLossGbx.IsGreaterOrEqual(pShiftLoss + pGbxInertia), "time: {0}  distance: {1}", time,
+					distance);
+
+				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
+					"time: {0}  distance: {1}", time,
+					distance);
+
+				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
+				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 0.5,
+					"time: {0}  distance: {1}", time, distance);
+
+				// P_eng_fcmap = sum(Losses Powertrain)
+				var pLossTot = pClutchLoss + pTC_Loss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + (distanceBased ? (pBrakeLoss +
+								pWheelInertia + pAir + pRoll + pGrad + pVehInertia) : pTrac) + pPTOconsumer + pPTOtransm + pP1Mech;
+				var pEngFcmapCalc = (pLossTot + pEngInertia + pAux).Value();
+				Assert.AreEqual(pEngFcmap.Value(), pEngFcmapCalc, 0.5, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pEngFcmap.Value(),
+					(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
+					pClutchLoss + pTC_Loss + pPTOtransm + pPTOconsumer + pP1Mech).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
+			}
+		}
+
+
+
 		[Category("LongRunning")]
 		[
 			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_Ser.vecto"),
@@ -611,14 +879,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
 			var runsFactory =
-				new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) { WriteModalResults = true };
+				SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, Meter>>();
+			VectoRunData runData = null;
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycleInfo).Data.Entries.Last()
 						.Distance));
+				if (runData == null) {
+					runData = run.Run.GetContainer().RunData;
+				}
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
@@ -631,19 +904,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 					modalResults.Item1, auxKeys, modalResults.Item2,
 					FuelConsumptionMapReader.Create(
 						((IEngineeringInputDataProvider)inputData)
-						.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap), true);
+						.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap), true, runData);
 			}
 
-			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering, true);
+			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering, true, runData);
 		}
 
 		private static void AssertModDataIntegrityAT(ModalResults modData, Dictionary<string, DataColumn> auxKeys,
-			Meter totalDistance, FuelConsumptionMap consumptionMap, bool atGbx)
+			Meter totalDistance, FuelConsumptionMap consumptionMap, bool atGbx, VectoRunData runData)
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
-			var ptoTransmissionColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
-			var ptoConsumerColumn = auxKeys.GetValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
+			var ptoTransmissionColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOTransmission);
+			var ptoConsumerColumn = auxKeys.GetVECTOValueOrDefault(Constants.Auxiliaries.IDs.PTOConsumer);
 			foreach (DataRow row in modData.Rows) {
 				if (totalDistance.IsEqual(((Meter)row[ModalResultField.dist.GetName()]))) {
 					continue;
@@ -678,12 +951,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pLossGbx = (Watt)row[ModalResultField.P_gbx_loss.GetName()];
 				var pGbxIn = (Watt)row[ModalResultField.P_gbx_in.GetName()];
 				var pLossAxle = (Watt)row[ModalResultField.P_axle_loss.GetName()];
-				var pLossAngle = row[ModalResultField.P_angle_loss.GetName()] is DBNull
+				var pLossAngle = runData.AngledriveData?.Type != AngledriveType.SeparateAngledrive
 					? 0.SI<Watt>()
 					: (Watt)row[ModalResultField.P_angle_loss.GetName()];
 				var pAxleIn = (Watt)row[ModalResultField.P_axle_in.GetName()];
-				var pLossRet = (Watt)row[ModalResultField.P_ret_loss.GetName()];
-				var pRetIn = (Watt)row[ModalResultField.P_retarder_in.GetName()];
+				var pLossRet = runData.Retarder.Type.IsDedicatedComponent() ? (Watt)row[ModalResultField.P_ret_loss.GetName()] : 0.SI<Watt>();
+				var pRetIn = runData.Retarder.Type.IsDedicatedComponent() ? (Watt)row[ModalResultField.P_retarder_in.GetName()] : pAxleIn;
 				var pGbxInertia = (Watt)row[ModalResultField.P_gbx_inertia.GetName()];
 				var pShiftLoss = row[ModalResultField.P_gbx_shift_loss.GetName()] is DBNull
 					? 0.SI<Watt>()

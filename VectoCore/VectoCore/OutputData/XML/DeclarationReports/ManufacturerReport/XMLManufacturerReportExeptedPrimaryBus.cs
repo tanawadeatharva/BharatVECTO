@@ -19,13 +19,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			VehiclePart.Add(
-				new XAttribute(xsi + "type", "VehicleExemptedPrimaryBusType"),
+				new XAttribute(xsi + XMLNames.XSIType, "VehicleExemptedPrimaryBusType"),
 				new XElement(vns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(vns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(vns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(vns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(vns + "LegislativeCategory", modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(vns + XMLNames.Bus_ChassisConfiguration, "Bus"),
+				new XElement(vns + XMLNames.ChassisConfiguration, "Bus"),
 				new XElement(vns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(vns + XMLNames.Vehicle_Articulated, modelData.VehicleData.InputData.Articulated),
 				new XElement(

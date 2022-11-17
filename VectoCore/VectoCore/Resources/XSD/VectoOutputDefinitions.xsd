@@ -32,4 +32,15 @@
 			<xs:enumeration value="km/h"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="VolumeUnitType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ltr"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="StorageCapacityUnitType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="As"/>
+			<xs:enumeration value="Ah"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

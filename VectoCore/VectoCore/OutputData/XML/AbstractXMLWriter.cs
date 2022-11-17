@@ -89,7 +89,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 						table.Columns.Cast<DataColumn>()
 							.Where(c => mapping.ContainsKey(c.ColumnName))
 							.Select(c => new XAttribute(mapping[c.ColumnName], 
-								row.Field<string>(c).ToDouble().ToXMLFormat(precision?.GetValueOrDefault(c.ColumnName, 2u) ?? 2u)))))
+								row.Field<string>(c).ToDouble().ToXMLFormat(precision?.GetVECTOValueOrDefault(c.ColumnName, 2u) ?? 2u)))))
 				.Cast<object>().ToArray();
 		}
 	}

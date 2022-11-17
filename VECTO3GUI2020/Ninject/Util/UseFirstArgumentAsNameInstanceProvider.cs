@@ -50,8 +50,7 @@ namespace VECTO3GUI2020.Ninject.Util
             catch (Exception e)
             {
                 throw new VectoException("failed to create instance for '{1}' via '{0}' version '{2}'", e, methodInfo.Name, methodInfo.ReturnType.Name, arguments[0]);
-                throw e;
-            }
+			}
         }
     }
 }

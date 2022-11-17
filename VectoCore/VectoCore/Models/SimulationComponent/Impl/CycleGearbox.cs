@@ -390,7 +390,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Constants.SimulationSettings.EngineIdlingSearchInterval,
 						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 						evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-						criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+						criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value(),
+						searcher: this);
 				} catch (VectoException) {
 					Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
 				}

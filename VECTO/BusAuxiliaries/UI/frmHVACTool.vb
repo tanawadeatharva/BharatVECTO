@@ -18,10 +18,7 @@ Public Class frmHVACTool
 	Private ahsmFilePath As String
 	'Private buses As IBusDatabase
 	Private ssmTOOL As SSMTOOL
-	Private originalssmTOOL As SSMTOOL
 	Private TabColors As Dictionary(Of TabPage, Color) = New Dictionary(Of TabPage, Color)()
-	Private editTechLine As SSMTechnology = New SSMTechnology()
-	Private gvTechListBinding As BindingList(Of SSMTechnology)
 	Private DefaultCategories As String() = {"Cooling", "Heating", "Insulation", "Ventiliation"}
 	Private vectoFile As String = String.Empty
 	Private UserHitCancel As Boolean = False
@@ -98,7 +95,7 @@ Public Class frmHVACTool
 		Me.ahsmFilePath = ahsmFilePath
 
 		ssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions)) ' , New HVACConstants, False, useDefaults)
-		originalssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions))  ' ahsmFilePath, New HVACConstants, False, useDefaults)
+		'originalssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions))  ' ahsmFilePath, New HVACConstants, False, useDefaults)
 
 		'If IO.File.Exists(ahsmFilePath) Then
 		'	If ssmTOOL.Load(ahsmFilePath) AndAlso originalssmTOOL.Load(ahsmFilePath) Then

@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using VECTO3GUI2020.Annotations;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace Vecto3GUI2020Test.ViewModelTests
 {
@@ -22,7 +11,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void restoreValuesWhenEditingAgain()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -74,7 +63,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		public void SIDummyCreation()
 		{
 
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -92,17 +81,9 @@ namespace Vecto3GUI2020Test.ViewModelTests
 
 
 		[Test]
-		public void loadVehicleDataAgainUnset()
-		{
-
-
-
-		}
-
-		[Test]
 		public void NoErrorAfterDataLoading()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			var vehicleVM =
 				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as
 					InterimStageBusVehicleViewModel_v2_8;
@@ -118,7 +99,7 @@ namespace Vecto3GUI2020Test.ViewModelTests
 		[Test]
 		public void LoadPrimaryAndEdit()
 		{
-			var vm = loadFile(primary_vehicle_only);
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
 			Assert.NotNull(vm);
 
 			var vehicleViewModel =
@@ -134,9 +115,32 @@ namespace Vecto3GUI2020Test.ViewModelTests
 			Assert.Null(vehicleData.ADAS);
 
 		}
+
+
+
+
 		#endregion
 
 
+		[Test]
+		public void ConsolidatedADASandTPMLMFromPrimaryVehicle()
+		{
+
+			var vm = LoadFileFromTestDirectory(primary_vehicle_only);
+			Assert.NotNull(vm);
+
+			var vehicleViewModel =
+				vm.MultiStageJobViewModel.ManufacturingStageViewModel.Vehicle as InterimStageBusVehicleViewModel_v2_8;
+
+			Assert.NotNull(vm.MultiStageJobViewModel.ManufacturingStages);
+			Assert.IsNotEmpty(vm.MultiStageJobViewModel.ManufacturingStages);
+
+			Assert.NotNull(vehicleViewModel.ConsolidatedVehicleData);
+			var consolidatedADAS = vehicleViewModel.ConsolidatedVehicleData.ADAS;
+			Assert.NotNull(consolidatedADAS);
+
+			Assert.NotNull(vehicleViewModel.ConsolidatedVehicleData.GrossVehicleMassRating);
+		}
 
 
 	}

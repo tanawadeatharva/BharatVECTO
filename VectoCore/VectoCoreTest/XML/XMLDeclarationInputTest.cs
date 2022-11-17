@@ -52,6 +52,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -413,7 +414,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var jobContainer = new JobContainer(sumData);
 			var dataProvider = xmlInputReader.CreateDeclaration(reader);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
 			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
@@ -574,7 +575,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, new FileOutputWriter("dummy"));
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, new FileOutputWriter("dummy"));
 			var jobContainer = new JobContainer(null);
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -858,7 +859,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lookup = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
 
 			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
-			Assert.AreEqual(1000, lookup.PowerDemand.Value());
+			Assert.AreEqual(350, lookup.PowerDemand.Value());
 		}
 
 		[TestCase]

@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
@@ -53,12 +54,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
 			var sumContainer = new SummaryDataContainer(writer);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				SumData = sumContainer,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true;
+			factory.SumData = sumContainer; //ActualModalData = true,
+			factory.Validate = false;
 			var jobContainer = new JobContainer(sumContainer);
 
 			
@@ -87,12 +86,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				? xmlInputReader.CreateDeclaration(jobFile)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
-			
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			factory.WriteModalResults = true; //ActualModalData = true,
+			factory.Validate = false;
+
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 		
 			//var runs = factory.SimulationRuns().ToArray();

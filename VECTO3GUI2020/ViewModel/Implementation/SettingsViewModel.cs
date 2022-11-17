@@ -70,18 +70,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 		{
 			get
 			{
-				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, _dialogHelper), window => true);
+				return _closeWindowCommand ?? new RelayCommand<Window>(window => CloseWindow(window, _dialogHelper, false), window => true);
 			}
 		}
-
-		private void CloseWindow(Window window, bool ask)
-		{
-
-		}
-
-
-
-
 
 		public ICommand ChangeFilePath
         {

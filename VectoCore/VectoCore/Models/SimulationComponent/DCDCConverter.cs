@@ -8,7 +8,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class DCDCConverter : StatefulVectoSimulationComponent<DCDCConverter.State>, IDCDCConverter
+	public class DCDCConverter : StatefulVectoSimulationComponent<DCDCConverter.State>, IDCDCConverter, IUpdateable
 	{
 		public double Efficiency { get; protected set; }
 
@@ -33,8 +33,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			var dischargeEnergy = (-DataBus.BatteryInfo.MaxDischargePower(dt) * dt);
 			var chargeEnergy = (-DataBus.BatteryInfo.MaxChargePower(dt) * dt);
-			if ((PreviousState.ConsumedEnergy / Efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
-				return PreviousState.ConsumedEnergy / dt / Efficiency;
+			var efficiency = PreviousState.ConsumedEnergy > 0 ? 1 / Efficiency : Efficiency;
+			if ((PreviousState.ConsumedEnergy * efficiency).IsBetween(chargeEnergy, dischargeEnergy)) {
+				return PreviousState.ConsumedEnergy / dt * efficiency;
 			}
 
 			// write in mod-file for post-processing correction
@@ -89,6 +90,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			public WattSecond ConsumedEnergy { get; set; }
 			public WattSecond MissingEnergy { get; set; }
+			
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+		public bool UpdateFrom(object other) {
+			if (other is DCDCConverter d) {
+				PreviousState = d.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
+		#endregion
 	}
 }

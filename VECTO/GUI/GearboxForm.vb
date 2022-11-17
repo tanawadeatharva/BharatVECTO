@@ -30,6 +30,7 @@ Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -83,12 +84,12 @@ Public Class GearboxForm
         If (Cfg.DeclMode) Then
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type = GearboxType.ATSerial) _
+                .Where(Function(type) Not type = GearboxType.APTN And (type.ManualTransmission() OrElse type = GearboxType.ATSerial)) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         Else
             CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                 .Cast(Of GearboxType)() _
-                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission()) _
+                .Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission() OrElse type = GearboxType.IHPC OrElse type = GearboxType.IEPC) _
                 .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
         End If
         DeclInit()
@@ -139,7 +140,7 @@ Public Class GearboxForm
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
         If GearboxFileBrowser.OpenDialog(_gbxFile) Then
             Try
-                OpenGbx(GearboxFileBrowser.Files(0), VehicleCategory.RigidTruck)
+                OpenGbx(GearboxFileBrowser.Files(0), VehicleCategory.RigidTruck, VectoSimulationJobType.ConventionalVehicle)
             Catch ex As Exception
                 MsgBox("Failed to open Gearbox File: " + ex.Message)
             End Try
@@ -241,7 +242,7 @@ Public Class GearboxForm
     End Sub
 
     'Open file
-    Public Sub OpenGbx(file As String, vehicleCategory As VehicleCategory)
+    Public Sub OpenGbx(file As String, vehicleCategory As VehicleCategory, vehicleJobType As VectoSimulationJobType)
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -253,6 +254,7 @@ Public Class GearboxForm
 		Dim axlegear As IAxleGearInputData = vehicle.Components.AxleGearInputData
 
         _vehicleCategory = vehicleCategory
+        _vehicleJobType = vehicleJobType
 
         If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
             Select Case WrongMode()
@@ -511,19 +513,20 @@ Public Class GearboxForm
 
         Change()
 
+        Dim hasTorqueConverter = gStype.AutomaticTransmission() AndAlso gStype <> GearboxType.APTN AndAlso gStype <> GearboxType.IHPC
         'ChTCon.Enabled = (GStype.AutomaticTransmission())
-        gbTC.Enabled = gStype.AutomaticTransmission()
-        pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
-        TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
-        TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
-        TbTqResv.Enabled = Not gStype.AutomaticTransmission()
-        GroupBox2.Enabled = Not gStype.AutomaticTransmission()
-        TBI_getr.Enabled = Not gStype.AutomaticTransmission()
-        TbTracInt.Enabled = Not gStype.AutomaticTransmission()
-        tbDownshiftAfterUpshift.Enabled = Not gStype.AutomaticTransmission()
-        tbUpshiftAfterDownshift.Enabled = Not gStype.AutomaticTransmission()
+        gbTC.Enabled = hasTorqueConverter
+        pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso hasTorqueConverter
+        gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso hasTorqueConverter
+        gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso hasTorqueConverter
+        TbStartAcc.Enabled = Not hasTorqueConverter
+        TbStartSpeed.Enabled = Not hasTorqueConverter
+        TbTqResv.Enabled = Not hasTorqueConverter
+        GroupBox2.Enabled = Not hasTorqueConverter
+        TBI_getr.Enabled = Not hasTorqueConverter
+        TbTracInt.Enabled = Not hasTorqueConverter
+        tbDownshiftAfterUpshift.Enabled = Not hasTorqueConverter
+        tbUpshiftAfterDownshift.Enabled = Not hasTorqueConverter
         UpdateGearboxInfoText()
     End Sub
 
@@ -711,6 +714,7 @@ Public Class GearboxForm
 
     Private _contextMenuFiles As String()
     Private _vehicleCategory As VehicleCategory
+    private _vehicleJobType as VectoSimulationJobType
 
     Private Sub OpenFiles(ParamArray files() As String)
 
@@ -809,6 +813,7 @@ Public Class GearboxForm
 
         'Dim vectoJob As VectoJob = New VectoJob() With {.FilePath = VectoJobForm.VECTOfile}
         'Dim vectoOk As Boolean = vectoJob.ReadFile()
+        dim hasICE = false
         Dim jobFile As String = VectoJobForm.VectoFile
         If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
@@ -820,56 +825,19 @@ Public Class GearboxForm
             Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
             'inputData = TryCast(JSONInputDataFactory.ReadComponentData(vectoJob.PathEng(False)), IEngineeringInputDataProvider)
 			Dim engine As IEngineEngineeringInputData = inputData.JobInputData.Vehicle.Components.EngineInputData
-			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
-
-
-            s = New Series
-            s.Points.DataBindXY(engineFld.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-                                engineFld.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
-            s.ChartType = SeriesChartType.FastLine
-            s.BorderWidth = 2
-            s.Color = Color.DarkBlue
-            s.Name = "Full load"
-            chart.Series.Add(s)
-
-			If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
-                'If FLD0.Init(VectoJobForm.n_idle) Then
-
-                'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
-                Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
-                If (Not IsNothing(shiftLines)) Then
-
-
-                    s = New Series
-
-                    's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-                    s.Points.DataBindXY(
-                        shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.AsRPM).
-                                            ToArray(),
-                        shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToArray())
-                    s.ChartType = SeriesChartType.FastLine
-                    s.BorderWidth = 2
-                    s.Color = Color.DarkRed
-                    s.BorderDashStyle = ChartDashStyle.Dash
-                    s.Name = "Upshift curve (generic)"
-                    chart.Series.Add(s)
-
-                    s = New Series
-                    's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-                    s.Points.DataBindXY(
-                        shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.AsRPM) _
-                                            .ToArray(),
-                        shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToArray())
-                    s.ChartType = SeriesChartType.FastLine
-                    s.BorderWidth = 2
-                    s.Color = Color.DarkRed
-                    s.BorderDashStyle = ChartDashStyle.Dash
-                    s.Name = "Downshift curve (generic)"
-                    chart.Series.Add(s)
-                End If
-                'End If
+            Dim engineFld As EngineFullLoadCurve = Nothing
+            if (not engine is nothing) then
+                engineFld = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
+                DrawEngineFld(engine, chart)
+                DrawShiftLineICE(engine, vehicle, gear, chart)
+                hasICE = true
             End If
+
+            dim em = inputData.JobInputData.Vehicle.Components.ElectricMachines?.Entries.FirstOrDefault(function(x) x.Position <> PowertrainPosition.GEN)
+            if (engine is nothing andalso not em is nothing) then 
+                DrawEMFld(em, chart)
+                DrawShiftLineEM(em, vehicle, gear, chart)
+            end if
         End If
 
         a.Name = "main"
@@ -886,7 +854,7 @@ Public Class GearboxForm
         a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
         a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-        a.AxisX.Minimum = 300
+        a.AxisX.Minimum = If(hasICE, 300,0)
         a.BorderDashStyle = ChartDashStyle.Solid
         a.BorderWidth = 1
 
@@ -905,8 +873,187 @@ Public Class GearboxForm
         PicBox.Image = img
     End Sub
 
+    
+    Private sub DrawEngineFld(engine As IEngineEngineeringInputData, chart As chart)
+        
+        Dim s As Series
+        Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
 
-    Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer, shiftStrategy As String) _
+
+        s = New Series
+        s.Points.DataBindXY(engineFld.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                            engineFld.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+        s.ChartType = SeriesChartType.FastLine
+        s.BorderWidth = 2
+        s.Color = Color.DarkBlue
+        s.Name = "Full load"
+        chart.Series.Add(s)
+    End sub
+
+    Private Sub DrawShiftLineICE(engine As IEngineEngineeringInputData, vehicle As IVehicleEngineeringInputData, gear As Integer, chart As Chart)
+        if (engine Is nothing) then 
+            return
+        End If
+        
+        Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
+        If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
+            'If FLD0.Init(VectoJobForm.n_idle) Then
+
+            'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
+            Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
+            Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
+            If (Not IsNothing(shiftLines)) Then
+
+
+                dim s = New Series
+
+                's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+                s.Points.DataBindXY(
+                    shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.AsRPM).
+                                       ToArray(),
+                    shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToArray())
+                s.ChartType = SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.BorderDashStyle = ChartDashStyle.Dash
+                s.Name = "Upshift curve (generic)"
+                chart.Series.Add(s)
+
+                s = New Series
+                's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+                s.Points.DataBindXY(
+                    shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.AsRPM) _
+                                       .ToArray(),
+                    shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToArray())
+                s.ChartType = SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.BorderDashStyle = ChartDashStyle.Dash
+                s.Name = "Downshift curve (generic)"
+                chart.Series.Add(s)
+            End If
+            'End If
+        End If
+    End Sub
+
+
+    Private sub DrawEmFld(em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData), chart As chart)
+        
+        Dim s As Series
+        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+
+
+        s = New Series
+        s.Points.DataBindXY(emFld.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
+                            emFld.FullLoadEntries.Select(Function(x) x.FullDriveTorque.Value()).ToArray())
+        s.ChartType = SeriesChartType.FastLine
+        s.BorderWidth = 2
+        s.Color = Color.DarkBlue
+        s.Name = "Dirve Torque"
+        
+        chart.Series.Add(s)
+
+        s = New Series
+        s.Points.DataBindXY(emFld.FullLoadEntries.Select(Function(x) x.MotorSpeed.AsRPM).ToArray(),
+                            emFld.FullLoadEntries.Select(Function(x) x.FullGenerationTorque.Value()).ToArray())
+        s.ChartType = SeriesChartType.FastLine
+        s.BorderWidth = 2
+        s.Color = Color.DarkBlue
+        s.Name = "Generation Torque"
+        
+        chart.Series.Add(s)
+    End sub
+
+     Private Sub DrawShiftLineEM(em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData), vehicle As IVehicleEngineeringInputData, gear As Integer, chart As Chart)
+        if (em Is nothing) then 
+            return
+        End If
+        
+         Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+        If VectoJobForm.Visible Then
+            'If FLD0.Init(VectoJobForm.n_idle) Then
+
+            'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
+            Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
+            Dim shiftLines As ShiftPolygon = GetShiftLines(emFld, vehicle, gears, gear)
+            If (Not IsNothing(shiftLines)) Then
+
+
+                dim s = New Series
+
+                's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+                if (shiftLines.Upshift.Any()) then
+                s.Points.DataBindXY(
+                    shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.AsRPM).
+                                       ToArray(),
+                    shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToArray())
+                end if
+                s.ChartType = SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.BorderDashStyle = ChartDashStyle.Dash
+                s.Name = "Upshift curve (generic)"
+                chart.Series.Add(s)
+
+                s = New Series
+                's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+                if (shiftLines.Downshift.Any()) then
+                s.Points.DataBindXY(
+                    shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.AsRPM) _
+                                       .ToArray(),
+                    shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToArray())
+                end If
+                s.ChartType = SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.BorderDashStyle = ChartDashStyle.Dash
+                s.Name = "Downshift curve (generic)"
+                chart.Series.Add(s)
+            End If
+            'End If
+        End If
+    End Sub
+
+    Private Function GetShiftLines(emFld As ElectricMotorFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer) As ShiftPolygon
+        
+        Dim maxTqStr As String = LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text
+        
+        If gears.Count <= 1 Then
+            Return Nothing
+        End If
+        Dim rDyn As Meter = vehicle.DynamicTyreRadius
+        If rDyn.IsEqual(0) Then
+            If (vehicle.Components.AxleWheels.AxlesEngineering.Count < 2) Then
+                Return Nothing
+            End If
+            rdyn = vehicle.Components.AxleWheels.AxlesEngineering.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
+                .Select(Function(da) DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius) _
+                .Average()
+        End If
+        If (rDyn.IsEqual(0)) Then
+            Return Nothing
+        End If
+
+        Dim tmpRunData as VectoRunData = New VectoRunData() With {
+                .GearboxData = New GearboxData() with {
+                .Type = CType(CbGStype.SelectedValue, GearboxType)
+                },
+                .GearshiftParameters = New  ShiftStrategyParameters(), 
+                .JobType = VectoSimulationJobType.BatteryElectricVehicle
+                }
+        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
+        
+        dim em as ElectricMotorData = ConvertToElectricMotorData(emFld, gear)
+
+        Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
+            CType(CbGStype.SelectedValue, GearboxType), gear - 1,
+            Nothing, gears, nothing,
+            Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
+            (rDyn), em)
+        Return shiftLines
+    End Function
+
+    Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer) _
         As ShiftPolygon
         Dim maxTqStr As String = LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text
         Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
@@ -928,10 +1075,10 @@ Public Class GearboxForm
         End If
 
         Dim tmpRunData as VectoRunData = New VectoRunData() With {
-            .ShiftStrategy = shiftStrategy,
             .GearboxData = New GearboxData() with {
                 .Type = CType(CbGStype.SelectedValue, GearboxType)
-            }
+            },
+            .JobType = _vehicleJobType
         }
         Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData))
             
@@ -1085,7 +1232,7 @@ Public Class GearboxForm
 
 			If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
                 Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
+				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
                 If (Not IsNothing(shiftLines)) Then
                     ShiftPolygonExport.WriteShiftPolygon(shiftLines, jobFile & "_Gear " & gear & ".vgbs")
                 End If

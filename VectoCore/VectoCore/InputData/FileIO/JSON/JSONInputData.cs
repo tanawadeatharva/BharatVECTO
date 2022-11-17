@@ -193,16 +193,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 			} catch (Exception e) {
 				if (!TolerateMissing) {
-					throw new VectoException(
-						"JobFile: Failed to read Gearbox file '{0}': {1}", e,
-						Body[JsonKeys.Vehicle_GearboxFile],
-						e.Message);
+					throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e,
+						Body[JsonKeys.Vehicle_GearboxFile], e.Message);
 				}
 
-				return new JSONGearboxDataV6(
-					GetDummyJSONStructure(),
-					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>()) +
-					MissingFileSuffix);
+				return new JSONGearboxDataV6(GetDummyJSONStructure(), 
+					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>())
+					+ MissingFileSuffix);
 			}
 		}
 
@@ -327,18 +324,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VectoSimulationJobType JobType => Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 
 		public virtual string JobName => _jobname;
-
-		public string ShiftStrategy
-		{
-			get {
-				if (Body["ShiftStrategy"] == null) {
-					return "";
-				}
-
-				return Body.GetEx<string>("ShiftStrategy");
-			}
-		}
-
+		
 		#endregion
 
 		#region DriverInputData
@@ -809,9 +795,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
-			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']").InnerText.ToDouble().SI<Meter>();
+			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
 			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']").InnerText);
-			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']").InnerText.ParseEnum<VehicleCode>();
+			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
 		}
 	}
 
@@ -850,7 +836,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				TotalVehicleMass = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_ResultEntry_TotalVehicleMass}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
 				Payload = (node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_Payload}']")?.InnerText.ToDouble() ?? 0).SI<Kilogram>(),
 				PassengerCount = node.SelectSingleNode($"./*[local-name()='{XMLNames.Bus_PassengerCount}']")?.InnerText.ToDouble() ?? 0,
-				FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
+				//FuelMode = "" //node.SelectSingleNode($"./*[local-name()='{XMLNames.Report_Result_FuelMode}']").InnerText
 			};
 		}
 
@@ -1018,19 +1004,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 		public string JobName { get; }
-		public string ShiftStrategy => "";
-
+		
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
 	}
 
+	// --------------------------
 
-	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IDeclarationInputDataProvider, IDeclarationJobInputData
+	public class JSONInputDataCompletedBusFactorMethodV7 : JSONFile, IMultistageVIFInputData //, IDeclarationInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		protected internal string PrimaryInputDataFile;
 		protected internal string CompletedInputDataFile;
+		protected internal bool RunSimulation;
 
 		public JSONInputDataCompletedBusFactorMethodV7(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -1040,13 +1027,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
+			RunSimulation = Body.GetEx<bool>(JsonKeys.BUS_RunSimulation);
+			
 
-			//PrimaryVehicle = CreateReader(primaryInputData);
+            //PrimaryVehicle = CreateReader(primaryInputData);
 
-			Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
-			PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IPrimaryVehicleInformationInputDataProvider);
-			JobName = Vehicle.VIN;
-		}
+            Vehicle = _xmlInputReader.CreateDeclaration(CompletedInputDataFile).JobInputData.Vehicle;
+            PrimaryVehicleData = (_xmlInputReader.Create(PrimaryInputDataFile) as IMultistepBusInputDataProvider);
+            //JobName = Vehicle.VIN;
+        }
 
 
 		//private IDeclarationInputDataProvider CreateReader(string vehicleFileName)
@@ -1062,30 +1051,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-		#endregion
+        #endregion
 
-		#region Implementation of IDeclarationInputDataProvider
+        //#region Implementation of IDeclarationInputDataProvider
 
-		public IDeclarationJobInputData JobInputData => this;
-		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleData { get; }
-		public XElement XMLHash { get; }
+        //public IDeclarationJobInputData JobInputData => this;
+        public IMultistepBusInputDataProvider PrimaryVehicleData { get; }
+        //public XElement XMLHash { get; }
 
-		#endregion
+        //#endregion
 
-		#region Implementation of IDeclarationJobInputData
+        //#region Implementation of IDeclarationJobInputData
 
-		public IVehicleDeclarationInputData Vehicle { get; }
-		public string JobName { get; }
-		public string ShiftStrategy => "";
+        public IVehicleDeclarationInputData Vehicle { get; }
+        //public string JobName { get; }
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+        //public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+
+        //#endregion
+
+        #region Implementation of IMultistageVIFInputData
+
+		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
+		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
+
+		public bool SimulateResultingVIF => RunSimulation;
 
 		#endregion
 	}
 
-	public class JSONInputDataV8_Hybrid : JSONInputDataV5
+	// --------------------------
+
+	public class JSONInputDataV8_ParallelHybrid : JSONInputDataV5
 	{
-		public JSONInputDataV8_Hybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+		public JSONInputDataV8_ParallelHybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
 		public override VectoSimulationJobType JobType => VectoSimulationJobType.ParallelHybridVehicle;
 
@@ -1095,6 +1094,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
 	}
 
+	// --------------------------
+
 	public class JSONInputDataV9_BEV : AbstractJSONInputData
 	{
 		
@@ -1102,7 +1103,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			tolerateMissing)
 		{
 			VehicleData = ReadVehicle();
-
 			if (Body[JsonKeys.Vehicle_GearboxFile] != null) {
 				Gearbox = ReadGearbox();
 				AxleGear = Gearbox as IAxleGearInputData;
@@ -1119,24 +1119,109 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 	}
 
+	// --------------------------
 
-	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider
+	public class JSONInputDataV11_SerialHybrid : AbstractJSONInputData
+	{
+
+		public JSONInputDataV11_SerialHybrid(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+			Engine = ReadEngine();
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null) {
+				Gearbox = ReadGearbox();
+				AxleGear = Gearbox as IAxleGearInputData;
+				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+				//GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
+			}
+		}
+
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.SerialHybridVehicle;
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+
+		
+	}
+
+	// --------------------------
+
+	public class JSONInputDataV12_IEPC : AbstractJSONInputData
+	{
+		public JSONInputDataV12_IEPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+			if (Body[JsonKeys.Vehicle_EngineFile] != null) {
+				Engine = ReadEngine();
+			}
+
+			if (Body[JsonKeys.Vehicle_GearboxFile] != null && !string.IsNullOrWhiteSpace(Body[JsonKeys.Vehicle_GearboxFile].Value<string>())) {
+				//AxleGear = ReadGearbox() as IAxleGearInputData;
+				Gearbox = ReadGearbox();  // gearbox is not used, but required by GUI
+				AxleGear = Gearbox as IAxleGearInputData;
+			}
+		}
+
+		public override IGearshiftEngineeringInputData GearshiftInputData =>
+			Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			Body["HybridStrategyParams"] == null
+				? null : JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>("HybridStrategyParams")), false);
+
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
+	}
+
+	// --------------------------
+
+	public class JSONInputDataV13_IHPC : JSONInputDataV8_ParallelHybrid
+	{
+		public JSONInputDataV13_IHPC(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
+	}
+
+	// --------------------------
+
+		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-		private string _primaryVehicleInputDataPath;
-		private IVehicleDeclarationInputData _primaryVehicleInputData;
-		public IVehicleDeclarationInputData PrimaryVehicle =>
-			_primaryVehicleInputData ?? (_primaryVehicleInputData =
-				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath).JobInputData.Vehicle);
-
-		private string _stageInputDataPath;
+		private readonly string _primaryVehicleInputDataPath;
+		private readonly string _stageInputDataPath;
 		private IVehicleDeclarationInputData _stageInputData;
+		private IDeclarationInputDataProvider _primaryVehicle;
 
-		public IVehicleDeclarationInputData StageInputData => 
-			_stageInputData ?? (_stageInputData =
-				_xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle);
+		public string PrimaryVehicleInputDataPath => _primaryVehicleInputDataPath;
+		public string StageInputDataPath => _stageInputDataPath;
+		public IDeclarationInputDataProvider PrimaryVehicle => 
+			_primaryVehicle ?? (_primaryVehicle =
+				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
+
+        public IVehicleDeclarationInputData StageInputData => 
+			_stageInputDataPath != null 
+			?
+            _stageInputData ?? (_stageInputData =
+                _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
+			:
+			null;
+
+		public bool SimulateResultingVIF => _simulateResultingVif;
+
 
 		private bool? _completed;
+		private bool _simulateResultingVif;
 
 		public bool? Completed
 		{
@@ -1153,7 +1238,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 			_primaryVehicleInputDataPath = Body.GetEx<string>(JsonKeys.PrimaryVehicle);
-			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStage);
+			_primaryVehicleInputDataPath = PathHelper.GetAbsolutePath(filename, _primaryVehicleInputDataPath);
+			_simulateResultingVif = Body.GetEx<bool>(JsonKeys.BUS_RunSimulation);
+			_stageInputDataPath = Body.GetEx<string>(JsonKeys.InterimStep);
+			_stageInputDataPath = PathHelper.GetAbsolutePath(filename, _stageInputDataPath);
 			_completed = Body.GetValueOrDefault<bool>(JsonKeys.Completed);
 
 		}

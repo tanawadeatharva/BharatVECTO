@@ -130,9 +130,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
             var factors = new
             {
-                urban = new[] { 0.11, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
+                urban = new[] { 0.0, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
                 rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
-                motorway = new[] { 0.89, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
+                motorway = new[] { 1.0, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
             };
 
             var r = new Random();
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         [TestCase]
         public void WHTCLookupTestLongHaul()
         {
-            var expected = 1.015501;
+            var expected = 1.0057;
 
             var rural = 1.0265;
             var urban = 1.0948;
@@ -334,14 +334,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         }
 
         [TestCase("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", 50),
-        TestCase("only the drive shaft of the PTO - multi-disc clutch", 1000),
-        TestCase("only the drive shaft of the PTO - multi-disc clutch, oil pump", 2000),
-        TestCase("drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 300),
-        TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch", 1500),
-        TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", 3000),
-        TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 600),
-        TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch", 2000),
-        TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 4000),
+        TestCase("only the drive shaft of the PTO - multi-disc clutch", 350),
+        TestCase("only the drive shaft of the PTO - multi-disc clutch, oil pump", 3000),
+        TestCase("drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 150),
+        TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch", 400),
+        TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", 3050),
+        TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 200),
+        TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch", 450),
+        TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 3100),
+        TestCase("PTO which includes 1 or more additional gearmesh(es), without disconnect clutch", 1500),
         TestCase("only one engaged gearwheel above oil level", 0)]
         public void AuxPTOTransmissionTest(string technology, double value)
         {
@@ -557,7 +558,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null,
                 null,
                 null),
-            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 132.6714, "Electric", null, null, null),
+            TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.87, "Electric", null, null, null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
                 null),
             TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, "Fixed displacement", "Fixed displacement",
@@ -569,7 +570,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expected, string axle1,
             string axle2, string axle3, string axle4)
         {
-            // mk remark: made the test call with 4 axle params, so that the test name is clear in the test explorer.
             AssertHelper.AreRelativeEqual(expected,
                 DeclarationData.SteeringPump.Lookup(mission, hdvClass,
                     new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));

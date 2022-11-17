@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var actual = VectoCSVFile.Read(result.actualFile);
 
 				if (actual.Columns.Contains(ModalResultField.v_act.GetShortCaption()) &&
-					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.v_act.GetShortCaption()).ToDouble(double.NaN))) {
+					!double.IsNaN(((string)actual.Rows[0][ModalResultField.v_act.GetShortCaption()]).ToDouble(double.NaN))) {
 					// test v_act >= 0
 					Assert.IsTrue(actual.Rows.Cast<DataRow>()
 						.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				if (actual.Columns.Contains(ModalResultField.dist.GetShortCaption()) &&
-					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.dist.GetShortCaption()).ToDouble(double.NaN))) {
+					!double.IsNaN(((string)actual.Rows[0][ModalResultField.dist.GetShortCaption()]).ToDouble(double.NaN))) {
 					// test distance monotonous increasing
 
 					var distPrev = actual.Rows[0].ParseDouble(ModalResultField.dist.GetShortCaption());
@@ -107,11 +107,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				CollectionAssert.AreEqual(expectedCols, actualCols,
-					"Moddata {0}: Columns differ:\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
+					"Moddata {0}: Columns differ:\nActual: {4}\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
 					result.actualFile,
 					expectedCols.Join(),
 					expectedCols.Except(actualCols).Join(),
-					actualCols.Except(expectedCols).Join());
+					actualCols.Except(expectedCols).Join(),
+					actualCols.Join());
 
 				for (var i = 0; testRowcount && i < expected.Rows.Count; i++) {
 					var expectedRow = expected.Rows[i];
@@ -139,11 +140,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
 			CollectionAssert.AreEqual(expectedCols, actualCols,
-				"SUM FILE {0}: Columns differ:\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
+				"SUM FILE {0}: Columns differ:\nActual: {4}\nExpected: {1}\nMissing:{2},\nToo Much:{3}",
 				actualFile,
 				expectedCols.Join(),
 				expectedCols.Except(actualCols).Join(),
-				actualCols.Except(expectedCols).Join());
+				actualCols.Except(expectedCols).Join(),
+				actualCols.Join());
 
 			for (var i = 0; i < expected.Rows.Count; i++) {
 				var expectedRow = expected.Rows[i];

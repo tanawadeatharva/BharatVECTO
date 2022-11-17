@@ -8,6 +8,8 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -66,15 +68,17 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
-			Assert.AreEqual(-10171.0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-298.4752, pwrMap.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
-			Assert.AreEqual(-20430.186, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-20853.4819, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
         }
 
@@ -97,15 +101,17 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-401.07, fldMapLow.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMapLow.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwrLow = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwrLow = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;
+			// var pwrLow = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwrLow.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwrLow.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwrLow.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMapLow = ElectricMotorMapReader.Create(pwrLow, 1);
-			Assert.AreEqual(-10171.0, pwrMapLow.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-0, pwrMapLow.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-298.4752, pwrMapLow.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
-			Assert.AreEqual(-20430.186, pwrMapLow.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-20853.4819, pwrMapLow.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
 
 
@@ -120,15 +126,17 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-476.284, fldMapHi.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(486.284, fldMapHi.FullGenerationTorque(0.RPMtoRad()).Value());
 
-			var pwrHi = inputProvider.VoltageLevels.Last().EfficiencyMap;
+			var pwrHi = inputProvider.VoltageLevels.Last().PowerMap.First().PowerMap;
+			// var pwrHi = inputProvider.VoltageLevels.Last().EfficiencyMap;
 			Assert.AreEqual("0", pwrHi.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwrHi.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("8.86041", pwrHi.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwrHi, 1);
-			Assert.AreEqual(-9153.9, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-268.6277, pwrMap.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
-			Assert.AreEqual(-18387.16730, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-18768.1337, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 		}
 
 		[TestCase()]
@@ -138,9 +146,13 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				new JSONComponentInputData(@"TestData\Hybrids\ElectricMotor\GenericEMotorV3.vem", null,
 					false);
 			var daa = new EngineeringDataAdapter();
-			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null).First().Item2;
+			var emData = daa.CreateElectricMachines(inputProvider.ElectricMachines, null, null).First().Item2;
 
+
+			Assert.AreEqual(26, emData.DragCurveLookup(2000.RPMtoRad(), 0u).Value());
+			
 			var em = emData.EfficiencyData;
+			var gear = new GearshiftPosition(0);
 
 			Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
 			Assert.AreEqual(-396.076, em.FullLoadDriveTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
@@ -152,15 +164,17 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
 			Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
 
-			Assert.AreEqual(26, em.LookupDragTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(33, em.LookupDragTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(29.5, em.LookupDragTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(31.25, em.LookupDragTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
+            Assert.AreEqual(-101.70072, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(400.SI<Volt>(), 2000.RPMtoRad(), -101.70072.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
 
-			Assert.AreEqual(-101.760, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(-115.1818, em.EfficiencyMapLookupTorque(600.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(14.5383, em.EfficiencyMapLookupTorque(500.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
-            Assert.AreEqual(14.5383, em.EfficiencyMapLookupTorque(550.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>()).Value(), 1e-3);
+			Assert.AreEqual(-114.51788, em.EfficiencyMapLookupTorque(600.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(600.SI<Volt>(), 2000.RPMtoRad(), -114.51788.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
+
+			Assert.AreEqual(-107.772009, em.EfficiencyMapLookupTorque(500.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(500.SI<Volt>(), 2000.RPMtoRad(), -107.772009.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
+
+			Assert.AreEqual(-111.053784, em.EfficiencyMapLookupTorque(550.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
+			Assert.AreEqual(-25000, em.LookupElectricPower(550.SI<Volt>(), 2000.RPMtoRad(), -111.053784.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
 
 		}
 
@@ -185,15 +199,18 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-802.14, fldMap.FullLoadDriveTorque(50.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(802.14, fldMap.FullGenerationTorque(50.RPMtoRad()).Value(), 1e-3);
 
-            var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			Assert.AreEqual("0", pwr.Rows[0][ElectricMotorMapReader.Fields.MotorSpeed]);
 			Assert.AreEqual("-800", pwr.Rows[0][ElectricMotorMapReader.Fields.Torque]);
 			Assert.AreEqual("9.8449", pwr.Rows[0][ElectricMotorMapReader.Fields.PowerElectrical]);
 
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 2);
-			Assert.AreEqual(-5816.6, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(0, pwrMap.LookupElectricPower(-0.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+			Assert.AreEqual(-208.04255, pwrMap.LookupElectricPower(1.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
-			Assert.AreEqual(-16170.5166, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
+
+			Assert.AreEqual(-16412.2624, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 
         }
 
@@ -208,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.8, engineering.JobInputData.Vehicle.InitialSOC);
 
 			var bat = engineering.JobInputData.Vehicle.Components.ElectricStorage.ElectricStorageElements.First().REESSPack as IBatteryPackEngineeringInputData;
-			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve);
+			var ri = BatteryInternalResistanceReader.Create(bat.InternalResistanceCurve, false);
 			var imax = BatteryMaxCurrentReader.Create(bat.MaxCurrentMap);
 			
 			Assert.NotNull(bat);
@@ -236,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Hybrids\GenericVehicle_Group2_P2\Class2_RigidTruck_ParHyb_ENG.vecto");
 
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 
 			var sumContainer = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumContainer);
@@ -263,7 +280,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\BatteryElectric\GenericVehicleB4\BEV_ENG.vecto");
 
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
 
 			var sumContainer = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumContainer);

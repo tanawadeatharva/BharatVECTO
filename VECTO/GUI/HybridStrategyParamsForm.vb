@@ -1,10 +1,4 @@
-﻿
-
-Imports System.IO
-Imports TUGraz.VectoCommon.InputData
-Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.FileIO.JSON
-' Copyright 2017 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -14,50 +8,34 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.IO
+Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 ''' <summary>
-''' Engine Editor. Open and save .VENG files.
+''' HybridStrategyParams Editor. Open and save .VENG files.
 ''' </summary>
-''' <remarks></remarks>
 Public Class HybridStrategyParamsForm
+
     Private _strategyParamsFile As String = ""
-    Public AutoSendTo As Boolean = False
-    Public JobDir As String = ""
+
     Private _changed As Boolean = False
 
-    Private _contextMenuFiles As String()
+    Public Property AutoSendTo As Boolean = False
 
+    Public Property JobDir As String = ""
 
+    Public Property JobType As VectoSimulationJobType
 
-
-    'Before closing Editor: Check if file was changed and ask to save.
     Private Sub F_ENG_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
+        If e.CloseReason <> CloseReason.ApplicationExitCall AndAlso e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
         End If
     End Sub
 
-    'Initialise.
-    Private Sub EngineFormLoad(sender As Object, e As EventArgs) Handles Me.Load
-
-        ' initialize form on load - nothng to do right now
-
-        'pnInertia.Enabled = Not Cfg.DeclMode
-
-
-        _changed = False
-
-
+    Private Sub HybridStrategyParamsFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         NewHybStrategyParams()
-    End Sub
-
-    'Set generic values for Declaration mode.
-    Private Sub DeclInit()
-
-        If Not Cfg.DeclMode Then Exit Sub
-
-
-
     End Sub
 
 
@@ -68,11 +46,11 @@ Public Class HybridStrategyParamsForm
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If EngineFileBrowser.OpenDialog(_strategyParamsFile) Then
+        If HCUFileBrowser.OpenDialog(_strategyParamsFile) Then
             Try
-                OpenHybridStrategyParametersFile(EngineFileBrowser.Files(0))
+                OpenHybridStrategyParametersFile(HCUFileBrowser.Files(0))
             Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading HybridStrategyParams File")
             End Try
         End If
     End Sub
@@ -86,7 +64,6 @@ Public Class HybridStrategyParamsForm
     End Sub
 
     Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
-
         If ChangeCheckCancel() Then Exit Sub
 
         If _strategyParamsFile = "" Then
@@ -111,8 +88,7 @@ Public Class HybridStrategyParamsForm
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
         If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath,
-                          $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#engine-editor")}""")
+            Process.Start(defaultBrowserPath, $"""file://{Path.Combine(MyAppPath, "User Manual\help.html#hybrid-strategy-parameters-editor")}""")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -120,38 +96,72 @@ Public Class HybridStrategyParamsForm
 
 #End Region
 
-    'Create new empty Engine file.
     Private Sub NewHybStrategyParams()
-
         If ChangeCheckCancel() Then Exit Sub
+        UpdateForm(JobType)
+        _changed = False
+    End Sub
 
-
-        tbEquivalenceFactorDischarge.Text = ""
-        tbMinSoC.Text = ""
-        tbMaxSoC.Text = ""
-        tbTargetSoC.Text = ""
-        tbauxBufferTime.Text = ""
-        tbAuxBufferChargeTime.Text = ""
-
-        DeclInit()
-
+    Private Sub UpdateForm(vectoSimulationJobType As VectoSimulationJobType)
         _strategyParamsFile = ""
         Text = "Hybrid Strategy Parameters Editor"
         LbStatus.Text = ""
 
-        _changed = False
+        tbEquivalenceFactorDischarge.ResetText()
+        tbEquivalenceFactorCharge.ResetText()
+        tbMinSoC.ResetText()
+        tbMaxSoC.ResetText()
+        tbTargetSoC.ResetText()
+        tbMinICEOnTime.ResetText()
+        tbauxBufferTime.ResetText()
+        tbAuxBufferChargeTime.ResetText()
+        tbICEStartPenaltyFactor.ResetText()
+        tbCostFactorSoCExponent.ResetText()
+        tbGensetMinOptPowerFactor.ResetText()
+
+        Select Case vectoSimulationJobType
+            Case VectoSimulationJobType.ParallelHybridVehicle
+                pnEquivFactor.Enabled = True
+                pnEquivFactorCharge.Enabled = True
+                pnMinSoC.Enabled = True
+                pnMaxSoC.Enabled = True
+                pnTargetSoC.Enabled = True
+                pnICEOnTime.Enabled = True
+                pnAuxBufferTime.Enabled = True
+                pnAuxBufferChgTime.Enabled = True
+                pnICEStartPenaltyFactor.Enabled = True
+                pnCostFactorSoCExponent.Enabled = True
+                pnGenset.Enabled = False
+            Case VectoSimulationJobType.SerialHybridVehicle
+            case VectoSimulationJobType.IEPC_S
+                pnEquivFactor.Enabled = False
+                pnEquivFactorCharge.Enabled = False
+                pnMinSoC.Enabled = True
+                pnMaxSoC.Enabled = False
+                pnTargetSoC.Enabled = True
+                pnICEOnTime.Enabled = False
+                pnAuxBufferTime.Enabled = False
+                pnAuxBufferChgTime.Enabled = False
+                pnICEStartPenaltyFactor.Enabled = False
+                pnCostFactorSoCExponent.Enabled = False
+                pnGenset.Enabled = False
+            Case Else
+                pnEquivFactor.Enabled = True
+                pnEquivFactorCharge.Enabled = True
+                pnMinSoC.Enabled = True
+                pnMaxSoC.Enabled = True
+                pnTargetSoC.Enabled = True
+                pnICEOnTime.Enabled = True
+                pnAuxBufferTime.Enabled = True
+                pnAuxBufferChgTime.Enabled = True
+                pnICEStartPenaltyFactor.Enabled = True
+                pnCostFactorSoCExponent.Enabled = True
+                pnGenset.Enabled = True
+        End Select
     End Sub
 
-    'Open VENG file
     Public Sub OpenHybridStrategyParametersFile(file As String)
-        Dim strategyParams As IHybridStrategyParameters
-
         If ChangeCheckCancel() Then Exit Sub
-
-        Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
-                                                                IEngineeringInputDataProvider)
-
-        strategyParams = inputData.JobInputData.HybridStrategyParameters
 
         If Cfg.DeclMode Then
             Select Case WrongMode()
@@ -164,34 +174,58 @@ Public Class HybridStrategyParamsForm
             End Select
         End If
 
-        Dim basePath As String = Path.GetDirectoryName(file)
+        UpdateForm(JobType)
+        Dim inputData = TryCast(JSONInputDataFactory.ReadComponentData(file), IEngineeringInputDataProvider)
+        Dim strategyParams As IHybridStrategyParameters = inputData.JobInputData.HybridStrategyParameters
 
-        tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
+        Select Case JobType
+            Case VectoSimulationJobType.ParallelHybridVehicle
+                tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
+                tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
+                tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
+                tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
+                tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
 
-        tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
-        tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
-        tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
-        tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
+                tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
+                tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
+                tbAuxBufferChargeTime.Text = strategyParams.AuxBufferChargeTime.ToGUIFormat()
 
-        tbAuxBufferChargeTime.Text = strategyParams.AuxBufferChargeTime.ToGUIFormat()
-        tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
-        tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
+                tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
+                tbCostFactorSoCExponent.Text = If(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
 
-        tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
-        tbCostFactorSoCExponent.Text = if(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
-        DeclInit()
+            Case VectoSimulationJobType.SerialHybridVehicle
+            Case VectoSimulationJobType.IEPC_S
+                tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
+                tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
+
+            Case Else
+                tbEquivalenceFactorDischarge.Text = strategyParams.EquivalenceFactorDischarge.ToGUIFormat()
+                tbEquivalenceFactorCharge.Text = strategyParams.EquivalenceFactorCharge.ToGUIFormat()
+                tbMinSoC.Text = (strategyParams.MinSoC * 100).ToGUIFormat()
+                tbMaxSoC.Text = (strategyParams.MaxSoC * 100).ToGUIFormat()
+                tbTargetSoC.Text = (strategyParams.TargetSoC * 100).ToGUIFormat()
+
+                tbMinICEOnTime.Text = strategyParams.MinimumICEOnTime.ToGUIFormat()
+                tbauxBufferTime.Text = strategyParams.AuxBufferTime.ToGUIFormat()
+                tbAuxBufferChargeTime.Text = strategyParams.AuxBufferChargeTime.ToGUIFormat()
+
+                tbICEStartPenaltyFactor.Text = strategyParams.ICEStartPenaltyFactor.ToGUIFormat()
+                tbCostFactorSoCExponent.Text = If(Double.IsNaN(strategyParams.CostFactorSOCExpponent), 5, strategyParams.CostFactorSOCExpponent).ToGUIFormat()
+                tbGensetMinOptPowerFactor.Text = If(Double.IsNaN(strategyParams.GensetMinOptPowerFactor), "", strategyParams.GensetMinOptPowerFactor.ToGUIFormat())
+        End Select
 
         REESSFileBrowser.UpdateHistory(file)
         Text = GetFilenameWithoutPath(file, True)
         LbStatus.Text = ""
         _strategyParamsFile = file
+
         Activate()
 
         _changed = False
     End Sub
 
     'Save or Save As function = true if file is saved
-    Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
+    Private Function SaveOrSaveAs(saveAs As Boolean) As Boolean
         If _strategyParamsFile = "" Or saveAs Then
             If HCUFileBrowser.SaveDialog(_strategyParamsFile) Then
                 _strategyParamsFile = HCUFileBrowser.Files(0)
@@ -202,25 +236,22 @@ Public Class HybridStrategyParamsForm
         Return SaveParamsToFile(_strategyParamsFile)
     End Function
 
-    'Save VENG file to given filepath. Called by SaveOrSaveAs. 
-    Private Function SaveParamsToFile(ByVal file As String) As Boolean
-
-        Dim strategyParams As HybridStrategyParams = New HybridStrategyParams
-        strategyParams.FilePath = file
-
-
-        strategyParams.EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(0)
-        strategyParams.EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(0)
-
-        strategyParams.MinSoC = tbMinSoC.Text.ToDouble(0) / 100
-        strategyParams.MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100
-        strategyParams.TargetSoC = tbTargetSoC.Text.ToDouble(0) / 100
-
-        strategyParams.MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0)
-        strategyParams.AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0)
-        strategyParams.AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0)
-        strategyParams.ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble()
-        strategyParams.CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(5)
+    'Save VENG file to given filepath.
+    Private Function SaveParamsToFile(file As String) As Boolean
+        Dim strategyParams = New HybridStrategyParams With {
+                .FilePath = file,
+                .EquivalenceFactorDischarge = tbEquivalenceFactorDischarge.Text.ToDouble(0),
+                .EquivalenceFactorCharge = tbEquivalenceFactorCharge.Text.ToDouble(0),
+                .MinSoC = tbMinSoC.Text.ToDouble(0) / 100,
+                .MaxSoC = tbMaxSoC.Text.ToDouble(0) / 100,
+                .TargetSoC = tbTargetSoC.Text.ToDouble(0) / 100,
+                .MinimumIceOnTime = tbMinICEOnTime.Text.ToDouble(0),
+                .AuxiliaryBufferTime = tbauxBufferTime.Text.ToDouble(0),
+                .AuxiliaryBufferChgTime = tbAuxBufferChargeTime.Text.ToDouble(0),
+                .ICEStartPenaltyFactor = tbICEStartPenaltyFactor.Text.ToDouble(0),
+                .CostFactorSOCExpponent = tbCostFactorSoCExponent.Text.ToDouble(0),
+                .GensetMinOptPowerFactor = tbGensetMinOptPowerFactor.Text.ToDouble(0)
+                }
 
         If Not strategyParams.SaveFile Then
             MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
@@ -244,130 +275,43 @@ Public Class HybridStrategyParamsForm
         Return True
     End Function
 
-
-#Region "Track changes"
-
-    'Flags current file as modified.
-    Private Sub Change()
-        If Not _changed Then
-            LbStatus.Text = "Unsaved changes in current file"
-            _changed = True
-        End If
-    End Sub
-
-    ' "Save changes ?" .... Returns True if User aborts
     Private Function ChangeCheckCancel() As Boolean
-
         If _changed Then
             Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
                 Case MsgBoxResult.Yes
                     Return Not SaveOrSaveAs(False)
                 Case MsgBoxResult.Cancel
                     Return True
-                Case Else 'MsgBoxResult.No
+                Case Else
                     _changed = False
                     Return False
             End Select
-
         Else
-
             Return False
-
         End If
     End Function
 
-
-
-
-
-
-#End Region
-
-
-
-    'Save and close
     Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
         If SaveOrSaveAs(False) Then Close()
     End Sub
 
-    'Close without saving (see FormClosing Event)
     Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
         Close()
     End Sub
 
+    Private Sub tbMinSoC_TextChanged(sender As Object, e As EventArgs) Handles tbEquivalenceFactorDischarge.TextChanged,
+                                                                               tbEquivalenceFactorCharge.TextChanged,
+                                                                               tbMinSoC.TextChanged,
+                                                                               tbMaxSoC.TextChanged,
+                                                                               tbTargetSoC.TextChanged,
+                                                                               tbMinICEOnTime.TextChanged,
+                                                                               tbauxBufferTime.TextChanged,
+                                                                               tbAuxBufferChargeTime.TextChanged,
+                                                                               tbICEStartPenaltyFactor.TextChanged,
+                                                                               tbCostFactorSoCExponent.TextChanged,
+                                                                               tbGensetMinOptPowerFactor.TextChanged
 
-#Region "Open File Context Menu"
-
-
-    Private Sub OpenFiles(ParamArray files() As String)
-
-        If files.Length = 0 Then Exit Sub
-
-        _contextMenuFiles = files
-
-        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
-
-        CmOpenFile.Show(Windows.Forms.Cursor.Position)
+        LbStatus.Text = "Unsaved changes in current file"
+        _changed = True
     End Sub
-
-    Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles OpenWithToolStripMenuItem.Click
-        If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
-    End Sub
-
-    Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles ShowInFolderToolStripMenuItem.Click
-        If File.Exists(_contextMenuFiles(0)) Then
-            Try
-                Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
-            Catch ex As Exception
-                MsgBox("Failed to open file!")
-            End Try
-        Else
-            MsgBox("File not found!")
-        End If
-    End Sub
-
-    Private Sub tbMinSoC_TextChanged(sender As Object, e As EventArgs) Handles tbMinSoC.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbMaxSoC_TextChanged(sender As Object, e As EventArgs) Handles tbMaxSoC.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbTargetSoC_TextChanged(sender As Object, e As EventArgs) Handles tbTargetSoC.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbauxBufferTime_TextChanged(sender As Object, e As EventArgs) Handles tbauxBufferTime.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbAuxBufferChargeTime_TextChanged(sender As Object, e As EventArgs) Handles tbAuxBufferChargeTime.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbEquivalenceFactor_TextChanged(sender As Object, e As EventArgs) Handles tbEquivalenceFactorDischarge.TextChanged
-        Change()
-    End Sub
-
-    Private Sub Panel4_Paint(sender As Object, e As PaintEventArgs) Handles pnCostFactorSoCExponent.Paint
-
-    End Sub
-
-    Private Sub tbICEStartPenaltyFactor_TextChanged(sender As Object, e As EventArgs) Handles tbICEStartPenaltyFactor.TextChanged
-        Change()
-    End Sub
-
-    Private Sub tbCostFactorSoCExponent_TextChanged(sender As Object, e As EventArgs) Handles tbCostFactorSoCExponent.TextChanged
-        Change()
-    End Sub
-
-#End Region
-
-
-
-
-
 End Class

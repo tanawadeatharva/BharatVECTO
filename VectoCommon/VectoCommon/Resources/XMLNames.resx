@@ -210,6 +210,12 @@
   <data name="Component_Transmission" xml:space="preserve">
     <value>Transmission</value>
   </data>
+  <data name="Component_ElectricMachine" xml:space="preserve">
+    <value>ElectricMachine</value>
+  </data>
+  <data name="Component_ElectricMachineGEN" xml:space="preserve">
+    <value>ElectricMachineGEN</value>
+  </data>
   <data name="Gearbox_TransmissionType" xml:space="preserve">
     <value>TransmissionType</value>
   </data>
@@ -1014,6 +1020,9 @@
   <data name="Report_ResultData_Signature" xml:space="preserve">
     <value>ResultDataSignature</value>
   </data>
+  <data name="Report_ManufacturerRecord_Signature" xml:space="preserve">
+    <value>ManufacturerRecordSignature</value>
+  </data>
   <data name="Report_Result_Payload" xml:space="preserve">
     <value>Payload</value>
   </data>
@@ -1143,8 +1152,8 @@
   <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
     <value>Electrical</value>
   </data>
-  <data name="ManufacturerAddressPrimaryVehicle" xml:space="preserve">
-    <value>ManufacturerAddressPrimaryVehicle</value>
+  <data name="ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
   </data>
   <data name="Engine_WHRCorrectionFactors_Mechanical" xml:space="preserve">
     <value>Mechanical</value>
@@ -1245,7 +1254,7 @@
   <data name="Bus_LowEntry" xml:space="preserve">
     <value>LowEntry</value>
   </data>
-  <data name="Bus_HeighIntegratedBody" xml:space="preserve">
+  <data name="Bus_HeightIntegratedBody" xml:space="preserve">
     <value>HeightIntegratedBody</value>
   </data>
   <data name="Bus_VehicleLength" xml:space="preserve">
@@ -1377,16 +1386,13 @@
   <data name="Report_Result_PassengerCount" xml:space="preserve">
     <value>PassengerCount</value>
   </data>
-  <data name="Bus_LegislativeCategory" xml:space="preserve">
+  <data name="Vehicle_LegislativeCategory" xml:space="preserve">
     <value>LegislativeCategory</value>
   </data>
-  <data name="Bus_ADAS_APTEcoRollReleaseLockupClutch" xml:space="preserve">
-    <value>APTEcoRollReleaseLockupClutch</value>
+  <data name="Bus_AirdragModifiedMultistep" xml:space="preserve">
+    <value>AirdragModifiedMultistep</value>
   </data>
-  <data name="Bus_AirdragModifiedMultistage" xml:space="preserve">
-    <value>AirdragModifiedMultistage</value>
-  </data>
-  <data name="Bus_CorrectedActualMass" xml:space="preserve">
+  <data name="CorrectedActualMass" xml:space="preserve">
     <value>CorrectedActualMass</value>
   </data>
   <data name="Bus_NumberPassengersLowerDeck" xml:space="preserve">
@@ -1416,17 +1422,17 @@
   <data name="Bus_WaterElectricHeater" xml:space="preserve">
     <value>WaterElectricHeater</value>
   </data>
-  <data name="VectoOutputMultistage" xml:space="preserve">
-    <value>VectoOutputMultistage</value>
+  <data name="VectoOutputMultistep" xml:space="preserve">
+    <value>VectoOutputMultistep</value>
   </data>
   <data name="Bus_PrimaryVehicle" xml:space="preserve">
     <value>PrimaryVehicle</value>
   </data>
-  <data name="ManufacturingStage" xml:space="preserve">
-    <value>ManufacturingStage</value>
+  <data name="ManufacturingStep" xml:space="preserve">
+    <value>ManufacturingStep</value>
   </data>
-  <data name="ManufacturingStage_StageCount" xml:space="preserve">
-    <value>stageCount</value>
+  <data name="ManufacturingStep_StepCount" xml:space="preserve">
+    <value>stepCount</value>
   </data>
   <data name="Bus_DeclarationType" xml:space="preserve">
     <value>DeclarationType</value>
@@ -1512,7 +1518,7 @@
   <data name="CompressorDrive" xml:space="preserve">
     <value>CompressorDrive</value>
   </data>
-  <data name="Bus_ChassisConfiguration" xml:space="preserve">
+  <data name="ChassisConfiguration" xml:space="preserve">
     <value>ChassisConfiguration</value>
   </data>
   <data name="Bus_NumberPassengerSeatsLowerDeck" xml:space="preserve">
@@ -1572,7 +1578,421 @@
   <data name="BusAux_Technology" xml:space="preserve">
     <value>Technology</value>
   </data>
-<data name="Report_CO2StandardsGroup" xml:space="preserve">
-	<value>CO2StandardsGroup</value>
+  <data name="BusHVACHeatPumpCooling" xml:space="preserve">
+    <value>Cooling</value>
+  </data>
+  <data name="BusHVACHeatPumpHeating" xml:space="preserve">
+    <value>Heating</value>
+  </data>
+  <data name="Exempted_SumNetPower" xml:space="preserve">
+    <value>SumNetPower</value>
+  </data>
+  <data name="Exempted_Technology" xml:space="preserve">
+    <value>Technology</value>
+  </data>
+  <data name="VehicleTypeApprovalNumber" xml:space="preserve">
+    <value>VehicleTypeApprovalNumber</value>
+  </data>
+  <data name="BusManufacturingStepDataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
+  </data>
+  <data name="ManufacturingStep_HashPreviousStep" xml:space="preserve">
+    <value>HashPreviousStep</value>
+  </data>
+  <data name="ManufacturingStep_stepCount_Attr" xml:space="preserve">
+    <value>stepCount</value>
+  </data>
+  <data name="ManufacturingStep_Bus_DataType" xml:space="preserve">
+    <value>BusManufacturingStepDataType</value>
+  </data>
+  <data name="Report_CO2StandardsGroup" xml:space="preserve">
+    <value>CO2StandardsGroup</value>
+  </data>
+  <data name="ElectricMachine_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="ElectricMachine_P2.5GearRatios" xml:space="preserve">
+    <value>P2.5GearRatios</value>
+  </data>
+  <data name="ElectricMachine_PowertrainPosition" xml:space="preserve">
+    <value>PowertrainPosition</value>
+  </data>
+  <data name="ElectricMachine_ContinuousTorque" xml:space="preserve">
+    <value>ContinuousTorque</value>
+  </data>
+  <data name="ElectricMachine_DcDcConverterIncluded" xml:space="preserve">
+    <value>DcDcConverterIncluded</value>
+  </data>
+  <data name="ElectricMachine_ElectricMachineType" xml:space="preserve">
+    <value>ElectricMachineType</value>
+  </data>
+  <data name="ElectricMachine_IHPCType" xml:space="preserve">
+    <value>IHPCType</value>
+  </data>
+  <data name="ElectricMachine_OverloadDuration" xml:space="preserve">
+    <value>OverloadDuration</value>
+  </data>
+  <data name="ElectricMachine_OverloadTorque" xml:space="preserve">
+    <value>OverloadTorque</value>
+  </data>
+  <data name="ElectricMachine_R85RatedPower" xml:space="preserve">
+    <value>R85RatedPower</value>
+  </data>
+  <data name="ElectricMachine_RotationalInertia" xml:space="preserve">
+    <value>RotationalInertia</value>
+  </data>
+  <data name="ElectricMachine_TestSpeedContinuousTorque" xml:space="preserve">
+    <value>TestSpeedContinuousTorque</value>
+  </data>
+  <data name="ElectricMachine_TestSpeedOverloadTorque" xml:space="preserve">
+    <value>TestSpeedOverloadTorque</value>
+  </data>
+  <data name="ElectricMachine_TestVoltageOverload" xml:space="preserve">
+    <value>TestVoltageOverload</value>
+  </data>
+  <data name="GearRatio_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="VoltageLevel_Voltage" xml:space="preserve">
+    <value>Voltage</value>
+  </data>
+  <data name="ElectricMachineSystem" xml:space="preserve">
+    <value>ElectricMachineSystem</value>
+  </data>
+  <data name="Component_ElectricEnergyStorage" xml:space="preserve">
+    <value>ElectricEnergyStorage</value>
+  </data>
+  <data name="ElectricEnergyStorage_Battery" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="ElectricEnergyStorage_Capacitor" xml:space="preserve">
+    <value>Capacitor</value>
+  </data>
+  <data name="Battery_SOCmax" xml:space="preserve">
+    <value>SOCmax</value>
+  </data>
+  <data name="Battery_SOCmin" xml:space="preserve">
+    <value>SOCmin</value>
+  </data>
+  <data name="Battery_StringID" xml:space="preserve">
+    <value>StringID</value>
+  </data>
+  <data name="REESS_BatteryType" xml:space="preserve">
+    <value>BatteryType</value>
+  </data>
+  <data name="REESS_ConnectorsSubsystemsIncluded" xml:space="preserve">
+    <value>ConnectorsSubsystemsIncluded</value>
+  </data>
+  <data name="REESS_CurrentLimits" xml:space="preserve">
+    <value>CurrentLimits</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve" xml:space="preserve">
+    <value>InternalResistance</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R10" xml:space="preserve">
+    <value>R_10</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R120" xml:space="preserve">
+    <value>R_120</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R2" xml:space="preserve">
+    <value>R_2</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_R20" xml:space="preserve">
+    <value>R_20</value>
+  </data>
+  <data name="REESS_InternalResistanceCurve_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
+  <data name="REESS_JunctionboxIncluded" xml:space="preserve">
+    <value>JunctionboxIncluded</value>
+  </data>
+  <data name="REESS_MapEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="REESS_OCV" xml:space="preserve">
+    <value>OCV</value>
+  </data>
+  <data name="REESS_OCV_OCV" xml:space="preserve">
+    <value>OCV</value>
+  </data>
+  <data name="REESS_OCV_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
+  <data name="REESS_RatedCapacity" xml:space="preserve">
+    <value>RatedCapacity</value>
+  </data>
+  <data name="REESS_TestingTemperature" xml:space="preserve">
+    <value>TestingTemperature</value>
+  </data>
+  <data name="BoostingLimitation_BoostingTorque" xml:space="preserve">
+    <value>boostingTorque</value>
+  </data>
+  <data name="BoostingLimitation_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="BoostingLimitation_RotationalSpeed" xml:space="preserve">
+    <value>rotationalSpeed</value>
+  </data>
+  <data name="DragCurve" xml:space="preserve">
+    <value>DragCurve</value>
+  </data>
+  <data name="DragCurve_DragTorque" xml:space="preserve">
+    <value>dragTorque</value>
+  </data>
+  <data name="DragCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="DragCurve_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="ElectricMachine_Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="ElectricMachine_VoltageLevel" xml:space="preserve">
+    <value>VoltageLevel</value>
+  </data>
+  <data name="ElectricMotorTorqueLimits" xml:space="preserve">
+    <value>ElectricMotorTorqueLimits</value>
+  </data>
+  <data name="ElectricMotorTorqueLimit_ElectricMachine" xml:space="preserve">
+    <value>ElectricMachine</value>
+  </data>
+  <data name="MaxTorqueCurve" xml:space="preserve">
+    <value>MaxTorqueCurve</value>
+  </data>
+  <data name="MaxTorqueCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="MaxTorqueCurve_MaxTorque" xml:space="preserve">
+    <value>maxTorque</value>
+  </data>
+  <data name="MaxTorqueCurve_MinTorque" xml:space="preserve">
+    <value>minTorque</value>
+  </data>
+  <data name="MaxTorqueCurve_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="PowerMap" xml:space="preserve">
+    <value>PowerMap</value>
+  </data>
+  <data name="PowerMap_ElectricPower" xml:space="preserve">
+    <value>electricPower</value>
+  </data>
+  <data name="PowerMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="PowerMap_OutShaftSpeed" xml:space="preserve">
+    <value>outShaftSpeed</value>
+  </data>
+  <data name="PowerMap_Torque" xml:space="preserve">
+    <value>torque</value>
+  </data>
+  <data name="REESS_CurrentLimits_MaxChargingCurrent" xml:space="preserve">
+    <value>maxChargingCurrent</value>
+  </data>
+  <data name="REESS_CurrentLimits_MaxDischargingCurrent" xml:space="preserve">
+    <value>maxDischargingCurrent</value>
+  </data>
+  <data name="REESS_CurrentLimits_SoC" xml:space="preserve">
+    <value>SoC</value>
+  </data>
+  <data name="Vehicle_BoostingLimitation" xml:space="preserve">
+    <value>BoostingLimitations</value>
+  </data>
+  <data name="Capacitor_Capacitance" xml:space="preserve">
+    <value>Capacitance</value>
+  </data>
+  <data name="Capacitor_InternalResistance" xml:space="preserve">
+    <value>InternalResistance</value>
+  </data>
+  <data name="Capacitor_MaxChargingCurrent" xml:space="preserve">
+    <value>MaxChargingCurrent</value>
+  </data>
+  <data name="Capacitor_MaxDischargingCurrent" xml:space="preserve">
+    <value>MaxDischargingCurrent</value>
+  </data>
+  <data name="Capacitor_MaxVoltage" xml:space="preserve">
+    <value>MaxVoltage</value>
+  </data>
+  <data name="Capacitor_MinVoltage" xml:space="preserve">
+    <value>MinVoltage</value>
+  </data>
+  <data name="ADC_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="ADC_TorqueLossMap" xml:space="preserve">
+    <value>TorqueLossMap</value>
+  </data>
+  <data name="ADC_TorqueLossMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="ADC_TorqueLossMap_InputSpeed" xml:space="preserve">
+    <value>inputSpeed</value>
+  </data>
+  <data name="ADC_TorqueLossMap_InputTorque" xml:space="preserve">
+    <value>inputTorque</value>
+  </data>
+  <data name="ADC_TorqueLossMap_TorqueLoss" xml:space="preserve">
+    <value>torqueLoss</value>
+  </data>
+  <data name="Gear_EntryName" xml:space="preserve">
+    <value>Gear</value>
+  </data>
+  <data name="Gear_GearNumber_Attr" xml:space="preserve">
+    <value>number</value>
+  </data>
+  <data name="Gear_MaxOutputShaftSpeed" xml:space="preserve">
+    <value>MaxOutShaftSpeed</value>
+  </data>
+  <data name="Gear_MaxOutputShaftTorque" xml:space="preserve">
+    <value>MaxOutShaftTorque</value>
+  </data>
+  <data name="Gear_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="IEPC_Component" xml:space="preserve">
+    <value>IEPC</value>
+  </data>
+  <data name="IEPC_DesignTypeWheelMotor" xml:space="preserve">
+    <value>DesignTypeWheelMotor</value>
+  </data>
+  <data name="IEPC_DifferentialIncluded" xml:space="preserve">
+    <value>DifferentialIncluded</value>
+  </data>
+  <data name="IEPC_NrOfDesignTypeWheelMotorMeasured" xml:space="preserve">
+    <value>NrOfDesignTypeWheelMotorMeasured</value>
+  </data>
+  <data name="Vehicle_TypeApprovalNumber" xml:space="preserve">
+    <value>VehicleTypeApprovalNumber</value>
+  </data>
+  <data name="Vehicle_ArchitectureID" xml:space="preserve">
+    <value>ArchitectureID</value>
+  </data>
+  <data name="Vehicle_MaxChargingPower" xml:space="preserve">
+    <value>MaxChargingPower</value>
+  </data>
+  <data name="Vehicle_OvcHev" xml:space="preserve">
+    <value>OvcHev</value>
+  </data>
+  <data name="Conditioning" xml:space="preserve">
+    <value>Conditioning</value>
+  </data>
+  <data name="Conditioning_CoolantTempInlet" xml:space="preserve">
+    <value>coolantTempInlet</value>
+  </data>
+  <data name="Conditioning_CoolingPower" xml:space="preserve">
+    <value>coolingPower</value>
+  </data>
+  <data name="Conditioning_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="PowerMap_Gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="DragCurve_Gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="Component_ADC" xml:space="preserve">
+    <value>ADC</value>
+  </data>
+  <data name="Component_BatterySystem" xml:space="preserve">
+    <value>BatterySystem</value>
+  </data>
+  <data name="Component_CapacitorSystem" xml:space="preserve">
+    <value>CapacitorSystem</value>
+  </data>
+  <data name="Component_ElectricMachineSystem" xml:space="preserve">
+    <value>ElectricMachineSystem</value>
+  </data>
+  <data name="Component_IEPC" xml:space="preserve">
+    <value>IEPC</value>
+  </data>
+  <data name="Component_CertifiedAeroReduction" xml:space="preserve">
+    <value>CertifiedAeroReduction</value>
+  </data>
+  <data name="REESS" xml:space="preserve">
+    <value>ElectricEnergyStorage</value>
+  </data>
+<data name="MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType" xml:space="preserve">
+	<value>ConventionalLorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType" xml:space="preserve">
+	<value>ConventionalPrimaryBusManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_ConventionalLorryOutputType" xml:space="preserve">
+	<value>ConventionalLorryOutputType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-Px_IHPCLorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S2_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S2_LorryOutputType" xml:space="preserve">
+	<value>HEV_S2_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S3_LorryOutputType" xml:space="preserve">
+	<value>HEV_S3_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_S4_LorryOutputType" xml:space="preserve">
+	<value>HEV_S4_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_IEPC_S_LorryOutputType" xml:space="preserve">
+	<value>HEV_IEPC_S_LorryOutputType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S3_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-S4_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>HEV-IEPC-S_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_HEV_Px_LorryOutputType" xml:space="preserve">
+	<value>HEV_Px_LorryOutputType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E2_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E3_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-E4_LorryManufacturerOutputDataType</value>
+</data>
+<data name="MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType" xml:space="preserve">
+	<value>PEV-IEPC_LorryManufacturerOutputDataType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E2_LorryOutputType" xml:space="preserve">
+	<value>PEV_E2_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E3_LorryOutputType" xml:space="preserve">
+	<value>PEV_E3_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_E4_LorryOutputType" xml:space="preserve">
+	<value>PEV_E4_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_PEV_IEPC_LorryOutputType" xml:space="preserve">
+	<value>PEV_IEPC_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_Exempted_LorryOutputType" xml:space="preserve">
+	<value>Exempted_LorryOutputType</value>
+</data>
+<data name="CIF_OutputDataType_Exempted_CompletedBusOutputType" xml:space="preserve">
+	<value>Exempted_CompletedBusOutputType</value>
+</data>
+<data name="BusAux_Clutch" xml:space="preserve">
+	<value>Clutch</value>
+</data>
+<data name="ElectricMachine_P2_5GearRatios_Gear_Attr" xml:space="preserve">
+	<value>gear</value>
+</data>
+<data name="XSIType" xml:space="preserve">
+	<value>type</value>
+</data>
+<data name="Report_Results_PrimaryVehicleSubgroup" xml:space="preserve">
+	<value>PrimaryVehicleSubgroup</value>
 </data>
 </root>

@@ -9,9 +9,44 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 {
+
+	public class EfficiencyMapNew : EfficiencyMap
+	{
+		
+		protected internal EfficiencyMapNew(DelaunayMap efficiencyMapMech2El) : base(efficiencyMapMech2El) { }
+
+		public override EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
+		{
+			var result = new EfficiencyResult();
+			result.Torque = torque;
+			result.Speed = angularSpeed;
+			var value = _efficiencyMapMech2El.Interpolate(torque, angularSpeed);
+			if (!value.IsNaN()) {
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed) + angularSpeed * torque;
+				return result;
+			}
+			if (allowExtrapolation) {
+				value = _efficiencyMapMech2El.Extrapolate(torque, angularSpeed);
+				result.ElectricalPower = value.SI<NewtonMeter>() * (angularSpeed) + angularSpeed * torque;
+				result.Extrapolated = true;
+				return result;
+			}
+			return result;
+		}
+
+		public double GetDelaunayZValue(Entry entry)
+		{
+			if (entry.MotorSpeed.IsEqual(0)) {
+				throw new VectoException("Electric motor speed has to be greater than 0");
+			}
+			return - ((entry.PowerElectrical - entry.MotorSpeed * entry.Torque) /
+						(entry.MotorSpeed)).Value();
+		}
+	}
+
 	public class EfficiencyMap : LoggingObject
 	{
-		private readonly DelaunayMap _efficiencyMapMech2El;
+		protected readonly DelaunayMap _efficiencyMapMech2El;
 		private PerSecond _maxSpeed;
 
 		protected internal EfficiencyMap(DelaunayMap efficiencyMapMech2El)
@@ -20,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 		}
 
 
-		public EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
+		public virtual EfficiencyResult LookupElectricPower(PerSecond angularSpeed, NewtonMeter torque, bool allowExtrapolation = false)
 		{
 			var result = new EfficiencyResult();
 			result.Torque = torque;
@@ -38,34 +73,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 				return result;
 			}
 			return result;
-		}
-
-		public EfficiencyResult SearchMechanicalPower(Watt electricPower, PerSecond angularSpeed,
-			bool allowExtrapolation = false)
-		{
-			if (electricPower.IsEqual(0))
-			{
-				return new EfficiencyResult
-				{
-					ElectricalPower = electricPower,
-					Speed = angularSpeed,
-					Torque = 0.SI<NewtonMeter>()
-				};
-			}
-			var torque = electricPower / angularSpeed;
-			var response = LookupElectricPower(angularSpeed, torque, true);
-			var delta = response.ElectricalPower - electricPower;
-			torque = SearchAlgorithm.Search(torque, delta, torque * 0.1,
-				getYValue: result => ((EfficiencyResult)result).ElectricalPower - electricPower,
-				evaluateFunction: x => LookupElectricPower(angularSpeed, x, true),
-				criterion: result => (((EfficiencyResult)result).ElectricalPower - electricPower).Value());
-
-			return new EfficiencyResult
-			{
-				ElectricalPower = electricPower,
-				Speed = angularSpeed,
-				Torque = torque
-			};
 		}
 
 		public string[] SerializedEntries
@@ -104,6 +111,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			public readonly PerSecond MotorSpeed;
 			public readonly NewtonMeter Torque;
 			public readonly Watt PowerElectrical;
+
+			public override string ToString()
+			{
+				return $"{MotorSpeed.AsRPM} / {Torque} / {PowerElectrical}";
+			}
 		}
 
 		public class EfficiencyResult
@@ -133,38 +145,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 				return null;
 			}
 
-			if (avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
+			if (avgSpeed.IsEqual(0.RPMtoRad()) || avgSpeed.IsGreaterOrEqual(MaxSpeed)) {
 				return 0.SI<NewtonMeter>();
 			}
 
 			try {
-				var retVal = SearchAlgorithm.Search(
-					maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
-					-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
-					getYValue: x => {
-						var myX = (EfficiencyResult)x;
-						return myX.ElectricalPower - batPower;
-					},
-					evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
-					criterion: x => {
-						var myX = (EfficiencyResult)x;
-						return (myX.ElectricalPower - batPower).Value();
-					});
+				var retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM);
 				var tmp = LookupElectricPower(avgSpeed, retVal, true);
-				if ((tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
+				if (VectoMath.Abs(tmp.ElectricalPower - batPower).IsGreater(Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					// searched operating point is not accurate enough...
-					retVal = SearchAlgorithm.Search(
-						maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
-						-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
-						getYValue: x => {
-							var myX = (EfficiencyResult)x;
-							return (myX.ElectricalPower - batPower) * 1e3;
-						},
-						evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
-						criterion: x => {
-							var myX = (EfficiencyResult)x;
-							return (myX.ElectricalPower - batPower).Value() * 1e3;
-						});
+					retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3);
+				}
+
+				if (maxEmTorque < 0) {
+					// propelling
+					if (retVal.IsSmaller(maxEmTorque)) {
+						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+					}
+				} else {
+					// recuperating
+					if (retVal.IsGreater(maxEmTorque)) {
+						retVal = SearchTorqueForElectricPower(batPower, avgSpeed, maxEmTorque, elPowerMaxEM, 1e3, true);
+					}
 				}
 				return retVal;
 			} catch (VectoSearchFailedException vsfe) {
@@ -172,6 +174,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor
 			}
 
 			return null;
+		}
+
+		private NewtonMeter SearchTorqueForElectricPower(Watt batPower, PerSecond avgSpeed, NewtonMeter maxEmTorque,
+			EfficiencyResult elPowerMaxEM, double factor = 1.0, bool forceLinesearch = false)
+		{
+			var retVal = SearchAlgorithm.Search(
+				maxEmTorque, elPowerMaxEM.ElectricalPower - batPower,
+				-maxEmTorque * 0.1 * (maxEmTorque > 0 ? -1 : 1),
+				getYValue: x => {
+					var myX = (EfficiencyResult)x;
+					return (myX.ElectricalPower - batPower) * factor;
+				},
+				evaluateFunction: x => LookupElectricPower(avgSpeed, x, true),
+				criterion: x => {
+					var myX = (EfficiencyResult)x;
+					return (myX.ElectricalPower - batPower).Value() * factor;
+				},
+				searcher: this,
+				forceLineSearch: forceLinesearch);
+			return retVal;
 		}
 
 		public PerSecond MaxSpeed

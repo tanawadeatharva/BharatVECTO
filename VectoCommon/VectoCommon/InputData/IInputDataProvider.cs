@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
@@ -84,17 +83,25 @@ namespace TUGraz.VectoCommon.InputData
 	public interface ISingleBusInputDataProvider : IDeclarationInputDataProvider
 	{
 		IVehicleDeclarationInputData PrimaryVehicle { get; }
-
 		IVehicleDeclarationInputData CompletedVehicle { get; }
 	}
 
 	
 
 
-	public interface IMultistageBusInputDataProvider : IDeclarationInputDataProvider
+	public interface IMultistepBusInputDataProvider : IDeclarationInputDataProvider
 	{
 		new IDeclarationMultistageJobInputData JobInputData { get; }
 	}
+
+	public interface IMultistagePrimaryAndStageInputDataProvider : IInputDataProvider
+	{
+		IDeclarationInputDataProvider PrimaryVehicle { get; }
+		IVehicleDeclarationInputData StageInputData { get; }
+
+		bool SimulateResultingVIF { get; }
+	}
+
 
 	public interface IDeclarationMultistageJobInputData
 	{
@@ -119,7 +126,8 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IMultistageVIFInputData :  IInputDataProvider
 	{
 		IVehicleDeclarationInputData VehicleInputData { get; }
-		IMultistageBusInputDataProvider MultistageJobInputData { get; }
+		IMultistepBusInputDataProvider MultistageJobInputData { get; }
+		bool SimulateResultingVIF { get; }
 	}
 }
 

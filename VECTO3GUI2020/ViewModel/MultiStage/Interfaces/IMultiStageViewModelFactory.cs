@@ -43,7 +43,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Interfaces
 		IDocumentViewModel GetStageInputViewModel(bool exemptedVehicle);
 		IViewModelBase GetNewMultistageJobViewModel();
 
-		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistageBusInputDataProvider inputData);
+		IMultiStageJobViewModel GetMultiStageJobViewModel(IMultistepBusInputDataProvider inputData);
 
 		IVehicleViewModel GetInterimStageVehicleViewModel();
 

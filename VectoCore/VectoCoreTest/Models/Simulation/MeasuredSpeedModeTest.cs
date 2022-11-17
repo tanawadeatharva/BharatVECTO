@@ -44,6 +44,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -276,8 +277,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(new MockModalDataContainer());
-			builder.Build(data);
+			PowertrainBuilder.Build(data, new MockModalDataContainer());
 		}
 
 		/// <summary>
@@ -362,8 +362,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(new MockModalDataContainer());
-			var jobContainer = builder.Build(data);
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer());
 		}
 
 		private static void RunJob(string jobFile, string expectedModFile, string actualModFile, string expectedSumFile,
@@ -374,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 			runsFactory.ActualModalData = actualModData;
 			runsFactory.WriteModalResults = true;
 

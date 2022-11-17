@@ -30,8 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -56,11 +54,14 @@ namespace TUGraz.VectoCommon.InputData
 
 	public enum VectoSimulationJobType
 	{
-		ConventionalVehicle,
+		ConventionalVehicle = 1,
 		ParallelHybridVehicle,
 		SerialHybridVehicle,
 		BatteryElectricVehicle,
 		EngineOnlySimulation,
+		IEPC_E,
+		IEPC_S,
+		IHPC
 	}
 
 	public interface IHybridStrategyParameters
@@ -82,6 +83,9 @@ namespace TUGraz.VectoCommon.InputData
 		double ICEStartPenaltyFactor { get; }
 
 		double CostFactorSOCExpponent { get; }
+
+		// serial hybrid only: factor applied to the max propulsion power which the genset needs to provide in the optimal operating point
+		double GensetMinOptPowerFactor { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -104,12 +108,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
 
-		Meter Height { get; }
+        Meter Height { get; }
 
-		TableData ElectricMotorTorqueLimits { get; }
-
-		TableData MaxPropulsionTorque { get; }
-
+		
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
@@ -163,6 +164,8 @@ namespace TUGraz.VectoCommon.InputData
 		IElectricStorageSystemEngineeringInputData ElectricStorage { get; }
 
 		IElectricMachinesEngineeringInputData ElectricMachines { get; }
+
+		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -210,7 +213,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData PTOCycleWhileDriving { get; }
 
 	}
-
+	
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>
@@ -343,6 +346,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double? PEV_TargetSpeedBrakeNorm { get; }
 
+		double? PEV_DownshiftSpeedFactor { get; }
 		double? PEV_DeRatingDownshiftSpeedFactor { get; }
 		double? PEV_DownshiftMinSpeedFactor { get; }
 	}
@@ -477,11 +481,18 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IElectricMotorEngineeringInputData : IElectricMotorDeclarationInputData
 	{
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricMachinesEngineeringInputData : IElectricMachinesDeclarationInputData
 	{
 		new IList<ElectricMachineEntry<IElectricMotorEngineeringInputData>> Entries { get; }
+	}
+
+
+	public interface IIEPCEngineeringInputData : IIEPCDeclarationInputData
+	{
+		double OverloadRecoveryFactor { get; }
 	}
 
 	public interface IElectricStorageEngineeringInputData : IElectricStorageDeclarationInputData
@@ -628,5 +639,5 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt ElectricPowerDemand { get; }
 	}
-
+	
 }

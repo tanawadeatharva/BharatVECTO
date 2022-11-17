@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.8" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
+<tns:VectoInputDeclaration schemaVersion="2.8" 
+xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-xmlns:v2.8="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8"
+xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
 xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-1234567890_mixed" xsi:type="InterimStageInputType" >
+	<v2.0:Vehicle id="VEH-1234567890_mixed" xsi:type="Vehicle_Conventional_CompletedBusDeclarationType" >
 		<Manufacturer>Some Manufacturer</Manufacturer>
 		<ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
 		<VIN>VEH-1234567890_m</VIN>
@@ -16,9 +17,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<LegislativeCategory>M3</LegislativeCategory>
 		<CorrectedActualMass>8300</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<AirdragModifiedMultistage>true</AirdragModifiedMultistage>
-		<NgTankSystem>Compressed</NgTankSystem>
+		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<NumberPassengerSeatsLowerDeck>30</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>0</NumberPassengersStandingLowerDeck>
 		<NumberPassengerSeatsUpperDeck>0</NumberPassengerSeatsUpperDeck>
@@ -31,9 +32,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 		<EntranceHeight>120</EntranceHeight>
 		<DoorDriveTechnology>mixed</DoorDriveTechnology>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
-		<Components xsi:type="CompletedVehicleComponentsDeclarationType">
-			<v2.8:AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType">
+		<VehicleTypeApprovalNumber>1234567890</VehicleTypeApprovalNumber>
+		<Components xsi:type="Components_Conventional_CompletedBusType">
+			<AirDrag>
+				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -43,7 +45,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 					<TransferredCdxA>6.32</TransferredCdxA>
 					<DeclaredCdxA>6.34</DeclaredCdxA>
 				</Data>
-				<Signature>
+				<v2.0:Signature>
 					<di:Reference URI="#CabinX23h">
 						<di:Transforms>
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -52,10 +54,10 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
 					</di:Reference>
-				</Signature>
-			</v2.8:AirDrag>
+				</v2.0:Signature>
+			</AirDrag>
 			<Auxiliaries>
-				<Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
+				<Data xsi:type="AUX_Conventional_CompletedBusType">
 					<ElectricSystem>
 						<LEDLights>
 							<Interiorlights>false</Interiorlights>
@@ -67,10 +69,14 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:\VectoCore\VectoCor
 					</ElectricSystem>
 					<HVAC>
 						<SystemConfiguration>7</SystemConfiguration>
-						<HeatPumpTypeDriverCompartment>non R-744 2-stage</HeatPumpTypeDriverCompartment>
-						<HeatPumpModeDriverCompartment>cooling</HeatPumpModeDriverCompartment>
-						<HeatPumpTypePassengerCompartment>non R-744 2-stage</HeatPumpTypePassengerCompartment>
-						<HeatPumpModePassengerCompartment>cooling</HeatPumpModePassengerCompartment>
+						<HeatPumpTypeDriverCompartment>
+							<Cooling>non R-744 2-stage</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypeDriverCompartment>
+						<HeatPumpTypePassengerCompartment>
+							<Cooling>non R-744 2-stage</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
 						<DoubleGlazing>true</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>

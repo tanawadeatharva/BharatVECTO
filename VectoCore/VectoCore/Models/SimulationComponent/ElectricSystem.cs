@@ -6,25 +6,30 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, IElectricChargerConnector, IBatteryConnector
+	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, 
+		IElectricChargerConnector, IBatteryConnector, IUpdateable
 	{
 
 		protected readonly List<IElectricAuxPort> Consumers = new List<IElectricAuxPort>();
 
-		protected IElectricChargerPort Charger;
+		public IList<IElectricChargerPort> Charger { get;  }
 
 		protected IElectricEnergyStorage Battery;
 
-		public ElectricSystem(IVehicleContainer container) : base(container) { }
+		public ElectricSystem(IVehicleContainer container) : base(container)
+		{
+			Charger = new List<IElectricChargerPort>();
+		}
 
 		public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
 			var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
-			var chargePower = Charger == null ? 0.SI<Watt>() : Charger.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun);
+			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
 			var totalPowerDemand = powerDemand + chargePower - auxDemand;
 
 			var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
@@ -77,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public void Connect(IElectricChargerPort charger)
 		{
-			Charger = charger;
+			Charger.Add(charger);
 		}
 
 		#endregion
@@ -138,7 +143,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				ConsumerPower = powerDemand;
 				BatteryPower = batteryPower;
 			}
+
+			public State Clone() => (State)MemberwiseClone();
 		}
 
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is ElectricSystem s) {
+				PreviousState = s.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

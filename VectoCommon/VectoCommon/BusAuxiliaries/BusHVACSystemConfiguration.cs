@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public enum BusHVACSystemConfiguration
@@ -69,7 +67,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 			return hvacConfig.ToString().Replace(Prefix, "");
 		}
 
-		public static string GetXmlFormat(this BusHVACSystemConfiguration? hvacConfiguration)
+		public static string ToXmlFormat(this BusHVACSystemConfiguration? hvacConfiguration)
 		{
 			if (hvacConfiguration == BusHVACSystemConfiguration.Unknown) {
 				return "0";

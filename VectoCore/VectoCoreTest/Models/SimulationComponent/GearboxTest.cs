@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var PvD = power.SI<Watt>();
 			var torqueToWheels = Formulas.PowerToTorque(PvD, angSpeed);
 
-			axleGear.Request(absTime, dt, torqueToWheels, angSpeed);
+			axleGear.Request(absTime, dt, torqueToWheels, angSpeed, false);
 
 			var loss = expectedLoss.SI<Watt>();
 
@@ -614,6 +614,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CycleData = new CycleData() {
 					LeftSample = cycleData.Entries.First(),
 				},
+				ElectricMotorPositions = new PowertrainPosition[]{},
 				HasCombustionEngine = true
 			};
 			var cycle = new MockDrivingCycle(container, cycleData);

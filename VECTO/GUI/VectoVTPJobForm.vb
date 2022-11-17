@@ -35,12 +35,6 @@ Public Class VectoVTPJobForm
     Public VectoFile As String
     Private _changed As Boolean = False
 
-    Private _pgDriver As TabPage
-
-    Private _pgDriverOn As Boolean = True
-
-    Private _auxDialog As VehicleAuxiliariesDialog
-
     Dim _xmlInputReader as IXMLInputDataReader
 
     Enum AuxViewColumns
@@ -55,9 +49,6 @@ Public Class VectoVTPJobForm
 
         Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
         _xmlInputReader = kernel.Get(Of IXMLInputDataReader)
-
-        _auxDialog = New VehicleAuxiliariesDialog
-
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = - 2
 

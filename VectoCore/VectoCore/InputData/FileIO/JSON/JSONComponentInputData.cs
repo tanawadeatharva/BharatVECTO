@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IBatteryPackEngineeringInputData Battery;
 		private IElectricMotorEngineeringInputData ElectricMotor;
 		private IBusAuxiliariesEngineeringData BusAux;
-
+		private IIEPCEngineeringInputData IEPCData;
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
@@ -101,6 +101,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case ".vaux":
 					tmp = JSONInputDataFactory.ReadEngineeringBusAuxiliaries(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.IEPCDataFile:
+					tmp = JSONInputDataFactory.ReadIEPCEngineeringInputData(filename, tolerateMissing);
+					break;
 			}
 
 			if(tmp is IVehicleEngineeringInputData x1) VehicleData = x1;
@@ -119,6 +122,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if(tmp is IElectricMotorEngineeringInputData x14) ElectricMotor = x14;
 			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
 			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
+			if (tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
 
 			_filename = filename;
 		}
@@ -175,8 +179,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string JobName => "";
 
-		public string ShiftStrategy => "";
-
 		public string Identifier => Vehicle.Identifier;
 
 		public bool ExemptedVehicle => false;
@@ -219,6 +221,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			});
 		} }
 
+		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
+
+		public IIEPCDeclarationInputData IEPC => IEPCData;
+
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {
 				new JSONElectricStorageEngineeringInputData {
@@ -237,13 +243,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Meter Height => VehicleData.Height;
 
-		public TableData ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
-
-		public TableData MaxPropulsionTorque => Vehicle.ElectricMotorTorqueLimits;
-
 		public bool? ATEcoRollReleaseLockupClutch => VehicleData.ADAS.ATEcoRollReleaseLockupClutch;
 
 		public XmlNode XMLSource => null;
+		public string VehicleTypeApprovalNumber { get; }
+		public ArchitectureID ArchitectureID { get; }
+		public bool OvcHev { get; }
+		public Watt MaxChargingPower { get; }
 
 		public Meter Length => VehicleData.Length;
 
@@ -254,7 +260,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public ConsumerTechnology? DoorDriveTechnology => VehicleData.DoorDriveTechnology;
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
+
+		public Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public TableData BoostingLimitations => Vehicle.BoostingLimitations;
 		
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
 
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
@@ -316,7 +326,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool? SleeperCab => DeclarationData.Vehicle.SleeperCabDefault;
 
-		public bool? AirdragModifiedMultistage { get; }
+		public bool? AirdragModifiedMultistep { get; }
 
 		public TankSystem? TankSystem => DeclarationData.Vehicle.TankSystemDefault;
 

@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly XNamespace NAMESPACE_URI =
 			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly XNamespace NAMESPACE_URI =
 			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "VectoOutputMultistageType";
+		public const string XSD_TYPE = "VectoOutputMultistepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IManufacturingStageInputData ConsolidateManufacturingStage => _concolidateManfacturingStage ?? (_concolidateManfacturingStage = Reader.ConsolidateManufacturingStage);
 
-		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
+		public VectoSimulationJobType JobType => ConsolidateManufacturingStage.Vehicle.VehicleType;
 
 		public bool InputComplete => Reader.InputComplete;
 
@@ -153,8 +153,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			return ResultsInputData.Results.FirstOrDefault(
 				x => x.VehicleGroup == vehicleClass &&
-					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission &&
-					x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase));
+					(x.SimulationParameter.Payload - payload).IsEqual(0, 1) && x.Mission == mission 
+					// && x.SimulationParameter.FuelMode.Equals(fuelMode, StringComparison.InvariantCultureIgnoreCase)
+					);
 		}
 
 		public XmlNode ResultsNode => GetNode(XMLNames.Report_Results);
@@ -176,14 +177,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "ManufacturingStageType";
+		public const string XSD_TYPE = "ManufacturingStepType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		private readonly XmlNode _signatureXmlNode;
 		private IVehicleDeclarationInputData _vehicle;
 		private IApplicationInformation _applicationInformation;
-		private DigestData _hashPreviousStage;
+		private DigestData _hashPreviousStep;
 		private DigestData _signature;
 
 
@@ -197,11 +198,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override DataSourceType SourceType => DataSourceType.XMLFile;
 
-		public DigestData HashPreviousStage =>
-			_hashPreviousStage ??
-			(_hashPreviousStage = Reader.GetDigestData(GetNode("HashPreviousStage")));
+		public DigestData HashPreviousStep =>
+			_hashPreviousStep ??
+			(_hashPreviousStep = Reader.GetDigestData(GetNode(XMLNames.ManufacturingStep_HashPreviousStep)));
 
-		public int StageCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStage_StageCount));
+		public int StepCount => Convert.ToInt32(GetAttribute(BaseNode, XMLNames.ManufacturingStep_StepCount));
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = Reader.Vehicle);
 
@@ -217,19 +218,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVIFInputData : IMultistageVIFInputData
 	{
-		private readonly IMultistageBusInputDataProvider _multistageJobInputData;
+		private readonly IMultistepBusInputDataProvider _multistageJobInputData;
 		private readonly IVehicleDeclarationInputData _vehicleInput;
 
-		public XMLDeclarationVIFInputData(IMultistageBusInputDataProvider multistageJobInputData,
-			IVehicleDeclarationInputData vehicleInput)
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
+			IVehicleDeclarationInputData vehicleInput) : this(multistageJobInputData, vehicleInput, false) { }
+
+		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
+		IVehicleDeclarationInputData vehicleInput, bool runSimulation)
 		{
 			_multistageJobInputData = multistageJobInputData;
 			_vehicleInput = vehicleInput;
+			_simulateResultingVif = runSimulation;
 		}
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+
+		private readonly bool _simulateResultingVif;
+		bool IMultistageVIFInputData.SimulateResultingVIF => _simulateResultingVif;
 
 		public DataSource DataSource { get; }
 	}

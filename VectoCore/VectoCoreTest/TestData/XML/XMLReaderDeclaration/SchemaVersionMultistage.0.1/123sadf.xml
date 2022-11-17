@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.8" xmlns:schemaVersion="2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-  <v2.0:Vehicle id="TODO:ADDIDENTIFIER" xsi:type="InterimstageInputType">
-    <Date>27.04.2021</Date>
-    <DeclarationType>interim</DeclarationType>
-  </v2.0:Vehicle>
-</tns:VectoInputDeclaration>

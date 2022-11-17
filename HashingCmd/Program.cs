@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
+
 namespace HashingCmd
 {
 	class Program

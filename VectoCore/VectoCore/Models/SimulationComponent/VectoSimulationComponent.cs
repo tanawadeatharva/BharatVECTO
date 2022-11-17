@@ -55,8 +55,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 			// if a component doesn't want to be registered in DataBus, it supplies null to the constructor
 			// (mk 2016-08-31: currently the only example is PTOCycleController, in order to not interfere with the real DrivingCycle)
-			if (dataBus != null)
+			if (dataBus != null) {
 				dataBus.AddComponent(this);
+			}
 		}
 
 		public virtual void CommitSimulationStep(Second time, Second simulationInterval, IModalDataContainer container)
@@ -145,5 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			OutTorque = outTorque;
 			OutAngularVelocity = outAngularVelocity;
 		}
+
+		public SimpleComponentState Clone() => (SimpleComponentState)MemberwiseClone();
 	}
 }

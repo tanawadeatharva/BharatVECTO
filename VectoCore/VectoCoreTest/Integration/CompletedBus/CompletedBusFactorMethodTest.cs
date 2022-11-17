@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Ninject;
+using NLog.LayoutRenderers;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -22,6 +23,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
@@ -102,18 +104,20 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var inputData = CompletedVIF.CreateCompletedVif(
 				JSONInputDataFactory.ReadJsonJob(JobFile_Group41) as JSONInputDataCompletedBusFactorMethodV7,
 				xmlInputReader);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
-			{
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
+			//{
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 			//var sumContainer = new SummaryDataContainer(writer);
 			//var jobContainer = new JobContainer(sumContainer);
 
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			Assert.IsTrue(runs.Count == 8 || runs.Count == 12);
 
 			var relatedRuns = SetRelatedVehicleParts(runs);
@@ -376,7 +380,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(6, genericGearbox.Gears.Count);
 			Assert.AreEqual(genericGearbox.Gears.Count, specificGearbox.Gears.Count);
 
-			AssertGearShiftParameters(relatedRun);
 			AssertGears(genericGearbox.Gears.Values.ToList());
 			AssertGears(specificGearbox.Gears.Values.ToList());
 			AssertGearsLossmap(
@@ -410,12 +413,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			}
 		}
 
-		private void AssertGearShiftParameters(RelatedRun relatedRun)
-		{
-			Assert.AreEqual(relatedRun.VectoRunDataGenericBody.ShiftStrategy, relatedRun.VectoRunDataSpezificBody.ShiftStrategy);
-		}
-
-
+		
 		#endregion
 
 		#region Torque Converter Asserts
@@ -836,12 +834,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				case 0:
 				case 1://Interurban
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.55781260, specificValue, 1e-6);
+					Assert.AreEqual(3.57, specificValue, 1e-6);
 					break;
 				case 2:
 				case 3://Coach
 					Assert.AreEqual(3.5, genericValue);
-					Assert.AreEqual(3.5632156, specificValue, 1e-6);
+					Assert.AreEqual(3.57, specificValue, 1e-6);
 					break;
 			}
 		}
@@ -884,7 +882,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				genericDriver.LookAheadCoasting.LookAheadDistanceFactor);
 			Assert.AreEqual(genericDriver.LookAheadCoasting, specificDriver.LookAheadCoasting);
 
-			Assert.AreEqual(true, genericDriver.OverSpeed.Enabled);
+			Assert.AreEqual(false, genericDriver.OverSpeed.Enabled);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeed.MinSpeed, genericDriver.OverSpeed.MinSpeed);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeed.AllowedOverSpeed, genericDriver.OverSpeed.OverSpeed);
 			Assert.AreEqual(genericDriver.OverSpeed, specificDriver.OverSpeed);
@@ -1032,15 +1030,16 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 					}
 				}
 			}
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 
-				//ActualModalData = true,
-				Validate = false
-			};
-
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			return runs;
 		}
 
@@ -1066,12 +1065,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 					break;
 				}
 			}
-
-			var factory = new SimulatorFactory(ExecutionMode.Declaration,  inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration,  inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 
 			//var runs = factory.SimulationRuns().ToArray();
@@ -1104,11 +1104,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
 				? xmlInputReader.CreateDeclaration(relativeJobPath)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 
 			//var runs = factory.SimulationRuns().ToArray();
@@ -1146,11 +1149,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
 				? xmlInputReader.CreateDeclaration(relativeJobPath)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate:false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 
 			var runs = factory.SimulationRuns().ToArray();
@@ -1189,12 +1195,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = new MockCompletedBusInputData(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer) {
-				WriteModalResults = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistepBusInputDataProvider, null), writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(completedVif as IMultistageBusInputDataProvider, null), writer) {
+			//	WriteModalResults = true,
+			//	Validate = false
+			//};
 
-			var runs = factory.DataReader.NextRun().ToList();
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 			
 			Assert.NotNull(run.VehicleData.PassengerCount);
@@ -1222,12 +1230,16 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var modifiedCompleted = xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(modified)));
 
 			var inputData = new MockSingleBusInputDataProvider(primary.JobInputData.Vehicle, modifiedCompleted.JobInputData.Vehicle);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, null) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
-			var runs = factory.DataReader.NextRun().ToList();
+			var factory =
+				SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, null, validate: false);
+			factory.WriteModalResults = true;
+
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, null) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
+			var runs = factory.RunDataFactory.NextRun().ToList();
 			var run = runs[runIdx];
 
 			Assert.NotNull(run.VehicleData.PassengerCount);
@@ -1272,7 +1284,6 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			public bool SavedInDeclarationMode => true;
 			public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 			public string JobName { get; }
-			public string ShiftStrategy => "";
 			public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 			#endregion
@@ -1316,11 +1327,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
 				? xmlInputReader.CreateDeclaration(relativeJobPath)
 				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
-				WriteModalResults = true,
-				//ActualModalData = true,
-				Validate = false
-			};
+
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
 			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
 
 			var runs = factory.SimulationRuns().ToArray();

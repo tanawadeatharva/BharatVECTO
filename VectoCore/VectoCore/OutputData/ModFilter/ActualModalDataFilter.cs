@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 		{
 			foreach (var field in fields) {
 				var fieldName = field.GetName();
-				if (current[fieldName] == DBNull.Value) {
+				if (!current.Table.Columns.Contains(fieldName) || current[fieldName] == DBNull.Value) {
 					continue;
 				}
 				if (field.GetDataType() == typeof(SI)) {

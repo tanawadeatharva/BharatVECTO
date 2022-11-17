@@ -84,8 +84,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					case "AMT": return GearboxType.AMT;
 					case "APT-S":
 					case "AT - Serial": return GearboxType.ATSerial;
+					case "APT-N":
 					case "APT-P":
 					case "AT - PowerSplit": return GearboxType.ATPowerSplit;
+					case "IHPC Type 1": return GearboxType.IHPC;
 				}
 
 				throw new ArgumentOutOfRangeException("GearboxType", value);
@@ -147,27 +149,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationGearboxDataProviderV26 : XMLDeclarationGearboxDataProviderV10
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+	//public class XMLDeclarationGearboxDataProviderV26 : XMLDeclarationGearboxDataProviderV10
+	//{
+	//	public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V210_JOBS;
 
-		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+	//	public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationGearboxDataProviderV26(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
-			vehicle, componentNode, sourceFile)
-		{ }
+	//	public XMLDeclarationGearboxDataProviderV26(
+	//		IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+	//		vehicle, componentNode, sourceFile)
+	//	{ }
 
-		#region Overrides of XMLDeclarationGearboxDataProviderV10
+	//	#region Overrides of XMLDeclarationGearboxDataProviderV10
 
-		public override bool DifferentialIncluded => GetBool(XMLNames.Gearbox_DifferentialIncluded);
+	//	public override bool DifferentialIncluded => GetBool(XMLNames.Gearbox_DifferentialIncluded);
 
-		public override double AxlegearRatio => DifferentialIncluded ? GetDouble(XMLNames.Gearbox_AxlegearRatio) : double.NaN;
+	//	public override double AxlegearRatio => DifferentialIncluded ? GetDouble(XMLNames.Gearbox_AxlegearRatio) : double.NaN;
 
-		#endregion
+	//	#endregion
 		
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
-	}
+	//	protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	//}
 	
 	// ---------------------------------------------------------------------------------------
 
@@ -175,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public new const string XSD_TYPE = "TransmissionDataPIFType";
+		public new const string XSD_TYPE = "TransmissionDataVIFType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
@@ -189,5 +191,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 		
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationGearboxDataProviderV23 : XMLDeclarationGearboxDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+		public new const string XSD_TYPE = "GearboxDataDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationGearboxDataProviderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 }

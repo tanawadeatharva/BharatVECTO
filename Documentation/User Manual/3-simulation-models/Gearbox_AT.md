@@ -1,31 +1,31 @@
-##Gearbox: AT Gearbox Model
+## Gearbox: AT Gearbox Model
 
-Vecto supports both, AT gearboxes with serial torque converter and AT gearboxes with power split. Internally, both gearbox types are simulated using a power train architecture with the torque converter in series.
+VECTO supports both, AT gearboxes with serial torque converter and AT gearboxes with power split. Internally, both gearbox types are simulated using a power train architecture with the torque converter in series.
 
 ![Automatic transmission with torque converter in series](pics/AT-S.svg)
 
 ![Automatic transmission with parallel torque converter](pics/AT-P.svg)
 
-In the input data [Gearbox File](#gearbox-file-.vgbx) **only the mechanical gears need to be specified**. Depending on the gearbox type (AT-S or AT-P) Vecto adds the correct virtual 'torque converter gear'.
+In the input data [Gearbox File](#gearbox-file-.vgbx) **only the mechanical gears need to be specified**. Depending on the gearbox type (AT-S or AT-P) VECTO adds the correct virtual 'torque converter gear'.
 
 For AT gearbox with serial torque converter, the torque converter uses the same ratio and mechanical losses as the first gear (and second, depending on the gear ratios), and adds the torque converter.
 
-For AT gearboxes using power split the torque converter characteristics already takes the transmission ratio and mechanical losses into account. Hence, Vecto sets the ratio for the mechanical gear to 1 without additional losses.
+For AT gearboxes using power split the torque converter characteristics already takes the transmission ratio and mechanical losses into account. Hence, VECTO sets the ratio for the mechanical gear to 1 without additional losses.
 
 The .vmod file for vehicles with AT gearboxes contains an additional column that indicates if the torque converter is locked or not.
 
-###Gearshift losses for AT Gearboxes
+### Gearshift losses for AT Gearboxes
 
 For AT gearboxes the losses during a power-shift are modeled according to the following equations
 
-####Basic assumptions
+#### Basic assumptions
 
 + Only power-shifts with positive power at gearbox output side are considered. 
 + Both upshifts and downshifts with positive power at gearbox output side have to be considered.
 + The power at gearbox output side is assumed to be constant during a power-shift
 
 
-####Power-shift loss computation
+#### Power-shift loss computation
 
 Model parameters: shift time ($t_s$), inertia factor ($f_I$)
 

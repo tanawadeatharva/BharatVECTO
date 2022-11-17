@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -11,10 +13,12 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -46,6 +50,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected const string BEV_E2_Job_BusAux = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_BusAux.vecto";
 		protected const string BEV_E2_Job_Cont30kW = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_Cont30kW.vecto";
 
+		protected const string BEV_E2_APTN_Job = @"TestData\BatteryElectric\GenericVehicleB2_APTN\BEV_B2_Group5LH_rl_APTN.vecto";
+		
+		protected const string BEV_E2_APTS_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTS.vecto";
+		protected const string BEV_E2_APTP_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTP.vecto";
+
+		protected const string BEV_E2_3Speed_PTO_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed_PTO.vecto";
+
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
 		public const string BatFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat";
 
@@ -69,9 +80,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Enable();
 
 			//#else
-			//GraphWriter.Disable();
+			//graphWriter.Disable();
 			//#endif
-			
+
 
 			var Yfields = new[] {
 				ModalResultField.v_act, ModalResultField.altitude, ModalResultField.acc, ModalResultField.Gear,
@@ -164,6 +175,47 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		[
+			TestCase(30, 0.5, 0, TestName = "PEV E4 Halt 30km/h SoC: 0.5, level"),
+			TestCase(50, 0.5, 0, TestName = "PEV E4 Halt 50km/h SoC: 0.5, level"),
+			//TestCase(80, 0.5, 0, TestName = "PEV E4 Halt 80km/h SoC: 0.5, level"), // max vehicle speed: 56
+			TestCase(30, 0.25, 0, TestName = "PEV E4 Halt 30km/h SoC: 0.25, level"),
+
+		TestCase(50, 0.5, 12, TestName = "PEV E4 Halt 50km/h SoC: 0.5, uphill 12"),
+
+		]
+		public void B4PEVHalt(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1}, 0
+				   900,   0, {1}, 3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B4_stop_{vmax}-{initialSoC}_{slope}";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE4;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
+				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
+				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
+					speed = (SI)r[ModalResultField.v_act.GetName()],
+					brakePwr = (SI)r[ModalResultField.P_brake_loss.GetName()]
+				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
+				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
+			}
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B4 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
 			TestCase("LongHaul", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle LongHaul, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("RegionalDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle RegionalDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
 			TestCase("UrbanDelivery", 2000, 0.8, 0, TestName = "PEV E4 DriveCycle UrbanDelivery, SoC: 0.8 Payload: 2t P_auxEl: 0kW"),
@@ -211,11 +263,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer)
-			{
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -309,7 +359,48 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			Assert.IsTrue(modData.Rows.Count > 0);
-			
+
+			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
+			graphWriter.Write(modFilename + ".vmod");
+		}
+
+		[
+			TestCase(30, 0.5, 0, TestName = "PEV E3 Halt 30km/h SoC: 0.5, level"),
+			TestCase(50, 0.5, 0, TestName = "PEV E3 Halt 50km/h SoC: 0.5, level"),
+			//TestCase(80, 0.5, 0, TestName = "PEV E3 Halt 80km/h SoC: 0.5, level"),  // max vehicle speed: 56 km/h
+			TestCase(30, 0.25, 0, TestName = "PEV E3 Halt 30km/h SoC: 0.25, level"),
+
+			TestCase(50, 0.5, 12, TestName = "PEV E3 Halt 50km/h SoC: 0.5, uphill 12"),
+
+		]
+		public void B3PEVHalt(double vmax, double initialSoC, double slope)
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				   900,   0, {1},    3", vmax, slope);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B3_halt_{vmax}-{initialSoC}_{slope}";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, initialSoC, pos, 2, 22.6, largeMotor: true);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			if (slope.IsSmallerOrEqual(0) && vmax > 30) {
+				((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data = modData;
+				var selected = ((VehicleContainer)run.GetContainer()).ModData.GetValues(r => new {
+					speed = (SI)r[ModalResultField.v_act.GetName()],
+					brakePwr = (SI)r[ModalResultField.P_brake_loss.GetName()]
+				}).Where(x => x.speed.IsSmaller(7.KMPHtoMeterPerSecond()) && x.speed.IsGreater(0));
+				Assert.IsTrue(selected.All(x => x.brakePwr.IsGreater(0)));
+			}
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
 		}
@@ -350,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			job.WaitFinished();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			
+
 			var graphWriter = GetGraphWriter(new[] { ModalResultField.P_electricMotor_mech_B3 });
 			graphWriter.Write(modFilename + ".vmod");
 		}
@@ -364,10 +455,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer) {
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -535,8 +625,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			graphWriter.Write(modFilename + ".vmod");
 		}
 
-        [
-            TestCase(BEV_E2_Job, 0, TestName = "PEV E2 Job LongHaul"),
+		[
+			TestCase(BEV_E2_Job, 0, TestName = "PEV E2 Job LongHaul"),
 			TestCase(BEV_E2_Job, 1, TestName = "PEV E2 Job Coach"),
 			TestCase(BEV_E2_Job, 2, TestName = "PEV E2 Job Construction"),
 			TestCase(BEV_E2_Job, 3, TestName = "PEV E2 Job HeavyUrban"),
@@ -579,18 +669,54 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			TestCase(BEV_E2_Job_Cont30kW, 7, TestName = "PEV E2 Cont. 30kW Job Suburban"),
 			TestCase(BEV_E2_Job_Cont30kW, 8, TestName = "PEV E2 Cont. 30kW Job Urban"),
 			TestCase(BEV_E2_Job_Cont30kW, 9, TestName = "PEV E2 Cont. 30kW Job UrbanDelivery"),
-		//TestCase(BEV_Job_Cont30kW, 0, TestName = "PEV E2 Job Cont. 80kW RD")
+			//TestCase(BEV_Job_Cont30kW, 0, TestName = "PEV E2 Job Cont. 80kW RD")
+
+			TestCase(BEV_E2_APTN_Job, 0, TestName = "PEV E2 APT-N Job LongHaul"),
+			TestCase(BEV_E2_APTN_Job, 1, TestName = "PEV E2 APT-N Job RegionalDelivery"),
+			TestCase(BEV_E2_APTN_Job, 2, TestName = "PEV E2 APT-N Job UrbanDelivery"),
+			TestCase(BEV_E2_APTN_Job, 3, TestName = "PEV E2 APT-N Job Construction"),
+			TestCase(BEV_E2_APTN_Job, 4, TestName = "PEV E2 APT-N Job Urban"),
+			TestCase(BEV_E2_APTN_Job, 5, TestName = "PEV E2 APT-N Job Suburban"),
+			TestCase(BEV_E2_APTN_Job, 6, TestName = "PEV E2 APT-N Job Interurban"),
+			TestCase(BEV_E2_APTN_Job, 7, TestName = "PEV E2 APT-N Job Coach"),
+
+			TestCase(BEV_E2_APTS_Job, 0, TestName = "PEV E2 APT-S Job LongHaul"),
+			TestCase(BEV_E2_APTS_Job, 1, TestName = "PEV E2 APT-S Job RegionalDelivery"),
+			TestCase(BEV_E2_APTS_Job, 2, TestName = "PEV E2 APT-S Job UrbanDelivery"),
+			TestCase(BEV_E2_APTS_Job, 3, TestName = "PEV E2 APT-S Job Construction"),
+			TestCase(BEV_E2_APTS_Job, 4, TestName = "PEV E2 APT-S Job Urban"),
+			TestCase(BEV_E2_APTS_Job, 5, TestName = "PEV E2 APT-S Job Suburban"),
+			TestCase(BEV_E2_APTS_Job, 6, TestName = "PEV E2 APT-S Job Interurban"),
+			TestCase(BEV_E2_APTS_Job, 7, TestName = "PEV E2 APT-S Job Coach"),
+
+			TestCase(BEV_E2_APTP_Job, 0, TestName = "PEV E2 APT-P Job LongHaul"),
+			TestCase(BEV_E2_APTP_Job, 1, TestName = "PEV E2 APT-P Job RegionalDelivery"),
+			TestCase(BEV_E2_APTP_Job, 2, TestName = "PEV E2 APT-P Job UrbanDelivery"),
+			TestCase(BEV_E2_APTP_Job, 3, TestName = "PEV E2 APT-P Job Construction"),
+			TestCase(BEV_E2_APTP_Job, 4, TestName = "PEV E2 APT-P Job Urban"),
+			TestCase(BEV_E2_APTP_Job, 5, TestName = "PEV E2 APT-P Job Suburban"),
+			TestCase(BEV_E2_APTP_Job, 6, TestName = "PEV E2 APT-P Job Interurban"),
+			TestCase(BEV_E2_APTP_Job, 7, TestName = "PEV E2 APT-P Job Coach"),
+
+			TestCase(BEV_E2_3Speed_PTO_Job, 0, TestName = "PEV E2 3speed PTO Job LongHaul"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 1, TestName = "PEV E2 3speed PTO Job Coach"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 2, TestName = "PEV E2 3speed PTO Job Construction"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 3, TestName = "PEV E2 3speed PTO Job HeavyUrban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 4, TestName = "PEV E2 3speed PTO Job Interurban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 5, TestName = "PEV E2 3speed PTO Job MunicipalUtility"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 6, TestName = "PEV E2 3speed PTO Job RegionalDelivery"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 7, TestName = "PEV E2 3speed PTO Job Suburban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 8, TestName = "PEV E2 3speed PTO Job Urban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 9, TestName = "PEV E2 3speed PTO Job UrbanDelivery"),
 		]
 		public void B2PEVRunJob(string jobFile, int cycleIdx)
 		{
 			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
 
 			var writer = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputProvider, writer)
-			{
-				Validate = false,
-				WriteModalResults = true,
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -610,29 +736,133 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 
-		
+
+		[TestCase]
+		public void Run_E3_AxlegearInputRetarder()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n500, 80, 0, 0");
+			var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5,
+				PowertrainPosition.BatteryElectricE3, 2, 2,largeMotor: true, retarderType: RetarderType.AxlegearInputRetarder);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void Run_E3_WithoutAxlegearInputRetarder()
+		{
+			var cycleData = string.Format(
+				@"   0, {0}, {1},    0
+				  7000, {0}, {1},    0", 80, 0);
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			var modFilename = $"SimpleBatteryElectric-B3_constant";
+			const PowertrainPosition pos = PowertrainPosition.BatteryElectricE3;
+			var job = CreateEngineeringRun(
+				cycle, modFilename, 0.5, pos, 2, 22.6, largeMotor: true, pAuxEl: 0);
+			var run = job.Runs.First().Run;
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			var data = run.GetContainer().RunData;
+			//File.WriteAllText(
+			//	$"{modFilename}.json",
+			//	JsonConvert.SerializeObject(data, Formatting.Indented));
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+
+
+			//var cycle = SimpleDrivingCycles.CreateCycleData("0, 80, 0, 0\n7000, 80, 0, 0");
+			//var job = CreateEngineeringRun(cycle, $"{MethodBase.GetCurrentMethod()}.vmod", 0.5,
+			//	PowertrainPosition.BatteryElectricE3, 2, 2, largeMotor: true, retarderType: RetarderType.None, pAuxEl:0);
+			//var run = job.Runs.First().Run;
+			//var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			//run.Run();
+
+			//Assert.IsTrue(run.FinishedWithoutErrors);
+			//Assert.IsTrue(modData.Rows.Count > 0);
+			//Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			//Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+			//Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+		}
+
+		[TestCase]
+		public void RunJob_E3_AxlegearInputRetarder() {
+			var jobFile = @"TestData\Components\Retarder\E3\E3WithAxlegearInputRetarder.vecto";
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+			factory.SumData = new SummaryDataContainer(writer);
+			var run = factory.SimulationRuns().ToArray()[0];
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()).Value()), Is.GreaterThan(0));
+			Assert.That(modData.Sum(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()).Value()), Is.GreaterThan(0));
+		}
+
+		[TestCase]
+		public void RunJob_E3_NoAxlegearInputRetarder()
+		{
+			var jobFile = @"TestData\Components\Retarder\E3\E3WithoutAxlegearInputRetarder.vecto";
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+			factory.SumData = new SummaryDataContainer(writer);
+			var run = factory.SimulationRuns().First();
+			var modData = ((ModalDataContainer)((VehicleContainer)run.GetContainer()).ModData).Data;
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+			Assert.IsTrue(modData.Rows.Count > 0);
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+        }
 
 		// =================================================
 
 
-		public static JobContainer CreateEngineeringRun(
-			DrivingCycleData cycleData, string modFileName, double initialSoc, PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null)
+		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, double initialSoc, 
+			PowertrainPosition pos, int count, double ratio, bool largeMotor = false, double pAuxEl = 0, Kilogram payload = null,
+			RetarderType retarderType = RetarderType.None)
 		{
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(modFileName));
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
-			var container = CreateBatteryElectricPowerTrain(
-				cycleData, modFileName, fileWriter, sumData, initialSoc, count, ratio, largeMotor,  pAuxEl, pos, payload);
-			
+			var container = CreateBatteryElectricPowerTrain(cycleData, modFileName, fileWriter, sumData, initialSoc, 
+				count, ratio, largeMotor, pAuxEl, pos, payload, retarderType);
+
 			var run = new DistanceRun(container);
 			jobContainer.AddRun(run);
 			return jobContainer;
 		}
 
-		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData,
-			string modFileName, FileOutputWriter fileWriter, SummaryDataContainer sumData,
-			double initialBatCharge, int count, double ratio, bool largeMotor, double pAuxEl, PowertrainPosition pos,
-			Kilogram payload = null)
+		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData, string modFileName, 
+			FileOutputWriter fileWriter, SummaryDataContainer sumData, double initialBatCharge, int count, double ratio, 
+			bool largeMotor, double pAuxEl, PowertrainPosition pos, Kilogram payload = null, RetarderType retarderType = RetarderType.None)
 		{
 			var gearboxData = CreateGearboxData_2Speed();
 			var axleGearData = CreateAxleGearData();
@@ -641,19 +871,26 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, true);
 
-			var electricMotorData =
-				MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
+			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(MotorFile, count, pos, 
+				ratio / (pos == PowertrainPosition.BatteryElectricE3 ? 2.59 : 1.0), 0.97);
 
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(BatFile, initialBatCharge);
-			
+
 			//var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(
-				 //Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
+			//Truck40tPowerTrain.EngineFile, gearboxData.Gears.Count);
 
+			var retarderLossMapEntries = new RetarderLossMap.RetarderLossEntry[] {
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 0.RPMtoRad(), TorqueLoss = 10.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 1000.RPMtoRad(), TorqueLoss = 12.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2000.RPMtoRad(), TorqueLoss = 18.SI<NewtonMeter>()},
+				new RetarderLossMap.RetarderLossEntry(){ RetarderSpeed = 2300.RPMtoRad(), TorqueLoss = 20.58.SI<NewtonMeter>()},
+			};
+			var retarderData = new RetarderData { Type = retarderType, LossMap = new RetarderLossMap(retarderLossMapEntries), Ratio = 1 };
 			
-
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				//AxleGearData = axleGearData,
 				//GearboxData = gearboxData,
@@ -661,7 +898,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				AirdragData = airdragData,
 				JobName = modFileName,
 				Cycle = cycleData,
-				Retarder = new RetarderData() { Type = RetarderType.None },
+				Retarder = retarderData,
 				Aux = new List<VectoRunData.AuxData>(),
 				ElectricMachinesData = electricMotorData,
 				//EngineData = engineData,
@@ -671,8 +908,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			};
 
 			var modDataFilter = new IModalDataFilter[] { }; //new IModalDataFilter[] { new ActualModalDataFilter(), };
-			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter)
-			{
+			var modData = new ModalDataContainer(runData, fileWriter, null, modDataFilter) {
 				WriteModalResults = true,
 			};
 			if (pos == PowertrainPosition.BatteryElectricE3) {
@@ -683,13 +919,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				runData.AxleGearData = axleGearData;
 				runData.GearboxData = gearboxData;
 			}
-			
+
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
+				ExecutionMode.Engineering, modData, sumData) {
 				RunData = runData
 			};
 
-			
+
 
 			var es = new ElectricSystem(container);
 			var battery = new BatterySystem(container, batteryData);
@@ -715,23 +951,23 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			switch (pos) {
 				case PowertrainPosition.HybridPositionNotSet:
 					throw new VectoException("invalid powertrain position");
-				case PowertrainPosition.HybridP0: 
+				case PowertrainPosition.HybridP0:
 				case PowertrainPosition.HybridP1:
-				case PowertrainPosition.HybridP2: 
-				case PowertrainPosition.HybridP3: 
-				case PowertrainPosition.HybridP4: 
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP3:
+				case PowertrainPosition.HybridP4:
 					throw new VectoException("testcase does not support parallel powertrain configurations");
 				case PowertrainPosition.BatteryElectricE4:
-					powertrain.AddComponent(
-						GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData, container, es, ctl));
+					powertrain.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE4, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
 					break;
 				case PowertrainPosition.BatteryElectricE3:
-					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
-							.AddComponent(
-								GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData, container, es, ctl));
+					powertrain
+						.AddComponent(new AxleGear(container, runData.AxleGearData))
+						.AddComponent(runData.Retarder.Type == RetarderType.AxlegearInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE3, runData.ElectricMachinesData, container, es, ctl));
 					new DummyGearboxInfo(container);
 					//new MockEngineInfo(container);
 					new ATClutchInfo(container);
@@ -744,13 +980,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							(int)entry.Key, null, new TransmissionInputData().Repeat(gearboxData.Gears.Count + 1).Cast<ITransmissionInputData>().ToList(), null, axleGearData.AxleGear.Ratio,
 							vehicleData.DynamicTyreRadius, electricMotorData.First().Item2);
 					}
-					powertrain.AddComponent(new AxleGear(container, runData.AxleGearData))
+
+					powertrain
+						.AddComponent(new AxleGear(container, runData.AxleGearData))
+						.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 						.AddComponent(new PEVGearbox(container, strategy))
-						.AddComponent(
-							GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
+						.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
+						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2, runData.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
 					break;
-					//throw new VectoException("Battery Electric configuration B2 currently not supported");
+				//throw new VectoException("Battery Electric configuration B2 currently not supported");
 				default: throw new ArgumentOutOfRangeException(nameof(pos), pos, null);
 			}
 
@@ -766,7 +1006,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			//ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);
@@ -789,7 +1029,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 							Ratio = ratio,
 							//ShiftPolygon = shiftStrategy.ComputeDeclarationShiftPolygon(GearboxType.AMT, i, null, )
 						})).ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				
+
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
 				InputData = new DummyGearboxData() {
@@ -907,7 +1147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
-			
+
 				//--------------------
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
@@ -924,7 +1164,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
 				//ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
-														//.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+				//.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 			};
 
 			return retVal;
@@ -977,5 +1217,5 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		public bool EngineOn => true;
 	}
 
-	
+
 }

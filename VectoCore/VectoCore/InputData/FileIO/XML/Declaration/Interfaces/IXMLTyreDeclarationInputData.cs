@@ -29,9 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Xml;
 using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 {
-	public interface IXMLTyreDeclarationInputData : ITyreDeclarationInputData, IXMLResource { }
+	public interface IXMLTyreDeclarationInputData : ITyreDeclarationInputData, IXMLResource
+	{
+		XmlNode GetXmlNode { get; }
+	}
 }

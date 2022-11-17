@@ -75,7 +75,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual Newton TyreTestLoad => _fzIso ?? (_fzIso = GetDouble(XMLNames.AxleWheels_Axles_Axle_FzISO).SI<Newton>());
 
-		public virtual string FuelEfficiencyClass => DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
+		public virtual string FuelEfficiencyClass => null;// DeclarationData.Wheels.TyreClass.Lookup(RollResistanceCoefficient);
+
+		#endregion
+
+		#region Implementation of IXMLTyreDeclarationInputData
+
+		public XmlNode GetXmlNode => BaseNode;
 
 		#endregion
 	}

@@ -41,7 +41,7 @@ Public Class HybridStrategyParams
         End If
 
         Try
-            Dim writer As JSONFileWriter = New JSONFileWriter()
+            Dim writer = New JSONFileWriter()
             writer.SaveStrategyParameters(Me, _filePath, Cfg.DeclMode)
 
         Catch ex As Exception
@@ -104,6 +104,8 @@ Public Class HybridStrategyParams
 
     Public Property ICEStartPenaltyFactor As Double Implements IHybridStrategyParameters.ICEStartPenaltyFactor
     Public Property CostFactorSOCExpponent As Double Implements IHybridStrategyParameters.CostFactorSOCExpponent
+    Public Property GensetMinOptPowerFactor As Double Implements IHybridStrategyParameters.GensetMinOptPowerFactor
+       
 
     Public Property AuxiliaryBufferTime As Double
 

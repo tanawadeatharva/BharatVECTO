@@ -238,12 +238,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
-			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
-			var numGears = gearbox.Gears.Count;
+			
+			var limits = vehicle.TorqueLimits?.ToDictionary(e => e.Gear) ?? new Dictionary<int, ITorqueLimitInputData>();
+			var gears = FilterDisabledGears(vehicle.TorqueLimits, gearbox);
+			var numGears = gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
-			foreach (var gear in gearbox.Gears) {
+			foreach (var gear in gears) {
 				var maxTorque = VectoMath.Min(
 					GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
 					VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
@@ -265,7 +267,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
+		protected static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
 		{
 			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				throw new VectoException("Missing WHR Data");
@@ -342,21 +344,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
-				!adas.ATEcoRollReleaseLockupClutch.HasValue) {
-				throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
-			}
+			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
+			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
+			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+			//}
 
 			retVal.ATEcoRollReleaseLockupClutch =
 				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
-					? adas.ATEcoRollReleaseLockupClutch.Value
+					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
 					: false;
 
 			if (!SupportedGearboxTypes.Contains(gearbox.Type)) {
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
 			}
 
-			var gearsInput = gearbox.Gears;
+			var gearsInput = FilterDisabledGears(inputData.TorqueLimits, gearbox);
+			
 			if (gearsInput.Count < 1) {
 				throw new VectoSimulationException(
 					"At least one Gear-Entry must be defined in Gearbox!");
@@ -364,8 +367,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			SetDeclarationData(retVal);
 
-			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
-				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
+			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearsInput.Count > 2
+				? gearsInput[0].Ratio / gearsInput[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
@@ -379,7 +382,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				var shiftPolygon = shiftPolygonCalc != null
 					? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
-						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio, dynamicTyreRadius)
+						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearsInput, engine, axlegearRatio, dynamicTyreRadius)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(
 						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
 						gearsInput, engine,
@@ -395,18 +398,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, runData.VehicleData.VehicleCategory);
 				gears.Add(i + 1, gearData);
-			}
-
-			// remove disabled gears (only the last or last two gears may be removed)
-			if (inputData.TorqueLimits != null) {
-				var toRemove = (from tqLimit in inputData.TorqueLimits where tqLimit.Gear >= gears.Keys.Max() - 1 && tqLimit.MaxTorque.IsEqual(0) select (uint)tqLimit.Gear).ToList();
-				if (toRemove.Count > 0 && toRemove.Min() <= gears.Count - toRemove.Count) {
-					throw new VectoException("Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.", toRemove.Min(), gears.Count);
-				}
-
-				foreach (var entry in toRemove) {
-					gears.Remove(entry);
-				}
 			}
 
 			retVal.Gears = gears;
@@ -427,7 +418,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			return retVal;
+            // update disengageWhenHaltingSpeed
+            if (retVal.Type.AutomaticTransmission()) {
+                var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+				if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any()) {
+					var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+						.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+					var vehicleSpeedDisengage = downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+												dynamicTyreRadius;
+					retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+				}
+			}
+
+            return retVal;
 		}
 
 		protected virtual TorqueConverterData CreateTorqueConverterData(GearboxType gearboxType,
@@ -488,7 +491,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength)
+		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, 
+			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength, int? numSteeredAxles)
 		{
 			if (!auxInputData.SavedInDeclarationMode) {
 				WarnDeclarationMode("AuxiliariesData");
@@ -520,6 +524,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
+						if (numSteeredAxles.HasValue && auxData.Technology.Count != numSteeredAxles.Value) {
+							throw new VectoException($"Number of steering pump technologies does not match number of steered axles ({numSteeredAxles.Value}, {auxData.Technology.Count})");
+						}
 						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
@@ -560,7 +567,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		private void WarnDeclarationMode(string inputData)
+		protected void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}

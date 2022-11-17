@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Castle.Core.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
@@ -18,11 +16,10 @@ namespace VECTO3GUI2020.Helper
 	{
 		public static XmlDocument ReadXmlDocument(string filePath)
 		{
-			if (filePath.IsNullOrEmpty())
+			if (string.IsNullOrEmpty(filePath))
 				return null;
 
 			var xmlDocument = new XmlDocument();
-			
 				
 			xmlDocument.Load(filePath);	
 
@@ -32,7 +29,7 @@ namespace VECTO3GUI2020.Helper
 
 		public static XmlNodeList GetComponentNodes(XmlDocument xmlDocument, string parentNode, string nodeName)
 		{
-			if (xmlDocument == null || parentNode.IsNullOrEmpty() || nodeName.IsNullOrEmpty())
+			if (xmlDocument == null || string.IsNullOrEmpty(parentNode) || string.IsNullOrEmpty(nodeName))
 				return null;
 
 			return xmlDocument.SelectNodes($"//*[local-name()='{parentNode}']//*[local-name()='{nodeName}']");
@@ -64,7 +61,7 @@ namespace VECTO3GUI2020.Helper
 		}
 
 		public static XDocument CreateWrapperDocument(this XElement xElement, XNamespace defaultNamespace,
-			XmlDocumentType docType = XmlDocumentType.DeclarationJobData)
+			XmlDocumentType docType = XmlDocumentType.DeclarationJobData, string schemaVersion = "2.0")
 		{
 			var prefixMap = new Dictionary<string, XNamespace>();
 
@@ -74,7 +71,7 @@ namespace VECTO3GUI2020.Helper
 			Debug.WriteLine(rootElement.ToString());
 
 			rootElement.Add(new XAttribute("xmlns", defaultNamespace));
-			rootElement.Add(new XAttribute("schemaVersion", XMLHelper.GetVersionFromNamespaceUri(defaultNamespace)));
+			rootElement.Add(new XAttribute("schemaVersion", schemaVersion));
 
 			xDocument.Add(rootElement);
 

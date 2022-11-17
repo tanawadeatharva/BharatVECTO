@@ -70,9 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerDemand"></param>
-		public void AddConstant(string auxId, Watt powerDemand)
+		/// <param name="columnName"></param>
+		public void AddConstant(string auxId, Watt powerDemand, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand);
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerDemand, columnName);
 		}
 
 		/// <summary>
@@ -84,20 +85,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
-		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
+		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc, string columnName = null)
 		{
-			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample));
+			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample), columnName);
 		}
 
-		
+
 		/// <summary>
 		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
 		/// </summary>
 		/// <param name="auxId"></param>
 		/// <param name="powerLossFunction"></param>
-		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction)
+		/// <param name="columnName"></param>
+		public void Add(string auxId, Func<PerSecond, Second, Second, bool, Watt> powerLossFunction, string columnName = null)
 		{
 			Auxiliaries[auxId] = powerLossFunction;
+			(DataBus as IVehicleContainer)?.AddAuxiliary(auxId, columnName);
+			//(DataBus as IVehicleContainer)?.SumData?.AddAuxiliary(auxId);
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
@@ -121,8 +125,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, PerSecond angularSpeed, bool dryRun = false)
 		{
-			var avgAngularSpeed = PreviousState.AngularSpeed != null
-				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
+			var iceOn = !DataBus.EngineInfo.EngineOn && DataBus.EngineCtl.CombustionEngineOn;
+			var prevAngularSpeed = iceOn ? DataBus.EngineInfo.EngineSpeed : PreviousState.AngularSpeed;
+
+			var avgAngularSpeed = prevAngularSpeed != null
+				? (angularSpeed + prevAngularSpeed) / 2.0
 				: angularSpeed;
 			if (!dryRun) {
 				CurrentState.AngularSpeed = angularSpeed;
@@ -241,6 +248,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public PerSecond AngularSpeed;
 			public Dictionary<string, Watt> PowerDemands;
+
+			public State Clone() => (State)MemberwiseClone();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is EngineAuxiliary a) {
+				PreviousState = a.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

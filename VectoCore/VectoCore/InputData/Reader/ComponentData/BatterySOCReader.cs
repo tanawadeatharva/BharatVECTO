@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
@@ -48,6 +49,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			public const string StateOfCharge = "SoC";
 
 			public const string BatteryVoltage = "V";
+		}
+	}
+
+	public static class BatteryHelper
+	{
+		public static WattSecond TotalUsableCapacityInSimulation(this IBatteryPackDeclarationInputData batteryData)
+		{
+			var tmp = BatterySOCReader.Create(batteryData.VoltageCurve);
+			var voltage = tmp.Lookup(((batteryData.MinSOC ?? 0) + (batteryData.MaxSOC ?? 1)) / 2.0);
+			return batteryData.Capacity * voltage;
+		}
+
+		public static WattSecond TotalStorageCapacity(this IBatteryPackDeclarationInputData batteryData)
+		{
+			var tmp = BatterySOCReader.Create(batteryData.VoltageCurve);
+			var voltage = tmp.Lookup(((batteryData.MinSOC ?? 0) + (batteryData.MaxSOC ?? 1)) / 2.0);
+			return batteryData.Capacity * voltage;
 		}
 	}
 }

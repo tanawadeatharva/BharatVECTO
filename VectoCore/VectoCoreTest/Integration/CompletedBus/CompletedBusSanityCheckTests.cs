@@ -15,6 +15,7 @@ using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
@@ -65,14 +66,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			//var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = _xmlInputReader.CreateDeclaration(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null),  writer)
-			{
-				WriteModalResults = true,
-				Validate = false
-			};
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null),  writer);
+			factory.WriteModalResults = true;
+			factory.Validate = false;
 
 			AssertHelper.Exception<VectoException>(() => {
-				var runs = factory.DataReader.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
+				var runs = factory.RunDataFactory.NextRun().ToList();}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
         [
@@ -115,18 +114,16 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
             //var inputData = new MockCompletedBusInputData(XmlReader.Create(PifFile_33_34), modified);
 			//var inputData = new MockCompletedBusInputData(modified);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null), writer)
-            {
-                WriteModalResults = true,
-                Validate = false
-            };
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, new XMLDeclarationVIFInputData(modified, null), writer);
+			factory.WriteModalResults = true;
+			factory.Validate = false;
 
-            //AssertHelper.Exception<VectoException>(() => {
-                var runs = factory.DataReader.NextRun().ToList();
+			//AssertHelper.Exception<VectoException>(() => {
+                var runs = factory.RunDataFactory.NextRun().ToList();
             //}, messageContains: "Input parameter 'separate air distribution ducts' has to be set to 'true' for vehicle group ");
         }
 
-        private IMultistageBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
+        private IMultistepBusInputDataProvider GetModifiedXML(string vifPrimary, string completedJob, BusHVACSystemConfiguration? hvacConfig, bool separateDucts)
 		{
 			var vifDataProvider = _xmlInputReader.Create(XmlReader.Create(vifPrimary));
 			//var completeDataProvider = _xmlInputReader.CreateDeclaration(comple);
@@ -135,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			completedXML.Load(completedJob);
 
 			var hvacCfgNode = completedXML.SelectSingleNode("//*[local-name()='SystemConfiguration']");
-			hvacCfgNode.InnerText = hvacConfig.GetXmlFormat();
+			hvacCfgNode.InnerText = hvacConfig.ToXmlFormat();
 
 			var airDuctsNode = completedXML.SelectSingleNode("//*[local-name()='SeparateAirDistributionDucts']");
 			airDuctsNode.InnerText = XmlConvert.ToString(separateDucts);
@@ -143,12 +140,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var completeDataProvider = _xmlInputReader.CreateDeclaration(modified);
 
-			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistageBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
+			var inputData = new XMLDeclarationVIFInputData(vifDataProvider as IMultistepBusInputDataProvider, completeDataProvider.JobInputData.Vehicle);
 
 			var filename = Guid.NewGuid().ToString().Substring(0, 20);
 			var writer = new FileOutputVIFWriter(filename, 0);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 			var jobContainer = new JobContainer(new MockSumWriter());
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -160,13 +157,13 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var completedVif = _xmlInputReader.CreateDeclaration(XmlReader.Create(new StringReader(completedVifXML.OuterXml)));
 			File.Delete(writer.XMLMultistageReportFileName);
 
-			return completedVif as IMultistageBusInputDataProvider;
+			return completedVif as IMultistepBusInputDataProvider;
 		}
 	}
 
-	public class MockCompletedBusInputData : IInputDataProvider, IMultistageBusInputDataProvider
+	public class MockCompletedBusInputData : IInputDataProvider, IMultistepBusInputDataProvider
 	{
-		private IMultistageBusInputDataProvider input;
+		private IMultistepBusInputDataProvider input;
 	
 		public MockCompletedBusInputData(XmlReader vif)
 		{
@@ -174,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var _xmlInputReader = kernel.Get<IXMLInputDataReader>();
 
 
-			input = _xmlInputReader.CreateDeclaration(vif) as IMultistageBusInputDataProvider;
+			input = _xmlInputReader.CreateDeclaration(vif) as IMultistepBusInputDataProvider;
 			
 			//JobName = Vehicle.VIN;
 		}

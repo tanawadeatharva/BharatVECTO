@@ -128,6 +128,8 @@ namespace VECTO3GUI.ViewModel.Adapter.Declaration
 			return GetComponentViewModel<IAirdragViewModel>(Component.Airdrag)?.ModelData;
 		} }
 
+		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
+
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 

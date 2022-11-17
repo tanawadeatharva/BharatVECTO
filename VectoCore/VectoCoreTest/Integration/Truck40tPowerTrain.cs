@@ -135,7 +135,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
-				.AddComponent(new DummyRetarder(container))
 				.AddComponent(new Gearbox(container, gbxStrategy))
 				.AddComponent(clutch)
 				.AddComponent(engine);
@@ -143,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("ZERO", 0.SI<Watt>());
 			engine.Connect(aux.Port());
-			container.ModalData.AddAuxiliary("ZERO");
+			container.AddAuxiliary("ZERO");
 
 			return container;
 		}

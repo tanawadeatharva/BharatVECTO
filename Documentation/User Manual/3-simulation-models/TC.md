@@ -1,13 +1,13 @@
-##Torque Converter Model
+## Torque Converter Model
 
-The torque converter is defined as (virtual) separate gear. Independent of the chosen AT gearbox type (serial or power split), Vecto uses a powertrain architecture with a serial torque converter. The mechanical gear ratios and gears with torque converter are created by Vecto depending on the gearbox type and gear configuration.
+The torque converter is defined as (virtual) separate gear. Independent of the chosen AT gearbox type (serial or power split), VECTO uses a powertrain architecture with a serial torque converter. The mechanical gear ratios and gears with torque converter are created by VECTO depending on the gearbox type and gear configuration.
 
 While the torque converter is active engine torque and speed are computed based on TC characteristic. 
 
  ![](pics/GBX-TC.svg)
 
 
-###Torque converter characteristics file (.vtcc)
+### Torque converter characteristics file (.vtcc)
 
 The file is described [here](#torque-converter-characteristics-.vtcc).
 
@@ -37,7 +37,7 @@ The torque converter characteristics must also be defined for speed ratios  grea
 <div class="declaration">
 In declaration mode, the torque converter for drag points is automatically appended by VECTO. Input data with a speed ratio &geq; 1 are skipped.
 
-For Power Split transmissions, where the torque converter characteristics already contains the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
+For Power Split transmissions, where the torque converter characteristics already includes the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
 
 $\nu_{PS} = \nu / ratio_i$
 

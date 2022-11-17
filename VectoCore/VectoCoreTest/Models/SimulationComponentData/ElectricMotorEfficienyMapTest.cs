@@ -1,9 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 	[TestFixture]
@@ -18,10 +25,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 		}
 
 		
-		[TestCase(-10000, 700, -120.6737), // EM drive has negative torque and thus negative electric power
-		TestCase(-20000, 1200, -141.5367),
-		TestCase(10000, 700, 153.5121),
-		TestCase(20000, 1200, 177.4109)]
+		[TestCase(-10000, 700, -118.916545), // EM drive has negative torque and thus negative electric power
+		TestCase(-20000, 1200, -141.451404),
+		TestCase(10000, 700, 155.046977),
+		TestCase(20000, 1200, 177.530544)]
 		public void TestLookupTorqueForBatPower(double batPwr, double emSpeed, double expectedTq)
 		{
 			var inputProvider =
@@ -30,7 +37,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
 			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
 
-			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
@@ -45,6 +53,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			Assert.AreEqual(expectedTq, tq.Value(), 1e-3);
 		}
 
+
+		//[Test]
+		//public void TestMahleEMLookup()
+		//{
+		//	var inputProvider =
+		//		JSONInputDataFactory.ReadElectricMotorData(@"E:\QUAM\Downloads\2022-07-07 Hybrid 40 kW System_sent.7z\2022-07-07 Hybrid 40 kW System_sent\TDS 40kW MTM 48-210x65 V2.04.vem", false);
+
+		//	var pwr = inputProvider.VoltageLevels.Last().PowerMap.First().PowerMap;
+		//	var fld = inputProvider.VoltageLevels.Last().FullLoadCurve;
+		//	var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
+		//	var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
+
+		//	//var tq = pwrMap.LookupTorque(-45058.6788.SI<Watt>(), 6542.3.RPMtoRad(), -67.0253.SI<NewtonMeter>());
+
+		//	//Assert.AreEqual(-56.72495079, tq.Value(), 1e-6);
+
+		//	var nEm = 4797.89676.RPMtoRad();
+		//	var PEl = 47959.8400.SI<Watt>();
+
+		//	var maxRecupTq = fldMap.FullGenerationTorque(nEm);
+		//	var elPwrRecup = pwrMap.LookupElectricPower(nEm, maxRecupTq);
+
+		//	var recupTq = pwrMap.LookupTorque(PEl, nEm, maxRecupTq);
+
+		//	for (var tq = maxRecupTq - 50.SI<NewtonMeter>();
+		//		tq < maxRecupTq + 50.SI<NewtonMeter>();
+		//		tq += 1.SI<NewtonMeter>()) {
+		//		var pEl = pwrMap.LookupElectricPower(nEm, tq, false);
+		//		if (pEl.ElectricalPower == null) {
+		//			continue;
+		//		}
+		//		Console.WriteLine($"{tq.Value()}, {pEl.ElectricalPower.Value()}, {(pEl.ElectricalPower - PEl).Value()}");
+		//	}
+
+		//	Assert.IsTrue(maxRecupTq > recupTq);
+		//	var elPwr = pwrMap.LookupElectricPower(nEm, recupTq);
+		//	Assert.AreEqual(PEl.Value(), elPwr.ElectricalPower.Value(), Constants.SimulationSettings.InterpolateSearchTolerance);
+		//}
+
 		[TestCase(-1000000, 700), // EM drive has negative torque and thus negative electric power
 		TestCase(1000000, 700)]
 		public void TestLookupTorqueForBatPower2(double batPwr, double emSpeed)
@@ -53,9 +100,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData\Hybrids\ElectricMotor\GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
-
-			var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
+			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1); 
+			
+			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;//ToDo FK: maybe wrong selection
+			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
 			var pwrMap = ElectricMotorMapReader.Create(pwr, 1);
 
 			var maxEmPwr = batPwr < 0
@@ -66,5 +114,43 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 			Assert.IsNull(tq);
 
 		}
+
+		[TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_fine.vemo", 0.8999, 0.9001),
+		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_90_coarse.vemo", 0.8999, 0.9001),
+		TestCase(@"TestData\Components\ElectricMotor\vem_P_inverter_DC_std.vemo", 0, 1)]
+		public void TestInterpolationMethod_PowerMap(string filename, double etaMin, double etaMax)
+		{
+			EfficiencyMap emMap;
+			using (var fs = File.OpenRead(filename)) {
+				emMap = ElectricMotorMapReader.Create(fs, 1);
+			}
+
+			var efficiencies = new List<double>();
+			for (var n = 10.RPMtoRad(); n < 4000.RPMtoRad(); n += 10.RPMtoRad()) {
+				for (var tq = -2800.SI<NewtonMeter>(); tq <= 2800.SI<NewtonMeter>(); tq += 100.SI<NewtonMeter>()) {
+					if (tq.IsEqual(0)) {
+						continue;
+					}
+					try {
+						var pwr = emMap.LookupElectricPower(n, tq);
+						if (pwr.ElectricalPower == null) {
+							continue;
+						}
+						Console.WriteLine($"{pwr.Speed.AsRPM}, {pwr.Torque.Value()}, {pwr.ElectricalPower.Value()}, {pwr.Extrapolated}, {(n * tq).Value()}");
+						var efficiency = tq < 0
+							? pwr.Speed * pwr.Torque / pwr.ElectricalPower
+							: pwr.ElectricalPower / (pwr.Speed * pwr.Torque);
+						// set efficiencies close to 0 to exactly 0 because later assertion uses sharp bounds without tolerance
+						efficiencies.Add(efficiency.IsEqual(0) ? 0.0 : efficiency);
+					} catch (Exception e) {
+						Console.WriteLine(e.Message);
+					}
+				}
+			}
+
+			Assert.IsTrue(efficiencies.All(x => x.IsBetween(etaMin, etaMax)), $"{efficiencies.Min()} - {efficiencies.Max()}");
+		}
+
+		
 	}
 }

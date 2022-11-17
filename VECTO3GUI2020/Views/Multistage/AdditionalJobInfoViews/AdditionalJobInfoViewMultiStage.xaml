@@ -11,31 +11,47 @@
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance common:AdditionalJobInfoViewModelMultiStage }">
     <Grid>
         <StackPanel Margin="10">
-            <Label>This Job cannot be Simulated because the following Parameters are invalid:</Label>
-            <ItemsControl ItemsSource="{Binding InvalidEntries }">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <BulletDecorator>
-                            <BulletDecorator.Bullet>
-                                <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Height="5" Width="5" Fill="{DynamicResource AccentColorButton}"/>
-                            </BulletDecorator.Bullet>
-                            <TextBlock Margin="5 0">
-                                <TextBlock.Text>
-                                    <Binding Path="." Converter="{StaticResource PropertyNameToLabelConverter}">
-                                        <Binding.ConverterParameter>
-                                            <x:Array Type="resources:ResourceManager">
-                                                <x:Static MemberType="properties:GUILabels" Member="ResourceManager"/>
-                                                <x:Static MemberType="properties:BusStrings" Member="ResourceManager"/>
-                                                <x:Static MemberType="properties:Strings" Member="ResourceManager"/>
-                                            </x:Array>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </BulletDecorator>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Label>This Job cannot be simulated</Label>
+            <Label Content="{Binding ErrorInfo}" 
+                   Visibility="{Binding ErrorInfo, 
+                    Converter={StaticResource NullToVisibilityConverter}}"/>
+            <Border Margin="2" BorderBrush="{DynamicResource ButtonHighlightColor}" BorderThickness="2" Visibility="{Binding InvalidEntriesPresent, 
+                        Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel>
+                    <Label Style="{StaticResource LabelStyle1}">
+                        Invalid Parameters:
+                    </Label>
+                    <ItemsControl ItemsSource="{Binding InvalidEntries }">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Height="5" Width="5" Fill="{DynamicResource AccentColorButton}"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Margin="5 0">
+                                        <TextBlock.Text>
+                                            <Binding Path="." Converter="{StaticResource PropertyNameToLabelConverter}">
+                                                <Binding.ConverterParameter>
+                                                    <x:Array Type="resources:ResourceManager">
+                                                        <x:Static MemberType="properties:GUILabels" Member="ResourceManager"/>
+                                                        <x:Static MemberType="properties:BusStrings" Member="ResourceManager"/>
+                                                        <x:Static MemberType="properties:Strings" Member="ResourceManager"/>
+                                                    </x:Array>
+                                                </Binding.ConverterParameter>
+                                            </Binding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </BulletDecorator>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Margin="2"  Orientation="Vertical" IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
         </StackPanel> 
     </Grid>
 </UserControl>

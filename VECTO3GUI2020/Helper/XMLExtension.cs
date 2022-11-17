@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Castle.Core.Resource;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
-using TUGraz.VectoHashing.Impl;
 using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.Util.XML.Interfaces;
 

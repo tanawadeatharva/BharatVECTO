@@ -54,14 +54,17 @@ namespace TUGraz.VectoCommon.Utils
 				throw new FormatException("Cannot convert an empty string to a number.");
 			}
 
-			try {
-				return double.Parse(self, CultureInfo.InvariantCulture);
-			} catch (FormatException) {
-				if (defaultValue.HasValue) {
-					return defaultValue.Value;
-				}
-				throw;
+			var success = double.TryParse(self, NumberStyles.Float, CultureInfo.InvariantCulture, out var retVal);
+			if (success) {
+				return retVal;
 			}
+
+			if (defaultValue.HasValue) {
+				return defaultValue.Value;
+			}
+
+			// throws an exception
+			return double.Parse(self, CultureInfo.InvariantCulture);
 		}
 
 		public static int ToInt(this string self, int? defaultValue = null)
@@ -84,20 +87,24 @@ namespace TUGraz.VectoCommon.Utils
 			return int.Parse(self) != 0;
 		}
 
-		public static double IndulgentParse(this string self)
+		public static bool IsNullOrEmpty(this string self)
 		{
-			return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
+			return string.IsNullOrEmpty(self);
+		}
+
+		public static bool IsNullOrWhiteSpace(this string self)
+		{
+			return string.IsNullOrWhiteSpace(self);
+		}
+
+		public static double IndulgentParse(this string self) =>
+			double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
 				CultureInfo.InvariantCulture);
-		}
 
-		public static Stream ToStream(this string self)
-		{
-			return new MemoryStream(Encoding.UTF8.GetBytes(self));
-		}
+		public static Stream ToStream(this string self) => 
+			new MemoryStream(Encoding.UTF8.GetBytes(self));
 
-		public static string RemoveWhitespace(this string self)
-		{
-			return string.Concat(self.Split());
-		}
+		public static string RemoveWhitespace(this string self) => 
+			string.IsNullOrEmpty(self) ? "" : string.Concat(self.Split());
 	}
 }

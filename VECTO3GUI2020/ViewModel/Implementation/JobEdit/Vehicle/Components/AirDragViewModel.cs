@@ -191,11 +191,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		}
 	}
 
-	public class AirDragViewModel_v2_8 : AirDragViewModel_v2_0
+	public class AirDragViewModel_v2_4 : AirDragViewModel_v2_0
 	{
-		public new static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV28).FullName;
+		public new static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV24).FullName;
 
-		public AirDragViewModel_v2_8(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+		public AirDragViewModel_v2_4(IXMLAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
 		{
 			LabelVisible = false;
 			IsReadOnly = true;

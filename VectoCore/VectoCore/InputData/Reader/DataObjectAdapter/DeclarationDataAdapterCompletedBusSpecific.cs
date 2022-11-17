@@ -168,8 +168,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
-				vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
+			var fanPower = vehicleData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+				? 0.SI<Watt>()
+				: DeclarationData.Fan.LookupElectricalPowerDemand(
+					vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
 			retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
 				ActiveDuringEngineStopStandstill = false,
 				ActiveDuringEngineStopDriving = false,
@@ -183,9 +185,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IVehicleDeclarationInputData completedVehicle)
 		{
 			return new PneumaticUserInputsConfig {
-				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize, primaryBusAuxiliaries.PneumaticSupply.Clutch),
+				CompressorMap = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+					? null
+					: DeclarationData.BusAuxiliaries.GetCompressorMap(
+						primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
+						primaryBusAuxiliaries.PneumaticSupply.Clutch),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
+				CompressorGearRatio = completedVehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle
+					?  0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,
 				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
 				KneelingHeight = VectoMath.Max(0.SI<Meter>(),
@@ -222,37 +229,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (completedVehicle.NumberPassengersStandingUpperDeck == null) {
 				throw new VectoException("NumberOfPassengersStandingUpperDeck input parameter is required");
 			}
-			if (busAux.HeatPumpTypeDriverCompartment == null) {
-				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			if (busAux.HeatPumpTypeCoolingDriverCompartment == null) {
+				throw new VectoException("HeatPumpTypeDriverCompartment Cooling input parameter is required");
 			}
-			if (busAux.HeatPumpPassengerCompartments == null || busAux.HeatPumpPassengerCompartments.Count == 0) {
-				throw new VectoException("HeatPumpPassengerCompartments input parameter is required");
+			if (busAux.HeatPumpTypeHeatingDriverCompartment == null) {
+				throw new VectoException("HeatPumpTypeDriverCompartment Heating input parameter is required");
 			}
-			if (busAux.HeatPumpModeDriverCompartment == null || (busAux.HeatPumpTypeDriverCompartment != HeatPumpType.none && busAux.HeatPumpModeDriverCompartment.Value == HeatPumpMode.N_A)) {
-				throw new VectoException("HeatPumpTypeDriverCompartment input parameter is required");
+			if (busAux.HeatPumpTypeCoolingPassengerCompartment == null) {
+				throw new VectoException("HeatPumpTypePassengerCompartment Cooling input parameter is required");
+			}
+			if (busAux.HeatPumpTypeHeatingPassengerCompartment == null) {
+				throw new VectoException("HeatPumpTypePassengerCompartment Heating input parameter is required");
 			}
 
-			if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeDriverCompartment == HeatPumpType.none) {
+
+			if (hvacConfiguration.RequiresDriverAC() && busAux.HeatPumpTypeCoolingDriverCompartment == HeatPumpType.none && busAux.HeatPumpTypeHeatingDriverCompartment == HeatPumpType.none) {
 				throw new VectoException("HVAC System Configuration {0} requires DriverAC Technology", hvacConfiguration);
 			}
 			
-			if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpPassengerCompartments.All(x => x.Item1 == HeatPumpType.none)) {
+			if (hvacConfiguration.RequiresPassengerAC() && busAux.HeatPumpTypeCoolingPassengerCompartment == HeatPumpType.none && busAux.HeatPumpTypeHeatingPassengerCompartment == HeatPumpType.none) {
 				throw new VectoException("HVAC System Configuration {0} requires PassengerAC Technology", hvacConfiguration);
 			}
 
-			if (busAux.HeatPumpPassengerCompartments.Any(x => x.Item1 != HeatPumpType.none && x.Item2 == HeatPumpMode.N_A)) {
-                throw new VectoException("HeatPumpModePassengerCompartment input parameter is required");
-            }
+			
 
-            var heatPumpTypeDriverCompartment =
-				busAux.HeatPumpModeDriverCompartment == HeatPumpMode.heating
-					? HeatPumpType.none
-					: busAux.HeatPumpTypeDriverCompartment.Value;
+            var heatPumpTypeDriverCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
 
-            var heatPumpTypePassengerCompartment = (
-                busAux.HeatPumpPassengerCompartments.All(x => x.Item2 == HeatPumpMode.heating)
-                    ? new[] {HeatPumpType.none}.ToList()
-                    : busAux.HeatPumpPassengerCompartments.Select(x => x.Item1).ToList()).FirstOrDefault();
+            var heatPumpTypePassengerCompartment = busAux.HeatPumpTypeCoolingPassengerCompartment.Value;
 
             var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
@@ -349,6 +352,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Mission mission)
 		{
 			var hvacConfiguration = completedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
+			if (!hvacConfiguration.HasValue || hvacConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration0, BusHVACSystemConfiguration.Unknown )) {
+				throw new VectoException(
+					$"HVAC Configuration {hvacConfiguration.ToXmlFormat()} is invalid for final step");
+			}
+
 			var correctionLengthDrivetrainVolume = DeclarationData.BusAuxiliaries.CorrectionLengthDrivetrainVolume(
 				completedVehicle.VehicleCode, completedVehicle.LowEntry, primaryVehicle.AxleConfiguration.NumAxles(),
 				primaryVehicle.Articulated);

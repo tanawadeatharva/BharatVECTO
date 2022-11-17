@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Windows;
 using Ninject;
-using Ninject.Extensions.ChildKernel;
-using VECTO3GUI2020.ViewModel.Interfaces;
-using VECTO3GUI2020.ViewModel.Implementation;
-using VECTO3GUI2020.Model.Interfaces;
-using VECTO3GUI2020.Model;
 using TUGraz.VectoCore;
-using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Model.Implementation;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Vehicle;
 using VECTO3GUI2020.Properties;
-using VECTO3GUI2020.ViewModel;
 using Application = System.Windows.Application;
 
 namespace VECTO3GUI2020

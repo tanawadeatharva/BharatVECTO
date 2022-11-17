@@ -37,7 +37,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -851,7 +850,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("{Val.ToString(\"F1\"),nq} [rad/s] ({AsRPM.ToString(\"F1\"),nq} [rpm)")]
+	[DebuggerDisplay("{Val.ToString(\"F1\"),nq} [rad/s] ({AsRPM.ToString(\"F1\"),nq} [rpm])")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly int[] Units = { 0, 0, -1, 0, 0, 0, 0 };
@@ -865,14 +864,36 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<PerSquareSecond>.Create(perSecond.Val / second.Value());
 		}
 
+		public static PerMeter operator /(PerSecond perSecond, MeterPerSecond second)
+		{
+			return SIBase<PerMeter>.Create(perSecond.Val / second.Value());
+		}
+
 		public static MeterPerSecond operator *(PerSecond perSecond, Meter meter)
 		{
 			return SIBase<MeterPerSecond>.Create(perSecond.Val * meter.Value());
 		}
-		
+
 		public double AsRPM => Val * 60 / (2 * Math.PI);
 	}
 
+	/// <summary>
+	/// SI Class for one per meter [1/m].
+	/// </summary>
+	[DebuggerDisplay("{Val.ToString(\"F1\"),nq} [1/m]")]
+	public class PerMeter : SIBase<PerMeter>
+	{
+		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private PerMeter(double val) : base(val, Units) { }
+
+		public static PerSecond operator *(PerMeter perMeter, MeterPerSecond meterPerSecond) => 
+			SIBase<PerSecond>.Create(perMeter.Val * meterPerSecond.Value());
+
+		public static PerSecond operator *(MeterPerSecond meterPerSecond, PerMeter perMeter) => perMeter * meterPerSecond;
+	}
+	
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
@@ -1144,6 +1165,8 @@ namespace TUGraz.VectoCommon.Utils
 		private Ohm(double val) : base(val, Units) { }
 
 		public override string UnitString => "Ω";
+
+		public double AsMilliOhm => Val * 1000;
 	}
 
 	public class Farad : SIBase<Farad>
@@ -1456,7 +1479,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;

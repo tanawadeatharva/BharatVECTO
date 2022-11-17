@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.ServiceModel;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -13,21 +12,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public class GenericBusRetarderData
 	{
 
-		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput)
-		{
-			if (retarderInput == null || !retarderInput.Type.IsDedicatedComponent()) {
-				return new  RetarderData {Type = retarderInput?.Type ?? RetarderType.None, Ratio = 1.0};
-			}
-
-			var retarder = new RetarderData
-			{
-				Ratio = retarderInput.Ratio,
-				Type = retarderInput.Type,
-				LossMap = GenerateGenericLossMap(retarderInput.Ratio)
+		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput) =>
+			new RetarderData {
+				Type = retarderInput?.Type ?? RetarderType.None,
+				Ratio = retarderInput?.Ratio ?? 1.0,
+				LossMap = retarderInput?.Type.IsDedicatedComponent() ?? false 
+					? GenerateGenericLossMap(retarderInput.Ratio) : null
 			};
-
-			return retarder;
-		}
 
 		private RetarderLossMap GenerateGenericLossMap(double stepUpRatio)
 		{

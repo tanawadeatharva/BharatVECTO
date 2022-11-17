@@ -100,6 +100,15 @@ namespace TUGraz.VectoCommon.Utils
 		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
+		public static IEnumerable<(TFirst,TSecond)> ZipAll<TFirst, TSecond>(this IEnumerable<TFirst> firstEnumerable,
+			IEnumerable<TSecond> secondEnumerable) =>
+			firstEnumerable.ZipAll(secondEnumerable, ValueTuple.Create);
+
+
+		/// <summary>
+		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
 		public static IEnumerable<TResult> ZipAll<TFirst, TSecond, TResult>(this IEnumerable<TFirst> firstEnumerable,
 			IEnumerable<TSecond> secondEnumerable, Func<TFirst, TSecond, TResult> resultSelector)
 		{
@@ -111,13 +120,6 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 		}
-
-		/// <summary>
-		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
-		/// </summary>
-		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
-		public static IEnumerable<(T1 Item1, T2 Item2)> Zip<T1, T2>(this IEnumerable<T1> self, IEnumerable<T2> other) =>
-			self.ZipAll(other, (arg1, arg2) => (arg1, arg2));
 
 		/// <summary>
 		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
@@ -335,5 +337,10 @@ namespace TUGraz.VectoCommon.Utils
 				item7 = enumerator.Current;
 			}
 		}
+
+		/// <summary>
+		/// Checks if a value is one of the candidate values.
+		/// </summary>
+		public static bool IsOneOf<T>(this T self, params T[] candidates) => candidates.Contains(self);
 	}
 }

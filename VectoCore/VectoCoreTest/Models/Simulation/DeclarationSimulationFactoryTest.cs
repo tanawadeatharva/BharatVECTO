@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -87,7 +88,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
+			factory.Validate = false;
 
 			var runs = factory.SimulationRuns().ToArray();
 			Assert.AreEqual(10, runs.Length);
@@ -98,11 +100,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var inputDataProvider = xmlInputReader.CreateDeclaration(SampleVehicleDecl);
 			
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null);
+			factory.Validate = false;
 
 			var runs = factory.SimulationRuns().ToArray();
 
-			var expected = new[] { 1.018867, 1.018867, 1.018867, 1.018867, 1.013299, 1.013299, 1.013299, 1.013299 };
+			var expected = new[] { 1.02, 1.02, 1.02, 1.02, 1.013299, 1.013299, 1.013299, 1.013299 };
 
 			for (var i = 0; i < 8; i++)
 				Assert.AreEqual(

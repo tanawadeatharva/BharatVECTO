@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
 				//case XmlDocumentType.PrimaryVehicleBusOutputData: return ReadPrimaryVehicleDeclarationJob(xmlDoc, source);
-				case XmlDocumentType.MultistageOutputData: return ReadMultistageDeclarationJob(xmlDoc, source);
+				case XmlDocumentType.MultistepOutputData: return ReadMultistageDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringComponentData:
 				case XmlDocumentType.DeclarationComponentData:
 				case XmlDocumentType.ManufacturerReport:
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IMultistageBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		protected virtual IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
+		protected virtual IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return input;
 		}
 
-		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
+		protected virtual IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
 		{
 			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {

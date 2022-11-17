@@ -10,9 +10,7 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
-using System;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.BusAuxiliaries;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {

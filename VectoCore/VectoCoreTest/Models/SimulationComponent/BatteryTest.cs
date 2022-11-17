@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using TUGraz.VECTO;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -226,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
@@ -234,6 +232,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var container = new MockVehicleContainer();
+			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
@@ -250,8 +249,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 				
 				absTime += dt.SI<Second>();
@@ -262,8 +261,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r2 - r1) / (10 - 2);
 				var r = slope * absTime.Value() + r1 - slope * 2;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -276,8 +275,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r3 - r2) / (20 - 10);
 				var r = slope * absTime.Value() + r2 - slope * 10;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -290,12 +289,40 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();
 			}
+		}
+
+
+		[TestCase(0.5, 0.5, 5000)]
+		public void BatteryTimeDependentInternalResistanceTest_120s(double initialSoC, double dt,
+			double powerDemand)
+		{
+			var r1 = 0.02;
+			var r2 = 0.04;
+			var r3 = 0.1;
+			var r4 = 0.15;
+
+			var batteryData = new BatterySystemData() {
+				Batteries = new List<Tuple<int, BatteryData>>() {
+					Tuple.Create(0, new BatteryData() {
+						Capacity = REESS_Capacity.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+						MinSOC = REESS_MinSoC,
+						MaxSOC = REESS_MaxSoC,
+						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
+						InternalResistance =
+							BatteryInternalResistanceReader.Create(
+								$"SoC, Ri-2, Ri-10, Ri-20, Ri-120\n0, {r1}, {r2}, {r3},{r4}\n100, {r1}, {r2}, {r3}, {r4}".ToStream(),
+								false),
+						MaxCurrent = BatteryMaxCurrentReader.Create(
+							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
+					})
+				}
+			};
 		}
 
 		[TestCase(0.5, 0.5, 5000),
@@ -314,21 +341,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
 				}
 			};
-
+			var modData = new MockModalDataContainer();
 			var container = new MockVehicleContainer();
+			container.ModalData = modData;
+
+			var batId = batteryData.Batteries.First().Item2.BatteryId;
 			var bat = new Battery(container, batteryData.Batteries.First().Item2);
 			var es = new ElectricSystem(container);
 			es.Connect(bat);
 			es.Connect(new MockElectricConsumer(0.SI<Watt>()));
 			bat.Initialize(initialSoC);
 
-			var modData = new MockModalDataContainer();
+			
 
 			var absTime = 0.SI<Second>();
 
@@ -346,8 +376,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r1, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();
@@ -358,8 +388,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r2 - r1) / (10 - 2);
 				var r = slope * (absTime.Value() - 5.5) + r1 - slope * 2;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -372,8 +402,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				var slope = (r3 - r2) / (20 - 10);
 				var r = slope * (absTime.Value() - 5.5) + r2 - slope * 10;
 				Assert.AreEqual(r, rREESS.Value(), 1e-9, $"{i} / {absTime}");
@@ -386,8 +416,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.IsInstanceOf<ElectricSystemResponseSuccess>(response);
 				bat.CommitSimulationStep(absTime, dt.SI<Second>(), modData);
 
-				var current = (Ampere)modData[ModalResultField.I_reess];
-				var rREESS = (Watt)modData[ModalResultField.P_reess_loss] / current / current;
+				var current = (Ampere)modData[ModalResultField.I_reess, batId];
+				var rREESS = (Watt)modData[ModalResultField.P_reess_loss, batId] / current / current;
 				Assert.AreEqual(r3, rREESS.Value(), 1e-9, $"{i} / {absTime}");
 
 				absTime += dt.SI<Second>();
@@ -411,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -421,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -431,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -441,7 +471,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})
@@ -529,7 +559,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -539,7 +569,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -549,7 +579,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					}),
@@ -559,7 +589,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						MaxSOC = REESS_MaxSoC,
 						SOCMap = BatterySOCReader.Create("SOC,V\n0,590\n100,658".ToStream()),
 						InternalResistance =
-							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream()),
+							BatteryInternalResistanceReader.Create($"SoC, Ri-2, Ri-10, Ri-20\n0, {r1}, {r2}, {r3}\n100, {r1}, {r2}, {r3}".ToStream(), false),
 						MaxCurrent = BatteryMaxCurrentReader.Create(
 							"SOC, I_charge, I_discharge\n0, 375, 573\n100, 375, 375".ToStream()),
 					})

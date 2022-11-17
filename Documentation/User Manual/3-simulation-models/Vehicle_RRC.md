@@ -1,8 +1,8 @@
-##Vehicle: Rolling Resistance Coefficient
+## Vehicle: Rolling Resistance Coefficient
 
 
 The rolling resistance is calculated using a speed-independent rolling resistance coefficient (RRC).
-In order to consider that the RRC depends on the vehicle's mass it is modelled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following equation (the index i refers to the vehicle's axle (truck and trailer)):
+In order to consider that the RRC depends on the vehicle's mass it is modeled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following equation (the index i refers to the vehicle's axle (truck and trailer)):
 
 $RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } \right)^{\beta-1}$
 
@@ -19,4 +19,4 @@ with:
 | g           | [m/s²] | Earth gravity acceleration (constant = 9.81, Vecto 3.x: 9.80665)                                                 | [constant model parameter] |
 | β           | [-]    | Constant parameter = 0.9                                                                                         | [constant model parameter] |
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the [Vehicle-Editor](#vehicle-editor).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the [Vehicle-Editor](#vehicle-editor-general-tab).

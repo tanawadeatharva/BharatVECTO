@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var modData = container.ModalData as ModalDataContainer;
 			var runData = container.RunData;
 			var ratio = 1.0 / runData.VehicleData.DynamicTyreRadius *
-						runData.AxleGearData.AxleGear.Ratio *
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * // alxlegear may be null for certain IEPC configurations
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
@@ -105,9 +105,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					gearbox.Disengaged = true;
 					gearbox.EngageTime = 100.SI<Second>();
 					gearbox._nextGear = gearForSpeed;
+
 					var vehicleSpeed = SimulateRollingVehicle(vehicle, gradient, container);
 					modData?.Reset();
-					tmp.Add(new Entry() { StartVelocity = speed, Gradient = gradient, EndVelocity = vehicleSpeed });
+					tmp.Add(new Entry { StartVelocity = speed, Gradient = gradient, EndVelocity = vehicleSpeed });
 				}
 			}
 
@@ -152,6 +153,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var simulationInterval = TractionInterruption;
 
+			if (simulationInterval.IsEqual(0)) {
+				return vehicle.VehicleSpeed;
+			}
+
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
@@ -176,7 +181,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion: (response, cnt) => {
 						var r = (ResponseDryRun)response;
 						return r != null && (vehicle.VehicleSpeed + r.Driver.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
-					}
+					},
+					searcher: this
 				);
 				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
 				if (!(step is ResponseSuccess)) {
@@ -211,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
 		{
 			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
@@ -222,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
 		{
 			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2);
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}

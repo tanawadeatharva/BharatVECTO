@@ -145,6 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				EngineSpeed = entry.EngineSpeed;
 				FanSpeed = entry.FanSpeed;
 				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
+				Highway = entry.Highway;
 			}
 
 			/// <summary>

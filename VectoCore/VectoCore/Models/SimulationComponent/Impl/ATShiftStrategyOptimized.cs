@@ -107,11 +107,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			var modData = new ModalDataContainer(runData, null, null);
-			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
 
-			builder.BuildSimplePowertrain(runData, TestContainer);
+			PowertrainBuilder.BuildSimplePowertrain(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
@@ -252,7 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var inAngularVelocity = GearboxModelData.Gears[next.Gear].Ratio * outAngularVelocity;
 				var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt);
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * totalTransmissionRatio).Cast<PerSecond>();
+				var estimatedEngineSpeed = vehicleSpeedPostShift * totalTransmissionRatio;
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
@@ -299,15 +297,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 
+				var tqdrag = fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed);
+				var tqmax = fld[next.Gear].FullLoadStationaryTorque(response.Engine.EngineSpeed);
+				if (tqmax.IsSmallerOrEqual(tqdrag) || response.Engine.EngineSpeed.IsGreaterOrEqual(DataBus.EngineInfo.EngineN95hSpeed)) {
+					// engine speed is to high or
+					// extrapolation of max torque curve for high engine speeds may leads to negative max torque 
+					continue;
+				}
+
 				if (double.IsNaN(fcCurrent)) {
 					//var responseCurrent = RequestDryRunWithGear(
 					//	absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, current);
 					//var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
 					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, current);
-					var tqCurrent = responseCurrent.Engine.TorqueOutDemand.LimitTo(
-						fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
-						fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
-					fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
+					if (responseCurrent.Engine.EngineSpeed.IsGreaterOrEqual(DataBus.EngineInfo.EngineN95hSpeed)) {
+						fcCurrent = double.MaxValue;
+					} else {
+						var tqCurrent = responseCurrent.Engine.TorqueOutDemand.LimitTo(
+							fld[currentGear.Gear].DragLoadStationaryTorque(responseCurrent.Engine.EngineSpeed),
+							fld[currentGear.Gear].FullLoadStationaryTorque(responseCurrent.Engine.EngineSpeed));
+						fcCurrent = GetFCRating(responseCurrent.Engine.EngineSpeed, tqCurrent);
+					}
 				}
 				var tqNext = response.Engine.TorqueOutDemand.LimitTo(
 					fld[next.Gear].DragLoadStationaryTorque(response.Engine.EngineSpeed),

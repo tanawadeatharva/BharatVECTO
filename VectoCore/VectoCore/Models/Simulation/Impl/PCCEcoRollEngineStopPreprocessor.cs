@@ -125,7 +125,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gradient = 0.SI<Radian>();
 
 			foreach (var motor in container.ElectricMotors.Values) {
-				((motor as ElectricMotor).Control as DummyElectricMotorControl).EmTorque = null;
+				if ((motor as ElectricMotor).Control is DummyElectricMotorControl emCtl) {
+					emCtl.EmTorque = null;
+				}
 			}
 
 			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
@@ -142,7 +144,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						return (r.Gearbox?.PowerRequest ?? r.ElectricMotor?.TotalTorqueDemand * r.ElectricMotor?.AvgDrivetrainSpeed).Value();
-					}
+					},
+					searcher: this
 				);
 			} catch (VectoSearchAbortedException) {
 				return gradient;

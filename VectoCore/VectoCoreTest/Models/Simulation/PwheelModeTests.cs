@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -164,7 +165,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						IdleSpeed = 560.RPMtoRad(),
 						Inertia = 1.SI<KilogramSquareMeter>(),
 						EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
-						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
+						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } },
+						Fuels = new List<CombustionEngineFuelData>() {
+							new CombustionEngineFuelData() {
+								FuelData = FuelData.Diesel
+							}
+						}
 					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
 				Retarder = new RetarderData(),
@@ -178,8 +184,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(new MockModalDataContainer());
-			var jobContainer = builder.Build(data);
+			var jobContainer = PowertrainBuilder.Build(data, new MockModalDataContainer(), new MockSumWriter());
 		}
 
 		/// <summary>
@@ -195,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -224,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

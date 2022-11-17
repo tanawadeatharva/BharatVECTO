@@ -48,7 +48,7 @@ using TUGraz.VectoCore.OutputData;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 		
-	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo
+	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo, IUpdateable
 	{
 		// only CycleData Lookup is set / accessed...
 
@@ -109,6 +109,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set;
 		}
 
+		public IElectricSystemInfo ElectricSystemInfo { get; }
+
 		public ITorqueConverterInfo TorqueConverterInfo => null;
 
 		public ITorqueConverterControl TorqueConverterCtl => null;
@@ -119,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IHybridControllerCtl HybridControllerCtl { get; }
 		public IAngledriveInfo AngledriveInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
+		public WHRCharger WHRCharger { get; }
 
 		public bool IsTestPowertrain => false;
 
@@ -233,6 +236,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
 		public PCCStates PCCState => PCCStates.OutsideSegment;
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 
 		public CycleData CycleData { get; set; }
 
@@ -261,6 +265,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void AddComponent(VectoSimulationComponent component)
 		{
 			Components.Add(component);
+			ModalData?.RegisterComponent(component);
+
+			//WriteSumData?.RegisterComponent(component, RunData);
+		}
+
+		public void AddAuxiliary(string id, string columnName = null)
+		{
+			ModalData?.AddAuxiliary(id, columnName);
 		}
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
@@ -311,9 +323,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return ClutchClosed(absTime);
 		}
 
+		public bool RequestAfterGearshift { get; set; }
+
 		#endregion
 
 		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public ISumData SumData { get; }
+
 		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
 			throw new NotImplementedException();
@@ -330,6 +346,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool HasElectricMotor { get; set; }
 		public PowertrainPosition[] ElectricMotorPositions { get; set; }
+		public VectoSimulationJobType VehicleArchitecutre { get; }
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			return false;
+		}
 
 		#endregion
 	}

@@ -46,13 +46,18 @@ Public Class REESSPackDialog
 			tbStreamId.Focus()
 			Return
 		End If
-		If Not IsNumeric(tbBatteryPackCnt.Text) Then
-			MsgBox("Invalid REESS Count")
-			tbBatteryPackCnt.Focus()
-			Return
-		End If
+        If Not IsNumeric(tbBatteryPackCnt.Text) Then
+            MsgBox("Invalid REESS Count")
+            tbBatteryPackCnt.Focus()
+            Return
+        End If
+        If Not 0 < Convert.ToInt32(tbBatteryPackCnt.Text) Then
+            MsgBox("REESS Count has to be positive")
+            tbBatteryPackCnt.Focus()
+            Return
+        End If
 
-		DialogResult = DialogResult.OK
+        DialogResult = DialogResult.OK
 		Close()
 	End Sub
 
@@ -83,9 +88,13 @@ Public Class REESSPackDialog
             End If
         End If
 
-        if BatteryForm.ShowDialog() = DialogResult.OK then
-			tbBattery.Text = BatteryForm.BatteryFile
-        end if
+        if Not BatteryForm.Visible Then
+            BatteryForm.Show()
+        Else 
+            If BatteryForm.WindowState = FormWindowState.Minimized Then BatteryForm.WindowState = FormWindowState.Normal
+            BatteryForm.BringToFront()
+        End If
+
         If Not Trim(f) = "" Then
             Try
                 BatteryForm.OpenBatteryFile(f)

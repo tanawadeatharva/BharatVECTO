@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -63,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Data = new ModalResults();
 
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
-				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
+				if (ModalResults.FuelConsumptionSignals.Contains(value) || Data.Columns.Contains(value.GetName())) {
 					continue;
 				}
 
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				}
 
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
-				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
+				foreach (var fcCol in ModalResults.FuelConsumptionSignals) {
 					var col = Data.Columns.Add(
 						fuels.Count == 1 ? fcCol.GetName() : $"{fcCol.GetName()}_{entry.FuelType.GetLabel()}",
 						typeof(SI));
@@ -183,37 +184,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool WriteModalResults { get; set; }
 
-		public IEnumerable<T> GetValues<T>(ModalResultField key)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
-		}
+		public IEnumerable<T> GetValues<T>(ModalResultField key) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[(int)key]);
 
-		public IEnumerable<T> GetValues<T>(DataColumn col)
-		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
-		}
+		public IEnumerable<T> GetValues<T>(DataColumn col) => 
+			Data.Rows.Cast<DataRow>().Select(x => (T)x[col]);
 
-		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
-		{
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc) => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T> => 
 			throw new NotImplementedException();
-		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
-		public void SetDataValue(string fieldName, object value)
-		{
+		public void SetDataValue(string fieldName, object value) => 
 			throw new NotImplementedException();
-		}
 
 		public void AddAuxiliary(string id, string columnName = null)
 		{
@@ -340,22 +329,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public double REESSStartSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public double REESSEndSoC()
-		{
-			throw new NotImplementedException();
-		}
-
-		public WattSecond REESSLoss()
-		{
-			throw new NotImplementedException();
-		}
-
 		public ICorrectedModalData CorrectedModalData { get; }
+		public void RegisterComponent(VectoSimulationComponent component)
+		{
+			
+		}
+
+		public bool ContainsColumn(string modalResultField)
+		{
+			return true;
+		}
 
 		public WattSecond REESSEnergyEnd()
 		{

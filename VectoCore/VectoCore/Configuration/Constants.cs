@@ -252,6 +252,10 @@ namespace TUGraz.VectoCore.Configuration
 			public const string DriverAccelerationCurve = ".vacc";
 
 			public const string HybridStrategyParameters = ".vhctl";
+
+			public const string Json = ".json";
+
+			public const string IEPCDataFile = ".viepc";
 		}
 
 		public static class SimulationSettings
@@ -278,6 +282,11 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Meter BrakeNextTargetDistance = 2.5.SI<Meter>();
 
+			/// <summary>
+			/// used in DriverModeBrake to detect if a vehicle is already below the speed of the brake trigger.
+			/// </summary>
+			public static readonly MeterPerSecond BrakeTriggerSpeedTolerance = 0.1.KMPHtoMeterPerSecond();
+			
 			public static readonly MeterPerSecond MinVelocityForCoast = 5.KMPHtoMeterPerSecond();
 
 			/// <summary>

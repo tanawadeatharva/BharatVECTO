@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var responseCount = 0;
 			do {
 				response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
-				debug.Add(response);
+				debug.Add("MSDC.R-0", response);
 
 				switch (response) {
 					case ResponseGearShift _:
@@ -193,7 +193,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
 							// ReSharper disable once AccessToModifiedClosure
 							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
+							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value(),
+							searcher: this);
 						Log.Info("Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
 							absTime, dt, acceleration, gradient);
 						break;
@@ -212,7 +213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.SimulationInterval = dt;
 			response.Driver.Acceleration = acceleration;
-			debug.Add(response);
+			debug.Add("MSDC.R-1", response);
 
 			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + DataBus.VehicleInfo.VehicleSpeed * dt;
 			if (CurrentState.SimulationDistance.IsSmaller(0)) {
@@ -240,7 +241,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				},
 				criterion: y => DataBus.ClutchInfo.ClutchClosed(absTime)
 					? ((ResponseDryRun)y).DeltaDragLoad.Value()
-					: ((ResponseDryRun)y).Gearbox.PowerRequest.Value());
+					: ((ResponseDryRun)y).Gearbox.PowerRequest.Value(),
+				searcher: this);
 			Log.Info(
 				"Found operating point for braking. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}, BrakePower: {4}",
 				absTime, dt, acceleration, gradient, DataBus.Brakes.BrakePower);
@@ -254,7 +256,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 					evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-					criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+					criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value(),
+					searcher: this);
 			}
 
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
@@ -270,7 +273,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 					evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
 					criterion:
-						y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+						y => ((ResponseDryRun)y).DeltaFullLoad.Value(),
+					searcher: this);
 				Log.Info(
 					"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
 					absTime, dt, acceleration, gradient);
@@ -286,7 +290,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					criterion: y => DataBus.ClutchInfo.ClutchClosed(absTime)
 						? ((ResponseDryRun)y).DeltaDragLoad.Value()
-						: ((ResponseDryRun)y).Gearbox.PowerRequest.Value());
+						: ((ResponseDryRun)y).Gearbox.PowerRequest.Value(),
+					searcher: this);
 				Log.Info(
 					"Found operating point for braking. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}, BrakePower: {4}",
 					absTime, dt, acceleration, gradient, DataBus.Brakes.BrakePower);
@@ -300,7 +305,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 						evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value(),
+						searcher: this);
 				}
 			}
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient, false);
@@ -379,7 +385,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingAction DrivingAction => DrivingAction.Accelerate;
 
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
+
 		public PCCStates PCCState => PCCStates.OutsideSegment;
+
+		public MeterPerSecond NextBrakeTriggerSpeed => 0.SI<MeterPerSecond>();
 
 		public Meter Distance => CurrentState.Distance;
 	}
