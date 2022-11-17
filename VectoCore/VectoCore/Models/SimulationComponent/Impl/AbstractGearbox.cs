@@ -124,6 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		public abstract bool GearEngaged(Second absTime);
+		public bool RequestAfterGearshift { get; set; }
 
 		protected bool ConsiderShiftLosses(GearshiftPosition nextGear, NewtonMeter torqueOut)
 		{
@@ -170,5 +171,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public GearshiftPosition Gear;
 		public TransmissionLossMap.LossMapResult TorqueLossResult;
 		public DrivingBehavior DrivingBehavior;
+
+		public new GearboxState Clone() => (GearboxState)base.Clone();
 	}
 }

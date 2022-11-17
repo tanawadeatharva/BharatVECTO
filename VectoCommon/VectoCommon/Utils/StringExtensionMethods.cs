@@ -54,14 +54,17 @@ namespace TUGraz.VectoCommon.Utils
 				throw new FormatException("Cannot convert an empty string to a number.");
 			}
 
-			try {
-				return double.Parse(self, CultureInfo.InvariantCulture);
-			} catch (FormatException) {
-				if (defaultValue.HasValue) {
-					return defaultValue.Value;
-				}
-				throw;
+			var success = double.TryParse(self, NumberStyles.Float, CultureInfo.InvariantCulture, out var retVal);
+			if (success) {
+				return retVal;
 			}
+
+			if (defaultValue.HasValue) {
+				return defaultValue.Value;
+			}
+
+			// throws an exception
+			return double.Parse(self, CultureInfo.InvariantCulture);
 		}
 
 		public static int ToInt(this string self, int? defaultValue = null)
@@ -102,6 +105,6 @@ namespace TUGraz.VectoCommon.Utils
 			new MemoryStream(Encoding.UTF8.GetBytes(self));
 
 		public static string RemoveWhitespace(this string self) => 
-			string.Concat(self.Split());
+			string.IsNullOrEmpty(self) ? "" : string.Concat(self.Split());
 	}
 }

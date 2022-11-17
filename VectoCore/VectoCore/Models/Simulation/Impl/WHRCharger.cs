@@ -5,7 +5,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort
+	public class WHRCharger : StatefulVectoSimulationComponent<WHRCharger.State>, IElectricChargerPort, IUpdateable
 	{
 		public double Efficiency { get; }
 
@@ -71,7 +71,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public WattSecond GeneratedEnergy { get; set; }
 
 			public WattSecond ExcessiveEnergy { get; set; }
+
+			public State Clone() => (State)MemberwiseClone();
 		}
 
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is WHRCharger c) {
+				PreviousState = c.PreviousState.Clone();
+				return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

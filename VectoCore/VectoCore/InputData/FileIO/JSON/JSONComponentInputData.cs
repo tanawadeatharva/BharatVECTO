@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IBatteryPackEngineeringInputData Battery;
 		private IElectricMotorEngineeringInputData ElectricMotor;
 		private IBusAuxiliariesEngineeringData BusAux;
-
+		private IIEPCEngineeringInputData IEPCData;
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
@@ -101,6 +101,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case ".vaux":
 					tmp = JSONInputDataFactory.ReadEngineeringBusAuxiliaries(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.IEPCDataFile:
+					tmp = JSONInputDataFactory.ReadIEPCEngineeringInputData(filename, tolerateMissing);
+					break;
 			}
 
 			if(tmp is IVehicleEngineeringInputData x1) VehicleData = x1;
@@ -119,6 +122,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if(tmp is IElectricMotorEngineeringInputData x14) ElectricMotor = x14;
 			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
 			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
+			if (tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
 
 			_filename = filename;
 		}
@@ -217,7 +221,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			});
 		} }
 
-		public IIEPCDeclarationInputData IEPC => null;
+		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
+
+		public IIEPCDeclarationInputData IEPC => IEPCData;
 
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {

@@ -25,6 +25,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterPrimaryBus
 
+		public override DriverData CreateDriverData()
+		{
+			var retVal = base.CreateDriverData();
+			retVal.LookAheadCoasting.Enabled = false;
+			retVal.OverSpeed.Enabled = false;
+			return retVal;
+		}
+
 		public override VehicleData CreateVehicleData(
 			IVehicleDeclarationInputData data, Segment segment, Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 		{

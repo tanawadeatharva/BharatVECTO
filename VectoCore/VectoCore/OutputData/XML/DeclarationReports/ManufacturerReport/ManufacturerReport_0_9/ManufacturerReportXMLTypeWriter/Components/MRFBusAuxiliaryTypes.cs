@@ -169,12 +169,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
-					new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
-					new XElement(_mrf + "HeadLightsLED", auxData.ElectricConsumers.HeadlightsLED),
-					new XElement(_mrf + "PositionLightsLED", auxData.ElectricConsumers.PositionlightsLED),
-					new XElement(_mrf + "BrakeLightsLED", auxData.ElectricConsumers.BrakelightsLED),
-					new XElement(_mrf + "InteriorLightsLED", auxData.ElectricConsumers.InteriorLightsLED)),
+				_mrfFactory.GetConventionalCompletedBusElectricSystemType().GetElement(auxData),
 				_mrfFactory.GetConventionalCompletedBus_HVACSystemType().GetElement(auxData)
 			);
 			return result;
@@ -183,14 +178,67 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-
-	internal class MRFCompletedBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFHEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
-		public MRFCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+		public MRFHEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				_mrfFactory.GetHEVCompletedBusElectricSystemType().GetElement(auxData),
+				_mrfFactory.GetHEVCompletedBus_HVACSystemType().GetElement(auxData)
+            );
+			return result;
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFPEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of AbstractMrfXmlType
+
+		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			var result = new XElement(_mrf + XMLNames.Component_Auxiliaries,
+				_mrfFactory.GetPEVCompletedBusElectricSystemType().GetElement(auxData),
+                _mrfFactory.GetPEVCompletedBus_HVACSystemType().GetElement(auxData)
+            );
+			return result;
+		}
+
+		#endregion
+	}
+
+	internal class MRFConventionalCompletedBusElectricSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFConventionalCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + "DayRunningLightsLED", auxData.ElectricConsumers.DayrunninglightsLED),
@@ -201,6 +249,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 
 		#endregion
+	}
+
+	internal class MRFHEVCompletedBusElectricSystemType : MRFConventionalCompletedBusElectricSystemType
+	{
+		public MRFHEVCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+	}
+
+	internal class MRFPEVCompletedBusElectricSystemType : MRFConventionalCompletedBusElectricSystemType
+	{
+		public MRFPEVCompletedBusElectricSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
 	}
 
 	internal class MRFConventionalCompletedBus_HVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
@@ -218,6 +278,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class MRFHEVCompletedBus_HVACSystemType : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	{
+		public MRFHEVCompletedBus_HVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Implementation of IMRFBusAuxiliariesType
+
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		{
+			return new XElement(_mrf + "HVACSystem",
+				_mrfFactory.GetCompletedBus_HVACSystemGroup().GetElements(auxData),
+				_mrfFactory.GetCompletedBus_xEVHVACSystemGroup().GetElements(auxData));
+		}
+
+		#endregion
+	}
+
+	internal class MRFPEVCompletedBus_HVACSystemType : MRFHEVCompletedBus_HVACSystemType
+	{
+		public MRFPEVCompletedBus_HVACSystemType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		
+	}
+
 	internal class MRFPrimaryBusElectricSystemType_Conventional_HEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
 		public MRFPrimaryBusElectricSystemType_Conventional_HEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
@@ -230,15 +313,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			var maxAlternatorPower = auxData.ElectricSupply.GetMaxAlternatorPower();
 			var electricStorageCapacity =
-				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity);
+				auxData.ElectricSupply.ElectricStorage?.Sum(electricStorage => electricStorage.ElectricStorageCapacity) ?? 0.SI<WattSecond>();
 			return new XElement(_mrf + XMLNames.BusAux_ElectricSystem,
 				new XElement(_mrf + XMLNames.BusAux_ElectricSystem_AlternatorTechnology,
 					auxData.ElectricSupply.AlternatorTechnology.ToXMLFormat()),
-				(auxData.ElectricSupply.AlternatorTechnology == AlternatorType.None || maxAlternatorPower == null)
-					? null
-					: new XElement(_mrf + "MaxAlternatorPower", maxAlternatorPower.ToXMLFormat(0)),
+				(auxData.ElectricSupply.AlternatorTechnology == AlternatorType.Smart
+					? new XElement(_mrf + "MaxAlternatorPower", maxAlternatorPower.ToXMLFormat(0))
+					: null),
 
-			auxData.ElectricSupply.ElectricStorage == null || electricStorageCapacity == null ? null : new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat()));
+				auxData.ElectricSupply.AlternatorTechnology == AlternatorType.Smart
+					? new XElement(_mrf + "ElectricStorageCapacity", electricStorageCapacity.ToXMLFormat())
+					: null);
 		}
 
 		#endregion
@@ -269,10 +354,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public virtual XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, GetPneumaticSystemTechnology(auxData)),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartcompressionSystem, auxData.PneumaticSupply.SmartAirCompression),
@@ -282,19 +367,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			);
 		}
 
+		protected virtual string GetPneumaticSystemTechnology(IBusAuxiliariesDeclarationData auxData)
+		{
+			return $"{auxData.PneumaticSupply.CompressorSize}, {auxData.PneumaticSupply.CompressorDrive.GetLabel()}, clutch: {auxData.PneumaticSupply.Clutch}";
+		}
+
 		#endregion
 	}
 
-	internal class MRFPrimaryBusPneumaticSystemType_HEV_S : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusPneumaticSystemType_HEV_S : MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px
 	{
 		public MRFPrimaryBusPneumaticSystemType_HEV_S(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public override XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, GetPneumaticSystemTechnology(auxData)),
 				new XElement(_mrf + XMLNames.Bus_CompressorRatio, auxData.PneumaticSupply.Ratio.ToXMLFormat(3)),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
@@ -305,19 +395,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class MRFPrimaryBusPneumaticSystemType_PEV_IEPC : AbstractMrfXmlType, IMRFBusAuxiliariesType
+	internal class MRFPrimaryBusPneumaticSystemType_PEV_IEPC : MRFPrimaryBusPneumaticSystemType_Conventional_Hev_Px
 	{
 		public MRFPrimaryBusPneumaticSystemType_PEV_IEPC(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		#region Implementation of IMRFBusAuxiliariesType
 
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
+		public override XElement GetElement(IBusAuxiliariesDeclarationData auxData)
 		{
 			return new XElement(_mrf + XMLNames.BusAux_PneumaticSystem,
-				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.GetLabel()),
+				new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, auxData.PneumaticSupply.CompressorDrive.ToString()),
 				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem, auxData.PneumaticSupply.SmartRegeneration),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat()),
-				new XElement(_mrf + "ReagentDosing", auxData.PneumaticConsumers.AdBlueDosing == ConsumerTechnology.Pneumatically)
+				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem_AirsuspensionControl, auxData.PneumaticConsumers.AirsuspensionControl.ToXMLFormat())
 			);
 		}
 

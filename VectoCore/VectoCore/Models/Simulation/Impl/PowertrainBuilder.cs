@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -56,37 +57,48 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
+	//public interface IPowertrainBuilderFactory
+	//{
+	//	PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null);
+
+	//}
+
+	//public class PowertrainBuilderFactory : IPowertrainBuilderFactory
+	//{
+	//	#region Implementation of IPowertrainBuilderFactory
+
+	//	public PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
+	//	{
+	//		return new PowertrainBuilder(modData, sumWriter);
+	//	}
+
+	//	#endregion
+	//}
 	/// <summary>
 	/// Provides Methods to build a simulator with a powertrain step by step.
 	/// </summary>
-	public class PowertrainBuilder
+	public static class PowertrainBuilder
 	{
-		private readonly IModalDataContainer _modData;
-		private readonly WriteSumData _sumWriter;
 
-		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
-		{
-			_modData = modData ?? throw new VectoException("Modal Data Container can't be null");
-			_sumWriter = sumWriter;
-		}
-
-		public IVehicleContainer Build(VectoRunData data)
+		public static IVehicleContainer Build(VectoRunData data, IModalDataContainer modData, ISumData sumWriter = null)
 		{
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
 					switch (data.JobType) {
-						case VectoSimulationJobType.ConventionalVehicle: return BuildFullPowertrainConventional(data);
-						case VectoSimulationJobType.ParallelHybridVehicle: return BuildFullPowertrainParallelHybrid(data);
-						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data);
-						case VectoSimulationJobType.BatteryElectricVehicle: return BuildBatteryElectricPowertrain(data);
-						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data);
+						case VectoSimulationJobType.ConventionalVehicle: return BuildFullPowertrainConventional(data, modData, sumWriter);
+						case VectoSimulationJobType.ParallelHybridVehicle: return BuildFullPowertrainParallelHybrid(data, modData, sumWriter);
+						case VectoSimulationJobType.SerialHybridVehicle: return BuildFullPowertrainSerialHybrid(data, modData, sumWriter);
+						case VectoSimulationJobType.BatteryElectricVehicle: return BuildFulPowertrainBatteryElectric(data, modData, sumWriter);
+						case VectoSimulationJobType.EngineOnlySimulation: return BuildEngineOnly(data, modData, sumWriter);
+						case VectoSimulationJobType.IEPC_E: return BuildFullPowertrainIEPCE(data, modData, sumWriter);
+						case VectoSimulationJobType.IEPC_S: return BuildFullPowertrainIEPCSerial(data, modData, sumWriter);
 						default: throw new ArgumentOutOfRangeException($"Powertrain Builder cannot build Powertrain for JobType: {data.JobType}");
 					}
-				case CycleType.EngineOnly: return BuildEngineOnly(data);
-				case CycleType.PWheel: return BuildPWheel(data);
-				case CycleType.VTP: return BuildVTP(data);
-				case CycleType.MeasuredSpeed: return BuildMeasuredSpeed(data);
-				case CycleType.MeasuredSpeedGear: return BuildMeasuredSpeedGear(data);
+				case CycleType.EngineOnly: return BuildEngineOnly(data, modData, sumWriter);
+				case CycleType.PWheel: return BuildPWheel(data, modData, sumWriter);
+				case CycleType.VTP: return BuildVTP(data, modData, sumWriter);
+				case CycleType.MeasuredSpeed: return BuildMeasuredSpeed(data, modData, sumWriter);
+				case CycleType.MeasuredSpeedGear: return BuildMeasuredSpeedGear(data, modData, sumWriter);
 				default: throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
 			}
 		}
@@ -99,14 +111,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///  └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildEngineOnly(VectoRunData data)
+		private static IVehicleContainer BuildEngineOnly(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
+			if (_sumWriter == null)
+				throw new ArgumentNullException(nameof(_sumWriter));
 			if (data.Cycle.CycleType != CycleType.EngineOnly) {
 				throw new VectoException("CycleType must be EngineOnly.");
 			}
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, _sumWriter) { RunData = data };
 
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
@@ -137,13 +150,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildPWheel(VectoRunData data)
+		private static IVehicleContainer BuildPWheel(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
+			if (_sumWriter == null)
+				throw new ArgumentNullException(nameof(_sumWriter));
 			if (data.Cycle.CycleType != CycleType.PWheel) {
 				throw new VectoException("CycleType must be PWheel.");
 			}
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, _sumWriter) { RunData = data };
 			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -173,13 +188,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///     └(VTPTruckAuxiliaries or VTPBusAuxiliaries)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildVTP(VectoRunData data)
+		private static IVehicleContainer BuildVTP(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.VTP) {
 				throw new VectoException("CycleType must be VTP.");
 			}
 
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
 
 			new VTPCycle(container, data.Cycle)
@@ -202,7 +217,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private void AddVTPBusAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
+		private static void AddVTPBusAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
 		{
 			var aux = new EngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
@@ -223,29 +238,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
-				container.ModalData?.AddAuxiliary(id);
 			}
-
-
 			engine.Connect(aux.Port());
 		}
 
-		private void AddVTPTruckAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
+		private static void AddVTPTruckAuxiliaries(VectoRunData data, VehicleContainer container, VTPCombustionEngine engine)
 		{
 			var aux = CreateSpeedDependentAuxiliaries(data, container);
 			var engineFan = new EngineFanAuxiliary(data.FanDataVTP.FanCoefficients.Take(3).ToArray(), data.FanDataVTP.FanDiameter);
 			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+					(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
@@ -269,13 +278,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
+		private static IVehicleContainer BuildMeasuredSpeed(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
 				throw new VectoException("CycleType must be MeasuredSpeed.");
 			}
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, sumWriter) { RunData = data };
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
@@ -309,13 +318,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
+		private static IVehicleContainer BuildMeasuredSpeedGear(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear) {
 				throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
 			}
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, sumWriter) { RunData = data };
 			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
@@ -351,13 +360,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///        └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildFullPowertrainConventional(VectoRunData data)
+		private static IVehicleContainer BuildFullPowertrainConventional(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
 
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
@@ -401,8 +410,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///         └(Aux)
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildFullPowertrainParallelHybrid(VectoRunData data)
+		private static IVehicleContainer BuildFullPowertrainParallelHybrid(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
 		{
+			if (_sumWriter == null)
+				throw new ArgumentNullException(nameof(_sumWriter));
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
@@ -416,7 +427,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("P0 Hybrids are modeled as SmartAlternator in the BusAuxiliary model.");
 			}
 
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, modData, _sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
@@ -424,13 +435,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			HybridController ctl;
 			SwitchableClutch clutch = null;
-			if (data.GearboxData.Type.ManualTransmission()) {
-				ctl = new HybridController(container, new HybridStrategy(data, container), es);
+			
+			if (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) {
+				ctl = new HybridController(container,new HybridStrategy(data, container), es);
 				clutch = new SwitchableClutch(container, data.EngineData);
 			} else {
 				ctl = new HybridController(container, new HybridStrategyAT(data, container), es);
 				new ATClutchInfo(container);
 			}
+		
 
 			// add engine before gearbox in the container, that gearbox can obtain it
 			var engine = new StopStartCombustionEngine(container, data.EngineData);
@@ -467,6 +480,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
@@ -522,8 +536,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///        └Engine E2
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildFullPowertrainSerialHybrid(VectoRunData data)
+		private static IVehicleContainer BuildFullPowertrainSerialHybrid(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
+			if (sumWriter == null)
+				throw new ArgumentNullException(nameof(sumWriter));
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
 			}
@@ -534,7 +550,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("SerialHybrid needs exactly one electric motor.");
 			}
 
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 			var strategy = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission()
 				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
@@ -603,6 +619,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					new ATClutchInfo(container);
@@ -632,7 +649,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, data);
+				.AddAuxiliariesSerialHybrid(container, data);
 
 			return container;
 		}
@@ -657,7 +674,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └Engine E2
 		/// </code>
 		/// </summary>
-		private IVehicleContainer BuildBatteryElectricPowertrain(VectoRunData data)
+		private static IVehicleContainer BuildFulPowertrainBatteryElectric(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -669,7 +686,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Battery electric vehicle needs exactly one electric motor.");
 			}
 			
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
 			var es = ConnectREESS(data, container);
 
 			var ctl = new BatteryElectricMotorController(container, es);
@@ -720,6 +737,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(em);
 
 					new ATClutchInfo(container);
@@ -749,10 +767,53 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
+		private static IPowerTrainComponent GetPEVPTO(VehicleContainer container, VectoRunData data)
+		{
+			if (data.PTO == null) {
+				return null;
+			}
+			var pto = new PEVPTO(container);
+
+			RoadSweeperAuxiliary rdSwpAux = null;
+			PTODriveAuxiliary ptoDrive = null;
+			if (data.ExecutionMode == ExecutionMode.Engineering && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
+				if (data.DriverData.PTODriveMinSpeed == null) {
+					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
+				}
+				rdSwpAux = new RoadSweeperAuxiliary(container);
+				pto.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+			}
+
+			if (data.ExecutionMode == ExecutionMode.Engineering &&
+				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
+				if (data.PTOCycleWhileDrive == null) {
+					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
+				}
+
+				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
+				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+			}
+			if (data.PTO != null) {
+				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).TorqueLoss);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+
+				pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+			}
+
+			return pto;
+		}
+
 		private static Retarder GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
 			type == data.Type ? new Retarder(container, data.LossMap, data.Ratio) : null;
 
-		private IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+		private static IElectricMotor GetElectricMachine(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
 				ElectricMotorData>> electricMachinesData, VehicleContainer container, IElectricSystem es, IHybridController ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
@@ -760,9 +821,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return null;
 			}
 
-			container.ModData?.AddElectricMotor(pos);
+			//container.ModData?.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos)
+				: new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			if (pos == PowertrainPosition.GEN) {
 				es.Connect(new GensetChargerAdapter(motor));
 			} else {
@@ -779,10 +842,194 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return null;
 			}
 
-			container.ModData?.AddElectricMotor(pos);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
+			//container.ModData?.AddElectricMotor(pos);
+			var motor = pos == PowertrainPosition.IEPC
+				? new IEPC(container, motorData.Item2, ctl, pos)
+				: new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);
 			return motor;
+		}
+
+		/// <summary>
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
+		/// <code>
+		/// DistanceBasedDrivingCycle
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | ├Singlespeed Gearbox
+		///      | └Engine IEPC
+		///      └ APTNGearbox
+		///       └Engine IEPC
+		/// </code>
+		/// </summary>
+		private static IVehicleContainer BuildFullPowertrainIEPCE(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+			if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.GEN)) {
+				throw new VectoException("IEPC vehicle does not support GEN set.");
+			}
+			if (data.ElectricMachinesData.Count != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one electric motor.");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, modData, sumWriter) { RunData = data };
+			var es = ConnectREESS(data, container);
+
+			var ctl = new BatteryElectricMotorController(container, es);
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First().Item1;
+			IElectricMotor em;
+			if (pos != PowertrainPosition.IEPC) {
+				throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
+			}
+			
+			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new IEPCGearbox(container, new APTNShiftStrategy(container))
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
+
+			new ATClutchInfo(container);
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container);
+			}
+			new DummyEngineInfo(container);
+
+			if (data.BusAuxiliaries != null) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
+				var electricStorage = new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				busAux.DCDCConverter = dcdc;
+				es.Connect(dcdc);
+				em.BusAux = busAux;
+			}
+
+			return container;
+		}
+
+		/// <summary>
+		/// Builds a battery electric powertrain for either E4, E3, or E2.
+		/// <code>
+		/// DistanceBasedDrivingCycle
+		/// └Driver
+		///  └Vehicle
+		///   └Wheels
+		///    └Brakes
+		///     └AxleGear
+		///      │ ├(AxlegearInputRetarder)
+		///      | ├Singlespeed Gearbox
+		///      | └Engine IEPC
+		///      └ APTNGearbox
+		///       └Engine IEPC
+		/// </code>
+		/// </summary>
+		private static IVehicleContainer BuildFullPowertrainIEPCSerial(VectoRunData data, IModalDataContainer modData, ISumData _sumWriter)
+		{
+			if (_sumWriter == null)
+				throw new ArgumentNullException(nameof(_sumWriter));
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 == PowertrainPosition.GEN) != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one GEN set.");
+			}
+			if (data.ElectricMachinesData.Count(x => x.Item1 != PowertrainPosition.GEN) != 1) {
+				throw new VectoException("IEPC vehicle needs exactly one electric motor.");
+			}
+
+			var container = new VehicleContainer(data.ExecutionMode, modData, _sumWriter) { RunData = data };
+			var es = ConnectREESS(data, container);
+
+			var strategy = new SerialHybridStrategy(data, container);
+			var ctl = new SerialHybridController(container, strategy, es);
+
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
+
+			var idleController = engine.IdleController;
+			ctl.Engine = engine;
+
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+			IElectricMotor em;
+			if (pos != PowertrainPosition.IEPC) {
+				throw new ArgumentOutOfRangeException(nameof(pos), pos, "Invalid engine powertrain position for BatteryElectric Vehicle");
+			}
+
+			//-->AxleGear-->APTNGearbox or SinglespeedGearbox-->Engine E2
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new IEPCGearbox(container, new APTNShiftStrategy(container))
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
+
+			new ATClutchInfo(container);
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container);
+			}
+
+			if (data.BusAuxiliaries != null) {
+				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+					throw new VectoException("BusAux must be supplied from REESS!");
+				}
+
+				var auxCfg = data.BusAuxiliaries;
+				var busAux = new BusAuxiliariesAdapter(container, auxCfg);
+				var electricStorage = new NoBattery(container);
+				busAux.ElectricStorage = electricStorage;
+				var dcdc = new DCDCConverter(container, data.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency);
+				busAux.DCDCConverter = dcdc;
+				es.Connect(dcdc);
+				em.BusAux = busAux;
+			}
+
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(engine, idleController)
+				.AddAuxiliaries(container, data);
+
+			return container;
 		}
 
 		/// <summary>
@@ -802,7 +1049,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///       └(Aux)
 		/// </code>
 		/// </summary>
-		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
+		public static void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
 		{
 			IVehicle vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
 			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
@@ -851,7 +1098,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///      └Engine E2
 		/// </code>
 		/// </summary>
-		public void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
+		public static void BuildSimpleSerialHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
@@ -908,6 +1155,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
 						.AddComponent(gearbox)
 						.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+						.AddComponent(GetPEVPTO(container, data))
 						.AddComponent(GetElectricMachine(PowertrainPosition.BatteryElectricE2,
 							data.ElectricMachinesData, container, es, ctl));
 					break;
@@ -917,7 +1165,60 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
+		/// <summary>
+		/// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
+		/// <code>
+		/// Vehicle
+		/// └Wheels
+		///  └SimpleHybridController
+		///   └Brakes
+		///    │ └Engine E4
+		///    └AxleGear
+		///     │ ├(AxlegearInputRetarder)
+		///     │ └Engine E3
+		///     ├(AngleDrive)
+		///     ├(TransmissionOutputRetarder)
+		///     └Gearbox or APTNGearbox
+		///      ├(TransmissionInputRetarder)
+		///      └Engine E2
+		/// </code>
+		/// </summary>
+		public static void BuildSimpleIEPCHybridPowertrain(VectoRunData data, VehicleContainer container)
+		{
+			var es = ConnectREESS(data, container);
+			var aux = new ElectricAuxiliary(container);
+			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			es.Connect(aux);
+			es.Connect(new GensetChargerAdapter(null));
+
+			var ctl = new SimpleHybridController(container, es);
+
+			//Vehicle-->Wheels-->SimpleHybridController-->Brakes
+			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(ctl)
+				.AddComponent(new Brakes(container));
+
+			var pos = data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
+			var gearbox = data.GearboxData.Gears.Count > 1
+				? (IGearbox)new APTNGearbox(container, ctl.ShiftStrategy)
+				: new SingleSpeedGearbox(container, data.GearboxData);
+			var em = GetElectricMachine(PowertrainPosition.IEPC, data.ElectricMachinesData, container, es, ctl);
+			powertrain
+				.AddComponent(data.AxleGearData != null ? new AxleGear(container, data.AxleGearData) : null)
+				.AddComponent(GetRetarder(RetarderType.AxlegearInputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(em);
+		}
+
+		/// <summary>
+		/// Builds a simple genset
+		/// <code>
+		/// Engine Gen
+		///  └CombustionEngine
+		/// </code>
+		/// </summary>
+		public static void BuildSimpleGenSet(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
 			var ctl = new GensetMotorController(container, es);
@@ -952,7 +1253,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///         └(Aux)
 		/// </code>
 		/// </summary>
-		public void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
+		public static void BuildSimpleHybridPowertrain(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
@@ -967,7 +1268,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			var ctl = new SimpleHybridController(container, es) { Gearbox = gbx, Engine = engine };
 			var idleController = GetIdleController(data.PTO, engine, container);
-			var clutch = data.GearboxData.Type.ManualTransmission() ? new SwitchableClutch(container, data.EngineData) : null;
+			var clutch = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC) ? new SwitchableClutch(container, data.EngineData) : null;
 
 
 			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
@@ -997,6 +1298,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController)
@@ -1042,7 +1344,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		///      └Electric Motor
 		/// </code>
 		/// </summary>
-		public void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
+		public static void BuildSimplePowertrainElectric(VectoRunData data, VehicleContainer container)
 		{
 			var es = ConnectREESS(data, container);
 			var aux = new ElectricAuxiliary(container);
@@ -1074,6 +1376,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
 				.AddComponent(GetElectricMachine(data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
 					data.ElectricMachinesData, container, es, new DummyElectricMotorControl()));
+			if (data.AxleGearData == null) {
+				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
+			}
 		}
 
 		private static ElectricSystem ConnectREESS(VectoRunData data, VehicleContainer container)
@@ -1107,7 +1412,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return es;
 		}
 
-		private DrivingCycleData GetMeasuredSpeedDummyCycle() =>
+		private static DrivingCycleData GetMeasuredSpeedDummyCycle() =>
 			DrivingCycleDataReader.ReadFromStream((
 				"<t>,<v>,<grad>\n" +
 				"0, 50, 0\n" +
@@ -1148,8 +1453,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
-
-				container.ModalData?.AddAuxiliary(id);
 			}
 
 			RoadSweeperAuxiliary rdSwpAux = null;
@@ -1160,8 +1463,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
 				}
 				rdSwpAux = new RoadSweeperAuxiliary(container);
-				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun));
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping,
+					(nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun),
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
 			}
 
 			if (data.ExecutionMode == ExecutionMode.Engineering &&
@@ -1171,36 +1475,61 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
-				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun));
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive,
+					(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun),
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
-												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-						(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-												Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+					(n, absTime, dt, dryRun) =>
+						container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) ||
+						(ptoDrive?.Active(absTime) ?? false)
+							? null
+							: data.PTO.LossMap.GetTorqueLoss(n) * n,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return aux;
 		}
 
-		private EngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
+		internal static EngineAuxiliary CreateAuxiliariesSerialHybrid(VectoRunData data,
+			IVehicleContainer container)
 		{
 			var aux = new EngineAuxiliary(container);
-			var auxData = data.Aux.ToArray();
-			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, auxData);
-			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.SteeringPump, auxData);
-			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.ElectricSystem, auxData);
-			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.PneumaticSystem, auxData);
+			foreach (var auxData in data.Aux) {
+				// id's in upper case
+				var id = auxData.ID.ToUpper();
+
+				switch (auxData.DemandType) {
+					case AuxiliaryDemandType.Constant:
+						aux.AddConstant(id, auxData.PowerDemand);
+						break;
+					case AuxiliaryDemandType.Direct:
+						aux.AddCycle(id);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
+				}
+			}
+
 			return aux;
 		}
 
-		private void AddSwitchingAux(EngineAuxiliary aux, IModalDataContainer modData, string auxId, VectoRunData.AuxData[] auxData)
+		private static EngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
+		{
+			var aux = new EngineAuxiliary(container);
+			var auxData = data.Aux.ToArray();
+			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, auxData);
+			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.SteeringPump, auxData);
+			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.ElectricSystem, auxData);
+			AddSwitchingAux(aux, Constants.Auxiliaries.IDs.PneumaticSystem, auxData);
+			return aux;
+		}
+
+		private static void AddSwitchingAux(EngineAuxiliary aux, string auxId, VectoRunData.AuxData[] auxData)
 		{
 			var urban = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.UrbanDelivery);
 			var rural = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.RegionalDelivery);
@@ -1217,7 +1546,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				return urban.PowerDemand;
 			});
-			modData.AddAuxiliary(auxId);
 		}
 
 		private static IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy = null)
@@ -1233,6 +1561,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return new ATGearbox(container, strategy);
 				case GearboxType.APTN:
 					return new APTNGearbox(container, strategy);
+				case GearboxType.IHPC:
+					return new APTNGearbox(container, strategy);
 				default:
 					throw new ArgumentOutOfRangeException("Unknown Gearbox Type", container.RunData.GearboxData.Type.ToString());
 			}
@@ -1246,6 +1576,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.AMT:
 					switch (runData.JobType) {
 						case VectoSimulationJobType.ConventionalVehicle:
+						case VectoSimulationJobType.ParallelHybridVehicle:
 							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
 							return new AMTShiftStrategyOptimized(container);
 						case VectoSimulationJobType.BatteryElectricVehicle:
@@ -1282,6 +1613,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.ParallelHybridVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.IEPC_E:
+						case VectoSimulationJobType.IEPC_S:
 							runData.ShiftStrategy = APTNShiftStrategy.Name;
 							return new APTNShiftStrategy(container);
 						case VectoSimulationJobType.ConventionalVehicle when container.IsTestPowertrain:
@@ -1289,7 +1622,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						default: 
 							throw new ArgumentException("APT-N Gearbox is only applicable on hybrids and battery electric vehicles.");
 					}
-
+				case GearboxType.IHPC:
+					switch (runData.JobType) {
+						case VectoSimulationJobType.IHPC:
+							runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
+							return new AMTShiftStrategyOptimized(container);
+						default:
+							throw new ArgumentException("IHPC Gearbox is only applicable on hybrid vehicle of type IHPC.");
+					}
 				default:
 					throw new ArgumentOutOfRangeException("GearboxType", runData.GearboxData.Type, "VECTO can not automatically derive shift strategy for GearboxType.");
 			}
@@ -1297,7 +1637,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN) {
+			if (runData.GearboxData.Type.AutomaticTransmission() && runData.GearboxData.Type != GearboxType.APTN && runData.GearboxData.Type != GearboxType.IHPC) {
 				new ATClutchInfo(container);
 				return new ATGearbox(container, null);
 			}
@@ -1305,28 +1645,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 
-	public class SimpleCharger : IElectricChargerPort
+	public class SimpleCharger : IElectricChargerPort, IUpdateable
 	{
 		#region Implementation of IElectricChargerPort
+		private Watt _chargingPower;
+		public SimpleCharger() => _chargingPower = 0.SI<Watt>();
+		public Watt Initialize() => _chargingPower = 0.SI<Watt>();
+		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun) => _chargingPower;
+		#endregion
 
-		public Watt ChargingPower { get; set; }
-
-		public SimpleCharger()
+		#region Implementation of IUpdateable
+		public bool UpdateFrom(object other)
 		{
-			ChargingPower = 0.SI<Watt>();
-		}
+			if (other is IElectricSystemInfo es) {
+				_chargingPower = es.ChargePower;
+				return true;
+			}
 
-		public Watt Initialize()
-		{
-			ChargingPower = 0.SI<Watt>();
-			return ChargingPower;
-		}
+			if (other is Watt w) {
+				_chargingPower = w;
+				return true;
+			}
 
-		public Watt PowerDemand(Second absTime, Second dt, Watt powerDemandEletricMotor, Watt auxPower, bool dryRun)
-		{
-			return ChargingPower;
+			return false;
 		}
-
 		#endregion
 	}
 
@@ -1532,6 +1874,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return true;
 		}
+
+		public bool RequestAfterGearshift { get; set; }
 
 		#endregion
 	}

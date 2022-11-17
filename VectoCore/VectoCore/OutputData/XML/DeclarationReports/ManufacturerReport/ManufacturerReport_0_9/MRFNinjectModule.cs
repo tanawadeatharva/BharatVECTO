@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.CompletedBus;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Lorry;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.Vehicle;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (exempted) {
 				result += exempted + vehicleType;
 			} else {
-				if (vehicleType == VehicleCategoryHelper.Lorry || vehicleType == VehicleCategoryHelper.PrimaryBus) {
+				if (vehicleType == VehicleCategoryHelper.Lorry || vehicleType == VehicleCategoryHelper.PrimaryBus || vehicleType == VehicleCategoryHelper.CompletedBus || vehicleType == VehicleCategoryHelper.Van) {
 					if (jobType == VectoSimulationJobType.ParallelHybridVehicle || ihpc) {
 						result += "HEV-Px/IHPC";
 					}else if (jobType == VectoSimulationJobType.SerialHybridVehicle) {
@@ -86,6 +87,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				6, 6, typeof(IManufacturerReportFactory).GetMethod(nameof(IManufacturerReportFactory.GetManufacturerReport)))).InSingletonScope();
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalLorryManufacturerReport());
+
+			#region LorryMRF
 			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(
 				nameCombinationMethod.Invoke(ToParams(
 					VehicleCategoryHelper.Lorry,
@@ -175,6 +178,115 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					true,
 					false)));
 
+			Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<ConventionalLorryManufacturerReport>().Named(
+				nameCombinationMethod.Invoke(ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+			Bind<IXMLManufacturerReport>().To<HEV_Px_IHPC_LorryManufacturerReport>()
+				.Named(nameCombinationMethod.Invoke(ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.ParallelHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					true)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_S2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S2,
+					false,
+					false,
+					false)));
+
+
+			Bind<IXMLManufacturerReport>().To<HEV_S3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_S4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_IEPC_S_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E2_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E3_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_E4_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_IEPC_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<Exempted_LorryManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(
+					VehicleCategoryHelper.Van,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
+			#endregion
+			#region PrimaryBUSMRF
 			Bind<IXMLManufacturerReport>().To<Conventional_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -252,6 +364,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					true,
 					false)));
+			Bind<IXMLManufacturerReport>().To<Exempted_PrimaryBus_ManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.PrimaryBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
+
+			#endregion
+			#region CompletedBus MRF
 
 			Bind<IXMLManufacturerReport>().To<Conventional_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
 				ToParams(VehicleCategoryHelper.CompletedBus,
@@ -261,6 +384,89 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					false,
 					false)));
 
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.ParallelHybridVehicle,
+					ArchitectureID.UNKNOWN,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<HEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.SerialHybridVehicle,
+					ArchitectureID.S_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<PEV_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					ArchitectureID.E_IEPC,
+					false,
+					true,
+					false)));
+
+			Bind<IXMLManufacturerReport>().To<Exempted_CompletedBusManufacturerReport>().Named(nameCombinationMethod.Invoke(
+				ToParams(VehicleCategoryHelper.CompletedBus,
+					VectoSimulationJobType.ConventionalVehicle,
+					ArchitectureID.UNKNOWN,
+					true,
+					false,
+					false)));
+
+
+
+			#endregion
 
 			#region Vehicle
 
@@ -284,6 +490,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_LorryVehicleType());
 			Bind<IXmlTypeWriter>().To<PevIEPCLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_LorryVehicleType());
+			Bind<IXmlTypeWriter>().To<ExemptedLorryVehicleTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetExempted_LorryVehicleType());
 
 			Bind<IXmlTypeWriter>().To<ConventionalPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_PrimaryBusVehicleType());
@@ -305,6 +513,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_E4_PrimaryBusVehicleType());
 			Bind<IXmlTypeWriter>().To<PevIepcPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_IEPC_PrimaryBusVehicleType());
+			Bind<IXmlTypeWriter>().To<ExemptedPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetExempted_PrimaryBusVehicleType());
 
 			Bind<IXmlTypeWriter>().To<ConventionalCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventional_CompletedBusVehicleType());
@@ -312,6 +522,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_CompletedBusVehicleType());
 			Bind<IXmlTypeWriter>().To<PevCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEV_CompletedBusVehicleType());
+			Bind<IXmlTypeWriter>().To<ExemptedCompletedBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetExempted_CompletedBusVehicleType());
 			#endregion
 			#region Components
 			Bind<IXmlTypeWriter>().To<ConventionalLorryComponentsTypeWriter>()
@@ -471,12 +683,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBus_HVACSystemType());
 
-			Bind<IMRFBusAuxiliariesType>().To<MRFCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusElectricSystemType());
+			Bind<IMRFBusAuxiliariesType>().To<MRFConventionalCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusElectricSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBusAuxType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusAuxType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBus_HVACSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFHEVCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusElectricSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBusAuxType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusAuxType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBus_HVACSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBus_HVACSystemType());
+
+			Bind<IMRFBusAuxiliariesType>().To<MRFPEVCompletedBusElectricSystemType>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusElectricSystemType());
 
 			#region Groups
 
-			Bind<IReportVehicleOutputGroup>().To<GeneralVehicleOutputOutputXmlGroup>().When(AccessedViaMRFFactory)
+			Bind<IReportVehicleOutputGroup>().To<GeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetGeneralVehicleOutputGroup());
 
 			Bind<IReportOutputGroup>().To<LorryGeneralVehicleOutputXmlGroup>().When(AccessedViaMRFFactory)
@@ -487,6 +717,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			
 			Bind<IReportOutputGroup>().To<PrimaryBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPrimaryBusGeneralVehicleOutputGroup());
+
+			Bind<IReportOutputGroup>().To<ExemptedPrimaryBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetExemptedPrimaryBusGeneralVehicleOutputGroup());
 
 			Bind<IReportOutputGroup>().To<HEVPrimaryBusVehicleOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_PrimaryBusVehicleOutputGroup());
@@ -509,12 +742,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IReportVehicleOutputGroup>().To<CompletedBusDimensionsSequenceOutputGroup>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusDimensionSequenceGroup());
 
-			Bind<IReportOutputGroup>().To<CompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
-				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBusGeneralVehicleOutputGroup());
+			Bind<IReportOutputGroup>().To<ConventionalCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetConventionalCompletedBusGeneralVehicleOutputGroup());
+
+			Bind<IReportOutputGroup>().To<HEVCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEVCompletedBusGeneralVehicleOutputGroup());
+
+			Bind<IReportOutputGroup>().To<PEVCompletedBusGeneralVehicleOutputGroup>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetPEVCompletedBusGeneralVehicleOutputGroup());
 
 
 			Bind<IMrfBusAuxGroup>().To<CompletedBus_HVACSystem_Group>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBus_HVACSystemGroup());
+
+			Bind<IMrfBusAuxGroup>().To<CompletedBus_xEVHVACSystem_Group>().When(AccessedViaMRFFactory)
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetCompletedBus_xEVHVACSystemGroup());
 
 			#endregion
 

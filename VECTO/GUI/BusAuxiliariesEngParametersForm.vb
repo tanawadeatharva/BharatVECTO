@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -66,6 +67,7 @@ Public Class BusAuxiliariesEngParametersForm
 
         select case JobType
             case VectoSimulationJobType.BatteryElectricVehicle:
+            case VectoSimulationJobType.IEPC_E:
                 bgPneumaticSystem.Enabled = False
                 gbHVAC.Enabled = False
                 cbES_HEVREESS.Checked = True
@@ -168,7 +170,7 @@ Public Class BusAuxiliariesEngParametersForm
         _busAuxParamsFile = ""
         Text = "Bus Auxiliaries Parameters Editor"
         LbStatus.Text = ""
-
+        pnSmartElectricParams.Enabled = false
         _changed = False
     End Sub
 
@@ -197,7 +199,7 @@ Public Class BusAuxiliariesEngParametersForm
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
         tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
-        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle) Then
+        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
             tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
             cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
             tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
@@ -262,7 +264,12 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
-        busAuxParams.PathCompressorMap = tbCompressorMap.Text
+        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle) then
+            busAuxParams.CompressorMap = Nothing
+        Else 
+            busAuxParams.CompressorMap = new SubPath()
+            busAuxParams.PathCompressorMap = tbCompressorMap.Text
+        End If
         busAuxParams.AverageAirDemand = tbAverageAirDemand.Text.ToDouble(0)
         busAuxParams.GearRatio = tbCompressorRatio.Text.ToDouble(0)
         busAuxParams.SmartCompression = cbSmartCompressor.Checked

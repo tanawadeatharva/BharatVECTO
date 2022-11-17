@@ -89,7 +89,7 @@ namespace TUGraz.VectoCommon.InputData
 	
 
 
-	public interface IMultistageBusInputDataProvider : IDeclarationInputDataProvider
+	public interface IMultistepBusInputDataProvider : IDeclarationInputDataProvider
 	{
 		new IDeclarationMultistageJobInputData JobInputData { get; }
 	}
@@ -98,6 +98,8 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IDeclarationInputDataProvider PrimaryVehicle { get; }
 		IVehicleDeclarationInputData StageInputData { get; }
+
+		bool SimulateResultingVIF { get; }
 	}
 
 
@@ -124,7 +126,8 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IMultistageVIFInputData :  IInputDataProvider
 	{
 		IVehicleDeclarationInputData VehicleInputData { get; }
-		IMultistageBusInputDataProvider MultistageJobInputData { get; }
+		IMultistepBusInputDataProvider MultistageJobInputData { get; }
+		bool SimulateResultingVIF { get; }
 	}
 }
 

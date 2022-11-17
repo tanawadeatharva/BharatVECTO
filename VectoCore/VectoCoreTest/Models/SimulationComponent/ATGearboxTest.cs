@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							   200,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500, 40, 0,    0";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC_shiftup-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
+				cycle, gbxType, null,
 				$"AT_Vehicle_Drive-TC_shiftdown-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
 
 			run.Run();
@@ -179,16 +179,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			Assert.IsTrue(gbxType.AutomaticTransmission());
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle(cycleName);
-			var run = ATPowerTrain.CreateEngineeringRun(
-				cycle, gbxType,
-				$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
-
 			var sumWriter =
 				new SummaryDataContainer(
 					new FileOutputWriter(
 						$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}"));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
-				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
+			var run = ATPowerTrain.CreateEngineeringRun(
+				cycle, gbxType, sumWriter,
+				$"AT_Vehicle_Drive-TC_{cycleName}-{(gbxType == GearboxType.ATSerial ? "ser" : "ps")}.vmod");
+
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

@@ -33,20 +33,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 				electricMachineSystem.Add(new XElement(_mrf + XMLNames.Component_Model, electricMachine.ElectricMachine.Model),
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, electricMachine.ElectricMachine.CertificationNumber),
-					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue.DigestValue),
+					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, electricMachine.ElectricMachine.DigestValue?.DigestValue ?? ""),
 					new XElement(_mrf + XMLNames.ElectricMachine_ElectricMachineType, electricMachine.ElectricMachine.ElectricMachineType),
 					new XElement(_mrf + XMLNames.Component_CertificationMethod, electricMachine.ElectricMachine.CertificationMethod),
-					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ToXMLFormat(0)));
+					new XElement(_mrf + "RatedPower", electricMachine.ElectricMachine.R85RatedPower.ConvertToKiloWatt().ToXMLFormat(0)));
 
 				var voltageLevels = new XElement(_mrf + "VoltageLevels");
 				electricMachineSystem.Add(voltageLevels);
 
-				foreach (var electricMotorVoltageLevel in electricMachine.ElectricMachine.VoltageLevels)
-				{
+				foreach (var electricMotorVoltageLevel in electricMachine.ElectricMachine.VoltageLevels) {
 					var voltageLevel = new XElement(_mrf + XMLNames.ElectricMachine_VoltageLevel,
-						new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0)),
+						electricMachine.ElectricMachine.VoltageLevels.Count > 1
+							? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0))
+							: null,
 						new XElement(_mrf + "MaxContinuousPower",
-							(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed)
+							(electricMotorVoltageLevel.ContinuousTorque *
+							electricMotorVoltageLevel.ContinuousTorqueSpeed).ConvertToKiloWatt()
 							.ToXMLFormat(0)));
 
 
@@ -56,10 +58,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				electricMachineElement.Add(electricMachineSystem);
 				if (electricMachine.ADC != null) {
 					var adc = electricMachine.ADC;
-					result.Add(new XElement(_mrf + XMLNames.Component_ADC, 
+					electricMachineElement.Add(new XElement(_mrf + XMLNames.Component_ADC, 
 						new XElement(_mrf + XMLNames.Component_Model, adc.Model),
 						new XElement(_mrf + XMLNames.Component_CertificationNumber, adc.CertificationNumber),
-						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, adc.DigestValue.DigestValue),
+						new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, adc.DigestValue?.DigestValue ?? ""),
 						new XElement(_mrf + XMLNames.Component_CertificationMethod, adc.CertificationMethod.ToXMLFormat()),
 						new XElement(_mrf + XMLNames.AngleDrive_Ratio, adc.Ratio.ToXMLFormat(3)))
 						);

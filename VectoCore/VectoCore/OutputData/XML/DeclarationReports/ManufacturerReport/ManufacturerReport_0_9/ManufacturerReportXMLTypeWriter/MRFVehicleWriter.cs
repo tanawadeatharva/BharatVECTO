@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
 {
@@ -78,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
+				//_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetHEV_S2_LorryComponentsType().GetElement(inputData));
 		}
 
@@ -198,7 +201,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class ExemptedLorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedLorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
+		#region Overrides of VehicleTypeWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var vehicle = inputData.JobInputData.Vehicle;
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				new XElement(_mrf + XMLNames.Component_Manufacturer, vehicle.Manufacturer),
+				new XElement(_mrf + XMLNames.ManufacturerAddress, vehicle.ManufacturerAddress),
+				_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(vehicle),
+				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicle.SleeperCab),
+				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
+				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
+			);
+		}
+
+		#endregion
+	}
 
 
 	public class ConventionalPrimaryBusVehicleTypeWriter : VehicleTypeWriter
@@ -209,10 +234,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
+			var vehicle = inputData.JobInputData.Vehicle;
+			var dualFuel = vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
-				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, inputData.JobInputData.Vehicle.DualFuelVehicle),
+				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
@@ -231,6 +259,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
 				_mrfFactory.GetHEV_Px_IHPC_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
@@ -365,6 +394,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class ExemptedPrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedPrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		#region Overrides of VehicleTypeWriter
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetExemptedPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
+				new XElement(_mrf + "VehicleTechnologyExempted", inputData.JobInputData.Vehicle.ExemptedTechnology),
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
+			);
+		}
+
+		#endregion
+	}
+
 	public class ConventionalCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
 		public ConventionalCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
@@ -373,12 +420,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var multistageInputdata = inputData as IMultistageBusInputDataProvider;
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
 			if (multistageInputdata == null) {
-				throw new ArgumentException($"inputdata must implement {nameof(IMultistageBusInputDataProvider)}");
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
 			}
 			return new XElement(_mrf + XMLNames.Component_Vehicle, 
-				_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetConventionalCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetConventionalADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
 				_mrfFactory.GetConventional_CompletedBusComponentsType().GetElement(inputData)
 				);
@@ -396,7 +443,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetHEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetHEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
@@ -410,14 +465,76 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			throw new NotImplementedException();
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+			if (multistageInputdata == null) {
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetPEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+				_mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+				_mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
 	}
 
+	public class ExemptedCompletedBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public ExemptedCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
+		#region Overrides of VehicleTypeWriter
 
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+			if (multistageInputdata == null)
+			{
+				throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+			}
+			var primaryVehicleData = multistageInputdata.JobInputData.PrimaryVehicle.Vehicle;
+			var consolidatedVehicleData = multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle;
+			var result = new XElement(_mrf + XMLNames.Component_Vehicle);
+			var manufacturers = new XElement(_mrf + "Manufacturers");
+			result.Add(manufacturers);
+			manufacturers.Add(GetManufacturerAndAddress(primaryVehicleData.Manufacturer, primaryVehicleData.ManufacturerAddress, 1));
+			foreach (var manufacturingStageInputData in multistageInputdata.JobInputData.ManufacturingStages) {
+				manufacturers.Add(GetManufacturerAndAddress(manufacturingStageInputData.Vehicle.Manufacturer,
+					manufacturingStageInputData.Vehicle.ManufacturerAddress,
+					stepCount: manufacturingStageInputData.StepCount));
+			}
+			result.Add(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle));
+			result.Add(
+				new XElement(_mrf + XMLNames.CorrectedActualMass,
+					consolidatedVehicleData.CurbMassChassis.ToXMLFormat(0)),
+				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, consolidatedVehicleData.ZeroEmissionVehicle),
+				new XElement(_mrf + XMLNames.Vehicle_RegisteredClass,
+					consolidatedVehicleData.RegisteredClass.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Bus_NumberPassengersUpperDeck,
+					consolidatedVehicleData.NumberPassengerSeatsUpperDeck +
+					consolidatedVehicleData.NumberPassengersStandingUpperDeck),
+				new XElement(_mrf + XMLNames.Bus_NumberPassengersLowerDeck,
+					consolidatedVehicleData.NumberPassengerSeatsLowerDeck +
+					consolidatedVehicleData.NumberPassengersStandingLowerDeck),
+				new XElement(_mrf + XMLNames.Vehicle_BodyworkCode, consolidatedVehicleData.VehicleCode.ToXMLFormat()),
+				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry)
+				);
+			//result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
+			return result;
 
+			//return new XElement(_mrf + XMLNames.Component_Vehicle,
+			//	_mrfFactory.GetCompletedBusGeneralVehicleOutputGroup().GetElements(inputData)
+			//);
+		}
 
+		#endregion
+
+		protected XElement GetManufacturerAndAddress(string manufacturer, string address, int stepCount)
+		{
+			return new XElement(_mrf + "Step",
+				new XAttribute("Count", stepCount),
+				new XElement(_mrf + XMLNames.Component_Manufacturer, manufacturer),
+				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, address));
+		}
+	}
 }

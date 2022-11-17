@@ -47,6 +47,25 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	public class JSONVehicleDataV11_IEPC : JSONVehicleDataV10_HEV_BEV
+	{
+		public JSONVehicleDataV11_IEPC(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
+			base(data, fileName, job, tolerateMissing)
+		{ }
+
+		public override IIEPCEngineeringInputData IEPCEngineeringInputData => JSONInputDataFactory.ReadIEPCEngineeringInputData(
+			Path.Combine(BasePath, Body.GetEx<string>("IEPC")), false);
+
+		public override IIEPCDeclarationInputData IEPC => JSONInputDataFactory.ReadIEPCEngineeringInputData(
+			Path.Combine(BasePath, Body.GetEx<string>("IEPC")), false);
+
+		#region Overrides of JSONVehicleDataV10_HEV_BEV
+
+		public override TableData BoostingLimitations => null;
+		
+		#endregion
+	}
+
 	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleDataV9
 	{
 		private JSONElectricStorageSystemEngineeringInputData _batteries;
@@ -79,6 +98,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
 					case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
 					case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
+					case "IEPC_E":
+					case "IEPC": return VectoSimulationJobType.IEPC_E;
+					case "IEPC_S":
+					case "IEPC-S": return VectoSimulationJobType.IEPC_S;
+					case "IHPC": return VectoSimulationJobType.IHPC;
 					default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
 				}
 			}
@@ -102,7 +126,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							"EM ADC LossMap")
 						: null,
 					Count = entry.GetEx<int>("Count"),
-					ElectricMachine =
+					ElectricMachine = 
 						JSONInputDataFactory.ReadElectricMotorData(
 							Path.Combine(BasePath, entry.GetEx<string>("MotorFile")), false)
 				};
@@ -119,9 +143,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			switch (VehicleType) {
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
 					return _adasInputData = new JSONADASInputDataV10BEV(this);
 				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IEPC_S:
 					return _adasInputData = new JSONADASInputDataV10HEV(this);
 				default:
 					return base.GetADS();
@@ -341,7 +368,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string ManufacturerAddress => Constants.NOT_AVAILABLE;
 
-		public virtual PerSecond EngineIdleSpeed => Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null;
+		public virtual PerSecond EngineIdleSpeed
+		{
+			get
+			{
+				if (Body["IdlingSpeed"] != null) {
+					return Body.GetEx<double>("IdlingSpeed").RPMtoRad();
+				} else {
+					return (EngineInputData as IEngineModeDeclarationInputData)?.IdleSpeed;
+				}
+
+				return null;
+			}
+		}
 
 		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration => AxleWheels().Cast<IAxleDeclarationInputData>().ToList();
 
@@ -424,7 +463,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		IElectricMachinesEngineeringInputData IVehicleComponentsEngineering.ElectricMachines => GetElectricMachines();
-		public IIEPCDeclarationInputData IEPC => null;
+		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => null;
+		public virtual IIEPCDeclarationInputData IEPC => null;
 
 		protected virtual IElectricMachinesEngineeringInputData GetElectricMachines()
 		{

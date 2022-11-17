@@ -31,7 +31,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {
 
-	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistageBusInputDataProvider, IJobViewModel, IEditViewModel
+	public interface IMultiStageJobViewModel : IDeclarationMultistageJobInputData, IMultistageVIFInputData, IMultistepBusInputDataProvider, IJobViewModel, IEditViewModel
 	{
 		IManufacturingStageViewModel ManufacturingStageViewModel { get; }
 		bool Exempted { get; }
@@ -66,7 +66,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _manufacturingStageViewModel, value);
 		}
 
-		public MultiStageJobViewModel_v0_1(IMultistageBusInputDataProvider inputData, 
+		public MultiStageJobViewModel_v0_1(IMultistepBusInputDataProvider inputData, 
 			IMultiStageViewModelFactory vmFactory, 
 			IMultistageDependencies multistageDependencies,
 			IXMLInputDataReader inputDataReader, 
@@ -200,14 +200,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					writer = new FileOutputVIFWriter(outputFile, numberOfManufacturingStages);
 				}
 
-				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData);
+				var inputData = new XMLDeclarationVIFInputData(vifData.MultistageJobInputData, vifData.VehicleInputData, false);
 
 
-				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer);
+				var factory = _simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, writer, null, null);
 				//var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer);
 					FileHelper.CreateDirectory(outputFile);
 
-					var jobContainer = new JobContainer(new NullSumWriter());
+					var jobContainer = new JobContainer(new NullSumWriter(writer));
 
 					jobContainer.AddRuns(factory);
 					jobContainer.Execute();
@@ -311,7 +311,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
         private readonly Lazy<IDialogHelper> _dialogHelper;
 		private readonly IMultistageDependencies _multistageDependencies;
 		private readonly DataSource _dataSource;
-		private readonly IMultistageBusInputDataProvider _inputData;
+		private readonly IMultistepBusInputDataProvider _inputData;
 		private bool _selected;
 		private readonly bool _exempted;
 		private readonly IJobListViewModel _jobListViewModel;
@@ -363,8 +363,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IVehicleDeclarationInputData VehicleInputData => _manufacturingStageViewModel.Vehicle;
 
-		public IMultistageBusInputDataProvider MultistageJobInputData => this;
+		public IMultistepBusInputDataProvider MultistageJobInputData => this;
 
+		public bool SimulateResultingVIF => throw new NotImplementedException();
 
 		#endregion
 
@@ -430,8 +431,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public class NullSumWriter : SummaryDataContainer
 	{
-		public override void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData) { }
+		public override void Write(IModalDataContainer modData, VectoRunData runData) { }
 
 		public override void Finish() { }
+		public NullSumWriter(ISummaryWriter writer) : base(writer) { }
 	}
 }

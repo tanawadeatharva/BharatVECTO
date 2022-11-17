@@ -125,6 +125,10 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//string Rim { get; }  // deprecated
 
+		/// <summary>
+		/// P196, P197  TorqueLimits: Gear [-], MaxTorque [Nm]
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		/// <summary>
@@ -155,14 +159,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool HybridElectricHDV { get; }
 
-		bool DualFuelVehicle { get; }
+        bool DualFuelVehicle { get; }
 
-		Watt MaxNetPower1 { get; }
+        Watt MaxNetPower1 { get; }
 
 		Watt MaxNetPower2 { get; }
 
 		string ExemptedTechnology { get; }
 
+		// --- end
 
 		RegistrationClass? RegisteredClass { get; }
 
@@ -402,6 +407,9 @@ namespace TUGraz.VectoCommon.InputData
 		SquareMeter TransferredAirDragArea { get; } // P246
 
 		SquareMeter AirDragArea_0 { get; } // P245
+
+		XmlNode XMLSource { get; }
+
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -911,14 +919,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData MaxCurrentMap { get; }
 	}
 
-	public static class BatteryHelper
-	{
-		public static AmpereSecond TotalUsableCapacityInSimulation(this IBatteryPackDeclarationInputData batteryData)
-		{
-			return batteryData.Capacity;
-		}
-	}
-
 	public interface ISuperCapDeclarationInputData : IREESSPackInputData
 	{
 		Farad Capacity { get; }
@@ -1091,7 +1091,7 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram TotalVehicleMass { get; }
 		Kilogram Payload { get; }
 		double PassengerCount { get; }
-		string FuelMode { get; }
+		//string FuelMode { get; }
 	}
 
 
@@ -1176,7 +1176,7 @@ namespace TUGraz.VectoCommon.InputData
 			switch (type)
 			{
 				case CompressorDrive.electrically: return nameof(CompressorDrive.electrically);
-				case CompressorDrive.mechanically: return nameof(CompressorDrive.electrically);
+				case CompressorDrive.mechanically: return nameof(CompressorDrive.mechanically);
 				default: return null;
 			}
 		}

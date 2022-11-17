@@ -619,6 +619,7 @@
         <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
         <VIN>VEH-1234567890</VIN>
         <Date>2021-06-07T22:00:00Z</Date>
+        <Model>SomeModel</Model>
         <LegislativeCategory>M3</LegislativeCategory>
         <CorrectedActualMass>19400</CorrectedActualMass>
         <TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>

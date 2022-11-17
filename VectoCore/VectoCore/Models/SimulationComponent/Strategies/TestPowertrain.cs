@@ -43,6 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 	public class TestPowertrain<T> where T: class, IHybridControlledGearbox, IGearbox
 	{
 		public SimplePowertrainContainer Container;
+		public IDataBus RealContainer;
+
 		public T Gearbox;
 		
 		public SimpleHybridController HybridController;
@@ -63,6 +65,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public TestPowertrain(SimplePowertrainContainer container, IDataBus realContainer)
 		{
 			Container = container;
+			RealContainer = realContainer;
+
 			Gearbox = Container.GearboxCtl as T;
 			
 			HybridController = Container.HybridController as SimpleHybridController;
@@ -75,13 +79,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
 			Charger = ((ElectricMotor?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
-				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 ||
+				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC ||
 					pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
 					ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as ElectricMotor;
 				}
 			}
 			
-			if (Gearbox != null && Gearbox.GearboxType.AutomaticTransmission() && Gearbox.GearboxType != GearboxType.APTN) {
+			if (Gearbox != null && Gearbox.GearboxType.AutomaticTransmission() && Gearbox.GearboxType != GearboxType.APTN && Gearbox.GearboxType != GearboxType.IHPC) {
 				TorqueConverter = Container.TorqueConverterInfo as TorqueConverter;
 				if (TorqueConverter == null) {
 					throw new VectoException("Torque converter missing for automatic transmission: {0}", Container.TorqueConverterInfo?.GetType().FullName);
@@ -110,9 +114,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 			//Brakes = new MockBrakes(container);
 		}
+
+		public void UpdateComponents() => Container.UpdateComponents(RealContainer);
 	}
 
-	public class MockBrakes : VectoSimulationComponent, IBrakes
+	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
 	{
 		public MockBrakes(IVehicleContainer container) : base(container)
 		{
@@ -136,6 +142,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		#region Implementation of IBrakes
 
 		public Watt BrakePower { get; set; }
+
+		#endregion
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is IBrakes b) {
+				BrakePower = b.BrakePower;
+				return true;
+			}
+
+			return false;
+		}
 
 		#endregion
 	}

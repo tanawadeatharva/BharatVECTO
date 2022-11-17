@@ -10,16 +10,16 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLDeclarationReportPrimaryVehicle : XMLDeclarationReport
 	{
-		protected IXMLPrimaryVehicleReport PrimaryReport;
+		protected IXMLVehicleInformationFile VehicleInformationFile;
 
 
-		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer, bool writePIF = false) : base(writer)
+		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer)
 		{
 		}
 
 		public override XDocument CustomerReport => null;
 
-		public override XDocument PrimaryVehicleReport => PrimaryReport?.Report;
+		public override XDocument PrimaryVehicleReport => VehicleInformationFile?.Report;
 
 
 		#region Overrides of XMLDeclarationReport
@@ -29,12 +29,12 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			if (modelData.Exempted) {
 				ManufacturerRpt = new XMLManufacturerReportExeptedPrimaryBus();
 				CustomerRpt = new XMLCustomerReportExemptedPrimaryBus();
-				PrimaryReport = new XMLExemptedPrimaryBusVehicleReport();
+				VehicleInformationFile = new XMLExemptedPrimaryBusVehicleReport();
 
 			} else {
 				ManufacturerRpt = new XMLManufacturerReportPrimaryBus();
 				CustomerRpt = new XMLCustomerReport();
-				PrimaryReport = new XMLPrimaryBusVehicleReport();
+				VehicleInformationFile = new XMLPrimaryBusVehicleReport();
 			}
 
 
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			base.InitializeReport(modelData, fuelModes);
-			PrimaryReport.Initialize(modelData,fuelModes);
+			VehicleInformationFile.Initialize(modelData,fuelModes);
 		}
 
 
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected override void WriteResult(ResultEntry result)
 		{
 			base.WriteResult(result);
-			PrimaryReport.WriteResult(result);
+			VehicleInformationFile.WriteResult(result);
 		}
 
 		protected override void GenerateReports()
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
 			CustomerRpt.GenerateReport(fullReportHash);
-			PrimaryReport.GenerateReport(fullReportHash);
+			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 
 	
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected override void OutputReports()
 		{
 			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
-			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, PrimaryReport.Report);
+			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, VehicleInformationFile.Report);
 		}
 
 		#endregion

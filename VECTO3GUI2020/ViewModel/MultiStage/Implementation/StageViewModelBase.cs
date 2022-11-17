@@ -6,9 +6,10 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
@@ -116,7 +117,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public IRelayCommand SaveInputDataCommand =>
 			_saveInputDataCommand ??
-			new Microsoft.Toolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
+			new CommunityToolkit.Mvvm.Input.RelayCommand(() => { SaveInputDataExecute(filename: _vehicleInputDataFilePath); },
 				() => _vehicleInputDataFilePath != null);
 
 		public ICommand SaveInputDataAsCommand =>
@@ -183,8 +184,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 			var xElement = vehicleWriter.GetElement();
-			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.v2_10_2);
-			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.v2_10_2).ToString());
+			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V24);
+			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V24).ToString());
 
 
 			var valid = false;

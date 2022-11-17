@@ -63,5 +63,19 @@ namespace HashingTool.Views
 			dialog.ErrorCount = XMLFile.XMLValidationErrors.Count;
 			dialog.ShowDialog();
 		}
+		
+		private void XMLFileBrowser_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                XMLFile.SetXMLFileCommnd.Execute(files?[0]);
+            }
+		}
+
+        private void XMLFileBrowser_DragOver(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+				e.Handled = true;
+		}
 	}
 }

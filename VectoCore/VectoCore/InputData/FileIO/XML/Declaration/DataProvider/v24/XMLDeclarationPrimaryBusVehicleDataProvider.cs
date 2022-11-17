@@ -115,10 +115,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
-		public override VectoSimulationJobType VehicleType
-		{
-			get => VectoSimulationJobType.ParallelHybridVehicle;
-		}
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -140,10 +140,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override VectoSimulationJobType VehicleType
-		{
-			get => VectoSimulationJobType.SerialHybridVehicle;
-		}
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -168,10 +168,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
 		#endregion
-		public override VectoSimulationJobType VehicleType
-		{
-			get => VectoSimulationJobType.BatteryElectricVehicle;
-		}
+
+		public override bool OvcHev => true;
+
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 	}
 
 
@@ -193,11 +194,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool Articulated => GetBool(XMLNames.Vehicle_Articulated);
 
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
+
 		#endregion
-		public override VectoSimulationJobType VehicleType
-		{
-			get => VectoSimulationJobType.BatteryElectricVehicle;
-		}
+
+		public override bool OvcHev => true;
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -221,12 +223,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
+		#region Overrides of AbstractXMLVehicleDataProviderV24
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
 
 		#endregion
-		public override VectoSimulationJobType VehicleType
-		{
-			get => VectoSimulationJobType.SerialHybridVehicle;
-		}
+
+		#endregion
+
+		public override bool HybridElectricHDV => true;
+
 	}
 
 

@@ -11,7 +11,7 @@ The electric motor file defines all parameters relevant for the electric machine
 
 It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
 
-VECTO automatically uses relative paths if the input file (e.g. elctric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. electric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
 
 
 ### Main Parameters
@@ -25,8 +25,8 @@ Inertia \[kgm²\]
 Continuous Torque \[Nm\]
 :    The nominal torque the electric machine can provide continuously
 
-Test Speed Continous Torque \[rpm\]
-:    Angular speed at which the continouos torque can be provided
+Test Speed Continuous Torque \[rpm\]
+:    Angular speed at which the continuous torque can be provided
 
 Overload Torque \[Nm\]
 :    Maximum torque above the continuous torque the electric motor can provide for a certain time
@@ -47,7 +47,7 @@ Max. Drive and Max. Generation Torque Curve
 :   Torque over engine speed the electric motor can apply on its output shaft. (see [Electric Motor Max Torque File (.vemp)](#electric-motor-max-torque-file-.vemp)). The max drive and max generation torque have to be provided for two different voltage levels.
 
 Electric Power Consumption Map
-:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-map-.vemo)). The power map has to be provided for two different voltage levels.
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [Electric Motor Map (.vemo)](#electric-motor-power-map-.vemo)). The power map has to be provided for two different voltage levels.
 
 Voltage Level Low/High
 :    Applicable voltage level for the electric power consumption map and max drive/generation torque curve

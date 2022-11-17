@@ -26,6 +26,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public XElement GetXmlType(IAirdragDeclarationInputData inputData)
 		{
+			if (inputData == null || inputData.AirDragArea == null) {
+				return null;
+			}
 			return new XElement(_mrf + XMLNames.Component_AirDrag,
 				new XElement(_mrf + XMLNames.Component_Model, inputData.Model),
 				new XElement(_mrf + XMLNames.Component_CertificationMethod, inputData.CertificationMethod),
@@ -33,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					? null
 					: new XElement(_mrf + XMLNames.Component_CertificationNumber, inputData.CertificationNumber),
 				new XElement(_mrf + "CdxA", inputData.AirDragArea.ToXMLFormat(2)),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, inputData.DigestValue.DigestValue));
+				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, inputData.DigestValue?.DigestValue ?? ""));
 		}
 
 		#endregion

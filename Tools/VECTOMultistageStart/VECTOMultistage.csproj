@@ -7,6 +7,15 @@
     <RootNamespace>TUGraz.VECTO</RootNamespace>
     <TargetFrameworks>net45</TargetFrameworks>
     <DefineConstants />
+    <Configurations>Debug;Release;MockupDebug</Configurations>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\VECTOStart\StarterHelper.cs" Link="StarterHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 
 </Project>

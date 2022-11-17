@@ -31,7 +31,8 @@
 
 using System;
 
-namespace TUGraz.VectoCore.InputData.Reader.Impl {
+namespace TUGraz.VectoCore.InputData.Reader.Impl 
+{
 	[Flags]
 	public enum SimulationType
 	{
@@ -42,4 +43,5 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		PWheel = 1 << 3,
 		VerificationTest = 1 << 4
 	}
+
 }

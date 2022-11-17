@@ -6,7 +6,7 @@
 ### Description
 
 
-The [Hybrid Strategy Parameters File (.vhctl)](#hybrid-strategy-parameters-file-.vhctl) defines all parameters used by the [Hybrid Control Strategy](#hybrid-control-strategy) to evaluate the best option for splitting the demanded torque between electric motor and combustion engine.
+The [Hybrid Strategy Parameters File (.vhctl)](#hybrid-strategy-parameters-file-.vhctl) defines all parameters used by the [Parallel Hybrid Control Strategy](#parallel-hybrid-control-strategy)/[Serial Hybrid Control Strategy](#serial-hybrid-control-strategy) to evaluate the best option for splitting the demanded torque between electric motor and combustion engine.
 
 ### Strategy Parameters
 
@@ -18,20 +18,20 @@ $f_\textrm{SoC} = 1 - \left(\frac{\textrm{SoC} - \textrm{TargetSoC}}{0.5 \cdot (
 
 The parameters for the cost function can be defined in the hybrid strategy file.
 
-Evquivalence Factor Discharge
+Equivalence Factor Discharge
 :   $f_{\textrm{equiv}}$ in case the battery is discharged
 
-Evquivalence Factor Charge
+Equivalence Factor Charge
 :   $f_{\textrm{equiv}}$ in case the battery is charged
 
 Min SoC
-:   $\textrm{SoC}_\textrm{min}$
+:   $\textrm{SoC}_\textrm{min}$ Minimum allowed state of charge
 
 Max SoC
-:   $\textrm{SoC}_\textrm{max}$
+:   $\textrm{SoC}_\textrm{max}$ Maximum allowed state of charge
 
 Target SoC
-:   $\textrm{TargetSoC}$
+:   $\textrm{TargetSoC}$ Targeted State of Charge for the REESS at the end of a drive
 
 Min ICE On Time
 :   In case the ICE was turned on, it cannot be turned of for this period of time

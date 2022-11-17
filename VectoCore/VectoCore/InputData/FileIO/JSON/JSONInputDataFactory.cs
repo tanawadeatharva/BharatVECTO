@@ -106,6 +106,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV10_PrimaryAndStageInputBus(json, filename, tolerateMissing);
 				case 11:
 					return new JSONInputDataV11_SerialHybrid(json, filename, tolerateMissing);
+				case 12:
+					return new JSONInputDataV12_IEPC(json, filename, tolerateMissing);
+				case 13: 
+					return new JSONInputDataV13_IHPC(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -124,6 +128,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONVehicleDataV9(json, filename, job, tolerateMissing);
 				case 10:
 					return new JSONVehicleDataV10_HEV_BEV(json, filename, job, tolerateMissing);
+				case 11:
+					return new JSONVehicleDataV11_IEPC(json, filename, job, tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}
@@ -237,6 +243,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONBusAuxiliariesEngineeringDataV1(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering BusAuxiliaries: Unsupported FileVersion. Got {0}", version);
+			}
+		}
+
+		public static IIEPCEngineeringInputData ReadIEPCEngineeringInputData(string filename,
+			bool tolerateMissing = false)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version) {
+				case 1:
+					return new JSONIEPCData(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
+			}
+		}
+
+		public static IElectricMotorEngineeringInputData ReadIHPCEngineeringInputData(string filename,
+			bool tolerateMissing = false)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version)
+			{
+				case 5:
+					return ReadElectricMotorData(filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering IHPC: Unsupported FileVersion. Got {0}", version);
 			}
 		}
 	}

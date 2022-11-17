@@ -6,11 +6,13 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, IElectricChargerConnector, IBatteryConnector
+	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnecor, 
+		IElectricChargerConnector, IBatteryConnector, IUpdateable
 	{
 
 		protected readonly List<IElectricAuxPort> Consumers = new List<IElectricAuxPort>();
@@ -141,7 +143,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 				ConsumerPower = powerDemand;
 				BatteryPower = batteryPower;
 			}
+
+			public State Clone() => (State)MemberwiseClone();
 		}
 
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is ElectricSystem s) {
+				PreviousState = s.PreviousState.Clone();
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }

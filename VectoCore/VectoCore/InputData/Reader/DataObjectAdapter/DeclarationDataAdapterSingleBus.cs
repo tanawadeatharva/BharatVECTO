@@ -91,11 +91,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			retVal.EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = vehicle.TorqueLimits.ToDictionary(e => e.Gear);
-			var numGears = gearbox.Gears.Count;
+			var gears = FilterDisabledGears(vehicle.TorqueLimits, gearbox);
+			
+			var numGears = gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
 			fullLoadCurves[0] = FullLoadCurveReader.Create(mode.FullLoadCurve, true);
 			fullLoadCurves[0].EngineData = retVal;
-			foreach (var gear in gearbox.Gears) {
+			foreach (var gear in gears) {
 				var maxTorque = VectoMath.Min(
 					GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
 					VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));

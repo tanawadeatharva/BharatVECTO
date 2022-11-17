@@ -113,15 +113,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				// create a dummy powertrain for pre-processing and estimations
-				var modData = new ModalDataContainer(data, null, null);
-				var builder = new PowertrainBuilder(modData);
 				var testContainer = new SimplePowertrainContainer(data);
-				if (data.JobType != VectoSimulationJobType.BatteryElectricVehicle && data.JobType != VectoSimulationJobType.SerialHybridVehicle)
-					builder.BuildSimplePowertrain(data, testContainer);
-				else {
-					builder.BuildSimplePowertrainElectric(data, testContainer);
-				}
 
+				switch (data.JobType) {
+					case VectoSimulationJobType.BatteryElectricVehicle:
+					case VectoSimulationJobType.SerialHybridVehicle:
+					case VectoSimulationJobType.IEPC_E:
+					case VectoSimulationJobType.IEPC_S:
+						PowertrainBuilder.BuildSimplePowertrainElectric(data, testContainer);
+						break;
+					case VectoSimulationJobType.IHPC:
+					case VectoSimulationJobType.ParallelHybridVehicle:
+						PowertrainBuilder.BuildSimpleHybridPowertrain(data, testContainer);
+						break;
+					case VectoSimulationJobType.ConventionalVehicle:
+						PowertrainBuilder.BuildSimplePowertrain(data, testContainer);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(data.JobType));
+				}
+				
 				container.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
 		}
@@ -427,7 +438,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 			var emDragLoss = CalculateElectricMotorDragLoss();
 			var iceDragLoss = 0.SI<Watt>();
-			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission() && dataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
 				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
 					iceDragLoss = DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
 				}
@@ -736,13 +747,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions)
 				sum += db.ElectricMotorInfo(pos).DragPower(
 					db.BatteryInfo.InternalVoltage,
-					db.ElectricMotorInfo(pos).ElectricMotorSpeed);
+					db.ElectricMotorInfo(pos).ElectricMotorSpeed, db.GearboxInfo.Gear);
 			return sum;
 		}
 
 		public bool IsOverspeedAllowed(MeterPerSecond velocity, bool prohibitOverspeed = false) =>
 			!prohibitOverspeed
-			&& Driver.DriverData.OverSpeed.Enabled
+			// allow overspeed either if enabled in the driver model, or ADAS PCC option 3 is enabled in the vehicle and we are on a highway
+			&& (Driver.DriverData.OverSpeed.Enabled || ADAS.PredictiveCruiseControl == PredictiveCruiseControlType.Option_1_2_3 && DataBus.DrivingCycleInfo.CycleData.LeftSample.Highway)
 			&& velocity > Driver.DriverData.OverSpeed.MinSpeed
 			&& ApplyOverspeed(velocity) < (DataBus.VehicleInfo.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());
 	}
@@ -1166,7 +1178,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleInfo.VehicleSpeed.IsSmallerOrEqual(DriverStrategy.BrakeTrigger.NextTargetSpeed) && !DataBus.VehicleInfo.VehicleStopped) {
+			if (DataBus.VehicleInfo.VehicleSpeed.IsSmaller(DriverStrategy.BrakeTrigger.NextTargetSpeed, Constants.SimulationSettings.BrakeTriggerSpeedTolerance)
+				&& !DataBus.VehicleInfo.VehicleStopped) {
 				var retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
 					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);

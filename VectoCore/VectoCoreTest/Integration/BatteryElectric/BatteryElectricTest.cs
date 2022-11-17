@@ -28,7 +28,6 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponentData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using static System.Formats.Asn1.AsnWriter;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 
 
@@ -56,6 +55,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		protected const string BEV_E2_APTS_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTS.vecto";
 		protected const string BEV_E2_APTP_Job = @"TestData\BatteryElectric\GenericVehicleB2_AT\BEV_B2_Group5LH_rl_APTP.vecto";
 
+		protected const string BEV_E2_3Speed_PTO_Job = @"TestData\BatteryElectric\GenericVehicleB2\BEV_ENG_3speed_PTO.vecto";
 
 		public const string MotorFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericEMotor_125kW_485Nm.vem";
 		public const string BatFile = @"TestData\BatteryElectric\GenericVehicleB4\GenericBattery_243kWh_750V.vbat";
@@ -697,6 +697,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			TestCase(BEV_E2_APTP_Job, 5, TestName = "PEV E2 APT-P Job Suburban"),
 			TestCase(BEV_E2_APTP_Job, 6, TestName = "PEV E2 APT-P Job Interurban"),
 			TestCase(BEV_E2_APTP_Job, 7, TestName = "PEV E2 APT-P Job Coach"),
+
+			TestCase(BEV_E2_3Speed_PTO_Job, 0, TestName = "PEV E2 3speed PTO Job LongHaul"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 1, TestName = "PEV E2 3speed PTO Job Coach"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 2, TestName = "PEV E2 3speed PTO Job Construction"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 3, TestName = "PEV E2 3speed PTO Job HeavyUrban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 4, TestName = "PEV E2 3speed PTO Job Interurban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 5, TestName = "PEV E2 3speed PTO Job MunicipalUtility"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 6, TestName = "PEV E2 3speed PTO Job RegionalDelivery"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 7, TestName = "PEV E2 3speed PTO Job Suburban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 8, TestName = "PEV E2 3speed PTO Job Urban"),
+			TestCase(BEV_E2_3Speed_PTO_Job, 9, TestName = "PEV E2 3speed PTO Job UrbanDelivery"),
 		]
 		public void B2PEVRunJob(string jobFile, int cycleIdx)
 		{
@@ -825,11 +836,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 			Assert.IsTrue(modData.Rows.Count > 0);
-			Assert.That(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
-			Assert.That(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
-			Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
-		}
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_ret_loss.GetName()));
+            Assert.IsFalse(modData.Columns.Contains(ModalResultField.P_retarder_in.GetName()));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_ret_loss.GetName()) is null));
+            //Assert.That(modData.Rows.Cast<DataRow>().All(r => r.Field<Watt>(ModalResultField.P_retarder_in.GetName()) is null));
+        }
 
 		// =================================================
 
@@ -879,6 +890,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			var runData = new VectoRunData() {
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.BatteryElectricVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				//AxleGearData = axleGearData,
 				//GearboxData = gearboxData,
@@ -909,7 +921,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			}
 
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) {
+				ExecutionMode.Engineering, modData, sumData) {
 				RunData = runData
 			};
 
@@ -994,7 +1006,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			//ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl, pos);
 			motor.Connect(es);

@@ -25,14 +25,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Component_CertificationNumber,
 					vehicleComponents.GearboxInputData.CertificationNumber),
 				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
-					vehicleComponents.GearboxInputData.DigestValue.DigestValue),
+					vehicleComponents.GearboxInputData.DigestValue?.DigestValue ?? ""),
+				new XElement(_mrf + XMLNames.Component_CertificationMethod, vehicleComponents.GearboxInputData.CertificationMethod.ToXMLFormat()),
 				new XElement(_mrf + "Type",
 					vehicleComponents.GearboxInputData.Type.ToXMLFormat()),
 				new XElement(_mrf + "NrOfGears", vehicleComponents.GearboxInputData.Gears.Count),
 				new XElement(_mrf + "FinalGearRatio",
 					vehicleComponents.GearboxInputData.Gears.Last().Ratio.ToXMLFormat(3)),
-				new XElement(_mrf + XMLNames.Vehicle_RetarderType,
-					vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
+				//new XElement(_mrf + XMLNames.Vehicle_RetarderType,
+				//	vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
 				(vehicleComponents.PTOTransmissionInputData != null ? new XElement(_mrf + "PowerTakeOff",
 					vehicleComponents.PTOTransmissionInputData.PTOTransmissionType != "None") : null));
 			return result;

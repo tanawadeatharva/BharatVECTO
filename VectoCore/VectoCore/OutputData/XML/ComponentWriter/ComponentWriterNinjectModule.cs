@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.ComponentWriter
 
 
 			//ADASTypes
-			var v2102 = XMLDeclarationNamespaces.v2_10_2;
+			var v2102 = XMLDeclarationNamespaces.V24;
 			Bind<IDeclarationAdasWriter>().To<AdasConventionalWriter>().
 				Named(GetName(GroupNames.ADAS_Conventional_Type, v2102));
 

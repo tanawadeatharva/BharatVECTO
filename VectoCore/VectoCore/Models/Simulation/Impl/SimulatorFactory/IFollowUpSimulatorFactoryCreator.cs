@@ -46,9 +46,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 
 	public class InterimAfterPrimaryFactoryCreator : FollowUpSimulatorFactoryCreator
 	{
-		private readonly TempFileOutputWriter _currentStageOutputDataWriter = null;
+		protected readonly TempFileOutputWriter _currentStageOutputDataWriter = null;
 		private readonly IOutputDataWriter _originalReportWriter = null;
-		private readonly IDeclarationReport _currentStageDeclarationReport = null;
+		protected IDeclarationReport _currentStageDeclarationReport = null;
 		private readonly IXMLInputDataReader _inputDataReader;
 		private readonly IMultistagePrimaryAndStageInputDataProvider _originalStageInputData;
 		private readonly IDeclarationReport _originalDeclarationReport;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 				new TempFileOutputWriter(originalReportWriter, ReportType.DeclarationReportManufacturerXML)
 				;
 			_currentStageDeclarationReport =
-				new XMLDeclarationReportPrimaryVehicle(_currentStageOutputDataWriter, true);
+				new XMLDeclarationReportPrimaryVehicle(_currentStageOutputDataWriter);
 			_currentStageInputData = originalStageInputData.PrimaryVehicle;
 
 		}
@@ -82,11 +82,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		{
 			//Prepare inputdata for next simulation step
 			var primaryInputData = _inputDataReader.CreateDeclaration(_currentStageOutputDataWriter
-				.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader()) as IMultistageBusInputDataProvider;
+				.GetDocument(ReportType.DeclarationReportPrimaryVehicleXML).CreateReader()) as IMultistepBusInputDataProvider;
 			Debug.Assert(primaryInputData != null);
 			var stageInputData = _originalStageInputData.StageInputData;
 
-			var nextStageInput = new XMLDeclarationVIFInputData(primaryInputData, stageInputData);
+			var nextStageInput = new XMLDeclarationVIFInputData(primaryInputData, stageInputData, _originalStageInputData.SimulateResultingVIF);
 
 			var manStagesCount =
 				nextStageInput.MultistageJobInputData.JobInputData.ManufacturingStages?.Count ?? -1;
@@ -132,9 +132,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		}
 		public override ISimulatorFactory GetNextFactory()
 		{
+			if (!_originalInputData.SimulateResultingVIF) {
+				return null;
+			}
 			var output = _xmlInputDataReader.CreateDeclaration(
-				XmlReader.Create(CurrentStageOutputDataWriter.MultistageXmlReport.ToString().ToStream())) as IMultistageBusInputDataProvider;
-			var nextStageInput = new XMLDeclarationVIFInputData(output, null);
+				XmlReader.Create(CurrentStageOutputDataWriter.MultistageXmlReport.ToString().ToStream())) as IMultistepBusInputDataProvider;
+			var nextStageInput = new XMLDeclarationVIFInputData(output, null, true);
 
 			return _simulatorFactoryFactory.Factory(ExecutionMode.Declaration, nextStageInput, CurrentStageOutputDataWriter, null, null,
 				_validate);

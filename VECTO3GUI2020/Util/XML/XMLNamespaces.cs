@@ -9,14 +9,15 @@ namespace VECTO3GUI2020.Util.XML
 		public static XNamespace Xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		public static XNamespace Tns = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 		public static XNamespace Tns_v20 = Tns.NamespaceName + ":v2.0";
-		public static XNamespace V26 = DeclarationDefinition + ":DEV:v2.6";
+		//public static XNamespace V26 = DeclarationDefinition + ":DEV:v2.6";
 		public static XNamespace V21 = DeclarationDefinition + ":v2.1";
-		public static XNamespace V23 = DeclarationDefinition + ":DEV:v2.3";
+		public static XNamespace V23 = DeclarationDefinition + ":v2.3";
+		public static XNamespace V24 = DeclarationDefinition + ":v2.4";
 		public static XNamespace V20 = DeclarationDefinition + ":v2.0";
 		public static XNamespace V10 = DeclarationDefinition + ":v1.0";
-		public static XNamespace V28 = DeclarationDefinition + ":DEV:v2.8";
-		public static XNamespace v2_10_1 = DeclarationDefinition + ":DEV:v2.10.1";
-		public static XNamespace v2_10_2 = DeclarationDefinition + ":DEV:v2.10.2";
+		//public static XNamespace V28 = DeclarationDefinition + ":DEV:v2.8";
+		//public static XNamespace v2_10_1 = DeclarationDefinition + ":DEV:v2.10.1";
+		//public static XNamespace v2_10_2 = DeclarationDefinition + ":DEV:v2.10.2";
 		public static XNamespace Di = "http://www.w3.org/2000/09/xmldsig#";
 
 
@@ -33,11 +34,9 @@ namespace VECTO3GUI2020.Util.XML
 				{ V20, "v2.0"},
 				{ V21, "v2.1"},
 				{ V23, "v2.3"},
-				{ V26, "v2.6"},
+				{ V24, "v2.4"},
+				//{ V26, "v2.6"},
 				{ Di, "di"},
-				{ V28, "v2.8"},
-				{v2_10_2, "v2.10.2"},
-				{v2_10_1, "v2.10.1"}
 			};
 
 		public static string GetPrefix(XNamespace xNamespace)

@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </value>
 		IGearbox Gearbox { get; set; }
 
-        GearshiftPosition NextGear { get; }
+		GearshiftPosition NextGear { get; }
 
 		bool CheckGearshiftRequired { get; }
 		GearshiftPosition MaxStartGear { get; }

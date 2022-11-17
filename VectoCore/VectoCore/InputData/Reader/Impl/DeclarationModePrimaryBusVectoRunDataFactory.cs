@@ -18,8 +18,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	{
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
-		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
-			base(dataProvider, report)
+		public DeclarationModePrimaryBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report, bool checkJobType = true) :
+			base(dataProvider, report, checkJobType)
 		{ }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -66,6 +66,38 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		private IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
+		{
+			switch (InputDataProvider.JobInputData.JobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
+				case VectoSimulationJobType.BatteryElectricVehicle:
+					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+				case VectoSimulationJobType.EngineOnlySimulation:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted()
+		{
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			foreach (var mission in _segment.Missions) {
+				foreach (var loading in mission.Loadings) {
+					var simulationRunData = CreateVectoRunData(vehicle, 0, mission, loading);
+					if (simulationRunData == null) {
+						continue;
+					}
+					yield return simulationRunData;
+				}
+
+			}
+		}
+
+		private IEnumerable<VectoRunData> VectoRunDataConventionalHeavyBusPrimaryNonExempted()
 		{
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			var engine = vehicle.Components.EngineInputData;

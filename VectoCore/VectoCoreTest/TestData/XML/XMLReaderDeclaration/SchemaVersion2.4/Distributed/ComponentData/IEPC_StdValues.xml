@@ -9,7 +9,7 @@
 			<AppVersion>aaaaa</AppVersion>
 			<ElectricMachineType>ASM</ElectricMachineType>
 			<CertificationMethod>Standard values for all components</CertificationMethod>
-			<R85RatedPower>1</R85RatedPower>
+			<R85RatedPower>50000</R85RatedPower>
 			<RotationalInertia>0.10</RotationalInertia>
 			<DifferentialIncluded>false</DifferentialIncluded>
 			<DesignTypeWheelMotor>true</DesignTypeWheelMotor>
@@ -32,14 +32,20 @@
 					<Entry outShaftSpeed="0.00" maxTorque="450.00" minTorque="-450.00"/>
 					<Entry outShaftSpeed="4000.00" maxTorque="100.00" minTorque="-100.00"/>
 				</MaxTorqueCurve>
-				<PowerMap>
+				<PowerMap gear="1">
+					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
+					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
+					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
+				</PowerMap>
+				<PowerMap gear="1">
 					<Entry outShaftSpeed="0.00" torque="-400.00" electricPower="-1000.00"/>
 					<Entry outShaftSpeed="0.00" torque="400.00" electricPower="1000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="-4000.00" electricPower="-20000.00"/>
 					<Entry outShaftSpeed="4000.00" torque="4000.00" electricPower="20000.00"/>
 				</PowerMap>
 			</VoltageLevel>
-			<DragCurve>
+			<DragCurve gear="1">
 				<Entry outShaftSpeed="0.00" dragTorque="10.00"/>
 				<Entry outShaftSpeed="4000.00" dragTorque="30.00"/>
 			</DragCurve>

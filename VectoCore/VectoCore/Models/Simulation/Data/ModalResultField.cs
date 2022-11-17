@@ -394,7 +394,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "EM_OVL-{0}-em [%]", outputFactor: 100)] ElectricMotor_OvlBuffer_,
 
 		[ModalResultField(typeof(SI), caption: "EM_{0}_off")] EM_Off_,
-		[ModalResultField(typeof(SI), caption: "EM_E2_off")] EM_E2_Off_,
+
+		[ModalResultField(typeof(SI), caption: "n_{0}_int_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_IEPC_int_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_int [Nm]")] T_IEPC_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_int_map [Nm]")] T_IEPC_map_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_int_drive_max [Nm]")] T_IEPC_int_drive_max_,
+		[ModalResultField(typeof(SI), caption: "T_{0}_int_gen_max [Nm]")] T_IEPC_int_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_int_gen_max [kW]", outputFactor: 1e-3)] P_IEPC_int_gen_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_int_drive_max [kW]", outputFactor: 1e-3)] P_IEPC_int_drive_max_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_inertia_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorInertiaLoss_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_int_mech_map [kW]", outputFactor: 1e-3)] P_IEPC_int_mech_map_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_el [kW]", outputFactor: 1e-3)] P_IEPC_el_,
+		[ModalResultField(typeof(SI), caption: "P_{0}_out [kW]", outputFactor: 1e-3)] P_IEPC_out_,
+		[ModalResultField(typeof(SI), caption: "n_IEPC_out_avg [kW]", outputFactor: 1e-3)] n_IEPC_out_avg,
+		[ModalResultField(typeof(SI), caption: "T_IEPC_out [kW]", outputFactor: 1e-3)] T_IEPC_out,
+		[ModalResultField(typeof(SI), caption: "P_{0}_loss [kW]", outputFactor: 1e-3)] P_IEPC_electricMotorLoss_,
+		[ModalResultField(typeof(SI), caption: "{0}_off")] IEPC_Off_,
+		[ModalResultField(typeof(SI), caption: "{0}_OVL [%]", outputFactor: 100)] IEPC_OvlBuffer_,
+
+
 
 
 		// only for graphDrawing Testcase
@@ -464,6 +482,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	{
 		private static ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute> _attributeDictionary =
 			new ConcurrentDictionary<ModalResultField, ModalResultFieldAttribute>();
+
 		public static string GetName(this ModalResultField field)
 		{
 			return GetAttribute(field).Name ?? field.ToString();

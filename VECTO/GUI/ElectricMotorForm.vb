@@ -573,12 +573,17 @@ Public Class ElectricMotorForm
             OpenFiles(FileRepl(tbDragTorque.Text, GetPath(_emFile)))
         End If
     End Sub
-
-    Private Sub btnBrowseEmMapLow_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapLow.Click
+    
+    Private Sub btnBrowseMaxTorqueLow_Click(sender As Object, e As EventArgs) Handles btnBrowseMaxTorqueLow.Click
         If ElectricMachineMaxTorqueFileBrowser.OpenDialog(FileRepl(tbMaxTorqueLow.Text, GetPath(_emFile))) Then _
             tbMaxTorqueLow.Text = GetFilenameWithoutDirectory(ElectricMachineMaxTorqueFileBrowser.Files(0), GetPath(_emFile))
     End Sub
 
+    Private Sub btnBrowseEmMapLow_Click(sender As Object, e As EventArgs) Handles btnBrowseEmMapLow.Click
+        If ElectricMachineEfficiencyMapFileBrowser.OpenDialog(FileRepl(tbMapLow.Text, GetPath(_emFile))) Then _
+            tbMapLow.Text = GetFilenameWithoutDirectory(ElectricMachineEfficiencyMapFileBrowser.Files(0), GetPath(_emFile))
+    End Sub
+    
     Private Sub btnEmMapOpenLow_Click(sender As Object, e As EventArgs) Handles btnEmMapOpenLow.Click
         Dim theFile As String
 
@@ -588,6 +593,18 @@ Public Class ElectricMotorForm
             OpenFiles(FileRepl(tbMapLow.Text, GetPath(_emFile)), theFile)
         Else
             OpenFiles(FileRepl(tbMapLow.Text, GetPath(_emFile)))
+        End If
+    End Sub
+
+    Private Sub btnMaxTorqueCurveOpenLow_Click(sender As Object, e As EventArgs) Handles btnMaxTorqueCurveOpenLow.Click
+        Dim theFile As String
+
+        theFile = FileRepl(tbMaxTorqueLow.Text, GetPath(_emFile))
+
+        If theFile <> NoFile AndAlso File.Exists(theFile) Then
+            OpenFiles(FileRepl(tbMaxTorqueLow.Text, GetPath(_emFile)), theFile)
+        Else
+            OpenFiles(FileRepl(tbMaxTorqueLow.Text, GetPath(_emFile)))
         End If
     End Sub
 End Class

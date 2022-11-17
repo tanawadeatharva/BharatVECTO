@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
-xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"  xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -9,28 +8,243 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
+	<xs:complexType name="ElectricMachineSystemMaxTorqueEntryType">
+		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P468 - [rpm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="maxTorque" type="v2.3:maxTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P469 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="minTorque" type="v2.3:minTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P470 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemPowerMapEntryType">
+		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P473 - [rpm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torque" type="v2.3:PowerMapTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P474 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="electricPower" type="v2.3:PowerMapElectricPowerType" use="required">
+			<xs:annotation>
+				<xs:documentation>P475 - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="VectoMockResults">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Results" type="vif:ResultsPrimaryVehicleType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="VectoOutputMultistep" type="vif:VectoOutputMultistepType">
 		<xs:annotation>
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="AbstractAngledriveDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractAuxiliaryDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractAxlegearDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractAxleWheelsComponentPIFType" abstract="true"/>
-	<xs:complexType name="AbstractAxleWheelsDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractEngineDataPIFType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-P_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_HEV-S_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_IEPC_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:complexType name="Abstract_AUX_PEV_PrimaryBusDeclarationType" abstract="true"/>
+	<xs:group name="BusAuxElectricSystemSupplySequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartAlternator" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RatedCurrent">
+							<xs:annotation>
+								<xs:documentation>P295 - [A]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedVoltage">
+							<xs:annotation>
+								<xs:documentation>P296 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:enumeration value="12"/>
+									<xs:enumeration value="24"/>
+									<xs:enumeration value="48"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Battery" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="BatteryTechnology">
+							<xs:annotation>
+								<xs:documentation>P296 - enum</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="lead-acid battery – conventional"/>
+									<xs:enumeration value="lead-acid battery – AGM"/>
+									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="li-ion battery - high power"/>
+									<xs:enumeration value="li-ion battery - high energy"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedCapacity" type="xs:integer">
+							<xs:annotation>
+								<xs:documentation>P299 - [Ah]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="NominalVoltage">
+							<xs:annotation>
+								<xs:documentation>P298 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:enumeration value="12"/>
+									<xs:enumeration value="24"/>
+									<xs:enumeration value="48"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Capacitor" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CapacitorTechnology">
+							<xs:annotation>
+								<xs:documentation>P300 - [-]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="with DCDC converter"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedCapacitance">
+							<xs:annotation>
+								<xs:documentation>P301 - [F]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="RatedVoltage">
+							<xs:annotation>
+								<xs:documentation>P302 - [V]</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="AbstractADCDataDeclarationType" abstract="true"/>
+	<xs:complexType name="AbstractAngledriveDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractAuxiliaryDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxlegearDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxleWheelsComponentVIFType" abstract="true"/>
+	<xs:complexType name="AbstractAxleWheelsDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractBatterySystemDataType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractREESSDataType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AbstractCapacitorSystemDataType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMachineSystemDataType" abstract="true"/>
+	<xs:complexType name="AbstractElectricMachineSystemVoltageLevelType" abstract="true"/>
+	<xs:complexType name="AbstractEngineDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractIEPCGearsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractManufacturingStepDataType" abstract="true">
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="AbstractPrimaryVehicleType" abstract="true"/>
-	<xs:complexType name="AbstractTorqueConverterDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractTransmissionDataPIFType" abstract="true"/>
-	<xs:complexType name="AbstractTransmissionGearsPIFType" abstract="true"/>
-	<xs:complexType name="AbstractVehicleComponentsPIFType" abstract="true"/>
-	<xs:complexType name="AngledriveDataPIFType">
+	<xs:complexType name="AbstractREESSDataType" abstract="true"/>
+	<xs:complexType name="AbstractTorqueConverterDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractTransmissionDataVIFType" abstract="true"/>
+	<xs:complexType name="AbstractTransmissionGearsVIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsConventionalVIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsHEV_Px_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsHEV_Sx_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsIEPC_S_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsIEPC_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVehicleComponentsPEV_Ex_VIFType" abstract="true"/>
+	<xs:complexType name="AbstractVIFIEPCDataType" abstract="true"/>
+	<xs:complexType name="ADCComponentDeclarationType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractADCDataDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ADCDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractAngledriveDataPIFType">
+			<xs:extension base="vif:AbstractADCDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P220 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P221 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P265 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P223 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P224 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Ratio" type="v1.0:AngledriveRatioType">
+						<xs:annotation>
+							<xs:documentation>P176 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P258 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AngledriveDataVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractAngledriveDataVIFType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -62,14 +276,53 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 							<xs:documentation>P224</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Ratio"/>
+					<xs:element name="Ratio" type="xs:double"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AngledrivePIFType">
+	<xs:complexType name="RetarderDataVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractRetarderVIFDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P220</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P221</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P258 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P265</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P223</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P224</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RetarderRatio" type="xs:double"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AngledriveVIFType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAngledriveDataPIFType"/>
+			<xs:element name="Data" type="vif:AbstractAngledriveDataVIFType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ApplicationInformationPrimaryVehicleType">
@@ -86,14 +339,9 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AuxiliaryComponentPIFType">
-		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAuxiliaryDataPIFType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="AuxiliaryDataPIFType">
+	<xs:complexType name="AUX_Conventional_PrimaryBusType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractAuxiliaryDataPIFType">
+			<xs:extension base="vif:AbstractAuxiliaryDataVIFType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
@@ -295,14 +543,292 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxlegearComponentPIFType">
+	<xs:complexType name="AUX_HEV-P_PrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:Abstract_AUX_HEV-P_PrimaryBusDeclarationType">
+				<xs:sequence>
+					<xs:element name="Fan">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyPrimaryBusType">
+									<xs:annotation>
+										<xs:documentation>P181 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182 - enum</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AuxSPTechnologyPrimaryBusType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ElectricSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnology_HEV_Type">
+									<xs:annotation>
+										<xs:documentation>P294 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:group ref="vif:BusAuxElectricSystemSupplySequenceGroup" minOccurs="0"/>
+								<xs:element name="SupplyFromHEVPossible" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P303 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P326 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AUX_HEV-S_PrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:Abstract_AUX_HEV-S_PrimaryBusDeclarationType">
+				<xs:sequence>
+					<xs:element name="Fan">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" type="v2.4:AuxFanTechnologyPrimaryBusType">
+									<xs:annotation>
+										<xs:documentation>P181 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182 - enum</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AuxSPTechnology_HEV-S_PrimaryBusType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ElectricSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AlternatorTechnology" type="v2.4:AlternatorTechnology_HEV-S_Type">
+									<xs:annotation>
+										<xs:documentation>P294 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="SupplyFromHEVPossible" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P303 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_HEV-S_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EngineWasteGasHeatExchanger" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P326 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AUX_IEPC_PrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:Abstract_AUX_IEPC_PrimaryBusDeclarationType">
+				<xs:sequence>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182 - enum</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_PrimaryBusType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_IEPC_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AUX_PEV_PrimaryBusType">
+		<xs:complexContent>
+			<xs:extension base="vif:Abstract_AUX_PEV_PrimaryBusDeclarationType">
+				<xs:sequence>
+					<xs:element name="SteeringPump">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Technology" maxOccurs="4">
+									<xs:annotation>
+										<xs:documentation>P182</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="v2.4:AuxSPTechnology_PEV_PrimaryBusType">
+												<xs:attribute name="axleNumber" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:int">
+															<xs:minInclusive value="1"/>
+															<xs:maxInclusive value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="PneumaticSystem">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:group ref="vif:BusAuxPneumaticSystemGen_PEV_SequenceGroup"/>
+								<xs:group ref="vif:BusAuxPneumaticSystemConsumerSequenceGroup"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AdjustableCoolantThermostat" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P324 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AuxiliaryComponentVIFType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractAxlegearDataPIFType"/>
+			<xs:element name="Data" type="vif:AbstractAuxiliaryDataVIFType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AxlegearDataPIFType">
+	<xs:complexType name="AxlegearComponentVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractAxlegearDataVIFType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AxlegearDataVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractAxlegearDataPIFType">
+			<xs:extension base="vif:AbstractAxlegearDataVIFType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -340,21 +866,21 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxleWheelsComponentPIFType">
+	<xs:complexType name="AxleWheelsComponentVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractAxleWheelsComponentPIFType">
+			<xs:extension base="vif:AbstractAxleWheelsComponentVIFType">
 				<xs:sequence>
-					<xs:element name="Data" type="vif:AbstractAxleWheelsDataPIFType"/>
+					<xs:element name="Data" type="vif:AbstractAxleWheelsDataVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxleWheelsDataPIFType">
+	<xs:complexType name="AxleWheelsDataVIFType">
 		<xs:annotation>
 			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractAxleWheelsDataPIFType">
+			<xs:extension base="vif:AbstractAxleWheelsDataVIFType">
 				<xs:sequence>
 					<xs:element name="Axles">
 						<xs:complexType>
@@ -367,6 +893,198 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="BatterySystemCurrentLimitsEntryType">
+		<xs:attribute name="SoC" type="v2.3:BatterySoCType" use="required">
+			<xs:annotation>
+				<xs:documentation>P529 - [%]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="maxChargingCurrent" type="v2.3:BatteryMaxCurrentType" use="required">
+			<xs:annotation>
+				<xs:documentation>P530 - [A]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="maxDischargingCurrent" type="v2.3:BatteryMaxCurrentType" use="required">
+			<xs:annotation>
+				<xs:documentation>P531 - [A]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="BatterySystemDataType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractBatterySystemDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<!-- <xs:annotation>
+							<xs:documentation>P511 - [-]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">511</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
+						</xs:annotation> -->
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<!-- <xs:annotation>
+							<xs:documentation>P512 - [-]</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">512</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
+						</xs:annotation> -->
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
+						<xs:annotation>
+							<xs:documentation>P516 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P513 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">513</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P514 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">514</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P515 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">515</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BatteryType" type="v2.3:BatteryTypeType">
+						<xs:annotation>
+							<xs:documentation>P517 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedCapacity">
+						<xs:annotation>
+							<xs:documentation>P518 - [Ah]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">518</vectoParam:parameterId>
+									<vectoParam:unit>Ah</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="v1.0:Double2">
+								<xs:minExclusive value="0.00"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ConnectorsSubsystemsIncluded" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P519 - bool</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">519</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="JunctionboxIncluded" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P520 - bool</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">520</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P521 - [°C]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="BatterySystem">521</vectoParam:parameterId>
+									<vectoParam:unit>°C</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OCV">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:BatterySystemOCVEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="CurrentLimits">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:BatterySystemCurrentLimitsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BatterySystemInternalResistanceEntryType">
+		<xs:attribute name="SoC" type="v2.3:BatterySoCType" use="required">
+			<xs:annotation>
+				<xs:documentation>P524 - [%]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="R_2" type="v2.3:InternalResistanceType" use="required">
+			<xs:annotation>
+				<xs:documentation>P525 - [mOhm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="R_10" type="v2.3:InternalResistanceType" use="required">
+			<xs:annotation>
+				<xs:documentation>P526 - [mOhm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="R_20" type="v2.3:InternalResistanceType" use="required">
+			<xs:annotation>
+				<xs:documentation>P527 - [mOhm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="R_120" type="v2.3:InternalResistanceType">
+			<xs:annotation>
+				<xs:documentation>P528 - [mOhm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="BatterySystemOCVEntryType">
+		<xs:attribute name="SoC" type="v2.3:BatterySoCType" use="required">
+			<xs:annotation>
+				<xs:documentation>P522 - [%]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="OCV" type="v2.3:BatteryOCVType" use="required">
+			<xs:annotation>
+				<xs:documentation>P523 - [V]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
 	<xs:complexType name="BusManufacturingStepDataType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractManufacturingStepDataType">
@@ -378,6 +1096,267 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:group name="BusAuxPneumaticSystemConsumerSequenceGroup">
+		<xs:sequence>
+			<xs:element name="SmartRegenerationSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P312 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AirsuspensionControl">
+				<xs:annotation>
+					<xs:documentation>P315 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electronically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PneumaticSCRReagentDosing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P316 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-Px_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SmartCompressionSystem" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P313 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_IEPC_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_PEV_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="BusAuxPneumaticSystemGen_HEV-S_SequenceGroup">
+		<xs:sequence>
+			<xs:element name="SizeOfAirSupply" type="v2.4:PneumaticSystemTechnologyType">
+				<xs:annotation>
+					<xs:documentation>P309 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorDrive">
+				<xs:annotation>
+					<xs:documentation>P310 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="mechanically"/>
+						<xs:enumeration value="electrically"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Clutch" type="v2.4:PneumaticSystemClutchTypeType">
+				<xs:annotation>
+					<xs:documentation>P311 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CompressorRatio">
+				<xs:annotation>
+					<xs:documentation>P314 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double3">
+						<xs:minInclusive value="0.000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CapacitorSystemDataType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractCapacitorSystemDataType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P532 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">532</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P533 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">533</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
+						<xs:annotation>
+							<xs:documentation>P537 - enum</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">537</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P534 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">534</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P535 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">535</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P536 - [-]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">536</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Capacitance" type="v2.3:CapacitanceType">
+						<xs:annotation>
+							<xs:documentation>P538 - [F]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">538</vectoParam:parameterId>
+									<vectoParam:unit>F</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="InternalResistance" type="v2.3:InternalResistanceType">
+						<xs:annotation>
+							<xs:documentation>P539 - [mOhm]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">539</vectoParam:parameterId>
+									<vectoParam:unit>mOhm</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MinVoltage" type="v2.3:CapacitorVoltageType">
+						<xs:annotation>
+							<xs:documentation>P540 - [V]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">540</vectoParam:parameterId>
+									<vectoParam:unit>V</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxVoltage" type="v2.3:CapacitorVoltageType">
+						<xs:annotation>
+							<xs:documentation>P541 - [V]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxChargingCurrent" type="v2.3:CapacitorMaxCurrentType">
+						<xs:annotation>
+							<xs:documentation>P542 - [A]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxDischargingCurrent" type="v2.3:CapacitorMaxCurrentType">
+						<xs:annotation>
+							<xs:documentation>P543 - [A]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestingTemperature" type="xs:int" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P544 - [°C]</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="CapacitorSystem">544</vectoParam:parameterId>
+									<vectoParam:unit>°C</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="CO2Type">
 		<xs:simpleContent>
 			<xs:extension base="xs:double">
@@ -385,14 +1364,245 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="EngineComponentPIFType">
+	<xs:complexType name="ConventionalVehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_ConventionalType"/>
+					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsConventionalVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ElectricEnergyStorageType">
+		<xs:choice>
+			<xs:element name="Capacitor" type="vif:REESSCapacitorType"/>
+			<xs:element name="Battery" type="vif:REESSBatteryType" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemConditioningEntryType">
+		<xs:attribute name="coolantTempInlet" type="v2.3:CoolantTempInletType" use="required">
+			<xs:annotation>
+				<xs:documentation>P476 - [°C]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="coolingPower" type="v2.3:CoolingPowerType" use="required">
+			<xs:annotation>
+				<xs:documentation>P477 - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemDragTorqueEntryType">
+		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P471 - [rpm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="dragTorque" type="v2.3:DragTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P472 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineGENType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractEngineDataPIFType"/>
+			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionGENType">
+				<xs:annotation>
+					<xs:documentation>P403 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Count">
+				<xs:annotation>
+					<xs:documentation>P404 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ElectricMachineSystem" type="vif:ElectricMachineSystemComponentDeclarationType"/>
+			<xs:element name="ADC" type="vif:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="EngineDataPIFType">
+	<xs:complexType name="ElectricMachineSystemComponentDeclarationType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractElectricMachineSystemDataType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemMaxTorqueCurveType">
+		<xs:sequence>
+			<xs:element name="Entry" type="vif:ElectricMachineSystemMaxTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractEngineDataPIFType">
+			<xs:extension base="vif:AbstractElectricMachineSystemDataType">
+				<xs:sequence>
+					<xs:group ref="vif:ElectricMachineSystemCommonParametersSequenceGroup"/>
+					<xs:group ref="vif:ElectricMachineSystemPowerRatingsSequenceGroup"/>
+					<xs:element name="DcDcConverterIncluded" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P465 - bool</xs:documentation>
+							<xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="ElectricMachine">465</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IHPCType" type="v2.3:IHPCTypeType">
+						<xs:annotation>
+							<xs:documentation>P466 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VoltageLevel" type="vif:ElectricMachineSystemVoltageLevelType" maxOccurs="unbounded"/>
+					<xs:element name="DragCurve">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:ElectricMachineSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Conditioning" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:ElectricMachineSystemConditioningEntryType" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemVoltageLevelType">
+		<xs:complexContent>
+			<xs:extension base="v2.3:AbstractElectricMachineSystemVoltageLevelType">
+				<xs:sequence>
+					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P467 - [V]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P459 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P460 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P461 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.3:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P462 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.3:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P463 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxTorqueCurve" type="vif:ElectricMachineSystemMaxTorqueCurveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineSystemType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractElectricMachineSystemDataType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectricMachineType">
+		<xs:sequence>
+			<xs:element name="PowertrainPosition" type="v2.4:PowertrainPositionDriveType">
+				<xs:annotation>
+					<xs:documentation>P403 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Count">
+				<xs:annotation>
+					<xs:documentation>P404 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ElectricMachineSystem" type="vif:ElectricMachineSystemComponentDeclarationType"/>
+			<xs:element name="ADC" type="vif:ADCComponentDeclarationType" minOccurs="0"/>
+			<xs:element name="P2.5GearRatios" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P407 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Ratio" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="v1.0:Double3">
+										<xs:attribute name="gear" use="required"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EnergyConsumptionType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="vif:EnergyConsumptionUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EngineComponentVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractEngineDataVIFType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WHRTypeType">
+		<xs:sequence>
+			<xs:element name="MechanicalOutputICE" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P335 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MechanicalOutputDrivetrain" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P336 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricalOutput" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P337 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EngineDataVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractEngineDataVIFType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -439,7 +1649,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 							<xs:documentation>P259 - [Nm]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="WHRType" type="v2.3:WHRTypeType"/>
+					<xs:element name="WHRType" type="vif:WHRTypeType"/>
 					<xs:element name="Mode" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
@@ -465,12 +1675,330 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="FuelConsumptionType">
-		<xs:simpleContent>
-			<xs:extension base="xs:double">
-				<xs:attribute name="unit" type="vif:EnergyConsumptionUnitType" use="required"/>
+	<xs:complexType name="HEV-IEPC-S_VehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P198 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-IEPC-S_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsIEPC_S_VIFType"/>
+				</xs:sequence>
 			</xs:extension>
-		</xs:simpleContent>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV-P_PrimaryAuxiliariesVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:Abstract_AUX_HEV-P_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-Px_VehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P198 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Px_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
+					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="BoostingLimitations" type="v2.4:AbstractBoostingLimitationsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsHEV_Px_VIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV-S_PrimaryAuxiliariesVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:Abstract_AUX_HEV-S_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HEV-Sx_VehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P198 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_HEV-Sx_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_HEVType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsSerialHybridDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsHEV_Sx_VIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPC_PrimaryAuxiliairesVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:Abstract_AUX_IEPC_PrimaryBusDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IEPC_VehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_IEPC_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_IEPCType"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsIEPC_VIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPCGearDeclarationType">
+		<xs:sequence>
+			<xs:element name="Ratio" type="v1.0:GearboxGearRatioType">
+				<xs:annotation>
+					<xs:documentation>P497 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxOutShaftTorque" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P498 - [Nm]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minExclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MaxOutShaftSpeed" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P499 - [1/min]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minExclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number" type="v1.0:GearboxGearNumberType" use="required">
+			<xs:annotation>
+				<xs:documentation>P496 - [-]</xs:documentation>
+				<xs:appinfo>
+				</xs:appinfo>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="IEPCGearsDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractIEPCGearsDeclarationType">
+				<xs:sequence>
+					<xs:element name="Gear" type="vif:IEPCGearDeclarationType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPCDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVIFIEPCDataType">
+				<xs:sequence>
+					<xs:group ref="vif:IEPCCommonParametersSequenceGroup"/>
+					<xs:element name="CertificationMethod" type="v2.3:IEPCCertificationMethodType">
+						<xs:annotation>
+							<xs:documentation>P484 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:IEPCPowerRatingsSequenceGroup"/>
+					<xs:element name="DifferentialIncluded" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P493 - bool</xs:documentation>
+							<!-- <xs:appinfo>
+								<vectoParam:description>
+									<vectoParam:parameterId component="IEPC">493</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description>
+							</xs:appinfo> -->
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DesignTypeWheelMotor" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P494 - bool</xs:documentation>
+							<xs:appinfo>
+								<!-- <vectoParam:description>
+									<vectoParam:parameterId component="IEPC">494</vectoParam:parameterId>
+									<vectoParam:unit>-</vectoParam:unit>
+								</vectoParam:description> -->
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NrOfDesignTypeWheelMotorMeasured" type="v2.3:NrOfDesignTypeWheelMotorMeasuredType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P495 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Gears" type="vif:AbstractIEPCGearsDeclarationType"/>
+					<xs:element name="VoltageLevel" type="vif:IEPCSystemVoltageLevelType" maxOccurs="unbounded"/>
+					<xs:element name="DragCurve" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:IEPCSystemDragTorqueEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+							<xs:attribute name="gear" use="required">
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Conditioning" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="vif:IEPCSystemConditioningEntryType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPCSystemConditioningEntryType">
+		<xs:attribute name="coolantTempInlet" type="v2.3:CoolantTempInletType" use="required">
+			<xs:annotation>
+				<xs:documentation>P509 - [°C]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="coolingPower" type="v2.3:CoolingPowerType" use="required">
+			<xs:annotation>
+				<xs:documentation>P510 - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="IEPCSystemDragTorqueEntryType">
+		<xs:attribute name="outShaftSpeed" type="v2.3:OutShaftSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P504 - [rpm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="dragTorque" type="v2.3:DragTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P505 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="IEPCSystemVoltageLevelType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractElectricMachineSystemVoltageLevelType">
+				<xs:sequence>
+					<xs:element name="Voltage" type="v2.3:VoltageLevelVoltageType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P500 - [V]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ContinuousTorque" type="v2.3:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P487 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedContinuousTorque" type="v2.3:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P488 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadTorque" type="v2.3:MaxTorqueType">
+						<xs:annotation>
+							<xs:documentation>P489 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TestSpeedOverloadTorque" type="v2.3:TestSpeedType">
+						<xs:annotation>
+							<xs:documentation>P490 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OverloadDuration" type="v2.3:OverloadDurationType">
+						<xs:annotation>
+							<xs:documentation>P491 - [s]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxTorqueCurve" type="v2.3:ElectricMachineSystemMaxTorqueCurveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IEPCType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractVIFIEPCDataType"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ManufacturingStepType">
 		<xs:sequence>
@@ -484,6 +2012,57 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TorqueConverterCharacteristicsEntryType">
+		<xs:attribute name="speedRatio" type="v1.0:TorqueConverterSpeedRatioType" use="required">
+			<xs:annotation>
+				<xs:documentation>P099 - [-]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torqueRatio" type="v1.0:TorqueConverterTorqueRatioType" use="required">
+			<xs:annotation>
+				<xs:documentation>P100 - [-]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="inputTorqueRef" type="v1.0:TorqueConverterInputTorqueRefType" use="required">
+			<xs:annotation>
+				<xs:documentation>P101 - [-]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PEV_Ex_VehicleVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractPrimaryVehicleType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
+					<xs:group ref="vif:Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup"/>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P269 - bool</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ArchitectureID" type="v2.4:ArchitectureID_PEV_Type">
+						<xs:annotation>
+							<xs:documentation>P400 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBus_xEV_ParametersSequenceGroup"/>
+					<xs:element name="ADAS" type="v2.4:Abstract_ADAS_PEVType"/>
+					<xs:element name="ElectricMotorTorqueLimits" type="v2.4:AbstractElectricMotorVehicleTorqueLimitsDeclarationType" minOccurs="0"/>
+					<xs:element name="Components" type="vif:AbstractVehicleComponentsPEV_Ex_VIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV_PrimaryAuxiliairesVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:Abstract_AUX_PEV_PrimaryBusDeclarationType"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PrimaryVehicleDataType">
 		<xs:complexContent>
@@ -505,9 +2084,59 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			<xs:element name="Signature" type="v1.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="REESSBatteryType">
+		<xs:sequence>
+			<xs:element name="StringID">
+				<xs:annotation>
+					<xs:documentation>P411 - [-]</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="REESS">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Data" type="vif:AbstractBatterySystemDataType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:sequence minOccurs="0">
+				<xs:element name="SOCmin">
+					<xs:annotation>
+						<xs:documentation>P413 - [%]</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:int">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="100"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SOCmax">
+					<xs:annotation>
+						<xs:documentation>P414 - [%]</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:int">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="100"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="REESSCapacitorType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractCapacitorSystemDataType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="ResultPrimaryVehicleType">
 		<xs:sequence>
-			<xs:element name="VehicleGroup">
+			<xs:element name="PrimaryVehicleSubgroup">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:minLength value="1"/>
@@ -521,25 +2150,15 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:element>
 			<xs:element name="SimulationParameters" type="vif:SimulationParametersType"/>
 			<xs:choice>
-				<xs:sequence>
-					<xs:element name="Fuel" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="EnergyConsumption" type="vif:FuelConsumptionType" maxOccurs="unbounded">
-									<xs:annotation>
-										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="type" type="xs:string" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="CO2" type="vif:CO2Type" maxOccurs="unbounded">
-						<xs:annotation>
-							<xs:documentation>I.2.3.13 - I.2.3.16 / #68</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
+				<xs:group ref="vif:ResultPrimaryVehicleGroup"/>
+				<xs:element name="OVCMode" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:group ref="vif:ResultPrimaryVehicleGroup"/>
+						</xs:sequence>
+						<xs:attribute name="type" use="required"/>
+					</xs:complexType>
+				</xs:element>
 				<xs:sequence>
 					<xs:element name="Error" type="xs:string"/>
 					<xs:element name="ErrorDetails" type="xs:string"/>
@@ -592,7 +2211,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="FuelMode">
+			<xs:element name="FuelMode" minOccurs="0">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value="dual fuel mode"/>
@@ -602,9 +2221,9 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterDataPIFType">
+	<xs:complexType name="TorqueConverterDataVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractTorqueConverterDataPIFType">
+			<xs:extension base="vif:AbstractTorqueConverterDataVIFType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -639,7 +2258,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 					<xs:element name="Characteristics" minOccurs="0">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="v1.0:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="vif:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -647,19 +2266,19 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterPIFType">
+	<xs:complexType name="TorqueConverterVIFType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractTorqueConverterDataPIFType"/>
+			<xs:element name="Data" type="vif:AbstractTorqueConverterDataVIFType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TransmissionComponentPIFType">
+	<xs:complexType name="TransmissionComponentVIFType">
 		<xs:sequence>
-			<xs:element name="Data" type="vif:AbstractTransmissionDataPIFType"/>
+			<xs:element name="Data" type="vif:AbstractTransmissionDataVIFType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TransmissionDataPIFType">
+	<xs:complexType name="TransmissionDataVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractTransmissionDataPIFType">
+			<xs:extension base="vif:AbstractTransmissionDataVIFType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -692,12 +2311,21 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="TransmissionType"/>
-					<xs:element name="Gears" type="vif:AbstractTransmissionGearsPIFType"/>
+					<xs:element name="Gears" type="vif:AbstractTransmissionGearsVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="TransmissionGearPIFType">
+	<xs:complexType name="TransmissionGearsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractTransmissionGearsVIFType">
+				<xs:sequence>
+					<xs:element name="Gear" type="vif:TransmissionGearVIFType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TransmissionGearVIFType">
 		<xs:sequence>
 			<xs:element name="Ratio"/>
 			<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
@@ -713,94 +2341,164 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 		</xs:sequence>
 		<xs:attribute name="number" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="TransmissionGearsPIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractTransmissionGearsPIFType">
-				<xs:sequence>
-					<xs:element name="Gear" type="vif:TransmissionGearPIFType" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="VectoOutputMultistepType">
 		<xs:sequence>
 			<xs:element name="PrimaryVehicle" type="vif:PrimaryVehicleType"/>
 			<xs:element name="ManufacturingStep" type="vif:ManufacturingStepType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="VehicleComponentsPIFType">
+	<xs:complexType name="Vehicle_Conventional_ComponentsVIFType">
 		<xs:complexContent>
-			<xs:extension base="vif:AbstractVehicleComponentsPIFType">
+			<xs:extension base="vif:AbstractVehicleComponentsConventionalVIFType">
 				<xs:sequence>
-					<xs:element name="Engine" type="vif:EngineComponentPIFType"/>
-					<xs:element name="Transmission" type="vif:TransmissionComponentPIFType"/>
-					<xs:element name="TorqueConverter" type="vif:TorqueConverterPIFType" minOccurs="0"/>
-					<xs:element name="Angledrive" type="vif:AngledrivePIFType" minOccurs="0"/>
-					<xs:element name="Axlegear" type="vif:AxlegearComponentPIFType"/>
-					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentPIFType"/>
-					<xs:element name="Auxiliaries" type="vif:AuxiliaryComponentPIFType"/>
+					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
+					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
+					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:AuxiliaryComponentVIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="VehicleExemptedPrimaryBusType">
+	<xs:complexType name="Vehicle_HEV-IEPC-S_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsIEPC_S_VIFType">
+				<xs:sequence>
+					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
+					<xs:element name="ElectricMachineGEN" type="vif:ElectricMachineGENType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="IEPC" type="vif:IEPCType"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_HEV-Px_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Px_VIFType">
+				<xs:sequence>
+					<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
+					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
+					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:HEV-P_PrimaryAuxiliariesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_HEV-S2_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
+					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
+					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_HEV-S3_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_HEV-S4_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsHEV_Sx_VIFType">
+				<xs:sequence>
+					<xs:group ref="vif:Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:HEV-S_PrimaryAuxiliariesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_PEV-E2_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
+				<xs:sequence>
+					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="Transmission" type="vif:TransmissionComponentVIFType"/>
+					<xs:element name="TorqueConverter" type="vif:TorqueConverterVIFType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="vif:AngledriveVIFType" minOccurs="0"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:PEV_PrimaryAuxiliairesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_PEV-E3_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
+				<xs:sequence>
+					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:PEV_PrimaryAuxiliairesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_PEV-E4_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsPEV_Ex_VIFType">
+				<xs:sequence>
+					<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:PEV_PrimaryAuxiliairesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Vehicle_PEV-IEPC_ComponentsVIFType">
+		<xs:complexContent>
+			<xs:extension base="vif:AbstractVehicleComponentsIEPC_VIFType">
+				<xs:sequence>
+					<xs:element name="IEPC" type="vif:IEPCType"/>
+					<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+					<xs:element name="Retarder" type="vif:RetarderVIFType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="vif:AxlegearComponentVIFType" minOccurs="0"/>
+					<xs:element name="AxleWheels" type="vif:AxleWheelsComponentVIFType"/>
+					<xs:element name="Auxiliaries" type="vif:IEPC_PrimaryAuxiliairesVIFType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Exempted_VehicleVIFType">
 		<xs:complexContent>
 			<xs:extension base="vif:AbstractPrimaryVehicleType">
 				<xs:sequence>
-					<xs:element name="ManufacturerPrimaryVehicle" type="v1.0:ManufacturerType">
-						<xs:annotation>
-							<xs:documentation>P235 / I.1.1.1 / #14</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ManufacturerAddressPrimaryVehicle" type="v1.0:ManufacturerAddressType">
-						<xs:annotation>
-							<xs:documentation>P252 / I.1.1.1 / #14</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Model" type="v1.0:ModelType">
-						<xs:annotation>
-							<xs:documentation>P236 / I.1.1.2</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="VIN" type="v1.0:VINType">
-						<xs:annotation>
-							<xs:documentation>P238 / I.1.1.3 / #1</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
-					<xs:element name="LegislativeCategory">
-						<xs:annotation>
-							<xs:documentation>P251 / I.1.1.4 / #10</xs:documentation>
-						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:minLength value="1"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P036 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P037 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Articulated" type="xs:boolean"/>
-					<xs:element name="TechnicalPermissibleMaximumLadenMass">
-						<xs:annotation>
-							<xs:documentation>P041 / I.1.1.6 / #12</xs:documentation>
-						</xs:annotation>
-						<xs:complexType>
-							<xs:simpleContent>
-								<xs:extension base="xs:double">
-									<xs:attribute name="unit" type="out:MassUnitType" use="required"/>
-								</xs:extension>
-							</xs:simpleContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:group ref="vif:Vehicle_PrimaryBusParametersSequenceGroup"/>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P269 / I.1.1.10</xs:documentation>
@@ -835,44 +2533,6 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="VehiclePIFType">
-		<xs:complexContent>
-			<xs:extension base="vif:AbstractPrimaryVehicleType">
-				<xs:sequence>
-					<xs:element name="ManufacturerPrimaryVehicle" type="v1.0:ManufacturerType"/>
-					<xs:element name="ManufacturerAddressPrimaryVehicle" type="v1.0:ManufacturerAddressType"/>
-					<xs:element name="Model" type="v1.0:ModelType"/>
-					<xs:element name="VIN" type="v1.0:VINType"/>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
-					<xs:element name="LegislativeCategory" type="xs:string">
-						<xs:annotation>
-							<xs:documentation>P251 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType"/>
-					<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType"/>
-					<xs:element name="Articulated" type="xs:boolean"/>
-					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>
-					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>
-					<xs:element name="RetarderType" type="v1.0:RetarderTypeType"/>
-					<xs:element name="RetarderRatio" type="v1.0:RetarderRatioType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P053 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
-						<xs:annotation>
-							<xs:documentation>P180 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
-					<xs:element name="ADAS" type="v2.1:AbstractAdvancedDriverAssistantSystemsType"/>
-					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="vif:AbstractVehicleComponentsPIFType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -912,4 +2572,323 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn
 			<xs:enumeration value="Coach"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:group name="ElectricMachineSystemCommonParametersSequenceGroup">
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P450 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">450</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>P451 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">451</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationMethod" type="v2.3:CertificationMethodType">
+				<xs:annotation>
+					<xs:documentation>P456 - enum</xs:documentation>
+					<xs:appinfo>
+						<vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">456</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P452 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">452</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>P453 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">453</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AppVersion" type="v1.0:AppVersionType">
+				<xs:annotation>
+					<xs:documentation>P454 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">454</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachineType" type="v2.3:ElectricMachineTypeType">
+				<xs:annotation>
+					<xs:documentation>P455 - enum</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="ElectricMachine">455</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="ElectricMachineSystemPowerRatingsSequenceGroup">
+		<xs:sequence>
+			<xs:element name="R85RatedPower" type="v2.3:R85RatedPowerType">
+				<xs:annotation>
+					<xs:documentation>P457 - [W]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RotationalInertia" type="v2.3:RotationalInertiaType">
+				<xs:annotation>
+					<xs:documentation>P458 - [kgm²]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="IEPCCommonParametersSequenceGroup">
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P478 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="IEPC">478</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>P479 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="IEPC">479</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+				<xs:annotation>
+					<xs:documentation>P480 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="IEPC">480</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>P481 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="IEPC">481</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AppVersion" type="v1.0:AppVersionType">
+				<xs:annotation>
+					<xs:documentation>P482 - [-]</xs:documentation>
+					<xs:appinfo>
+						<!-- <vectoParam:description>
+							<vectoParam:parameterId component="IEPC">482</vectoParam:parameterId>
+							<vectoParam:unit>-</vectoParam:unit>
+						</vectoParam:description> -->
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ElectricMachineType" type="v2.3:ElectricMachineTypeType">
+				<xs:annotation>
+					<xs:documentation>P483 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="IEPCPowerRatingsSequenceGroup">
+		<xs:sequence>
+			<xs:element name="R85RatedPower" type="v2.3:R85RatedPowerType">
+				<xs:annotation>
+					<xs:documentation>P485 - [W]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RotationalInertia" type="v2.3:RotationalInertiaType">
+				<xs:annotation>
+					<xs:documentation>P486 [ kgm2]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_HEV-Sx_ComponentsVIFTypeSequenceGroup">
+		<xs:sequence>
+			<xs:element name="Engine" type="vif:EngineComponentVIFType"/>
+			<xs:element name="ElectricMachineGEN" type="vif:ElectricMachineGENType"/>
+			<xs:element name="ElectricEnergyStorage" type="vif:ElectricEnergyStorageType"/>
+			<xs:element name="ElectricMachine" type="vif:ElectricMachineType"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_PrimaryBus_Retarder_ParametersSequenceGroup">
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="RetarderType" type="v2.4:RetarderTypeType">
+					<xs:annotation>
+						<xs:documentation>P052 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RetarderRatio" type="v1.0:RetarderRatioType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>P053 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_PrimaryBus_xEV_ParametersSequenceGroup">
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="OvcHev" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>P401 - bool</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="MaxChargingPower" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>P402 - [W]</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:int">
+							<xs:minExclusive value="0"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_PrimaryBusChassisBusParameters">
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element name="LegislativeCategory" type="v2.4:LegislativeCategoryPrimaryBusDeclarationType">
+					<xs:annotation>
+						<xs:documentation>P251 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ChassisConfiguration" type="v2.4:ChassisConfigurationPrimaryBusDeclarationType">
+					<xs:annotation>
+						<xs:documentation>P036 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AxleConfiguration" type="v2.4:AxleConfigurationPrimaryBusLorryDeclarationType">
+					<xs:annotation>
+						<xs:documentation>P037 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Articulated" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>P281 - bool</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType">
+					<xs:annotation>
+						<xs:documentation>P041 - [kg]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_PrimaryBusGeneralParametersSequence">
+		<xs:sequence>
+			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+				<xs:annotation>
+					<xs:documentation>P235 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+				<xs:annotation>
+					<xs:documentation>P252 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Model" type="v1.0:ModelType">
+				<xs:annotation>
+					<xs:documentation>P236 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VIN" type="v1.0:VINType">
+				<xs:annotation>
+					<xs:documentation>P238 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>P239 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="Vehicle_PrimaryBusParametersSequenceGroup">
+		<xs:sequence>
+			<xs:group ref="vif:Vehicle_PrimaryBusGeneralParametersSequence"/>
+			<xs:group ref="vif:Vehicle_PrimaryBusChassisBusParameters"/>
+		</xs:sequence>
+	</xs:group>
+	<!--Components-->
+	<!--VehicleVIFType-->
+	<xs:group name="ResultPrimaryVehicleGroup">
+		<xs:sequence>
+			<xs:element name="Fuel" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="EnergyConsumption" type="vif:EnergyConsumptionType" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="type" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ElectricEnergyConsumption" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="EnergyConsumption" type="vif:EnergyConsumptionType" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="RetarderVIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="vif:AbstractRetarderVIFDataType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AbstractRetarderVIFDataType"/>
 </xs:schema>

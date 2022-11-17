@@ -1,0 +1,92 @@
+## IEPC Editor
+
+![](pics/IEPC_Form.png)
+
+
+### Description
+
+Integrated electric powertrain component (IEPC) means a combined system of an electric machine system together with the functionality of either a single- or multi-speed gearbox or a differential or both. 
+
+An IEPC can be of design-type wheel motor which means that the output shaft (or two output shafts) are directly connected to the wheel hub(s). The IEPC component file defines all parameters relevant for the electric machine. These are the motor's maximum drive and recuperation torque, the drag torque as well as the electric power map.
+
+An IEPC may have several shiftable transmission steps or only a single gear stage between the output shaft and the electric machine. The electric power consumption map has to be provided for every gear. 
+
+### Relative File Paths
+
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. 
+
+VECTO automatically uses relative paths if the input file (e.g. electric power map) is in the same directory as the Electric Motor File. (The Electric Motor File must be saved before browsing for input files.)
+
+
+### Main Parameters
+
+Make and Model
+:   Free text defining the gearbox model, type, etc.
+
+Inertia \[kgm²\]
+:   Rotational inertia of the electric machine at the output shaft of the EM. (Engineering mode only)
+
+Gears
+:   Gear ratios of the transmission steps of the IEPC
+
+Continuous Torque \[Nm\]
+:    The nominal torque the electric machine can provide continuously
+
+Continuous Torque Speed \[rpm\]
+:    Angular speed at which the continuous torque can be provided
+
+Overload Torque \[Nm\]
+:    Maximum torque above the continuous torque the electric motor can provide for a certain time
+
+Overload Torque Speed\[rpm\]
+:    Angular speed at which the overload torque was measured
+
+Overload Duration \[s\]
+:    The time interval the electric machine can operate at its peak performance
+
+Thermal Overload Recovery Factor  \[-\]
+:    The accumulated overload energy has to be below the max. overload capacity multiplied by this factor so that the peak power is available again.
+
+Full Load Curve
+:	TODO    
+
+Drag Curves
+:	The motor's drag torque over engine speed when the motor is not energized. The torque values in the drag curve have to be negative. (see [Electric Motor Drag Curve File (.vemd)](#electric-motor-drag-curve-file-.vemd))
+
+Power Map Per Gear
+:   Defines the electric power that is required to provide a certain mechanical power (torque and angular speed) at the motor's shaft. This map is used to calculate the electric power demand. The electric power consumption map shall cover a torque range exceeding the max. drive and max. generation torque and shall cover the speed range from 0 up to the maximum speed. (see [IEPC Map (.viepco)](#iepc-power-map-.viepco)). The power map has to be provided for two different voltage levels and all gears.
+
+Voltage Level Low/High
+:    Applicable voltage level for the electric power consumption map and max drive/generation torque curve
+
+
+
+### Controls
+
+
+![](pics/blue-document-icon.png) New file
+:   Create a new empty .vem file
+
+![open](pics/Open-icon.png)Open existing file
+:   Open an existing .vem file
+
+
+![save](pics/Actions-document-save-icon.png) ***Save current file***
+
+![SaveAs](pics/Actions-document-save-as-icon.png) ***Save file as...***
+
+![sendto](pics/export-icon.png) Send current file to the [VECTO Editor](#job-editor)
+:   **Note:** If the current file was opened via the [VECTO Editor](#job-editor) the file will be sent automatically when saved.
+
+
+![](pics/browse.png) ***Open file browser***
+
+![](pics/OpenFile.PNG) ***Open file*** (see [File Open Command)](#settings).
+
+![OK](pics/OK.png) Save and close file
+:   If necessary the file path in the [VECTO Editor](#job-editor) will
+be updated.
+
+
+![Cancel](pics/Cancel.png) ***Cancel without saving***
+

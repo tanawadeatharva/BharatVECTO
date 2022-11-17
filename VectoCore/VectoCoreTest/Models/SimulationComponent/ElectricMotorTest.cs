@@ -66,11 +66,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullLoadDriveTorque(2000.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(-334.23 * count, -emModelData.EfficiencyData.VoltageLevels.First().FullLoadCurve.FullGenerationTorque(2000.RPMtoRad()).Value(), 1e-3);
 
-			Assert.AreEqual(30 * count, emModelData.DragCurve.Lookup(2500.RPMtoRad()).Value(), 1e-3);
+			Assert.AreEqual(30 * count, emModelData.DragCurveLookup(2500.RPMtoRad(), 0u).Value(), 1e-3);
 
 			Assert.AreEqual(-14579 * count,
-				emModelData.EfficiencyData.VoltageLevels.First().EfficiencyMap
-					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), false).ElectricalPower.Value(),
+				emModelData.EfficiencyData.VoltageLevels.First()
+					.LookupElectricPower(190.99.RPMtoRad(), (-500 * count).SI<NewtonMeter>(), 0, false).ElectricalPower.Value(),
 				1e-3);
 
 
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = motor.Request(absTime, dt, torque.SI<NewtonMeter>(), speed.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			var dragTorque = data.First().Item2.DragCurve.Lookup(speed.RPMtoRad());
+			var dragTorque = data.First().Item2.DragCurveLookup(speed.RPMtoRad(), 0u);
 			var enginePower = speed.RPMtoRad() * (torque.SI<NewtonMeter>() + dragTorque);
 			var motorMechPower = dragTorque * speed.RPMtoRad();
 			Assert.AreEqual(enginePower.Value(), response.Engine.PowerRequest.Value(), 1e-6);
@@ -422,7 +422,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var modData = new ModalDataContainer(runData, new FileOutputWriter("debug.csv"), null);
-			modData.AddElectricMotor(PowertrainPosition.HybridP2);
+			//modData.AddElectricMotor(PowertrainPosition.HybridP2);
+			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
+			
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			new EngineOnlyGearboxInfo(container);
 

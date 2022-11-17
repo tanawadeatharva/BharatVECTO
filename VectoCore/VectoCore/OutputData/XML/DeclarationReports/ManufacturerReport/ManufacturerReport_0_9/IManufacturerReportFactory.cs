@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_LorryVehicleType();
 
+		IXmlTypeWriter GetExempted_LorryVehicleType();
 
 
 
@@ -40,9 +41,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_E4_PrimaryBusVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_PrimaryBusVehicleType();
 
+		IXmlTypeWriter GetExempted_PrimaryBusVehicleType();
+
 		IXmlTypeWriter GetConventional_CompletedBusVehicleType();
 		IXmlTypeWriter GetHEV_CompletedBusVehicleType();
 		IXmlTypeWriter GetPEV_CompletedBusVehicleType();
+
+		IXmlTypeWriter GetExempted_CompletedBusVehicleType();
 
 
 		IXmlTypeWriter GetConventionalLorryComponentsType();
@@ -70,10 +75,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetPEV_CompletedBusComponentsType();
 
 
-
-
-
-
 		IReportVehicleOutputGroup GetGeneralVehicleOutputGroup();
 
 
@@ -85,8 +86,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IReportOutputGroup GetPEV_lorryVehicleOutputGroup();
 		IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetExemptedPrimaryBusGeneralVehicleOutputGroup();
 		IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup();
-
 
 
 		IXmlTypeWriter GetEngineTorqueLimitationsType();
@@ -128,15 +129,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType();
 		IMRFBusAuxiliariesType GetConventionalCompletedBus_HVACSystemType();
-		IMRFBusAuxiliariesType GetCompletedBusElectricSystemType();
+		IMRFBusAuxiliariesType GetConventionalCompletedBusElectricSystemType();
+
+		IMRFBusAuxiliariesType GetHEVCompletedBusAuxType();
+		IMRFBusAuxiliariesType GetHEVCompletedBus_HVACSystemType();
+		IMRFBusAuxiliariesType GetHEVCompletedBusElectricSystemType();
+
+		IMRFBusAuxiliariesType GetPEVCompletedBusAuxType();
+		IMRFBusAuxiliariesType GetPEVCompletedBus_HVACSystemType();
+		IMRFBusAuxiliariesType GetPEVCompletedBusElectricSystemType();
 
 
 		IReportOutputGroup GetPEV_PrimaryBusVehicleOutputGroup();
-		IReportOutputGroup GetCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetConventionalCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetHEVCompletedBusGeneralVehicleOutputGroup();
+		IReportOutputGroup GetPEVCompletedBusGeneralVehicleOutputGroup();
 		IReportVehicleOutputGroup GetCompletedBusSequenceGroup();
 		IReportVehicleOutputGroup GetCompletedBusDimensionSequenceGroup();
 		IMrfBusAuxGroup GetCompletedBus_HVACSystemGroup();
+		IMrfBusAuxGroup GetCompletedBus_xEVHVACSystemGroup();
 		IMrfVehicleType GetBoostingLimitationsType();
+
 	}
 
 

@@ -52,11 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
-		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
+		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		internal readonly IDrivingCycleData Data;
-		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
+		internal DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
 		private Meter CycleEndDistance;
@@ -579,5 +579,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CycleIntervalIterator.Dispose();
 		}
+
+		#region Implementation of IUpdateable
+
+		public bool UpdateFrom(object other) {
+			if (other is DistanceBasedDrivingCycle c) {
+				PreviousState = c.PreviousState.Clone();
+				CycleIntervalIterator = c.CycleIntervalIterator;
+				//TODO MK-20220523 also allow updating from measuredspeeddrivingcycle?
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }
