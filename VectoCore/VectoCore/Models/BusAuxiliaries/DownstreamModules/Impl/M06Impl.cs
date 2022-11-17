@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sum17 = vc3 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
 			var sum18 = vc4
 				? _m4.GetPowerCompressorOn() * Constants.BusAuxiliaries.PneumaticUserConfig.PneumaticOverrunUtilisation
-				: 0.SI<Watt>();
+				: vc0 ? _m3.GetAveragePowerDemandAtCrankFromPneumatics() - sum17 : 0.SI<Watt>();
 			var sum19 = sum17 + sum18;
 
 			_overrunFlag = vc0;

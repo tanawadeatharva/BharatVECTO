@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.9.xsd">
 	<Results>
 		<Status>success</Status>
-		<!-- ICE only, non-OCV HEV (and H2 only ICE in future) Bus  -->
+		<!-- ICE only, non-OVC HEV (and H2 only ICE in future) Bus  -->
 		<Result status="success" xsi:type="ResultSuccessConventionalType">
 			<Mission>Long Haul</Mission>
 			<Distance unit="km">100.185</Distance>
@@ -44,6 +44,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9 V:\VectoCore\
 				<CO2 unit="g/p-km">8.2</CO2>
 			</Total>
 		</Result>
-		<!-- END ICE only, non-OCV HEV (and H2 only ICE in future) Bus -->
+		<!-- END ICE only, non-OVC HEV (and H2 only ICE in future) Bus -->
 	</Results>
 </VectoMockResults>

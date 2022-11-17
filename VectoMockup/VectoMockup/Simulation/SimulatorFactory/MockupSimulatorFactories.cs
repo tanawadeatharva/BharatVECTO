@@ -77,7 +77,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 			});
 		}
 
-		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
+		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
 			return new MockupRun(new VehicleContainer(ExecutionMode.Declaration,

@@ -14,11 +14,11 @@
     "VoltageLevels": [
       {
         "Voltage": 500,
-        "ContinuousTorque": 13860.59,
-        "ContinuousTorqueSpeed": 166.99,
-        "OverloadTorque": 16517.20,
-        "OverloadTorqueSpeed": 166.01,
-        "OverloadTime": 312,
+        "ContinuousTorque": 600.00,
+        "ContinuousTorqueSpeed": 1485.00,
+        "OverloadTorque": 900.00,
+        "OverloadTorqueSpeed": 1485.00,
+        "OverloadTime": 180,
         "FullLoadCurve": "GenericEMotor_140kW_900Nm.vemp",
         "EfficiencyMap": {
           "1": "GenericMap_140kW_936Nm.vemo",
@@ -37,11 +37,11 @@
       },
       {
         "Voltage": 900,
-        "ContinuousTorque": 15015.63,
-        "ContinuousTorqueSpeed": 168.62,
-        "OverloadTorque": 17325.73,
-        "OverloadTorqueSpeed": 170.17,
-        "OverloadTime": 345,
+        "ContinuousTorque": 600.00,
+        "ContinuousTorqueSpeed": 1485.00,
+        "OverloadTorque": 900.00,
+        "OverloadTorqueSpeed": 1485.00,
+        "OverloadTime": 200,
         "FullLoadCurve": "GenericEMotor_140kW_900Nm.vemp",
         "EfficiencyMap": {
           "1": "GenericMap_140kW_936Nm.vemo",

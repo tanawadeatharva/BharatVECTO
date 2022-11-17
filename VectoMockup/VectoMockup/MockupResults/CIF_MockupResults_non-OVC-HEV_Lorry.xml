@@ -4,8 +4,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd">
 	<Results>
 		<Status>success</Status>
-		<!-- non-OCV HEV Lorry  -->
-		<Result status="success" xsi:type="ResultSuccessNonOCVHEVType">
+		<!-- non-OVC HEV Lorry  -->
+		<Result status="success" xsi:type="ResultSuccessNonOVCHEVType">
 			<Mission>Long Haul</Mission>
 			<SimulationParameters>
 				<TotalVehicleMass unit="kg">17200</TotalVehicleMass>
@@ -29,8 +29,8 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\Vec
 				<CO2 unit="g/m³-km">8.4</CO2>
 			</Total>
 		</Result>
-		<!-- END non-OCV HEV Lorry -->
-		<Summary xsi:type="ResultSummaryNonOCVHEVType">
+		<!-- END non-OVC HEV Lorry -->
+		<Summary xsi:type="ResultSummaryNonOVCHEVType">
 			<AveragePayload unit="t">3.141</AveragePayload>
 			<Fuel type="Diesel CI"><!-- repeat for every fuel used -->
 				<FuelConsumption unit="g/km">6.1</FuelConsumption>

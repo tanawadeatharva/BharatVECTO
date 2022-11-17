@@ -1027,7 +1027,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
-			RunSimulation = Body.GetEx<bool>(JsonKeys.BUS_RunSimulation);
+			RunSimulation = Body.ContainsKey(JsonKeys.BUS_RunSimulation) ? Body.GetEx<bool>(JsonKeys.BUS_RunSimulation) : true;
 			
 
             //PrimaryVehicle = CreateReader(primaryInputData);
