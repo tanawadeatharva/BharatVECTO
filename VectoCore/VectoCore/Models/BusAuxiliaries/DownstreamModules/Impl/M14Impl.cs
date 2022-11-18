@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var averageUsableEngineWasteHeat = averageEngineWasteHeatPwr *
 												_ssmTool.SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant *
 												_ssmTool.SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater;
-			return _ssmTool.AverageAuxHeaterPower(averageUsableEngineWasteHeat) * cycleTime;
+			return _ssmTool.AverageHeaterPower(averageUsableEngineWasteHeat).AuxHeaterPower * cycleTime;
 		}
 	}
 

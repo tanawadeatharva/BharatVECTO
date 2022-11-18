@@ -904,13 +904,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var ssmCooling = DoGetSsmInputs(mission, completedVehicle, primaryVehicle, loadingType,
 				applicableSystemConfigCooling, busAux.HeatPumpTypeCoolingDriverCompartment.Value,
-				busAux.HeatPumpTypeCoolingPassengerCompartment.Value);
+				busAux.HeatPumpTypeCoolingPassengerCompartment.Value, true);
 			ssmCooling.ElectricHeater = HeaterType.None;
 			var ssmHeating = DoGetSsmInputs(mission, completedVehicle, primaryVehicle, loadingType,
 				applicableSystemConfigHeating, busAux.HeatPumpTypeHeatingDriverCompartment.Value,
-				busAux.HeatPumpTypeHeatingPassengerCompartment.Value);
+				busAux.HeatPumpTypeHeatingPassengerCompartment.Value, false);
 			ssmHeating.ElectricHeater = GetElectricHeater(busAux);
-
+			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
 			return (ssmCooling, ssmHeating);
 		}
 
@@ -933,11 +933,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private SSMInputs DoGetSsmInputs(Mission mission, IVehicleDeclarationInputData completedVehicle,
 			IVehicleDeclarationInputData primaryVehicle, LoadingType loadingType,
 			BusHVACSystemConfiguration hvacConfiguration, HeatPumpType heatPumpTypeDriverCompartment,
-			HeatPumpType heatPumpTypePassengerCompartment)
+			HeatPumpType heatPumpTypePassengerCompartment, bool cooling)
 		{
 			var isDoubleDecker = completedVehicle.VehicleCode.IsDoubleDeckerBus();
 
-			var internalLength = hvacConfiguration == BusHVACSystemConfiguration.Configuration2
+			var driverAcOnly = hvacConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2,
+				BusHVACSystemConfiguration.Configuration4);
+			var internalLength = cooling && driverAcOnly
 				? 2 * Constants.BusParameters.DriverCompartmentLength // OK
 				: DeclarationData.BusAuxiliaries.CalculateInternalLength(
 					completedVehicle.Length, completedVehicle.VehicleCode,
@@ -987,16 +989,25 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			ssmInputs.HVACSystemConfiguration = hvacConfiguration;
 
-			ssmInputs.DriverCompartmentLength = hvacConfiguration.RequiresDriverAC()
-				? hvacConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2, BusHVACSystemConfiguration.Configuration4)
-					? 2 * Constants.BusParameters.DriverCompartmentLength
-					: Constants.BusParameters.DriverCompartmentLength
-				: 0.SI<Meter>();
-			ssmInputs.PassengerCompartmentLength = hvacConfiguration.RequiresPassengerAC()
-				? hvacConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2, BusHVACSystemConfiguration.Configuration4)
-					? 0.SI<Meter>()
-					: internalLength - Constants.BusParameters.DriverCompartmentLength
-				: 0.SI<Meter>();
+			if (cooling) {
+				ssmInputs.DriverCompartmentLength = hvacConfiguration.RequiresDriverAC()
+					? driverAcOnly
+						? 2 * Constants.BusParameters.DriverCompartmentLength
+						: Constants.BusParameters.DriverCompartmentLength
+					: 0.SI<Meter>();
+				ssmInputs.PassengerCompartmentLength = hvacConfiguration.RequiresPassengerAC()
+					? driverAcOnly
+						? 0.SI<Meter>()
+						: internalLength - Constants.BusParameters.DriverCompartmentLength
+					: 0.SI<Meter>();
+			} else {
+				ssmInputs.DriverCompartmentLength = hvacConfiguration.RequiresDriverAC()
+					? Constants.BusParameters.DriverCompartmentLength 
+					: 0.SI<Meter>();
+				ssmInputs.PassengerCompartmentLength = hvacConfiguration.RequiresDriverAC()
+					? internalLength - Constants.BusParameters.DriverCompartmentLength
+					: internalLength;
+			}
 
 			//ssmInputs.HVACCompressorType = heatPumpTypePassengerCompartment; // use passenger compartment
 
