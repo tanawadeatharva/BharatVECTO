@@ -111,40 +111,85 @@ public class SSMTestHeatingCooling
 	TestCase(CFG10 , 11 , HeatPumpNone       , HeatPump3Stage    , 822.528   , 2965.1077) ,
 
 	// only electrical heatpumps
-	TestCase(CFG2  , 1  , HeatPumpCont       , HeatPumpType.none                 , 299.88    , 0.0)       ,
-	TestCase(CFG2  , 6  , HeatPumpCont       , HeatPumpType.none                 , 299.88    , 0.0)       ,
-	TestCase(CFG2  , 8  , HeatPumpCont       , HeatPumpType.none                 , 288.8324  , 0)         ,
-	TestCase(CFG2  , 11 , HeatPumpCont       , HeatPumpType.none                 , 1520.7    , 0)         ,
+	TestCase(CFG2  , 1  , HeatPumpCont       , HeatPumpNone   , 299.88    , 0.0)       ,
+	TestCase(CFG2  , 6  , HeatPumpCont       , HeatPumpNone   , 299.88    , 0.0)       ,
+	TestCase(CFG2  , 8  , HeatPumpCont       , HeatPumpNone   , 288.8324  , 0)         ,
+	TestCase(CFG2  , 11 , HeatPumpCont       , HeatPumpNone   , 1520.7    , 0)         ,
 
-	TestCase(CFG4  , 1  , HeatPumpCont       , HeatPumpType.none                 , 428.400   , 0.0)       ,
-	TestCase(CFG4  , 6  , HeatPumpCont       , HeatPumpType.none                 , 428.4     , 0.0)       ,
-	TestCase(CFG4  , 8  , HeatPumpCont       , HeatPumpType.none                 , 823.4756  , 0)         ,
-	TestCase(CFG4  , 11 , HeatPumpCont       , HeatPumpType.none                 , 2055.3432 , 0)         ,
+	TestCase(CFG2  , 1  , HeatPumpR744       , HeatPumpNone   , 299.88    , 0.0)       ,
+	TestCase(CFG2  , 6  , HeatPumpR744       , HeatPumpNone   , 299.88    , 0.0)       ,
+	TestCase(CFG2  , 8  , HeatPumpR744       , HeatPumpNone   , 288.8524  , 0)         ,
+	TestCase(CFG2  , 11 , HeatPumpR744       , HeatPumpNone   , 1866.3491 , 0)         ,
+
+	TestCase(CFG4  , 1  , HeatPumpCont       , HeatPumpNone  , 428.400   , 0.0)       ,
+	TestCase(CFG4  , 6  , HeatPumpCont       , HeatPumpNone  , 428.4     , 0.0)       ,
+	TestCase(CFG4  , 8  , HeatPumpCont       , HeatPumpNone  , 823.4756, 0)         ,
+	TestCase(CFG4  , 11 , HeatPumpCont       , HeatPumpNone  , 2055.3432, 0)         ,
+
+	TestCase(CFG4  , 1  , HeatPumpR744       , HeatPumpNone  , 428.400   , 0.0)       ,
+	TestCase(CFG4  , 6  , HeatPumpR744       , HeatPumpNone  , 428.4     , 0.0)       ,
+	TestCase(CFG4  , 8  , HeatPumpR744       , HeatPumpNone  , 823.4956  , 0)         ,
+	TestCase(CFG4  , 11 , HeatPumpR744       , HeatPumpNone  , 2400.9923 , 0)         ,
 
 	TestCase(CFG5  , 1  , HeatPumpNone       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG5  , 6  , HeatPumpNone       , HeatPumpCont , 856.80    , 0.0)       ,
 	TestCase(CFG5  , 8  , HeatPumpNone       , HeatPumpCont , 1413.2125 , 0)         ,
 	TestCase(CFG5  , 11 , HeatPumpNone       , HeatPumpCont , 3636.1338 , 0)         ,
 
+	TestCase(CFG5  , 1  , HeatPumpNone       , HeatPumpR744 , 428.400   , 0.0)       ,
+	TestCase(CFG5  , 6  , HeatPumpNone       , HeatPumpR744 , 856.80    , 0.0)       ,
+	TestCase(CFG5  , 8  , HeatPumpNone       , HeatPumpR744 , 1425.648, 0)         ,
+	TestCase(CFG5  , 11 , HeatPumpNone       , HeatPumpR744 , 4424.9953, 0)         ,
+
 	TestCase(CFG6  , 1  , HeatPumpNone       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG6  , 6  , HeatPumpNone       , HeatPumpCont , 856.80    , 0.0)       ,
 	TestCase(CFG6  , 8  , HeatPumpNone       , HeatPumpCont , 1413.2125 , 0)         ,
 	TestCase(CFG6  , 11 , HeatPumpNone       , HeatPumpCont , 3636.1338 , 0)         ,
+	
+	TestCase(CFG6  , 1  , HeatPumpNone       , HeatPumpR744 , 428.400   , 0.0)       ,
+	TestCase(CFG6  , 6  , HeatPumpNone       , HeatPumpR744 , 856.80    , 0.0)       ,
+	TestCase(CFG6  , 8  , HeatPumpNone       , HeatPumpR744 , 1425.648, 0)         ,
+	TestCase(CFG6  , 11 , HeatPumpNone       , HeatPumpR744 , 4424.9953, 0)         ,
 
 	TestCase(CFG7  , 1  , HeatPumpCont       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG7  , 6  , HeatPumpCont       , HeatPumpCont , 856.80    , 0.0)       ,
 	TestCase(CFG7  , 8  , HeatPumpCont       , HeatPumpCont , 1413.2125 , 0)         ,
 	TestCase(CFG7  , 11 , HeatPumpCont       , HeatPumpCont , 3636.1338 , 0)         ,
 
+	TestCase(CFG7  , 1  , HeatPumpR744       , HeatPumpCont , 428.400   , 0.0)       ,
+	TestCase(CFG7  , 6  , HeatPumpR744       , HeatPumpCont , 856.80    , 0.0)       ,
+	TestCase(CFG7  , 8  , HeatPumpR744       , HeatPumpCont , 1415.3128, 0)         ,
+	TestCase(CFG7  , 11 , HeatPumpR744       , HeatPumpCont , 3746.1447, 0)         ,
+
+	TestCase(CFG7  , 1  , HeatPumpCont       , HeatPumpR744 , 428.400   , 0.0)       ,
+	TestCase(CFG7  , 6  , HeatPumpCont       , HeatPumpR744 , 856.80    , 0.0)       ,
+	TestCase(CFG7  , 8  , HeatPumpCont       , HeatPumpR744 , 1423.474, 0)         ,
+	TestCase(CFG7  , 11 , HeatPumpCont       , HeatPumpR744 , 4259.4119, 0)         ,
+
 	TestCase(CFG8  , 1  , HeatPumpNone       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG8  , 6  , HeatPumpNone       , HeatPumpCont , 856.80    , 0.0)       ,
 	TestCase(CFG8  , 8  , HeatPumpNone       , HeatPumpCont , 1413.2125 , 0)         ,
 	TestCase(CFG8  , 11 , HeatPumpNone       , HeatPumpCont , 3636.1338 , 0)         ,
 
+	TestCase(CFG8  , 1  , HeatPumpNone       , HeatPumpR744 , 428.400   , 0.0)       ,
+	TestCase(CFG8  , 6  , HeatPumpNone       , HeatPumpR744 , 856.80    , 0.0)       ,
+	TestCase(CFG8  , 8  , HeatPumpNone       , HeatPumpR744 , 1425.648, 0)         ,
+	TestCase(CFG8  , 11 , HeatPumpNone       , HeatPumpR744 , 4424.9953, 0)         ,
+
 	TestCase(CFG9  , 1  , HeatPumpCont       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG9  , 6  , HeatPumpCont       , HeatPumpCont , 856.80    , 0.0)       ,
 	TestCase(CFG9  , 8  , HeatPumpCont       , HeatPumpCont , 1413.2125 , 0)         ,
 	TestCase(CFG9  , 11 , HeatPumpCont       , HeatPumpCont , 3636.1338 , 0)         ,
+
+	TestCase(CFG9  , 1  , HeatPumpR744       , HeatPumpCont , 428.400   , 0.0)       ,
+	TestCase(CFG9  , 6  , HeatPumpR744       , HeatPumpCont , 856.80    , 0.0)       ,
+	TestCase(CFG9  , 8  , HeatPumpR744       , HeatPumpCont , 1415.3128, 0)         ,
+	TestCase(CFG9  , 11 , HeatPumpR744       , HeatPumpCont , 3746.1447, 0)         ,
+
+	TestCase(CFG9  , 1  , HeatPumpCont       , HeatPumpR744 , 428.400   , 0.0)       ,
+	TestCase(CFG9  , 6  , HeatPumpCont       , HeatPumpR744 , 856.80    , 0.0)       ,
+	TestCase(CFG9  , 8  , HeatPumpCont       , HeatPumpR744 , 1423.474, 0)         ,
+	TestCase(CFG9  , 11 , HeatPumpCont       , HeatPumpR744 , 4259.4119, 0)         ,
 
 	TestCase(CFG10 , 1  , HeatPumpNone       , HeatPumpCont , 428.400   , 0.0)       ,
 	TestCase(CFG10 , 6  , HeatPumpNone       , HeatPumpCont , 856.80    , 0.0)       ,
@@ -157,10 +202,10 @@ public class SSMTestHeatingCooling
 	TestCase(CFG7  , 8  , HeatPumpCont       , HeatPump3Stage    , 883.4159  , 547.9913)  ,
 	TestCase(CFG7  , 11 , HeatPumpCont       , HeatPump3Stage    , 1116.3204 , 2644.1315) ,
 
-	TestCase(CFG7  , 1  , HeatPump2Stage    , HeatPumpType.non_R_744_continuous , 428.400   , 0.0)       ,
-	TestCase(CFG7  , 6  , HeatPump2Stage    , HeatPumpType.non_R_744_continuous , 856.80    , 0.0)       ,
-	TestCase(CFG7  , 8  , HeatPump2Stage    , HeatPumpType.non_R_744_continuous , 1360.3368 , 59.7565)   ,
-	TestCase(CFG7  , 11 , HeatPump2Stage    , HeatPumpType.non_R_744_continuous , 3393.4694 , 285.6602)  ,
+	TestCase(CFG7  , 1  , HeatPump2Stage    , HeatPumpCont       , 428.400   , 0.0)       ,
+	TestCase(CFG7  , 6  , HeatPump2Stage    , HeatPumpCont       , 856.80    , 0.0)       ,
+	TestCase(CFG7  , 8  , HeatPump2Stage    , HeatPumpCont       , 1360.3368 , 59.7565)   ,
+	TestCase(CFG7  , 11 , HeatPump2Stage    , HeatPumpCont       , 3393.4694 , 285.6602)  ,
 
 	TestCase(CFG9  , 1  , HeatPumpCont      , HeatPump3Stage    , 428.400   , 0.0)       ,
 	TestCase(CFG9  , 6  , HeatPumpCont      , HeatPump3Stage    , 856.80    , 0.0)       ,
@@ -220,19 +265,35 @@ public class SSMTestHeatingCooling
 		// electric: ventilation + heatpump
 		TestCase(CFG2, HeatPumpCont, HeatPumpNone, 395.9945, 0.0),
 		TestCase(CFG4, HeatPumpCont, HeatPumpNone, 676.364, 0),
+		TestCase(CFG2, HeatPumpR744, HeatPumpNone, 418.4411, 0),
+		TestCase(CFG4, HeatPumpR744, HeatPumpNone, 698.8106, 0),
 
 		TestCase(CFG5  , HeatPumpNone  , HeatPumpCont , 1076.1036 , 0) ,
+		TestCase(CFG5  , HeatPumpNone  , HeatPumpR744 , 1136.6973, 0) ,
 		TestCase(CFG6  , HeatPumpNone  , HeatPumpCont , 1076.1036 , 0) ,
+		TestCase(CFG6  , HeatPumpNone  , HeatPumpR744 , 1136.6973, 0) ,
 		TestCase(CFG7  , HeatPumpCont  , HeatPumpCont , 1076.1036 , 0) ,
+		TestCase(CFG7  , HeatPumpR744  , HeatPumpCont , 1084.8656, 0) ,
+		TestCase(CFG7  , HeatPumpCont  , HeatPumpR744 , 1124.3766, 0) ,
+		TestCase(CFG7  , HeatPumpR744  , HeatPumpR744 , 1136.6973, 0) ,
 		TestCase(CFG8  , HeatPumpNone  , HeatPumpCont , 1076.1036 , 0) ,
+		TestCase(CFG8  , HeatPumpNone  , HeatPumpR744 , 1136.6973, 0) ,
 		TestCase(CFG9  , HeatPumpCont  , HeatPumpCont, 1076.1036 , 0) ,
+		TestCase(CFG9  , HeatPumpR744  , HeatPumpCont, 1084.8656, 0) ,
+		TestCase(CFG9  , HeatPumpCont  , HeatPumpR744, 1124.3766, 0) ,
+		TestCase(CFG9  , HeatPumpR744  , HeatPumpR744, 1136.6973, 0) ,
 		TestCase(CFG10 , HeatPumpNone  , HeatPumpCont, 1076.1036 , 0) ,
+		TestCase(CFG10 , HeatPumpNone  , HeatPumpR744, 1136.6973 , 0) ,
 
 		// mixed electrical and mechanical heatpumps
 		TestCase(CFG7 , HeatPumpCont   , HeatPump3Stage , 707.0598  , 383.9348) ,
 		TestCase(CFG7 , HeatPump2Stage , HeatPumpCont   , 1039.7276 , 41.703)   ,
+		TestCase(CFG7 , HeatPumpR744   , HeatPump3Stage , 708.0087, 392.4745) ,
+		TestCase(CFG7 , HeatPump2Stage , HeatPumpR744   , 1084.5117, 46.679)   ,
 		TestCase(CFG9 , HeatPumpCont   , HeatPump3Stage , 707.0598  , 383.9348) ,
-		TestCase(CFG9 , HeatPump2Stage , HeatPumpCont  , 1039.7276 , 41.703)   ,
+		TestCase(CFG9 , HeatPump2Stage , HeatPumpCont   , 1039.7276 , 41.703)   ,
+		TestCase(CFG9 , HeatPumpR744   , HeatPump3Stage , 708.0087, 392.4745) ,
+		TestCase(CFG9 , HeatPump2Stage , HeatPumpR744   , 1084.5117, 46.679)   ,
 
 	]
 	public void SSMTest_Cooling_AvgAllEnvironments(BusHVACSystemConfiguration cfg, HeatPumpType driverHeatpump,
@@ -1251,6 +1312,187 @@ public class SSMTestHeatingCooling
 			expectedHPElPwrW, expectedHPMechPwrW, expecetdElecricPowerElHeater, expectedAuxHeater);
 	}
 
+
+	// ==================================================
+
+	[
+		TestCase(CFG7  , 11  , HeatPump2Stage    , HeatPump3Stage, 5000, 9639.0, 329.0112, 5705.3337),
+		TestCase(CFG7, 11, HeatPumpCont, HeatPumpCont, 5000, 9639.0, 5671.7119, 0),
+		]
+	public void SSMTest_CoolingLimited_SingleEnvironment(BusHVACSystemConfiguration cfg, int envId, HeatPumpType driverHeatpump,
+		HeatPumpType passengerHeatpump, double expectedMaxCoolingPwrDriver, double expectedMaxCoolingPwrPassenger
+		, double expectedElPwrW, double expectedMechPwrW)
+	{
+		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatpumpCooling: driverHeatpump, 
+			passengerHeatpumpCooling: passengerHeatpump, length: 12, height: 1.5);
+
+		// set list of environmental conditions to a single entry
+		var ssmInputs = auxData.SSMInputsCooling as SSMInputs;
+		Assert.NotNull(ssmInputs);
+		var envAll = ssmInputs.EnvironmentalConditions;
+		var selectedEnv = envAll.EnvironmentalConditionsMap.GetEnvironmentalConditions().Where(x => x.ID == envId).FirstOrDefault();
+		Assert.NotNull(selectedEnv);
+		var newEnv = new EnvironmentalConditionMapEntry(selectedEnv.ID, selectedEnv.Temperature, selectedEnv.Solar, 1.0,
+			selectedEnv.HeatPumpCoP.ToDictionary(x => x.Key, x => x.Value),
+			selectedEnv.HeaterEfficiency.ToDictionary(x => x.Key, x => x.Value));
+		ssmInputs.EnvironmentalConditionsMap = new EnvironmentalConditionsMap(new[] { newEnv });
+		// override passenger count
+		ssmInputs.NumberOfPassengers = 150;
+		// ---
+
+		Assert.AreEqual(cfg, ssmInputs.HVACSystemConfiguration);
+
+		var ssm = new SSMTOOL(auxData.SSMInputsCooling);
+
+		Console.WriteLine($"{ssm.ElectricalWAdjusted.Value().ToGUIFormat(4)}, {ssm.MechanicalWBaseAdjusted.Value().ToGUIFormat(4)}");
+
+		Assert.AreEqual(expectedMaxCoolingPwrDriver, ssmInputs.HVACMaxCoolingPowerDriver.Value(), "max cooling power driver");
+		Assert.AreEqual(expectedMaxCoolingPwrPassenger, ssmInputs.HVACMaxCoolingPowerPassenger.Value(), "max cooling power passenger");
+		Assert.AreEqual(expectedElPwrW, ssm.ElectricalWAdjusted.Value(), 1e-3, "expected Electric Power");
+		Assert.AreEqual(expectedMechPwrW, ssm.MechanicalWBaseAdjusted.Value(), 1e-3, "expected Mechanical Power");
+
+	}
+
+    // ==================================================
+    [
+		TestCase(CFG1, 1, 5e3, 8475.49374),
+		TestCase(CFG1, 2, 5e3, 2261.98124),
+		TestCase(CFG1, 3, 5e3, -604.51875),
+		TestCase(CFG1, 4, 5e3, -3026.0124),
+		TestCase(CFG1, 5, 5e3, -3505.3468),
+		TestCase(CFG1, 6, 5e3, 0),
+		TestCase(CFG1, 7, 5e3, 0),
+		TestCase(CFG1, 8, 5e3, 0),
+		TestCase(CFG1, 9, 5e3, 0),
+		TestCase(CFG1, 10, 5e3, 0),
+		TestCase(CFG1, 11, 5e3, 0),
+	]
+	public void SSMTest_HeatingDemand_EngineWasteHeat_SingleEnvironment(BusHVACSystemConfiguration cfg, int envId,
+		double engineWasteHeat, double expectedHeatingPower)
+	{
+		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatPumpHeating: HeatPumpNone, passengerHeatPumpHeating: HeatPumpNone,
+			electricHeater: NoElHtr, auxHeaterPower: 0.SI<Watt>());
+
+		// set list of environmental conditions to a single entry
+		var ssmInputs = auxData.SSMInputsHeating as SSMInputs;
+		Assert.NotNull(ssmInputs);
+		var envAll = ssmInputs.EnvironmentalConditions;
+		var selectedEnv = envAll.EnvironmentalConditionsMap.GetEnvironmentalConditions().Where(x => x.ID == envId).FirstOrDefault();
+		Assert.NotNull(selectedEnv);
+		var newEnv = new EnvironmentalConditionMapEntry(selectedEnv.ID, selectedEnv.Temperature, selectedEnv.Solar, 1.0,
+			selectedEnv.HeatPumpCoP.ToDictionary(x => x.Key, x => x.Value),
+			selectedEnv.HeaterEfficiency.ToDictionary(x => x.Key, x => x.Value));
+		ssmInputs.EnvironmentalConditionsMap = new EnvironmentalConditionsMap(new[] { newEnv });
+		// ---
+
+		Assert.AreEqual(cfg, ssmInputs.HVACSystemConfiguration);
+
+		var ssm = new SSMTOOL(auxData.SSMInputsHeating);
+
+		var heatingPower = ssm.AverageHeaterPower(engineWasteHeat.SI<Watt>());
+
+		Console.WriteLine($"{heatingPower.RequiredHeatingPower.Value().ToGUIFormat(4)}");
+
+		Assert.AreEqual(expectedHeatingPower, heatingPower.RequiredHeatingPower.Value(), 1e-3, "expected Heating Demand");
+	}
+
+    [
+		TestCase("a", CFG7, 1, HeatPumpCont, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC7, HDC7, 5475.4938, 0, 0, 1177.5255, 5475.4938),
+		TestCase("b", CFG7, 2, HeatPumpCont, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC7, HDC7, 0, 0, 0, 0, 0),
+		TestCase("c", CFG7, 3, HeatPumpCont, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC7, HDC7, 0, 0, 0, 0, 0),
+
+		TestCase("d", CFG6, 1, HeatPumpNone, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC10, HDC7, 5475.4938, 0, 0, 1177.5255, 5475.4937),
+		TestCase("e", CFG6, 2, HeatPumpNone, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC10, HDC7, 0, 0, 0, 0, 0),
+		TestCase("f", CFG6, 3, HeatPumpNone, HeatPump3Stage, WaterElHtr, AuxHtrPwr30, 8e3, HDC10, HDC7, 0, 0, 0, 0, 0),
+
+	]
+	public void SSMTest_HeatingDistribution_EngineWasteHeat_SingleEnvironment(string dummySort, BusHVACSystemConfiguration cfg, int envId,
+		HeatPumpType driverHeatpump,
+		HeatPumpType passengerHeatpump, HeaterType electricHeater, double auxHeaterPwr, double engineWasteHeat,
+		HeatingDistributionCase expectedHeatingDistributionCase, HeatingDistributionCase expectedHeatingDistributionCasePassenger,
+		double expectedHeatingDemand, double expectedHPElPwrW, double expectedHPMechPwrW, double expecetdElecricPowerElHeater,
+		double expectedAuxHeater)
+	{
+		SSMTest_HeatingDistribution_SingleEnvironment(cfg, envId, driverHeatpump, passengerHeatpump, electricHeater, auxHeaterPwr,
+			expectedHeatingDistributionCase, expectedHeatingDistributionCasePassenger, expectedHeatingDemand,
+			expectedHPElPwrW, expectedHPMechPwrW, expecetdElecricPowerElHeater, expectedAuxHeater, engineWasteHeat);
+	}
+
+	// ==================================================
+
+	[
+		TestCase("a1", CFG7, 1, HeatPumpR744, HeatPump3Stage, 0, HDC1, HDC5, 7513.7338, 331.3278, 0, 0, 0), // exceeding heating limit
+		TestCase("a2", CFG7, 1, HeatPumpR744, HeatPump3Stage, 5e3, HDC1, HDC5, 2513.7337, 139.6519, 0, 0, 0), // not exceeding heating limit
+		TestCase("b1", CFG7, 1, HeatPump2Stage, HeatPumpR744, 0, HDC5, HDC1, 7513.7338, 2981.95, 0, 0, 0),
+		TestCase("b2", CFG7, 1, HeatPump2Stage, HeatPumpR744, 5e3, HDC5, HDC1, 2513.7337, 1256.8669, 0, 0, 0),
+		TestCase("c1", CFG7, 1, HeatPumpR744, HeatPumpR744, 0, HDC1, HDC1, 7513.7338, 3313.2778, 0, 0, 0),
+		TestCase("c2", CFG7, 1, HeatPumpR744, HeatPumpR744, 5e3, HDC1, HDC1, 2513.7337, 1396.5188, 0, 0, 0),
+	]
+	public void SSMTest_HeatingDistribution_SingleEnvironment_Limited(string dummySort, BusHVACSystemConfiguration cfg, int envId,
+		HeatPumpType driverHeatpump,
+		HeatPumpType passengerHeatpump, double engineWasteHeat,
+		HeatingDistributionCase expectedHeatingDistributionCase, HeatingDistributionCase expectedHeatingDistributionCasePassenger,
+		double expectedHeatingDemand, double expectedHPElPwrW, double expectedHPMechPwrW, double expecetdElecricPowerElHeater,
+		double expectedAuxHeater)
+	{
+		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatPumpHeating: driverHeatpump, passengerHeatPumpHeating: passengerHeatpump,
+			electricHeater: NoElHtr, auxHeaterPower: 0.SI<Watt>(), height: 0.6);
+
+		// set list of environmental conditions to a single entry
+		var ssmInputs = auxData.SSMInputsHeating as SSMInputs;
+		Assert.NotNull(ssmInputs);
+		var envAll = ssmInputs.EnvironmentalConditions;
+		var selectedEnv = envAll.EnvironmentalConditionsMap.GetEnvironmentalConditions().Where(x => x.ID == envId).FirstOrDefault();
+		Assert.NotNull(selectedEnv);
+		var newEnv = new EnvironmentalConditionMapEntry(selectedEnv.ID, selectedEnv.Temperature, selectedEnv.Solar, 1.0,
+			selectedEnv.HeatPumpCoP.ToDictionary(x => x.Key, x => x.Value),
+			selectedEnv.HeaterEfficiency.ToDictionary(x => x.Key, x => x.Value));
+		ssmInputs.EnvironmentalConditionsMap = new EnvironmentalConditionsMap(new[] { newEnv });
+		
+
+		ssmInputs.NumberOfPassengers = 1;
+		// ---
+
+		Assert.AreEqual(cfg, ssmInputs.HVACSystemConfiguration);
+
+		var ssm = new SSMTOOL(auxData.SSMInputsHeating);
+
+		var heatingPower = ssm.AverageHeaterPower(engineWasteHeat.SI<Watt>());
+
+		Console.WriteLine($"HDC{ssmInputs.HeatingDistributionCaseDriver.GetID()}, HDC{ssmInputs.HeatingDistributionCasePassenger.GetID()}, {heatingPower.RequiredHeatingPower.Value().ToGUIFormat(4)}, {heatingPower.HeatPumpPowerEl.Value().ToGUIFormat(4)}, {heatingPower.HeatPumpPowerMech.Value().ToGUIFormat(4)}, {heatingPower.ElectricHeaterPowerEl.Value().ToGUIFormat(4)}, {heatingPower.AuxHeaterPower.Value().ToGUIFormat(4)}");
+
+		Assert.AreEqual(expectedHeatingDistributionCase, ssmInputs.HeatingDistributionCaseDriver, "Driver");
+		Assert.AreEqual(expectedHeatingDistributionCasePassenger, ssmInputs.HeatingDistributionCasePassenger, "Passenger");
+
+		Assert.AreEqual(engineWasteHeat.IsEqual(0), heatingPower.RequiredHeatingPower.Value() > ssmInputs.MaxHeatingPower.Value());
+
+		Assert.AreEqual(expectedHeatingDemand, heatingPower.RequiredHeatingPower.Value(), 1e-3, "expected Heating Demand");
+		Assert.AreEqual(expectedHPElPwrW, heatingPower.HeatPumpPowerEl.Value(), 1e-3, "expected HeatPump Electric Power");
+		Assert.AreEqual(expectedHPMechPwrW, heatingPower.HeatPumpPowerMech.Value(), 1e-3, "expected HeatPump Mechanical Power");
+		Assert.AreEqual(expecetdElecricPowerElHeater, heatingPower.ElectricHeaterPowerEl.Value(), 1e-3, "expected ElectricHeater Power");
+		Assert.AreEqual(expectedAuxHeater, heatingPower.AuxHeaterPower.Value(), 1e-3, "expected AuxHeater Power");
+
+		// re-calculate electrical and mechanical heating demand, ignoring electrical heater and aux heater
+		// in case no engine waste heat is available, the re-calculated values have to be higher than the values from the SSM module where certain 
+		// limits are applied (only in case the heat-pump is used!)
+		var copDriver = newEnv.HeatPumpCoP.ContainsKey(driverHeatpump) ? newEnv.HeatPumpCoP[driverHeatpump] : double.NaN;
+		var copPassenger = newEnv.HeatPumpCoP.ContainsKey(passengerHeatpump) ? newEnv.HeatPumpCoP[passengerHeatpump] : double.NaN;
+		var heatingDriver = expectedHeatingDemand.SI<Watt>() * ssmInputs.DriverHVACContribution;
+		var heatingPassenger = expectedHeatingDemand.SI<Watt>() * ssmInputs.PassengerHVACContribution;
+
+		var hpElHeating = (driverHeatpump.IsElectrical() && !double.IsNaN(copDriver) ? heatingDriver / copDriver : 0.SI<Watt>()) + 
+						(passengerHeatpump.IsElectrical() && !double.IsNaN(copPassenger) ? heatingPassenger / copPassenger : 0.SI<Watt>());
+		var hpMechHeating = (driverHeatpump.IsMechanical() && !double.IsNaN(copDriver) ? heatingDriver / copDriver : 0.SI<Watt>()) +
+						(passengerHeatpump.IsMechanical() && !double.IsNaN(copPassenger) ? heatingPassenger / copPassenger : 0.SI<Watt>());
+		if (engineWasteHeat.IsEqual(0)) {
+			Assert.IsTrue(hpElHeating.IsEqual(0) || hpElHeating > heatingPower.HeatPumpPowerEl);
+			Assert.IsTrue(hpMechHeating.IsEqual(0) || hpMechHeating > heatingPower.HeatPumpPowerMech);
+		} else {
+			Assert.AreEqual(hpElHeating.Value(), heatingPower.HeatPumpPowerEl.Value(), 1e-3);
+			Assert.AreEqual(hpMechHeating.Value(), heatingPower.HeatPumpPowerMech.Value(), 1e-3);
+		}
+	}
+
 	// ==================================================
 	// ==================================================
 
@@ -1290,11 +1532,13 @@ public class SSMTestHeatingCooling
 	}
 
 
-	public void SSMTest_HeatingDistribution_SingleEnvironment(BusHVACSystemConfiguration cfg, int envId, HeatPumpType driverHeatpump,
-		HeatPumpType passengerHeatpump, HeaterType electricHeater, double auxHeaterPwr, HeatingDistributionCase expectedHeatingDistributionCaseDriver,
+	protected void SSMTest_HeatingDistribution_SingleEnvironment(BusHVACSystemConfiguration cfg, int envId,
+		HeatPumpType driverHeatpump,
+		HeatPumpType passengerHeatpump, HeaterType electricHeater, double auxHeaterPwr,
+		HeatingDistributionCase expectedHeatingDistributionCaseDriver,
 		HeatingDistributionCase expectedHeatingDistributionCasePassenger, double expectedHeatingPower,
 		double expectedHPElPwrW, double expectedHPMechPwrW, double expecetdElecricPowerElHeater,
-		double expectedAuxHeater)
+		double expectedAuxHeater, double engineWasteHeat = 0)
 	{
 		var auxData = GetAuxParametersConventionalSingleDeckForTest(cfg, driverHeatPumpHeating: driverHeatpump, passengerHeatPumpHeating: passengerHeatpump,
 			electricHeater: electricHeater, auxHeaterPower: auxHeaterPwr.SI<Watt>());
@@ -1315,7 +1559,7 @@ public class SSMTestHeatingCooling
 
 		var ssm = new SSMTOOL(auxData.SSMInputsHeating);
 
-		var heatingPower = ssm.AverageHeaterPower(0.SI<Watt>());
+		var heatingPower = ssm.AverageHeaterPower(engineWasteHeat.SI<Watt>());
 
 		Console.WriteLine($"HDC{ssmInputs.HeatingDistributionCaseDriver.GetID()}, HDC{ssmInputs.HeatingDistributionCasePassenger.GetID()}, {heatingPower.RequiredHeatingPower.Value().ToGUIFormat(4)}, {heatingPower.HeatPumpPowerEl.Value().ToGUIFormat(4)}, {heatingPower.HeatPumpPowerMech.Value().ToGUIFormat(4)}, {heatingPower.ElectricHeaterPowerEl.Value().ToGUIFormat(4)}, {heatingPower.AuxHeaterPower.Value().ToGUIFormat(4)}");
 
@@ -1342,7 +1586,7 @@ public class SSMTestHeatingCooling
 
 	private IAuxiliaryConfig GetAuxParametersConventionalSingleDeckForTest(BusHVACSystemConfiguration hvacConfig, HeatPumpType? driverHeatpumpCooling = null,
 		HeatPumpType? passengerHeatpumpCooling = null, HeatPumpType? driverHeatPumpHeating = null, HeatPumpType? passengerHeatPumpHeating = null, 
-		Watt auxHeaterPower = null, HeaterType? electricHeater = null)
+		Watt auxHeaterPower = null, HeaterType? electricHeater = null, int passengerCount = 40, double length = 12, double height = 3)
 	{
 		return CreateBusAuxInputParameters(MissionType.Urban, 
 			VehicleClass.Class31a, 
@@ -1350,27 +1594,27 @@ public class SSMTestHeatingCooling
 			VehicleCode.CA, 
 			RegistrationClass.II, 
 			AxleConfiguration.AxleConfig_4x2, 
-			false, 
-			false, 
-			12.SI<Meter>(), 
-			3.SI<Meter>(), 
-			2.55.SI<Meter>(), 
-			40, 
-			0, 
-			driverHeatPumpHeating ?? HeatPumpType.none, 
-			driverHeatpumpCooling ?? HeatPumpType.none, 
-			passengerHeatPumpHeating ?? HeatPumpType.none, 
-			passengerHeatpumpCooling ?? HeatPumpType.none, 
-			auxHeaterPower ?? 0.SI<Watt>(), 
-			electricHeater != null && (electricHeater & HeaterType.AirElectricHeater) != 0,
-			electricHeater != null && (electricHeater & HeaterType.WaterElectricHeater) != 0,
-			electricHeater != null && (electricHeater & HeaterType.OtherElectricHeating) != 0,
+			articulated: false, 
+			lowEntry: false, 
+			length: length.SI<Meter>(), 
+			height: height.SI<Meter>(), 
+			width: 2.55.SI<Meter>(), 
+			numPassengersLowerdeck: passengerCount, 
+			numPassengersUpperdeck: 0, 
+			hpHeatingDriver: driverHeatPumpHeating ?? HeatPumpType.none, 
+			hpCoolingDriver: driverHeatpumpCooling ?? HeatPumpType.none, 
+			hpHeatingPassenger: passengerHeatPumpHeating ?? HeatPumpType.none, 
+			hpCoolingPassenger: passengerHeatpumpCooling ?? HeatPumpType.none, 
+			auxHeaterPower: auxHeaterPower ?? 0.SI<Watt>(), 
+			airElectricHeater: electricHeater != null && (electricHeater & HeaterType.AirElectricHeater) != 0,
+			waterElectricHeater: electricHeater != null && (electricHeater & HeaterType.WaterElectricHeater) != 0,
+			otherElectricHeater: electricHeater != null && (electricHeater & HeaterType.OtherElectricHeating) != 0,
 			hvacConfig, 
-			false, 
-			false,
-			false, 
-			false, 
-			false,
+			doubleGlazing: false, 
+			adjustableAuxHeater: false,
+			separateAirdistributionDicts: false, 
+			adjustableCoolantThermostat: false, 
+			engineWasteGasHeatExchanger: false,
             steeringpumps: new[] { "Dual displacement" }, 
 			fanTech: "Crankshaft mounted - Discrete step clutch", 
 			alternatorTech: AlternatorType.Conventional, entranceHeight: 0.3.SI<Meter>());
