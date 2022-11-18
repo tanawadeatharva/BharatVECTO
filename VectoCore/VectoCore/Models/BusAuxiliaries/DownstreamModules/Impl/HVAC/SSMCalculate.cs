@@ -768,7 +768,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 							: run2TotalW //.TechListAmendedFuelHeater(env.Temperature, env.Solar)
                     ) - ssmTOOL.EngineWasteHeat;
 			}
-			return result;
+			return VectoMath.Max(result, 0.SI<Watt>());
 
 		}
 	}

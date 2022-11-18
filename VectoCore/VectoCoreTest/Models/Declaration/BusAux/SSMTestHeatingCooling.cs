@@ -1357,9 +1357,9 @@ public class SSMTestHeatingCooling
     [
 		TestCase(CFG1, 1, 5e3, 8475.49374),
 		TestCase(CFG1, 2, 5e3, 2261.98124),
-		TestCase(CFG1, 3, 5e3, -604.51875),
-		TestCase(CFG1, 4, 5e3, -3026.0124),
-		TestCase(CFG1, 5, 5e3, -3505.3468),
+		TestCase(CFG1, 3, 5e3, 0), // no negative heating demand!
+		TestCase(CFG1, 4, 5e3, 0), // no negative heating demand!
+		TestCase(CFG1, 5, 5e3, 0), // no negative heating demand!
 		TestCase(CFG1, 6, 5e3, 0),
 		TestCase(CFG1, 7, 5e3, 0),
 		TestCase(CFG1, 8, 5e3, 0),
