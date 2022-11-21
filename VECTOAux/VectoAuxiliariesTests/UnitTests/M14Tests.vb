@@ -44,9 +44,9 @@ Namespace UnitTests
         Public ReadOnly Property EngineWasteHeat As Watt Implements ISSMTOOL.EngineWasteHeat
 
 
-        Public Function AverageAuxHeaterPower(averageUseableEngineWasteHeat As Watt) As Watt Implements ISSMPowerDemand.AverageHeaterPower
+        Public Function AverageAuxHeaterPower(averageUseableEngineWasteHeat As Watt) As HeaterPower Implements ISSMPowerDemand.AverageHeaterPower
 
-            Return (0.5*(averageUseableEngineWasteHeat.Value()*0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI (of Watt)
+            Return new HeaterPower With{ .AuxHeaterPower = (0.5*(averageUseableEngineWasteHeat.Value()*0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI (of Watt)}
         End Function
 
         Public Property SSMInputs As ISSMDeclarationInputs Implements ISSMTOOL.SSMInputs

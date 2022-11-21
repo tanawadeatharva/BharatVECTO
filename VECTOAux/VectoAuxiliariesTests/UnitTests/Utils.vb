@@ -136,7 +136,6 @@ Public Class Utils
                 .HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin(),
                 .CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin(),
                 .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast (Of JoulePerCubicMeter),
-                .HVACCompressorType = HeatPumpType.non_R_744_2_stage, 
                 .HVACMaxCoolingPowerPassenger = 18.si(Unit.SI.kilo.watt).Cast (of Watt),
                 .AuxHeaterEfficiency =  0.84,
                 .FuelFiredHeaterPower = 30.SI(Unit.SI.kilo.watt).Cast (Of Watt),

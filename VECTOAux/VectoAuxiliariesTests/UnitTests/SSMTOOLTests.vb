@@ -153,7 +153,7 @@ Namespace UnitTests
             If section = "AC-System" Then
                 'AC-SYSTEM
                 '*********
-                Assert.AreEqual(HeatPumpType.non_R_744_2_stage, target.ACSystem.HVACCompressorType)
+                'Assert.AreEqual(HeatPumpType.non_R_744_2_stage, target.ACSystem.HVACCompressorType)
                 Assert.AreEqual(15.5567, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0, 1e-3)
                 'Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
