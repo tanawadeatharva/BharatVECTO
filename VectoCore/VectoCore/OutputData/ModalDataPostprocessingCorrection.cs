@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			var workBusAuxPSCompOff = nonSmartAirGen.Sum(x => x.P_compOff * x.dt);
 			var workBusAuxPSCompOn = nonSmartAirGen.Sum(x => x.P_compOn * x.dt);
-			var airBusAuxPSON = nonSmartAirGen.Sum(x => x.Nl_alwaysOn);
+			var airBusAuxPSON = nonSmartAirGen.Sum(x => x.Nl_alwaysOn) ?? 0.SI<NormLiter>();
 
 			r.kAir = airBusAuxPSON.IsEqual(0)
 				? 0.SI(Unit.SI.Watt.Second.Per.Cubic.Meter)
