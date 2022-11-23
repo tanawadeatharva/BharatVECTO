@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var torqueConverter = inputData.Components.TorqueConverterInputData;
 
 			var engine = runData.EngineData;
-			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0f;
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
 			var retVal = SetCommonGearboxData(gearbox);
