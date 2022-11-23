@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -71,6 +72,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto, IGearboxDeclarationInputData gbx)
 		{
 
+			if (gbx == null && pto != null && (pto.PTOTransmissionType != "None")) {
+				throw new VectoException("PTO specified but the vehicle has no gearbox");
+			} 
+				
 			if ((gbx != null) && (pto != null) && (pto.PTOTransmissionType != "None"))
 			{
 				var powerDemand = DeclarationData.PTOTransmission.Lookup(pto.PTOTransmissionType).PowerDemand;
@@ -81,6 +86,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
 				};
 			}
+
 			return null;
 		}
 	}
