@@ -1,4 +1,11 @@
-﻿using System.IO;
+﻿
+
+#define singlethreaded
+
+using System.Collections.Immutable;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
@@ -6,14 +13,18 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Integration.Declaration.HeavyLorry;
 
+
+
 [TestFixture]
 public class HeavyLorrySimulation
 {
+
 
 	private const string BASE_DIR = @"TestData\Integration\DeclarationMode\V24_DeclarationMode\";
 	private StandardKernel _kernel;
@@ -28,20 +39,22 @@ public class HeavyLorrySimulation
 
 	[TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml"),
 	TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml"),
-	TestCase(@"HeavyLorry\Conventional_heavyLorry_AMT.xml", false),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml", false),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml", false),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E3_realistic_municipal.xml"),
-	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml")]
-	public void HeavyLorrySimulationTest(string jobFile, bool multiThreaded = true)
+	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
+	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
+	TestCase(@"HeavyLorry\Group2_HEV_S2.xml"),
+	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml"),
+	]
+	public void HeavyLorrySimulationTest(string jobFile)
 	{
-		RunSimulation(jobFile, multiThreaded);
+#if singlethreaded
+		RunSimulation(jobFile, false);
+#else
+		RunSimulation(jobFile, true);
+#endif
 	}
-
 
 	public void RunSimulation(string jobFile, bool multiThreaded = true)
 	{
@@ -49,17 +62,30 @@ public class HeavyLorrySimulation
 		var dataProvider = _xmlReader.CreateDeclaration(filePath);
 		var fileWriter = new FileOutputWriter(filePath);
 		var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
-		var jobContainer = new JobContainer(new MockSumWriter()) { };
+		runsFactory.WriteModalResults = true;
+		var jobContainer = new JobContainer(new MockSumWriter()){};
+		//var jobContainer = new JobContainer(new MockSumWriter()) { };
 		jobContainer.AddRuns(runsFactory);
 		PrintRuns(jobContainer, null);
+		
 		jobContainer.Execute(multiThreaded);
 		jobContainer.WaitFinished();
 		Assert.IsTrue(jobContainer.AllCompleted);
 		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
 		PrintRuns(jobContainer, fileWriter);
 		PrintFiles(fileWriter);
-
 	}
+
+	
+
+	
+
+
+
+
+
+
+
 
 	private void PrintRuns(JobContainer jobContainer, FileOutputWriter fileWriter = null)
 	{
@@ -67,17 +93,19 @@ public class HeavyLorrySimulation
 			TestContext.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value.CycleName} {keyValuePair.Value.RunName} {keyValuePair.Value.Error?.Message}" );
 			//if (fileWriter != null && keyValuePair.Value.Success) {
 			//	TestContext.AddTestAttachment(fileWriter.GetModDataFileName(keyValuePair.Value.RunName, keyValuePair.Value.CycleName, keyValuePair.Value.RunSuffix), keyValuePair.Value.RunName);
-   //         }
+			//         }
 	
 		}
 	}
 
 	private void PrintFiles(FileOutputWriter fileWriter)
 	{
+		//if (fileWriter.GetWrittenFiles().Count == 0) {
+		//	Assert.Fail("No files written\n");
+		//}
 		foreach (var keyValuePair in fileWriter.GetWrittenFiles()) {
 			TestContext.WriteLine($"{keyValuePair.Key} written to {keyValuePair.Value}");
 			TestContext.AddTestAttachment(keyValuePair.Value, keyValuePair.Key.ToString());
 		}
-		
 	}
 }
