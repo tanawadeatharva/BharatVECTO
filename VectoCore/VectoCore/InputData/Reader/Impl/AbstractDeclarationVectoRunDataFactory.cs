@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			//}
 		}
 
-		public IEnumerable<VectoRunData> NextRun()
+		public virtual IEnumerable<VectoRunData> NextRun()
 		{
 		
 			Initialize();

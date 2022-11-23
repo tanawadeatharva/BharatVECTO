@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Implementation of IVectoRunDataFactory
 
-			public IEnumerable<VectoRunData> NextRun()
+			public override IEnumerable<VectoRunData> NextRun()
 			{
 				Initialize();
 				if (Report != null)
@@ -214,7 +214,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 			}
 
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData, AngledriveData angledriveData)
+			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
+				AxleGearData axleGearData, AngledriveData angledriveData)
 			{
 				
 			}
