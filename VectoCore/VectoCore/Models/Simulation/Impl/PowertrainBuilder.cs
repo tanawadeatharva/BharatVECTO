@@ -807,7 +807,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.PTO == null) {
 				return null;
 			}
-			var pto = new PEVPTO(container);
+			var pto = new PEVPtoTransm(container);
 
 			RoadSweeperAuxiliary rdSwpAux = null;
 			PTODriveAuxiliary ptoDrive = null;
@@ -830,7 +830,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
 				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
-			if (data.PTO != null) {
+			if (data.PTO.TransmissionType != null) {
 				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 								DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).TorqueLoss);
 				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
@@ -1543,9 +1543,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var aux = new EngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
+				if (auxData.ConnectToREESS == true)
+				{
+					continue;
+				}
+
 				// id's in upper case
 				var id = auxData.ID.ToUpper();
 
+	
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
 						aux.AddConstant(id, auxData.PowerDemandMech);
