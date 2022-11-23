@@ -41,7 +41,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class AxleGear : TransmissionComponent, IAxlegear, IUpdateable
 	{
-		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) { }
+		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear)
+		{
+
+		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{

@@ -430,21 +430,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		private static void SetEngineeringData(
-			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
-		{
+			IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal) {
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.Type == GearboxType.APTN || gearbox.Type == GearboxType.IHPC ? 0.SI<Second>() : gearbox.TractionInterruption;
 		}
 
-		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
-		{
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data) {
 			var retVal = SetCommonAxleGearData(data);
 			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true);
 			return retVal;
 		}
 
-		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
-		{
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data) {
 			return DoCreateAngledriveData(data, true);
 		}
 
@@ -469,8 +466,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return auxList;
 		}
 
-		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
-		{
+		internal DriverData CreateDriverData(IDriverEngineeringInputData driver) {
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");
 			}

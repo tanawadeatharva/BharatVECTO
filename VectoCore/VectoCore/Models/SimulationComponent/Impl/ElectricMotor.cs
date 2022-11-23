@@ -196,7 +196,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var emTorqueDt = Control.MechanicalAssistPower(absTime, dt, outTorque,
 				PreviousState.DrivetrainSpeed, outAngularVelocity, maxDriveTorqueDt, maxRecuperationTorqueDt, Position, dryRun);
 
-			var emTorque = emTorqueDt == null ? null : ConvertDrivetrainTorqueToEm(avgDtSpeed, emTorqueDt);
+			var emTorque = (emTorqueDt == null)
+				? null 
+				: ConvertDrivetrainTorqueToEm(avgDtSpeed, emTorqueDt);
 			var emOff = emTorqueDt == null;
 
 			if (!dryRun && !DataBus.IsTestPowertrain && emTorqueDt != null && NextComponent != null && (emTorque.IsSmaller(maxDriveTorqueEm ?? 0.SI<NewtonMeter>(), 1e-3) ||
@@ -238,13 +240,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				emTorque = 0.SI<NewtonMeter>();
 			}
 
-			if (Position == PowertrainPosition.BatteryElectricE2 && !DataBus.GearboxInfo.GearEngaged(absTime)) {
-				// electric motor is after the gearbox but no gear engaged - ignore inertia and drag...
-				emTorqueDt = 0.SI<NewtonMeter>();
-				emTorque = 0.SI<NewtonMeter>();
-			}
+            if (Position == PowertrainPosition.BatteryElectricE2 && !DataBus.GearboxInfo.GearEngaged(absTime))
+            {
+                // electric motor is after the gearbox but no gear engaged - ignore inertia and drag...
+                emTorqueDt = 0.SI<NewtonMeter>();
+                emTorque = 0.SI<NewtonMeter>();
+            }
 
-			if (Position == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
+            if (Position == PowertrainPosition.HybridP1 && !DataBus.EngineCtl.CombustionEngineOn) {
 				// electric motor is directly connected to the ICE, ICE is off and EM is off - do not apply drag loss
 				emTorqueDt = 0.SI<NewtonMeter>();
 				emTorque = 0.SI<NewtonMeter>();
@@ -263,7 +266,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// inertia torque 'brakes' - electric motor has to provide this torque in addition (T_inertia > 0 when angular speed increases)
 			// emTorque < 0 when propelling, emTorqueMap needs to be 'more negative' to provide torque for inertia
 			// emTorque > 0 when recuperating, inertia 'brakes' in addition, emTorqueMap is decreased
-			var emTorqueMap = emTorque - inertiaTorqueEm ;
+			var emTorqueMap = emTorque - inertiaTorqueEm;
 			if (emOff) {
 				// not used later 
 				emTorqueMap = null;

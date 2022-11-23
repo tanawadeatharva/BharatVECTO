@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 				Action<SuperCapData> setSuperCapData);
 
 
@@ -105,7 +105,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException();
 			}
 
-			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData)
+			public virtual HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
 			{
 				throw new NotImplementedException();
 			}
@@ -232,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action,
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 				Action<SuperCapData> setSuperCapData)
 			{
 				throw new NotImplementedException();
@@ -244,6 +245,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private IEngineDataAdapter _engineDataAdapter = new CombustionEngineComponentDataAdapter();
 			private ElectricMachinesDataAdapter _electricMachinesDataAdapter = new ElectricMachinesDataAdapter();
 			private ElectricStorageAdapter _eletricStorageAdapter = new ElectricStorageAdapter();
+			protected IAuxiliaryDataAdapter _auxAdapter = new HeavyLorryAuxiliaryDataAdapter();
 			public override CombustionEngineData CreateEngineData(
 				IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
 			{
@@ -271,6 +273,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _eletricStorageAdapter.CreateSuperCapData(reessInputData);
 			}
 
+			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
+				IBusAuxiliariesDeclarationData busAuxData,
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
+				VectoSimulationJobType jobType)
+			{
+				return _auxAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
+					numSteeredAxles, jobType);
+			}
+
 			//public RetarderData CreateRetarderData 
 
 			#endregion
@@ -285,12 +296,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private SerialHybridStrategyParameterDataAdapter _hybridStrategyParameterData =
 				new SerialHybridStrategyParameterDataAdapter();
 
-			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
-				IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
+			protected ElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+
+
+			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
 			{
-				throw new NotImplementedException();
+				return _hybridStrategyParameterData.CreateHybridStrategyParameters(runDataBatteryData,
+					runDataSuperCapData, vehicleMass, ovcMode);
 			}
 
 			#endregion
@@ -310,9 +323,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return null;
 			}
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
-				throw new NotImplementedException();
+				var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
+				var superCapData = _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+
+
+
+				if (superCapData != null && batteryData != null)
+				{
+					throw new VectoException("SuperCap AND Battery not supported");
+				}
+
+				setBatteryData(batteryData);
+				setSuperCapData(superCapData);
 			}
 
 
@@ -326,6 +350,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			private ParallelHybridStrategyParameterDataAdapter _hybridStrategyDataAdapter =
 				new ParallelHybridStrategyParameterDataAdapter();
 
+			private PTODataAdapterLorry _ptoAdapterLorry = new PTODataAdapterLorry();
 			protected override GearboxType[] SupportedGearboxTypes => new[]
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 			private GearboxDataAdapter _gearboxDataAdapter = new GearboxDataAdapter(null);
@@ -346,12 +371,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				throw new NotImplementedException();
 			}
 
-			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData)
+			public override HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+				SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode)
 			{
 				return _hybridStrategyDataAdapter.CreateHybridStrategyParameters(runDataBatteryData, runDataSuperCapData);
 			}
@@ -362,13 +388,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
 			{
-				throw new NotImplementedException();
+				return _ptoAdapterLorry.CreateDefaultPTOData(pto, gbx);
 			}
 
 			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
 				IGearboxDeclarationInputData gbx)
 			{
-				throw new NotImplementedException();
+				return _ptoAdapterLorry.CreatePTOTransmissionData(ptoData, gbx);
 			}
 
 			#endregion
@@ -453,7 +479,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData,
 				IGearboxDeclarationInputData gbx)
 			{
-				return _ptoDataAdapter.CreatePTOTransmissionData(ptoData, gbx);
+				var result = _ptoDataAdapter.CreatePTOTransmissionData(ptoData, gbx);
+				return result;
 			}
 
 			#endregion
@@ -474,7 +501,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _gearBoxDataAdaper.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
 			}
 
-			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed, GearboxType gearboxType, int gearsCount)
+			public override ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+				GearboxType gearboxType, int gearsCount)
 			{
 				return _gearBoxDataAdaper.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
 			}
@@ -511,6 +539,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.APTN };
 
 			#endregion
+
+
 		}
 		public class PEV_E3 : BatteryElectric { }
 		public class PEV_E4 : BatteryElectric { }
@@ -532,7 +562,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 			public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action, Action<SuperCapData> setSuperCapData)
+				VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
 			{
 				throw new NotImplementedException();
 			}

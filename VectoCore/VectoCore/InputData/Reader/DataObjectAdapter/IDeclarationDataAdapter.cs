@@ -70,13 +70,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
 
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
-			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> action,
+			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 			Action<SuperCapData> setSuperCapData);
 		BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType,
 			bool ovc);
 		SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData componentsElectricStorage);
-		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData, SuperCapData runDataSuperCapData);
+		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
+			SuperCapData runDataSuperCapData, Kilogram vehicleMass, VectoRunData.OvcHevMode ovcMode);
 		ShiftStrategyParameters CreateDummyGearshiftStrategy();
 	}
 
