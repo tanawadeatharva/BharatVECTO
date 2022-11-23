@@ -28,9 +28,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
-
+			powerDemand = powerDemand ?? 0.SI<Watt>();
 			var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
-			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
+			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun)); 
 			var totalPowerDemand = powerDemand + chargePower - auxDemand;
 
 			var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
