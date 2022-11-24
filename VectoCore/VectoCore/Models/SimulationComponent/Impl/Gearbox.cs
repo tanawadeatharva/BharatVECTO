@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -139,8 +141,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gear = gear;
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear.Gear].Ratio;
 			var torqueLossResult = ModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			
 			CurrentState.TorqueLossResult = torqueLossResult;
 			var inTorque = outTorque / ModelData.Gears[gear.Gear].Ratio + torqueLossResult.Value;
+
+			if (DataBus.PowertrainInfo.ElectricMotorPositions.Any(x => x.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5))) {
+				// if there is an electric motor after the transmission, initialize the EM first
+				NextComponent.Initialize(inTorque, inAngularVelocity);
+			}
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = ModelData.Inertia.IsEqual(0)
@@ -369,6 +377,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TransmissionTorqueLoss = inTorque * ModelData.Gears[gear.Gear].Ratio - outTorque;
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, false);
+
+			InvokeGearShiftTriggered();
 
 			response.Gearbox.PowerRequest = outTorque * avgAngularVelocity;
 			response.Gearbox.Gear = new GearshiftPosition(0);

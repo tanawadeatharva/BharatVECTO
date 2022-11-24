@@ -28,7 +28,7 @@ The hybrid control is located in the simulated power train right after the wheel
 
 ### Evaluation of different options
 
-Note: The convention is that for all powertrain components (except te ICE) a positive torque loss means an additional drag while a negative torque loss means the component contributes to propel the vehicle. So all passive components can only apply positive torque losses and only active components such as electric motors can propel the vehicle which means it has a negative torque loss.
+Note: The convention is that for all powertrain components (except the ICE) a positive torque loss means an additional drag while a negative torque loss means the component contributes to propel the vehicle. So all passive components can only apply positive torque losses and only active components such as electric motors can propel the vehicle which means it has a negative torque loss.
 
 The variable u is used to identify the different evaluated options. The value of u denotes the factor how much of the torque at the output shaft of the electric motor is applied by the electric motor. A u value of -1 thus means the electric motor provides the full torque demanded at its output shaft and the torque at the input shaft is 0. A positive value of u means that the electric motor acts as generator and applies a torque demand in addition. 
 
@@ -42,7 +42,7 @@ In case the driver's action is to accelerate the vehicle, the hybrid control str
 2.  Evaluate options where the electric motor contributes to propel the vehicle.
 
     i.  Iterate over all negative u values with a certain step size (typically 0.1) up to u_maxDrive
-        u_maxDrive is detemined by the torque demanded at the out shaft of the electric motor and the maximum drive torque of the electric motor -- whichever is lower.
+        u_maxDrive is determined by the torque demanded at the out shaft of the electric motor and the maximum drive torque of the electric motor -- whichever is lower.
     ii. If the case where the electric motor applies its maximum drive torque is not already covered by the  
         iteration of u values in the previous step, calculate the maximum drive configuration explicitly
     iii. If it is allowed to turn off the electric motor or the electric motor can propel during gear shifts, 
@@ -53,13 +53,13 @@ In case the driver's action is to accelerate the vehicle, the hybrid control str
      i. Iterate over all positive u values with a certain step size (typically 0.1) up to the electric 
         motor's maximum generation torque.
     ii. For vehicles of configuration P2 evaluate the configuration where the electric motor's generation 
-        torque equals the torque demanded at the electric motor's output shaft (i.e., the torue at the electric motor's input shaft is 0) if it is allowed to turn of the ICE.
+        torque equals the torque demanded at the electric motor's output shaft (i.e., the torque at the electric motor's input shaft is 0) if it is allowed to turn of the ICE.
     iii. For vehicles of configuration P3 and P4 search for the torque the electric motor has to apply as 
          a generator so that the resulting torque at the combustion engine is 0. If this torque value is within the limits of the electric motor, calculate the corresponding u value and add this option to the list of evaluated configurations.
 
 In case of a coast or roll action (e.g. during look-ahead coasting dur during traction interruption) the electric motor is turned off.
 
-In case the driver performs a brake aktion the following options are considered
+In case the driver performs a brake action the following options are considered
 
 1. In case of vehicle configurations P3 or P4, or vehicle configuration P2 and the gearbox is engaged:
    (1) If the combustion engine is on and the torque demand at the combustion engine is above the drag 
@@ -78,7 +78,7 @@ Depending on the last gearshift the allowed gear range for upshifts and downshif
 
 ### Cost Function
 
-A cost value is calculated for every evaluated solution described above. In case the configurration results in an invalid operating point the cost value is set to invalid. Reasons for invalid configurations are that the engine operating point is outside the shift polygons, the engine speed is too high or too low, the electric power demand is too high or too low, the battery's SoC would go below the $\textrm{SoC}_{low}$ threshold, etc.
+A cost value is calculated for every evaluated solution described above. In case the configuration results in an invalid operating point the cost value is set to invalid. Reasons for invalid configurations are that the engine operating point is outside the shift polygons, the engine speed is too high or too low, the electric power demand is too high or too low, the battery's SoC would go below the $\textrm{SoC}_{low}$ threshold, etc.
 
 If a configuration is not valid because for example the ICE speed is too high or too low, or the torque demand is too high, or too low the corresponding value of the cost function is set to 'NaN' (not a number) and thus the total score is invalid. In addition, certain flags indicating why a certain configuration is considered invalid are set. These flags are used for the selection of a hybrid configuration to be used as described below. *Note: the calculated  score may be a valid number but certain ignore flags may be set. For example if the engine speed is slightly too high or the battery SoC is
 
@@ -139,7 +139,7 @@ From the list of possible hybrid powertrain configurations with its cost value t
 2. Select all configurations with a valid score and the engine speed is valid (i.e., not too high, nor too low and within the shift lines) and order by score
 3. Select all configurations with a valid score and order by score
 4. If the driver is accelerating and in all evaluated configurations the engine's torque demand is above the engine's maximum torque filter the possible configurations according to the following criteria
-    (1) If the electric motor can propell during traction interruptions (i.e., P4 and P3 configurations) or the gearbox is engaged (P2 configuration) select all configurations where the battery SoC is within the allowed range, order the configurations by difference in gear to the current gear and then order the configurations by the mecanical torque the electric motor can provide
+    (1) If the electric motor can propel during traction interruptions (i.e., P4 and P3 configurations) or the gearbox is engaged (P2 configuration) select all configurations where the battery SoC is within the allowed range, order the configurations by difference in gear to the current gear and then order the configurations by the mechanical torque the electric motor can provide
     (2) 
 5. If the driver is accelerating and in all evaluated configurations the engine's torque demand is below the engine's drag torque filter the possible configurations according to the following criteria. If the electric motor can propel during traction interruptions (i.e., P4 and P3 configurations) or the gearbox is engaged (P2 configuration) 
     (1) Select all configurations where the engine speed is valid and the battery's SoC is within the allowed range and order the configurations by the difference in gear to the current gear and then by the mechanical torque the motor can provide

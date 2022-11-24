@@ -34,7 +34,7 @@ xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 					<tcl:Entry gear="6" maxTorque="1800"/>
 					<tcl:Entry gear="1" maxTorque="2500"/>
 				</TorqueLimits>
-				<Components xsi:type="Vehicle_Conventional_ComponentsVIFType">
+				<Components xsi:type="VehicleComponentsPIFType">
 					<Engine>
 						<Data xsi:type="EngineDataVIFType">
 							<Manufacturer>Generic Engine Manufacturer</Manufacturer>

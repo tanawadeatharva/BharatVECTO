@@ -99,25 +99,31 @@ Public Class VehicleForm
 
 		CbRtType.DataSource = EnumHelper.GetKeyValuePairs(Of RetarderType)(Function(t) t.GetLabel()).ToDataView()
 
-		If (Cfg.DeclMode) Then
-			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
-				.Cast(Of AxleConfiguration) _
-				.Select(Function(category) New With {.Key = category, .Value = category.GetName()}).ToList()
-		Else
-			CbAxleConfig.DataSource = EnumHelper.GetKeyValuePairs(Of AxleConfiguration)(Function(t) t.GetName())
-		End If
+        If (Not Cfg.DeclMode) Then
+            CbAxleConfig.DataSource = EnumHelper.GetKeyValuePairs(Of AxleConfiguration)(Function(t) t.GetName())
+        End If
 
-		cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
+        cbEcoRoll.DataSource = EnumHelper.GetKeyValuePairs(Of EcoRollType)(Function(t) t.GetName())
 
 		cbPcc.DataSource = EnumHelper.GetKeyValuePairs(Of PredictiveCruiseControlType)(Function(t) t.GetName())
 
 		cbTankSystem.DataSource = EnumHelper.GetKeyValuePairs(Of TankSystem)()
 
-		'tpADAS.Enabled = Cfg.DeclMode
+        'tpADAS.Enabled = Cfg.DeclMode
 
-		CbCat.DataSource = EnumHelper.GetKeyValuePairs(Of VehicleCategory)(Function(t) t.GetLabel())
 
-		cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(Of AngledriveType)(Function(t) t.GetLabel())
+        'TODO RK20220809 add busses as soon as available
+        If (Cfg.DeclMode) Then
+            CbCat.DataSource = EnumHelper.GetKeyValuePairs(Of VehicleCategory)(
+                Function(t) t.GetLabel(),
+                Function(x) x.IsOneOf(VehicleCategory.Van, VehicleCategory.RigidTruck, VehicleCategory.Tractor))
+        Else
+            CbCat.DataSource = EnumHelper.GetKeyValuePairs(Of VehicleCategory)(Function(t) t.GetLabel())
+        End If
+
+
+
+        cbAngledriveType.DataSource = EnumHelper.GetKeyValuePairs(Of AngledriveType)(Function(t) t.GetLabel())
 
 		_axlDlog = New VehicleAxleDialog
 		_torqueLimitDlog = New VehicleTorqueLimitDialog()
@@ -143,19 +149,19 @@ Public Class VehicleForm
 	'Set HDVclasss
 	Private Sub SetHdVclass()
 		If String.IsNullOrEmpty(TbMassMass.Text) OrElse Not IsNumeric(TbMassMass.Text) Then
-			TbHDVclass.Text = "-"
-			Exit Sub
+            TbHDVclass.Text = "-"
+            Exit Sub
 		End If
 		Dim vehC As VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory)
 		Dim axlC As AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
-		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+        Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble(0) * 1000).SI(Of Kilogram)()
 
-		_hdVclass = VehicleClass.Unknown
+        _hdVclass = VehicleClass.Unknown
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
+            s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 
-		Catch
+        Catch
 			' no segment found - ignore
 		End Try
 		If s0.Found Then
@@ -170,17 +176,17 @@ Public Class VehicleForm
 
 	'Set generic values for Declaration mode
 	Private Sub DeclInit()
-		If Not Cfg.DeclMode Then Exit Sub
+        If Not Cfg.DeclMode Then Exit Sub
 
-		If String.IsNullOrEmpty(TbMassMass.Text) Then
+        If String.IsNullOrEmpty(TbMassMass.Text) Then
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
 		Dim vehC As VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory)
 		Dim axlC As AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
-		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+        Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble(0) * 1000).SI(Of Kilogram)()
 
-		Dim s0 As Segment = Nothing
+        Dim s0 As Segment = Nothing
 		Try
 			s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 		Catch
@@ -198,8 +204,8 @@ Public Class VehicleForm
 														AxleType.VehicleNonDriven))
 				Next
 
-			ElseIf axleCount < LvRRC.Items.Count Then
-				For i = axleCount To LvRRC.Items.Count - 1
+			ElseIf axleCount <LvRRC.Items.Count Then
+                For i = axleCount To LvRRC.Items.Count - 1
 					LvRRC.Items.RemoveAt(LvRRC.Items.Count - 1)
 				Next
 			End If
@@ -525,7 +531,8 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
-	Private Function CreateRatioPerGearListViewItem(gear As Integer, ratio As Double) As ListViewItem
+
+    Private Function CreateRatioPerGearListViewItem(gear As Integer, ratio As Double) As ListViewItem
 		Dim retval As New ListViewItem
 		retval.SubItems(0).Text = gear.ToGUIFormat()
 		retval.SubItems.Add(ratio.ToGUIFormat())
@@ -820,7 +827,9 @@ Public Class VehicleForm
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 
-		For Each entry As ListViewItem In LvRRC.Items
+        Dim relCheck As Double = 0
+        Dim hasDrivenAxle As Boolean = False
+        For Each entry As ListViewItem In LvRRC.Items
 			Dim a0 As AxleInputData = New AxleInputData()
 			a0.AxleWeightShare = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
 			a0.TwinTyres = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
@@ -831,10 +840,26 @@ Public Class VehicleForm
 			tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
 			tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
 			a0.Tyre = tyre
-			veh.Axles.Add(a0)
-		Next
+            veh.Axles.Add(a0)
+            relCheck += a0.AxleWeightShare
+            If a0.AxleType.Equals(AxleType.VehicleDriven) Then
+                hasDrivenAxle = True
+            End If
+        Next
 
-		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
+
+        If Not hasDrivenAxle Then
+            MsgBox("No driven axle selected")
+            tcVehicleComponents.SelectedTab = tpGeneral
+            Return False
+        End If
+        If (relCheck < 1) Or (relCheck > 1) Then
+            MsgBox("Relative Weight distribution on axle does not sum to 1")
+            tcVehicleComponents.SelectedTab = tpGeneral
+            Return False
+        End If
+
+        veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
@@ -956,9 +981,9 @@ Public Class VehicleForm
 
 
 		veh.GearDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoGear.Text), Nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
-		veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
-		'---------------------------------------------------------------------------------
-		If Not veh.SaveFile Then
+        veh.EngineSpeedDuringPTODrive = If(String.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble(0).RPMtoRad())
+        '---------------------------------------------------------------------------------
+        If Not veh.SaveFile Then
 			MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -1105,23 +1130,31 @@ Public Class VehicleForm
 		Change()
 	End Sub
 
-	Private Sub CbCat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbCat.SelectedIndexChanged
+    Private Sub TBcdA_Leave(sender As Object, e As EventArgs) Handles TBcdA.Leave
+        If Not IsNumeric(TBcdA.Text) Then
+            MsgBox("Invalid value for Air Resistance - Cd x A")
+            TBcdA.Focus()
+        End If
+    End Sub
+
+    Private Sub CbCat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbCat.SelectedIndexChanged
+        Change()
+        SetAxleConfigOptions()
+        SetHdVclass()
+        DeclInit()
+    End Sub
+
+    Private Sub TbMassTrailer_TextChanged(sender As Object, e As EventArgs) Handles TbMassExtra.TextChanged
 		Change()
-		SetHdVclass()
-		DeclInit()
 	End Sub
 
-	Private Sub TbMassTrailer_TextChanged(sender As Object, e As EventArgs) Handles TbMassExtra.TextChanged
-		Change()
-	End Sub
+    Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.Leave
+        Change()
+        SetHdVclass()
+        DeclInit()
+    End Sub
 
-	Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.TextChanged
-		Change()
-		SetHdVclass()
-		DeclInit()
-	End Sub
-
-	Private Sub CbAxleConfig_SelectedIndexChanged(sender As Object, e As EventArgs) _
+    Private Sub CbAxleConfig_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbAxleConfig.SelectedIndexChanged
 		Change()
 		SetHdVclass()
@@ -1131,6 +1164,13 @@ Public Class VehicleForm
 #End Region
 
 #Region "Axle Configuration"
+	Private Sub SetAxleConfigOptions()
+		If Cfg.DeclMode Then
+			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations(CType(CbCat.SelectedValue, VehicleCategory)) _
+				.Cast(Of AxleConfiguration) _
+				.Select(Function(category) New With {.Key = category, .Value = category.GetName()}).ToList()
+		End If
+	End Sub
 
 	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
 		_axlDlog.Clear()
@@ -1277,8 +1317,26 @@ Public Class VehicleForm
 	End Sub
 
 #End Region
+    Private Sub tbInitialSoCMax_Leave(sender As Object, e As System.EventArgs) Handles tbInitialSoC.Leave
 
-	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
+        If Not IsNumeric(tbInitialSoC.Text) Then
+            MsgBox("Invalid SoC Max value")
+            tbInitialSoC.Focus()
+            Return
+        End If
+		If Not 0 < Convert.ToInt32(tbInitialSoC.Text) Then
+			MsgBox("Input has to be positive")
+			tbInitialSoC.Focus()
+			Return
+		End If
+        If Not 100 < Convert.ToInt32(tbInitialSoC.Text) Then
+            MsgBox("Input has to below 100")
+            tbInitialSoC.Focus()
+            Return
+        End If
+    End Sub
+
+    Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
 
 		If (Cfg.DeclMode) Then
 			Exit Sub
@@ -1459,10 +1517,13 @@ Public Class VehicleForm
 		ElseIf PowertrainPosition.BatteryElectricE3.Equals(cbEmPos.SelectedValue) Then
 			gbRetarderLosses.Enabled = True
 			CType(CbRtType.DataSource, DataView).RowFilter = $"Key in ({CInt(RetarderType.None)}, {CInt(RetarderType.AxlegearInputRetarder)})"
-		Else
+		ElseIf False Then 'not IEPC vehicle
 			gbRetarderLosses.Enabled = True
-			CType(CbRtType.DataSource, DataView).RowFilter = $"Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
-		End If
+            CType(CbRtType.DataSource, DataView).RowFilter = "Key <> {CInt(RetarderType.AxlegearInputRetarder)}"
+        Else
+            gbRetarderLosses.Enabled = True
+            CType(CbRtType.DataSource, DataView).RowFilter = ""
+        End If
 
 		If (selectedValue IsNot Nothing) Then
 			If Not selectedValue.Equals(CbRtType.SelectedValue) Then

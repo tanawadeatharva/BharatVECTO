@@ -303,6 +303,37 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
+		private const string BASE_PATH = @"E:\QUAM\Workspace\VECTO-Bugreports_DEV\Bugreport Jobs\2022\";
+        [TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 4),
+        TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 3),
+		TestCase(BASE_PATH + @"VECTO-1660_2022_11_02_VectoDaten_Iveco_CrosswayLE_MH\IVECO_CRW_LE_C9D_360hp_DNXT_7G_MH.vecto", 6),
+        ]
+		public void Vecto1660_BusAux_SmartPS_with_Hybrid(string jobFile, int cycleIdx)
+		{
+			var inputProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+
+			var writer = new FileOutputWriter(jobFile);
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, writer);
+			factory.Validate = false;
+			factory.WriteModalResults = true;
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+
+			factory.SumData = sumContainer;
+
+			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+
+			Assert.NotNull(run);
+
+			var pt = run.GetContainer();
+
+			Assert.NotNull(pt);
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
 		// =======================================================================================
 
 		[
@@ -1594,6 +1625,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
 				JobType = VectoSimulationJobType.ParallelHybridVehicle,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
@@ -1640,7 +1672,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				WriteModalResults = true,
 			};
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); });
+				ExecutionMode.Engineering, modData, sumData);
 			container.RunData = runData;
 
 			var strategy = gearboxType.AutomaticTransmission()
@@ -1749,6 +1781,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var runData = new VectoRunData() {
 				//PowertrainConfiguration = PowertrainConfiguration.ParallelHybrid,
 				JobRunId = 0,
+				SimulationType = SimulationType.DistanceCycle,
 				DriverData = driverData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
@@ -1772,7 +1805,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			};
 
 			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, x => { sumData?.Write(x, 1, 1, runData); }) { RunData = runData };
+				ExecutionMode.Engineering, modData, sumData) { RunData = runData };
 			
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -1859,7 +1892,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				return null;
 			}
 
-			container.ModData.AddElectricMotor(pos);
+			//container.ModData.AddElectricMotor(pos);
 			ctl.AddElectricMotor(pos, motorData.Item2);
 			var motor = new ElectricMotor(container, motorData.Item2, ctl.ElectricMotorControl(pos), pos);
 			motor.Connect(es);

@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Newtonsoft.Json;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -46,6 +48,10 @@ namespace VectoMockupTest
 		protected const string ConventionalHeavyLorry = BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT.xml";
 		protected const string ConventionalHeavyLorry_DifferentTyres = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AMT_DifferentTyres.xml";
 		protected const string ConventionalHeavyLorry_AT_Angledrive = BasePathMockup + @"HeavyLorry\Conventional_heavyLorry_AT_Angledrive.xml";
+
+		protected const string ConventionalHeavyLorry_Vocational =
+			BasePath + @"HeavyLorry\Conventional_heavyLorry_AMT_Vocational.xml";
+
 		protected const string HEV_Px_HeavyLorry = BasePath + @"HeavyLorry\HEV_heavyLorry_AMT_Px_IHPC.xml";
 		protected const string HEV_S2_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_AMT_S2.xml";
 		protected const string HEV_S3_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S3.xml";
@@ -53,6 +59,7 @@ namespace VectoMockupTest
 		protected const string HEV_S4_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_S4.xml";
 		protected const string HEV_IEPC_S_HeavyLorry = BasePath + @"HeavyLorry\HEV-S_heavyLorry_IEPC-S.xml";
 		protected const string PEV_E2_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2.xml";
+		protected const string PEV_E2_HeavyLorry_Vocational = BasePath + @"HeavyLorry\PEV_heavyLorry_AMT_E2_Vocational.xml";
 		protected const string PEV_E3_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E3.xml";
 		protected const string PEV_E4_HeavyLorry = BasePath + @"HeavyLorry\PEV_heavyLorry_E4.xml";
 		protected const string PEV_IEPC_HeavyLorry = BasePath + @"HeavyLorry\IEPC_heavyLorry.xml";
@@ -243,6 +250,7 @@ namespace VectoMockupTest
 		[TestCase(ConventionalHeavyLorry, TestName = "ConventionalHeavyLorry")]
 		[TestCase(ConventionalHeavyLorry_DifferentTyres, TestName = "ConventionalHeavyLorry_DifferentTyres")]
 		[TestCase(ConventionalHeavyLorry_AT_Angledrive, TestName = "ConventionalHeavyLorry_AT_Angledrive")]
+		[TestCase(ConventionalHeavyLorry_Vocational, TestName = "ConventionalHeavyLorry_Vocational")]
 		//[TestCase(ConventionalHeavyLorry, false, TestName = "ConventionalHeavyLorryNoMockup")]
 		[TestCase(HEV_S2_HeavyLorry, TestName = "HEV_S2_HeavyLorry")]
 		[TestCase(HEV_S3_HeavyLorry, TestName = "HEV_S3_HeavyLorry")]
@@ -250,6 +258,7 @@ namespace VectoMockupTest
 		[TestCase(HEV_S4_HeavyLorry, TestName = "HEV_S4_HeavyLorry")]
 		[TestCase(HEV_Px_HeavyLorry, TestName = "HEV_Px_HeavyLorry")]
 		[TestCase(PEV_E2_HeavyLorry, TestName = "PEV_E2_HeavyLorry")]
+		[TestCase(PEV_E2_HeavyLorry_Vocational, TestName = "PEV_E2_HeavyLorry_Vocational")]
 		//[TestCase(PEV_E2_HeavyLorry, false, TestName = "PEV_E2_HeavyLorryNoMockup")]
 		[TestCase(PEV_E3_HeavyLorry, TestName = "PEV_E3_HeavyLorry")]
 		[TestCase(PEV_E4_HeavyLorry, TestName = "PEV_E4_HeavyLorry")]
@@ -279,7 +288,7 @@ namespace VectoMockupTest
 		public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
-			var inputProvider = _inputDataReader.Create(fileName);
+			var inputProvider = _inputDataReader.CreateDeclaration(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumWriter);
@@ -294,6 +303,19 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+
+			if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
+				Assert.IsFalse(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
+			} else {
+				Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
+			}
+
+		}
+
+		public bool CheckElementExists(string name, string fileName)
+		{
+			var xDoc = XDocument.Load(fileName);
+			return xDoc.XPathSelectElements($"//*[local-name()='{name}']").FirstOrDefault() != null;
 		}
 
 
@@ -339,94 +361,6 @@ namespace VectoMockupTest
 		}
 
 		
-		//[TestCase(Conventional_InterimBus, Conventional_StageInput, TestName = "ConventionalInterimBus")]
-		//public void InterimBusMockupTest(string vifInput, string stageInputFile)
-		//{
-		//	CopyInputFile(vifInput);
-		//	//SimulatorFactory.MockUpRun = mockup;
-		//	var multistageBusInput = _inputDataReader.Create(vifInput) as IMultistepBusInputDataProvider;
-		//	Assert.NotNull(multistageBusInput);
-
-		//	var stageInput = _inputDataReader.CreateDeclaration(stageInputFile);
-		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, vifInput);
-		//	var sumWriter = new SummaryDataContainer(null);
-		//	var jobContainer = new JobContainer(sumWriter);
-
-		//	var inputData = new XMLDeclarationVIFInputData(multistageBusInput, stageInput.JobInputData.Vehicle);
-
-		//	var _simulatorFactory =
-		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, inputData, fileWriter, null, null, true);
-		//	Clearfiles(fileWriter);
-		//	jobContainer.AddRuns(_simulatorFactory);
-		//	jobContainer.Execute(false);
-		//	jobContainer.WaitFinished();
-		//	CheckFileExists(fileWriter, checkMrf:false, checkCif: false, checkVif: true);
-
-
-		//}
-
-
-		//[TestCase(Conventional_CompletedBus, TestName = "ConventionalCompletedBus")]
-		//public void CompletedBusMockupTest(string fileName)
-		//{
-		//	CopyInputFile(fileName);
-		//	//SimulatorFactory.MockUpRun = mockup;
-		//	XMLDeclarationVIFInputData input = null!;
-		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-		//	using (var reader = XmlReader.Create(fileName))
-		//	{
-		//		input = new XMLDeclarationVIFInputData(_inputDataReader.Create(fileName) as IMultistepBusInputDataProvider, null);
-		//		fileWriter = new FileOutputVIFWriter(fileName, input.MultistageJobInputData.JobInputData.ManufacturingStages.Count);
-		//	}
-		//	var sumWriter = new SummaryDataContainer(null);
-		//	var jobContainer = new JobContainer(sumWriter);
-
-		//	var _simulatorFactory =
-		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-		//	Clearfiles(fileWriter);
-		//	jobContainer.AddRuns(_simulatorFactory);
-		//	jobContainer.Execute(false);
-		//	jobContainer.WaitFinished();
-		//	CheckFileExists(fileWriter, checkCif: true, checkVif: false);
-		//}
-
-		//[TestCase(CompleteDiesel, TestName="CompleteDiesel")]
-  //      [TestCase(CompleteExempted, TestName = "CompleteExempted Bus")]
-  //      [TestCase(CompleteExemptedWithoutTPMLM, TestName = "CompleteExempted No TPMLM")]
-		//public void PrimaryAndCompletedTest(string fileName)
-		//{
-
-		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-		//	var sumWriter = new SummaryDataContainer(null);
-		//	var jobContainer = new JobContainer(sumWriter);
-		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
-		//	var _simulatorFactory =
-		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-		//	Clearfiles(fileWriter);
-		//	jobContainer.AddRuns(_simulatorFactory);
-		//	jobContainer.Execute(false);
-		//	jobContainer.WaitFinished();
-		//	CheckFileExists(fileWriter, checkCif: true, checkVif: true, checkMrf: true, checkPrimaryMrf: true);
-		//}
-
-
-		//[TestCase(InterimDiesel, TestName = "PrimaryAndInterim")]
-		//public void PrimaryAndInterim(string fileName)
-		//{
-
-		//	var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
-		//	var sumWriter = new SummaryDataContainer(null);
-		//	var jobContainer = new JobContainer(sumWriter);
-		//	var input = JSONInputDataFactory.ReadJsonJob(fileName);
-		//	var _simulatorFactory =
-		//		_simFactoryFactory.Factory(ExecutionMode.Declaration, input, fileWriter, null, null, true);
-		//	Clearfiles(fileWriter);
-		//	jobContainer.AddRuns(_simulatorFactory);
-		//	jobContainer.Execute(false);
-		//	jobContainer.WaitFinished();
-		//	CheckFileExists(fileWriter, checkCif: false, checkVif: true, checkMrf:false, checkPrimaryMrf:true);
-
-		//}
 
 		[TestCase(Conventional_PrimaryBus_Tyres, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_DifferentTyres")]
 		[TestCase(Conventional_PrimaryBus_AT_Angledrive, Conventional_InterimBusInput, "Conventional", TestName = "Interim_Conventional_Bus_AT_Angledrive")]

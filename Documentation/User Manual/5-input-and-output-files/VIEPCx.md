@@ -1,6 +1,6 @@
 ## IEPC Max Torque File (.viepcp)
 
-This file contains the IEPC's maximum drive torque and maximum recuperation torque depending on the motor's angluar speed. The file uses the [VECTO CSV format](#csv).
+This file contains the IEPC's maximum drive torque and maximum recuperation torque depending on the motor's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .viepcp
 - Header: **n_out [rpm] , T_drive_out [Nm] , T_recuperation_out [Nm]**
@@ -27,7 +27,7 @@ n_out   , T_drive_out , T_recuperation_out
 
 ## IEPC Drag Curve File (.viepcd)
 
-This file contains the IEPC's drag torque (i.e. the eletric motor is not energized) depending on the motor's angluar speed. The file uses the [VECTO CSV format](#csv).
+This file contains the IEPC's drag torque (i.e. the electric motor is not energized) depending on the motor's angular speed. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .viepcd
 - Header: **n_out [rpm] , T_drag_out [Nm]**

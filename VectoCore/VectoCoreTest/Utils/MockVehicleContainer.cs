@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IGearboxInfo GearboxInfo => this;
 
+		public event Action GearShiftTriggered;
+
 		public IGearboxControl GearboxCtl => this;
 
 		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
@@ -265,6 +267,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void AddComponent(VectoSimulationComponent component)
 		{
 			Components.Add(component);
+			ModalData?.RegisterComponent(component);
+
+			//WriteSumData?.RegisterComponent(component, RunData);
+		}
+
+		public void AddAuxiliary(string id, string columnName = null)
+		{
+			ModalData?.AddAuxiliary(id, columnName);
 		}
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
@@ -320,6 +330,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		#endregion
 
 		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public ISumData SumData { get; }
+
 		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
 		{
 			throw new NotImplementedException();

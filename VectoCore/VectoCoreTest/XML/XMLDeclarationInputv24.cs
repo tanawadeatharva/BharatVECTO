@@ -270,8 +270,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			//optional test
 			if (testDir == Optional_TESTS_DIR) {
-				Assert.IsNull(vehicle.Components.AngledriveInputData);
-				Assert.IsNull(vehicle.Components.RetarderInputData);
+				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
+				Assert.IsNotNull(vehicle.Components.RetarderInputData);
 				Assert.IsEmpty(vehicle.TorqueLimits);
 			}
 			else {
@@ -2059,7 +2059,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, eMachine.Count);
 
 			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachine.ElectricMachineType);
-			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
+			Assert.AreEqual(50000.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);
 			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
 			Assert.AreEqual("IHPC Type 1", eMachine.ElectricMachine.IHPCType);

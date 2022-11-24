@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -101,12 +102,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		void SetDataValue(string fieldName, object value);
 
-		void AddAuxiliary(string id, string columnName = null);
+        void AddAuxiliary(string id, string columnName = null);
 
-		/// <summary>
-		/// Finishes the writing of the DataWriter.
-		/// </summary>
-		void Finish(VectoRun.Status runStatus, Exception exception = null);
+        /// <summary>
+        /// Finishes the writing of the DataWriter.
+        /// </summary>
+        void Finish(VectoRun.Status runStatus, Exception exception = null);
 
 		/// <summary>
 		/// clear the modal data after the simulation
@@ -127,7 +128,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
-		void AddElectricMotor(PowertrainPosition pos);
+		//void AddElectricMotor(PowertrainPosition pos);
 		KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel);
 		bool HasCombustionEngine { get; }
 		WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos);
@@ -143,12 +144,9 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond ElectricMotorLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorMotLosses(PowertrainPosition emPos);
 		WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos);
-        
-		double REESSStartSoC();
-		double REESSEndSoC();
-		WattSecond REESSLoss();
-
 		ICorrectedModalData CorrectedModalData { get; }
+		void RegisterComponent(VectoSimulationComponent component);
+		bool ContainsColumn(string modalResultField);
 	}
 
 	public interface IModalDataPostProcessor
@@ -318,10 +316,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
 		{
-			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia);
-			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia) ?? 0.SI<WattSecond>();
+			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia) ?? 0.SI<WattSecond>();
 			return paEngine + paGearbox;
 		}
+
 
 		public static WattSecond WorkClutch(this IModalDataContainer data)
 		{
@@ -417,12 +416,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.WorkWheelsPos() / data.Duration;
+			return (data.WorkWheelsPos() ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static Watt PowerWheel(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) / data.Duration;
+			return (data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in) ?? 0.SI<WattSecond>()) / data.Duration;
 		}
 
 		public static WattSecond WorkREESSChargeTerminal(this IModalDataContainer data)
@@ -698,6 +697,9 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[i] = 0.SI<Scalar>();
 			}
 
+			if (!data.ContainsColumn(ModalResultField.Gear.GetName())) {
+				return retVal;
+			}
 			var gearData = data.GetValues(x => new {
 				Gear = x.Field<uint>(ModalResultField.Gear.GetName()),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
@@ -716,7 +718,22 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static int NumICEStarts(this IModalDataContainer data)
 		{
-			return data.GetValues(x => x.Field<bool>((int)ModalResultField.ICEOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+			return data.GetValues(x => x.Field<bool>(ModalResultField.ICEOn.GetName())).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+		}
+
+		public static WattSecond REESSLoss(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_reess_loss);
+		}
+
+		public static double REESSStartSoC(this IModalDataContainer data)
+		{
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).First()?.Value() ?? 0) * 100;
+		}
+
+		public static double REESSEndSoC(this IModalDataContainer data)
+		{
+			return (data.GetValues<SI>(ModalResultField.REESSStateOfCharge).Last()?.Value() ?? 0) * 100;
 		}
 	}
 }

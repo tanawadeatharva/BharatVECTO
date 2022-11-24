@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoMockup
@@ -197,10 +198,10 @@ namespace TUGraz.VectoMockup
 			_modalDataContainerImplementation.CalculateAggregateValues();
 		}
 
-		public void AddElectricMotor(PowertrainPosition pos)
-		{
-			_modalDataContainerImplementation.AddElectricMotor(pos);
-		}
+		//public void AddElectricMotor(PowertrainPosition pos)
+		//{
+		//	_modalDataContainerImplementation.AddElectricMotor(pos);
+		//}
 
 		public KilogramPerWattSecond VehicleLineSlope(IFuelProperties fuel)
 		{
@@ -290,6 +291,15 @@ namespace TUGraz.VectoMockup
 		}
 
 		public ICorrectedModalData CorrectedModalData => _modalDataContainerImplementation.CorrectedModalData;
+		public void RegisterComponent(VectoSimulationComponent component)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool ContainsColumn(string modalResultField)
+		{
+			throw new NotImplementedException();
+		}
 
 		#endregion
 	}

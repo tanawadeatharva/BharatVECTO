@@ -18,7 +18,7 @@ The general gearshift conditions for downshifting are:
 
 The general gearshift conditions for upshifting are:
 
-  * Driver behaviour is accelerating or driving 
+  * Driver behavior is accelerating or driving 
   * $t_{lastshift} + t_{between shifts} < t_{act}$ 
   * $t_{lastDownshift} + Upshift delay < t_{act}$
 
@@ -58,11 +58,11 @@ Upshift conditions:
 
 The second level of the gearshift algorithm is the polygon shift rule. If the current operating point is outside of the shift polygons, the polygon shift rule applies:
 
-Downshift behaviour: 
+Downshift behavior: 
 
   * If the operating point (Teng, neng) is left the downshift line, shift to the next lower gear
 
-Upshift behaviour:
+Upshift behavior:
 
   * If the operating point (Teng, neng) is right to the upshift line, shift to the highest gear which is right to the downshift line and below the full load torque considering similar engine power output.
 

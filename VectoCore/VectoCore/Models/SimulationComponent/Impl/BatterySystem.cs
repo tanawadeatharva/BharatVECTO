@@ -132,9 +132,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public BatterySystem(IVehicleContainer dataBus, BatterySystemData batterySystemData) : base(dataBus)
 		{
-			var idx = 0;
 			foreach (var entry in batterySystemData.Batteries) {
-				var bat = new Battery(null, entry.Item2, idx++);
+				var bat = new Battery(null, entry.Item2);
 				if (!Batteries.ContainsKey(entry.Item1)) {
 					Batteries[entry.Item1] = new BatteryString();
 				}
@@ -234,6 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AmpereSecond Capacity => TotalCapacity;
 
 		public Volt NominalVoltage => Batteries.Values.Select(x => x.NominalVoltage).Average();
+
 		#endregion
 
 		#region Implementation of IElectricEnergyStoragePort

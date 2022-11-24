@@ -35,7 +35,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl {
+namespace TUGraz.VectoCore.Models.Simulation.Impl 
+{
 	internal class ExemptedRun : VectoRun
 	{
 		private Action<ModalDataContainer> _writeSumData;

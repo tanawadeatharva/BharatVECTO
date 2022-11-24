@@ -546,7 +546,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected double GetFCRating(ResponseDryRun response)//PerSecond engineSpeed, NewtonMeter tqCurrent)
 		{
 			var currentGear = response.Gearbox.Gear;
-
+			if (currentGear.Gear == 0)
+			{
+				return 0;
+			}
+			// there's no power if the gear is 0.
 			var maxGenTorque = VectoMath.Min(GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxRecuperationTorque);
 			var maxDriveTorque = GearboxModelData.Gears[currentGear.Gear].MaxTorque != null
 				? VectoMath.Max(-GearboxModelData.Gears[currentGear.Gear].MaxTorque, response.ElectricMotor.MaxDriveTorque)
@@ -671,7 +675,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var fullLoadPower = -(response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity);
 				//.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-				var reserve = 1 - response.ElectricMotor.TorqueRequestEmMap / response.ElectricMotor.MaxDriveTorqueEM;
+				var reserve = 1 - (response.ElectricMotor.TorqueRequestEmMap ?? 0.SI<NewtonMeter>()) / response.ElectricMotor.MaxDriveTorqueEM;
 
 				var isBelowDownshift = gear.Gear > 1 &&
 										IsBelowDownshiftCurve(GearboxModelData.Gears[gear.Gear].ShiftPolygon, response.ElectricMotor.TorqueRequest,
@@ -682,7 +686,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//return gear;
 					emSpeeds[gear] = Tuple.Create(response.ElectricMotor.AngularVelocity,
 						(GearshiftParams.StartSpeed * TransmissionRatio * GearboxModelData.Gears[gear.Gear].Ratio)
-						.Cast<PerSecond>(), (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricSystem.RESSPowerDemand).Value());
+						.Cast<PerSecond>(), 
+						!response.ElectricSystem.RESSPowerDemand.IsEqual(0) 
+							? (response.ElectricMotor.ElectricMotorPowerMech / response.ElectricSystem.RESSPowerDemand).Value()
+							: 0
+						);
 				}
 			}
 

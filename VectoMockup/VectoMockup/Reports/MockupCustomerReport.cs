@@ -73,8 +73,10 @@ namespace TUGraz.VectoMockup.Reports
         {
             Results.AddFirst(new XElement(Cif + "Status", "success"));
             Results.AddFirst(new XComment("Always prints success at the moment"));
-            Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Summary", _modelData));
-        }
+			if (!_modelData.VehicleData.InputData.VocationalVehicle) {
+				Results.Add(MockupResultReader.GetCIFMockupResult(_outputDataType, resultValue, Cif + "Summary", _modelData));
+            }
+		}
 
 		public void WriteExemptedResults()
 		{
