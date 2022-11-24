@@ -16,8 +16,7 @@ using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
@@ -40,7 +39,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public AlternatorType AlternatorType { get; set; }
 
 		[JsonIgnore]
-		public Dictionary<string, ElectricConsumerEntry> ElectricalConsumers { get; set; }
+		public IDictionary<string, AuxiliaryDataAdapter.ElectricConsumerEntry> ElectricalConsumers { get; set; }
 
 		public string[] ElectricalConsumersSerialized
 		{

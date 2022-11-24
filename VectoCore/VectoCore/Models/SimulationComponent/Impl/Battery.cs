@@ -173,12 +173,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
+
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
 			var tPulse = PreviousState.PowerDemand.Sign() == CurrentState.PowerDemand.Sign()
 				? PreviousState.PulseDuration
 				: 0.SI<Second>();
 			CurrentState.PulseDuration = tPulse + simulationInterval;
+			if (ModelData.ChargeSustainingBattery) {
+				CurrentState.StateOfCharge = PreviousState.StateOfCharge;
+			}
 			AdvanceState();
 		}
 
@@ -287,4 +291,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 	}
+
+
 }

@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Battery {
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 		public int BatteryId { get; internal set; }
+		public bool ChargeSustainingBattery { get; internal set; }
+
 	}
 
 	public class SuperCapData

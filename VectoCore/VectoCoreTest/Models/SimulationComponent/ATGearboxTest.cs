@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -262,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gbxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
 
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var vehicleInput = new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxInput

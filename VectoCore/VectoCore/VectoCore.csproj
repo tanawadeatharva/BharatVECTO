@@ -53,6 +53,10 @@
 
 	<ItemGroup>
     <None Remove="Resources\Declaration\Buses\DefaultActuationsMap.apac" />
+    <None Remove="Resources\Declaration\Buses\HeatingDistribution.csv" />
+    <None Remove="Resources\Declaration\Buses\HeatingDistributionCases.csv" />
+    <None Remove="Resources\Declaration\Buses\HVACHeatingPowerDriver.csv" />
+    <None Remove="Resources\Declaration\Buses\HVACHeatingPowerPassenger.csv" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.acmp" />
     <None Remove="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.acmp" />
@@ -131,6 +135,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JSONKeys.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
+    <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
   </ItemGroup>
 
 </Project>

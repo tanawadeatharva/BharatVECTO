@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -36,7 +37,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var genInput = ((JObject)body["SSMInputs"]);
 
 			var retVal = new SSMInputs(fileName);
-			
+
+			var heatPumpCoP = new Dictionary<HeatPumpType, double>();
+			var heaterEff = new Dictionary<HeaterType, double>();
+
 			retVal.GFactor = genInput.GetEx<double>("BC_GFactor");
 			//retVal.PassengerBoundaryTemperature = genInput.GetEx<double>("BC_PassengerBoundaryTemperature").DegCelsiusToKelvin();
 			retVal.HeatingBoundaryTemperature = genInput.GetEx<double>("BC_HeatingBoundaryTemperature").DegCelsiusToKelvin();
@@ -47,7 +51,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.SpecificVentilationPower = genInput.GetEx<double>("BC_SpecificVentilationPower").SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
 			retVal.AuxHeaterEfficiency = genInput.GetEx<double>("BC_AuxHeaterEfficiency");
 			retVal.UValue = genInput.GetEx<double>("BC_UValue").SI<WattPerKelvinSquareMeter>();
-			retVal.COP = genInput.GetEx<double>("AC_COP");
+			//retVal.COP = genInput.GetEx<double>("AC_COP");
+			foreach (var entry in EnumHelper.GetValues<HeatPumpType>()) {
+				heatPumpCoP.Add(entry, genInput.GetEx<double>("AC_COP"));
+			}
 			//retVal.GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
 																										//retVal.MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();
 			retVal.MaxPossibleBenefitFromTechnologyList = genInput.GetEx<double>("BC_MaxPossibleBenefitFromTechnologyList");
@@ -55,18 +62,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.BusFloorType = genInput.GetEx<string>("BP_FloorType").ParseEnum<FloorType>();
 			retVal.BusSurfaceArea = genInput.GetEx<double>("BP_BusSurfaceArea").SI<SquareMeter>();
 			retVal.BusWindowSurface = genInput.GetEx<double>("BP_BusWindowSurfaceArea").SI<SquareMeter>();
-			retVal.BusVolume = genInput.GetEx<double>("BP_BusVolume").SI<CubicMeter>();
+			retVal.BusVolumeVentilation = genInput.GetEx<double>("BP_BusVolume").SI<CubicMeter>();
 			retVal.NumberOfPassengers = genInput.GetEx<double>("BP_PassengerCount");
 
 			//retVal.EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
 			//retVal.Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
-			retVal.DefaultConditions = new EnvironmentalConditionMapEntry(
+			retVal.DefaultConditions = new EnvironmentalConditionMapEntry(0,
 				genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin(),
-				genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>(), 1.0);
+				genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>(), 1.0, heatPumpCoP, heaterEff);
 			//retVal.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
 			//retVal.BatchMode = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-			retVal.HVACCompressorType = HeatPumpTypeHelper.Parse(genInput.GetEx<string>("AC_CompressorType"));
-			retVal.HVACMaxCoolingPower = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+			//retVal.HVACCompressorType = HeatPumpTypeHelper.Parse(genInput.GetEx<string>("AC_CompressorType"));
+			retVal.HVACMaxCoolingPowerPassenger = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 			retVal.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
 			retVal.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");
 			retVal.VentilationDuringAC = genInput.GetEx<bool>("VEN_VentilationDuringAC");

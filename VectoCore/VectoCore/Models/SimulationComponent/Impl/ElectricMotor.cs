@@ -548,7 +548,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (DeRatingActive) {
-				if (ThermalBuffer.IsSmallerOrEqual(ModelData.Overload.OverloadBuffer * ModelData.OverloadRegenerationFactor)) {
+				if (ThermalBuffer.IsSmallerOrEqual(ModelData.Overload.OverloadBuffer * ModelData.OverloadRecoveryFactor)) {
 					DeRatingActive = false;
 				}
 			} else {

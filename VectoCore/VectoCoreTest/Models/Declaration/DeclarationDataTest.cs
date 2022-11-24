@@ -41,7 +41,10 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
@@ -226,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             double expected)
         {
             var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
                     height.SI<Meter>()),
                 CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -238,7 +241,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
         {
             var curve =
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
 
             AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
             AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
@@ -266,7 +269,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
         {
             var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
                     height.SI<Meter>()),
                 CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -2084,7 +2087,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(6, runs.Count);
@@ -2108,7 +2111,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
                     @"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(8, runs.Count);
@@ -2132,7 +2135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional());
 
             var runs = dataReader.NextRun().ToList();
 

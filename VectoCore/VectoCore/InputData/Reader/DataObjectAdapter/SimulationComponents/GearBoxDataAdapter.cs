@@ -1,0 +1,418 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+{
+	public interface IGearboxDataAdapter
+	{
+		GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
+
+		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
+			PerSecond engineIdlingSpeed);
+	}
+
+	public abstract class GearboxDataAdapterBase : ComponentDataAdapterBase, IGearboxDataAdapter
+	{
+		#region Helper
+		protected internal static NewtonMeter GbxMaxTorque(
+			ITransmissionInputData gear, int numGears, NewtonMeter maxEngineTorque
+		)
+		{
+			if (gear.Gear - 1 < numGears / 2)
+			{
+				// gears count from 1 to n, -> n entries, lower half can always limit
+				if (gear.MaxTorque != null)
+				{
+					return gear.MaxTorque;
+				}
+			}
+			else
+			{
+				// upper half can only limit if max-torque <= 90% of engine max torque
+				if (gear.MaxTorque != null &&
+					gear.MaxTorque <= DeclarationData.Engine.TorqueLimitGearboxFactor * maxEngineTorque)
+				{
+					return gear.MaxTorque;
+				}
+			}
+
+			return null;
+		}
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected virtual void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, $"TCGear {i + 1}");
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected virtual void CreateATGearData(
+			IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
+			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
+			VehicleCategory vehicleCategory)
+		{
+			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0)
+			{
+				// powersplit transmission: torque converter already contains ratio and losses
+				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
+			}
+
+			if (gearbox.Type == GearboxType.ATSerial)
+			{
+				if (i == 0)
+				{
+					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
+					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
+				}
+
+				if (i == 1 && gearDifferenceRatio >=
+					DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory))
+				{
+					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
+					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
+					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+
+					// NOTE: the lower gear in 'gears' dictionary has index i !!
+					gears[i].Ratio = double.NaN;
+					gears[i].LossMap = null;
+				}
+			}
+		}
+
+		protected virtual TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i,
+			bool useEfficiencyFallback, VehicleCategory vehicleCategory, GearboxType gearboxType)
+		{
+			if (gear.LossMap != null)
+			{
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, $"Gear {i + 1}", true);
+			}
+			if (useEfficiencyFallback)
+			{
+				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, $"Gear {i + 1}");
+			}
+			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
+		}
+		#endregion
+		protected static void SetDeclarationData(GearboxData retVal)
+		{
+			retVal.Inertia = DeclarationData.Gearbox.Inertia;
+			retVal.TractionInterruption = retVal.Type.TractionInterruption();
+		}
+
+		protected static GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		{
+			return new GearboxData
+			{
+				InputData = data,
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationMethod != CertificationMethod.StandardValues ?
+					data.CertificationNumber : "",
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
+				Type = data.Type
+			};
+		}
+
+		public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
+		{
+			CheckDeclarationMode(inputData.Components.GearboxInputData, "Gearbox");
+			return DoCreateGearboxData(inputData, runData, shiftPolygonCalculator, supportedGearboxTypes);
+		}
+
+		protected abstract GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes);
+
+
+		public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
+			PerSecond engineIdlingSpeed)
+		{
+			var retVal = new ShiftStrategyParameters
+			{
+				TorqueReserve = DeclarationData.GearboxTCU.TorqueReserve,
+				StartTorqueReserve = DeclarationData.GearboxTCU.TorqueReserveStart,
+				TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
+				StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+
+				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
+				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
+				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
+				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,
+				AllowedGearRangeUp = DeclarationData.GearboxTCU.AllowedGearRangeUp,
+				AllowedGearRangeDown = DeclarationData.GearboxTCU.AllowedGearRangeDown,
+				LookBackInterval = DeclarationData.GearboxTCU.LookBackInterval,
+				DriverAccelerationLookBackInterval = DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
+				DriverAccelerationThresholdLow = DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
+				AverageCardanPowerThresholdPropulsion =
+					DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
+				CurrentCardanPowerThresholdPropulsion =
+					DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
+				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
+				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
+				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
+					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
+					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
+				AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix +
+						".GearshiftParameters.AccelerationReserveLookup.csv")),
+				ShareTorque99L = ShareTorque99lLookupReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv")
+				),
+				PredictionDurationLookup = PredictionDurationLookupReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix +
+						".GearshiftParameters.PredictionTimeLookup.csv")
+				),
+				ShareIdleLow = ShareIdleLowReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
+				),
+				ShareEngineHigh = EngineSpeedHighLookupReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix +
+						".GearshiftParameters.ShareEngineSpeedHigh.csv")
+				),
+
+				//--------------------
+				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
+				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
+				AllowedGearRangeFC = gbx.Type.AutomaticTransmission()
+					? (gbx.Gears.Count > DeclarationData.GearboxTCU.ATSkipGearsThreshold
+						? DeclarationData.GearboxTCU.AllowedGearRangeFCATSkipGear
+						: DeclarationData.GearboxTCU.AllowedGearRangeFCAT)
+					: DeclarationData.GearboxTCU.AllowedGearRangeFCAMT,
+				VelocityDropFactor = DeclarationData.GearboxTCU.VelocityDropFactor,
+				AccelerationFactor = DeclarationData.GearboxTCU.AccelerationFactor,
+				MinEngineSpeedPostUpshift = 0.RPMtoRad(),
+				ATLookAheadTime = DeclarationData.GearboxTCU.ATLookAheadTime,
+
+				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
+				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
+				ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked
+					.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
+			};
+
+			return retVal;
+		}
+	}
+
+	public class GearboxDataAdapter : GearboxDataAdapterBase
+	{
+		private readonly ITorqueConverterDataAdapter _torqueConverterDataAdapter;
+
+		public GearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter)
+		{
+			_torqueConverterDataAdapter = torqueConverterDataAdapter;
+		}
+		#region Overrides of GearBoxDataAdapterBase
+
+		protected override GearboxData DoCreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes)
+		{
+			var gearbox = inputData.Components.GearboxInputData;
+
+			var adas = inputData.ADAS;
+			var torqueConverter = inputData.Components.TorqueConverterInputData;
+
+			var engine = runData.EngineData;
+			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
+
+			var retVal = SetCommonGearboxData(gearbox);
+
+			//if (adas != null && retVal.Type.AutomaticTransmission() && adas.EcoRoll != EcoRollType.None &&
+			//	!adas.ATEcoRollReleaseLockupClutch.HasValue) {
+			//	throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+			//}
+
+			retVal.ATEcoRollReleaseLockupClutch =
+				adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission()
+					? (adas.ATEcoRollReleaseLockupClutch.HasValue ? adas.ATEcoRollReleaseLockupClutch.Value : false)
+					: false;
+
+			if (!supportedGearboxTypes.Contains(gearbox.Type))
+			{
+				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
+			}
+
+			var gearsInput = gearbox.Gears;
+			if (gearsInput.Count < 1)
+			{
+				throw new VectoSimulationException(
+					"At least one Gear-Entry must be defined in Gearbox!");
+			}
+
+			SetDeclarationData(retVal);
+
+			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
+				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
+				: 1.0;
+
+			var gears = new Dictionary<uint, GearData>();
+			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
+			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
+				? VehicleCategory.GenericBusVehicle
+				: inputData.VehicleCategory;
+			for (uint i = 0; i < gearsInput.Count; i++)
+			{
+				var gear = gearsInput[(int)i];
+				var lossMap = CreateGearLossMap(gear, i, false, vehicleCategory, gearbox.Type);
+
+				var shiftPolygon = shiftPolygonCalculator != null
+					? shiftPolygonCalculator.ComputeDeclarationShiftPolygon(
+						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio,
+						dynamicTyreRadius)
+					: DeclarationData.Gearbox.ComputeShiftPolygon(
+						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+						gearsInput, engine,
+						axlegearRatio, dynamicTyreRadius, null);
+
+				var gearData = new GearData
+				{
+					ShiftPolygon = shiftPolygon,
+					MaxSpeed = gear.MaxInputSpeed,
+					MaxTorque = gear.MaxTorque,
+					Ratio = gear.Ratio,
+					LossMap = lossMap,
+				};
+
+				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears,
+					runData.VehicleData.VehicleCategory);
+				gears.Add(i + 1, gearData);
+			}
+
+			// remove disabled gears (only the last or last two gears may be removed)
+			if (inputData.TorqueLimits != null)
+			{
+				var toRemove = (from tqLimit in inputData.TorqueLimits
+								where tqLimit.Gear >= gears.Keys.Max() - 1 && tqLimit.MaxTorque.IsEqual(0)
+								select (uint)tqLimit.Gear).ToList();
+				if (toRemove.Count > 0 && toRemove.Min() <= gears.Count - toRemove.Count)
+				{
+					throw new VectoException(
+						"Only the last 1 or 2 gears can be disabled. Disabling gear {0} for a {1}-speed gearbox is not allowed.",
+						toRemove.Min(), gears.Count);
+				}
+
+				foreach (var entry in toRemove)
+				{
+					gears.Remove(entry);
+				}
+			}
+
+			retVal.Gears = gears;
+			if (retVal.Type.AutomaticTransmission())
+			{
+				var ratio = double.IsNaN(retVal.Gears[1].Ratio)
+					? 1
+					: retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
+				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
+
+				retVal.TorqueConverterData =
+					_torqueConverterDataAdapter.CreateTorqueConverterData(gearbox.Type, torqueConverter, ratio, engine);
+
+				if (torqueConverter != null)
+				{
+					retVal.TorqueConverterData.Manufacturer = torqueConverter.Manufacturer;
+					retVal.TorqueConverterData.ModelName = torqueConverter.Model;
+					retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
+					retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
+					retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
+					retVal.TorqueConverterData.Date = torqueConverter.Date;
+					retVal.TorqueConverterData.AppVersion = torqueConverter.AppVersion;
+				}
+			}
+
+			// update disengageWhenHaltingSpeed
+			if (retVal.Type.AutomaticTransmission())
+			{
+				var firstGear = retVal.GearList.First(x => x.IsLockedGear());
+				if (retVal.Gears[firstGear.Gear].ShiftPolygon.Downshift.Any())
+				{
+					var downshiftSpeedInc = retVal.Gears[firstGear.Gear].ShiftPolygon
+						.InterpolateDownshiftSpeed(0.SI<NewtonMeter>()) * 1.05;
+					var vehicleSpeedDisengage =
+						downshiftSpeedInc / axlegearRatio / retVal.Gears[firstGear.Gear].Ratio *
+						dynamicTyreRadius;
+					retVal.DisengageWhenHaltingSpeed = vehicleSpeedDisengage;
+				}
+			}
+
+			return retVal;
+		}
+
+		#endregion
+	}
+
+	public class GenericCompletedBusGearboxDataAdapter : GearboxDataAdapter
+	{
+		public const double GearEfficiencyDirectGear = 0.98;
+		public const double GearEfficiencyIndirectGear = 0.96;
+		public const double GearEfficiencyAT = 0.925;
+		public GenericCompletedBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(
+			torqueConverterDataAdapter)
+		{
+
+		}
+
+		#region Overrides of GearboxDataAdapterBase
+
+		protected override TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+			VehicleCategory vehicleCategory, GearboxType gearboxType)
+		{
+			if (gearboxType.AutomaticTransmission())
+			{
+				return TransmissionLossMapReader.Create(GearEfficiencyAT, gear.Ratio, $"Gear {i + 1}");
+			}
+			return TransmissionLossMapReader.Create(
+				gear.Ratio.IsEqual(1) ? GearEfficiencyDirectGear : GearEfficiencyIndirectGear, gear.Ratio, $"Gear {i + 1}");
+		}
+
+		protected override void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			//gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(GearEfficiencyIndirectGear, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1.0, 1, $"TCGear {i + 1}");
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		#endregion
+	}
+}

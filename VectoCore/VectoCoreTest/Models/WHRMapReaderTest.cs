@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -31,6 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
+		private IVectoRunDataFactoryFactory _runDataFactory;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -106,7 +108,9 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			var reader = XmlReader.Create(SingleFuelWHRVehicle);
 			var inputDataProvider = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
+			//var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(10, runs.Length);
@@ -129,8 +133,9 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -154,7 +159,8 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -179,7 +185,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -191,7 +198,8 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			var reader = XmlReader.Create(DualFuelWHRVehicle);
 			var inputDataProvider = xmlInputReader.Create(reader) as IDeclarationInputDataProvider;
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(10, runs.Length);
@@ -214,7 +222,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			var runs = dao.NextRun().ToArray();
 			
 			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
@@ -236,7 +245,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -264,7 +274,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -289,7 +300,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
@@ -310,7 +322,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			//var runs = dao.NextRun().ToArray();
 			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });
 			
@@ -333,7 +346,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
+			var dao = _runDataFactory.CreateDeclarationRunDataFactory(inputDataProvider, new NullDeclarationReport(),
+				new NullVTPReport());
 			//var runs = dao.NextRun().ToArray();
 			//Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
 			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });

@@ -4,7 +4,8 @@ xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/
 xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"  
-xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd">
+xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 ./../../../../../VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data xsi:type="PrimaryVehicleDataType" id="PIF-4121ae4751874cefa376">
 			<Vehicle xsi:type="ConventionalVehicleVIFType">
@@ -23,11 +24,11 @@ xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xs
 				<RetarderRatio>1.000</RetarderRatio>
 				<AngledriveType>None</AngledriveType>
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-				<vif:ADAS xsi:type="ADAS_Conventional_Type" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" >
-					<EngineStopStart>false</EngineStopStart>
-					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
-					<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
-					<PredictiveCruiseControl>none</PredictiveCruiseControl>
+				<ADAS xsi:type="v2.4:ADAS_Conventional_Type">
+					<v2.4:EngineStopStart>false</v2.4:EngineStopStart>
+					<v2.4:EcoRollWithoutEngineStop>false</v2.4:EcoRollWithoutEngineStop>
+					<v2.4:EcoRollWithEngineStop>false</v2.4:EcoRollWithEngineStop>
+					<v2.4:PredictiveCruiseControl>none</v2.4:PredictiveCruiseControl>
 				</vif:ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
 					<tcl:Entry gear="6" maxTorque="1800"/>

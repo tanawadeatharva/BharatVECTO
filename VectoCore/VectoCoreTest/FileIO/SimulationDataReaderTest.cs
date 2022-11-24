@@ -38,7 +38,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -66,7 +68,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			if (declarationProvider == null) {
 				throw new VectoException("Failed to cas to Engineering InputDataProvider");
 			}
-			var reader = new DeclarationModeTruckVectoRunDataFactory(declarationProvider, null);
+
+			var dataAdapter = new DeclarationDataAdapterHeavyLorry.Conventional();
+			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter);
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

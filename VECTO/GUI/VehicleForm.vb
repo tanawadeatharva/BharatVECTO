@@ -12,9 +12,11 @@
 
 Imports System.IO
 Imports System.Linq
+Imports Ninject
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
@@ -64,6 +66,16 @@ Public Class VehicleForm
 	Private _emRatioPerGearDlog As EMGearRatioDialog
 	Private _reessPackDlg As REESSPackDialog
 	Friend VehicleType As VectoSimulationJobType
+
+
+	Public Sub New()
+
+		' Dieser Aufruf ist für den Designer erforderlich.
+		InitializeComponent()
+
+		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+
+	End Sub
 
 	'Close - Check for unsaved changes
 	Private Sub VehicleFormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing

@@ -42,6 +42,14 @@ Namespace UnitTests
             dim vehicle = auxConfig.VehicleData
             'CType(vehicle, VehicleData).Height = 0.SI (of Meter)
             Dim ssmInput = SSMInputData.ReadFile(_SSMMAP, vehicle, Nothing)
+
+            If (ssmInput.HVACSystemConfiguration = BusHVACSystemConfiguration.Unknown ) then
+                Dim tmp =CType(ssmInput, SSMInputs)
+                tmp.HVACSystemConfiguration = BusHVACSystemConfiguration.Configuration6
+                tmp.HeatPumpTypePassengerCompartment = HeatPumpType.non_R_744_2_stage
+            end if
+                                                                                                                            
+
             ssm = New SSMTOOL(ssmInput)
             
             alternatorMap = AlternatorReader.ReadMap(_GOODMAP)

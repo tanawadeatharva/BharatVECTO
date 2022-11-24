@@ -31,7 +31,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		public IPneumaticsConsumersDemand PneumaticAuxillariesConfig { get; internal set; }
 
-		public ISSMInputs SSMInputs { get; internal set; }
+		public ISSMInputs SSMInputsCooling { get; internal set; }
+
+		public ISSMInputs SSMInputsHeating { get; internal set; }
 
 		//public IActuationsMap ActuationsMap { get; internal set; }
 		public IActuations Actuations { get; internal set; }

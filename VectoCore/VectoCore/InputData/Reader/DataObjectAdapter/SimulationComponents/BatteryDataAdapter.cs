@@ -1,0 +1,137 @@
+﻿using System;
+using System.Linq;
+using System.Security.Policy;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
+{
+	public class ElectricStorageAdapter
+	{
+		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData)
+		{
+			if (batteryInputData == null)
+			{
+				return null;
+			}
+
+			var bat = batteryInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.Battery).ToArray();
+
+			if (bat.Length == 0)
+			{
+				return null;
+			}
+
+			var retVal = new BatterySystemData();
+			foreach (var entry in bat)
+			{
+				var b = entry.REESSPack as IBatteryPackDeclarationInputData;
+				if (b == null)
+				{
+					continue;
+				}
+
+				//for (var i = 0; i < entry.Count; i++) {
+					var minSoc = DeclarationData.Battery.GetMinSoc(b.BatteryType);
+					if (b.MinSOC != null && b.MinSOC > minSoc) {
+						minSoc = b.MinSOC.Value;
+					}
+					var maxSoc = DeclarationData.Battery.GetMaxSoc(b.BatteryType);
+					if (b.MaxSOC != null && b.MaxSOC < maxSoc) {
+						maxSoc = b.MaxSOC.Value;
+					}
+				
+					var batteryData = new BatteryData() {
+						MinSOC = minSoc,
+						MaxSOC = maxSoc,
+						MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
+						Capacity = b.Capacity,
+						InternalResistance =
+							BatteryInternalResistanceReader.Create(b.InternalResistanceCurve, false),
+						SOCMap = BatterySOCReader.Create(b.VoltageCurve),
+					};
+
+					retVal.Batteries.Add(Tuple.Create(entry.StringId, batteryData));
+				//}
+			}
+
+
+
+			retVal.InitialSoC = CalculateInitialSoc(retVal);
+			return retVal;
+		}
+
+		private double CalculateInitialSoc(BatterySystemData battery)
+		{
+			var socLimits = battery.GetSocLimits();
+			return (socLimits.MaxSoc - socLimits.MinSoc) / 2;
+		}
+
+		public SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData)
+		{
+			if (reessInputData == null)
+			{
+				return null;
+			}
+
+			var superCaps = reessInputData.ElectricStorageElements.Where(x => x.REESSPack.StorageType == REESSType.SuperCap).ToArray();
+
+			var superCap = superCaps.FirstOrDefault()?.REESSPack as ISuperCapDeclarationInputData;
+
+			if (superCap == null)
+			{
+				return null;
+			}
+
+			return new SuperCapData()
+			{
+				Capacity = superCaps.First().Count * superCap.Capacity,
+				InternalResistance = superCap.InternalResistance / superCaps.First().Count,
+				MinVoltage = superCap.MinVoltage * DeclarationData.SuperCap.SocMin, //Überschreiben prozent beziehen sich auf max voltage
+				MaxVoltage = superCap.MaxVoltage,
+				MaxCurrentCharge = superCap.MaxCurrentCharge,
+				MaxCurrentDischarge = -superCap.MaxCurrentDischarge,
+				InitialSoC = Math.Sqrt(Math.Pow(superCap.MaxVoltage.Value(), 2) - Math.Pow(superCap.MaxVoltage.Value(), 2)) /
+							superCap.MaxVoltage.Value()
+			};
+		}
+
+
+		
+	}
+
+	public static class BatterySystemHelper
+	{
+		public static Volt CalculateAverageVoltage(this BatterySystemData battery)
+		{
+			if (battery == null)
+			{
+				return null;
+			}
+			var tmpBattery = new BatterySystem(null, battery);
+			var min = tmpBattery.MinSoC;
+			var max = tmpBattery.MaxSoC;
+			var averageSoC = (min + max) / 2.0;
+
+			tmpBattery.Initialize(averageSoC);
+			return tmpBattery.InternalVoltage;
+		}
+
+
+		public static (double MinSoc, double MaxSoc) GetSocLimits(this BatterySystemData battery)
+		{
+			if (battery == null) {
+				throw new ArgumentNullException();
+			}
+
+			var tmpBattery = new BatterySystem(null, battery);
+			return (tmpBattery.MinSoC, tmpBattery.MaxSoC);
+		}
+	}
+	
+}

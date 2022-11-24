@@ -1,14 +1,8 @@
-﻿using System;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
@@ -141,114 +135,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 			return null;
 		}
-
-		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport, IVTPReport vtpReport)
-		{
-			switch (dataProvider) {
-				case IVTPDeclarationInputDataProvider vtpProvider: {
-					RunDataFactory = CreateRunDataReader(vtpProvider, vtpReport);
-					return;
-				}
-				case ISingleBusInputDataProvider singleBusProvider: {
-					RunDataFactory = CreateRunDataReader(singleBusProvider, declarationReport);
-					return;
-				}
-				case IDeclarationInputDataProvider declDataProvider: {
-					RunDataFactory = CreateRunDataReader(declDataProvider, declarationReport);
-					return;
-				}
-				case IMultistageVIFInputData multistageVifInputData: {
-					RunDataFactory = CreateRunDataReader(multistageVifInputData, declarationReport);
-					return;
-				}
-				case IMultistagePrimaryAndStageInputDataProvider multiStagePrimaryAndStageInputData: {
-
-					throw new VectoException("Simulation should be split up in separate steps");
-				}
-				default:
-					throw new VectoException("Unknown InputData for Declaration Mode!");
-			}
-		}
-
-		private IVectoRunDataFactory CreateRunDataReader(IMultistageVIFInputData multistageVifInputData, IDeclarationReport declarationReport)
-		{
-			if (multistageVifInputData.VehicleInputData == null)
-			{
-				//THIS DOESN'T WORK :/
-				var reportCompleted = declarationReport; //; new XMLDeclarationReportCompletedVehicle(ReportWriter, true)
-				//{
-				//	PrimaryVehicleReportInputData = multistageVifInputData.MultistageJobInputData.JobInputData.PrimaryVehicle,
-				//};
-				return new DeclarationModeCompletedMultistageBusVectoRunDataFactory(
-					multistageVifInputData.MultistageJobInputData,
-					reportCompleted);
-			} else {
-				var report = declarationReport;// ?? new XMLDeclarationReportMultistageBusVehicle(ReportWriter);
-				return new DeclarationModeMultistageBusVectoRunDataFactory(multistageVifInputData, report);
-
-
-			}
-		}
-
-		private IVectoRunDataFactory CreateRunDataReader(IDeclarationInputDataProvider declDataProvider,
-			IDeclarationReport declarationReport)
-		{
-			var vehicleCategory = declDataProvider.JobInputData.Vehicle.VehicleCategory;
-			if(vehicleCategory.IsLorry()) {
-				var report = declarationReport ?? new XMLDeclarationReport(ReportWriter);
-				return new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report);
-			}
-
-			if(vehicleCategory.IsBus())
-				switch (declDataProvider.JobInputData.Vehicle.VehicleCategory)
-				{
-					case VehicleCategory.HeavyBusCompletedVehicle:
-						var reportCompleted = declarationReport;
-											//??
-											//new XMLDeclarationReportCompletedVehicle(ReportWriter,
-											//	declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle)
-											//{
-											//	PrimaryVehicleReportInputData = declDataProvider.PrimaryVehicleData,
-											//};
-						return new DeclarationModeCompletedBusVectoRunDataFactory(declDataProvider, reportCompleted);
-					case VehicleCategory.HeavyBusPrimaryVehicle:
-						var reportPrimary = declarationReport;
-							//??
-							//				new XMLDeclarationReportPrimaryVehicle(ReportWriter,
-							//					declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
-						return new DeclarationModePrimaryBusVectoRunDataFactory(declDataProvider, reportPrimary);
-						
-					default:
-
-						break;
-				}
-
-			throw new Exception(
-				$"Could not create RunDataFactory for Vehicle Category{vehicleCategory}");
-		}
-
-		private IVectoRunDataFactory CreateRunDataReader(ISingleBusInputDataProvider singleBusProvider,
-			IDeclarationReport declarationReport)
-		{
-			var report = declarationReport ?? new XMLDeclarationReport(ReportWriter);
-			return new DeclarationModeSingleBusVectoRunDataFactory(singleBusProvider, report);
-		}
-
-		private IVectoRunDataFactory CreateRunDataReader(IVTPDeclarationInputDataProvider vtpProvider,
-			IVTPReport vtpReport)
-		{
-			var report = vtpReport ?? new XMLVTPReport(ReportWriter);
-			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry()) {
-				return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, report);
-			}
-
-			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus()) {
-				return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, report);
-			}
-
-			throw new Exception(
-				$"Could not create RunDataFactory for Vehicle Category{vtpProvider.JobInputData.Vehicle.VehicleCategory}");
-		}
-
 	}
 }

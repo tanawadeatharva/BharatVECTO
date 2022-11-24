@@ -1,9 +1,12 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IEnvironmentalConditionsMapEntry
 	{
+		int ID { get; }
+
 		Kelvin Temperature { get; }
 		WattPerSquareMeter Solar { get; }
 
@@ -12,5 +15,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 
 		//double GetNormalisedWeighting(IList<IEnvironmentalConditionsMapEntry> map);
+
+		IReadOnlyDictionary<HeaterType, double> HeaterEfficiency { get; }
+
+		IReadOnlyDictionary<HeatPumpType, double> HeatPumpCoP { get; }
 	}
 }

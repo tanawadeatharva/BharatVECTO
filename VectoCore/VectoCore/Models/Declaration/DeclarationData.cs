@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -49,11 +50,11 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
-
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public static class DeclarationData
+    public static class DeclarationData
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -101,6 +102,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const double AlternatorEfficiency = 0.7;
 
 		public const double WHRChargerEfficiency = 0.98;
+
+		public const double OverloadRecoveryFactor = 0.9;
 
 		public static readonly ConcurrentDictionary<MissionType, DrivingCycleData> CyclesCache =
 			new ConcurrentDictionary<MissionType, DrivingCycleData>();
@@ -245,6 +248,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
+			private static HVACHeatingPower hvacMaxHeatingPower;
+			private static HeatingDistributionCasesMap heatingDistributionCasesMap;
+			private static HeatingDistributionMap heatingDistributionMap;
 
 			public static List<SSMTechnology> SSMTechnologyList =>
 				ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
@@ -253,6 +259,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static IEnvironmentalConditionsMap DefaultEnvironmentalConditions =>
 				envMap ?? (envMap = EnvironmentalContidionsMapReader.ReadStream(
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultClimatic.aenv")));
+
+			public static HeatingDistributionCasesMap HeatingDistributionCases =>
+				heatingDistributionCasesMap ?? (heatingDistributionCasesMap = HeatingDistributionCasesMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistributionCases.csv")));
+			public static HeatingDistributionMap HeatingDistribution =>
+				heatingDistributionMap ?? (heatingDistributionMap = HeatingDistributionMapReader.ReadStream(
+					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.HeatingDistribution.csv")));
 
 			public static ElectricalConsumerList DefaultElectricConsumerList =>
 				elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
@@ -264,6 +277,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 
 			public static HVACCoolingPower HVACMaxCoolingPower => hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower());
+
+			public static HVACHeatingPower HVACMaxHeatingPower => hvacMaxHeatingPower ?? (hvacMaxHeatingPower = new HVACHeatingPower());
 
 			public static PerSecond VentilationRate(BusHVACSystemConfiguration? hvacSystemConfig, bool heating)
 			{
@@ -372,19 +387,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double CalculateCOP(Watt coolingPwrDriver, HeatPumpType comprTypeDriver, Watt coolingPwrPass, HeatPumpType comprTypePass, FloorType floorType)
-			{
-				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == HeatPumpType.none) {
-					comprTypeDriver = comprTypePass;
-				}
-				if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
-					return 1.0;
-				}
-				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
-						(coolingPwrDriver + coolingPwrPass);
-			}
+            public static double CalculateCOP(Watt coolingPwrDriver, double copDriver, Watt coolingPwrPass, double copPass)
+            {
+                if (coolingPwrDriver.IsGreater(0) && copDriver.IsEqual(0)) {
+                    copDriver = copPass;
+                }
+                if (coolingPwrDriver.IsEqual(0) && coolingPwrPass.IsEqual(0)) {
+                    return 1.0;
+                }
+                return (coolingPwrDriver * copDriver + coolingPwrPass * copPass) /
+                        (coolingPwrDriver + coolingPwrPass);
+            }
 
-			public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
+            public static Meter CorrectionLengthDrivetrainVolume(VehicleCode? vehicleCode, bool? lowEntry, int numAxles, bool articulated)
 			{
 				if ((vehicleCode == VehicleCode.CE || vehicleCode == VehicleCode.CG) && (bool)lowEntry) {
 					switch (numAxles) {
@@ -396,6 +411,73 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return 0.SI<Meter>();
 			}
+
+			public static BusHVACSystemConfiguration GetHVACConfig(BusHVACSystemConfiguration hvacConfigurationInput, HeatPumpType heatPumpDriver, HeatPumpType heatPumpPassenger)
+			{
+				var hasDriverHP = heatPumpDriver != HeatPumpType.none;
+				var hasPassengerHP = heatPumpPassenger != HeatPumpType.none;
+
+				switch (hvacConfigurationInput) {
+					case BusHVACSystemConfiguration.Unknown:
+					case BusHVACSystemConfiguration.Configuration0:
+						throw new VectoException($"Invalid HVAC Configuration {hvacConfigurationInput}");
+					case BusHVACSystemConfiguration.Configuration1 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration1;
+
+					case BusHVACSystemConfiguration.Configuration2 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration1;
+					case BusHVACSystemConfiguration.Configuration2 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration2;
+
+					case BusHVACSystemConfiguration.Configuration3 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+
+					case BusHVACSystemConfiguration.Configuration4 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration4 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+
+					case BusHVACSystemConfiguration.Configuration5 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration5 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+
+					case BusHVACSystemConfiguration.Configuration6 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration6 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration6;
+
+					case BusHVACSystemConfiguration.Configuration7 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration7 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+					case BusHVACSystemConfiguration.Configuration7 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration5;
+					case BusHVACSystemConfiguration.Configuration7 when hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration7;
+
+					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration8 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration8;
+
+					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration4;
+					case BusHVACSystemConfiguration.Configuration9 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration8;
+					case BusHVACSystemConfiguration.Configuration9 when hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration9;
+
+					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && !hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration3;
+					case BusHVACSystemConfiguration.Configuration10 when !hasDriverHP && hasPassengerHP:
+						return BusHVACSystemConfiguration.Configuration10;
+				}
+				throw new VectoException($"Invalid HVAC combination! System Configuration: {hvacConfigurationInput.GetName()}, Driver HeatPump: {heatPumpDriver.GetLabel()}, Passenger HeatPump: {heatPumpPassenger.GetLabel()}");
+			}
+
 		}
 
 		public static class Driver
@@ -1206,6 +1288,52 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public static class SuperCap
+		{
+			public const double SocMin = 0.45;
+		}
 
+
+		public static class Battery
+		{
+			/// <summary>
+			/// Percentage of the maximum voltage of the battery
+			/// </summary>
+			private const double SOCMinHP = 0.2;
+			private const double SOCMaxHP = 0.8;
+
+			private const double SOCMinHE = 0.05;
+			private const double SOCMaxHE = 0.95;
+
+			public static double GetMinSoc(BatteryType type)
+			{
+				switch (type) {
+					case BatteryType.HPBS:
+						return SOCMinHP;
+						break;
+					case BatteryType.HEBS:
+						return SOCMinHE;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(type), type, null);
+				}
+			}
+
+
+			public static double GetMaxSoc(BatteryType type)
+			{
+				switch (type)
+				{
+					case BatteryType.HPBS:
+						return SOCMaxHP;
+						break;
+					case BatteryType.HEBS:
+						return SOCMaxHE;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(type), type, null);
+				}
+			}
+		}
 	}
 }

@@ -55,9 +55,17 @@ using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
+
+
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
+		public enum OvcHevMode
+		{
+			NotApplicable,
+			ChargeSustaining,
+			ChargeDepleting,
+		}
 
 		public VectoRunData()
 		{
@@ -129,7 +137,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public AuxFanData FanDataVTP { get; internal set; }
 
-		public List<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
+		public IList<Tuple<PowertrainPosition, ElectricMotorData>> ElectricMachinesData { get; internal set; }
 
 		public BatterySystemData BatteryData { get; internal set; }
 
@@ -358,6 +366,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 			return null;
 		}
+
 	}
 
 	public class VTPData
@@ -371,4 +380,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public Meter FanDiameter;
 	}
+
 }

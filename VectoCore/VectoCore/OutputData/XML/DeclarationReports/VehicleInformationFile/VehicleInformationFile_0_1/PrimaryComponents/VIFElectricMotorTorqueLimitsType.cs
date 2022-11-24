@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				electricMachine);
 		}
 
-		private  List<XElement> GetVoltageLevels(List<Tuple<Volt, TableData>> voltageLevels)
+		private IList<XElement> GetVoltageLevels(IList<Tuple<Volt, TableData>> voltageLevels)
 		{
 			var voltageEntries = new List<XElement>();
 			foreach (var voltageLevel in voltageLevels) 

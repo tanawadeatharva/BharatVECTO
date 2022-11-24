@@ -4,6 +4,7 @@ using System.Data;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -44,6 +45,7 @@ namespace TUGraz.VectoMockup
     {
 		private IModalDataContainer _modalDataContainerImplementation;
 		private readonly Action<IModalDataContainer> _addReportResult;
+		private Func<Second, Joule, Joule, HeaterDemandResult> _auxHeaterDemandCalc;
 
 		public MockupModalDataContainer(IModalDataContainer modalDataContainer,
 			Action<IModalDataContainer> addReportResult)
@@ -58,6 +60,11 @@ namespace TUGraz.VectoMockup
 		public Second Duration => 1.SI(Unit.SI.Hour).Cast<Second>();
 		public Meter Distance => 100.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
+		Func<Second, Joule, Joule, HeaterDemandResult> IModalDataContainer.AuxHeaterDemandCalc
+		{
+			get => _auxHeaterDemandCalc;
+			set => _auxHeaterDemandCalc = value;
+		}
 
 		#endregion
 
@@ -163,6 +170,11 @@ namespace TUGraz.VectoMockup
 			return _modalDataContainerImplementation.GetColumnName(fuelData, mrf);
 		}
 
+		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		{
+			return _modalDataContainerImplementation.GetColumnName(pos, mrf);
+		}
+
 		public void Reset()
 		{
 			_modalDataContainerImplementation.Reset();
@@ -170,7 +182,7 @@ namespace TUGraz.VectoMockup
 
 		
 
-		public Func<Second, Joule, Joule> AuxHeaterDemandCalc
+		public Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc
 		{
 			get => _modalDataContainerImplementation.AuxHeaterDemandCalc;
 			set => _modalDataContainerImplementation.AuxHeaterDemandCalc = value;

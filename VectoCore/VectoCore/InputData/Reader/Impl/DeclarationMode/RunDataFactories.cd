@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="TUGraz.VectoCore.InputData.Reader.Impl.DeclarationModeTruckVectoRunDataFactory">
+    <Position X="6.5" Y="4.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>gAKAIAAAAAAAAAABAAAABAAAAAQAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\Reader\Impl\DeclarationModeHeavyLorryVectoRunDataFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.Reader.Impl.AbstractDeclarationVectoRunDataFactory">
+    <Position X="1.25" Y="2.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>gAoAAgAAAkEgAQIBAACgACgAAAAAAAEIAgAAgAQABAA=</HashCode>
+      <FileName>InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TUGraz.VectoCore.InputData.Reader.Impl.DeclarationModePrimaryBusVectoRunDataFactory">
+    <Position X="6.5" Y="1.25" Width="6" />
+    <TypeIdentifier>
+      <HashCode>gAIBAgAAAAAAAAABAAAABAAAAAAIAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\Reader\Impl\DeclarationModePrimaryBusVectoRunDataFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TUGraz.VectoCore.InputData.IVectoRunDataFactory">
+    <Position X="2.75" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputData\IVectoRunDataFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

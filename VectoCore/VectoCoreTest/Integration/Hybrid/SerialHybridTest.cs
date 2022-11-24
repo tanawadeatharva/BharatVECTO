@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using System.Data;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -612,12 +613,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			jobContainer.AddRun(run);
 			return jobContainer;
 		}
-
 		public static VehicleContainer CreateSerialHybridPowerTrain(DrivingCycleData cycleData, string modFileName,
 			double initialBatCharge, SummaryDataContainer sumData, double pAuxEl,
 			PowertrainPosition pos, double ratio, Kilogram payload = null, Watt maxDriveTrainPower = null, 
 			GearboxType gearboxType = GearboxType.NoGearbox, RetarderType retarderType = RetarderType.None)
 		{
+			
 			var gearboxData = CreateGearboxData(gearboxType);
 			var axleGearData = CreateAxleGearData(gearboxType);
 			
@@ -632,8 +633,13 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var electricMotorData = MockSimulationDataFactory.CreateElectricMotorData(emFile, 2, pos, correctedRatio, 1);
 
 			var genFile = GeneratorFile;
-			electricMotorData.AddRange(
-				MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.GEN, 2.6, 1));
+
+			foreach (var md in MockSimulationDataFactory.CreateElectricMotorData(genFile, 1,
+						PowertrainPosition.GEN, 2.6, 1)) {
+				electricMotorData.Add(md);
+			}
+			//electricMotorData.AddRange(
+			//	MockSimulationDataFactory.CreateElectricMotorData(genFile, 1, PowertrainPosition.GEN, 2.6, 1));
 
 			var batFile = BatFile;
 			var batteryData = MockSimulationDataFactory.CreateBatteryData(batFile, initialBatCharge);

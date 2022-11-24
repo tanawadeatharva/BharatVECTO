@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -14,21 +15,56 @@ namespace TUGraz.VectoCore.OutputData.XML
 	/// <summary>
 	/// Create MRF and VIF for primary bus
 	/// </summary>
-	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReportPrimaryVehicle
+	public class XMLDeclarationReportPrimaryVehicle_09 : XMLDeclarationReport09
 	{
-				private readonly IManufacturerReportFactory _mrfFactory;
+		private readonly IManufacturerReportFactory _mrfFactory;
 		private readonly IVIFReportFactory _vifFactory;
+
+		protected IXMLVehicleInformationFile VehicleInformationFile;
+
+		public override XDocument CustomerReport => null;
+
+		public override XDocument PrimaryVehicleReport => VehicleInformationFile?.Report;
 
 		public XMLDeclarationReportPrimaryVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
-			IVIFReportFactory vifFactory) : base(writer)
+			IVIFReportFactory vifFactory) : base(writer, mrfFactory, cifFactory)
 		{
 			_mrfFactory = mrfFactory;
 			//_cifFactory = cifFactory;
 			_vifFactory = vifFactory;
 		}
 
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			base.InitializeReport(modelData, fuelModes);
+			VehicleInformationFile.Initialize(modelData, fuelModes);
+		}
+
+
+
+		protected override void WriteResult(ResultEntry result)
+		{
+			base.WriteResult(result);
+			VehicleInformationFile.WriteResult(result);
+		}
+
+		protected override void GenerateReports()
+		{
+			ManufacturerRpt.GenerateReport();
+			var fullReportHash = GetSignature(ManufacturerRpt.Report);
+			CustomerRpt.GenerateReport(fullReportHash);
+			VehicleInformationFile.GenerateReport(fullReportHash);
+		}
+
+
+
+		protected override void OutputReports()
+		{
+			Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, ManufacturerRpt.Report);
+			Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, VehicleInformationFile.Report);
+		}
 
 
 
@@ -63,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML
     /// <summary>
     /// Create VIF of an interim (or the complete(d) step
     /// </summary>
-    public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport
+    public class XMLDeclarationReportInterimVehicle_09 : XMLDeclarationReport09
 	{
 		protected readonly IVIFReportFactory _vifFactory;
 
@@ -73,7 +109,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLDeclarationReportInterimVehicle_09(IReportWriter writer,
 			IManufacturerReportFactory mrfFactory,
 			ICustomerInformationFileFactory cifFactory,
-			IVIFReportFactory vifFactory, IVIFReportInterimFactory interimFactory) : base(writer)
+			IVIFReportFactory vifFactory, IVIFReportInterimFactory interimFactory) : base(writer, mrfFactory, cifFactory)
 		{
 			_vifFactory = vifFactory;
 			_interimFactory = interimFactory;

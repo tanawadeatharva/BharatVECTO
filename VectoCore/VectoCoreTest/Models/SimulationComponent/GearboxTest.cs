@@ -53,6 +53,7 @@ using System.IO;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
@@ -521,7 +522,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(GearboxDataFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var engineData = dao.CreateEngineData(new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxInput
@@ -587,7 +588,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(GearboxDataFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(EngineDataFile);
-			var dao = new DeclarationDataAdapterHeavyLorry();
+			var dao = new DeclarationDataAdapterHeavyLorry.Conventional();
 			var engineData = dao.CreateEngineData(new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxInput

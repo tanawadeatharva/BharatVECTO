@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -106,10 +107,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IBatteryPackDeclarationInputData
 
 		public virtual double? MinSOC  => 
-			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmin) ? GetDouble(XMLNames.Battery_SOCmin) / 100 : (double?)null;
 
 		public virtual double? MaxSOC => 
-			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) : (double?)null;
+			ElementExists(XMLNames.Battery_SOCmax) ? GetDouble(XMLNames.Battery_SOCmax) / 100 : (double?)null;
 
 		public virtual BatteryType BatteryType => GetString(XMLNames.REESS_BatteryType).ParseEnum<BatteryType>();
 		public virtual AmpereSecond Capacity => GetDouble(XMLNames.REESS_RatedCapacity).SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>();
@@ -122,11 +123,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual TableData InternalResistanceCurve => ReadTableData(XMLNames.REESS_InternalResistanceCurve, XMLNames.REESS_MapEntry,
 			new Dictionary<string, string> {
-				{XMLNames.REESS_InternalResistanceCurve_SoC, XMLNames.REESS_InternalResistanceCurve_SoC},
-				{XMLNames.REESS_InternalResistanceCurve_R2, XMLNames.REESS_InternalResistanceCurve_R2},
-				{XMLNames.REESS_InternalResistanceCurve_R10, XMLNames.REESS_InternalResistanceCurve_R10},
-				{XMLNames.REESS_InternalResistanceCurve_R20, XMLNames.REESS_InternalResistanceCurve_R20},
-				{XMLNames.REESS_InternalResistanceCurve_R120, XMLNames.REESS_InternalResistanceCurve_R120}
+				{BatteryInternalResistanceReader.Fields.StateOfCharge, XMLNames.REESS_InternalResistanceCurve_SoC},
+				{BatteryInternalResistanceReader.Fields.InternalResistance_2, XMLNames.REESS_InternalResistanceCurve_R2},
+				{BatteryInternalResistanceReader.Fields.InternalResistance_10, XMLNames.REESS_InternalResistanceCurve_R10},
+				{BatteryInternalResistanceReader.Fields.InternalResistance_20, XMLNames.REESS_InternalResistanceCurve_R20},
+				{BatteryInternalResistanceReader.Fields.InternalResistance_120, XMLNames.REESS_InternalResistanceCurve_R120}
 			});
 		
 		public virtual TableData VoltageCurve => ReadTableData(XMLNames.REESS_OCV, XMLNames.REESS_MapEntry, 

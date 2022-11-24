@@ -200,7 +200,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
-		Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		
 		TableData BoostingLimitations { get; }
 
@@ -778,10 +778,14 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter OverloadTorque { get; }
 
 		PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-
-		Second OverloadTime { get; } //OverloadDuration
-
-		TableData FullLoadCurve { get; } //MaxTorqueCurve
+		/// <summary>
+		/// OverloadDuration
+		/// </summary>
+		Second OverloadTime { get; }
+		/// <summary>
+		/// MaxTorqueCurve
+		/// </summary>
+		TableData FullLoadCurve { get; }
 
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
