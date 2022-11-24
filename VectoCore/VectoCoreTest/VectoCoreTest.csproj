@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
     <ProjectReference Include="..\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 

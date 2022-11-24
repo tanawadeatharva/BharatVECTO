@@ -856,10 +856,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				
 				dcdc.Connect(elAux);
 			
-
-
-
-
 				dcdc.Initialize();
             }
 
@@ -1127,7 +1123,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static void AddElectricAuxiliary(VectoRunData data, VehicleContainer container, ElectricSystem es)
 		{
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
 			es.Connect(aux);
         }

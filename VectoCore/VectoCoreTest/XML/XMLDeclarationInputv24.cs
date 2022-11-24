@@ -367,7 +367,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("aaaaa", eMachine.AppVersion);
 			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachineType);
 			Assert.AreEqual(CertificationMethod.Measured, eMachine.CertificationMethod);
-			Assert.AreEqual(1.SI<Watt>(), eMachine.R85RatedPower);
+			Assert.AreEqual(50000.SI<Watt>(), eMachine.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.Inertia);//RotationalInertia
 			//Assert.AreEqual(200.00.SI<NewtonMeter>(), eMachine.ContinuousTorque);
 			//Assert.AreEqual(2000.00.SI<PerSecond>(), eMachine.ContinuousTorqueSpeed);//TestSpeedContinuousTorque
@@ -1333,7 +1333,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("aaaaa", iepcData.AppVersion);
 			Assert.AreEqual(ElectricMachineType.ASM, iepcData.ElectricMachineType);
 			Assert.AreEqual(CertificationMethod.Measured, iepcData.CertificationMethod);
-			Assert.AreEqual(1.SI<Watt>(), iepcData.R85RatedPower);
+			Assert.AreEqual(50000.SI<Watt>(), iepcData.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), iepcData.Inertia);//RotationalInertia
 			Assert.AreEqual(false, iepcData.DifferentialIncluded);
 			Assert.AreEqual(false, iepcData.DesignTypeWheelMotor);

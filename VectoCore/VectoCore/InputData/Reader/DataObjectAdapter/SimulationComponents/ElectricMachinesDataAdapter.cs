@@ -35,22 +35,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		}
 
-		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
+		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines, 
+			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits)
 		{
 			if (torqueLimits == null) {
 				return;
 			}
 			
-			
 			foreach (var torqueLimit  in torqueLimits.OrderBy(x => x.Key)) {
 				
 				//E-machines at position
-				foreach(var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(e => e.ElectricMachine))
-				{
+				foreach(var eMachine in electricMachines.Entries.Where(e => e.Position == torqueLimit.Key).Select(x => x.ElectricMachine)) {
 					foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1)) {
 						if (eMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel)) {
 							throw new VectoException(
-								$"Voltage level {torqueLimitVoltageLevel} not found in {eMachine.ElectricMachineType} at position {torqueLimit.Key}");
+								$"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key}");
 						}
 					}
 				}
