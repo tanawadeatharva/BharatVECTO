@@ -210,6 +210,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData PTOCycleDuringStop { get; }
 
+		TableData EPTOCycleDuringStop { get; }
+
 		TableData PTOCycleWhileDriving { get; }
 
 	}

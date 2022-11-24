@@ -543,6 +543,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
+			container[ModalResultField.n_gbx_in_avg] = avgInAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 			container[ModalResultField.T_gbx_in] = CurrentState.InTorque;
 

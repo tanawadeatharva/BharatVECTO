@@ -74,7 +74,7 @@
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
+</ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net45'">
     <Reference Include="Microsoft.VisualBasic" />
@@ -110,8 +110,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj" />
+    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -140,6 +144,7 @@
   <ItemGroup>
     <Folder Include="InputData\Reader\DataObjectAdapter\CompletedBus\Generic\" />
     <Folder Include="InputData\Reader\DataObjectAdapter\SimulationComponents\StrategyDataAdapter\" />
+    <Folder Include="Models\SimulationComponent\Impl\Controller\" />
   </ItemGroup>
 
 </Project>

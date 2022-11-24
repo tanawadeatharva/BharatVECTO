@@ -72,6 +72,8 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly EPtoCycleStandstill As SubPath
+	
 	Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
@@ -123,6 +125,7 @@ Public Class Vehicle
 		ReessPacks = New List(Of Tuple(Of String, Integer, Integer))
 		PtoLossMap = New SubPath()
 		PtoCycleStandstill = New SubPath()
+		EPtoCycleStandstill = New SubPath()
 		PtoCycleDriving = New SubPath()
 		ElectricMotorFile = New SubPath()
 		ElectricMotorMechLossMap = New SubPath()
@@ -162,7 +165,7 @@ Public Class Vehicle
 				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle)
 				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
-				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle)
+				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
@@ -243,6 +246,7 @@ Public Class Vehicle
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
 		PtoCycleStandstill.Clear()
+		EPtoCycleStandstill.Clear()
 		PtoCycleDriving.Clear()
 
 		Axles.Clear()
@@ -599,7 +603,16 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
+    Public ReadOnly Property EPTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.EPTOCycleDuringStop
+		Get
+			If String.IsNullOrWhiteSpace(EPtoCycleStandstill.FullPath) Then
+				Return Nothing
+			End If
+			Return VectoCSVFile.Read(EPtoCycleStandstill.FullPath)
+		End Get
+	End Property
+
+    Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
 			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then

@@ -83,12 +83,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void AddCycle(string auxId)
 		{
 			Add(auxId, (nEng, absTime, dt, dryRun) => DataBus.DrivingCycleInfo.CycleData.LeftSample.AdditionalAuxPowerDemand);
+
 		}
 
 		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc, string columnName = null)
 		{
 			Add(auxId, (nEng, absTime, dt, dryRun) => powerLossFunc(DataBus.DrivingCycleInfo.CycleData.LeftSample), columnName);
 		}
+
 
 
 		/// <summary>
@@ -144,13 +146,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
-				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN, Constants.Auxiliaries.IDs.ENG_AUX_MECH_STP
+				Constants.Auxiliaries.IDs.SteeringPump, 
+				Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.PTOConsumer, 
+				Constants.Auxiliaries.IDs.PTOTransmission,
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN, 
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_STP
 			};
 			var auxiliarieIgnoredDuringDrive = new[] {
 				Constants.Auxiliaries.IDs.Fan,
-				Constants.Auxiliaries.IDs.ENG_AUX_MECH_FAN
+				Constants.Auxiliaries.IDs.ENGMode_AUX_MECH_FAN
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();

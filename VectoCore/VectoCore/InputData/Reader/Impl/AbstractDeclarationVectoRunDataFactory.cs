@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			//}
 		}
 
-		public IEnumerable<VectoRunData> NextRun()
+		public virtual IEnumerable<VectoRunData> NextRun()
 		{
 		
 			Initialize();
@@ -80,22 +80,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected abstract void Initialize();
 
-		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx,
+		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 			Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
+			int? modeIdx = null,
 			VectoRunData.OvcHevMode ovcMode = VectoRunData.OvcHevMode.NotApplicable);
 
 		protected virtual void InitializeReport()
 		{
+			return; // TODO <- remove
 			VectoRunData powertrainConfig;
 			List<List<FuelData.Entry>> fuels;
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>());
+				powertrainConfig = CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
 				powertrainConfig = _segment.Missions.Select(
 												mission => CreateVectoRunData(
-													vehicle, 0, mission, mission.Loadings.First()))
+													vehicle, mission, mission.Loadings.First(), 0))
 											.FirstOrDefault(x => x != null);
 				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
 								.ToList();

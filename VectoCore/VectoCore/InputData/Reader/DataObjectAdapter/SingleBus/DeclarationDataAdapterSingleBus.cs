@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return _engineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public DriverData CreateDriverData()
+			public DriverData CreateDriverData(Segment segment)
 			{
-				return _driverDataAdapter.CreateDriverData();
+				return _driverDataAdapter.CreateDriverData(segment);
 			}
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gearboxInputData)
@@ -100,15 +100,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 			public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio,
 				PerSecond engineIdlingSpeed)
 			{
-				return _gearboxDataAdapter.CreateGearshiftData(gbx, axleRatio, engineIdlingSpeed);
+				return _gearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gbx.Type, gbx.Gears.Count);
 			}
 
 			public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 				IBusAuxiliariesDeclarationData busAuxInput, MissionType mission,
-				VehicleClass segment, Meter vehicleLength, int? numSteeredAxles)
+				VehicleClass segment, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
 			{
 				return _busAuxiliaryDataAdapter.CreateAuxiliaryData(auxInputData, busAuxInput, mission, segment,
-					vehicleLength, numSteeredAxles);
+					vehicleLength, numSteeredAxles, jobType);
 			}
 
 			public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission,

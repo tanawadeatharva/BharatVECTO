@@ -53,6 +53,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -835,7 +836,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				var gbxType = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type;
 				Assert.AreEqual(gearboxType, gbxType.ToXMLFormat());
-				Assert.IsTrue(DeclarationDataAdapterHeavyLorry.Conventional.SupportedGearboxTypes.Contains(gbxType));
+				Assert.IsTrue(DeclarationDataAdapterHeavyLorry.Conventional.SupportsGearboxTypes.Contains(gbxType));
 			}
 		}
 
@@ -1109,7 +1110,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Electric driven pump", steeringPump.Technology[1]);
 
 			Assert.AreEqual(
-				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).Value());
+				616.2, DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class5, steeringPump.Technology).electricPumps.Value());
 		}
 	}
 }

@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 						primaryBusAuxiliaries, mission.MissionType, primarySegment.VehicleClass,
 						mission.BusParameter.VehicleLength,
-						PrimaryVehicle.Components.AxleWheels.NumSteeredAxles),
+						PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType),
 					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 					Retarder = _retarderData,
 					DriverData = _driverData,
@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				_retarderData = DataAdapterGeneric.CreateRetarderData(PrimaryVehicle.Components.RetarderInputData);
 
 
-				_driverData = DataAdapterGeneric.CreateDriverData();
+				_driverData = DataAdapterGeneric.CreateDriverData(_segmentCompletedBus);
 				_driverData.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segmentCompletedBus.AccelerationFile);
 			}
 

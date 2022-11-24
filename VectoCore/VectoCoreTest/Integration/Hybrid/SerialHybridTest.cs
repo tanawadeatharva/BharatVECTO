@@ -710,7 +710,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
-			var aux = new ElectricAuxiliary(container);
+			var aux = new HighVoltageElectricAuxiliary(container);
 			aux.AddConstant("P_aux_el", pAuxEl.SI<Watt>());
 			es.Connect(aux);
 

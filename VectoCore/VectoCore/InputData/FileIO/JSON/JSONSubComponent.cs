@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -225,7 +226,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	internal class JSONPTOTransmissioninputData : JSONSubComponent, IPTOTransmissionInputData
 	{
-		public JSONPTOTransmissioninputData(JSONVehicleDataV7 vehicle) : base(vehicle) { }
+		public JSONPTOTransmissioninputData(JSONVehicleDataV7 vehicle) : base(vehicle)
+		{
+
+		}
 
 		#region IPTOTransmissionInputData
 
@@ -295,23 +299,83 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData PTOCycleDuringStop
 		{
-			get {
-				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
-					return null;
+			get
+			{
+
+				var ePtoTableData = GetEPTOCycle();
+				var ptoTableData = GetPTOCycle();
+				ThrowIfBothTablesArePresent(ePtoTableData, ptoTableData);
+				return ptoTableData;
+			}
+		}
+
+		private TableData GetPTOCycle()
+		{
+			var pto = Body[JsonKeys.Vehicle_PTO];
+			var cycle = pto?[JsonKeys.Vehicle_PTO_Cycle];
+			if (cycle == null) {
+				return null;
+			}
+
+			if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+				return null;
+			}
+
+			try {
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle),
+					"PTO Cycle Standstill");
+			} catch (Exception) {
+				if (!TolerateMissing) {
+					throw;
 				}
-				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
-				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
-					return null;
+
+				return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + JSONFile.MissingFileSuffix,
+					DataSourceType.Missing);
+			}
+		}
+
+		public TableData EPTOCycleDuringStop
+		{
+			get
+			{
+				var ePtoTableData = GetEPTOCycle();
+				var ptoTableData = GetPTOCycle();
+				ThrowIfBothTablesArePresent(ePtoTableData, ptoTableData);
+				return ePtoTableData;
+			}
+
+		}
+
+		private void ThrowIfBothTablesArePresent(TableData epto, TableData pto)
+		{
+			if((epto != null && pto != null)) {
+				throw new VectoException(
+					$"Setting {JsonKeys.Vehicle_PTO_Cycle} AND {JsonKeys.Vehicle_EPTO_Cycle} is not allowed");
+			}
+		}
+
+		private TableData GetEPTOCycle()
+		{
+			var pto = Body[JsonKeys.Vehicle_PTO];
+			var cycle = pto?[JsonKeys.Vehicle_EPTO_Cycle];
+			if (cycle == null) {
+				return null;
+			}
+
+			if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+				return null;
+			}
+
+			try {
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_EPTO_Cycle),
+					"EPTO Cycle Standstill");
+			} catch (Exception) {
+				if (!TolerateMissing) {
+					throw;
 				}
-				try {
-					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "PTO Cycle Standstill");
-				} catch (Exception) {
-					if (!TolerateMissing) {
-						throw;
-					}
-					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + JSONFile.MissingFileSuffix, DataSourceType.Missing);
-				}
+
+				return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + JSONFile.MissingFileSuffix,
+					DataSourceType.Missing);
 			}
 		}
 

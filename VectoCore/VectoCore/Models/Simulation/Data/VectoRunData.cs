@@ -45,8 +45,10 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Battery;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
@@ -71,6 +73,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			Exempted = false;
 			JobType = VectoSimulationJobType.ConventionalVehicle;
+			DCDCData = new DCDCData() {
+				DCDCEfficiency = DeclarationData.DCDCEfficiency,
+			};
 		}
 
 		public VectoSimulationJobType JobType { get; internal set; }
@@ -143,6 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public SuperCapData SuperCapData { get; internal set; }
 
+		public DCDCData DCDCData { get; internal set; }
 
 		public SimulationType SimulationType { get; internal set; }
 
@@ -178,20 +184,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public class AuxData
 		{
+			public delegate Watt PowerDemandFunc(IDataBus dataBus, bool mechPower = true);
 			// ReSharper disable once InconsistentNaming
 			public string ID;
 
 			public IList<string> Technology;
 
-			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandMech;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemandElectric;
 
 			[JsonIgnore]
-			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandFunc;
+			public Func<DrivingCycleData.DrivingCycleEntry, Watt> PowerDemandMechCycleFunc;
+
+			[JsonIgnore] public PowerDemandFunc PowerDemandDataBusFunc;
+
+
 
 			[Required] public AuxiliaryDemandType DemandType;
 
+			[Required] public bool ConnectToREESS;
+
+			[Required] public bool IsFullyElectric;
 
 			public MissionType? MissionType;
+
+
+
 		}
 
 		// container to pass genset data from powertrain to post-processing, not filled by dataadapter/rundatafactory

@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -68,6 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
+		public static readonly Watt MinEnginePowerForEMS_PEV = 300e3.SI<Watt>();
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
 		public static readonly PrimaryBusSegments PrimaryBusSegments = new PrimaryBusSegments();
@@ -87,10 +89,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
+		public static readonly Conditioning Conditioning = new Conditioning();
 		public static readonly Payloads Payloads = new Payloads();
 
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;
 
@@ -100,6 +104,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
 		public const double AlternatorEfficiency = 0.7;
+		public const double DCDCEfficiency = 1.0;
+
+		public const double HVACElectricEfficiencyFactor = 0.8;
 
 		public const double WHRChargerEfficiency = 0.98;
 
@@ -1231,6 +1238,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const string DefaultPTOActivationCycle =
 				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
+
+			public const string DefaultE_PTOActivationCycle = DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoel";
 		}
 
 		public static class VTPMode
@@ -1296,11 +1305,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Battery
 		{
+			public static GenericSOC GenericSOC = new GenericSOC();
+
 			/// <summary>
 			/// Percentage of the maximum voltage of the battery
 			/// </summary>
-			private const double SOCMinHP = 0.2;
-			private const double SOCMaxHP = 0.8;
+			private const double SOCMinHP = 0.05;
+			private const double SOCMaxHP = 0.95;
 
 			private const double SOCMinHE = 0.05;
 			private const double SOCMaxHE = 0.95;
@@ -1318,6 +1329,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						throw new ArgumentOutOfRangeException(nameof(type), type, null);
 				}
 			}
+
+			public static double GenericDeterioration => 0.05;
 
 
 			public static double GetMaxSoc(BatteryType type)

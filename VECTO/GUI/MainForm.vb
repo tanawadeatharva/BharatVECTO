@@ -130,6 +130,7 @@ Public Class MainForm
         TransmissionLossMapFileBrowser = New FileBrowser("vtlm")
         PtoLossMapFileBrowser = New FileBrowser("vptol")
         PTODrivingCycleStandstillFileBrowser = New FileBrowser("vptoc")
+        PTODrivingCycleElectricStandstillFileBrowser = New FileBrowser("vptoel")
         PTODrivingCycleDrivingFileBrowser = New FileBrowser("vptor")
         TorqueConverterFileBrowser = New FileBrowser("vtcc")
         TorqueConverterShiftPolygonFileBrowser = New FileBrowser("vgbs")
@@ -1094,7 +1095,7 @@ lbFound:
                                  $"Starting Simulation ({JobFileList.Count} Jobs, {jobContainer.GetProgress().Count _
                                  } Runs)"})
 
-        jobContainer.Execute(True)
+        jobContainer.Execute(Cfg.Multithreaded)
 
         Dim start As DateTime = DateTime.Now()
 

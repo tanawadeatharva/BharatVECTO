@@ -369,7 +369,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 			return gearsInput;
 		}
-
 	}
 }
 
