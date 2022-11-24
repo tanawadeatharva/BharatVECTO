@@ -672,8 +672,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			Assert.AreEqual(140.865, genericBusParam.BusSurfaceArea.Value(), 1e-3);
 			Assert.AreEqual(134.783, specificBusParam.BusSurfaceArea.Value(), 1e-3);
 
-			Assert.AreEqual(81.09, genericBusParam.BusVolume.Value(), 1e-3);
-			Assert.AreEqual(75.4162, specificBusParam.BusVolume.Value(), 1e-3);
+			Assert.AreEqual(81.09, genericBusParam.BusVolumeVentilation.Value(), 1e-3);
+			Assert.AreEqual(75.4162, specificBusParam.BusVolumeVentilation.Value(), 1e-3);
 		}
 
 		private void AssertPassengerCount(double genericLoading, double specificLoading, int index)
@@ -1126,6 +1126,39 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+        [TestCase(@"TestData\Integration\Buses\FactorMethod\SingleBus_41-32b.vecto", TestName = "HVAC_Heating RunSingleBusSimulation Group 41/32b"),]
+		public void TestRunPrimaryOrSingleBusSimulationHVACHeating(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, validate: false);
+			factory.WriteModalResults = true;
+			//var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			//	WriteModalResults = true,
+			//	//ActualModalData = true,
+			//	Validate = false
+			//};
+			var jobContainer = new JobContainer(new SummaryDataContainer(writer));
+
+            var runs = factory.SimulationRuns().ToArray();
+            var runIdx = 0;
+            runs[runIdx].Run();
+
+            Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+
+   //         jobContainer.AddRuns(factory);
+
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat(progress.Select(r => r.Value.Error)));
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat(jobContainer.Runs.Select(r => r.ExecException)));

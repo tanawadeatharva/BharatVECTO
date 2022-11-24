@@ -26,7 +26,8 @@ static internal class SSMBusAuxModelParameters
 		bool airElectricHeater, bool waterElectricHeater, bool otherElectricHeater,
 		BusHVACSystemConfiguration hvacConfig, bool doubleGlazing, bool adjustableAuxHeater,
 		bool separateAirdistributionDicts, bool adjustableCoolantThermostat, bool engineWasteGasHeatExchanger,
-		string[] steeringpumps, string fanTech, AlternatorType alternatorTech, Meter entranceHeight)
+		string[] steeringpumps, string fanTech, AlternatorType alternatorTech, Meter entranceHeight,
+		LoadingType loading = LoadingType.ReferenceLoad)
 	{
 		var dao = new SpecificCompletedBusAuxiliaryDataAdapter(new PrimaryBusAuxiliaryDataAdapter());
 
@@ -106,7 +107,7 @@ static internal class SSMBusAuxModelParameters
 
 		var runData = new VectoRunData() {
 			Mission = mission,
-			Loading = LoadingType.ReferenceLoad,
+			Loading = loading,
 			VehicleData = new VehicleData() {
 				VehicleClass = vehicleClass,
 			},

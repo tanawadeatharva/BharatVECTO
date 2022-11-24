@@ -140,6 +140,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public double CoolantHeatTransferredToAirCabinHeater { get; set; }
 
+		public double ElectricWasteHeatToCoolant { get; set; }
 
 		#region Implementation of ISSMInputs
 
@@ -233,6 +234,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double FuelEnergyToHeatToCoolant { get; set; }
 		public double CoolantHeatTransferredToAirCabinHeater { get; set; }
 
+		public double ElectricWasteHeatToCoolant { get; set; }
 		#endregion
 	}
 

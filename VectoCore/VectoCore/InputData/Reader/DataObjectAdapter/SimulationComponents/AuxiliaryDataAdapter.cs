@@ -538,6 +538,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
 				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
 				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+				ElectricWasteHeatToCoolant = Constants.BusAuxiliaries.Heater.ElectricWasteHeatToCoolant,
 				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
 
 				VentilationOnDuringHeating = true,

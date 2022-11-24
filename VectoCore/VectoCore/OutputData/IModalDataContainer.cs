@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -114,13 +115,15 @@ namespace TUGraz.VectoCore.OutputData
 		void FinishSimulation();
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
+
+		string GetColumnName(PowertrainPosition pos, ModalResultField mrf);
 		void Reset();
 
 		Second Duration { get; }
 
 		Meter Distance { get; }
 
-		Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
@@ -162,6 +165,11 @@ namespace TUGraz.VectoCore.OutputData
 		WattSecond WorkWHR { get; }
 		WattSecond WorkBusAuxPSCorr { get; }
 		WattSecond WorkBusAuxESMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
+		WattSecond WorkBusAuxHeatPumpHeatingMech { get; }
+
+		WattSecond WorkBusAuxElectricHeater { get; }
+
 		WattSecond WorkBusAuxCorr { get; }
 		WattSecond EnergyDCDCMissing { get; }
 		Joule AuxHeaterDemand { get; }

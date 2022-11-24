@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -231,6 +232,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		{
+			return string.Format(mrf.GetCaption(), pos.GetName());
+		}
+
 		public void Reset()
 		{
 
@@ -240,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Meter Distance => null;
 
-		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+		public Func<Second, Joule, Joule, HeaterDemandResult> AuxHeaterDemandCalc { get; set; }
 
 		public KilogramPerWattSecond EngineLineCorrectionFactor(IFuelProperties fuel)
 		{

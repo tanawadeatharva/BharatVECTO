@@ -44,7 +44,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		BusHVACSystemConfiguration HVACSystemConfiguration { get; }
 
 		string Source { get; }
-		
+		double ElectricWasteHeatToCoolant { get; }
 	}
 
 	public interface ISSMBusParameters
@@ -394,6 +394,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		double FuelEnergyToHeatToCoolant { get; set; }
 
 		double CoolantHeatTransferredToAirCabinHeater { get; set; }
+		double ElectricWasteHeatToCoolant { get; }
 	}
 
 }

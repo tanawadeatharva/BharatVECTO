@@ -1601,7 +1601,7 @@ public class SSMTestHeatingCooling
 			airElectricHeater: electricHeater != null && (electricHeater & HeaterType.AirElectricHeater) != 0,
 			waterElectricHeater: electricHeater != null && (electricHeater & HeaterType.WaterElectricHeater) != 0,
 			otherElectricHeater: electricHeater != null && (electricHeater & HeaterType.OtherElectricHeating) != 0,
-			hvacConfig, 
+			hvacConfig: hvacConfig, 
 			doubleGlazing: false, 
 			adjustableAuxHeater: false,
 			separateAirdistributionDicts: false, 
@@ -1609,7 +1609,9 @@ public class SSMTestHeatingCooling
 			engineWasteGasHeatExchanger: false,
             steeringpumps: new[] { "Dual displacement" }, 
 			fanTech: "Crankshaft mounted - Discrete step clutch", 
-			alternatorTech: AlternatorType.Conventional, entranceHeight: 0.3.SI<Meter>());
+			alternatorTech: AlternatorType.Conventional, 
+			entranceHeight: 0.3.SI<Meter>(), 
+			loading: LoadingType.ReferenceLoad);
 
 	}
 

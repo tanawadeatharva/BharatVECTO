@@ -187,6 +187,7 @@ namespace TUGraz.VectoCore.Configuration
 			public static class Heater {
 				public const double CoolantHeatTransferredToAirCabinHeater = 0.75;
 				public const double FuelEnergyToHeatToCoolant = 0.2;
+				public const double ElectricWasteHeatToCoolant = 0.9;
 			}
 		}
 

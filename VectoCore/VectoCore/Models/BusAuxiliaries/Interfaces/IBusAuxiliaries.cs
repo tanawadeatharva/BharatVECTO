@@ -12,6 +12,7 @@
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
@@ -107,8 +108,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		Watt PSPowerCompressorDragOnly { get; }
 		Watt HVACMechanicalPowerConsumer { get; }
 		Watt HVACMechanicalPowerGenerated { get; }
-		
-		Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal);
+
+		HeaterDemandResult AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal, Joule electricMotorWasteHeatTotal);
 
 
 		///// <summary>
@@ -156,5 +157,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
         //bool RunStop(ref string message);
 
         void ResetCalculations();
+	}
+
+	public class HeaterDemandResult
+	{
+		public Joule AuxHeater => HeaterPower.AuxHeaterPower * CycleTime;
+
+		public WattSecond HeatPumpElectricEnergy => HeaterPower.HeatPumpPowerEl * CycleTime;
+
+		public WattSecond HeatPumpMechanicalEnergy => HeaterPower.HeatPumpPowerMech * CycleTime;
+
+		public WattSecond ElectricHeaterEnergy => HeaterPower.ElectricHeaterPowerEl * CycleTime;
+
+		public Watt AverageHeatPumpElectricPower => HeaterPower.HeatPumpPowerEl;
+		public Watt AverageHeatPumpMechanicalPower => HeaterPower.HeatPumpPowerMech;
+		public Watt AverageElectricHeaterPower => HeaterPower.ElectricHeaterPowerEl;
+
+		protected HeaterPower HeaterPower;
+
+		public HeaterDemandResult(HeaterPower hPwr, Second cycleTime)
+		{
+			HeaterPower = hPwr;
+			CycleTime = cycleTime;
+		}
+
+		public Second CycleTime { get; }
 	}
 }
