@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -38,13 +40,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			GetDouble(XMLNames.ElectricMachine_ContinuousTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond ContinuousTorqueSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedContinuousTorque).RPMtoRad();
 
 		public virtual NewtonMeter OverloadTorque =>
 			GetDouble(XMLNames.ElectricMachine_OverloadTorque).SI<NewtonMeter>();
 
 		public virtual PerSecond OverloadTestSpeed =>
-			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).SI<PerSecond>();
+			GetDouble(XMLNames.ElectricMachine_TestSpeedOverloadTorque).RPMtoRad();
 
 		public virtual Second OverloadTime =>
 			GetDouble(XMLNames.ElectricMachine_OverloadDuration).SI<Second>();
@@ -99,8 +101,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected virtual IList<IElectricMotorVoltageLevel> GetVoltageLevels()
 		{
 			var voltageLevelNodes = GetNodes(XMLNames.ElectricMachine_VoltageLevel, BaseNode);
-			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0)
+			if (voltageLevelNodes is null || voltageLevelNodes.Count == 0) {
 				return null;
+			}
+
 
 			var voltageLevels = new List<IElectricMotorVoltageLevel>();
 
@@ -119,8 +123,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private IList<IElectricMotorPowerMap> GetPowerMaps()
 		{
 			var powerMapNodes = GetNodes(XMLNames.PowerMap);
-			if (powerMapNodes is null || powerMapNodes.Count == 0)
+			if (powerMapNodes is null || powerMapNodes.Count == 0) {
 				return null;
+			}
+
 
 			var powerMaps = new List<IElectricMotorPowerMap>();
 			foreach (XmlNode powerMapNode in powerMapNodes)
@@ -131,11 +137,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			return powerMaps;
 		}
 
-		
-		public class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
+
+		private class ElectricMotorPowerMap : AbstractXMLType, IElectricMotorPowerMap
 		{
-			private Dictionary<string, string> powerMapMapping = AttributeMappings.EMPowerMap;
-			
+			private static readonly Dictionary<string, string> _powerMapMapping = AttributeMappings.EMPowerMap;
+			private static readonly string _elPowerCol = _powerMapMapping.FirstOrDefault(x => x.Value == XMLNames.PowerMap_ElectricPower).Key;
+
 			public ElectricMotorPowerMap(XmlNode xmlNode) : base(xmlNode) { }
 			
 			#region Implementation of IElectricMotorPowerMap
@@ -146,7 +153,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			private TableData ReadPowerMap()
 			{
 				var powerMapEntryNodes = GetNodes(XMLNames.PowerMap_Entry);
-				return XMLHelper.ReadTableData(powerMapMapping, powerMapEntryNodes);
+				var powerMap = XMLHelper.ReadTableData(_powerMapMapping, powerMapEntryNodes);
+
+
+                var col = powerMap.Columns[_elPowerCol];
+                foreach (DataRow row in powerMap.Rows) {
+					//Convert input data from W to kW
+					row[col] = (row.ParseDouble(col) / 1000).ToString(CultureInfo.InvariantCulture);
+				}
+                return powerMap;
 			}
 
 			#endregion
