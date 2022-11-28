@@ -20,6 +20,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			Source = source;
 			HeatingFuel = heatingFuel ?? FuelData.Diesel;
+			DriverCompartmentLength = 0.SI<Meter>();
+			PassengerCompartmentLength = 0.SI<Meter>();
 		}
 
 		public string Source { get; }

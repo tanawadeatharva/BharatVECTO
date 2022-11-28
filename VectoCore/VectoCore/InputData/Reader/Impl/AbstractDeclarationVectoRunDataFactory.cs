@@ -87,7 +87,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected virtual void InitializeReport()
 		{
-			return; // TODO <- remove
 			VectoRunData powertrainConfig;
 			List<List<FuelData.Entry>> fuels;
 			var vehicle = InputDataProvider.JobInputData.Vehicle;

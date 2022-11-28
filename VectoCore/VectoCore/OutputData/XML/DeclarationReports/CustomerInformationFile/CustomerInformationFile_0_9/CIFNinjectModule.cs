@@ -239,6 +239,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					false)));
 			#endregion
 
+			#region SingleBusCIF
+
+			Bind<IXMLCustomerReport>().To<Conventional_SingleBusCIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.PrimaryBus,
+				VectoSimulationJobType.ConventionalVehicle,
+				ArchitectureID.UNKNOWN,
+				false,
+				false,
+				false)));
+
+			#endregion
+
 			#region VehicleTypes
 			Bind<IXmlTypeWriter>().To<CIFConventionalLorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalLorryVehicleType());
@@ -310,6 +321,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			Bind<IXmlTypeWriter>().To<CIF_ExemptedCompletedBusVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetExemptedCompletedBusVehicleType());
+
+			// ====
+
+			Bind<IXmlTypeWriter>().To<CIF_Conventional_SingleBusVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventional_SingleBusVehicleType());
+
 			#endregion
 
 			#region VehicleGroups
@@ -344,6 +361,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IReportOutputGroup>().To<ConventionalCompletedBusVehicleSequenceGroupCIF>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalCompletedBusVehicleSequenceGroupWriter());
 
+			Bind<IReportOutputGroup>().To<SingleBusVehicleTypeGroup>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetSingleBusVehicleTypeGroup());
+
+
 			#endregion
 			#region ComponentGroups
 			Bind<IReportOutputGroup>().To<EngineGroup>().When(AccessedViaCIFFactory)
@@ -371,6 +392,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IReportOutputGroup>().To<PEVCompletedBusAuxGroup>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEV_CompletedBusAuxGroup());
 
+			Bind<IReportOutputGroup>().To<ConventionalSingleBusAuxGroup>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalSingleBusAuxGroup());
 
 			#endregion
 

@@ -138,11 +138,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#region Overrides of LorryBase
 
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData,
-				AngledriveData angledriveData)
-			{
-				throw new NotImplementedException();
-			}
 			protected override void Initialize()
 			{
 				_segment = GetSegment(InputDataProvider.JobInputData.Vehicle, false);
@@ -157,15 +152,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				ILorryDeclarationDataAdapter declarationDataAdapter) : base(dataProvider, report,
 				declarationDataAdapter) { }
 
-			#region Overrides of LorryBase
-
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData,
-				AngledriveData angledriveData)
-			{
-				throw new NotImplementedException();
-			}
-
-			#endregion
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 

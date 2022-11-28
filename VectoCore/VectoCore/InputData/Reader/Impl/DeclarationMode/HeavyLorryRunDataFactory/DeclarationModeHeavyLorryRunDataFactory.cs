@@ -120,8 +120,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 				_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
 				
-				
-
 				_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 				_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
@@ -130,8 +128,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 
 			}
-
-			protected abstract void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData, AngledriveData angledriveData);
 
 			#region Implementation of IVectoRunDataFactory
 
@@ -212,12 +208,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						}
 					}
 				}
-			}
-
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle,
-				AxleGearData axleGearData, AngledriveData angledriveData)
-			{
-				
 			}
 
 
@@ -416,40 +406,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			}
 
-			#region Overrides of LorryBase
-
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData, AngledriveData angledriveData)
-			{
-				
-				//if (vehicle.ArchitectureID != ArchitectureID.E2) {
-				//	DataAdapter.CreateDummyGearshiftStrategy();
-
-
-
-				//	return;
-				//}
-				//var tmpRunData = new VectoRunData()
-				//{
-				//	GearboxData = new GearboxData()
-				//	{
-				//		Type = vehicle.Components.GearboxInputData.Type,
-				//	}
-				//};
-				//var tempVehicle = DataAdapter.CreateVehicleData(vehicle, _segment, _segment.Missions.First(),
-				//	_segment.Missions.First().Loadings.First(), _allowVocational);
-				//var tmpStrategy = PowertrainBuilder.GetShiftStrategy(new SimplePowertrainContainer(tmpRunData));
-				////var electricMachineData = DataAdapter.CreateElectricMachines(vehicle.Components.ElectricMachines, vehicle.ElectricMotorTorqueLimits, )
-				//_gearboxData = DataAdapter.CreateGearboxData(
-				//	vehicle, new VectoRunData() { ElectricMachinesData = null, AxleGearData = axleGearData, VehicleData = tempVehicle },
-				//	tmpStrategy);
-				//_gearshiftData = DataAdapter.CreateGearshiftData(
-				//	_gearboxData, axleGearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0),
-				//	null, _gearboxData.Type, _gearboxData.Gears.Count);
-			}
-			
-
-			#endregion
-
 			#endregion
 		}
 
@@ -500,15 +456,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#endregion
 
-			#region Overrides of LorryBase
-
-			protected override void SetGearboxAndGearshiftData(IVehicleDeclarationInputData vehicle, AxleGearData axleGearData,
-				AngledriveData angledriveData)
-			{
-				throw new NotImplementedException();
-			}
-
-			#endregion
 		}
 		
 	}

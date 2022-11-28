@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected override void WriteResult(ResultEntry result)
 		{
-			base.WriteResult(result);
+			ManufacturerRpt.WriteResult(result);
+			//base.WriteResult(result);
 			VehicleInformationFile.WriteResult(result);
 		}
 
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
-			CustomerRpt.GenerateReport(fullReportHash);
+			//CustomerRpt.GenerateReport(fullReportHash);
 			VehicleInformationFile.GenerateReport(fullReportHash);
 		}
 

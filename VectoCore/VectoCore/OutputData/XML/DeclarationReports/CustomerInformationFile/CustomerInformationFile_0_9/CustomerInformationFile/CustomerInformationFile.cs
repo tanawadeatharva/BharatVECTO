@@ -413,4 +413,73 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 	#endregion
+
+	#region SingleBus
+
+	public abstract class CustomerInformationFileSingleBus : CustomerInformationFile
+	{
+		protected XElement InputDataIntegrityPrimaryVehicle { get; set; }
+
+		protected XElement ManufacturerReportIntegrityPrimaryVehicle { get; set; }
+
+		protected CustomerInformationFileSingleBus(ICustomerInformationFileFactory cifFactory) :
+			base(cifFactory)
+		{ }
+
+		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		{
+			InitializeVehicleData(modelData.InputData);
+			_ovc = modelData.VehicleData.Ocv;
+
+			var inputData = modelData.InputData as ISingleBusInputDataProvider;
+			if (inputData == null) {
+				throw new VectoException("CompletedBus CustomerInformationFile requires SingleBusInputData");
+			}
+			Results = new XElement(Cif_0_9 + "Results");
+			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
+				//inputData.JobInputData.ConsolidateManufacturingStage.Signature == null ? 
+					XMLHelper.CreateDummySig(_di)
+					//: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di)
+				);
+			//new XElement());
+			InputDataIntegrityPrimaryVehicle = new XElement(Cif_0_9 + "InputDataSignaturePrimaryVehicle",
+				//inputData.PrimaryVehicle..ToXML(_di)
+				XMLHelper.CreateDummySig(_di)
+				);
+			ManufacturerReportIntegrityPrimaryVehicle =
+				new XElement(Cif_0_9 + "ManufacturerRecordSignaturePrimaryVehicle", 
+					XMLHelper.CreateDummySig(_di)
+					//inputData.JobInputData.PrimaryVehicle.ManufacturerRecordHash.ToXML(_di)
+					);
+		}
+
+		protected override IList<XElement> GetReportContents(XElement resultSignature)
+		{
+			return new[] {
+				Vehicle,
+				InputDataIntegrityPrimaryVehicle,
+				ManufacturerReportIntegrityPrimaryVehicle,
+				InputDataIntegrity,
+				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
+				Results,
+				XMLHelper.GetApplicationInfo(Cif_0_9)
+			};
+		}
+	}
+
+	public class Conventional_SingleBusCIF : CustomerInformationFileSingleBus
+	{
+		public override string OutputDataType => "Conventional_CompletedBusOutputType";
+
+		public Conventional_SingleBusCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory)
+		{
+		}
+
+		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _cifFactory.GetConventional_SingleBusVehicleType().GetElement(inputData);
+		}
+	}
+
+	#endregion
 }

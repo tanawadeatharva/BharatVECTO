@@ -17,6 +17,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
@@ -585,11 +586,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 
-		public virtual ISSMDeclarationInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData,
+		public virtual SSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData,
 			Mission mission,
 			LoadingType loadingType, BusHVACSystemConfiguration applicableHVACConfiguration,
 			HeatPumpType driverHeatpumpType, HeatPumpType passengerHeatpumpType, Watt auxHeaterPower,
-			IFuelProperties heatingFuel)
+			IFuelProperties heatingFuel, bool cooling)
 		{
 			var busParams = mission.BusParameter;
 			
@@ -636,16 +637,28 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			//retVal.HVACCompressorType = passengerHeatpumpType; // use passenger compartment
 
-			retVal.DriverCompartmentLength = applicableHVACConfiguration.RequiresDriverAC()
-				? applicableHVACConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2, BusHVACSystemConfiguration.Configuration4)
-					? 2 * Constants.BusParameters.DriverCompartmentLength
-					: Constants.BusParameters.DriverCompartmentLength
-				: 0.SI<Meter>();
-			retVal.PassengerCompartmentLength = applicableHVACConfiguration.RequiresPassengerAC()
-				? applicableHVACConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2, BusHVACSystemConfiguration.Configuration4)
-					? 0.SI<Meter>()
-					: internalLength - Constants.BusParameters.DriverCompartmentLength
-				: 0.SI<Meter>();
+			if (cooling) {
+				retVal.DriverCompartmentLength = applicableHVACConfiguration.RequiresDriverAC()
+					? applicableHVACConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2,
+						BusHVACSystemConfiguration.Configuration4)
+						? 2 * Constants.BusParameters.DriverCompartmentLength
+						: Constants.BusParameters.DriverCompartmentLength
+					: 0.SI<Meter>();
+				retVal.PassengerCompartmentLength = applicableHVACConfiguration.RequiresPassengerAC()
+					? applicableHVACConfiguration.IsOneOf(BusHVACSystemConfiguration.Configuration2,
+						BusHVACSystemConfiguration.Configuration4)
+						? 0.SI<Meter>()
+						: internalLength - Constants.BusParameters.DriverCompartmentLength
+					: 0.SI<Meter>();
+			} else {
+				retVal.DriverCompartmentLength = applicableHVACConfiguration.RequiresDriverAC()
+					? Constants.BusParameters.DriverCompartmentLength
+					: 0.SI<Meter>();
+				retVal.PassengerCompartmentLength = applicableHVACConfiguration.RequiresDriverAC()
+					? internalLength - Constants.BusParameters.DriverCompartmentLength
+					: internalLength;
+			}
+
 			return retVal;
 		}
 
@@ -798,6 +811,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var applicableHVACConfigHeating = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
 				HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentHeating);
 
+			var ssmCooling = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
+				runData.Loading, applicableHVACConfigCooling, HeatPumpType.none,
+				hvacParams.HeatPumpTypePassengerCompartmentCooling, hvacParams.HVACAuxHeaterPower, FuelData.Diesel, true);
+			var ssmHeating = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
+				runData.Loading, applicableHVACConfigHeating, HeatPumpType.none,
+				hvacParams.HeatPumpTypePassengerCompartmentHeating, hvacParams.HVACAuxHeaterPower, FuelData.Diesel,
+				false);
+			ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
+			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
+
 			var retVal = new AuxiliaryConfig
 			{
 				InputData = primaryVehicle.Components.BusAuxiliaries,
@@ -805,14 +828,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(primaryVehicle, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
-				SSMInputsCooling = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission, 
-					runData.Loading, applicableHVACConfigCooling, HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentCooling, hvacParams.HVACAuxHeaterPower, FuelData.Diesel),
-				SSMInputsHeating = CreateSSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
-					runData.Loading, applicableHVACConfigCooling, HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentHeating, hvacParams.HVACAuxHeaterPower, FuelData.Diesel),
+				SSMInputsCooling = ssmCooling,
+				SSMInputsHeating = ssmHeating,
 				VehicleData = runData.VehicleData,
 			};
 
 			return retVal;
+		}
+
+		private HeaterType GetElectricHeater(Mission mission, VectoRunData runData)
+		{
+			HVACParameters hvacParams = null;
+			switch (runData.JobType) {
+				case VectoSimulationJobType.ConventionalVehicle:
+					hvacParams = mission.BusParameter.HVACConventional;
+					break;
+				case VectoSimulationJobType.ParallelHybridVehicle:
+				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.IHPC:
+					hvacParams = mission.BusParameter.HVACHEV;
+					break;
+				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.IEPC_E:
+					hvacParams = mission.BusParameter.HVACPEV;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			return hvacParams.WaterElectricHeater ? HeaterType.WaterElectricHeater : HeaterType.None;
 		}
 
 		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(

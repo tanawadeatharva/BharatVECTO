@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
                 }
             };
 
-			retVal.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+            retVal.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
             return retVal;
         }
         #endregion
