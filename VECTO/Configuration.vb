@@ -32,6 +32,7 @@ Public Class Configuration
 	Public Multithreaded As Boolean
 
 	Public ValidateRunData As Boolean
+	Public SaveVectoRunData As Boolean
 
     public OutputFolder As String
 
@@ -63,6 +64,7 @@ Public Class Configuration
 		ValidateRunData = True
         OutputFolder = ""
 		Multithreaded = True
+		SaveVectoRunData = False
 	End Sub
 
 	Public Sub Load()
@@ -95,6 +97,7 @@ Public Class Configuration
 				DeclMode = body.GetEx(Of Boolean)("DeclMode")
 				ValidateRunData = IsNothing(body("ValidateRunData")) OrElse body.GetEx(Of Boolean)("ValidateRunData")
                 OutputFolder = If(body("OutputFolder") Is Nothing, "", body("OutputFolder").Value(of string)())
+				SaveVectoRunData = body.GetEx(Of Boolean)("SaveRunData")
 			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
@@ -121,6 +124,7 @@ Public Class Configuration
 		body.Add("DeclMode", DeclMode)
 		body.Add("ValidateRunData", ValidateRunData)
         body.Add("OutputFolder", OutputFolder)
+		body.Add("SaveRunData", SaveVectoRunData)
 
 		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
 	End Sub
