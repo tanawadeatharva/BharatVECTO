@@ -29,7 +29,7 @@ xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 					<v2.4:EcoRollWithoutEngineStop>false</v2.4:EcoRollWithoutEngineStop>
 					<v2.4:EcoRollWithEngineStop>false</v2.4:EcoRollWithEngineStop>
 					<v2.4:PredictiveCruiseControl>none</v2.4:PredictiveCruiseControl>
-				</vif:ADAS>
+				</ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
 					<tcl:Entry gear="6" maxTorque="1800"/>
 					<tcl:Entry gear="1" maxTorque="2500"/>
@@ -125,7 +125,7 @@ xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 					<AxleWheels>
 						<Data xsi:type="AxleWheelsDataVIFType">
 							<Axles>
-								<vif:Axle axleNumber="1" xsi:type="AxleDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+								<vif0.1:Axle axleNumber="1" xsi:type="AxleDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<AxleType>VehicleNonDriven</AxleType>
 									<TwinTyres>false</TwinTyres>
 									<Steered>true</Steered>
@@ -151,8 +151,8 @@ xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 											</di:Reference>
 										</Signature>
 									</Tyre>
-								</vif:Axle>
-								<vif:Axle axleNumber="2" xsi:type="AxleDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+								</vif0.1:Axle>
+								<vif0.1:Axle axleNumber="2" xsi:type="AxleDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<AxleType>VehicleDriven</AxleType>
 									<TwinTyres>true</TwinTyres>
 									<Steered>false</Steered>
@@ -178,7 +178,7 @@ xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1"
 											</di:Reference>
 										</Signature>
 									</Tyre>
-								</vif:Axle>
+								</vif0.1:Axle>
 							</Axles>
 						</Data>
 					</AxleWheels>
