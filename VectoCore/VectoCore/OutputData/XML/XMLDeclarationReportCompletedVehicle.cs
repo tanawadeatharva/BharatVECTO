@@ -38,14 +38,14 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				};
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			_weightingFactors = EqualWeighting;
 
 			InstantiateReports(modelData);
 
-			ManufacturerRpt.Initialize(modelData, fuelModes);
-			CustomerRpt.Initialize(modelData, fuelModes);
+			ManufacturerRpt.Initialize(modelData);
+			CustomerRpt.Initialize(modelData);
 		}
 		#endregion
 

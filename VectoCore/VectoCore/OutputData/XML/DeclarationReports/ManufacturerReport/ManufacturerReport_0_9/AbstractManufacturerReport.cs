@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -52,14 +51,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IXMLManufacturerReport
 
-		public abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
+		protected abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 			
-			Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			//Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
 			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}

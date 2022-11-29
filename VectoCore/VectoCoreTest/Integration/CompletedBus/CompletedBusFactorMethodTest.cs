@@ -1311,6 +1311,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			public IVehicleDeclarationInputData PrimaryVehicle { get; set; }
 			public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+			public XElement XMLHashCompleted { get; }
 
 			#endregion
 

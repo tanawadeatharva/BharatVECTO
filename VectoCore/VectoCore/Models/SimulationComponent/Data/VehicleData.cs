@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public ADASData ADAS { get; internal set; }
 		public bool VocationalVehicle { get; internal set; }
 
-		public bool Ocv { get; internal set; }
+		public bool OffVehicleCharging { get; internal set; }
 
 		public class ADASData
 		{

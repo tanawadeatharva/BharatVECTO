@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
@@ -51,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		
 		#region Implementation of IXMLPrimaryVehicleReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
 			Results = new XElement(VIF + XMLNames.Report_Results);

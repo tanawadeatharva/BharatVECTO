@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -80,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -111,7 +110,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 					GetADAS(modelData.VehicleData.ADAS),
-					ComponentData(modelData, fuelModes)
+					ComponentData(modelData)
 					);
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
@@ -136,8 +135,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			);
 		}
 
-		protected virtual XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected virtual XElement[] ComponentData(VectoRunData modelData)
 		{
+			var vehicle = modelData.InputData.JobInputData.Vehicle;
+			var fuelModes = vehicle.Components.EngineInputData.EngineModes.Select(x =>
+					x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
+				.ToList();
 			return new[] {
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineRatedPower,
@@ -299,7 +302,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		#region Implementation of IXMLCustomerReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
 			// MQ 2021-06-14 TODO: fill with meat
 		}

@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 								mission, mission.Loadings.First(), 0))
 						.FirstOrDefault(x => x != null);
 
-				Report.InitializeReport(powertrainConfig, new List<List<FuelData.Entry>>());
+				Report.InitializeReport(powertrainConfig);
 			}
 
 			private VectoRunData GetExemptedVectoRunData()

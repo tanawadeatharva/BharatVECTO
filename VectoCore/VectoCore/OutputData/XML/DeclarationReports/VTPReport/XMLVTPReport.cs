@@ -346,7 +346,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			VehicleClass = modelData.VehicleData.VehicleClass;
 			if (VehicleClass.IsBus()) {
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
 						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckFWDType"),
-						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetEngineDescription(modelData.EngineData, modelData.InputData.JobInputData.Vehicle.TankSystem),
 						GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData.AxleGear.Ratio),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 						GetRetarderDescription(modelData.Retarder),
@@ -387,7 +387,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Vehicle_Components,
 						new XAttribute(xsi + XMLNames.XSIType, "ComponentsTruckType"),
-						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetEngineDescription(modelData.EngineData, modelData.InputData.JobInputData.Vehicle.TankSystem),
 						GetGearboxDescription(modelData.GearboxData),
 						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 						GetRetarderDescription(modelData.Retarder),
@@ -553,8 +553,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
+		private XElement GetEngineDescription(CombustionEngineData engineData, TankSystem? tankSystem)
 		{
+			var fuelModes = engineData.InputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, tankSystem)).ToList())
+				.ToList();
 			return new XElement(
 				tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),

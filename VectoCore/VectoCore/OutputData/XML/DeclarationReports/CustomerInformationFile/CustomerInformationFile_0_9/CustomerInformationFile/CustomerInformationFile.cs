@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -30,7 +29,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetConventionalLorryVehicleType().GetElement(inputData);
 		}
@@ -45,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_PxLorryVehicleType().GetElement(inputData);
 		}
@@ -59,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S2_LorryVehicleType().GetElement(inputData);
 		}
@@ -74,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S3_LorryVehicleType().GetElement(inputData);
 		}
@@ -89,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S4_LorryVehicleType().GetElement(inputData);
 		}
@@ -104,7 +103,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_IEPC_LorryVehicleType().GetElement(inputData);
 		}
@@ -119,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E2_LorryVehicleType().GetElement(inputData);
 		}
@@ -134,7 +133,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E3_LorryVehicleType().GetElement(inputData);
 		}
@@ -149,7 +148,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E4_LorryVehicleType().GetElement(inputData);
 
@@ -167,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractCustomerReport
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_IEPC_LorryVehicleType().GetElement(inputData);
 		}
@@ -184,7 +183,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_Exempted_LorryOutputType;
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetExempted_LorryVehicleType().GetElement(inputData);
 		}
@@ -206,16 +205,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected CustomerInformationFileCompletedBus(ICustomerInformationFileFactory cifFactory) :
 			base(cifFactory) { }
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
 			}
-			Results = new XElement(Cif_0_9 + "Results");
+			//Results = new XElement(Cif_0_9 + "Results");
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
@@ -249,7 +248,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         {
         }
 
-        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
         {
 			Vehicle = _cifFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -263,7 +262,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_Px_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -277,7 +276,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         {
         }
 
-        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
         {
             Vehicle = _cifFactory.GetHEV_IHPC_CompletedBusVehicleType().GetElement(inputData);
         }
@@ -291,7 +290,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S2_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -305,7 +304,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S3_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -319,7 +318,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_S4_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -333,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetHEV_IEPC_S_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -347,7 +346,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E2_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -361,7 +360,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E3_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -375,7 +374,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_E4_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -389,7 +388,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetPEV_IEPC_CompletedBusVehicleType().GetElement(inputData);
 		}
@@ -404,7 +403,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override string OutputDataType => XMLNames.CIF_OutputDataType_Exempted_CompletedBusOutputType;
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetExemptedCompletedBusVehicleType().GetElement(inputData);
 		}
@@ -426,26 +425,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			base(cifFactory)
 		{ }
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 
 			var inputData = modelData.InputData as ISingleBusInputDataProvider;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus CustomerInformationFile requires SingleBusInputData");
 			}
-			Results = new XElement(Cif_0_9 + "Results");
+			//Results = new XElement(Cif_0_9 + "Results");
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
-				//inputData.JobInputData.ConsolidateManufacturingStage.Signature == null ? 
-					XMLHelper.CreateDummySig(_di)
-					//: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di)
-				);
+				inputData.XMLHashCompleted);
 			//new XElement());
 			InputDataIntegrityPrimaryVehicle = new XElement(Cif_0_9 + "InputDataSignaturePrimaryVehicle",
-				//inputData.PrimaryVehicle..ToXML(_di)
-				XMLHelper.CreateDummySig(_di)
-				);
+                inputData.XMLHash);
 			ManufacturerReportIntegrityPrimaryVehicle =
 				new XElement(Cif_0_9 + "ManufacturerRecordSignaturePrimaryVehicle", 
 					XMLHelper.CreateDummySig(_di)
@@ -475,7 +469,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 		}
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _cifFactory.GetConventional_SingleBusVehicleType().GetElement(inputData);
 		}

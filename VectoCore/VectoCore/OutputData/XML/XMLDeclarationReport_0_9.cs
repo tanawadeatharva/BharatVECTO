@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -36,10 +34,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_vifFactory = vifFactory;
 		}
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			base.InitializeReport(modelData, fuelModes);
-			VehicleInformationFile.Initialize(modelData, fuelModes);
+			base.InitializeReport(modelData);
+			VehicleInformationFile.Initialize(modelData);
 		}
 
 
@@ -135,7 +133,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#endregion
 
-		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void InitializeReport(VectoRunData modelData)
 		{
 			//_multistageBusReport =
 			//	modelData.Exempted ? new XMLMultistageExemptedBusReport() : new XMLMultistageBusReport();

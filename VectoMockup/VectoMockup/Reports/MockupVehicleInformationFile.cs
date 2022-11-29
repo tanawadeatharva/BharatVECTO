@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -77,9 +75,9 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Implementation of IXMLPrimaryVehicleReport
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public void Initialize(VectoRunData modelData)
 		{
-			_vehicleInformationFileImplementation.Initialize(modelData, fuelModes);
+			_vehicleInformationFileImplementation.Initialize(modelData);
 			_modelData = modelData;
 		}
 

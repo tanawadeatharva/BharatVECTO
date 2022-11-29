@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -48,15 +47,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 
-		public abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
+		protected abstract void InitializeVehicleData(IDeclarationInputDataProvider inputData);
 
 		#region Implementation of IXMLCustomerReport
 
-		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
-			Results = new XElement(Cif_0_9 + "Results");
+			_ovc = modelData.VehicleData.OffVehicleCharging;
+			//Results = new XElement(Cif_0_9 + "Results");
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}

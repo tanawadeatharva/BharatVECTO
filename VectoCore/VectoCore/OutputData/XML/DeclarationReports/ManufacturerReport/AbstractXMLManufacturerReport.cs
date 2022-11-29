@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 			throw new NotImplementedException();
 		}
 
-		public abstract void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		public abstract void Initialize(VectoRunData modelData);
 
 		public virtual void GenerateReport()
 		{
@@ -306,10 +306,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 				: new XElement(tns + XMLNames.Vehicle_TorqueLimits, limits.Cast<object>().ToArray());
 		}
 
-		protected abstract XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
+		protected abstract XElement VehicleComponents(VectoRunData modelData);
 
-		protected virtual XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
+		protected virtual XElement GetEngineDescription(CombustionEngineData engineData, TankSystem? tankSystem)
 		{
+			var fuelModes = engineData.InputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, tankSystem)).ToList())
+				.ToList();
 			return new XElement(
 				tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),

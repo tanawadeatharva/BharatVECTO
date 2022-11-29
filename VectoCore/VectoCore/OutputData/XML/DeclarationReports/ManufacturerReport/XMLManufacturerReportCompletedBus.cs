@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 
 		#region Overrides of AbstractXMLManufacturerReport
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			_tankSystem = modelData.VehicleData.InputData.TankSystem;
 			VehiclePart.Add(
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 					new XElement(tns + XMLNames.Bus_VehicleWidth, modelData.VehicleData.InputData.Width.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology, modelData.VehicleData.InputData.DoorDriveTechnology.ToXMLFormat()),
 					
-					VehicleComponents(modelData, fuelModes),
+					VehicleComponents(modelData),
 					GetInputDataSignature(modelData)
 				)
 			);
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport 
 			return retVal.ToArray();
 		}
 
-		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		protected override XElement VehicleComponents(VectoRunData modelData)
 		{
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,

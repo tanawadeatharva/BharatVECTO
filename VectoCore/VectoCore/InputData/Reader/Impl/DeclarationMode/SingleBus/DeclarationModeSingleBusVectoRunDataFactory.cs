@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 								.ToList())
 						.ToList();
 				}
-				Report.InitializeReport(powertrainConfig, fuels);
+				Report.InitializeReport(powertrainConfig);
 			}
 
 			protected void Initialize()

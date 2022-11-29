@@ -192,8 +192,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		protected virtual HeatingDistributionCase GetHeatingDistributionCase(HeatPumpType heatPump)
 		{
-			return HeatingDistributions.GetHeatingDistributionCase(heatPump, ElectricHeater,
-				AuxHeater.FuelFiredHeaterPower.IsGreater(0));
+			return HeatingDistributions?.GetHeatingDistributionCase(heatPump, ElectricHeater,
+				AuxHeater.FuelFiredHeaterPower.IsGreater(0)) ?? HeatingDistributionCase.HeatingDistribution_NotAvailable_;
 		}
 
 		public HeatingDistributionCasesMap HeatingDistributions { get; set; }

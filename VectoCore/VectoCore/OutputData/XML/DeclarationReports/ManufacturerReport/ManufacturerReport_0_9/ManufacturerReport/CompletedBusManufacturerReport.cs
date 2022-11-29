@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -19,15 +17,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
-		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public override void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
 			}
-			Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
+			//Results = new XElement(Mrf_0_9 + XMLNames.Report_Results);
 			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
@@ -44,9 +42,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override string OutputDataType => "ConventionalCompletedBusManufacturerOutputDataType";
 
-		
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetConventional_CompletedBusVehicleType().GetElement(inputData);
 			//GenerateReport(OutputDataType);
@@ -64,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override string OutputDataType => "HEVCompletedBusManufacturerOutputDataType";
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetHEV_CompletedBusVehicleType().GetElement(inputData);
 			//GenerateReport("HEVCompletedBusManufacturerOutputDataType");
@@ -81,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override string OutputDataType => "PEVCompletedBusManufacturerOutputDataType";
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetPEV_CompletedBusVehicleType().GetElement(inputData);
 			//GenerateReport(OutputDataType);
@@ -98,7 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public override string OutputDataType => "ExemptedCompletedBusManufacturerOutputDataType";
 
-		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
 			Vehicle = _mRFReportFactory.GetExempted_CompletedBusVehicleType().GetElement(inputData);
 			//GenerateReport(OutputDataType);
