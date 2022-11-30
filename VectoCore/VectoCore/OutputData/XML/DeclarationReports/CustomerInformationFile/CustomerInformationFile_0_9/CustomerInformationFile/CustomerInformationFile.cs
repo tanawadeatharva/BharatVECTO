@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -196,8 +197,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	#region CompletedBus
 
-	public abstract class CustomerInformationFileCompletedBus : CustomerInformationFile
+	public abstract class CustomerInformationFileCompletedBus : CustomerInformationFile, IXMLCustomerReportCompletedBus
 	{
+		private bool _allSuccess;
+		private int _resultCount;
 		protected XElement InputDataIntegrityPrimaryVehicle { get; set; }
 
 		protected XElement ManufacturerReportIntegrityPrimaryVehicle { get; set; }
@@ -238,6 +241,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				XMLHelper.GetApplicationInfo(Cif_0_9)
 			};
 		}
+
+		#region Implementation of IXMLCustomerReportCompletedBus
+
+		public void WriteResult(XMLDeclarationReport.ResultEntry genericResult, XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
+		{
+			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
+			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
+			_resultCount++;
+			//Results.Add(
+			//	genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
+			//		? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
+			//		: GetErrorResultEntry(genericResult, specificResult, primaryResult));
+		}
+
+		#endregion
 	}
 
 	public class Conventional_CompletedBusCIF : CustomerInformationFileCompletedBus

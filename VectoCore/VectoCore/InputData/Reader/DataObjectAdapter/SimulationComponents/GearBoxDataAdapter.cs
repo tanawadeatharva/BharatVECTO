@@ -388,6 +388,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public const double GearEfficiencyDirectGear = 0.98;
 		public const double GearEfficiencyIndirectGear = 0.96;
 		public const double GearEfficiencyAT = 0.925;
+
 		public GenericCompletedBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(
 			torqueConverterDataAdapter)
 		{
@@ -416,5 +417,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		}
 
 		#endregion
+	}
+
+	public class CompletedSpecifigBusGearboxDataAdapter : GenericCompletedBusGearboxDataAdapter
+	{
+		public CompletedSpecifigBusGearboxDataAdapter(ITorqueConverterDataAdapter torqueConverterDataAdapter) : base(torqueConverterDataAdapter) { }
 	}
 }

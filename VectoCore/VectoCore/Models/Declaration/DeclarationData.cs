@@ -198,7 +198,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return Declaration.WeightingGroup.Unknown;
 		}
 
+		public static double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
+			double registeredPassengersStanding, LoadingType loading)
+		{
+			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
+			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
+				? mission.BusParameter.PassengerDensityLow
+				: mission.BusParameter.PassengerDensityRef);
 
+			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading) {
+				throw new VectoException("Unhandled loading type: {0}", loading);
+			}
+
+			var passengerCount = registeredPassengerSeats +
+								(mission.MissionType == MissionType.Coach ? 0 : registeredPassengersStanding);
+
+			return loading == LoadingType.ReferenceLoad
+				? VectoMath.Min(passengerCountRef, passengerCount)
+				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), passengerCount);
+		}
 
 		public static class BusAuxiliaries
 		{

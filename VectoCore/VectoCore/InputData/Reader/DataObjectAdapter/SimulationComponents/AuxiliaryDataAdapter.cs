@@ -923,31 +923,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			_primaryBusDataAdapter = primaryBusDataAdapter as PrimaryBusAuxiliaryDataAdapter;
 		}
-		private double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
-			double registeredPassengersStanding, LoadingType loading)
-		{
-			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(length, width);
-			var passengerCountRef = busFloorArea * (loading == LoadingType.LowLoading
-				? mission.BusParameter.PassengerDensityLow
-				: mission.BusParameter.PassengerDensityRef);
-
-			if (loading != LoadingType.ReferenceLoad && loading != LoadingType.LowLoading)
-			{
-				throw new VectoException("Unhandled loading type: {0}", loading);
-			}
-
-			var passengerCount = registeredPassengerSeats +
-								(mission.MissionType == MissionType.Coach ? 0 : registeredPassengersStanding);
-
-			return loading == LoadingType.ReferenceLoad
-				? VectoMath.Min(passengerCountRef, passengerCount)
-				: VectoMath.Min(passengerCountRef * mission.MissionType.GetLowLoadFactorBus(), passengerCount);
-		}
-
+		
 		#region Avarage Current Demand Calculation
 
-
-		protected bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
+		protected override bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
 			if (consumerName == "Day running lights LED bonus" && (bool)busAux.ElectricConsumers.DayrunninglightsLED)
 				return true;
@@ -1215,7 +1194,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			ssmInputs.BusVolumeVentilation = (ventilationLength - correctionLengthDrivetrainVolume) * correctedBusWidth * internalHeight;
 
 			ssmInputs.UValue = DeclarationData.BusAuxiliaries.UValue(completedVehicle.VehicleCode.GetFloorType());
-			ssmInputs.NumberOfPassengers = GetNumberOfPassengers(
+			ssmInputs.NumberOfPassengers = DeclarationData.GetNumberOfPassengers(
 				mission, internalLength, correctedBusWidth,
 				(completedVehicle.NumberPassengerSeatsLowerDeck ?? 0) + (completedVehicle.NumberPassengerSeatsUpperDeck ?? 0),
 				(completedVehicle.NumberPassengersStandingLowerDeck ?? 0) + (completedVehicle.NumberPassengersStandingUpperDeck ?? 0),

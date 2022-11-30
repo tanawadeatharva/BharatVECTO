@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VectoOutputMultistep xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
-	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
-	 xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
-	 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 ./../../../../../VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
+xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
+xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:vif0.1="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1 ./../../../../../VectoCore/Resources/XSD/VectoOutputMultistep.0.1.xsd">
 	<PrimaryVehicle>
 		<Data xsi:type="PrimaryVehicleDataType" id="VIF-65de7efe65ee4b4cac4c">
 			<Vehicle xsi:type="ConventionalVehicleVIFType">
-				<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
-				<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
+				<Manufacturer>Generic Truck Manufacturer</Manufacturer>
+				<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 				<Model>Generic Model</Model>
 				<VIN>VEH-1234567890_nonSmart</VIN>
 				<Date>2017-02-15T11:00:00Z</Date>
@@ -25,12 +21,12 @@
 				<RetarderRatio>1.000</RetarderRatio>
 				<AngledriveType>None</AngledriveType>
 				<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-				<ADAS xmlns:adas="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xsi:type="adas:AdvancedDriverAssistantSystemsType">
-					<adas:EngineStopStart>true</adas:EngineStopStart>
-					<adas:EcoRollWithoutEngineStop>false</adas:EcoRollWithoutEngineStop>
-					<adas:EcoRollWithEngineStop>true</adas:EcoRollWithEngineStop>
-					<adas:PredictiveCruiseControl>none</adas:PredictiveCruiseControl>
-				</ADAS>
+				<vif:ADAS xsi:type="ADAS_Conventional_Type" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4">
+					<EngineStopStart>true</EngineStopStart>
+					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+					<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+					<PredictiveCruiseControl>none</PredictiveCruiseControl>
+				</vif:ADAS>
 				<TorqueLimits xmlns:tcl="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="tcl:TorqueLimitsType">
 					<tcl:Entry gear="6" maxTorque="1800"/>
 					<tcl:Entry gear="1" maxTorque="2500"/>
@@ -49,9 +45,9 @@
 							<RatedPower>380000</RatedPower>
 							<MaxEngineTorque>2400</MaxEngineTorque>
 							<WHRType>
-								<MechanicalOutputICE xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</MechanicalOutputICE>
-								<MechanicalOutputDrivetrain xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</MechanicalOutputDrivetrain>
-								<ElectricalOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">false</ElectricalOutput>
+								<MechanicalOutputICE>false</MechanicalOutputICE>
+								<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+								<ElectricalOutput>false</ElectricalOutput>
 							</WHRType>
 							<Mode>
 								<IdlingSpeed>560</IdlingSpeed>
@@ -269,7 +265,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">17.81185</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -283,7 +278,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">21.37501</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -297,7 +291,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">14.37972</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -311,7 +304,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">17.36588</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -325,7 +317,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">12.72559</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31SD</PrimaryVehicleSubgroup>
@@ -339,7 +330,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">15.58182</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -353,7 +343,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">18.89946</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -367,7 +356,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">22.89746</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -381,7 +369,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">15.23384</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -395,7 +382,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">18.56793</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -409,7 +395,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">13.41841</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P31DD</PrimaryVehicleSubgroup>
@@ -423,7 +408,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">16.61045</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -437,7 +421,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">10.88604</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -451,7 +434,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">12.24260</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -465,7 +447,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">8.63290</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32SD</PrimaryVehicleSubgroup>
@@ -479,7 +460,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">9.09409</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -493,7 +473,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">11.25244</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -507,7 +486,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">12.91147</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -521,7 +499,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">9.09497</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 				<Result status="success">
 					<PrimaryVehicleSubgroup>P32DD</PrimaryVehicleSubgroup>
@@ -535,7 +512,6 @@
 					<Fuel type="NG CI">
 						<EnergyConsumption unit="MJ/km">9.65550</EnergyConsumption>
 					</Fuel>
-					
 				</Result>
 			</Results>
 			<ApplicationInformation>

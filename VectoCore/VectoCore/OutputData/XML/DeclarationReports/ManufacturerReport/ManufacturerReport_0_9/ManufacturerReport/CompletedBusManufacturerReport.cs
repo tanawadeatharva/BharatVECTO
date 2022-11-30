@@ -7,14 +7,16 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
 {
-	internal abstract class CompletedBusManufacturerReportBase : AbstractManufacturerReport
+	internal abstract class CompletedBusManufacturerReportBase : AbstractManufacturerReport, IXMLManufacturerReportCompletedBus
 	{
 		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
+		private bool _allSuccess;
 		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory) : base(MRFReportFactory) { }
 
 		public override void Initialize(VectoRunData modelData)
@@ -32,6 +34,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di));
 		}
 
+		#region Implementation of IXMLManufacturerReportCompletedBus
+
+		public virtual void WriteResult(XMLDeclarationReport.ResultEntry genericResult,
+			XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult)
+		{
+			_allSuccess &= genericResult.Status == VectoRun.Status.Success;
+			_allSuccess &= specificResult.Status == VectoRun.Status.Success;
+			//Results.Add(
+			//	genericResult.Status == VectoRun.Status.Success && specificResult.Status == VectoRun.Status.Success
+			//		? GetSuccessResultEntry(genericResult, specificResult, primaryResult)
+			//		: GetErrorResultEntry(genericResult, specificResult, primaryResult));
+
+		}
+
+		#endregion
 	}
 
 	internal class Conventional_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase

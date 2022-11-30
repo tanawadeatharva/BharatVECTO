@@ -12,4 +12,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport
 		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
 		void GenerateReport();
 	}
+
+	public interface IXMLManufacturerReportCompletedBus
+	{
+		void WriteResult(XMLDeclarationReport.ResultEntry genericResult,
+			XMLDeclarationReport.ResultEntry specificResult, IResult primaryResult);
+	}
 }

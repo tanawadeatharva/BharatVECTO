@@ -92,8 +92,8 @@ namespace TUGraz.VectoCore.OutputData.XML {
 						genericResult.VehicleClass, genericResult.Mission, genericResult.Payload);
 				}
 
-				(ManufacturerRpt as XMLManufacturerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
-				(CustomerRpt as XMLCustomerReportCompletedBus).WriteResult(genericResult, specificResult, primaryResult);
+				(ManufacturerRpt as IXMLManufacturerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
+				(CustomerRpt as IXMLCustomerReportCompletedBus)?.WriteResult(genericResult, specificResult, primaryResult);
 			}
 
 			GenerateReports();
