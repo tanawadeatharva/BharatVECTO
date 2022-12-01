@@ -743,12 +743,12 @@ namespace VectoHashingTest
 			var variationValid = h2.ValidateHash();
 			Assert.IsTrue(variationValid);
 
-			var message = "";
-			var validatorV = new XMLValidator(xmlDocV, validationErrorAction: (s, ve) => message = ve.Exception.Message);
+			var validatorV = new XMLValidator(xmlDocV, validationErrorAction: (s, ve) => {});
 			var result = validatorV.ValidateXML(XmlDocumentType.DeclarationComponentData);
 
 			Assert.IsFalse(result);
-			Assert.IsTrue(message.Contains("Invalid tyre dimension"));
+			Assert.NotNull(validatorV.ValidationError);
+			Assert.IsTrue(validatorV.ValidationError.Contains("Invalid tyre dimension"));
 		}
 
 		[
@@ -798,13 +798,12 @@ namespace VectoHashingTest
 			xmlDoc.Load(modified);
 			var h = VectoHash.Load(xmlDoc);
 			var hashed = h.AddHash();
-			string message = "";
 			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())),
-				validationErrorAction: (s, ve) => message = ve.Exception.Message);
+				validationErrorAction: (s, ve) => { });
 			var result = validator.ValidateXML(XmlDocumentType.DeclarationComponentData);
 			
 			Assert.IsFalse(result);
-			Assert.IsTrue(message.Contains("Invalid tyre dimension"));
+			Assert.IsTrue(validator.ValidationError.Contains("Invalid tyre dimension"));
 		}
 
 		private XmlReader GetModifiedXML(XDocument doc, string dimension)
