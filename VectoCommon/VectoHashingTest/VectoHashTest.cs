@@ -743,7 +743,7 @@ namespace VectoHashingTest
 			var variationValid = h2.ValidateHash();
 			Assert.IsTrue(variationValid);
 
-			var validatorV = new XMLValidator(xmlDocV, validationErrorAction: (s, ve) => {});
+			var validatorV = new XMLValidator(xmlDocV, validationErrorAction: (s, ve, m) => {});
 			var result = validatorV.ValidateXML(XmlDocumentType.DeclarationComponentData);
 
 			Assert.IsFalse(result);
@@ -799,7 +799,7 @@ namespace VectoHashingTest
 			var h = VectoHash.Load(xmlDoc);
 			var hashed = h.AddHash();
 			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())),
-				validationErrorAction: (s, ve) => { });
+				validationErrorAction: (s, ve, m) => { });
 			var result = validator.ValidateXML(XmlDocumentType.DeclarationComponentData);
 			
 			Assert.IsFalse(result);

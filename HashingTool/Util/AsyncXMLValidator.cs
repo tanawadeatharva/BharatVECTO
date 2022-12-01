@@ -41,7 +41,7 @@ namespace HashingTool.Util
 	{
 		private XMLValidator _validator;
 
-		public AsyncXMLValidator(XmlReader xml, Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
+		public AsyncXMLValidator(XmlReader xml, Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent, string> validationErrorAction)
 		{
 			_validator = new XMLValidator(xml, resultaction, validationErrorAction);
 		}
