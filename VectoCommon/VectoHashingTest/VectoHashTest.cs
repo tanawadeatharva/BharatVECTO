@@ -32,13 +32,18 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 using Ninject;
+using System.Xml.Xsl;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
@@ -655,5 +660,206 @@ namespace VectoHashingTest
 			Assert.AreEqual(hashReadInterim3, inputDataProvider.MultistageJobInputData.JobInputData.ManufacturingStages[3].HashPreviousStep.DigestValue);
 
 		}
+
+		private const string WheelsFileToHash25 = @"Testdata\XML\ToHash\Tyre_v25.xml";
+
+        [TestCase(WheelsFileToHash25)]
+		public void TestTyreValidDimension(string file)
+		{
+			var validDimensions = DeclarationData.Wheels.GetWheelsDimensions();
+			foreach (var dimension in validDimensions) {
+				var modified = GetModifiedXML(file, dimension);
+				var xmlDoc = new XmlDocument();
+				xmlDoc.Load(modified);
+				var h = VectoHash.Load(xmlDoc);
+				var hashed = h.AddHash();
+
+				var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())));
+				Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
+			}
+		}
+
+		
+		[
+			TestCase(WheelsFileToHash25, "255/70 R22.5",  "255/70 R22.5"),
+			TestCase(WheelsFileToHash25, "255/70 R22.5",  "  255/70 R22.5"),
+			TestCase(WheelsFileToHash25, "255/70 R22.5",  "255/70 R22.5  "),
+			TestCase(WheelsFileToHash25, "255/70 R22.5", "255/70 R22.5"),
+			TestCase(WheelsFileToHash25, "  255/70 R22.5", "255/70 R22.5"),
+			TestCase(WheelsFileToHash25, "255/70 R22.5  ", "255/70 R22.5"),
+		]
+		public void TestTyreValidDimensionVariationHash(string file, string dimension, string dimensionVaried)
+		{
+			// create XML with dimension string and hash it
+			var reference = GetModifiedXML(file, dimension);
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(reference);
+			var h = VectoHash.Load(xmlDoc);
+			var hashed = h.AddHash();
+
+			// created XML needs to be valid
+			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
+
+			// change the dimension string to something else and load the modified XML
+			var variation = GetModifiedXML(hashed, dimensionVaried);
+			var xmlDocV = new XmlDocument();
+			xmlDocV.Load(variation);
+			var h2 = VectoHash.Load(xmlDocV);
+
+			// the hash has to be valid
+			var variationValid = h2.ValidateHash();
+			Assert.IsTrue(variationValid);
+
+			var validatorV = new XMLValidator(xmlDocV);
+			Assert.IsTrue(validatorV.ValidateXML(XmlDocumentType.DeclarationComponentData));
+		}
+
+		[
+			TestCase(WheelsFileToHash25, "255/70 R22.5  ", "255/70  R22.5"), // the hash is still the same but the tyre dimension is invalid
+			//TestCase(WheelsFileToHash25, "255/70 R22.5  ", "255/70  R 22.5"),
+			//TestCase(WheelsFileToHash25, "255/70 R22.5  ", "255 / 70  R 22.5"),
+		]
+		public void TestTyreInvalidDimensionVariationHash(string file, string dimension, string dimensionVaried)
+		{
+			// create XML with dimension string and hash it
+			var reference = GetModifiedXML(file, dimension);
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(reference);
+			var h = VectoHash.Load(xmlDoc);
+			var hashed = h.AddHash();
+
+			// created XML needs to be valid
+			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
+
+			// change the dimension string to something else and load the modified XML
+			var variation = GetModifiedXML(hashed, dimensionVaried);
+			var xmlDocV = new XmlDocument();
+			xmlDocV.Load(variation);
+			var h2 = VectoHash.Load(xmlDocV);
+
+			// the hash has to be valid
+			var variationValid = h2.ValidateHash();
+			Assert.IsTrue(variationValid);
+
+			var validatorV = new XMLValidator(xmlDocV, validationErrorAction: (s, ve, m) => {});
+			var result = validatorV.ValidateXML(XmlDocumentType.DeclarationComponentData);
+
+			Assert.IsFalse(result);
+			Assert.NotNull(validatorV.ValidationError);
+			Assert.IsTrue(validatorV.ValidationError.Contains("Invalid tyre dimension"));
+		}
+
+		[
+            TestCase(WheelsFileToHash25, "255/70 R22.5", "255/70  R 22.5"),
+            TestCase(WheelsFileToHash25, "255/70 R22.5", "255 / 70  R 22.5"),
+        ]
+		public void TestTyreIDimensionVariationInvalidHash(string file, string dimension, string dimensionVaried)
+		{
+			// create XML with dimension string and hash it
+			var reference = GetModifiedXML(file, dimension);
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(reference);
+			var h = VectoHash.Load(xmlDoc);
+			var hashed = h.AddHash();
+
+			// created XML needs to be valid
+			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
+
+			// change the dimension string to something else and load the modified XML
+			var variation = GetModifiedXML(hashed, dimensionVaried);
+			var xmlDocV = new XmlDocument();
+			xmlDocV.Load(variation);
+			var h2 = VectoHash.Load(xmlDocV);
+
+			// the hash is no longer valid
+			var variationValid = h2.ValidateHash();
+			Assert.IsFalse(variationValid);
+
+		}
+
+		[
+			TestCase(WheelsFileToHash25, "asdf"),
+			TestCase(WheelsFileToHash25, "250/70R14XX"),
+			TestCase(WheelsFileToHash25, "V425/55 R19.5"),
+			TestCase(WheelsFileToHash25, "425 / 55 R 19.5"),
+	        TestCase(WheelsFileToHash25, "255 / 70 R22.5"),
+	        TestCase(WheelsFileToHash25, "255/70   R22.5"),
+	        TestCase(WheelsFileToHash25, "  255/70    R22.5		   "),
+	        TestCase(WheelsFileToHash25, "  255/70	R22.5		   "),
+	        TestCase(WheelsFileToHash25, "255/70   R22.5"),
+		]
+		public void TestTyreInValidDimension(string file, string dimension)
+		{
+			var modified = GetModifiedXML(file, dimension);
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(modified);
+			var h = VectoHash.Load(xmlDoc);
+			var hashed = h.AddHash();
+			var validator = new XMLValidator(XmlReader.Create(new StringReader(hashed.ToString())),
+				validationErrorAction: (s, ve, m) => { });
+			var result = validator.ValidateXML(XmlDocumentType.DeclarationComponentData);
+			
+			Assert.IsFalse(result);
+			Assert.IsTrue(validator.ValidationError.Contains("Invalid tyre dimension"));
+		}
+
+		private XmlReader GetModifiedXML(XDocument doc, string dimension)
+		{
+			var tyreDimension = doc.XPathSelectElement("//*[local-name()='Dimension']");
+			Assert.NotNull(tyreDimension);
+			tyreDimension.Value = dimension;
+
+			var xmlString = "";
+			using (MemoryStream ms = new MemoryStream()) {
+				using (XmlWriter xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true })) {
+					doc.WriteTo(xw);
+					xw.Flush();
+				}
+				ms.Flush();
+				ms.Seek(0, SeekOrigin.Begin);
+				using (var reader = new StreamReader(ms)) {
+					xmlString = reader.ReadToEnd();
+				}
+			}
+
+			var modified = XmlReader.Create(new StringReader(xmlString));
+			return modified;
+		}
+
+		private XmlReader GetModifiedXML(string file, string dimension)
+		{
+			var inputXml = new XmlDocument();
+			inputXml.Load(file);
+
+			var tyreDimension = inputXml.SelectSingleNode("//*[local-name()='Dimension']");
+			Assert.NotNull(tyreDimension);
+			tyreDimension.InnerText = dimension;
+			
+			var modified = XmlReader.Create(new StringReader(inputXml.OuterXml));
+			return modified;
+		}
+
+  //      [TestCase()]
+		//public void TestXSLTransform()
+		//{
+		//	var dimension = "  425 / 55 R 19.5  ";
+
+		//	var modified = GetModifiedXML(WheelsFileToHash25, dimension);
+		//	var xmlDoc = new XmlDocument();
+		//	xmlDoc.Load(modified);
+
+
+		//	var transform = new XmlDsigExcC14NTransform();
+		//	transform.LoadInput(xmlDoc);
+
+		//	var output = transform.GetOutput() as Stream;
+		//	var sr = new StreamReader(output);
+			
+		//	var xml = sr.ReadToEnd();
+
+		//}
 	}
 }

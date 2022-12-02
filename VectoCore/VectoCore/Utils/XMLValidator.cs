@@ -36,28 +36,30 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils
 {
 	public class XMLValidator
 	{
-		private readonly Action<XmlSeverityType, ValidationEvent> _validationErrorAction;
+		private readonly Action<XmlSeverityType, ValidationEvent, string> _validationErrorAction;
 		private readonly Action<bool> _resultAction;
 		private bool _valid;
 		private  XmlDocument _doc;
 		private List<string> _validationErrors = new List<string>();
 
-		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
+		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent, string> validationErrorAction)
 		{
-			_validationErrorAction = validationErrorAction ?? ((x, y) => { });
+			_validationErrorAction = validationErrorAction ?? ((x, y, s) => { });
 			_resultAction = resultaction ?? (x => { });
 			_valid = false;
 		}
 
 		public XMLValidator(
 			XmlReader document, Action<bool> resultaction = null,
-			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null) : this(resultaction, validationErrorAction)
+			Action<XmlSeverityType, ValidationEvent, string> validationErrorAction = null) : this(resultaction, validationErrorAction)
 		{
 			_doc = new XmlDocument();
 			_doc.Load(document);
@@ -65,7 +67,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public XMLValidator(
 			XmlDocument document, Action<bool> resultaction = null,
-			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null) : this(resultaction, validationErrorAction)
+			Action<XmlSeverityType, ValidationEvent, string> validationErrorAction = null) : this(resultaction, validationErrorAction)
 		{
 			_doc = document;
 		}
@@ -85,8 +87,25 @@ namespace TUGraz.VectoCore.Utils
 			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || 
 				_doc.DocumentElement?.SchemaInfo == null ||
 				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
-				ValidationCallBack(null, null);
+				_validationErrors.Add( string.Format("XML file does not validate against a supported version of {0}", docType));
+				ValidationCallBack(this, null);
 				_valid = false;
+			}
+
+			var tyreNodes = _doc.SelectNodes(XMLHelper.QueryLocalName(XMLNames.AxleWheels_Axles_Axle_Tyre,
+				XMLNames.ComponentDataWrapper, XMLNames.AxleWheels_Axles_Axle_Dimension));
+
+			if (tyreNodes != null) {
+				foreach (XmlNode tyreNode in tyreNodes) {
+					var dimension = tyreNode.InnerText;
+					var validDimension = DeclarationData.Wheels.GetWheelsDimensions().Contains(dimension.Trim());
+					if (validDimension) {
+						continue;
+					}
+
+					_validationErrors.Add($"Invalid tyre dimension '{dimension.Trim()}'. Please check Wheels.csv for valid tyre dimensions.");
+					ValidationCallBack(this, null);
+				}
 			}
 
 			return _valid;
@@ -97,15 +116,15 @@ namespace TUGraz.VectoCore.Utils
 			_resultAction(false);
 			_valid = false;
 			_validationErrors.Add(args?.Message ?? "no schema found");
-			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
+			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args }, ValidationError);
 		}
 
 		public string ValidationError => _validationErrors.Any() ? _validationErrors.Join(Environment.NewLine) : null;
 
-		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
+		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt, string message)
 		{
 			if (severity == XmlSeverityType.Error) {
-				throw new VectoException("Validation error: {0}", evt?.ValidationEventArgs?.Message ?? "XML schema not known");
+				throw new VectoException("Validation error: {0}", evt?.ValidationEventArgs?.Message ?? message ?? "XML schema not known");
 			}
 		}
 
