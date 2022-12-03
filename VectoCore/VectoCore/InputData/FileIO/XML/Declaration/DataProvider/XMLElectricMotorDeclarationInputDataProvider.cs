@@ -154,14 +154,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				var powerMapEntryNodes = GetNodes(XMLNames.PowerMap_Entry);
 				var powerMap = XMLHelper.ReadTableData(_powerMapMapping, powerMapEntryNodes);
-
-
-                var col = powerMap.Columns[_elPowerCol];
-                foreach (DataRow row in powerMap.Rows) {
-					//Convert input data from W to kW
-					row[col] = (row.ParseDouble(col) / 1000).ToString(CultureInfo.InvariantCulture);
-				}
-                return powerMap;
+				return powerMap;
 			}
 
 			#endregion
