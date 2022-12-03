@@ -793,7 +793,9 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IElectricMotorPowerMap
 	{
 		int Gear { get; }
-
+		/// <summary>
+		/// P_el must be in W!
+		/// </summary>
 		TableData PowerMap { get; }
 	}
 	
