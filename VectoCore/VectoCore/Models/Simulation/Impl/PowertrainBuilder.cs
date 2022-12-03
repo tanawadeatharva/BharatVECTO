@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -59,27 +58,27 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	//public interface IPowertrainBuilderFactory
-	//{
-	//	PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null);
+    //public interface IPowertrainBuilderFactory
+    //{
+    //	PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null);
 
-	//}
+    //}
 
-	//public class PowertrainBuilderFactory : IPowertrainBuilderFactory
-	//{
-	//	#region Implementation of IPowertrainBuilderFactory
+    //public class PowertrainBuilderFactory : IPowertrainBuilderFactory
+    //{
+    //	#region Implementation of IPowertrainBuilderFactory
 
-	//	public PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
-	//	{
-	//		return new PowertrainBuilder(modData, sumWriter);
-	//	}
+    //	public PowertrainBuilder GetPowerTrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
+    //	{
+    //		return new PowertrainBuilder(modData, sumWriter);
+    //	}
 
-	//	#endregion
-	//}
-	/// <summary>
-	/// Provides Methods to build a simulator with a powertrain step by step.
-	/// </summary>
-	public static class PowertrainBuilder
+    //	#endregion
+    //}
+    /// <summary>
+    /// Provides Methods to build a simulator with a powertrain step by step.
+    /// </summary>
+    public static class PowertrainBuilder
 	{
 
 		public static IVehicleContainer Build(VectoRunData data, IModalDataContainer modData, ISumData sumWriter = null)
@@ -649,7 +648,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl))
+			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es,
+					ctl))
 				.AddComponent(engine, idleController)
 				.AddAuxiliariesSerialHybrid(container, data);
 
@@ -1258,8 +1258,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = ConnectREESS(data, container);
 			var ctl = new GensetMotorController(container, es);
 
+			var ice = new StopStartCombustionEngine(container, data.EngineData);
+			ice.AddAuxiliariesSerialHybrid(container, data);
+			
 			GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es, ctl)
-				.AddComponent(new StopStartCombustionEngine(container, data.EngineData));
+				.AddComponent(ice);
 
 			new ATClutchInfo(container);
 			new DummyGearboxInfo(container, new GearshiftPosition(0));
