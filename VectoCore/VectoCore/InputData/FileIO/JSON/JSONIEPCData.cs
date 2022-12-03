@@ -6,6 +6,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 				powerMaps.Add(new JSONElectricMotorPowerMap {
 					Gear = Convert.ToInt32(key),
-					PowerMap = ReadTableData(value, "ElectricMotor Power Map")
+					PowerMap = ReadTableData(value, "ElectricMotor Power Map").ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000)
 				});
 			}
 
