@@ -95,15 +95,15 @@ namespace TUGraz.VectoCore.Utils.Ninject
 	{
 		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => {
 			if (arguments[0] is VehicleClassification classification) {
-				return classification.GetHashCode().ToString();
-			} else {
+                return GetName(classification);
+            } else {
 				throw new ArgumentException($"{nameof(arguments)}[0] must be of type {typeof(VehicleClassification)}");
 			}
 		};
 
 		#region Overrides of VehicleTypeAndArchitectureStringHelperReportBase
 
-		private string GetName(VehicleClassification classification)
+		private static string GetName(VehicleClassification classification)
 		{
 			return classification.GetHashCode().ToString();
 		}
