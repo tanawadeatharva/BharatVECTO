@@ -1095,7 +1095,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			if (hvacConfigHeating != hvacConfiguration && hvacConfigCooling != hvacConfiguration) {
 				throw new VectoException(
-					$"The HVAC System Configuration must be either matched for the case heating or cooling h:{hvacConfigHeating.GetName()}/c:{hvacConfigCooling.GetName()}");
+					$"The HVAC System Configuration must be either matched for the case heating or cooling input: {hvacConfiguration.GetName()},  h:{hvacConfigHeating.GetName()}/c:{hvacConfigCooling.GetName()}");
 			}
 
 			var xEVBus = !primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
