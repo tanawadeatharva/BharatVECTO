@@ -557,9 +557,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? (IHybridControlStrategy)new SerialHybridStrategyAT(data, container)
 				: new SerialHybridStrategy(data, container);
 
-			var aux = new HighVoltageElectricAuxiliary(container);
-			aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
-			es.Connect(aux);
+			//var aux = new HighVoltageElectricAuxiliary(container);
+			//aux.AddConstant("P_aux_el", data.ElectricAuxDemand ?? 0.SI<Watt>());
+			//es.Connect(aux);
+
+
 
 			var ctl = new SerialHybridController(container, strategy, es);
 
@@ -646,6 +648,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				} else {
 					throw new VectoException("BusAux data set but no BusAux component found!");
 				}
+			} else {
+				var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+
+				es.Connect(dcdc);
+				var elAux = new ElectricAuxiliaries(container);
+
+				IEPTO epto = null;
+				if (data.PTO?.PTOCycle != null)
+				{
+					var pevPTOController = GetPEVIdleController(data.PTO, container);
+					cycle.IdleController = pevPTOController;
+					var eptoAux = new EPTO(pevPTOController);
+					elAux.AddAuxiliary(eptoAux);
+					epto = eptoAux;
+				}
+
+				elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
+				if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
+				{
+					elAux.AddAuxiliary(new Conditioning(data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond), epto));
+				}
+
+				dcdc.Connect(elAux);
+				dcdc.Initialize();
 			}
 
 			ctl.GenSet.AddComponent(GetElectricMachine(PowertrainPosition.GEN, data.ElectricMachinesData, container, es,
@@ -755,6 +781,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		
 			if (data.BusAuxiliaries != null) {
+				
 				if (!data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
 					throw new VectoException("BusAux must be supplied from REESS!");
 				}
