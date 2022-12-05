@@ -338,17 +338,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
 			}
 
-			if (AnyMissingGear(currentGears))
+			if (DragCurves.Count > 1 && AnyMissingGear(currentGears))
 				throw new ArgumentException("The DragCurve contains a gear which was not specified under gears");
 		}
 
-		private bool AnyMissingGear(Dictionary<int, bool> foundedGears)
+		private bool AnyMissingGear(Dictionary<int, bool> foundGears)
 		{
-			var keys = foundedGears.Keys.ToList();
+			var keys = foundGears.Keys.ToList();
 			foreach (var key in keys) {
-				if(!foundedGears[key])
+				if(!foundGears[key])
 					return true;
-				foundedGears[key] = false;
+				foundGears[key] = false;
 			}
 
 			return false;
