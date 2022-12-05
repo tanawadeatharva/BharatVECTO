@@ -147,12 +147,12 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="columnName"></param>
 		/// <param name="factor"></param>
 		/// <returns></returns>
-		public static TableData ApplyFactor(this TableData source, string columnName, double factor)
+		public static TableData ApplyFactor(this TableData source, string columnName, double factor, int decimals = 2)
 		{
 			foreach (DataRow row in source.Rows)
 			{
 				//Convert input data from W to kW
-				row[columnName] = (row.ParseDouble(columnName) * factor).ToString(CultureInfo.InvariantCulture);
+				row[columnName] = (Math.Round(row.ParseDouble(columnName) * factor, decimals)).ToString(CultureInfo.InvariantCulture);
 			}
 
 			return source;
