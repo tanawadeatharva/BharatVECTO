@@ -7,7 +7,7 @@
 	},
 	"Body": {
 		"CompletedVehicle": "vecto_vehicle-completed_heavyBus_42.xml",
-		"PrimaryVehicleResults":  "primary_heavyBus group42_SmartPS.RSLT_VIF.xml",
+		"PrimaryVehicleResults":  "VIF/primary_heavyBus group42_SmartPS.RSLT_VIF.xml",
 		"RunSimulation": true
 	}
 }

@@ -7,7 +7,7 @@
 	},
 	"Body": {
 		"CompletedVehicle": "vecto_vehicle-completed_heavyBus_41.xml",
-		"PrimaryVehicleResults":  "primary_heavyBus group41.RSLT_VIF.xml",
+		"PrimaryVehicleResults":  "VIF/primary_heavyBus group41.RSLT_VIF.xml",
 		"RunSimulation": true
 	}
 }

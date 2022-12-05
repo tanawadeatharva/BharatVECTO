@@ -32,8 +32,8 @@
     <None Include="TestData\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="TestData\Integration\Buses\FactorMethod\primary_heavyBus group42_SmartPS.RSLT_VIF.xml">
+	<ItemGroup>
+    <None Update="TestData\Integration\Buses\FactorMethod\CompletedBus_41-32b.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Integration\DeclarationMode\V24_DeclarationMode\HeavyLorry\PEV_heavyLorry_AMT_E2_realistic.xml">
