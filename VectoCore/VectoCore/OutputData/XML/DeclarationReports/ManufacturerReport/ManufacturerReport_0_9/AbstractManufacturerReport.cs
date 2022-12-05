@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			_mRFReportFactory = MRFReportFactory;
 
-			// MQ: write dummy result element for testcases (2022-07-13)
+			// TODO MQ: write dummy result element for testcases (2022-07-13), remove once result writing is implemented
 			Results = new XElement(Mrf_0_9 + "Results",
 				new XElement(Mrf_0_9 + "Status", "success"),
 				new XElement(Mrf_0_9 + "ExemptedVehicle"));

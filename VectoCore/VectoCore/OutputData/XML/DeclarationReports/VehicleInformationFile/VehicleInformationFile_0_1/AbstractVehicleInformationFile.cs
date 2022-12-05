@@ -53,7 +53,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			Results = new XElement(VIF + XMLNames.Report_Results);
+			// TODO MQ: write dummy result element for testcases (2022-12-02), remove once result writing is implemented
+			Results = new XElement(VIF + XMLNames.Report_Results,
+				new XElement(VIF + "Status", "success"),
+				new XElement(VIF + "ExemptedVehicle"));
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 
