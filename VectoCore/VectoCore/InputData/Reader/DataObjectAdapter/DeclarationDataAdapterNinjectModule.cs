@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_S_IEPC>()
-				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S4>();
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC>();
 
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.HEV_P1>()
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.HEV_S_IEPC>()
-                .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S4>();
+                .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.HEV_S_IEPC>();
 
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.HEV_P1>()
