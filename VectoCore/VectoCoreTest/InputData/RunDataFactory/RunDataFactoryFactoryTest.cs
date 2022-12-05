@@ -494,7 +494,7 @@ namespace TUGraz.VectoCore.Tests.InputData.RunDataFactory
         public void HEV_P2_CompletedBus(bool checkCompletedBusAdapters = false)
         {
             var input = new Mock<IMultistageVIFInputData>()
-                .HEV(ArchitectureID.S2)
+                .HEV(ArchitectureID.P2)
                 .CompletedBus();
             var fact = CreateRunDataFactory(input, typeof(DeclarationModeCompletedBusRunDataFactory.HEV_P2));
 			if (checkCompletedBusAdapters)
