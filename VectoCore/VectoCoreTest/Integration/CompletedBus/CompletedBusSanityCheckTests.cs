@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				{ BusHVACSystemConfiguration.Configuration6, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
 				{ BusHVACSystemConfiguration.Configuration7, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
 				{ BusHVACSystemConfiguration.Configuration8, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
-				{ BusHVACSystemConfiguration.Configuration9, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
+				{ BusHVACSystemConfiguration.Configuration9, Tuple.Create(HeatPumpType.non_R_744_2_stage, HeatPumpType.non_R_744_3_stage) },
 				{ BusHVACSystemConfiguration.Configuration10, Tuple.Create(HeatPumpType.none, HeatPumpType.non_R_744_3_stage) },
 			};
 			if (!hvacConfig.HasValue || !mapping.ContainsKey(hvacConfig.Value)) {
