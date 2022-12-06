@@ -1,7 +1,7 @@
 {
   "Header": {
     "CreatedBy": "",
-    "Date": "2022-10-19T11:55:04.5471436Z",
+    "Date": "2022-10-31T15:32:30.7559947Z",
     "AppVersion": "3",
     "FileVersion": 10
   },
@@ -81,9 +81,10 @@
       }
     ],
     "PTO": {
-      "Type": "drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump",
-      "LossMap": "PTO-idle.vptol",
+      "Type": "only the drive shaft of the PTO - multi-disc clutch, oil pump",
+      "LossMap": "",
       "Cycle": "",
+      "CycleEPTO": "EPTO-idle.vptoel",
       "CycleDriving": ""
     }
   }
