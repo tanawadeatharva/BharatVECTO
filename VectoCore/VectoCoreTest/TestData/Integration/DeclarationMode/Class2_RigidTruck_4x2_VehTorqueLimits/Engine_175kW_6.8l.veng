@@ -3,7 +3,7 @@
     "CreatedBy": " ()",
     "Date": "2016-10-13T10:06:50.6286564Z",
     "AppVersion": "3",
-    "FileVersion": 3
+    "FileVersion": 4
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -16,6 +16,11 @@
     "WHTC-Urban": 1.0,
     "WHTC-Rural": 1.0,
     "WHTC-Motorway": 1.0,
-    "ColdHotBalancingFactor": 1.0
+    "ColdHotBalancingFactor": 1.0,
+    "RatedPower": 175000,
+    "RatedSpeed": 2000,
+    "MaxTorque": 956,
+    "CFRegPer": 1.0,
+    "FuelType":  "Diesel CI" 
   }
 }
