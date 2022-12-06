@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -127,6 +128,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData, runData.SuperCapData, runData.VehicleData.TotalVehicleMass, ovcMode);
+
+				if (ovcMode != VectoRunData.OvcHevMode.NotApplicable) {
+					runData.BatteryData.InitialSoC = runData.HybridStrategyParameters.InitialSoc;
+				}
+
+
+
+
+				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
+
+				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
+
+				runData.PTO = mission.MissionType == MissionType.MunicipalUtility
+					? municipalPtoTransmissionData
+					: ptoTransmissionData;
 
 
 

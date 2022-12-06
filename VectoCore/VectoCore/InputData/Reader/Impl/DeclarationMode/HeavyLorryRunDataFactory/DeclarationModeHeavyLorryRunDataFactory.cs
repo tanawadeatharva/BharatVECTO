@@ -384,15 +384,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 
-				if (mission.MissionType == MissionType.MunicipalUtility) {
-
-				}
 
 				result.Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, null,
 					mission.MissionType, _segment.VehicleClass, vehicle.Length,
 					vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
 
-
+				
 				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData, vehicle.Components.GearboxInputData);
 
 				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(vehicle.Components.GearboxInputData, vehicle.Components.PTOTransmissionInputData);
