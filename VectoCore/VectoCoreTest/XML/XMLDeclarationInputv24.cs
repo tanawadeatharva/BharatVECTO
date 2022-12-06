@@ -463,9 +463,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestPowerMapEntry(string outShaftSpeed, string torque, string electricPower, DataRow row)
 		{
-			Assert.AreEqual(outShaftSpeed, row[XMLNames.PowerMap_OutShaftSpeed]);
-			Assert.AreEqual(torque, row[XMLNames.PowerMap_Torque]);
-			Assert.AreEqual(electricPower, row[XMLNames.PowerMap_ElectricPower]);
+			Assert.AreEqual(outShaftSpeed, row["n"]);
+			Assert.AreEqual(torque, row["T"]);
+			Assert.AreEqual(electricPower, row["P_el"]);
 		}
 
 		private void TestDragCurve(TableData dragCurve)
@@ -1776,15 +1776,15 @@ namespace TUGraz.VectoCore.Tests.XML
 			{
 				Assert.IsNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNull(vehicle.Components.RetarderInputData);
-				Assert.IsEmpty(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.TorqueLimits);
 				Assert.IsNull(vehicle.ElectricMotorTorqueLimits);
 			}
 			else
 			{
 				Assert.IsNotNull(vehicle.Components.AngledriveInputData);
 				Assert.IsNotNull(vehicle.Components.RetarderInputData);
-				Assert.IsNotNull(vehicle.TorqueLimits);
-				Assert.IsNotEmpty(vehicle.TorqueLimits);
+				Assert.IsNull(vehicle.TorqueLimits);
+				//Assert.IsNotEmpty(vehicle.TorqueLimits);
 				Assert.IsNotNull(vehicle.ElectricMotorTorqueLimits);
 			}
 
@@ -2096,7 +2096,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			Assert.AreEqual(ElectricMachineType.ASM, eMachine.ElectricMachine.ElectricMachineType);
 			Assert.AreEqual(CertificationMethod.StandardValues, eMachine.ElectricMachine.CertificationMethod);
-			Assert.AreEqual(1.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
+			Assert.AreEqual(50000.SI<Watt>(), eMachine.ElectricMachine.R85RatedPower);
 			Assert.AreEqual(0.10.SI<KilogramSquareMeter>(), eMachine.ElectricMachine.Inertia);//RotationalInertia
 			Assert.AreEqual(true, eMachine.ElectricMachine.DcDcConverterIncluded);
 			Assert.AreEqual("None", eMachine.ElectricMachine.IHPCType);

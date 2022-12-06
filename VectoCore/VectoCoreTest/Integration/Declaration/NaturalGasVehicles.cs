@@ -122,8 +122,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var co2Node = manufacturerReport.XPathSelectElement(
 				$"//*[local-name()='Results']/*[local-name()='Result'][{runIdx}]//*[local-name()='CO2' and @unit='g/km']");
 
-			Console.WriteLine("fc: {0}  co2: {1}", fcNode.Value, co2Node.Value);
+			Console.WriteLine("fc: {0}  co2: {1}", fcNode?.Value ?? "NaN", co2Node?.Value ?? "NaN");
 
+			Assert.NotNull(fcNode);
+			Assert.NotNull(co2Node);
 			Assert.AreEqual(expectedFc, fcNode.Value.ToDouble(), 0.1);
 			Assert.AreEqual(expectedCo2, co2Node.Value.ToDouble(), 0.1);
 		}
