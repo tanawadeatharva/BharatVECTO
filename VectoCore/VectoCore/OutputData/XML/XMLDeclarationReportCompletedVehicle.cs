@@ -13,7 +13,7 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 namespace TUGraz.VectoCore.OutputData.XML {
 	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
 	{
-		public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer) { }
+		public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer, true) { }
 
 		public IPrimaryVehicleInformationInputDataProvider PrimaryVehicleReportInputData { get; set; }
 

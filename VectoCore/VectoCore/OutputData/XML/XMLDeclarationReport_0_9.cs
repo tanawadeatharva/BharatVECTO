@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 
 
-		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer)
+		public XMLDeclarationReport09(IReportWriter writer, IManufacturerReportFactory mrfFactory, ICustomerInformationFileFactory cifFactory) : base(writer, true)
 		{
 			_mrfFactory = mrfFactory;
 			_cifFactory = cifFactory;

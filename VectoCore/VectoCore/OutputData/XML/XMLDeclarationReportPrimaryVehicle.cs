@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		protected IXMLVehicleInformationFile VehicleInformationFile;
 
 
-		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer)
+		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer, true)
 		{
 		}
 

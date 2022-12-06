@@ -60,7 +60,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IReportWriter writer) : base(writer) { }
+		public XMLDeclarationReport(IReportWriter writer) : base(writer)
+		{
+			throw new NotImplementedException("Use new implementation...");
+		}
+
+		protected XMLDeclarationReport(IReportWriter writer, bool dummy) : base(writer) { }
 
 		public class ResultEntry : IResultEntry
 		{
