@@ -32,5 +32,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data {
 		
 		// serial hybrid only: factor applied to the max propulsion power which the genset needs to provide in the optimal operating point
 		public double GensetMinOptPowerFactor { get; set; }
+
+
+		public double InitialSoc { get; set; }
 	}
 }

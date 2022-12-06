@@ -81,13 +81,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			result.EquivalenceFactorDischarge = double.NaN;
 			result.CostFactorSOCExponent = 5;
 
+			var tmpSystem = new BatterySystem(null, batterySystemData);
+
+			SetGenericParameters(result, tmpSystem, superCapData, vehicleMass, out var deltaSoc);
+
 			switch (ovcMode) {
 				case VectoRunData.OvcHevMode.NotApplicable:
-					SetGenericParameters(result, batterySystemData, superCapData, vehicleMass);
+
 					break;
 				case VectoRunData.OvcHevMode.ChargeSustaining:
+					result.InitialSoc = (tmpSystem.MaxSoC + tmpSystem.MinSoC) / 2;
 					break;
 				case VectoRunData.OvcHevMode.ChargeDepleting:
+					result.InitialSoc = tmpSystem.MinSoC + deltaSoc;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(ovcMode), ovcMode, null);
@@ -100,10 +106,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		}
 
-		private void SetGenericParameters(HybridStrategyParameters result, BatterySystemData batterySystemData,
-			SuperCapData superCapData, Kilogram vehicleMass){
-			var tmpSystem = new BatterySystem(null, batterySystemData);
-			var deltaSoc = CalculatedDeltaSocSHev(vehicleMass, batterySystemData, tmpSystem);
+		private void SetGenericParameters(HybridStrategyParameters result, BatterySystem tmpSystem,
+			SuperCapData superCapData, Kilogram vehicleMass, out double deltaSoc){
+			
+			deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem);
 
 
 			result.MinSoC = tmpSystem.MinSoC + 2 * deltaSoc;
@@ -112,7 +118,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 			if (result.MinSoC >= result.TargetSoC) {
-				deltaSoc = CalculatedDeltaSocSHev(vehicleMass, batterySystemData, tmpSystem, 50);
+				deltaSoc = CalculatedDeltaSocSHev(vehicleMass, tmpSystem, 50);
 				//Small battery
 				result.TargetSoC = tmpSystem.MaxSoC - 1 * deltaSoc;
 				result.MinSoC = tmpSystem.MinSoC + 2 * deltaSoc;
@@ -122,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			}
 		}
 
-		private double CalculatedDeltaSocSHev(Kilogram vehicleMass, BatterySystemData batterySystemData,
+		private double CalculatedDeltaSocSHev(Kilogram vehicleMass, 
 			BatterySystem tmpSystem, double kmph = 100)
 
 		{
