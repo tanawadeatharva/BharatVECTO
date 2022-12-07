@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			InitializeVehicleData(modelData.InputData);
-			_ovc = modelData.VehicleData.Ocv;
+			_ovc = modelData.VehicleData.OffVehicleCharging;
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
 			if (inputData == null) {
 				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");

@@ -67,7 +67,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public void WriteResult(XMLDeclarationReport.ResultEntry resultValue)
 		{
 			results.Add(resultValue);
-
 		}
 
 		public void GenerateReport(XElement resultSignature)

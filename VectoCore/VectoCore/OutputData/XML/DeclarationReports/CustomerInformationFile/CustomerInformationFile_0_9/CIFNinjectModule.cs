@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using Ninject.Activation;
 using Ninject.Extensions.ContextPreservation;
 using Ninject.Extensions.Factory;
+using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CIFWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
@@ -396,5 +398,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 
 		#endregion
+	}
+
+
+	internal class CIFResultsNinjectModule : NinjectModule
+	{
+		public override void Load()
+		{
+			
+			Bind<IResultWriter>().To<ExemptedResultsWriter>();
+		}
 	}
 }
