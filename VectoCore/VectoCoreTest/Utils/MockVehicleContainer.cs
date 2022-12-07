@@ -335,6 +335,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public void ResetComponents()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void FinishSingleSimulationRun(Exception e = null)
+		{
+			throw new NotImplementedException();
+		}
+
 
 		#region Implementation of IPowertainInfo
 

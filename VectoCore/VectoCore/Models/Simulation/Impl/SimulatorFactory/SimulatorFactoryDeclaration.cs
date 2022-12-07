@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 		private IVTPReport _currentStageVTPReport;
 		protected readonly IXMLDeclarationReportFactory _xmlDeclarationReportFactory;
 
+		
 
 		public SimulatorFactoryDeclaration(IInputDataProvider dataProvider, 
 			IOutputDataWriter writer,
@@ -31,8 +32,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			IXMLInputDataReader xmlInputDataReader,
 			ISimulatorFactoryFactory simulatorFactoryFactory,
 			IXMLDeclarationReportFactory xmlDeclarationReportFactory,
-			IVectoRunDataFactoryFactory runDataFactoryFactory
-			) : base(ExecutionMode.Declaration, writer, validate)
+			IVectoRunDataFactoryFactory runDataFactoryFactory 
+		) : base(ExecutionMode.Declaration, writer, validate)
 		{
 			_xmlInputDataReader = xmlInputDataReader;
 			_simFactoryFactory = simulatorFactoryFactory;

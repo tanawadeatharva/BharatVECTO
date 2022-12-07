@@ -45,8 +45,7 @@ public class HeavyLorrySimulation
 	TestCase(@"HeavyLorry\PEV_heavyLorry_AMT_E2_pto_transm.xml"),
 	TestCase(@"HeavyLorry\PEV_heavyLorry_E4.xml"),
 	TestCase(@"HeavyLorry\Group2_HEV_S2.xml"),
-	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml"),
-	]
+	TestCase(@"HeavyLorry\Group5_HEV_P2_.xml")]
 	public void HeavyLorrySimulationTest(string jobFile)
 	{
 #if singlethreaded
@@ -69,7 +68,11 @@ public class HeavyLorrySimulation
 		PrintRuns(jobContainer, null);
 		
 		jobContainer.Execute(multiThreaded);
-		jobContainer.WaitFinished();
+
+		if (multiThreaded) {
+			jobContainer.WaitFinished();
+		}
+
 		Assert.IsTrue(jobContainer.AllCompleted);
 		Assert.IsTrue(jobContainer.Runs.TrueForAll(runEntry => runEntry.Success));
 		PrintRuns(jobContainer, fileWriter);

@@ -596,7 +596,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation
 			});
 
 			var start = Stopwatch.StartNew();
-			jobContainer.Execute(true);
+			jobContainer.Execute(true); //TODO HM set back to true
 			
 			while (!jobContainer.AllCompleted)
 			{
