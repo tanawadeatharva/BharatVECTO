@@ -64,50 +64,34 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 			protected virtual void InitializeReport()
 			{
-				var powertrainConfig = CompletedVehicle.ExemptedVehicle || PrimaryVehicle.ExemptedVehicle
-					? GetExemptedVectoRunData()
-					: _segmentCompletedBus.Missions.Select(
-							mission => CreateVectoRunDataSpecific(
-								mission, mission.Loadings.First(), 0))
-						.FirstOrDefault(x => x != null);
-
+				var powertrainConfig = GetPowertrainConfigForReportInit();
 				Report.InitializeReport(powertrainConfig);
 			}
 
-			private VectoRunData GetExemptedVectoRunData()
+			protected virtual VectoRunData GetPowertrainConfigForReportInit()
 			{
-				throw new NotImplementedException();
+				return _segmentCompletedBus.Missions.Select(
+						mission => CreateVectoRunDataSpecific(
+							mission, mission.Loadings.First(), 0))
+					.FirstOrDefault(x => x != null);
 			}
 
 			protected virtual IEnumerable<VectoRunData> GetNextRun()
 			{
-				if (PrimaryVehicle.ExemptedVehicle)
-				{
-					//return new[] { GetExemptedVectoRunData() };
-				}
-
-				return VectoRunDataHeavyBusCompleted();
-			}
-			protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
-			{
-				
-				
 				var engineModes = PrimaryVehicle.Components.EngineInputData
 					?.EngineModes;
 
-				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++)
-				{
+				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 					var fuelMode = "single fuel mode";
-					if (engineModes[modeIdx].Fuels.Count > 1)
-					{
+					if (engineModes[modeIdx].Fuels.Count > 1) {
 						fuelMode = "dual fuel mode";
 					}
 
 					foreach (var vectoRunData in CreateVectoRunDataForMissions(modeIdx, fuelMode))
 						yield return vectoRunData;
 				}
-			
 			}
+			
 			protected virtual VectoRunData CreateVectoRunDataGeneric(Mission mission, KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int modeIdx)
 			{
 				var cycle = DeclarationData.CyclesCache.GetOrAdd(mission.MissionType, _ => DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false));
@@ -393,6 +377,37 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 		public class Exempted : CompletedBusBase
 		{
 			public Exempted(IMultistageVIFInputData dataProvider, IDeclarationReport report, ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific, IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric) : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric) { }
+
+			protected override IEnumerable<VectoRunData> GetNextRun()
+			{
+				return new[] { GetPowertrainConfigForReportInit() };
+			}
+
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				return new VectoRunData() {
+					Exempted = true,
+					VehicleData = new VehicleData() {
+						ModelName = CompletedVehicle.Model,
+						Manufacturer = CompletedVehicle.Manufacturer,
+						ManufacturerAddress = CompletedVehicle.ManufacturerAddress,
+						VIN = CompletedVehicle.VIN,
+						LegislativeClass = CompletedVehicle.LegislativeClass,
+						RegisteredClass = CompletedVehicle.RegisteredClass,
+						VehicleCode = CompletedVehicle.VehicleCode,
+						CurbMass = CompletedVehicle.CurbMassChassis,
+						GrossVehicleMass = CompletedVehicle.GrossVehicleMassRating,
+						ZeroEmissionVehicle = PrimaryVehicle.ZeroEmissionVehicle,
+						MaxNetPower1 = PrimaryVehicle.MaxNetPower1,
+						InputData = CompletedVehicle
+					},
+					Report = Report,
+					Mission = new Mission() {
+						MissionType = MissionType.ExemptedMission
+					},
+					InputData = DataProvider.MultistageJobInputData
+				};
+			}
 		}
 	}
 }

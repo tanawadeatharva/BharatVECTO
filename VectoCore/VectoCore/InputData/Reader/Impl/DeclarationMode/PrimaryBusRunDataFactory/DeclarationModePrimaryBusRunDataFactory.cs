@@ -63,6 +63,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				}
 			}
 
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return _segment.Missions.Select(
+						mission => CreateVectoRunData(
+							vehicle, mission, mission.Loadings.First(), 0))
+					.FirstOrDefault(x => x != null);
+			}
+
 			protected Segment GetSegment(IVehicleDeclarationInputData vehicle)
 			{
 				if (vehicle.VehicleCategory != VehicleCategory.HeavyBusPrimaryVehicle)
@@ -467,9 +476,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			#region Overrides of PrimaryBusBase
 
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
+			}
+
 			protected override IEnumerable<VectoRunData> VectoRunDataHeavyBusPrimary()
 			{
-				throw new NotImplementedException();
+				yield return new VectoRunData {
+					Exempted = true,
+					Report = Report,
+					Mission = new Mission { MissionType = MissionType.ExemptedMission },
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, new Segment(),
+						null,
+						new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(LoadingType.ReferenceLoad,
+							Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null)), _allowVocational),
+					InputDataHash = InputDataProvider.XMLHash
+				};
 			}
 
 			#endregion

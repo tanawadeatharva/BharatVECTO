@@ -13,6 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		public XMLDeclarationReportPrimaryVehicle(IReportWriter writer) : base(writer, true)
 		{
+			throw new NotSupportedException("Use new implementation!");
 		}
 
 		public override XDocument CustomerReport => null;

@@ -87,18 +87,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected virtual void InitializeReport()
 		{
-			VectoRunData powertrainConfig;
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
-			} else {
-				powertrainConfig = _segment.Missions.Select(
-												mission => CreateVectoRunData(
-													vehicle, mission, mission.Loadings.First(), 0))
-											.FirstOrDefault(x => x != null);
-			}
+			var powertrainConfig = GetPowertrainConfigForReportInit();
 			Report.InitializeReport(powertrainConfig);
 		}
+
+		protected abstract VectoRunData GetPowertrainConfigForReportInit();
 
 		//protected virtual PTOData CreateDefaultPTOData()
 		//{

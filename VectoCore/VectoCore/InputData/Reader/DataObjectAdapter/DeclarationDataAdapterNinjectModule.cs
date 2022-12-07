@@ -177,7 +177,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.PEV_E_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>();
-
+			Bind<IGenericCompletedBusDeclarationDataAdapter>()
+				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Exempted>();
             #endregion
 
             #region CompletedBus Specific
@@ -238,6 +240,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
             Bind<ISpecificCompletedBusDeclarationDataAdapter>()
                 .To<DeclarationDataAdapterSpecificCompletedBus.PEV_E_IEPC>()
                 .WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>();
+			Bind<ISpecificCompletedBusDeclarationDataAdapter>()
+				.To<DeclarationDataAdapterSpecificCompletedBus.Exempted>()
+				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Exempted>();
 			#endregion
 
 			#region SingleBus

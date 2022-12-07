@@ -93,5 +93,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
         public class PEV_E3 : CompletedBusDeclarationBase { }
         public class PEV_E4 : CompletedBusDeclarationBase { }
         public class PEV_E_IEPC : CompletedBusDeclarationBase { }
+		public class Exempted : CompletedBusDeclarationBase { }
 	}
 }

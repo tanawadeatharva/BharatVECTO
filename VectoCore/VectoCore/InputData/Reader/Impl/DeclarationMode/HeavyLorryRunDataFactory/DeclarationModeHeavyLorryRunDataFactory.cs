@@ -142,6 +142,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return GetNextRun();
 			}
 
+			#region Overrides of AbstractDeclarationVectoRunDataFactory
+
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return _segment.Missions.Select(
+						mission => CreateVectoRunData(
+							vehicle, mission, mission.Loadings.First(), 0))
+					.FirstOrDefault(x => x != null);
+			}
+
+			#endregion
+
 			protected Segment GetSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
 			{
 				_allowVocational = true;
@@ -444,6 +457,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				throw new NotImplementedException();
 			}
+
+			#region Overrides of LorryBase
+
+			protected override VectoRunData GetPowertrainConfigForReportInit()
+			{
+				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				return CreateVectoRunData(vehicle, null, new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(), 0);
+			}
+
+			#endregion
 
 			protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle,
 				Mission mission,
